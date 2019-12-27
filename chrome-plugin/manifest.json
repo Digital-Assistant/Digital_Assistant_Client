@@ -1,0 +1,40 @@
+{
+  "manifest_version": 2,
+  "name": "Universal Digital Assistant (Alpha)",
+  "version": "0.1.1.2",
+  "description": "Building an Extension for custom user navigation which helps in assisting users to navigate to right place.",
+  "permissions": ["activeTab", "background", "declarativeContent", "storage", "webNavigation", "cookies", "tabs", "identity","identity.email"],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "content_scripts": [
+	{
+	  "matches": ["*://localhost/*","*://*.vantagecircle.com/*", "*://*.nistapp.com/*", "*://*.myplaceforparts.com/*", "*://*.rknowsys.com/*"],
+	  "js": ["js/injectscriptmodifier.js"],
+	  "all_frames": false,
+	  "run_at":"document_start"
+	},
+	{
+	  "matches": ["*://localhost/*","*://*.vantagecircle.com/*", "*://*.nistapp.com/*", "*://*.myplaceforparts.com/*", "*://*.rknowsys.com/*"],
+	  "js": ["js/injectsdk.js"],
+	  "run_at":"document_end"
+	}
+  ],
+  "web_accessible_resources": [
+	"js/*",
+	"assets/*",
+	"css/*"
+  ],
+  "background": {
+    "scripts": ["js/background.js"],
+    "persistent": false
+  },
+  "oauth2": {
+	"client_id": "972566460301-70191ibf29gvdbutqoa41a4iva9ovejl.apps.googleusercontent.com",
+	"scopes":["https://www.googleapis.com/auth/contacts.readonly"]
+  },
+  "icons": {
+    "16": "images/uda-logo-16x16.png",
+    "32": "images/uda-logo-32x32.png",
+    "48": "images/uda-logo-48x48.png",
+    "128": "images/uda-logo1-128x128.png"
+  }
+}

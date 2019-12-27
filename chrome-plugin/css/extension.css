@@ -1,0 +1,245 @@
+/* The Modal (background) */
+#original-content{
+	/*overflow: auto;*/
+}
+#steps-content{
+	position: relative;
+	z-index: 9999;
+}
+#nistBtn{
+	width:50px;
+	position: fixed;
+	right: 10%;
+	top: 0px;
+	right: 0px;
+	z-index: 9999;
+	cursor: pointer;
+	cursor: hand;
+}
+.nistmodal {
+	display: none; /* Hidden by default */
+	/*position: fixed; /* Stay in place */
+	z-index: 9999; /* Sit on top */
+	/*padding-top: 100px; /* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	/*overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0,0,0); /* Fallback color */
+	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.nist-modal-content {
+	background-color: #fefefe;
+	/*margin: auto;
+	padding: 20px;*/
+	border: 1px solid #888;
+	/*width: 100%;*/
+}
+
+/* The Close Button */
+.nist-close {
+	color: #aaaaaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+}
+
+.nist-close:hover,
+.nist-close:focus {
+	color: #000;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.nist-search-icon img{
+	padding-top: 10px;
+	position: relative;
+	left: 30px;
+}
+.nist-ce-icon{
+	float: right;
+}
+.nist-voice-icon img{
+	padding-top: 10px;
+	position: relative;
+	left: -30px;
+}
+
+.nist-root{
+	/*width:95%;*/
+	margin-left:20px;
+}
+.nistmodal-left{
+	/*float:left;*/
+	/*width:40%;*/
+}
+.nistmodal-right{
+	/*float:left;*/
+	width:93%;
+}
+
+.nist-table-div{
+	width:100%;
+	margin-top:50px;
+}
+.nist-voice-search-tb td{
+	background-color: #f1f1f1;
+	border-bottom: 2px solid #fff;
+}
+
+.nist-voice-search-tb th{
+	background: #ff5625;
+	color: #fff;
+}
+.nist-voice-search-tb, .table-div{
+	max-height: 300px;
+	overflow-y: scroll;
+	width:100%;
+}
+.nist-voice-search-tb h4{
+	color: #fff;
+	font-size:14px;
+	padding: 0px 16px;
+	font-size:20px;
+}
+.nist-voice-search-tb head5{
+	color: #303f9f;
+	font-size:18px;
+	padding: 10px 10px;
+}
+/* Style the list */
+ul.nistbreadcrumb {
+	list-style: none;
+	background-color: #eee;
+}
+
+/* Display list items side by side */
+ul.nistbreadcrumb li {
+	display: inline;
+	font-size: 14px;
+	color: #ff5722;
+	cursor: pointer;
+	cursor: hand;
+}
+
+/* Add a slash symbol (/) before/behind each list item */
+ul.nistbreadcrumb li+li:before {
+	padding: 8px;
+	color: black;
+	content: "/\00a0";
+}
+
+/* Add a color to all links inside the list */
+ul.nistbreadcrumb li a {
+	color: #000;
+	text-decoration: none;
+}
+
+/* Add a color on mouse-over */
+ul.nistbreadcrumb li a:hover {
+	color: #01447e;
+	text-decoration: underline;
+}
+#nistBt2{
+	position: fixed;
+	bottom: 0;
+	right: -250px;
+	width: 300px;
+}
+.nist-search-container {
+	display: -ms-flexbox; /* IE10 */
+	display: flex;
+	width: 100%;
+	margin-bottom: 15px;
+}
+
+.nist-search{
+	width: 100%;
+	outline: none;
+	width: 100%;
+	height: 35px;
+	background: #fafafa;
+	box-shadow: 1px 0px 3px 1px #c5c5c5;
+	border: 2px solid white;
+	padding-left:40px;
+}
+.nist-search::placeholder {
+	padding-left:0px;
+}
+.nist-search:focus {
+	border: 2px solid dodgerblue;
+	padding-left:40px;
+}
+.nist-search:focus::placeholder {
+	padding-left:0px;
+}
+
+.nist-icon {
+	width: 18px;
+	cursor: hand;
+	cursor: pointer;
+}
+
+.nist-alignleft {
+	float: left;
+}
+
+.nist-alignright {
+	float: right;
+}
+
+.nist-clear {
+	clear: both;
+}
+
+.cursor {
+	cursor: pointer;
+	cursor: hand;
+}
+
+@media (min-width: 320px) and (max-width: 767px)
+{
+	.nistmodal-left{
+		width: 100%;
+		text-align: center;
+	}
+	.nistmodal-right {
+		float: left;
+		width: 100%;
+	}
+	.nist-voice-search-tb h4{
+		font-size:12px;
+		padding: 0px;
+	}
+	.nist-root{
+		margin:0px;
+	}
+	.nist-voice-search-tb h5{
+		font-size:12px;
+		padding:5px;
+		margin:0px;
+	}
+	ul.nistbreadcrumb li {
+		font-size: 10px;
+	}
+	.nistbreadcrumb{
+		padding:5px;
+		margin:0px;
+	}
+	.nist-srch-input{
+		margin-bottom: 10px;
+	}
+	#nistBtn{
+		margin-right: 60px;
+	}
+	#nistBtn img{
+		width:20px;
+		height:20px;
+		padding-top:0px;
+		margin:0px;
+	}
+
+}
