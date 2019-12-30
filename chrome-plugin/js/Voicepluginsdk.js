@@ -1765,6 +1765,15 @@ if (typeof Voicepluginsdk == 'undefined') {
 			};
 			xhr.send(JSON.stringify(senddata));
 		},
+		startautoplay:function(){
+
+		},
+		stopautoplay:function () {
+
+		},
+		pauseautoplay:function () {
+
+		}
 	};
 	Voicepluginsdk.init();
 } else {
