@@ -2,7 +2,7 @@ let clickObjects = [];
 let sessionID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 let lastPostTime = 0;
 let lastPostCount = 0;
-var voicedebug = false;
+var voicedebug = true;
 const POST_INTERVAL = 3000; //in milliseconds, each minute
 const API_URL = (voicedebug) ? "http://localhost:11080/voiceapi" : "https://voicetest.nistapp.com/voiceapi";
 const EXTENSION_VERSION = true;
@@ -142,6 +142,12 @@ function processNode(node) {
         addNewElement(newClickObject);
         //return;
     }
+
+    if(node.classList && node.classList.contains("dropdown-toggle")){
+        let newClickObject = {element: node, action: null};
+        addNewElement(newClickObject);
+    }
+
     /*
     if(node.hasAttribute("data-toggle") && node.getAttribute("data-toggle")=="dropdown"){
         let newClickObject = {element:node,action:null};

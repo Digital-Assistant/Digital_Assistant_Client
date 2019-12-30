@@ -566,7 +566,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 		indexclicknodes: function(){
 			// console.log("indexing started");
 			// console.log("initial nodes");
-			// console.log(clickObjects);
+			console.log(clickObjects);
 			this.previousurl=this.currenturl=window.location.href;
 			// indexing functionality called
 			this.indexdom(document.body);
