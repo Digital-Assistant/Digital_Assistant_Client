@@ -91,6 +91,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 		addedtoslidingdiv:false,
 		elastic:{apiurl:"http://localhost:9200",indexname:"nistapp",currentpage:0,querystring:""},
 		navigationcookiename:"nistnavshow",
+		autoplay:false,
 		inarray:function(value,object){
 			var check=jQuery.inArray(value,object);
 			return check;
@@ -458,15 +459,18 @@ if (typeof Voicepluginsdk == 'undefined') {
 					Voicepluginsdk.gettimestamp("stop");
 				});
 			}
-			var navigationcookie=this.getstoragedata(this.navigationcookiename);
+			/*var navigationcookie=this.getstoragedata(this.navigationcookiename);
 			if(navigationcookie){
 				var navigationcookiedata = JSON.parse(navigationcookie);
 				if(navigationcookiedata.shownav) {
 					this.openmodal();
 					this.renderelasticresultshtml();
-					this.renderelasticresultrow(navigationcookiedata.data,navigationcookiedata.data.id,true);
+					if(navigationcookiedata.autoplay){
+						this.autoplay=true;
+					}
+					this.renderelasticresultrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
 				}
-			}
+			}*/
 		},
 		addvoicesearchmodal: function(){
 			var html =  '<div id="nistModal" class="nistmodal" nist-voice="true">' +
@@ -594,6 +598,18 @@ if (typeof Voicepluginsdk == 'undefined') {
 			}
 			// console.log(this.menuitems);
 			this.sendtoserver();
+			var navigationcookie=this.getstoragedata(this.navigationcookiename);
+			if(navigationcookie){
+				var navigationcookiedata = JSON.parse(navigationcookie);
+				if(navigationcookiedata.shownav) {
+					this.openmodal();
+					this.renderelasticresultshtml();
+					if(navigationcookiedata.autoplay){
+						this.autoplay=true;
+					}
+					this.renderelasticresultrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
+				}
+			}
 		},
 		// indexing new clicknodes after new html got loaded
 		indexnewclicknodes:function(){
@@ -1569,7 +1585,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 						'</table>';
 			$("#nistvoicesearchresults").html(html);
 		},
-		renderelasticresultrow:function(data,index,shownodelist=false){
+		renderelasticresultrow:function(data,index,shownodelist=false, navcookiedata={}){
 			var html='<tr nist-voice="true">' +
 						' <td nist-voice="true" '+((!shownodelist)?'class="cursor"':'')+'>' +
 						((shownodelist && this.sessionID==data.usersessionid)?'<div nist-voice="true" id="deletesequence"><img class="nist-icon nist-alignright" src="'+this.extensionpath+'assets/delete-icon.png" /></div><div class="nist-clear"></div>':'')+
@@ -1577,6 +1593,9 @@ if (typeof Voicepluginsdk == 'undefined') {
 						'  <ul id="nistbreadcrumb'+index+'" nist-voice="true">' +
 							((!shownodelist)?data.userclicknodesSet.length+' Steps':'') +
 						'  </ul>' +
+						'<div id="playicons">' +
+						((navcookiedata.autoplay)?'<img class="nist-icon nist-alignmiddle" id="nist-autoplay" src="'+this.extensionpath+'assets/stop-autoplay.png" />':'<img class="nist-icon nist-alignmiddle" id="nist-autoplay" src="'+this.extensionpath+'assets/play.png" />')+
+						'</div><div class="nist-clear"></div>'+
 						((shownodelist)?'<div id="voteicons"><img class="nist-icon nist-alignleft" id="nist-upvote" src="'+this.extensionpath+'assets/upvote-icon.png" /><img class="nist-icon nist-alignright" id="nist-downvote" src="'+this.extensionpath+'assets/downvote-icon.png" /></div><div class="nist-clear"></div>':'') +
 						' </td>' +
 					'</tr>';
@@ -1588,8 +1607,20 @@ if (typeof Voicepluginsdk == 'undefined') {
 				$("#nist-voiceresultrow").append(element);
 			} else {
 				$("#nist-voiceresultrow").html(element);
+				var performactionnode=false;
 				for(var i=0;i<data.userclicknodesSet.length;i++){
-					$("#nistbreadcrumb"+index).append(this.rendersteps(data.userclicknodesSet[i]));
+					var visited = -1;
+					if(navcookiedata.navigateddata.length>0) {
+						visited = this.inarray(data.userclicknodesSet[i].id, navcookiedata.navigateddata);
+					}
+					// console.log(visited);
+					if(navcookiedata.autoplay && (!navcookiedata.pause || !navcookiedata.stop)){
+						if(visited==-1 && !performactionnode){
+							performactionnode=data.userclicknodesSet[i];
+							// console.log(performactionnode);
+						}
+					}
+					$("#nistbreadcrumb"+index).append(this.rendersteps(data.userclicknodesSet[i],visited,navcookiedata));
 				}
 				if(this.sessionID==data.usersessionid){
 					$("#deletesequence").click(function () {
@@ -1617,22 +1648,39 @@ if (typeof Voicepluginsdk == 'undefined') {
 				$('#nist-downvote').click(function () {
 					Voicepluginsdk.addvote("down",data);
 				});
+
+				$("#nist-autoplay").click(function () {
+					Voicepluginsdk.toggleautoplay(navcookiedata);
+				});
+
+				if(typeof performactionnode=="object" && this.autoplay) {
+					console.log("performing action");
+					this.performclickaction(performactionnode,navcookiedata);
+				} else if(this.autoplay){
+					this.toggleautoplay(navcookiedata);
+				}
 			}
 		},
 		elasticresultaction:function(data){
-			var navcookiedata = {shownav: true, data: data};
+			var navcookiedata = {shownav: true, data: data, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[]};
 			// console.log(navcookiedata);
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
-			this.renderelasticresultrow(data,data.id,true);
+			this.renderelasticresultrow(data,data.id,true, navcookiedata);
 		},
-		rendersteps:function(data){
-			var template = $("<li nist-voice=\"true\"><a nist-voice=\"true\">"+data.clickednodename+"</a></li>");
-			template.click(function () {
-				Voicepluginsdk.performclickaction(data);
-			});
+		rendersteps:function(data,visited=false, navcookiedata={}){
+			if(visited>-1) {
+				var template = $("<li nist-voice=\"true\"><strike><a nist-voice=\"true\">" + data.clickednodename + "</a></strike></li>");
+			} else {
+				var template = $("<li nist-voice=\"true\"><a nist-voice=\"true\">" + data.clickednodename + "</a></li>");
+			}
+			if(visited==-1) {
+				template.click(function () {
+					Voicepluginsdk.performclickaction(data,navcookiedata);
+				});
+			}
 			return template;
 		},
-		performclickaction:function(selectednode){
+		performclickaction:function(selectednode,navcookiedata){
 			var matchnodes = [];
 			// console.log(selectednode);
 			if(selectednode.objectdata) {
@@ -1698,6 +1746,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			}
 			// console.log(matchnodes);
 			if(matchnodes.length == 1){
+				this.updatenavcookiedata(navcookiedata,selectednode.id);
 				this.matchaction(matchnodes[0],false);
 				return;
 			} else if(matchnodes.length>1) {
@@ -1717,6 +1766,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 				});
 				if(finalmatchnode.hasOwnProperty("element-data")) {
 					// console.log(finalmatchnode);
+					this.updatenavcookiedata(navcookiedata,selectednode.id);
 					this.matchaction(finalmatchnode, false);
 				}
 				return;
@@ -1802,6 +1852,21 @@ if (typeof Voicepluginsdk == 'undefined') {
 		},
 		pauseautoplay:function () {
 
+		},
+		toggleautoplay:function(navcookiedata){
+			if(navcookiedata.autoplay){
+				navcookiedata.autoplay=false;
+				this.autoplay=false;
+			} else {
+				navcookiedata.autoplay=true;
+				this.autoplay=true;
+			}
+			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
+			this.renderelasticresultrow(navcookiedata.data,navcookiedata.data.id,true, navcookiedata);
+		},
+		updatenavcookiedata:function(navcookiedata,selectednodeid){
+			navcookiedata.navigateddata.push(selectednodeid);
+			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 		}
 	};
 	Voicepluginsdk.init();
