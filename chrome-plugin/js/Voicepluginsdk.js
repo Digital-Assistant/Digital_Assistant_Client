@@ -259,6 +259,15 @@ if (typeof Voicepluginsdk == 'undefined') {
 				}
 			});
 
+			// We need to wait till all dom content is loaded. We initially used a standard wait time but shifted to
+			//      use https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event
+			//      This still produces some discrepancy where some nodes are not being processed.
+			//      This needs to be improved at some point.
+			window.addEventListener('load', (event) => {
+				console.log('page is fully loaded');
+				Voicepluginsdk.indexclicknodes();
+			});
+
 			// Voicepluginsdk.indexclicknodes();
 
 			// this.functionsToRunWhenReady = [];
@@ -564,28 +573,48 @@ if (typeof Voicepluginsdk == 'undefined') {
 		},
 		// indexing all nodes after all the clicknodes are available
 		indexclicknodes: function(){
-			// console.log("indexing started");
+			console.log("Intial indexing started");
 			// console.log("initial nodes");
-			console.log(clickObjects);
+			// startmutationslistner=true;
+			var processcount=clickObjects.length;
+			// console.log(clickObjects);
+			console.log(processcount);
 			this.previousurl=this.currenturl=window.location.href;
+			postmessage=false;
 			// indexing functionality called
 			this.indexdom(document.body);
-			// console.log(this.htmlindex);
-			// console.log(this.menuitems);
+			postmessage=true;
 			startmutationslistner=true;
+			// console.log(this.htmlindex);
+			var totalcount=clickObjects.length;
+			console.log(totalcount);
+			if(processcount<totalcount){
+				console.log("new nodes added need to reprocess in the initial processing");
+				// this.indexclicknodes();
+			}
+			// console.log(this.menuitems);
 			this.sendtoserver();
 		},
 		// indexing new clicknodes after new html got loaded
 		indexnewclicknodes:function(){
-			// console.log("indexing new nodes started");
+			console.log("indexing new nodes started");
 			// console.log("new nodes");
 			// console.log(newclickObjects);
 			// this.htmlindex=[];
 			this.removefromhtmlindex();
+			var processcount=clickObjects.length;
+			console.log(processcount);
 			this.indexnewnodes=true;
 			this.currenturl=window.location.href;
-			// console.log(this.htmlindex);
+			postmessage=false;
 			this.indexdom(document.body);
+			postmessage=true;
+			var totalcount=clickObjects.length;
+			console.log(totalcount);
+			if(processcount<totalcount){
+				console.log("new nodes added need to reprocess");
+				// this.indexnewclicknodes();
+			}
 			// console.log(this.htmlindex);
 			/*
 			// todo improvise the indexing based on selection url and so on

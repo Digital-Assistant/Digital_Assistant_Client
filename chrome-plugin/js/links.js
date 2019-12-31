@@ -2,7 +2,7 @@ let clickObjects = [];
 let sessionID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 let lastPostTime = 0;
 let lastPostCount = 0;
-var voicedebug = true;
+var voicedebug = false;
 const POST_INTERVAL = 3000; //in milliseconds, each minute
 const API_URL = (voicedebug) ? "http://localhost:11080/voiceapi" : "https://voicetest.nistapp.com/voiceapi";
 const EXTENSION_VERSION = true;
@@ -15,6 +15,7 @@ let totalclickobjects=0;
 let processingtime=Date.now();
 let starttime=Date.now();
 let processcount=0;
+let postmessage=false;
 // console.log(window.location.host);
 /*var xhr = new XMLHttpRequest();
 var domain=window.location.host;
@@ -302,7 +303,7 @@ function doPost() {
     // console.log(clickObjects.length);
     var reindexevent;
     var indexevent;
-    if (Date.now() - lastPostTime >= POST_INTERVAL && (lastPostCount != clickObjects.length || processcount != lastPostCount)) {
+    if (startmutationslistner && postmessage && Date.now() - lastPostTime >= POST_INTERVAL && (lastPostCount != clickObjects.length || processcount != lastPostCount)) {
 
         console.log("start time: " + processingtime);
         console.log("Stop time: " + processingtime);
@@ -315,24 +316,25 @@ function doPost() {
                 cancelable: false
             });
             document.dispatchEvent(reindexevent);
-        } else if (startmutationslistner !== true) {
+        } /*else if (startmutationslistner !== true) {
             indexevent = new CustomEvent("Indexnodes", {
                 detail: {data: "indexclicknodes"},
                 bubbles: false,
                 cancelable: false
             });
             document.dispatchEvent(indexevent);
-        }
+        }*/
         lastPostTime = Date.now();
         lastPostCount = clickObjects.length;
         // console.log(clickObjects);
     }
 }
 
+// commenting the below functionality as it is going to infinite loop.
 // sending the data to the sdk for every interval time that is mentioned in the Post interval variable
-setInterval(function () {
+/*setInterval(function () {
     doPost();
-}, POST_INTERVAL);
+}, POST_INTERVAL);*/
 
 function test() {
     invokeById(2);
