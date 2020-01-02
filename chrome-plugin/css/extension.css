@@ -110,6 +110,12 @@
 	font-size:18px;
 	padding: 10px 10px;
 }
+
+.nist-voice-search-tb li a{
+	cursor: hand;
+	cursor: pointer;
+}
+
 /* Style the list */
 ul.nistbreadcrumb {
 	list-style: none;
@@ -199,7 +205,12 @@ ul.nistbreadcrumb li a:hover {
 	cursor: pointer;
 	cursor: hand;
 }
-
+.nist-alignmiddle{
+	text-align: center;
+}
+#playicons{
+	text-align: center;
+}
 @media (min-width: 320px) and (max-width: 767px)
 {
 	.nistmodal-left{

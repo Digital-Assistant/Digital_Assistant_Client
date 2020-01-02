@@ -1586,6 +1586,18 @@ if (typeof Voicepluginsdk == 'undefined') {
 			$("#nistvoicesearchresults").html(html);
 		},
 		renderelasticresultrow:function(data,index,shownodelist=false, navcookiedata={}){
+			if(shownodelist && navcookiedata.data.userclicknodesSet.length==navcookiedata.navigateddata.length){
+				console.log(navcookiedata);
+				navcookiedata.navcompleted=true;
+			}
+			var playiconhtml='';
+			if(shownodelist) {
+				if (navcookiedata.navcompleted) {
+					playiconhtml = '<span>Completed</span>';
+				} else {
+					playiconhtml = (navcookiedata.autoplay) ? '<img class="nist-icon nist-alignmiddle" id="nist-autoplay" src="' + this.extensionpath + 'assets/stop-autoplay.png" />' : '<img class="nist-icon nist-alignmiddle" id="nist-autoplay" src="' + this.extensionpath + 'assets/play.png" />';
+				}
+			}
 			var html='<tr nist-voice="true">' +
 						' <td nist-voice="true" '+((!shownodelist)?'class="cursor"':'')+'>' +
 						((shownodelist && this.sessionID==data.usersessionid)?'<div nist-voice="true" id="deletesequence"><img class="nist-icon nist-alignright" src="'+this.extensionpath+'assets/delete-icon.png" /></div><div class="nist-clear"></div>':'')+
@@ -1594,7 +1606,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 							((!shownodelist)?data.userclicknodesSet.length+' Steps':'') +
 						'  </ul>' +
 						'<div id="playicons">' +
-						((navcookiedata.autoplay)?'<img class="nist-icon nist-alignmiddle" id="nist-autoplay" src="'+this.extensionpath+'assets/stop-autoplay.png" />':'<img class="nist-icon nist-alignmiddle" id="nist-autoplay" src="'+this.extensionpath+'assets/play.png" />')+
+						playiconhtml +
 						'</div><div class="nist-clear"></div>'+
 						((shownodelist)?'<div id="voteicons"><img class="nist-icon nist-alignleft" id="nist-upvote" src="'+this.extensionpath+'assets/upvote-icon.png" /><img class="nist-icon nist-alignright" id="nist-downvote" src="'+this.extensionpath+'assets/downvote-icon.png" /></div><div class="nist-clear"></div>':'') +
 						' </td>' +
@@ -1657,6 +1669,9 @@ if (typeof Voicepluginsdk == 'undefined') {
 					console.log("performing action");
 					this.performclickaction(performactionnode,navcookiedata);
 				} else if(this.autoplay){
+					/*if(navcookiedata.userclicknodesSet.length==navcookiedata.navigateddata.length){
+						navcookiedata.navcompleted=true;
+					}*/
 					this.toggleautoplay(navcookiedata);
 				}
 			}
