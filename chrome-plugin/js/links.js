@@ -341,3 +341,11 @@ function test() {
 }
 
 //setTimeout(function(){test();},3000);
+/*
+document.addEventListener("beforescriptexecute", modifybodyhtml, true);
+function modifybodyhtml(){
+    console.log("check");
+    var bodyhtml=document.body.innerHTML;
+    var html='<div id="nistBtn" nist-voice="true"></div><div id="original-content">'+bodyhtml+'</div><div id="steps-content" style="display: none;"><div id="voicemodalhtml" nist-voice="true"></div></div>';
+    document.body.innerHTML=html;
+}*/

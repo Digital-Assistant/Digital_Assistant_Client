@@ -17,7 +17,7 @@
 	cursor: hand;
 }
 .nistmodal {
-	display: none; /* Hidden by default */
+	/*display: none; /* Hidden by default */
 	/*position: fixed; /* Stay in place */
 	z-index: 9999; /* Sit on top */
 	/*padding-top: 100px; /* Location of the box */

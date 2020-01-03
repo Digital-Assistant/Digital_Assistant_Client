@@ -183,7 +183,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 		},
 		otherscripts: function(){
 			this.totalotherScripts=1;
-			this.loadCssScript(this.extensionpath+"css/extension.css");
+			this.loadCssScript(this.extensionpath+"css/extension-v0.1.2.css");
 			this.loadOtherScript(this.extensionpath+"js/domJSON.js");
 		},
 		allReady: function() {
@@ -390,8 +390,8 @@ if (typeof Voicepluginsdk == 'undefined') {
 
 			// var html="<div id='original-content'><div id=\"nistBtn\" nist-voice=\"true\"></div></div><div id='steps-content'><div id=\"voicemodalhtml\" nist-voice=\"true\"></div></div>";
 
-			var html="<div id=\"nistBtn\" nist-voice=\"true\"></div><div id='steps-content'><div id=\"voicemodalhtml\" nist-voice=\"true\"></div></div>";
-			var bodyhtml=document.body.innerHTML;
+			var html='<div id="nistBtn" nist-voice="true"></div><div id="original-content"></div><div id="steps-content" style="display: none;"><div id="voicemodalhtml" nist-voice="true"></div></div>';
+			// var bodyhtml=document.body.innerHTML;
 			// var bodyhtml=document.body.childNodes;
 
 			// $(document.body).html('');
@@ -472,7 +472,63 @@ if (typeof Voicepluginsdk == 'undefined') {
 				}
 			}*/
 		},
-		addvoicesearchmodal: function(){
+		addvoicesearchmodal:function(){
+			var html =  '<div class="voice-redmine-rght">'+
+						'	<div class="voice-hng-left"><h3>How Can I Help Today?</h3></div>'+
+						'	<div class="voice-hng-right"><img id="closenistmodal" src="'+this.extensionpath+'assets/voice-close.png"></div>'+
+						'	<div class="voice-red-hr-line"></div>'+
+						// '	<button class="voice-suggesion-lbl">Create a new issue</button><button class="voice-suggesion-lbl">Assign an issue to Ajay</button><button class="voice-suggesion-lbl">Show list of issues assigned to me</button><br>'+
+						'	<div class="voice-srch-bg">'+
+						'		<span class="voice-srch"><img src="'+this.extensionpath+'assets/voice-search.png"></span><input type="search" class="voice-srch-fld"  id="voicesearchinput" placeholder="Search..." />' +
+						'       <span id="nist-voice-icon-start" class="voice-voice-srch" nist-voice="true"><img nist-voice="true" src="'+this.extensionpath+'assets/voice-voice.png" /></span>'+
+						'       <span style="display:none;" class="voice-voice-srch" id="nist-voice-icon-stop" nist-voice="true"><img src="'+this.extensionpath+'assets/stop.png" nist-voice="true" /></span>' +
+						'	</div>'+
+						'	<div class="voice-dropdown" style="float:right;">'+
+						'	  <a class="voice-advc-link">Advanced</a> '+
+						'	   <button id="nistvoicerecbtn" class="voice-record-img"><img src="'+this.extensionpath+'assets/voice-record.png"> <span>Rec</span></button>'+
+						'	</div><br>'+
+						'   <div id="nistvoicesearchresults"></div>'
+						'</div>';
+			$("#voicemodalhtml").html(html);
+			$("#closenistmodal").click(function(){
+				Voicepluginsdk.closemodal();
+			});
+			$("#voicesearch").click(function(){
+				// Voicepluginsdk.searchnodes();
+				Voicepluginsdk.searchinelastic();
+			});
+			$("#voicesearchinput").keydown(function (e) {
+				if (e.keyCode == 13) {
+					$("#nistvoicesearchresults").html("");
+					// Voicepluginsdk.searchnodes();
+					Voicepluginsdk.searchinelastic();
+					return false;
+				}
+			});
+			if(speechrecognitionavailable){
+				$("#nist-voice-icon-start").click(function () {
+					$("#nistvoicesearchresults").html("");
+					// console.log("starting voice recognition");
+					Voicepluginsdk.recognition.start();
+					$("#nist-voice-icon-start").hide();
+					$("#nist-voice-icon-stop").show();
+				});
+				$("#nist-voice-icon-stop").click(function () {
+					// console.log("stopping voice recognition");
+					Voicepluginsdk.recognition.stop();
+					$("#nist-voice-icon-stop").hide();
+					$("#nist-voice-icon-start").show();
+				});
+			} else {
+				$("#nist-voice-icon-start").hide();
+				$("#nist-voice-icon-stop").hide();
+			}
+			$("#nistvoicerecbtn").click(function(){
+				// Voicepluginsdk.startrecordingsequence();
+				Voicepluginsdk.gettimestamp("start");
+			});
+		},
+		addvoicesearchmodalold: function(){
 			var html =  '<div id="nistModal" class="nistmodal" nist-voice="true">' +
 						'<div class="nist-modal-content" nist-voice="true">' +
 						' <span class="nist-close" id="closenistmodal" nist-voice="true">&times;</span>' +
@@ -551,7 +607,8 @@ if (typeof Voicepluginsdk == 'undefined') {
 			if(this.sessiondata.authenticated) {
 				$("#nistBtn").hide();
 				// $('#original-content').css("width","85%").css("float","left");
-				$('#steps-content').css("width", "15%").css("float", "right");
+				// $('#steps-content').css("width", "15%").css("float", "right");
+				$('#steps-content').show();
 				$("#nistModal").css("display", "block");
 				$("#voicesearchinput").val("");
 				if (focus) {
@@ -565,7 +622,8 @@ if (typeof Voicepluginsdk == 'undefined') {
 		},
 		closemodal:function(){
 			// $('#original-content').css("width","100%");
-			$('#steps-content').css("width","0%");
+			// $('#steps-content').css("width","0%");
+			$('#steps-content').hide();
 			$("#nistModal").css("display","none");
 			$("#nistvoicesearchresults").html("");
 			$("#nistrecordresults").html("");
@@ -1568,7 +1626,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			var matchnodes = data;
 			if(matchnodes.length>0){
 				// console.log(matchnodes);
-				this.renderelasticresultshtml();
+				// this.renderelasticresultshtml();
 				for(var k=0;k<matchnodes.length;k++){
 					if(matchnodes[k].hasOwnProperty("deleted") && matchnodes[k].deleted===0) {
 						this.renderelasticresultrow(matchnodes[k], k);
@@ -1586,6 +1644,81 @@ if (typeof Voicepluginsdk == 'undefined') {
 			$("#nistvoicesearchresults").html(html);
 		},
 		renderelasticresultrow:function(data,index,shownodelist=false, navcookiedata={}){
+			if(shownodelist && navcookiedata.data.userclicknodesSet.length==navcookiedata.navigateddata.length){
+				console.log(navcookiedata);
+				navcookiedata.navcompleted=true;
+			}
+			var playiconhtml='';
+			if(shownodelist) {
+				if (navcookiedata.navcompleted) {
+					playiconhtml = '<span>Completed</span>';
+				} else {
+					playiconhtml = (navcookiedata.autoplay) ? '<img class="nist-icon nist-alignmiddle" id="nist-autoplay" src="' + this.extensionpath + 'assets/stop-autoplay.png" />' : '<img class="nist-icon nist-alignmiddle" id="nist-autoplay" src="' + this.extensionpath + 'assets/play.png" />';
+				}
+			}
+			var path='';
+			for(var i=0;i<data.userclicknodesSet.length;i++){
+				if(path!=''){
+					path +=' > ';
+				}
+				path += data.userclicknodesSet[i].clickednodename;
+			}
+			var html=   '	<div class="voice-sugtns-list"><h4><a>'+data.name.toString()+'</a></h4>'+
+						'		<p>'+path+'</p>'+
+						'	</div>';
+			var element=$(html);
+			if(shownodelist==false) {
+				element.click(function () {
+					Voicepluginsdk.elasticresultaction(data);
+				});
+				$("#nistvoicesearchresults").append(element);
+			} else {
+				$("#nistvoicesearchresults").html(element);
+				var performactionnode=false;
+				for(var i=0;i<data.userclicknodesSet.length;i++){
+					var visited = -1;
+					if(navcookiedata.navigateddata.length>0) {
+						visited = this.inarray(data.userclicknodesSet[i].id, navcookiedata.navigateddata);
+					}
+					// console.log(visited);
+					if(navcookiedata.autoplay && (!navcookiedata.pause || !navcookiedata.stop)){
+						if(visited==-1 && !performactionnode){
+							performactionnode=data.userclicknodesSet[i];
+							// console.log(performactionnode);
+						}
+					}
+					$("#nistbreadcrumb"+index).append(this.rendersteps(data.userclicknodesSet[i],visited,navcookiedata));
+				}
+				if(this.sessionID==data.usersessionid){
+					$("#deletesequence").click(function () {
+						Voicepluginsdk.deletesequencelist(data);
+					});
+				}
+
+				$('#nist-upvote').click(function () {
+					Voicepluginsdk.addvote("up",data);
+				});
+				$('#nist-downvote').click(function () {
+					Voicepluginsdk.addvote("down",data);
+				});
+
+				$("#nist-autoplay").click(function () {
+					Voicepluginsdk.toggleautoplay(navcookiedata);
+				});
+
+				// need to improve the autoplay functionality.
+				if(typeof performactionnode=="object" && this.autoplay) {
+					console.log("performing action");
+					this.performclickaction(performactionnode,navcookiedata);
+				} else if(this.autoplay){
+					/*if(navcookiedata.userclicknodesSet.length==navcookiedata.navigateddata.length){
+						navcookiedata.navcompleted=true;
+					}*/
+					this.toggleautoplay(navcookiedata);
+				}
+			}
+		},
+		renderelasticresultrowold:function(data,index,shownodelist=false, navcookiedata={}){
 			if(shownodelist && navcookiedata.data.userclicknodesSet.length==navcookiedata.navigateddata.length){
 				console.log(navcookiedata);
 				navcookiedata.navcompleted=true;
