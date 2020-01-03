@@ -1640,20 +1640,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 					});
 				}
 
-				/*
-				var xhr = new XMLHttpRequest();
-				xhr.open("GET", this.apihost + "/clickevents/sequence/votes/"+data.id, true);
-				// xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-				xhr.onload = function(event){
-					if(xhr.status == 200){
-						console.log(xhr.response);
-					} else {
-						console.log(xhr.status+" : "+xhr.statusText);
-					}
-				};
-				xhr.send();
-				*/
-
 				$('#nist-upvote').click(function () {
 					Voicepluginsdk.addvote("up",data);
 				});
@@ -1665,6 +1651,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 					Voicepluginsdk.toggleautoplay(navcookiedata);
 				});
 
+				// need to improve the autoplay functionality.
 				if(typeof performactionnode=="object" && this.autoplay) {
 					console.log("performing action");
 					this.performclickaction(performactionnode,navcookiedata);
