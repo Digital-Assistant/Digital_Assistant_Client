@@ -119,23 +119,25 @@
 .voice-suggesion-card{
   background: #FAFAFA;
   box-shadow: 2px 1px 4px 4px #a6a6a6;
-  width: 90%;
-  margin: 15px auto;
+  width: 95%;
+  margin: 10px 0px 10px 10px;
   height: 200px;
 }
 .voice-card-left{
   width: 80%;
-  padding-left: 20px;
-  padding-bottom: 20px;
+  /*padding-left: 20px;
+  padding-bottom: 20px;*/
   float: left;
+  height: auto;
 }
 .voice-card-left h4{
   color: #333333;
   padding-left: 20px;
   padding-bottom: 15px;
+  /*margin-top: 20px;*/
 }
 .voice-card-right{
-  width: 15%;
+  width: 10%;
   float: right;
   background: #fff;
 }
@@ -146,6 +148,8 @@
   padding: 5px 0px 5px 40px;
   color: #7F7F7F;
   font-size: 14px;
+  cursor: pointer;
+  cursor: hand;
  }
  .voice-sugggesion-bullet li:before{
     content: "";
@@ -154,10 +158,19 @@
     left: 14px;
     width: 25px;
     height: 25px;
-    background-image: url('../assets/voice-bullet.png');
+    /*background-image: url('../assets/voice-forward.png');*/
  }
+.voice-sugggesion-bullet li.active:before{
+  content: "";
+  position: absolute;
+  top: 0px;
+  left: 14px;
+  width: 25px;
+  height: 25px;
+  background-image: url('../assets/voice-bullet.png');
+}
 .voice-delete-violet, .voice-like-violet, .voice-dislike-violet{
-  padding: 16.5px;
+  padding: 16.8px 0px;
   cursor: pointer;
 }
 .voice-delete-violet:hover{
@@ -204,25 +217,6 @@
 }
 .voice-dropdown:hover .voice-record-img {
   display: block;
-}
-.voice-suggesion-card2{
-  background: #FAFAFA;
-  box-shadow: 2px 1px 4px 4px #a6a6a6;
-  width: 90%;
-  margin: 15px auto;
-  height: 230px;
-}
-.voice-card-left2{
-  width: 80%;
-  padding-left: 20px;
-  padding-bottom: 20px;
-  float: left;
-}
-.voice-card-left2 h4{
-  color: #333333;
-  padding-left: 20px;
-  padding-bottom: 15px;
-  margin-top: 20px;
 }
 .voice-save-recrded-inpt{
   background: #fff;
@@ -272,4 +266,7 @@
 #nistvoicesearchresults{
   height: 82vh;
   overflow-y: scroll;
+}
+.nist-clear {
+  clear: both;
 }
