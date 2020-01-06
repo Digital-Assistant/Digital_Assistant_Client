@@ -641,7 +641,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			var navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
 			// this.createcookie(this.navigationcookiename,JSON.stringify(navcookiedata),this.cookieexpires,"/");
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
-			this.cancelrecordingsequence();
+			this.cancelrecordingsequence(false);
 		},
 		// indexing all nodes after all the clicknodes are available
 		indexclicknodes: function(){
@@ -1583,7 +1583,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			};
 			xhr.send();
 		},
-		cancelrecordingsequence:function(){
+		cancelrecordingsequence:function(render=true){
 			var recordingcookie = this.getstoragedata(this.recordingcookiename);
 			if(recordingcookie){
 				var recordingcookiedata=JSON.parse(recordingcookie);
@@ -1594,14 +1594,16 @@ if (typeof Voicepluginsdk == 'undefined') {
 				return false;
 			}
 			this.createstoragedata(this.recordingcookiename,JSON.stringify(recordingcookiedata));
-			this.addbuttonhtml();
-			this.addvoicesearchmodal(true);
+			if(render) {
+				this.addbuttonhtml();
+				this.addvoicesearchmodal(true);
+			}
 		},
 		addrecordresultshtml:function(data){
 			// console.log(data);
 			if(data.length>0) {
 				this.recordedsequenceids=data;
-				var html =  '<div class="voice-suggesion-card">'+
+				var html =  '   <div class="voice-suggesion-card">'+
 							'		<div class="voice-card-left">'+
 							'			<h4>Recorded Sequence</h4>'+
 							'			<ul id="nist-recordresultrow" class="voice-sugggesion-bullet">'+
@@ -1623,7 +1625,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			// console.log(data);
 			index++;
 			var html =  '<li nist-voice="true" class="active">' +
-						(index++)+')\t'+data.clickednodename +
+							data.clickednodename +
 						'</li>';
 			var element=$(html);
 			$("#nist-recordresultrow").append(element);
@@ -1660,6 +1662,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			} else {
 				var searchtext = searchterm;
 			}
+			this.cancelrecordingsequence(false);
 			// console.log(searchtext);
 			var xhr = new XMLHttpRequest();
 			xhr.open("GET", this.apihost + "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host), true);
