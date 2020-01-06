@@ -532,7 +532,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 			} else {
 				$("#nistvoicerecstpbtn").click(function () {
 					// Voicepluginsdk.startrecordingsequence();
-					console.log("here");
 					Voicepluginsdk.gettimestamp("stop");
 				});
 			}
@@ -1657,11 +1656,12 @@ if (typeof Voicepluginsdk == 'undefined') {
 			this.createstoragedata(this.recordclicknodecookiename,clickednodename);
 		},
 		searchinelastic:function(searchterm=''){
-			if(searchterm=='') {
-				var searchtext = $("#voicesearchinput").val();
-			} else {
+			if(searchterm) {
 				var searchtext = searchterm;
+			} else {
+				var searchtext = $("#voicesearchinput").val();
 			}
+			// console.log(searchtext);
 			this.cancelrecordingsequence(false);
 			// console.log(searchtext);
 			var xhr = new XMLHttpRequest();
@@ -1768,7 +1768,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 				});
 				$("#nist-voiceresultrow").append(element);
 			} else {*/
-				// $("#nist-voiceresultrow").html(element);
 				$("#nistvoicesearchresults").html(element);
 				var performactionnode=false;
 				for(var i=0;i<data.userclicknodesSet.length;i++){
@@ -1813,6 +1812,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 					this.toggleautoplay(navcookiedata);
 				}
 				$("#backtosearch").click(function () {
+					// console.log(navcookiedata.searchterm);
 					Voicepluginsdk.backtosearchresults(navcookiedata);
 				});
 			// }
@@ -2020,8 +2020,8 @@ if (typeof Voicepluginsdk == 'undefined') {
 		},
 		backtosearchresults:function (navcookiedata) {
 			if(navcookiedata.searchterm!=''){
-				var navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
-				this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
+				// var navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
+				// this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 				$("#voicesearchinput").val(navcookiedata.searchterm);
 				this.searchinelastic(navcookiedata.searchterm);
 			}
