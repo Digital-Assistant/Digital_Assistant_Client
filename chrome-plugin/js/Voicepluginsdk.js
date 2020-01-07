@@ -1606,10 +1606,13 @@ if (typeof Voicepluginsdk == 'undefined') {
 				return false;
 			}
 			this.createstoragedata(this.recordingcookiename,JSON.stringify(recordingcookiedata));
+			var navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
+			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 			if(render) {
 				this.addbuttonhtml();
 				this.addvoicesearchmodal(true);
 			}
+
 		},
 		addrecordresultshtml:function(data){
 			// console.log(data);
