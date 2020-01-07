@@ -478,7 +478,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 				recbtn ='	   <button nist-voice="true" id="nistvoicerecstpbtn" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-stop.png"> <span nist-voice="true">Stop</span></button>';
 			}
 			var html =  '<div class="voice-redmine-rght">'+
-						'	<div class="voice-hng-left"><h3>How Can I Help Today?</h3></div>'+
+						'	<div class="voice-hng-left"><h3>How Can I Help You Today?</h3></div>'+
 						'	<div class="voice-hng-right"><img id="closenistmodal" src="'+this.extensionpath+'assets/voice-close.png"></div>'+
 						'	<div class="voice-red-hr-line"></div>'+
 						// '	<button class="voice-suggesion-lbl">Create a new issue</button><button class="voice-suggesion-lbl">Assign an issue to Ajay</button><button class="voice-suggesion-lbl">Show list of issues assigned to me</button><br>'+
