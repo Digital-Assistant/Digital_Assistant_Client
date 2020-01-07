@@ -470,12 +470,12 @@ if (typeof Voicepluginsdk == 'undefined') {
 		addvoicesearchmodal:function(addnisticon=true){
 			/*var recbtn ='	  <a nist-voice="true" class="voice-advc-link">Advanced</a> '+
 						'	   <button nist-voice="true" id="nistvoicerecbtn" class="voice-record-img"><img src="'+this.extensionpath+'assets/voice-record.png"> <span>Rec</span></button>';*/
-			var recbtn ='	   <button nist-voice="true" id="nistvoicerecbtn" class="voice-record-img"><img src="'+this.extensionpath+'assets/voice-record.png"> <span>Rec</span></button>';
+			var recbtn ='	   <button nist-voice="true" id="nistvoicerecbtn" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-record.png"> <span nist-voice="true">Rec</span></button>';
 
 			if(!addnisticon){
 				/*recbtn ='	  <a nist-voice="true" class="voice-advc-link">Advanced</a> '+
 						'	   <button nist-voice="true" id="nistvoicerecstpbtn" class="voice-record-img"><img src="'+this.extensionpath+'assets/voice-stop.png"> <span>Stop</span></button>';*/
-				recbtn ='	   <button nist-voice="true" id="nistvoicerecstpbtn" class="voice-record-img"><img src="'+this.extensionpath+'assets/voice-stop.png"> <span>Stop</span></button>';
+				recbtn ='	   <button nist-voice="true" id="nistvoicerecstpbtn" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-stop.png"> <span nist-voice="true">Stop</span></button>';
 			}
 			var html =  '<div class="voice-redmine-rght">'+
 						'	<div class="voice-hng-left"><h3>How Can I Help Today?</h3></div>'+
@@ -645,6 +645,27 @@ if (typeof Voicepluginsdk == 'undefined') {
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 			this.cancelrecordingsequence(false);
 		},
+		showhtml:function(){
+			var checkrecording = this.getstoragedata(this.recordingcookiename);
+			if(checkrecording) {
+				var checkrecordingdata = JSON.parse(checkrecording);
+				if (checkrecordingdata.hasOwnProperty("recording") && checkrecordingdata.recording) {
+					return false;
+				}
+			}
+			var navigationcookie=this.getstoragedata(this.navigationcookiename);
+			if(navigationcookie){
+				var navigationcookiedata = JSON.parse(navigationcookie);
+				if(navigationcookiedata.shownav) {
+					this.openmodal();
+					// this.renderelasticresultshtml();
+					if(navigationcookiedata.autoplay){
+						this.autoplay=true;
+					}
+					this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
+				}
+			}
+		},
 		// indexing all nodes after all the clicknodes are available
 		indexclicknodes: function(){
 			console.log("Intial indexing started");
@@ -668,18 +689,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			}
 			// console.log(this.menuitems);
 			this.sendtoserver();
-			var navigationcookie=this.getstoragedata(this.navigationcookiename);
-			if(navigationcookie){
-				var navigationcookiedata = JSON.parse(navigationcookie);
-				if(navigationcookiedata.shownav) {
-					this.openmodal();
-					// this.renderelasticresultshtml();
-					if(navigationcookiedata.autoplay){
-						this.autoplay=true;
-					}
-					this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
-				}
-			}
+			this.showhtml();
 		},
 		// indexing new clicknodes after new html got loaded
 		indexnewclicknodes:function(){
@@ -1621,6 +1631,8 @@ if (typeof Voicepluginsdk == 'undefined') {
 					this.renderrecordresultrow(data[i],i);
 				}
 				this.openmodal(false);
+			} else {
+				this.showhtml();
 			}
 		},
 		renderrecordresultrow:function(data,index){
@@ -1753,9 +1765,9 @@ if (typeof Voicepluginsdk == 'undefined') {
 						'	<div class="voice-card-left">'+
 						'		<div class="voice-back-btn"><img nist-voice="true" id="backtosearch" src="'+this.extensionpath+'assets/voice-back.png"></div>'+
 						'       <div class="voice-feedback-btns">' +
-						'		    <img nist-voice="true" id="deletesequence" class="voice-delete-violet" src="'+this.extensionpath+'assets/voice-delete.png">'+
 						'		    <img nist-voice="true" id="nist-upvote" class="voice-like-violet" src="'+this.extensionpath+'assets/voice-like.png">'+
 						'		    <img nist-voice="true" id="nist-downvote" class="voice-dislike-violet" src="'+this.extensionpath+'assets/voice-dislike.png">'+
+						'		    <img nist-voice="true" id="deletesequence" class="voice-delete-violet" src="'+this.extensionpath+'assets/voice-delete.png">'+
 						'       </div>'+
 						'		<h4>'+data.name.toString()+'</h4>'+
 						'		<ul class="voice-sugggesion-bullet" id="nistvoicesteps">'+
@@ -1822,9 +1834,9 @@ if (typeof Voicepluginsdk == 'undefined') {
 		},
 		rendersteps:function(data,visited=false, navcookiedata={}){
 			if(visited>-1) {
-				var template = $("<li nist-voice=\"true\" class='active'><a nist-voice=\"true\">" + data.clickednodename + "</a></li>");
+				var template = $("<li nist-voice=\"true\" class='active'>" + data.clickednodename + "</li>");
 			} else {
-				var template = $("<li nist-voice=\"true\"><a nist-voice=\"true\">" + data.clickednodename + "</a></li>");
+				var template = $("<li nist-voice=\"true\">" + data.clickednodename + "</li>");
 			}
 			if(visited==-1) {
 				template.click(function () {
