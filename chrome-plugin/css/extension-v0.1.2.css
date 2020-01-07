@@ -26,7 +26,8 @@
   float: right;
   background: #fff;
   box-shadow: 0 -6px 6px 6px #949292;
-  height: 100vh;
+  min-height: 100vh;
+  height: auto !important;
   z-index: 9999;
 }
 .voice-hng-left{
