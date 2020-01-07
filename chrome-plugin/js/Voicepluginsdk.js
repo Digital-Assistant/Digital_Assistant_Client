@@ -468,12 +468,14 @@ if (typeof Voicepluginsdk == 'undefined') {
 			}*/
 		},
 		addvoicesearchmodal:function(addnisticon=true){
-			var recbtn ='	  <a nist-voice="true" class="voice-advc-link">Advanced</a> '+
-						'	   <button nist-voice="true" id="nistvoicerecbtn" class="voice-record-img"><img src="'+this.extensionpath+'assets/voice-record.png"> <span>Rec</span></button>';
+			/*var recbtn ='	  <a nist-voice="true" class="voice-advc-link">Advanced</a> '+
+						'	   <button nist-voice="true" id="nistvoicerecbtn" class="voice-record-img"><img src="'+this.extensionpath+'assets/voice-record.png"> <span>Rec</span></button>';*/
+			var recbtn ='	   <button nist-voice="true" id="nistvoicerecbtn" class="voice-record-img"><img src="'+this.extensionpath+'assets/voice-record.png"> <span>Rec</span></button>';
 
 			if(!addnisticon){
-				recbtn ='	  <a nist-voice="true" class="voice-advc-link">Advanced</a> '+
-						'	   <button nist-voice="true" id="nistvoicerecstpbtn" class="voice-record-img"><img src="'+this.extensionpath+'assets/voice-stop.png"> <span>Stop Rec</span></button>';
+				/*recbtn ='	  <a nist-voice="true" class="voice-advc-link">Advanced</a> '+
+						'	   <button nist-voice="true" id="nistvoicerecstpbtn" class="voice-record-img"><img src="'+this.extensionpath+'assets/voice-stop.png"> <span>Stop</span></button>';*/
+				recbtn ='	   <button nist-voice="true" id="nistvoicerecstpbtn" class="voice-record-img"><img src="'+this.extensionpath+'assets/voice-stop.png"> <span>Stop</span></button>';
 			}
 			var html =  '<div class="voice-redmine-rght">'+
 						'	<div class="voice-hng-left"><h3>How Can I Help Today?</h3></div>'+
@@ -485,9 +487,10 @@ if (typeof Voicepluginsdk == 'undefined') {
 						'       <span id="nist-voice-icon-start" class="voice-voice-srch" nist-voice="true"><img nist-voice="true" src="'+this.extensionpath+'assets/voice-voice.png" /></span>'+
 						'       <span style="display:none;" class="voice-voice-srch" id="nist-voice-icon-stop" nist-voice="true"><img src="'+this.extensionpath+'assets/stop.png" nist-voice="true" /></span>' +
 						'	</div>'+
-						'	<div class="voice-dropdown" style="float:right;">'+
+						// '	<div class="voice-dropdown" style="float:right; margin-right: 20px;">'+
 								recbtn +
-						'	</div><br>'+
+						// '	</div><br>'+
+						'<div class="nist-clear"></div>'+
 						'   <div id="nistvoicesearchresults"></div>'
 						'</div>';
 			$("#voicemodalhtml").html(html);
@@ -1748,15 +1751,15 @@ if (typeof Voicepluginsdk == 'undefined') {
 					'</tr>';*/
 			var html =  '<div class="voice-suggesion-card">'+
 						'	<div class="voice-card-left">'+
-						'		<div><img nist-voice="true" id="backtosearch" src="'+this.extensionpath+'assets/voice-back.png"></div>'+
+						'		<div class="voice-back-btn"><img nist-voice="true" id="backtosearch" src="'+this.extensionpath+'assets/voice-back.png"></div>'+
+						'       <div class="voice-feedback-btns">' +
+						'		    <img nist-voice="true" id="deletesequence" class="voice-delete-violet" src="'+this.extensionpath+'assets/voice-delete.png">'+
+						'		    <img nist-voice="true" id="nist-upvote" class="voice-like-violet" src="'+this.extensionpath+'assets/voice-like.png">'+
+						'		    <img nist-voice="true" id="nist-downvote" class="voice-dislike-violet" src="'+this.extensionpath+'assets/voice-dislike.png">'+
+						'       </div>'+
 						'		<h4>'+data.name.toString()+'</h4>'+
 						'		<ul class="voice-sugggesion-bullet" id="nistvoicesteps">'+
 						'		</ul>'+
-						'	</div>'+
-						'	<div class="voice-card-right">'+
-						'		<img nist-voice="true" id="deletesequence" class="voice-delete-violet" src="'+this.extensionpath+'assets/voice-delete.png">'+
-						'		<img nist-voice="true" id="nist-upvote" class="voice-like-violet" src="'+this.extensionpath+'assets/voice-like.png">'+
-						'		<img nist-voice="true" id="nist-downvote" class="voice-dislike-violet" src="'+this.extensionpath+'assets/voice-dislike.png">'+
 						'	</div>'+
 						'   <div class="nist-clear"></div>'+
 						'</div>'+
