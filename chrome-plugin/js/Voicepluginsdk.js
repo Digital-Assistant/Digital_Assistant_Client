@@ -1231,7 +1231,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			// console.log(data);
 			var node=data["element-data"];
 			var timetoinvoke=1000;
-			setTimeout(function () {
+			// setTimeout(function () {
 				switch (node.nodeName.toLowerCase()) {
 					case "input":
 						switch (node.getAttribute("type")) {
@@ -1273,36 +1273,19 @@ if (typeof Voicepluginsdk == 'undefined') {
 					default:
 						node.click();
 				}
-			},timetoinvoke);
-			/*
-			if(node.hasOwnProperty("menuitems") && node.menuitems.length>0){
-				node.menuitems.forEach(function (menuitem, menuitemindex) {
-					setTimeout(function () {
-						console.log(menuitem);
-						menuitem.menunode.click();
-					},timetoinvoke);
-					timetoinvoke = timetoinvoke+3000;
-				});
+			// },timetoinvoke);
+			this.invokenextitem(node,timetoinvoke);
+		},
+		invokenextitem:function(node,timetoinvoke){
+			var link=false;
+			timetoinvoke=timetoinvoke+4000;
+			console.log(timetoinvoke);
+			if(node.hasOwnProperty("href")){
+				link=true;
 			}
-			*/
-			// console.log(timetoinvoke);
-			/*setTimeout(function () {
-				//$("#voicesearchinput").focus();
-				if(node.nodeName.toLowerCase() === "input" || node.nodeName.toLowerCase() === "textarea" || node.nodeName.toLowerCase() === "select"){
-					if((node.getAttribute("type") && (node.getAttribute("type") === "text" || node.getAttribute("type") === "")) || node.nodeName.toLowerCase() === "textarea" || node.nodeName.toLowerCase() === "select"){
-						node.focus();
-					} else {
-						node.click();
-						// $(node).hover().click();
-						// $(node).mouseover().click();
-					}
-				} else {
-					node.click();
-					// node.trigger("mouseover").click();
-					// Voicepluginsdk.eventFire(node,"click");
-					// $(node).click();
-				}
-			},timetoinvoke);*/
+			if(!link) {
+				setTimeout(function(){Voicepluginsdk.showhtml();}, timetoinvoke);
+			}
 		},
 		eventFire:function(el, etype){
 			if (el.fireEvent) {
