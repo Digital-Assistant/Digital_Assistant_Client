@@ -3,7 +3,7 @@ let sessionID = Math.random().toString(36).substring(2, 15) + Math.random().toSt
 let lastPostTime = 0;
 let lastPostCount = 0;
 var voicedebug = false;
-const POST_INTERVAL = 3000; //in milliseconds, each minute
+const POST_INTERVAL = 1000; //in milliseconds, each minute
 const API_URL = (voicedebug) ? "http://localhost:11080/voiceapi" : "https://voicetest.nistapp.com/voiceapi";
 const EXTENSION_VERSION = true;
 let newclickObjects = [];
@@ -303,38 +303,42 @@ function doPost() {
     // console.log(clickObjects.length);
     var reindexevent;
     var indexevent;
-    if (startmutationslistner && postmessage && Date.now() - lastPostTime >= POST_INTERVAL && (lastPostCount != clickObjects.length || processcount != lastPostCount)) {
+    if (postmessage && Date.now() - lastPostTime >= POST_INTERVAL && (lastPostCount != clickObjects.length || processcount != lastPostCount)) {
 
         console.log("start time: " + processingtime);
         console.log("Stop time: " + processingtime);
         console.log("Total time: " + (processingtime - starttime) / 1000);
 
-        if (startmutationslistner && newclickObjects.length > 0) {
-            reindexevent = new CustomEvent("Indexnodes", {
-                detail: {data: "indexnewclicknodes"},
-                bubbles: false,
-                cancelable: false
-            });
-            document.dispatchEvent(reindexevent);
-        } /*else if (startmutationslistner !== true) {
+        if (startmutationslistner !== true) {
+            console.log("sending nodes index message");
             indexevent = new CustomEvent("Indexnodes", {
                 detail: {data: "indexclicknodes"},
                 bubbles: false,
                 cancelable: false
             });
             document.dispatchEvent(indexevent);
-        }*/
-        lastPostTime = Date.now();
-        lastPostCount = clickObjects.length;
+            lastPostTime = Date.now();
+            lastPostCount = clickObjects.length;
+        } else if (startmutationslistner && newclickObjects.length > 0) {
+            console.log("sending new nodes index message");
+            reindexevent = new CustomEvent("Indexnodes", {
+                detail: {data: "indexnewclicknodes"},
+                bubbles: false,
+                cancelable: false
+            });
+            document.dispatchEvent(reindexevent);
+            lastPostTime = Date.now();
+            lastPostCount = newclickObjects.length;
+        }
         // console.log(clickObjects);
     }
 }
 
 // commenting the below functionality as it is going to infinite loop.
 // sending the data to the sdk for every interval time that is mentioned in the Post interval variable
-/*setInterval(function () {
+setInterval(function () {
     doPost();
-}, POST_INTERVAL);*/
+}, POST_INTERVAL);
 
 function test() {
     invokeById(2);

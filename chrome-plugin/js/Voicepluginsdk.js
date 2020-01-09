@@ -209,7 +209,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			this.checkuserkeyexists();
 
 			// adding the respective html to show up the icons and all the required html
-			this.addvoiceiconhtml();
+			// this.addvoiceiconhtml();
 
 			// adding speech recognition functionality based on the library availability
 			if(speechrecognitionavailable){
@@ -266,7 +266,9 @@ if (typeof Voicepluginsdk == 'undefined') {
 			//      This needs to be improved at some point.
 			window.addEventListener('load', (event) => {
 				console.log('page is fully loaded');
-				Voicepluginsdk.indexclicknodes();
+				// location.reload();
+				Voicepluginsdk.modifybodyhtml();
+				// Voicepluginsdk.indexclicknodes();
 			});
 
 			// Voicepluginsdk.indexclicknodes();
@@ -390,7 +392,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 
 			// var html="<div id='original-content'><div id=\"nistBtn\" nist-voice=\"true\"></div></div><div id='steps-content'><div id=\"voicemodalhtml\" nist-voice=\"true\"></div></div>";
 
-			var html='<div id="nistBtn" nist-voice="true"></div><div id="original-content"></div><div id="steps-content" style="display: none;"><div id="voicemodalhtml" nist-voice="true"></div></div>';
+			// var html='<div id="nistBtn" nist-voice="true"></div><div id="original-content"></div><div id="steps-content" style="display: none;"><div id="voicemodalhtml" nist-voice="true"></div></div>';
 			// var bodyhtml=document.body.innerHTML;
 			// var bodyhtml=document.body.childNodes;
 
@@ -399,13 +401,25 @@ if (typeof Voicepluginsdk == 'undefined') {
 			// $('#original-content').append(bodyhtml);
 			// $(document.body).append(html);
 
+			// $(document.body).prepend(html);
+
+			// this.addbuttonhtml();
+		},
+		modifybodyhtml:function(){
+			var html='<div id="nistBtn" nist-voice="true"></div><div id="original-content"></div><div id="steps-content" style="display: none;"><div id="voicemodalhtml" nist-voice="true"></div></div>';
+			// $(document.body).html('');
+			// $(document.body).html(html);
+			// $('#original-content').append(bodyhtml);
+			// $(document.body).append(html);
+
 			$(document.body).prepend(html);
 
-			this.addbuttonhtml();
-		},
-		addclasstobodychild:function(){
-			var childnodes=document.body.childNodes;
-			// console.log(childnodes)
+			var bodyhtml=document.body.innerHTML;
+			$(document.body).html(bodyhtml).promise().done(function(){
+				Voicepluginsdk.indexclicknodes();
+				Voicepluginsdk.addbuttonhtml();
+			});
+			// postmessage=true;
 		},
 		addvoicehtml:function(){
 			// console.log(this.extensionpath);
@@ -617,8 +631,8 @@ if (typeof Voicepluginsdk == 'undefined') {
 		openmodal:function(focus=true){
 			if(this.sessiondata.authenticated) {
 				$("#nistBtn").hide();
-				// $('#original-content').css("width","85%").css("float","left");
-				// $('#steps-content').css("width", "15%").css("float", "right");
+				// $('#original-content').css("width","80%").css("float","left");
+				// $('#steps-content').css("width", "20%").css("float", "right");
 				$('#steps-content').show();
 				$("#nistModal").css("display", "block");
 				$("#voicesearchinput").val("");
@@ -689,7 +703,9 @@ if (typeof Voicepluginsdk == 'undefined') {
 			}
 			// console.log(this.menuitems);
 			this.sendtoserver();
-			this.showhtml();
+			if(processcount==totalcount) {
+				this.showhtml();
+			}
 		},
 		// indexing new clicknodes after new html got loaded
 		indexnewclicknodes:function(){
@@ -697,12 +713,12 @@ if (typeof Voicepluginsdk == 'undefined') {
 			// console.log("new nodes");
 			// console.log(newclickObjects);
 			// this.htmlindex=[];
-			this.removefromhtmlindex();
 			var processcount=clickObjects.length;
+			postmessage=false;
+			this.removefromhtmlindex();
 			console.log(processcount);
 			this.indexnewnodes=true;
 			this.currenturl=window.location.href;
-			postmessage=false;
 			this.indexdom(document.body);
 			postmessage=true;
 			var totalcount=clickObjects.length;
@@ -729,6 +745,10 @@ if (typeof Voicepluginsdk == 'undefined') {
 			// send all the indexed nodes to server
 			this.sendtoserver();
 			// console.log(this.menuitems);
+			if(processcount==totalcount) {
+				postmessage=false;
+				this.showhtml();
+			}
 		},
 		removefromhtmlindex:function(){
 			var newhtmlindex=[];
@@ -1737,7 +1757,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 		},
 		showselectedrow:function(data,index,shownodelist=false, navcookiedata={}){
 			if(shownodelist && navcookiedata.data.userclicknodesSet.length==navcookiedata.navigateddata.length){
-				console.log(navcookiedata);
+				// console.log(navcookiedata);
 				navcookiedata.navcompleted=true;
 			}
 			var playiconhtml =  '<div class="voice-autoplay-stop">';
@@ -2046,8 +2066,8 @@ if (typeof Voicepluginsdk == 'undefined') {
 		},
 		backtosearchresults:function (navcookiedata) {
 			if(navcookiedata.searchterm!=''){
-				// var navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
-				// this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
+				var navcookiedata1 = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:navcookiedata.searchterm};
+				this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata1));
 				$("#voicesearchinput").val(navcookiedata.searchterm);
 				this.searchinelastic(navcookiedata.searchterm);
 			}
