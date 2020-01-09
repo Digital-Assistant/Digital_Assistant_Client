@@ -419,6 +419,11 @@ if (typeof Voicepluginsdk == 'undefined') {
 				Voicepluginsdk.indexclicknodes();
 				Voicepluginsdk.addbuttonhtml();
 			});
+			// window.location.reload();
+			/*$(document.body).hide().show().promise().done(function(){
+				Voicepluginsdk.indexclicknodes();
+				Voicepluginsdk.addbuttonhtml();
+			});*/
 			// postmessage=true;
 		},
 		addvoicehtml:function(){
@@ -492,8 +497,11 @@ if (typeof Voicepluginsdk == 'undefined') {
 				recbtn ='	   <button nist-voice="true" id="nistvoicerecstpbtn" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-stop.png"> <span nist-voice="true">Stop</span></button>';
 			}
 			var html =  '<div class="voice-redmine-rght">'+
+						'<div class="">'+
 						'	<div class="voice-hng-left"><h3>How Can I Help You Today?</h3></div>'+
-						'	<div class="voice-hng-right"><img id="closenistmodal" src="'+this.extensionpath+'assets/voice-close.png"></div>'+
+						'	<div class="voice-hng-right"><img id="closenistmodal" style="vertical-align:middle;" src="'+this.extensionpath+'assets/voice-close.png"></div>'+
+						'   <div class="nist-clear"></div>'+
+						'</div>'+
 						'	<div class="voice-red-hr-line"></div>'+
 						// '	<button class="voice-suggesion-lbl">Create a new issue</button><button class="voice-suggesion-lbl">Assign an issue to Ajay</button><button class="voice-suggesion-lbl">Show list of issues assigned to me</button><br>'+
 						'	<div class="voice-srch-bg">'+
@@ -1867,7 +1875,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			if(visited>-1) {
 				var template = $("<li nist-voice=\"true\" class='active'>" + data.clickednodename + "</li>");
 			} else {
-				var template = $("<li nist-voice=\"true\">" + data.clickednodename + "</li>");
+				var template = $("<li nist-voice=\"true\" class=''>" + data.clickednodename + "</li>");
 			}
 			if(visited==-1) {
 				template.click(function () {
@@ -2068,6 +2076,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			if(navcookiedata.searchterm!=''){
 				var navcookiedata1 = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:navcookiedata.searchterm};
 				this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata1));
+				this.autoplay=false;
 				$("#voicesearchinput").val(navcookiedata.searchterm);
 				this.searchinelastic(navcookiedata.searchterm);
 			}
