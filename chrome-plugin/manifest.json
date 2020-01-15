@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Universal Digital Assistant (Alpha)",
-  "version": "0.1.2.1",
+  "version": "0.1.2.2",
   "description": "Building an Extension for custom user navigation which helps in assisting users to navigate to right place.",
   "permissions": ["activeTab", "background", "declarativeContent", "storage", "webNavigation", "cookies", "tabs", "identity","identity.email"],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
@@ -36,5 +36,6 @@
     "32": "images/uda-logo-32x32.png",
     "48": "images/uda-logo-48x48.png",
     "128": "images/uda-logo1-128x128.png"
-  }
+  },
+  "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv/yeSxW1TAJzPJcIjqSt\naO/oTmJYzfZ8mgQa+FAZC+8R/7gysanAFWM6pkFMEkFqVBXOc0Zg8mYLoD899kZ6\nZnsFag6T42ByOMQcXCFNoOnXpYNc9DTFnc6MYQicEEPWhaikhLcM/C/XWyEdwbIv\nwQ3O6pXbK3pIWz3rU81yMkJa5cKSaZXkrvrtir+g8eMK5KyWD0qRw2geGf9CmFSF\nwIoS3fAoEotsmJ6dXVeEtoXQQPiAXmHzUZYP90ZbHFlFRjW3TpGDeplxytxLVDsx\n+t7oD11WMZxYN0ZMwjdWQh+SxItHmXXLfP42SSrh4nqTVfs/3NJoXaRELgkhse9x\nfQIDAQAB\n-----END PUBLIC KEY-----"
 }
