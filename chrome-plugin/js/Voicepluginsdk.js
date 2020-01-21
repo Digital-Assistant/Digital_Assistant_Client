@@ -1642,7 +1642,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 							'			</ul>'+
 							'			<div>'+
 							'				<input id="nistsequencelabel" type="text" name="save-recrded" class="voice-save-recrded-inpt" placeholder="Enter label">'+
-							'				<button class="voice-cancel-btn" onclick="Voicepluginsdk.cancelrecordingsequence();">Cancel</button> <button onclick="Voicepluginsdk.submitrecordedlabel();" class="voice-submit-btn">Submit</button>'+
+							'				<button class="voice-cancel-btn" onclick="Voicepluginsdk.cancelrecordingsequence();">Cancel and exit</button> <button onclick="Voicepluginsdk.submitrecordedlabel();" class="voice-submit-btn">Submit</button>'+
 							'			</div>'+
 							'		</div>'+
 							'	</div>';
