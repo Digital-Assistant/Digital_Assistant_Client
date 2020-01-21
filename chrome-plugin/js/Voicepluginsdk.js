@@ -414,11 +414,17 @@ if (typeof Voicepluginsdk == 'undefined') {
 
 			$(document.body).prepend(html);
 
-			var bodyhtml=document.body.innerHTML;
-			$(document.body).html(bodyhtml).promise().done(function(){
+			if(typeof issdk === 'undefined') {
+				var bodyhtml = document.body.innerHTML;
+				$(document.body).html(bodyhtml).promise().done(function () {
+					Voicepluginsdk.indexclicknodes();
+					Voicepluginsdk.addbuttonhtml();
+				});
+			} else {
+				console.log('from sdk no rerendering of body');
 				Voicepluginsdk.indexclicknodes();
 				Voicepluginsdk.addbuttonhtml();
-			});
+			}
 			// window.location.reload();
 			/*$(document.body).hide().show().promise().done(function(){
 				Voicepluginsdk.indexclicknodes();

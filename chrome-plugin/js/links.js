@@ -16,6 +16,7 @@ let processingtime=Date.now();
 let starttime=Date.now();
 let processcount=0;
 let postmessage=false;
+let udaauthdata={id:null,email: null};
 // console.log(window.location.host);
 /*var xhr = new XMLHttpRequest();
 var domain=window.location.host;
