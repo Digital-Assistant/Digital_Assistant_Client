@@ -1666,6 +1666,11 @@ if (typeof Voicepluginsdk == 'undefined') {
 		},
 		submitrecordedlabel:function(){
 			var sequencename=$("#nistsequencelabel").val();
+			if(sequencename==''){
+				alert('Please enter proper label');
+				$("#nistsequencelabel").focus();
+				return false;
+			}
 			var sequenceids = [];
 			for(var i=0;i<this.recordedsequenceids.length;i++){
 				sequenceids.push(this.recordedsequenceids[i].id);
