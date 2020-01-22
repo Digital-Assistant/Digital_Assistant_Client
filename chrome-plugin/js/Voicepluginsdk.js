@@ -270,8 +270,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 			//      This still produces some discrepancy where some nodes are not being processed.
 			//      This needs to be improved at some point.
 			window.addEventListener('load', (event) => {
-				console.log('page is fully loaded');
-				// location.reload();
 				Voicepluginsdk.modifybodyhtml();
 				// Voicepluginsdk.indexclicknodes();
 			});
@@ -712,8 +710,10 @@ if (typeof Voicepluginsdk == 'undefined') {
 			postmessage=false;
 			// indexing functionality called
 			this.indexdom(document.body);
-			postmessage=true;
-			startmutationslistner=true;
+			if(typeof issdk=='undefined') {
+				postmessage = true;
+				startmutationslistner = true;
+			}
 			// console.log(this.htmlindex);
 			var totalcount=clickObjects.length;
 			console.log(totalcount);
@@ -763,11 +763,11 @@ if (typeof Voicepluginsdk == 'undefined') {
 			}
 			*/
 			// send all the indexed nodes to server
-			this.sendtoserver();
 			// console.log(this.menuitems);
 			if(processcount==totalcount) {
 				postmessage=false;
 				this.showhtml();
+				this.sendtoserver();
 			}
 		},
 		removefromhtmlindex:function(){
