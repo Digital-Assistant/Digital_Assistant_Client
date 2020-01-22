@@ -330,7 +330,8 @@ function doPost() {
             });
             document.dispatchEvent(reindexevent);
             lastPostTime = Date.now();
-            lastPostCount = clickObjects.length;
+            lastPostCount = newclickObjects.length;
+            // lastPostCount = clickObjects.length;
         }
         // console.log(clickObjects);
     }
