@@ -50,6 +50,11 @@ if (typeof Voicepluginsdk == 'undefined') {
 		Voicepluginsdk.openmodal();
 	});
 
+	document.addEventListener("Alertmessagedata", function(data) {
+		// console.log("received alert message");
+		alert(JSON.parse(data.detail.data));
+	});
+
 	// initializing the sdk variable need to change to a new variable in future.
 	var Voicepluginsdk = {
 		sdkUrl: "/",
