@@ -2,10 +2,6 @@
 Voice plugin Javascript SDK Library
 IMPORTANT NOTE: Copying this library and hosting it locally is strongly discouraged.
  */
-// checking whether jquery available or not
-if(typeof jQuery == "undefined"){
-	console.log("jquery not available");
-}
 // creating the sdk variable
 if (typeof Voicepluginsdk == 'undefined') {
 	var badBrowser=false;
@@ -14,15 +10,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 	}
 	var speechrecognitionavailable=false;
 	var voiceRecognition;
-	/*
-	try{
-		SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition;	
-		speechrecognitionavailable=true;
-	} catch(e) {
-		console.log(e);
-		speechrecognitionavailable=false;
-	}
-	*/
 
 	// initializing voice recognition library
 	if(!window.hasOwnProperty("webkitSpeechRecognition")){
@@ -79,8 +66,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 		updatesOccur : true,
 		updatecounter : 0,
 		lastupdatecounter : 0,
-		//mutationobserver: new MutationObserver(mutationscallback), // not using now used when we have implemented for salesforce after dimitriys code we are not using.
-		//mutationconfig:{ attributes: true, childList: true, subtree: true }, // mutation observer configuration.
 		menuitems: [],
 		extensionpath:document.currentScript.src.toString().replace("js/Voicepluginsdk.js",""),
 		indexnewnodes:false,
@@ -98,9 +83,9 @@ if (typeof Voicepluginsdk == 'undefined') {
 		navigationcookiename:"nistnavshow",
 		autoplay:false,
 		inarray:function(value,object){
-			var check=jQuery.inArray(value,object);
-			return check;
+			return jQuery.inArray(value, object);
 		},
+
 		// constructor for the sdk class which will be initialized on loading of the variable.
 		init: function() {
 			// loading jquery if not available
@@ -113,9 +98,11 @@ if (typeof Voicepluginsdk == 'undefined') {
 				this.otherscripts();
 			}
 		},
+
+		//adding required script functionality to the head of the page.
 		loadScript: function(url) {
 
-			var script = document.createElement("script")
+			var script = document.createElement("script");
 			script.type = "text/javascript";
 
 			if (script.readyState){
@@ -143,17 +130,9 @@ if (typeof Voicepluginsdk == 'undefined') {
 
 			script.src = url;
 			document.getElementsByTagName("head")[0].appendChild(script);
-			/*
-			if(badBrowser){
-				var iexdomainscript=document.createElement("script");
-				iexdomainscript.type = "text/javascript";
-				iexdomainscript.src = this.sdkUrl+'js/jquery.xdomainrequest.min.js';
-				//document.getElementsByTagName("head")[0].appendChild(iexdomainscript);
-			}
-			*/
 		},
 		loadOtherScript: function(url) {
-			var script = document.createElement("script")
+			var script = document.createElement("script");
 			script.type = "text/javascript";
 			script.src = url;
 			if (script.readyState){
@@ -162,7 +141,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 						script.onreadystatechange = null;
 						Voicepluginsdk.totalotherScriptsCompleted++;
 						if (Voicepluginsdk.totalotherScriptsCompleted === Voicepluginsdk.totalotherScripts) {
-							// console.log("loaded other script");
 							Voicepluginsdk.allReady();
 						}
 					}
@@ -171,16 +149,14 @@ if (typeof Voicepluginsdk == 'undefined') {
 				script.onload = function(){
 					Voicepluginsdk.totalotherScriptsCompleted++;
 					if (Voicepluginsdk.totalotherScriptsCompleted === Voicepluginsdk.totalotherScripts) {
-						// console.log("loaded other script");
 						Voicepluginsdk.allReady();
-						// setTimeout(Voicepluginsdk.allReady(), 250);
 					}
 				};
 			}
 			document.body.appendChild(script);
 		},
 		loadCssScript: function(url) {
-			var script = document.createElement("link")
+			var script = document.createElement("link");
 			script.rel="stylesheet";
 			script.type = "text/css";
 			script.href = url;
@@ -213,9 +189,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 			// check user session exists and create if not available
 			this.checkuserkeyexists();
 
-			// adding the respective html to show up the icons and all the required html
-			// this.addvoiceiconhtml();
-
 			// adding speech recognition functionality based on the library availability
 			if(speechrecognitionavailable){
 				// console.log("speech recognition available");
@@ -226,33 +199,29 @@ if (typeof Voicepluginsdk == 'undefined') {
 					textfromspeech = "";
 					// console.log("speech started");
 					// console.log('Voice recognition activated. Try speaking into the microphone.');
-				}
+				};
 
 				this.recognition.onspeechend = function() {
 					// console.log("speech ended");
-				}
+				};
 
 				this.recognition.onerror = function(event) {
 					if(event.error === 'no-speech') {
 						// console.log('No speech was detected. Try again.');
 					};
-				}
+				};
 
 				this.recognition.onresult = function(event) {
-					// console.log(event);
 					if (event.results.length > 0) {
 						var current = event.resultIndex;
 						// Get a transcript of what was said.
 						var transcript = event.results[current][0].transcript;
-						// console.log(transcript);
 						$("#voicesearchinput").val(transcript);
-						// Voicepluginsdk.searchnodes();
 						Voicepluginsdk.searchinelastic();
 					}
-				}
+				};
 			}
 			
-			//this.startlookingforchanges();
 			this.ready = true;
 
 			// listen for when to start the indexing of the dom based on the clicknodes availability
@@ -271,17 +240,11 @@ if (typeof Voicepluginsdk == 'undefined') {
 			//      This needs to be improved at some point.
 			window.addEventListener('load', (event) => {
 				Voicepluginsdk.modifybodyhtml();
-				// Voicepluginsdk.indexclicknodes();
 			});
-
-			// Voicepluginsdk.indexclicknodes();
-
-			// this.functionsToRunWhenReady = [];
-
 		},
 		getcookievalue:function(cookiename){
-			// console.log(document.cookie);
 			var cookievalue=null;
+
 			// Split cookie string and get all individual name=value pairs in an array
 			var cookieArr = document.cookie.split(";");
 
@@ -297,21 +260,17 @@ if (typeof Voicepluginsdk == 'undefined') {
 				}
 			}
 
-			// console.log(cookievalue);
 			// Return null if not found
 			return cookievalue;
 		},
 		checkuserkeyexists:function(){
-			// var sessionid=this.getstoragedata(this.cookiename);
 			var sessiondata=this.getstoragedata(this.cookiename);
 			if(sessiondata){
 				var parsedsessiondata=JSON.parse(sessiondata);
 				this.sessiondata=parsedsessiondata;
 				this.sessionID=parsedsessiondata.sessionkey;
 				this.recorddocumentclick();
-				// console.log(this.sessiondata);
 			}else{
-				// console.log("session key not found requesting from backend");
 				var sessionevent = new CustomEvent("RequestSessiondata", {detail: {data: "getusersessiondata"}, bubbles: false, cancelable: false});
 				document.dispatchEvent(sessionevent);
 			}
@@ -323,10 +282,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			document.cookie = cookiename + "=" + cookievalue + ";" + expires + ";path="+path;
 		},
 		createsession:function(data){
-			// if($.cookie(this.cookiename)){
-			// var sessionid=this.getcookievalue(this.cookiename);
 			var sessiondata=this.getstoragedata(this.cookiename);
-			// console.log(sessiondata);
 			if(sessiondata){
 				this.sessiondata=data;
 				this.sessionID=data.sessionkey;
@@ -337,84 +293,10 @@ if (typeof Voicepluginsdk == 'undefined') {
 				this.sessionID=data.sessionkey;
 				this.createstoragedata(this.cookiename,JSON.stringify(data));
 			}
-			// console.log(this.sessiondata);
 			this.recorddocumentclick();
-		},
-		startlookingforchanges: function (){
-			// Start observing the target node for configured mutations
-			Voicepluginsdk.targetNode=document.body;
-			Voicepluginsdk.mutationobserver = new MutationObserver(Voicepluginsdk.mutationscallback);
-			Voicepluginsdk.mutationobserver.observe(Voicepluginsdk.targetNode, Voicepluginsdk.mutationconfig);
-			//Voicepluginsdk.mutationsCompletedCallback();
-		},
-		mutationsCompletedCallback: function(){
-			if (Voicepluginsdk.updatesOccur) {
-				Voicepluginsdk.updatesOccur = false;
-				// console.log('HTML updated');
-				setTimeout(this.mutationsCompletedCallback, 250);
-			} else {
-				//this.mutationobserver.takeRecords();
-				Voicepluginsdk.mutationobserver.disconnect();
-				//console.log(updatecounter);
-				//console.log(lastupdatecounter);
-				Voicepluginsdk.lastupdatecounter=this.updatecounter;
-				Voicepluginsdk.updatecounter++;
-				//console.log(updatecounter);
-				//console.log(lastupdatecounter);
-				// observer.observe(targetNode, config);
-				// console.log('NO MORE MUTATIONS!');
-				if(Voicepluginsdk.updatecounter === 0){
-					chrome.runtime.send ({
-						action: "reindexpage"
-					});
-				}
-				/*
-			    if(updatecounter>lastupdatecounter){
-			        chrome.runtime.sendMessage({
-			            action: "reindexpage"
-			        });
-			    }
-				*/
-			}
-		},
-		mutationscallback: function(mutationsList, observer) {
-			//for(var mutation of mutationsList) {
-			mutationsList.forEach(function (mutation, mutationkey) {
-				if (mutation.type === 'childList') {
-					// console.log('A child node has been added or removed.');
-					this.updatesOccur = true;
-				}
-				else if (mutation.type === 'attributes') {
-					// console.log('The ' + mutation.attributeName + ' attribute was modified.');
-					this.updatesOccur = true;
-				}
-			});
-
-		},
-		addvoiceiconhtml:function(){
-			// console.log(this.extensionpath);
-
-			// var html="<div id='original-content'><div id=\"nistBtn\" nist-voice=\"true\"></div></div><div id='steps-content'><div id=\"voicemodalhtml\" nist-voice=\"true\"></div></div>";
-
-			// var html='<div id="nistBtn" nist-voice="true"></div><div id="original-content"></div><div id="steps-content" style="display: none;"><div id="voicemodalhtml" nist-voice="true"></div></div>';
-			// var bodyhtml=document.body.innerHTML;
-			// var bodyhtml=document.body.childNodes;
-
-			// $(document.body).html('');
-			// $(document.body).html(html);
-			// $('#original-content').append(bodyhtml);
-			// $(document.body).append(html);
-
-			// $(document.body).prepend(html);
-
-			// this.addbuttonhtml();
 		},
 		modifybodyhtml:function(){
 			var html='<div id="nistBtn" nist-voice="true"></div><div id="original-content"></div><div id="steps-content" style="display: none;"><div id="voicemodalhtml" nist-voice="true"></div></div>';
-			// $(document.body).html('');
-			// $(document.body).html(html);
-			// $('#original-content').append(bodyhtml);
-			// $(document.body).append(html);
 
 			$(document.body).prepend(html);
 
@@ -425,26 +307,9 @@ if (typeof Voicepluginsdk == 'undefined') {
 					Voicepluginsdk.addbuttonhtml();
 				});
 			} else {
-				console.log('from sdk no rerendering of body');
 				Voicepluginsdk.indexclicknodes();
 				Voicepluginsdk.addbuttonhtml();
 			}
-			// window.location.reload();
-			/*$(document.body).hide().show().promise().done(function(){
-				Voicepluginsdk.indexclicknodes();
-				Voicepluginsdk.addbuttonhtml();
-			});*/
-			// postmessage=true;
-		},
-		addvoicehtml:function(){
-			// console.log(this.extensionpath);
-			var html="<div id='original-content'></div><div id='steps-content'><div id=\"voicemodalhtml\" nist-voice=\"true\"></div></div>";
-			var bodyhtml=document.body.innerHTML;
-			// body.append(html);
-			$(document.body).html('');
-			$(document.body).html(html);
-			$('#original-content').append(bodyhtml);
-			this.addbuttonhtml()
 		},
 		addbuttonhtml:function(){
 			$("#nistBtn").unbind("click").html("");
@@ -461,7 +326,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			} else {
 				var buttonhtml="<img src=\""+this.extensionpath+"assets/uda-logo.png\" width=\"50px\" height=\"50px\" nist-voice=\"true\">";
 			}
-			// if(document.body != null){ document.body.appendChild(html); };
+
 			$("#nistBtn").append(buttonhtml);
 			if(addnisticon){
 				this.addvoicesearchmodal(addnisticon);
@@ -475,35 +340,14 @@ if (typeof Voicepluginsdk == 'undefined') {
 					}
 				}
 			} else {
-				/*var stopbtn =$("#nistBtn");
-				stopbtn.click(function () {
-					// Voicepluginsdk.stoprecordingsequence();
-					Voicepluginsdk.gettimestamp("stop");
-				});*/
 				this.addvoicesearchmodal(addnisticon);
 				this.showrecordedresults();
 			}
-			/*var navigationcookie=this.getstoragedata(this.navigationcookiename);
-			if(navigationcookie){
-				var navigationcookiedata = JSON.parse(navigationcookie);
-				if(navigationcookiedata.shownav) {
-					this.openmodal();
-					this.renderelasticresultshtml();
-					if(navigationcookiedata.autoplay){
-						this.autoplay=true;
-					}
-					this.renderelasticresultrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
-				}
-			}*/
 		},
 		addvoicesearchmodal:function(addnisticon=true){
-			/*var recbtn ='	  <a nist-voice="true" class="voice-advc-link">Advanced</a> '+
-						'	   <button nist-voice="true" id="nistvoicerecbtn" class="voice-record-img"><img src="'+this.extensionpath+'assets/voice-record.png"> <span>Rec</span></button>';*/
 			var recbtn ='	   <button nist-voice="true" id="nistvoicerecbtn" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-record.png"> <span nist-voice="true">Rec</span></button>';
 
 			if(!addnisticon){
-				/*recbtn ='	  <a nist-voice="true" class="voice-advc-link">Advanced</a> '+
-						'	   <button nist-voice="true" id="nistvoicerecstpbtn" class="voice-record-img"><img src="'+this.extensionpath+'assets/voice-stop.png"> <span>Stop</span></button>';*/
 				recbtn ='	   <button nist-voice="true" id="nistvoicerecstpbtn" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-stop.png"> <span nist-voice="true">Stop</span></button>';
 			}
 			var html =  '<div class="voice-redmine-rght">'+
@@ -519,9 +363,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 						'       <span id="nist-voice-icon-start" class="voice-voice-srch" nist-voice="true"><img nist-voice="true" src="'+this.extensionpath+'assets/voice-voice.png" /></span>'+
 						'       <span style="display:none;" class="voice-voice-srch" id="nist-voice-icon-stop" nist-voice="true"><img src="'+this.extensionpath+'assets/stop.png" nist-voice="true" /></span>' +
 						'	</div>'+
-						// '	<div class="voice-dropdown" style="float:right; margin-right: 20px;">'+
 								recbtn +
-						// '	</div><br>'+
 						'<div class="nist-clear"></div>'+
 						'   <div id="nistvoicesearchresults"></div>'
 						'</div>';
@@ -530,7 +372,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 				Voicepluginsdk.closemodal();
 			});
 			$("#voicesearch").click(function(){
-				// Voicepluginsdk.searchnodes();
 				Voicepluginsdk.searchinelastic();
 			});
 			$("#voicesearchinput").keydown(function (e) {
@@ -561,96 +402,18 @@ if (typeof Voicepluginsdk == 'undefined') {
 			}
 			if(addnisticon) {
 				$("#nistvoicerecbtn").click(function () {
-					// Voicepluginsdk.startrecordingsequence();
 					Voicepluginsdk.gettimestamp("start");
 				});
 			} else {
 				$("#nistvoicerecstpbtn").click(function () {
-					// Voicepluginsdk.startrecordingsequence();
 					Voicepluginsdk.gettimestamp("stop");
 				});
 			}
 		},
-		addvoicesearchmodalold: function(){
-			var html =  '<div id="nistModal" class="nistmodal" nist-voice="true">' +
-						'<div class="nist-modal-content" nist-voice="true">' +
-						' <span class="nist-close" id="closenistmodal" nist-voice="true">&times;</span>' +
-						' <div class="nist-root" nist-voice="true">' +
-						'  <div class="nistmodal-left" nist-voice="true">'+
-						'   <img src="'+this.extensionpath+'assets/uda-logo.png" width="40px" height="40px" id="" nist-voice="true">'+
-						'   <img id="nistvoicerecbtn" src="'+this.extensionpath+'assets/start-icon.png" width="50px" height="50px" nist-voice="true">'+
-						'  </div>' +
-						'  <div class="nistmodal-right" nist-voice="true">' +
-						'   <div class="nist-search-container" nist-voice="true">' +
-						'    <span class="nist-search-icon" id="voicesearch" nist-voice="true"><img src="'+this.extensionpath+'assets/search.png" nist-voice="true"></span>' +
-						'    <input class="nist-search" id="voicesearchinput" type="text" placeholder="Search" name="srch" nist-voice="true" >' +
-						'    <span class="nist-voice-icon" id="nist-voice-icon-start" nist-voice="true"><img src="'+this.extensionpath+'assets/microphone.png" nist-voice="true" ></span>' +
-						'    <span style="display:none;" class="nist-voice-icon" id="nist-voice-icon-stop" nist-voice="true"><img src="'+this.extensionpath+'assets/stop.png" nist-voice="true" ></span>' +
-						'   </div>'+
-						'  </div>' +
-						' </div>' +
-						// ' <div id="nistvoicerecbtn" class="nist-root" nist-voice="true">' +
-						// '   <img src="'+this.extensionpath+'assets/start-icon.png" width="50px" height="50px" nist-voice="true">"+
-						// ' </div>' +
-						// ' <div id="nistvoicestepsbtn" class="nist-root" nist-voice="true">' +
-						// '   <img src="'+this.extensionpath+'assets/steps.png" width="50px" height="50px" nist-voice="true">"+
-						// ' </div>' +
-						' <div class="nist-table-div" id="nistvoicesearchresults" nist-voice="true">' +
-						' </div>' +
-						' <div class="nist-table-div" id="nistrecordresults" nist-voice="true">' +
-						' </div>' +
-						'</div>' +
-						'</div>';
-			$("#voicemodalhtml").html(html);
-			$("#closenistmodal").click(function(){
-				Voicepluginsdk.closemodal();
-			});
-			$("#voicesearch").click(function(){
-				// Voicepluginsdk.searchnodes();
-				Voicepluginsdk.searchinelastic();
-			});
-			$("#voicesearchinput").keydown(function (e) {
-				if (e.keyCode == 13) {
-					$("#nistvoicesearchresults").html("");
-					// Voicepluginsdk.searchnodes();
-					Voicepluginsdk.searchinelastic();
-					return false;
-				}
-			});
-			if(speechrecognitionavailable){
-				$("#nist-voice-icon-start").click(function () {
-					$("#nistvoicesearchresults").html("");
-					// console.log("starting voice recognition");
-					Voicepluginsdk.recognition.start();
-					$("#nist-voice-icon-start").hide();
-					$("#nist-voice-icon-stop").show();
-				});
-				$("#nist-voice-icon-stop").click(function () {
-					// console.log("stopping voice recognition");
-					Voicepluginsdk.recognition.stop();
-					$("#nist-voice-icon-stop").hide();
-					$("#nist-voice-icon-start").show();
-				});
-			} else {
-				$("#nist-voice-icon-start").hide();
-				$("#nist-voice-icon-stop").hide();
-			}
-			$("#nistvoicerecbtn").click(function(){
-				// Voicepluginsdk.startrecordingsequence();
-				Voicepluginsdk.gettimestamp("start");
-			});
-			/*
-			$("#nistvoicestepsbtn").click(function(){
-				$('#original-content').css("width","80%");
-				$('#steps-content').css("width","20%");
-			});
-			*/
-		},
+		//opening the UDA screen
 		openmodal:function(focus=true){
 			if(this.sessiondata.authenticated) {
 				$("#nistBtn").hide();
-				// $('#original-content').css("width","80%").css("float","left");
-				// $('#steps-content').css("width", "20%").css("float", "right");
 				$('#steps-content').show();
 				$("#nistModal").css("display", "block");
 				$("#voicesearchinput").val("");
@@ -658,14 +421,12 @@ if (typeof Voicepluginsdk == 'undefined') {
 					$("#voicesearchinput").focus();
 				}
 			} else {
-				// console.log("authenticating")
 				var sessionevent = new CustomEvent("RequestSessiondata", {detail: {data: "authtenicate"}, bubbles: false, cancelable: false});
 				document.dispatchEvent(sessionevent);
 			}
 		},
+		//closing the UDA screen
 		closemodal:function(){
-			// $('#original-content').css("width","100%");
-			// $('#steps-content').css("width","0%");
 			$('#steps-content').hide();
 			$("#nistModal").css("display","none");
 			$("#nistvoicesearchresults").html("");
@@ -673,10 +434,10 @@ if (typeof Voicepluginsdk == 'undefined') {
 			this.recordedsequenceids=[];
 			$("#nistBtn").show();
 			var navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
-			// this.createcookie(this.navigationcookiename,JSON.stringify(navcookiedata),this.cookieexpires,"/");
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 			this.cancelrecordingsequence(false);
 		},
+		//render the required html for showing up the proper html
 		showhtml:function(){
 			var checkrecording = this.getstoragedata(this.recordingcookiename);
 			if(checkrecording) {
@@ -690,7 +451,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 				var navigationcookiedata = JSON.parse(navigationcookie);
 				if(navigationcookiedata.shownav) {
 					this.openmodal();
-					// this.renderelasticresultshtml();
 					if(navigationcookiedata.autoplay){
 						this.autoplay=true;
 					}
@@ -700,28 +460,19 @@ if (typeof Voicepluginsdk == 'undefined') {
 		},
 		// indexing all nodes after all the clicknodes are available
 		indexclicknodes: function(){
-			console.log("Intial indexing started");
-			// console.log("initial nodes");
-			// startmutationslistner=true;
 			var processcount=clickObjects.length;
-			// console.log(clickObjects);
-			console.log(processcount);
 			this.previousurl=this.currenturl=window.location.href;
 			postmessage=false;
 			// indexing functionality called
 			this.indexdom(document.body);
-			if(typeof issdk=='undefined') {
-				postmessage = true;
-				startmutationslistner = true;
-			}
-			// console.log(this.htmlindex);
 			var totalcount=clickObjects.length;
-			console.log(totalcount);
 			if(processcount<totalcount){
-				console.log("new nodes added need to reprocess in the initial processing");
-				// this.indexclicknodes();
+				if(typeof issdk=='undefined') {
+					postmessage = true;
+					startmutationslistner = true;
+				}
 			}
-			// console.log(this.menuitems);
+			//send all the indexnodes to server
 			this.sendtoserver();
 			if(processcount==totalcount) {
 				this.showhtml();
@@ -729,41 +480,18 @@ if (typeof Voicepluginsdk == 'undefined') {
 		},
 		// indexing new clicknodes after new html got loaded
 		indexnewclicknodes:function(){
-			console.log("indexing new nodes started");
-			// console.log("new nodes");
-			// console.log(newclickObjects);
-			// this.htmlindex=[];
 			var processcount=clickObjects.length;
 			postmessage=false;
 			this.removefromhtmlindex();
-			console.log(processcount);
 			this.indexnewnodes=true;
 			this.currenturl=window.location.href;
 			this.indexdom(document.body);
 			postmessage=true;
 			var totalcount=clickObjects.length;
-			console.log(totalcount);
 			if(processcount<totalcount){
-				console.log("new nodes added need to reprocess");
-				// this.indexnewclicknodes();
+				//todo new nodes added need to reprocess
 			}
-			// console.log(this.htmlindex);
-			/*
-			// todo improvise the indexing based on selection url and so on
-			this.currenturl=window.location.href;
-			if(this.currenturl==this.previousurl) {
-				this.indexnewnodes=true;
-				this.indexdom(document.body);
-			} else {
-				//todo capture user clicks and check if the url is changed via html5 and then index based on the click
-				//this.htmlindex=[];
-				//todo need to decide whent to clear the old index
-				this.indexdom(document.body);
-				newclickObjects=[];
-			}
-			*/
 			// send all the indexed nodes to server
-			// console.log(this.menuitems);
 			if(processcount==totalcount) {
 				postmessage=false;
 				this.showhtml();
@@ -799,20 +527,17 @@ if (typeof Voicepluginsdk == 'undefined') {
 					}
 
 					if(node.hasChildNodes()){
-						// console.log("--Has Children--");
 						var childnodes =  node.childNodes;
 						var hasparentclick = false;
 						if(node.hasOwnProperty("hasclick")){
 							hasparentclick=true;
 						}
 
-						//childnodes.forEach(function (childnode, key) {
 						if(childnodes.length>0){
 							for (var i=0;i<childnodes.length;i++){
 								var childnode=childnodes[i];
 								this.nodeid++;
 								if(node.hasOwnProperty("displaytype") && node.displaytype === "tab-content") {
-									//console.log("tab-content assigned");
 									childnode.displaytype = node.displaytype;
 									childnode.tabid = node.tabid;
 								}
@@ -856,7 +581,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 		// Check for each node and then match it with the available clicknodes which are identified by links.js
 		indexnode: function(node, parentnode, hasparentnodeclick=false, fromdocumentclick=false){
 			var elementdata = {"element-type": "", "element-labels" : [], "element-action" : "", "element-path" : "","element-url":"", "element-data":[],"menu-items":[]};
-			//console.log("indexing " + node.nodeName);
 
 			if(parentnode.classList && parentnode.classList.contains("tab-content")){
 				node.displaytype = "tab-content";
@@ -916,24 +640,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 				node.hasclick=true;
 				elementdata["element-type"] = node.nodeName.toLowerCase();
 				elementdata["element-url"] =  window.location.href;
-				/*
-				if(node.nodeName.toLowerCase() === "input" || node.nodeName.toLowerCase() === "textarea"){
-
-					if(node.getAttribute("placeholder") && node.getAttribute("placeholder")!="") {
-						elementdata["element-labels"].push(node.getAttribute("placeholder").toString());
-					}
-					if(node.getAttribute("type") && node.getAttribute("type")=="submit") {
-						if(node.getAttribute("value")){
-							elementdata["element-labels"].push(node.getAttribute("value").toString());
-						}
-					}
-
-					if(elementdata["element-labels"].length==0)
-					{
-						elementdata["element-labels"] = this.getInputLabels(node,[]);
-					}
-
-				}*/
 
 				if(parentnode.classList && parentnode.classList.contains("tab-content")){
 					node.displaytype = "tab-content";
@@ -972,11 +678,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 					}
 				}
 
-
-				/*if(node.hasOwnProperty("displaytype") && node.displaytype === "tab-content"){
-					elementdata["element-path"] = node.tabid;
-				}*/
-
 				if(node.getAttribute("data-toggle") && node.getAttribute("data-toggle")=="tab"){
 					node.navtype="navtab";
 					elementdata["element-action"] = "navtab";
@@ -984,26 +685,15 @@ if (typeof Voicepluginsdk == 'undefined') {
 				elementdata["element-data"] = node;
 				elementdata["clickobject"] = clickobject;
 
-				// console.log(elementdata);
-
 				this.htmlindex.push(elementdata);
-				//todo add the node click via mouse and normal click via function
-				/*$(node).click(function () {
-					// Voicepluginsdk.recorduserclick(elementdata);
-					Voicepluginsdk.recorduserclick(node,false);
-				});*/
+
 				// add click to node to send what user has clicked.
 				this.addClickToNode(node);
-				/*if(hasparentnodeclick){
-					$(parentnode).unbind("click",Voicepluginsdk.recorduserclick(parentnode,false));
-				}*/
 			}
 			return node;
 		},
 		// getting the text for the clicknodes.
 		getInputLabels: function(node, inputlabels, iterationno, iterate=true, getchildlabels=true, fromclick=false, iteratelimit=3, ignorenode=[]){
-
-			// console.log(node);
 
 			if(Array.isArray(ignorenode)){
 				ignorenode=node;
@@ -1013,8 +703,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 				iterationno++;
 				inputlabels = this.getInputLabels(node.parentNode, inputlabels, iterationno, iterate, true, fromclick, iteratelimit, ignorenode);
 				if(fromclick) {
-					// console.log("select iterate");
-					// console.log(inputlabels);
+					//todo need to rework
 				}
 			}
 
@@ -1040,12 +729,8 @@ if (typeof Voicepluginsdk == 'undefined') {
 
 			//todo fix for image tags
 			if(iterate && node.nodeName.toLowerCase() != "img" && inputlabels.length == 0 && iterationno<=iteratelimit){
-				//console.log("--looping to fetch the input label--");
 				iterationno++;
-				// console.log(iterationno);
 				inputlabels = this.getInputLabels(node.parentNode,[], iterationno, iterate, getchildlabels, fromclick, iteratelimit);
-				// console.log(parentnode);
-				// return inputlabels;
 			}
 
 			if(node.nodeName.toLowerCase() === "input" || node.nodeName.toLowerCase() === "textarea" || node.nodeName.toLowerCase() === "img"){
@@ -1057,18 +742,11 @@ if (typeof Voicepluginsdk == 'undefined') {
 					if(node.getAttribute("value")){
 						inputlabels.push({"text":node.getAttribute("value").toString(),"match":false});
 					}
-					/*
-					if(inputlabels.length == 0){
-						inputlabels = this.getInputLabels(node,[]);
-					}
-					*/
 				}
 				if(node.getAttribute("alt")){
 					inputlabels.push({"text":node.getAttribute("alt").toString(),"match":false});
 				}
 			}
-
-			//console.log(inputlabels);
 
 			return inputlabels;
 		},
@@ -1082,19 +760,13 @@ if (typeof Voicepluginsdk == 'undefined') {
 			});
 
 			if(inputlabel === ""){
-				//console.log("--looping to fetch the input label--");
 				inputlabel = this.getinputlabel(parentnode.parentNode,"");
-				// console.log(parentnode);
-			} else {
-				//console.log(inputlabel);
 			}
 
 			return inputlabel;
 		},
 		addClickToNode:function(node){
 			var nodename=node.nodeName.toLowerCase();
-			// console.log("adding click to "+nodename);
-			// console.log({addnode:node});
 			switch (nodename) {
 				case "select":
 					$(node).on({"change":function () {
@@ -1106,7 +778,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 					break;
 				case "input":
 					if(!node.hasAttribute("type")){
-						// console.log("type attribute not found");
 						return;
 					}
 					var inputtype=node.getAttribute("type").toLowerCase();
@@ -1134,7 +805,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 						case "time":
 						case "url":
 						case "week":
-							// console.log("adding input click action");
 							$(node).click(function () {
 								Voicepluginsdk.recorduserclick(node, false);
 							});
@@ -1158,11 +828,9 @@ if (typeof Voicepluginsdk == 'undefined') {
 					break;
 			}
 		},
+		//searching all the nodes for the given input
 		searchnodes: function(){
-			/*this.htmlindex=[];
-			Voicepluginsdk.indexclicknodes();*/
 			var searchtext = $("#voicesearchinput").val();
-			// console.log(searchtext);
 			var matchnodes = [];
 			if(searchtext != "" && this.htmlindex.length>0){
 				for(var i=0;i<this.htmlindex.length;i++){
@@ -1170,7 +838,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 					var searchlabelexists=false;
 					for(var j=0;j<searchnode['element-labels'].length;j++){
 						var label = searchnode['element-labels'][j].text.toString().toLowerCase();
-						//if(label == searchtext.toString().toLowerCase()){
 						if(label.indexOf(searchtext.toString().toLowerCase()) !==-1){
 							searchlabelexists=true;
 							searchnode['element-labels'][j].match=true;
@@ -1182,18 +849,17 @@ if (typeof Voicepluginsdk == 'undefined') {
 				}
 			}
 			if(matchnodes.length>0){
-				// console.log("match found rendering results");
 				if(matchnodes.length==1){
 					this.matchaction(matchnodes[0]);
 					return;
 				}
-				// console.log(matchnodes);
 				this.rendersearchresults();
 				for(var k=0;k<matchnodes.length;k++){
 					this.renderresultrow(matchnodes[k],k);
 				}
 			}
 		},
+		//render results html
 		rendersearchresults:function(){
 			var html =  '<table class="nist-voice-search-tb" nist-voice="true">' +
 						'  <tbody id="nist-voiceresultrow" nist-voice="true">' +
@@ -1201,6 +867,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 						'</table>';
 			$("#nistvoicesearchresults").html(html);
 		},
+		//render result row html
 		renderresultrow:function(data,index){
 			var matchindex=0;
 			for(var i=0;i<data["element-labels"].length;i++){
@@ -1229,69 +896,59 @@ if (typeof Voicepluginsdk == 'undefined') {
 				}
 			}
 		},
+		//render path if available
 		renderpathsearch:function(data){
 			var template = $("<li nist-voice=\"true\"><a nist-voice=\"true\">"+data+"</a></li>");
-			/*template.click(function () {
-
-			});*/
 			return template;
 		},
+		//matching the action of the node and invoking whether to click or focus
 		matchaction:function(data,close=true){
 			if(close) {
 				this.closemodal();
 			}
-			// console.log(data);
 			var node=data["element-data"];
 			var timetoinvoke=1000;
-			// setTimeout(function () {
-				switch (node.nodeName.toLowerCase()) {
-					case "input":
-						switch (node.getAttribute("type")) {
-							case "text":
-								node.focus();
-								break;
-							case "password":
-								node.focus();
-								break;
-							case "text":
-								node.focus();
-								break;
-							case "checkbox":
-								node.click();
-								break;
-							default:
-								// node.click();
-								node.focus();
-						}
-						break;
-					case "textarea":
-						node.focus();
-						break;
-					case "select":
-						/*if(node.childNodes.length>0){
-							// node.setAttribute('size',node.childNodes.length);
-							$(node).trigger("mousedown");
-						} else {
+			switch (node.nodeName.toLowerCase()) {
+				case "input":
+					switch (node.getAttribute("type")) {
+						case "text":
 							node.focus();
-						}*/
-						node.focus();
-						break;
-					case "option":
-						node.parentNode.focus();
-						break;
-					case "checkbox":
-						node.click();
-						break;
-					default:
-						node.click();
-				}
-			// },timetoinvoke);
+							break;
+						case "password":
+							node.focus();
+							break;
+						case "text":
+							node.focus();
+							break;
+						case "checkbox":
+							node.click();
+							break;
+						default:
+							// node.click();
+							node.focus();
+					}
+					break;
+				case "textarea":
+					node.focus();
+					break;
+				case "select":
+					node.focus();
+					break;
+				case "option":
+					node.parentNode.focus();
+					break;
+				case "checkbox":
+					node.click();
+					break;
+				default:
+					node.click();
+			}
 			this.invokenextitem(node,timetoinvoke);
 		},
+		//invoke the click of next item
 		invokenextitem:function(node,timetoinvoke){
 			var link=false;
 			timetoinvoke=timetoinvoke+4000;
-			console.log(timetoinvoke);
 			if(node.hasOwnProperty("href")){
 				link=true;
 			}
@@ -1299,6 +956,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 				setTimeout(function(){Voicepluginsdk.showhtml();}, timetoinvoke);
 			}
 		},
+		//firing an event if event available for the node. Currently not implemented
 		eventFire:function(el, etype){
 			if (el.fireEvent) {
 				el.fireEvent('on' + etype);
@@ -1308,6 +966,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 				el.dispatchEvent(evObj);
 			}
 		},
+		//reindex all nodes
 		reindexnodes:function(){
 			this.indexdom(document.body);
 			this.sendtoserver();
@@ -1315,14 +974,12 @@ if (typeof Voicepluginsdk == 'undefined') {
 		// sending all the indexed nodes to server
 		sendtoserver: function(){
 			var indexednodes = this.htmlindex;
-			// console.log(indexednodes);
 			var items = [];
 			if(indexednodes.length>0){
 				for(var i=0;i<indexednodes.length;i++){
 					var itemdata = {id:'', textlabels:[], path:'', objectdata:''};
 					var indexednode = indexednodes[i];
 					itemdata.id = indexednode.clickobject.id;
-					// itemdata.textlabels = indexednode["element-labels"];
 					if(indexednode["element-labels"].length>0){
 						var textlabels=[];
 						for(var j=0;j<indexednode["element-labels"].length;j++){
@@ -1335,37 +992,31 @@ if (typeof Voicepluginsdk == 'undefined') {
 					items.push(itemdata);
 				}
 				var data = {sessionid:this.sessionID,domain:window.location.host,urlpath:window.location.pathname, clickednodename:"", data:JSON.stringify(items)};
-				// var clickednodenamedata=this.getcookievalue(this.recordclicknodecookiename);
 				var clickednodenamedata=this.getstoragedata(this.recordclicknodecookiename);
 				if(clickednodenamedata){
 					data.clickednodename=clickednodenamedata;
 				}
-				// console.log(data);
 				var outputdata = JSON.stringify(data);
-				// console.log(outputdata);
 				var xhr = new XMLHttpRequest();
 				xhr.open("POST", this.apihost+"/clickevents/", true);
 				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 				xhr.onload = function(event){
 					if(xhr.status == 200){
-						// console.log(xhr.response);
 						startmutationslistner=true;
 					} else {
 						console.log(xhr.status+" : "+xhr.statusText);
 					}
 					Voicepluginsdk.addclickedrecordcookie("");
 				};
-				xhr.send(outputdata);//todo  - error verification? or switch to websockets
+				xhr.send(outputdata);
 			}
 		},
+		//adding user click to the processing node.
 		recorduserclick:function(node, fromdocument=false, selectchange=false){
-			// console.log({clickednode:node});
-			// console.log(domJSON.toJSON(node));
 			if(fromdocument){
-				// console.log("from document click functionality");
+				// todo from document click functionality;
 			}
 			if(node.hasAttribute("nist-voice")){
-				// console.log("nist-voice attribute found");
 				return true;
 			}
 			var processclick=true;
@@ -1378,13 +1029,8 @@ if (typeof Voicepluginsdk == 'undefined') {
 				}
 			}
 			if(processclick===false){
-				// console.log("not processed");
 				return true;
 			}
-
-			// var postdata={domain:window.location.host,urlpath:window.location.pathname,sessionid:this.sessionID,clickednodename:"",html5:0,clickedpath:"",objectdata:JSON.stringify(node)};
-			// console.log(domJSON.toJSON(node, {stringify: true}));
-			// var postdata={domain:window.location.host,urlpath:window.location.pathname,sessionid:this.sessionID,clickednodename:"",html5:0,clickedpath:"",objectdata:JSON.stringify(domJSON.toJSON(node))};
 
 			if(node.nodeName.toLowerCase()=="input" && node.getAttribute("type")=="radio"){
 				var postdata = {
@@ -1424,7 +1070,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 				};
 			}
 			postdata.clickednodename = this.getclickedinputlabels(node,fromdocument,selectchange);
-			// console.log(postdata);
 			this.addclickedrecordcookie(postdata.clickednodename);
 			var outputdata = JSON.stringify(postdata);
 			var xhr = new XMLHttpRequest();
@@ -1439,6 +1084,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			};
 			xhr.send(outputdata);
 		},
+		//getting input label for the clicked node
 		getclickedinputlabels:function(node, fromdocument=false, selectchange=false){
 			var inputlabels="";
 			var nodename=node.nodeName.toLowerCase();
@@ -1458,7 +1104,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 					}
 					break;
 				case "input":
-					// console.log(node);
 					switch (node.getAttribute("type").toLowerCase()) {
 						default:
 							var textlabels = this.getInputLabels(node, [], 1, true, true, true);
@@ -1491,54 +1136,15 @@ if (typeof Voicepluginsdk == 'undefined') {
 						inputlabels = labels.toString();
 					}
 			}
-			// console.log(inputlabels);
-			/*
-			if(node.nodeName.toLowerCase()==="select"){
-				if(selectchange) {
-					inputlabels = $(node).find(":selected").text();
-				} else {
-					var textlabels = this.getInputLabels(node, [], 1, true, false, true);
-					if (textlabels.length > 0) {
-						var labels = [];
-						for (var j = 0; j < textlabels.length; j++) {
-							labels.push(textlabels[j].text);
-						}
-						inputlabels = labels.toString();
-					}
-				}
-			} else if(node.nodeName.toLowerCase()=="input" && node.getAttribute("type")=="checkbox"){
-				console.log()
-				var textlabels = this.getInputLabels(node, [], 1, true, false, true);
-				if (textlabels.length > 0) {
-					var labels = [];
-					for (var j = 0; j < textlabels.length; j++) {
-						labels.push(textlabels[j].text);
-					}
-					inputlabels = labels.toString();
-				}
-			} else {
-				var textlabels = this.getInputLabels(node, [], 1, false, true, true);
-				if (textlabels.length > 0) {
-					var labels = [];
-					for (var j = 0; j < textlabels.length; j++) {
-						labels.push(textlabels[j].text);
-					}
-					inputlabels = labels.toString();
-				}
-			}
-			*/
 			return inputlabels;
 		},
+		//record page click todo functionality
 		recorddocumentclick:function(){
 			$(document).ready(function(){
-				document.body.addEventListener('click', function (event) {
-
-					// console.log(event.currentTarget);
-					// Voicepluginsdk.recorduserclick(event.target,true);
-
-				}, false);
+				document.body.addEventListener('click', function (event) { }, false);
 			});
 		},
+		//adding current timestamp to the required actions under recording functionality
 		gettimestamp:function(buttonclicked){
 			if(buttonclicked != "") {
 				var result = Date.now();
@@ -1549,6 +1155,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 				}
 			}
 		},
+		//show recorded results in UDA screen
 		showrecordedresults:function(){
 			var recordingcookie = this.getstoragedata(this.recordingcookiename);
 			var starttime=null;
@@ -1557,16 +1164,12 @@ if (typeof Voicepluginsdk == 'undefined') {
 				var recordingcookiedata=JSON.parse(recordingcookie);
 				starttime=recordingcookiedata.starttime;
 			} else {
-				console.log("recording start time not found");
 				return false;
 			}
-
-			// this.addbuttonhtml();
 
 			$("#nistvoicesearchresults").html("");
 			var xhr = new XMLHttpRequest();
 			xhr.open("GET", this.apihost+"/clickevents/fetchrecorddata?start="+starttime+"&end="+endtime+"&sessionid="+Voicepluginsdk.sessionID+"&domain="+recordingcookiedata.domain, true);
-			// xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
 				if(xhr.status == 200){
 					Voicepluginsdk.addrecordresultshtml(JSON.parse(xhr.response));
@@ -1576,6 +1179,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			};
 			xhr.send();
 		},
+		//start recording the user click to form a sequence
 		startrecordingsequence:function(currenttimestamp){
 			var recordingcookie = this.getstoragedata(this.recordingcookiename);
 			if (recordingcookie) {
@@ -1588,9 +1192,9 @@ if (typeof Voicepluginsdk == 'undefined') {
 			}
 			recordingcookiedata.domain = window.location.host;
 			this.createstoragedata(this.recordingcookiename,JSON.stringify(recordingcookiedata));
-			// this.closemodal();
 			this.addbuttonhtml();
 		},
+		//stop recording sequence that has been started and show recorded results
 		stoprecordingsequence:function(currenttimestamp){
 			var recordingcookie = this.getstoragedata(this.recordingcookiename);
 			if(recordingcookie){
@@ -1598,17 +1202,14 @@ if (typeof Voicepluginsdk == 'undefined') {
 				recordingcookiedata.endtime=currenttimestamp;
 				recordingcookiedata.recording=false;
 			} else {
-				// console.log("recording start time not found");
 				return false;
 			}
 			this.createstoragedata(this.recordingcookiename,JSON.stringify(recordingcookiedata));
-			// console.log(recordingcookiedata);
 			this.addbuttonhtml();
 			this.addvoicesearchmodal(true);
 			$("#nistvoicesearchresults").html("");
 			var xhr = new XMLHttpRequest();
 			xhr.open("GET", this.apihost+"/clickevents/fetchrecorddata?start="+recordingcookiedata.starttime+"&end="+recordingcookiedata.endtime+"&sessionid="+Voicepluginsdk.sessionID+"&domain="+recordingcookiedata.domain, true);
-			// xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
 				if(xhr.status == 200){
 					Voicepluginsdk.addrecordresultshtml(JSON.parse(xhr.response));
@@ -1618,6 +1219,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			};
 			xhr.send();
 		},
+		//cancel the recording sequence
 		cancelrecordingsequence:function(render=true){
 			var recordingcookie = this.getstoragedata(this.recordingcookiename);
 			if(recordingcookie){
@@ -1625,7 +1227,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 				recordingcookiedata.endtime=Date.now();
 				recordingcookiedata.recording=false;
 			} else {
-				// console.log("recording start time not found");
 				return false;
 			}
 			this.createstoragedata(this.recordingcookiename,JSON.stringify(recordingcookiedata));
@@ -1637,8 +1238,8 @@ if (typeof Voicepluginsdk == 'undefined') {
 			}
 
 		},
+		//show sequence list html
 		addrecordresultshtml:function(data){
-			// console.log(data);
 			if(data.length>0) {
 				this.recordedsequenceids=data;
 				var html =  '   <div class="voice-suggesion-card">'+
@@ -1661,8 +1262,8 @@ if (typeof Voicepluginsdk == 'undefined') {
 				this.showhtml();
 			}
 		},
+		//render record row html of the sequence
 		renderrecordresultrow:function(data,index){
-			// console.log(data);
 			index++;
 			var html =  '<li nist-voice="true" class="active">' +
 							data.clickednodename +
@@ -1670,6 +1271,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			var element=$(html);
 			$("#nist-recordresultrow").append(element);
 		},
+		// submit functionality of the recorded sequence.
 		submitrecordedlabel:function(){
 			var sequencename=$("#nistsequencelabel").val();
 			if(sequencename==''){
@@ -1683,7 +1285,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 			}
 
 			var sequencelistdata={name:sequencename,domain:window.location.host,usersessionid:this.sessionID,userclicknodelist:sequenceids.toString(),userclicknodesSet:this.recordedsequenceids};
-			// console.log(sequencelistdata);
 
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", this.apihost + "/clickevents/recordsequencedata", true);
@@ -1698,25 +1299,22 @@ if (typeof Voicepluginsdk == 'undefined') {
 			};
 			xhr.send(JSON.stringify(sequencelistdata));
 		},
+		// adding the last clicked record to the storage
 		addclickedrecordcookie:function(clickednodename){
 			this.createstoragedata(this.recordclicknodecookiename,clickednodename);
 		},
+		// search from elastic functionality
 		searchinelastic:function(searchterm=''){
 			if(searchterm) {
 				var searchtext = searchterm;
 			} else {
 				var searchtext = $("#voicesearchinput").val();
 			}
-			// console.log(searchtext);
 			this.cancelrecordingsequence(false);
-			// console.log(searchtext);
 			var xhr = new XMLHttpRequest();
 			xhr.open("GET", this.apihost + "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host), true);
-			// xhr.open("GET", "https://nistapp.com/nistapp/app/deals/elastic?countryId=102&searchString="+searchtext+"&size=10&start=0", true);
-			// xhr.setRequestHeader('Nistapp_Version', '0.8.17');
 			xhr.onload = function(event){
 				if(xhr.status == 200){
-					// console.log(xhr.response);
 					Voicepluginsdk.renderelasticresults(JSON.parse(xhr.response));
 				} else {
 					console.log(xhr.status+" : "+xhr.statusText);
@@ -1724,12 +1322,11 @@ if (typeof Voicepluginsdk == 'undefined') {
 			};
 			xhr.send();
 		},
+		//rendering search results screen
 		renderelasticresults:function(data){
 			var matchnodes = data;
 			if(matchnodes.length>0){
 				$("#nistvoicesearchresults").html('');
-				// console.log(matchnodes);
-				// this.renderelasticresultshtml();
 				for(var k=0;k<matchnodes.length;k++){
 					if(matchnodes[k].hasOwnProperty("deleted") && matchnodes[k].deleted===0) {
 						this.renderelasticresultrow(matchnodes[k], k);
@@ -1739,6 +1336,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 				}
 			}
 		},
+		//rendering each row html of the search result
 		renderelasticresultrow:function(data){
 			var path='';
 			for(var i=0;i<data.userclicknodesSet.length;i++){
@@ -1756,16 +1354,16 @@ if (typeof Voicepluginsdk == 'undefined') {
 			});
 			$("#nistvoicesearchresults").append(element);
 		},
+		//selected search result functionality
 		elasticresultaction:function(data){
 			var navcookiedata = {shownav: true, data: data, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
-			// console.log(navcookiedata);
 			navcookiedata.searchterm=$("#voicesearchinput").val();
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 			this.showselectedrow(data,data.id,true, navcookiedata);
 		},
+		//showing the selected search result screen functionality
 		showselectedrow:function(data,index,shownodelist=false, navcookiedata={}){
 			if(shownodelist && navcookiedata.data.userclicknodesSet.length==navcookiedata.navigateddata.length){
-				// console.log(navcookiedata);
 				navcookiedata.navcompleted=true;
 			}
 			var playiconhtml =  '<div class="voice-autoplay-stop">';
@@ -1787,19 +1385,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 				}
 			}
 			playiconhtml   +=   '</div>';
-			/*var html='<tr nist-voice="true">' +
-						' <td nist-voice="true" '+((!shownodelist)?'class="cursor"':'')+'>' +
-						((shownodelist && this.sessionID==data.usersessionid)?'<div nist-voice="true" id="deletesequence"><img class="nist-icon nist-alignright" src="'+this.extensionpath+'assets/delete-icon.png" /></div><div class="nist-clear"></div>':'')+
-						'  <head5 nist-voice="true">'+data.name.toString()+'</head5>' +
-						'  <ul id="nistbreadcrumb'+index+'" nist-voice="true">' +
-							((!shownodelist)?data.userclicknodesSet.length+' Steps':'') +
-						'  </ul>' +
-						'<div id="playicons">' + backtosearchresults
-						playiconhtml +
-						'</div><div class="nist-clear"></div>'+
-						((shownodelist)?'<div id="voteicons"><img class="nist-icon nist-alignleft" id="nist-upvote" src="'+this.extensionpath+'assets/upvote-icon.png" /><img class="nist-icon nist-alignright" id="nist-downvote" src="'+this.extensionpath+'assets/downvote-icon.png" /></div><div class="nist-clear"></div>':'') +
-						' </td>' +
-					'</tr>';*/
 			var html =  '<div class="voice-suggesion-card">'+
 						'	<div class="voice-card-left">'+
 						'		<div class="voice-back-btn"><img nist-voice="true" id="backtosearch" src="'+this.extensionpath+'assets/voice-back.png"></div>'+
@@ -1816,61 +1401,48 @@ if (typeof Voicepluginsdk == 'undefined') {
 						'</div>'+
 						playiconhtml;
 			var element=$(html);
-			/*if(shownodelist==false) {
-				element.click(function () {
-					Voicepluginsdk.elasticresultaction(data);
-				});
-				$("#nist-voiceresultrow").append(element);
-			} else {*/
-				$("#nistvoicesearchresults").html(element);
-				var performactionnode=false;
-				for(var i=0;i<data.userclicknodesSet.length;i++){
-					var visited = -1;
-					if(navcookiedata.navigateddata.length>0) {
-						visited = this.inarray(data.userclicknodesSet[i].id, navcookiedata.navigateddata);
+			$("#nistvoicesearchresults").html(element);
+			var performactionnode=false;
+			for(var i=0;i<data.userclicknodesSet.length;i++){
+				var visited = -1;
+				if(navcookiedata.navigateddata.length>0) {
+					visited = this.inarray(data.userclicknodesSet[i].id, navcookiedata.navigateddata);
+				}
+				if(navcookiedata.autoplay && (!navcookiedata.pause || !navcookiedata.stop)){
+					if(visited==-1 && !performactionnode){
+						performactionnode=data.userclicknodesSet[i];
 					}
-					// console.log(visited);
-					if(navcookiedata.autoplay && (!navcookiedata.pause || !navcookiedata.stop)){
-						if(visited==-1 && !performactionnode){
-							performactionnode=data.userclicknodesSet[i];
-							// console.log(performactionnode);
-						}
-					}
-					$("#nistvoicesteps").append(this.rendersteps(data.userclicknodesSet[i],visited,navcookiedata));
 				}
-				if(this.sessionID==data.usersessionid){
-					$("#deletesequence").click(function () {
-						Voicepluginsdk.deletesequencelist(data);
-					});
-				}
+				$("#nistvoicesteps").append(this.rendersteps(data.userclicknodesSet[i],visited,navcookiedata));
+			}
+			if(this.sessionID==data.usersessionid){
+				$("#deletesequence").click(function () {
+					Voicepluginsdk.deletesequencelist(data);
+				});
+			}
 
-				$('#nist-upvote').click(function () {
-					Voicepluginsdk.addvote("up",data);
-				});
-				$('#nist-downvote').click(function () {
-					Voicepluginsdk.addvote("down",data);
-				});
+			$('#nist-upvote').click(function () {
+				Voicepluginsdk.addvote("up",data);
+			});
+			$('#nist-downvote').click(function () {
+				Voicepluginsdk.addvote("down",data);
+			});
 
-				$("#nist-autoplay").click(function () {
-					Voicepluginsdk.toggleautoplay(navcookiedata);
-				});
+			$("#nist-autoplay").click(function () {
+				Voicepluginsdk.toggleautoplay(navcookiedata);
+			});
 
-				// need to improve the autoplay functionality.
-				if(typeof performactionnode=="object" && this.autoplay) {
-					console.log("performing action");
-					this.performclickaction(performactionnode,navcookiedata);
-				} else if(this.autoplay){
-					/*if(navcookiedata.userclicknodesSet.length==navcookiedata.navigateddata.length){
-						navcookiedata.navcompleted=true;
-					}*/
-					this.toggleautoplay(navcookiedata);
-				}
-				$("#backtosearch").click(function () {
-					// console.log(navcookiedata.searchterm);
-					Voicepluginsdk.backtosearchresults(navcookiedata);
-				});
-			// }
+			// need to improve the autoplay functionality.
+			if(typeof performactionnode=="object" && this.autoplay) {
+				this.performclickaction(performactionnode,navcookiedata);
+			} else if(this.autoplay){
+				this.toggleautoplay(navcookiedata);
+			}
+			$("#backtosearch").click(function () {
+				Voicepluginsdk.backtosearchresults(navcookiedata);
+			});
 		},
+		//showing the sequence steps html
 		rendersteps:function(data,visited=false, navcookiedata={}){
 			if(visited>-1) {
 				var template = $("<li nist-voice=\"true\" class='active'>" + data.clickednodename + "</li>");
@@ -1884,54 +1456,20 @@ if (typeof Voicepluginsdk == 'undefined') {
 			}
 			return template;
 		},
+		//perform click action of the sequence steps
 		performclickaction:function(selectednode,navcookiedata){
 			var matchnodes = [];
-			// console.log(selectednode);
 			if(selectednode.objectdata) {
-				// var selectednodedata=domJSON.toDOM(JSON.parse(selectednode.objectdata));
 				var originalnode=JSON.parse(selectednode.objectdata);
-				// console.log(originalnode);
-				// console.log(selectednodedata);
-				// console.log({converteddom:domJSON.toDOM(originalnode)});
 				if(selectednode && this.htmlindex.length>0){
 					for(var i=0;i<this.htmlindex.length;i++){
 						var searchnode = this.htmlindex[i];
 						var searchlabelexists=false;
 						var comparenode=domJSON.toJSON(searchnode["element-data"]);
-						// console.log(comparenode.node);
 						var match=this.comparenodes(comparenode.node,originalnode.node);
-						/*
-						if(searchnode["element-data"].nodeName.toLowerCase()=="select"){
-							console.log("---------------------------");
-							console.log(originalnode.node);
-							console.log(comparenode.node);
-							console.log(match);
-							console.log("---------------------------");
-						}
-						*/
-						// if((match.matched+8)>=match.count){
 						if((match.matched+17)>=match.count){
 							searchlabelexists=true;
 						}
-						// console.log(match);
-						// console.log(searchnode);
-						// searchlabelexists = true;
-						/*for (var j = 0; j < searchnode['element-labels'].length; j++) {
-							var label = searchnode['element-labels'][j].text.toString().toLowerCase();
-							if (label == selectednode.clickednodename.toString().toLowerCase()) {
-								searchnode['element-labels'][j].match = true;
-							}
-						}*/
-						/*if(searchnode["element-data"].isEqualNode(selectednodedata)){
-							searchlabelexists=true;
-							for (var j = 0; j < searchnode['element-labels'].length; j++) {
-								var label = searchnode['element-labels'][j].text.toString().toLowerCase();
-								if (label == selectednode.clickednodename.toString().toLowerCase()) {
-									searchnode['element-labels'][j].match = true;
-									searchlabelexists=true;
-								}
-							}
-						}*/
 						if(searchlabelexists){
 							var matchnodeexists=false;
 							if(matchnodes.length>0){
@@ -1948,18 +1486,13 @@ if (typeof Voicepluginsdk == 'undefined') {
 					}
 				}
 			}
-			// console.log(matchnodes);
 			if(matchnodes.length == 1){
 				this.updatenavcookiedata(navcookiedata,selectednode.id);
 				this.matchaction(matchnodes[0],false);
 				return;
 			} else if(matchnodes.length>1) {
 				//todo need to perform some user intervention
-				// console.log("more than two clicknodes found");
-				// console.log(selectednode.clickednodename);
 				var finalmatchnode={};
-				// for(var k=0;j<matchnodes.length;k++){
-				// 	var matchnode=matchnodes[k];
 				matchnodes.forEach(function (matchnode, matchnodeindex) {
 					if(matchnode.hasOwnProperty("element-data")) {
 						var inputlabels = Voicepluginsdk.getclickedinputlabels(matchnode["element-data"]);
@@ -1969,7 +1502,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 					}
 				});
 				if(finalmatchnode.hasOwnProperty("element-data")) {
-					// console.log(finalmatchnode);
 					this.updatenavcookiedata(navcookiedata,selectednode.id);
 					this.matchaction(finalmatchnode, false);
 				}
@@ -1978,10 +1510,9 @@ if (typeof Voicepluginsdk == 'undefined') {
 				console.log("no clicknodes found");
 			}
 		},
+		//comparing nodes of indexed and the sequence step selected
 		comparenodes:function(comparenode,originalnode,match={count:0,matched:0}){
-			// console.log(originalnode);
 			for(var key in originalnode){
-				// console.log(key);
 				match.count++;
 				if(comparenode.hasOwnProperty(key) && (typeof originalnode[key] === 'object') && (typeof comparenode[key] === 'object')){
 					match.matched++
@@ -1989,7 +1520,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 				} else if(comparenode.hasOwnProperty(key) && Array.isArray(originalnode[key]) && originalnode[key].length>0 && Array.isArray(comparenode[key]) && comparenode[key].length>0){
 					match.matched++;
 					if(comparenode[key].length==originalnode[key].length) {
-					// 	match.matched++
 						for (var i = 0; i < originalnode[key].length; i++) {
 							match=this.comparenodes(comparenode[key][i], originalnode[key][i],match);
 						}
@@ -2000,20 +1530,23 @@ if (typeof Voicepluginsdk == 'undefined') {
 			}
 			return match;
 		},
+		//adding data to the storage
 		createstoragedata:function(key,value){
 			window.localStorage.setItem(key, value);
 		},
+		//getting the data from the storage
 		getstoragedata:function(key){
 			var result=window.localStorage.getItem(key);
 			return result;
 		},
+		//delete sequence list functionality for the owner
 		deletesequencelist:function(data){
-			// console.log(data);
 			var confirmdialog=confirm("Are you sure want to delete "+data.name);
 			if(confirmdialog === true){
 				Voicepluginsdk.confirmdelete(data);
 			}
 		},
+		//confirmation for the deletion of the sequence list
 		confirmdelete:function (data) {
 			var senddata=JSON.stringify({usersessionid:this.sessionID,id:data.id});
 			var xhr = new XMLHttpRequest();
@@ -2021,7 +1554,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
 				if(xhr.status == 200){
-					// console.log(xhr.response);
 					Voicepluginsdk.closemodal();
 				} else {
 					console.log(xhr.status+" : "+xhr.statusText);
@@ -2029,6 +1561,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			};
 			xhr.send(senddata);
 		},
+		//adding vote functionality
 		addvote:function(votetype,data){
 			var senddata={"usersessionid": this.sessionID, "sequenceid" : data.id, "upvote":0, "downvote":0};
 			if(votetype=="up"){
@@ -2048,15 +1581,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			};
 			xhr.send(JSON.stringify(senddata));
 		},
-		startautoplay:function(){
-
-		},
-		stopautoplay:function () {
-
-		},
-		pauseautoplay:function () {
-
-		},
+		//autoplay functionality to stop and play
 		toggleautoplay:function(navcookiedata){
 			if(navcookiedata.autoplay){
 				navcookiedata.autoplay=false;
@@ -2068,10 +1593,12 @@ if (typeof Voicepluginsdk == 'undefined') {
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 			this.showselectedrow(navcookiedata.data,navcookiedata.data.id,true, navcookiedata);
 		},
+		//updating the navigated data
 		updatenavcookiedata:function(navcookiedata,selectednodeid){
 			navcookiedata.navigateddata.push(selectednodeid);
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 		},
+		//back to search results functionality
 		backtosearchresults:function (navcookiedata) {
 			if(navcookiedata.searchterm!=''){
 				var navcookiedata1 = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:navcookiedata.searchterm};
@@ -2085,7 +1612,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 	Voicepluginsdk.init();
 } else {
 	// this script has already been loaded
-	// probably have it 2x on the same page
 }
 
 /**
@@ -2102,7 +1628,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 		"groupCollapsed", "groupEnd", "time", "timeEnd", "profile", "profileEnd",
 		"dirxml", "assert", "count", "markTimeline", "timeStamp", "clear"
 		];
-	// define undefined methods as noops to prevent errors
+	// define undefined methods as to prevent errors
 	for (var i = 0; i < m.length; i++) {
 		if (!window.console[m[i]]) {
 			window.console[m[i]] = function() {};

@@ -17,36 +17,6 @@ let starttime=Date.now();
 let processcount=0;
 let postmessage=false;
 let udaauthdata={id:null,email: null};
-// console.log(window.location.host);
-/*var xhr = new XMLHttpRequest();
-var domain=window.location.host;
-xhr.open("GET", API_URL+"/domain/patterns?domain="+domain);
-// xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-xhr.onload = function(event){
-  if(xhr.status == 200){
-    console.log(xhr.response);
-    sitepatterns=xhr.response;
-  } else {
-    console.log(xhr.status+" : "+xhr.statusText);
-  }
-};
-xhr.send`();*/
-/*
-if(window.location.host=="mail.google.com") {
-  sitepatterns = [
-    {"patterntype": "role", "patternvalue": "tab"},
-    {"patterntype": "role", "patternvalue": "button"},
-    {"patterntype": "role", "patternvalue": "menuitem"},
-    {"patterntype": "role", "patternvalue": "link"},
-    {"patterntype": "act", "patternvalue": "any"},
-    {"patterntype": "jsaction", "patternvalue": "any"}
-  ];
-} else if (window.location.host=="www.linkedin.com"){
-  sitepatterns = [
-    {"patterntype": "data-control-name", "patternvalue": "any"}
-  ];
-}
-*/
 
 // adding the click object that is registered via javascript
 EventTarget.prototype.addEventListener = function (addEventListener) {
@@ -76,14 +46,7 @@ HTMLElement.prototype.addEventListener = function (a, b, c) {
 
 // adding the clickobjects that were identified.
 function addNewElement(clickObject) {
-    /*
-    if(clickObject.element){
-      var node=clickObject.element;
-      if(node.hasAttribute("nist-voice") && node.getAttribute("nist-voice")=="true"){
-        return;
-      }
-    }
-    */
+    //checking whether the element is window or not
     if (clickObject.element === window) {
         return;
     }
@@ -94,7 +57,8 @@ function addNewElement(clickObject) {
     }
 
     for (var i = 0; i < clickObjects.length; i++) {
-        if (clickObjects[i].element === clickObject.element) {//todo, discuss , how better to call actions, if multiple actions should be stored, or selector better.
+        if (clickObjects[i].element === clickObject.element) {
+            //todo, discuss , how better to call actions, if multiple actions should be stored, or selector better.
             return;
         }
     }
@@ -117,32 +81,26 @@ function processNode(node) {
     if (node.onclick != undefined) {
         let newClickObject = {element: node, action: node.onclick};
         addNewElement(newClickObject);
-        //return;
     }
     if (node.tagName && node.tagName.toLowerCase() === "a" && node.href !== undefined) {
         let newClickObject = {element: node, action: null};
         addNewElement(newClickObject);
-        //return;
     }
     if (node.tagName && node.tagName.toLowerCase() === "input") {
         let newClickObject = {element: node, action: null};
-        // console.log(node);
         addNewElement(newClickObject);
     }
     if (node.tagName && node.tagName.toLowerCase() === "textarea") {
         let newClickObject = {element: node, action: null};
         addNewElement(newClickObject);
-        //return;
     }
     if (node.tagName && node.tagName.toLowerCase() === "option") {
         let newClickObject = {element: node, action: null};
         addNewElement(newClickObject);
-        //return;
     }
     if (node.tagName && node.tagName.toLowerCase() === "select") {
         let newClickObject = {element: node, action: null};
         addNewElement(newClickObject);
-        //return;
     }
 
     if(node.classList && node.classList.contains("dropdown-toggle")){
@@ -150,23 +108,12 @@ function processNode(node) {
         addNewElement(newClickObject);
     }
 
-    /*
-    if(node.hasAttribute("data-toggle") && node.getAttribute("data-toggle")=="dropdown"){
-        let newClickObject = {element:node,action:null};
-        addNewElement(newClickObject);
-    }
-    */
-    // console.log({processingnode:node});
+    //processing site patterns and adding to the clickobjects
     if (node.nodeType === Node.ELEMENT_NODE) {
         var addtoclick = false;
         if (sitepatterns.length > 0 && node.attributes.length > 0) {
             for (var attributeindex = 0; attributeindex < node.attributes.length; attributeindex++) {
                 var attributemap = node.attributes[attributeindex];
-
-                /*if (node.hasOwnProperty(sitepattern.patterntype) && node.getAttribute(sitepattern.patterntype) == sitepattern.patternvalue) {
-                  let newClickObject = {element: node, action: null};
-                  addNewElement(newClickObject);
-                }*/
 
                 for (var sitepatternindex = 0; sitepatternindex < sitepatterns.length; sitepatternindex++) {
                     var sitepattern = sitepatterns[sitepatternindex];
@@ -178,9 +125,6 @@ function processNode(node) {
                 for (var ignorenodeindex = 0; ignorenodeindex < ignorepatterns.length; ignorenodeindex++) {
                     var ignorenodemap = ignorepatterns[ignorenodeindex];
                     if (attributemap.nodeName.toString().toLowerCase() === ignorenodemap.patterntype.toLowerCase() && (attributemap.nodeValue.toString().toLowerCase() === ignorenodemap.patternvalue.toString().toLowerCase() || ignorenodemap.patternvalue.toString().toLowerCase() === "any")) {
-                        // console.log(attributemap.nodeName);
-                        // console.log(ignorenodemap.patterntype);
-                        // console.log("ignore pattern found not adding to click object");
                         processRemovedNode(node);
                         processchildren = false;
                         addtoclick = false;
@@ -188,13 +132,10 @@ function processNode(node) {
                 }
             }
             if (addtoclick) {
-                // console.log("found pattern object");
                 let newClickObject = {element: node, action: null};
                 addNewElement(newClickObject);
             }
         }
-    } else {
-        // console.log({processingnode:node});
     }
 
     if (node.children && processchildren) {
@@ -298,18 +239,9 @@ function getNodeLabel(node) {
 
 // sending the available click objects to the sdk
 function doPost() {
-    // console.log("---checking count-------");
-    // console.log(processcount);
-    // console.log(lastPostCount);
-    // console.log(clickObjects.length);
     var reindexevent;
     var indexevent;
     if (postmessage && Date.now() - lastPostTime >= POST_INTERVAL && (lastPostCount != clickObjects.length || processcount != lastPostCount)) {
-    // if(postmessage && (lastPostCount != clickObjects.length)){
-
-        console.log("start time: " + processingtime);
-        console.log("Stop time: " + processingtime);
-        console.log("Total time: " + (processingtime - starttime) / 1000);
 
         if (startmutationslistner !== true) {
             console.log("sending nodes index message");
@@ -331,28 +263,11 @@ function doPost() {
             document.dispatchEvent(reindexevent);
             lastPostTime = Date.now();
             lastPostCount = newclickObjects.length;
-            // lastPostCount = clickObjects.length;
         }
-        // console.log(clickObjects);
     }
 }
 
-// commenting the below functionality as it is going to infinite loop.
 // sending the data to the sdk for every interval time that is mentioned in the Post interval variable
 setInterval(function () {
     doPost();
 }, POST_INTERVAL);
-
-function test() {
-    invokeById(2);
-}
-
-//setTimeout(function(){test();},3000);
-/*
-document.addEventListener("beforescriptexecute", modifybodyhtml, true);
-function modifybodyhtml(){
-    console.log("check");
-    var bodyhtml=document.body.innerHTML;
-    var html='<div id="nistBtn" nist-voice="true"></div><div id="original-content">'+bodyhtml+'</div><div id="steps-content" style="display: none;"><div id="voicemodalhtml" nist-voice="true"></div></div>';
-    document.body.innerHTML=html;
-}*/
