@@ -18,11 +18,17 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 function loginwithgoogle(){
 	sessiondata.authenticationsource="google";
 	chrome.identity.getProfileUserInfo(function (data) {
-		// console.log(data);
-		sessiondata.authenticated=true;
-		sessiondata.authdata=data;
-		console.log(sessiondata);
-		bindauthenticatedaccount()
+		if(data.id!='' && data.emailid!="") {
+			console.log("from google profile data");
+			console.log(data);
+			sessiondata.authenticated = true;
+			sessiondata.authdata = data;
+			console.log(sessiondata);
+			bindauthenticatedaccount();
+		} else {
+			console.log("user not logged in");
+			sendsessiondata("Alertmessagedata","UDA: UserID not set. Digital assistant will not work.")
+		}
 	});
 	/*
 	chrome.identity.onSignInChanged.addListener(function(accountdata, signedIn){
@@ -38,11 +44,17 @@ function loginwithgoogle(){
 	*/
 }
 
-function sendsessiondata(sendaction="Usersessiondata"){
+function sendsessiondata(sendaction="Usersessiondata",message=''){
 	console.log(sessiondata);
-	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-		chrome.tabs.sendMessage(tabs[0].id, {action: sendaction, data: JSON.stringify(sessiondata)});
-	});
+	if(sendaction=="Alertmessagedata"){
+		chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+			chrome.tabs.sendMessage(tabs[0].id, {action: sendaction, data: JSON.stringify(message)});
+		});
+	} else {
+		chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+			chrome.tabs.sendMessage(tabs[0].id, {action: sendaction, data: JSON.stringify(sessiondata)});
+		});
+	}
 }
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
