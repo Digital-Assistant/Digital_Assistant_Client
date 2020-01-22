@@ -466,11 +466,10 @@ if (typeof Voicepluginsdk == 'undefined') {
 			// indexing functionality called
 			this.indexdom(document.body);
 			var totalcount=clickObjects.length;
+			postmessage = true;
+			startmutationslistner = true;
 			if(processcount<totalcount){
-				if(typeof issdk=='undefined') {
-					postmessage = true;
-					startmutationslistner = true;
-				}
+				//	todo refine the processing nodes.
 			}
 			//send all the indexnodes to server
 			this.sendtoserver();

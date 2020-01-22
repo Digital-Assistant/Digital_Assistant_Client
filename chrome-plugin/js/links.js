@@ -250,7 +250,6 @@ function doPost() {
             lastPostTime = Date.now();
             lastPostCount = clickObjects.length;
         } else if (startmutationslistner && newclickObjects.length > 0) {
-            console.log("sending new nodes index message");
             reindexevent = new CustomEvent("Indexnodes", {
                 detail: {data: "indexnewclicknodes"},
                 bubbles: false,
