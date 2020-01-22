@@ -163,12 +163,10 @@ function processRemovedNode(node) {
 
 //mutation observer initialization and adding the logic to process the clickobjects
 var observer = new MutationObserver(function (mutations) {
-    // console.log(mutations);
 
     mutations.forEach(function (mutation) {
         if (mutation.removedNodes.length) {
             [].some.call(mutation.removedNodes, processRemovedNode);
-            //console.log(clickObjects);
         }
         if (!mutation.addedNodes.length) {
             return;
@@ -176,8 +174,6 @@ var observer = new MutationObserver(function (mutations) {
         if (startmutationslistner) {
             addedbymutations = true;
         }
-        // console.log(mutation.addedNodes);
-        // processNode(mutation.target) || [].some.call(mutation.addedNodes, processNode);
         [].some.call(mutation.addedNodes, processNode);
     });
 });
