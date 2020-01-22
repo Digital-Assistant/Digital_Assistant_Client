@@ -32,5 +32,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		//Voicepluginsdk.createsession(request.data);
 		var sessionevent = new CustomEvent("AuthenticatedUsersessiondata", {detail: {data: request.data}, bubbles: false, cancelable: false});
 		document.dispatchEvent(sessionevent);
+	} else if(request.action=="Alertmessagedata"){
+		var sessionevent = new CustomEvent("Alertmessagedata", {detail: {data: request.data}, bubbles: false, cancelable: false});
+		document.dispatchEvent(sessionevent);
 	}
 });

@@ -38,11 +38,17 @@ function loginwithgoogle(){
 	*/
 }
 
-function sendsessiondata(sendaction="Usersessiondata"){
+function sendsessiondata(sendaction="Usersessiondata",message=''){
 	console.log(sessiondata);
-	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-		chrome.tabs.sendMessage(tabs[0].id, {action: sendaction, data: JSON.stringify(sessiondata)});
-	});
+	if(sendaction=="Alertmessagedata"){
+		chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+			chrome.tabs.sendMessage(tabs[0].id, {action: sendaction, data: JSON.stringify(message)});
+		});
+	} else {
+		chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+			chrome.tabs.sendMessage(tabs[0].id, {action: sendaction, data: JSON.stringify(sessiondata)});
+		});
+	}
 }
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {

@@ -304,7 +304,8 @@ function doPost() {
     // console.log(clickObjects.length);
     var reindexevent;
     var indexevent;
-    if (postmessage && Date.now() - lastPostTime >= POST_INTERVAL && (lastPostCount != clickObjects.length || processcount != lastPostCount)) {
+    // if (postmessage && Date.now() - lastPostTime >= POST_INTERVAL && (lastPostCount != clickObjects.length || processcount != lastPostCount)) {
+    if(postmessage && (lastPostCount != clickObjects.length)){
 
         console.log("start time: " + processingtime);
         console.log("Stop time: " + processingtime);
@@ -329,7 +330,7 @@ function doPost() {
             });
             document.dispatchEvent(reindexevent);
             lastPostTime = Date.now();
-            lastPostCount = newclickObjects.length;
+            lastPostCount = clickObjects.length;
         }
         // console.log(clickObjects);
     }
