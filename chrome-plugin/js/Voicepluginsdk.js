@@ -315,25 +315,21 @@ if (typeof Voicepluginsdk == 'undefined') {
 			$("#nistBtn").unbind("click").html("");
 			var addnisticon=true;
 			var checkrecording = this.getstoragedata(this.recordingcookiename);
+			var buttonhtml="<img src=\""+this.extensionpath+"assets/uda-logo.png\" width=\"50px\" height=\"50px\" nist-voice=\"true\">";
+			$("#nistBtn").append(buttonhtml);
+			var modal =$("#nistBtn");
+			modal.click(function () {
+				Voicepluginsdk.openmodal();
+			});
 			if(checkrecording){
 				var checkrecordingdata=JSON.parse(checkrecording);
 				if(checkrecordingdata.hasOwnProperty("recording") && checkrecordingdata.recording){
 					addnisticon=false;
 					this.openmodal();
-				} else {
-					var buttonhtml="<img src=\""+this.extensionpath+"assets/uda-logo.png\" width=\"50px\" height=\"50px\" nist-voice=\"true\">";
 				}
-			} else {
-				var buttonhtml="<img src=\""+this.extensionpath+"assets/uda-logo.png\" width=\"50px\" height=\"50px\" nist-voice=\"true\">";
 			}
-
-			$("#nistBtn").append(buttonhtml);
 			if(addnisticon){
 				this.addvoicesearchmodal(addnisticon);
-				var modal =$("#nistBtn");
-				modal.click(function () {
-					Voicepluginsdk.openmodal();
-				});
 				window.onclick = function(event) {
 					if (event.target == modal) {
 						Voicepluginsdk.closemodal();
@@ -901,7 +897,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			return template;
 		},
 		//matching the action of the node and invoking whether to click or focus
-		matchaction:function(data,close=true){
+		matchaction:function(data,close=true,selectednode){
 			if(close) {
 				this.closemodal();
 			}
@@ -931,7 +927,29 @@ if (typeof Voicepluginsdk == 'undefined') {
 					node.focus();
 					break;
 				case "select":
-					node.focus();
+					var inputlabel=this.getclickedinputlabels(node);
+					var labelmatch=false;
+					if (inputlabel.toLowerCase() === selectednode.clickednodename.toLowerCase()) {
+						labelmatch=true;
+						node.focus();
+					}
+					if(!labelmatch){
+						var childnodes=node.childNodes;
+						var finalchildnode=null;
+						if(childnodes.length>0){
+							$(node).find(":selected").attr("selected",null);
+							for(var i=0;i<childnodes.length;i++){
+								var childnode=childnodes[i];
+								var textcontent = childnode.textContent.replace(/[\n\r]+|[\s]{2,}/g, ' ').trim();
+								if(textcontent.toLowerCase()===selectednode.clickednodename.toLowerCase()){
+									finalchildnode=childnode;
+								}
+							}
+						}
+						if(finalchildnode!==null){
+							$(finalchildnode).attr("selected","selected");
+						}
+					}
 					break;
 				case "option":
 					node.parentNode.focus();
@@ -1235,7 +1253,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 				this.addbuttonhtml();
 				this.addvoicesearchmodal(true);
 			}
-
 		},
 		//show sequence list html
 		addrecordresultshtml:function(data){
@@ -1284,13 +1301,12 @@ if (typeof Voicepluginsdk == 'undefined') {
 			}
 
 			var sequencelistdata={name:sequencename,domain:window.location.host,usersessionid:this.sessionID,userclicknodelist:sequenceids.toString(),userclicknodesSet:this.recordedsequenceids};
-
+			this.cancelrecordingsequence(true);
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", this.apihost + "/clickevents/recordsequencedata", true);
 			xhr.setRequestHeader('Content-Type', 'application/json');
 			xhr.onload = function(event){
 				if(xhr.status == 200){
-					// console.log(xhr.response);
 					Voicepluginsdk.closemodal();
 				} else {
 					console.log(xhr.status+" : "+xhr.statusText);
@@ -1487,7 +1503,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			}
 			if(matchnodes.length == 1){
 				this.updatenavcookiedata(navcookiedata,selectednode.id);
-				this.matchaction(matchnodes[0],false);
+				this.matchaction(matchnodes[0],false,selectednode);
 				return;
 			} else if(matchnodes.length>1) {
 				//todo need to perform some user intervention
@@ -1502,11 +1518,12 @@ if (typeof Voicepluginsdk == 'undefined') {
 				});
 				if(finalmatchnode.hasOwnProperty("element-data")) {
 					this.updatenavcookiedata(navcookiedata,selectednode.id);
-					this.matchaction(finalmatchnode, false);
+					this.matchaction(finalmatchnode, false,selectednode);
 				}
 				return;
 			} else {
 				console.log("no clicknodes found");
+				alert("Unable to find the action");
 			}
 		},
 		//comparing nodes of indexed and the sequence step selected
