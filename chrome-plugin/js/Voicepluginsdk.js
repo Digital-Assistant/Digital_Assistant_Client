@@ -82,6 +82,8 @@ if (typeof Voicepluginsdk == 'undefined') {
 		elastic:{apiurl:"http://localhost:9200",indexname:"nistapp",currentpage:0,querystring:""},
 		navigationcookiename:"nistnavshow",
 		autoplay:false,
+		processingnodes:false,
+		processedclickobjectscount:0,
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -459,37 +461,51 @@ if (typeof Voicepluginsdk == 'undefined') {
 			var processcount=clickObjects.length;
 			this.previousurl=this.currenturl=window.location.href;
 			postmessage=false;
+			this.processingnodes=true;
+			this.processedclickobjectscount=processcount;
 			// indexing functionality called
 			this.indexdom(document.body);
 			var totalcount=clickObjects.length;
 			postmessage = true;
 			startmutationslistner = true;
+			this.processingnodes=false;
 			if(processcount<totalcount){
 				//	todo refine the processing nodes.
 			}
 			//send all the indexnodes to server
-			this.sendtoserver();
+			// this.sendtoserver();
 			if(processcount==totalcount) {
 				this.showhtml();
 			}
 		},
 		// indexing new clicknodes after new html got loaded
 		indexnewclicknodes:function(){
+			if(this.processingnodes){
+				return;
+			}
 			var processcount=clickObjects.length;
+			if(this.processedclickobjectscount===processcount){
+				return;
+			}
 			postmessage=false;
+			this.processingnodes=true;
+			this.processedclickobjectscount=processcount;
 			this.removefromhtmlindex();
 			this.indexnewnodes=true;
 			this.currenturl=window.location.href;
 			this.indexdom(document.body);
 			postmessage=true;
+			this.processingnodes=false;
 			var totalcount=clickObjects.length;
 			if(processcount<totalcount){
 				//todo new nodes added need to reprocess
 			}
 			// send all the indexed nodes to server
 			if(processcount==totalcount) {
-				postmessage=false;
+				// postmessage=false;
 				this.showhtml();
+			}
+			if(this.processedclickobjectscount===totalcount){
 				this.sendtoserver();
 			}
 		},
