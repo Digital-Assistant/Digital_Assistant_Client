@@ -471,6 +471,8 @@ if (typeof Voicepluginsdk == 'undefined') {
 			this.processingnodes=false;
 			if(processcount<totalcount){
 				//	todo refine the processing nodes.
+				this.indexnewclicknodes();
+				return;
 			}
 			//send all the indexnodes to server
 			// this.sendtoserver();
@@ -480,6 +482,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 		},
 		// indexing new clicknodes after new html got loaded
 		indexnewclicknodes:function(){
+			console.log("indexing new nodes");
 			if(this.processingnodes){
 				return;
 			}
@@ -499,6 +502,8 @@ if (typeof Voicepluginsdk == 'undefined') {
 			var totalcount=clickObjects.length;
 			if(processcount<totalcount){
 				//todo new nodes added need to reprocess
+				this.indexnewclicknodes();
+				return;
 			}
 			// send all the indexed nodes to server
 			if(processcount==totalcount) {
@@ -601,6 +606,10 @@ if (typeof Voicepluginsdk == 'undefined') {
 			var clickobjectexists=false;
 			var clickobject={};
 
+			if(node.hasAttribute("nist-voice") && node.getAttribute("nist-voice")){
+				return node;
+			}
+
 			if(this.htmlindex.length>0){
 				for(var htmli=0;htmli<this.htmlindex.length;htmli++){
 					if(node.isEqualNode(this.htmlindex[htmli]['element-data'])){
@@ -609,8 +618,19 @@ if (typeof Voicepluginsdk == 'undefined') {
 				}
 			}
 
+			for (var i = 0; i < clickObjects.length; i++) {
+				// console.log(clickObjects[i]);
+				if(clickObjects[i].element==window){
+					continue;
+				}
+				if (node.isEqualNode(clickObjects[i].element)) {
+					clickobjectexists = true;
+					clickobject = clickObjects[i];
+				}
+			}
+
 			//to do capture user clicks and check if the url is changed via html5 and then index based on the click
-			if(this.indexnewnodes){
+			/*if(this.indexnewnodes){
 				for (var i = 0; i < newclickObjects.length; i++) {
 					// console.log(clickObjects[i]);
 					if(newclickObjects[i].hasOwnProperty("element") && newclickObjects[i].element==window){
@@ -622,21 +642,8 @@ if (typeof Voicepluginsdk == 'undefined') {
 					}
 				}
 			} else {
-				for (var i = 0; i < clickObjects.length; i++) {
-					// console.log(clickObjects[i]);
-					if(clickObjects[i].element==window){
-						continue;
-					}
-					if (node.isEqualNode(clickObjects[i].element)) {
-						clickobjectexists = true;
-						clickobject = clickObjects[i];
-					}
-				}
-			}
 
-			if(node.hasAttribute("nist-voice") && node.getAttribute("nist-voice")){
-				return node;
-			}
+			}*/
 
 			if(node.hasAttribute("type") && node.getAttribute("type") == "hidden"){
 				return node;
@@ -1116,6 +1123,8 @@ if (typeof Voicepluginsdk == 'undefined') {
 				}
 			};
 			xhr.send(outputdata);
+			//processing new clicknodes if available after the click action.
+			setTimeout(function (){Voicepluginsdk.indexnewclicknodes();},POST_INTERVAL);
 		},
 		//getting input label for the clicked node
 		getclickedinputlabels:function(node, fromdocument=false, selectchange=false){

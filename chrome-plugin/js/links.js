@@ -261,6 +261,8 @@ function doPost() {
 }
 
 // sending the data to the sdk for every interval time that is mentioned in the Post interval variable
+/*
 setInterval(function () {
     doPost();
 }, POST_INTERVAL);
+*/
