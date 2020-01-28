@@ -68,11 +68,6 @@ function addNewElement(clickObject) {
     }
     clickObject.id = clickObjects.length;
     clickObjects.push(clickObject);
-    if (startmutationslistner) {
-        newclickObjects.push(clickObject);
-    }
-    processingtime=Date.now();
-    processcount++;
 }
 
 // processing node from mutation and then send to clickbojects addition
@@ -150,7 +145,6 @@ function processRemovedNode(node) {
     for (var j = 0; j < clickObjects.length; j++) {
         if (node === clickObjects[j].element) {
             clickObjects.splice(j, 1);
-            processcount--;
             break;
         }
     }
@@ -187,24 +181,6 @@ observer.observe(document, {
 function init() {
     let nodes = document.querySelector("*");
     [].some.call(nodes, processNodes);
-}
-
-// invoking the clickobject click call currently not using
-function invokeById(id) {
-    if (clickObjects[id] !== undefined && clickObjects[id] != null) {
-        if (clickObjects[id].action) {
-            clickObjects[id].action.call(clickObjects[id].element);
-        } else {
-            if (clickObjects[id].element.href) {
-                window.location.href = clickObjects[id].element.href;
-            }
-            clickObjects[id].element.focus();
-            //clickObjects[id].element.click();
-            var event = document.createEvent('MouseEvents');
-            event.initMouseEvent('click', true, true);
-            clickObjects[id].element.dispatchEvent(event);
-        }
-    }
 }
 
 // trying to get the text label of the processing node.
@@ -253,9 +229,9 @@ function doPost() {
                 bubbles: false,
                 cancelable: false
             });
+            lastPostCount = clickObjects.length;
             document.dispatchEvent(reindexevent);
             lastPostTime = Date.now();
-            lastPostCount = clickObjects.length;
         }
     }
 }

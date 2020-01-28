@@ -218,7 +218,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 						var current = event.resultIndex;
 						// Get a transcript of what was said.
 						var transcript = event.results[current][0].transcript;
-						$("#voicesearchinput").val(transcript);
+						jQuery("#voicesearchinput").val(transcript);
 						Voicepluginsdk.searchinelastic();
 					}
 				};
@@ -300,11 +300,12 @@ if (typeof Voicepluginsdk == 'undefined') {
 		modifybodyhtml:function(){
 			var html='<div id="nistBtn" nist-voice="true"></div><div id="original-content"></div><div id="steps-content" style="display: none;"><div id="voicemodalhtml" nist-voice="true"></div></div>';
 
-			$(document.body).prepend(html);
+			jQuery(document.body).prepend(html);
 
-			if(typeof issdk === 'undefined') {
+			if(typeof isvoicesdk === 'undefined') {
 				var bodyhtml = document.body.innerHTML;
-				$(document.body).html(bodyhtml).promise().done(function () {
+				jQuery(window).trigger('resize');
+				jQuery(document.body).promise().done(function () {
 					Voicepluginsdk.indexclicknodes();
 					Voicepluginsdk.addbuttonhtml();
 				});
@@ -314,12 +315,12 @@ if (typeof Voicepluginsdk == 'undefined') {
 			}
 		},
 		addbuttonhtml:function(){
-			$("#nistBtn").unbind("click").html("");
+			jQuery("#nistBtn").unbind("click").html("");
 			var addnisticon=true;
 			var checkrecording = this.getstoragedata(this.recordingcookiename);
 			var buttonhtml="<img src=\""+this.extensionpath+"assets/uda-logo.png\" width=\"50px\" height=\"50px\" nist-voice=\"true\">";
-			$("#nistBtn").append(buttonhtml);
-			var modal =$("#nistBtn");
+			jQuery("#nistBtn").append(buttonhtml);
+			var modal =jQuery("#nistBtn");
 			modal.click(function () {
 				Voicepluginsdk.openmodal();
 			});
@@ -365,45 +366,45 @@ if (typeof Voicepluginsdk == 'undefined') {
 						'<div class="nist-clear"></div>'+
 						'   <div id="nistvoicesearchresults"></div>'
 						'</div>';
-			$("#voicemodalhtml").html(html);
-			$("#closenistmodal").click(function(){
+			jQuery("#voicemodalhtml").html(html);
+			jQuery("#closenistmodal").click(function(){
 				Voicepluginsdk.closemodal();
 			});
-			$("#voicesearch").click(function(){
+			jQuery("#voicesearch").click(function(){
 				Voicepluginsdk.searchinelastic();
 			});
-			$("#voicesearchinput").keydown(function (e) {
+			jQuery("#voicesearchinput").keydown(function (e) {
 				if (e.keyCode == 13) {
-					$("#nistvoicesearchresults").html("");
+					jQuery("#nistvoicesearchresults").html("");
 					// Voicepluginsdk.searchnodes();
 					Voicepluginsdk.searchinelastic();
 					return false;
 				}
 			});
 			if(speechrecognitionavailable){
-				$("#nist-voice-icon-start").click(function () {
-					$("#nistvoicesearchresults").html("");
+				jQuery("#nist-voice-icon-start").click(function () {
+					jQuery("#nistvoicesearchresults").html("");
 					// console.log("starting voice recognition");
 					Voicepluginsdk.recognition.start();
-					$("#nist-voice-icon-start").hide();
-					$("#nist-voice-icon-stop").show();
+					jQuery("#nist-voice-icon-start").hide();
+					jQuery("#nist-voice-icon-stop").show();
 				});
-				$("#nist-voice-icon-stop").click(function () {
+				jQuery("#nist-voice-icon-stop").click(function () {
 					// console.log("stopping voice recognition");
 					Voicepluginsdk.recognition.stop();
-					$("#nist-voice-icon-stop").hide();
-					$("#nist-voice-icon-start").show();
+					jQuery("#nist-voice-icon-stop").hide();
+					jQuery("#nist-voice-icon-start").show();
 				});
 			} else {
-				$("#nist-voice-icon-start").hide();
-				$("#nist-voice-icon-stop").hide();
+				jQuery("#nist-voice-icon-start").hide();
+				jQuery("#nist-voice-icon-stop").hide();
 			}
 			if(addnisticon) {
-				$("#nistvoicerecbtn").click(function () {
+				jQuery("#nistvoicerecbtn").click(function () {
 					Voicepluginsdk.gettimestamp("start");
 				});
 			} else {
-				$("#nistvoicerecstpbtn").click(function () {
+				jQuery("#nistvoicerecstpbtn").click(function () {
 					Voicepluginsdk.gettimestamp("stop");
 				});
 			}
@@ -411,12 +412,12 @@ if (typeof Voicepluginsdk == 'undefined') {
 		//opening the UDA screen
 		openmodal:function(focus=true){
 			if(this.sessiondata.authenticated) {
-				$("#nistBtn").hide();
-				$('#steps-content').show();
-				$("#nistModal").css("display", "block");
-				$("#voicesearchinput").val("");
+				jQuery("#nistBtn").hide();
+				jQuery('#steps-content').show();
+				jQuery("#nistModal").css("display", "block");
+				jQuery("#voicesearchinput").val("");
 				if (focus) {
-					$("#voicesearchinput").focus();
+					jQuery("#voicesearchinput").focus();
 				}
 			} else {
 				var sessionevent = new CustomEvent("RequestSessiondata", {detail: {data: "authtenicate"}, bubbles: false, cancelable: false});
@@ -425,12 +426,12 @@ if (typeof Voicepluginsdk == 'undefined') {
 		},
 		//closing the UDA screen
 		closemodal:function(){
-			$('#steps-content').hide();
-			$("#nistModal").css("display","none");
-			$("#nistvoicesearchresults").html("");
-			$("#nistrecordresults").html("");
+			jQuery('#steps-content').hide();
+			jQuery("#nistModal").css("display","none");
+			jQuery("#nistvoicesearchresults").html("");
+			jQuery("#nistrecordresults").html("");
 			this.recordedsequenceids=[];
-			$("#nistBtn").show();
+			jQuery("#nistBtn").show();
 			var navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 			this.cancelrecordingsequence(false);
@@ -482,7 +483,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 		},
 		// indexing new clicknodes after new html got loaded
 		indexnewclicknodes:function(){
-			console.log("indexing new nodes");
 			if(this.processingnodes){
 				return;
 			}
@@ -508,6 +508,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			// send all the indexed nodes to server
 			if(processcount==totalcount) {
 				// postmessage=false;
+				this.addbuttonhtml();
 				this.showhtml();
 			}
 			if(this.processedclickobjectscount===totalcount){
@@ -628,22 +629,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 					clickobject = clickObjects[i];
 				}
 			}
-
-			//to do capture user clicks and check if the url is changed via html5 and then index based on the click
-			/*if(this.indexnewnodes){
-				for (var i = 0; i < newclickObjects.length; i++) {
-					// console.log(clickObjects[i]);
-					if(newclickObjects[i].hasOwnProperty("element") && newclickObjects[i].element==window){
-						continue;
-					}
-					if (node.isEqualNode(newclickObjects[i].element)) {
-						clickobjectexists = true;
-						clickobject = newclickObjects[i];
-					}
-				}
-			} else {
-
-			}*/
 
 			if(node.hasAttribute("type") && node.getAttribute("type") == "hidden"){
 				return node;
@@ -787,7 +772,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			var nodename=node.nodeName.toLowerCase();
 			switch (nodename) {
 				case "select":
-					$(node).on({"change":function () {
+					jQuery(node).on({"change":function () {
 							Voicepluginsdk.recorduserclick(node, false, true);
 						},"focus":function(){
 							Voicepluginsdk.recorduserclick(node, false,false);
@@ -823,24 +808,24 @@ if (typeof Voicepluginsdk == 'undefined') {
 						case "time":
 						case "url":
 						case "week":
-							$(node).click(function () {
+							jQuery(node).click(function () {
 								Voicepluginsdk.recorduserclick(node, false);
 							});
 							break;
 						default:
-							$(node).click(function () {
+							jQuery(node).click(function () {
 								Voicepluginsdk.recorduserclick(node, false);
 							});
 							break;
 					}
 					break;
 				case "mat-select":
-					$(node).click(function () {
+					jQuery(node).click(function () {
 						Voicepluginsdk.recorduserclick(node, false);
 					});
 					break;
 				default:
-					$(node).click(function () {
+					jQuery(node).click(function () {
 						Voicepluginsdk.recorduserclick(node, false);
 					});
 					break;
@@ -848,7 +833,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 		},
 		//searching all the nodes for the given input
 		searchnodes: function(){
-			var searchtext = $("#voicesearchinput").val();
+			var searchtext = jQuery("#voicesearchinput").val();
 			var matchnodes = [];
 			if(searchtext != "" && this.htmlindex.length>0){
 				for(var i=0;i<this.htmlindex.length;i++){
@@ -883,7 +868,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 						'  <tbody id="nist-voiceresultrow" nist-voice="true">' +
 						'  </tbody>' +
 						'</table>';
-			$("#nistvoicesearchresults").html(html);
+			jQuery("#nistvoicesearchresults").html(html);
 		},
 		//render result row html
 		renderresultrow:function(data,index){
@@ -900,23 +885,23 @@ if (typeof Voicepluginsdk == 'undefined') {
 						' </ul>' +
 						'</td>' +
 						'</tr>';
-			var element=$(html);
+			var element=jQuery(html);
 			element.click(function(){
 				Voicepluginsdk.matchaction(data);
 			});
-			$("#nist-voiceresultrow").append(element);
+			jQuery("#nist-voiceresultrow").append(element);
 			if(data['element-path']!=""){
 				var paths=data['element-path'].split(">");
 				if(paths.length>0){
 					for (var i=0;i<paths.length;i++){
-						$("#nistbreadcrumb"+index).append(this.renderpathsearch(paths[i]));
+						jQuery("#nistbreadcrumb"+index).append(this.renderpathsearch(paths[i]));
 					}
 				}
 			}
 		},
 		//render path if available
 		renderpathsearch:function(data){
-			var template = $("<li nist-voice=\"true\"><a nist-voice=\"true\">"+data+"</a></li>");
+			var template = jQuery("<li nist-voice=\"true\"><a nist-voice=\"true\">"+data+"</a></li>");
 			return template;
 		},
 		//matching the action of the node and invoking whether to click or focus
@@ -960,7 +945,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 						var childnodes=node.childNodes;
 						var finalchildnode=null;
 						if(childnodes.length>0){
-							$(node).find(":selected").attr("selected",null);
+							jQuery(node).find(":selected").attr("selected",null);
 							for(var i=0;i<childnodes.length;i++){
 								var childnode=childnodes[i];
 								var textcontent = childnode.textContent.replace(/[\n\r]+|[\s]{2,}/g, ' ').trim();
@@ -970,7 +955,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 							}
 						}
 						if(finalchildnode!==null){
-							$(finalchildnode).attr("selected","selected");
+							jQuery(finalchildnode).attr("selected","selected");
 						}
 					}
 					break;
@@ -1133,7 +1118,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			switch (nodename) {
 				case "select":
 					if(selectchange) {
-						inputlabels = $(node).find(":selected").text();
+						inputlabels = jQuery(node).find(":selected").text();
 					} else {
 						var textlabels = this.getInputLabels(node, [], 1, true, false, true);
 						if (textlabels.length > 0) {
@@ -1182,7 +1167,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 		},
 		//record page click todo functionality
 		recorddocumentclick:function(){
-			$(document).ready(function(){
+			jQuery(document).ready(function(){
 				document.body.addEventListener('click', function (event) { }, false);
 			});
 		},
@@ -1209,7 +1194,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 				return false;
 			}
 
-			$("#nistvoicesearchresults").html("");
+			jQuery("#nistvoicesearchresults").html("");
 			var xhr = new XMLHttpRequest();
 			xhr.open("GET", this.apihost+"/clickevents/fetchrecorddata?start="+starttime+"&end="+endtime+"&sessionid="+Voicepluginsdk.sessionID+"&domain="+recordingcookiedata.domain, true);
 			xhr.onload = function(event){
@@ -1249,7 +1234,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			this.createstoragedata(this.recordingcookiename,JSON.stringify(recordingcookiedata));
 			this.addbuttonhtml();
 			this.addvoicesearchmodal(true);
-			$("#nistvoicesearchresults").html("");
+			jQuery("#nistvoicesearchresults").html("");
 			var xhr = new XMLHttpRequest();
 			xhr.open("GET", this.apihost+"/clickevents/fetchrecorddata?start="+recordingcookiedata.starttime+"&end="+recordingcookiedata.endtime+"&sessionid="+Voicepluginsdk.sessionID+"&domain="+recordingcookiedata.domain, true);
 			xhr.onload = function(event){
@@ -1294,7 +1279,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 							'			</div>'+
 							'		</div>'+
 							'	</div>';
-				$("#nistvoicesearchresults").html(html);
+				jQuery("#nistvoicesearchresults").html(html);
 				for(var i=0;i<data.length;i++){
 					this.renderrecordresultrow(data[i],i);
 				}
@@ -1309,15 +1294,15 @@ if (typeof Voicepluginsdk == 'undefined') {
 			var html =  '<li nist-voice="true" class="active">' +
 							data.clickednodename +
 						'</li>';
-			var element=$(html);
-			$("#nist-recordresultrow").append(element);
+			var element=jQuery(html);
+			jQuery("#nist-recordresultrow").append(element);
 		},
 		// submit functionality of the recorded sequence.
 		submitrecordedlabel:function(){
-			var sequencename=$("#nistsequencelabel").val();
+			var sequencename=jQuery("#nistsequencelabel").val();
 			if(sequencename==''){
 				alert('Please enter proper label');
-				$("#nistsequencelabel").focus();
+				jQuery("#nistsequencelabel").focus();
 				return false;
 			}
 			var sequenceids = [];
@@ -1348,7 +1333,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			if(searchterm) {
 				var searchtext = searchterm;
 			} else {
-				var searchtext = $("#voicesearchinput").val();
+				var searchtext = jQuery("#voicesearchinput").val();
 			}
 			this.cancelrecordingsequence(false);
 			var xhr = new XMLHttpRequest();
@@ -1366,7 +1351,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 		renderelasticresults:function(data){
 			var matchnodes = data;
 			if(matchnodes.length>0){
-				$("#nistvoicesearchresults").html('');
+				jQuery("#nistvoicesearchresults").html('');
 				for(var k=0;k<matchnodes.length;k++){
 					if(matchnodes[k].hasOwnProperty("deleted") && matchnodes[k].deleted===0) {
 						this.renderelasticresultrow(matchnodes[k], k);
@@ -1388,16 +1373,16 @@ if (typeof Voicepluginsdk == 'undefined') {
 			var html=   '	<div class="voice-sugtns-list"><h4><a>'+data.name.toString()+'</a></h4>'+
 						'		<p>'+path+'</p>'+
 						'	</div>';
-			var element=$(html);
+			var element=jQuery(html);
 			element.click(function () {
 				Voicepluginsdk.elasticresultaction(data);
 			});
-			$("#nistvoicesearchresults").append(element);
+			jQuery("#nistvoicesearchresults").append(element);
 		},
 		//selected search result functionality
 		elasticresultaction:function(data){
 			var navcookiedata = {shownav: true, data: data, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
-			navcookiedata.searchterm=$("#voicesearchinput").val();
+			navcookiedata.searchterm=jQuery("#voicesearchinput").val();
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 			this.showselectedrow(data,data.id,true, navcookiedata);
 		},
@@ -1440,8 +1425,8 @@ if (typeof Voicepluginsdk == 'undefined') {
 						'   <div class="nist-clear"></div>'+
 						'</div>'+
 						playiconhtml;
-			var element=$(html);
-			$("#nistvoicesearchresults").html(element);
+			var element=jQuery(html);
+			jQuery("#nistvoicesearchresults").html(element);
 			var performactionnode=false;
 			for(var i=0;i<data.userclicknodesSet.length;i++){
 				var visited = -1;
@@ -1453,22 +1438,22 @@ if (typeof Voicepluginsdk == 'undefined') {
 						performactionnode=data.userclicknodesSet[i];
 					}
 				}
-				$("#nistvoicesteps").append(this.rendersteps(data.userclicknodesSet[i],visited,navcookiedata));
+				jQuery("#nistvoicesteps").append(this.rendersteps(data.userclicknodesSet[i],visited,navcookiedata));
 			}
 			if(this.sessionID==data.usersessionid){
-				$("#deletesequence").click(function () {
+				jQuery("#deletesequence").click(function () {
 					Voicepluginsdk.deletesequencelist(data);
 				});
 			}
 
-			$('#nist-upvote').click(function () {
+			jQuery('#nist-upvote').click(function () {
 				Voicepluginsdk.addvote("up",data);
 			});
-			$('#nist-downvote').click(function () {
+			jQuery('#nist-downvote').click(function () {
 				Voicepluginsdk.addvote("down",data);
 			});
 
-			$("#nist-autoplay").click(function () {
+			jQuery("#nist-autoplay").click(function () {
 				Voicepluginsdk.toggleautoplay(navcookiedata);
 			});
 
@@ -1478,16 +1463,16 @@ if (typeof Voicepluginsdk == 'undefined') {
 			} else if(this.autoplay){
 				this.toggleautoplay(navcookiedata);
 			}
-			$("#backtosearch").click(function () {
+			jQuery("#backtosearch").click(function () {
 				Voicepluginsdk.backtosearchresults(navcookiedata);
 			});
 		},
 		//showing the sequence steps html
 		rendersteps:function(data,visited=false, navcookiedata={}){
 			if(visited>-1) {
-				var template = $("<li nist-voice=\"true\" class='active'>" + data.clickednodename + "</li>");
+				var template = jQuery("<li nist-voice=\"true\" class='active'>" + data.clickednodename + "</li>");
 			} else {
-				var template = $("<li nist-voice=\"true\" class=''>" + data.clickednodename + "</li>");
+				var template = jQuery("<li nist-voice=\"true\" class=''>" + data.clickednodename + "</li>");
 			}
 			if(visited==-1) {
 				template.click(function () {
@@ -1645,7 +1630,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 				var navcookiedata1 = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:navcookiedata.searchterm};
 				this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata1));
 				this.autoplay=false;
-				$("#voicesearchinput").val(navcookiedata.searchterm);
+				jQuery("#voicesearchinput").val(navcookiedata.searchterm);
 				this.searchinelastic(navcookiedata.searchterm);
 			}
 		}

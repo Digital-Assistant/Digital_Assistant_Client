@@ -7,13 +7,13 @@
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "content_scripts": [
 	{
-	  "matches": ["*://localhost/*","*://*.vantagecircle.com/*", "*://*.nistapp.com/*", "*://*.myplaceforparts.com/*", "*://*.rknowsys.com/*"],
+	  "matches": ["*://localhost/*","*://*.vantagecircle.com/*", "*://*.nistapp.com/*", "*://*.myplaceforparts.com/*", "*://*.rknowsys.com/*","*://yureshwar.atlassian.net/*"],
 	  "js": ["js/injectscriptmodifier.js"],
 	  "all_frames": false,
 	  "run_at":"document_start"
 	},
 	{
-	  "matches": ["*://localhost/*","*://*.vantagecircle.com/*", "*://*.nistapp.com/*", "*://*.myplaceforparts.com/*", "*://*.rknowsys.com/*"],
+	  "matches": ["*://localhost/*","*://*.vantagecircle.com/*", "*://*.nistapp.com/*", "*://*.myplaceforparts.com/*", "*://*.rknowsys.com/*","*://yureshwar.atlassian.net/*"],
 	  "js": ["js/injectsdk.js"],
 	  "run_at":"document_end"
 	}
