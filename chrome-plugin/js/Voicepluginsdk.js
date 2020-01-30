@@ -84,6 +84,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 		autoplay:false,
 		processcount:0,
 		totalcount:0,
+		rerenderhtml:true,
 		processingnodes:false,
 		processedclickobjectscount:0,
 		inarray:function(value,object){
@@ -326,9 +327,9 @@ if (typeof Voicepluginsdk == 'undefined') {
 			modal.click(function () {
 				Voicepluginsdk.openmodal();
 			});
-			// if(this.processedclickobjectscount===clickObjects.length) {
+			if(this.rerenderhtml) {
 				this.showhtml();
-			// }
+			}
 		},
 		addvoicesearchmodal:function(addnisticon=true){
 			var recbtn ='	   <button nist-voice="true" id="nistvoicerecbtn" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-record.png"> <span nist-voice="true">Rec</span></button>';
@@ -432,6 +433,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 					return false;
 				}
 			}*/
+			this.rerenderhtml=false;
 			var addnisticon=true;
 			var checkrecording = this.getstoragedata(this.recordingcookiename);
 			if(checkrecording){
@@ -474,25 +476,15 @@ if (typeof Voicepluginsdk == 'undefined') {
 			this.processedclickobjectscount=this.processcount;
 			this.totalcount=clickObjects.length;
 			this.processingnodes=false;
-			/*console.log("-----------Index click nodes method start----------------");
-			console.log("Processing count: "+this.processcount);
-			console.log("Total count: "+ this.totalcount);
-			console.log("-----------Index click nodes method end----------------");*/
 			if(this.processcount<this.totalcount){
 				//	todo refine the processing nodes.
-				/*console.log("-----------Call to index new click nodes method start----------------");
-				console.log("indexing new click nodes");
-				console.log("-----------Call to index new click nodes method end----------------");*/
+				// this.rerenderhtml=true;
 				this.indexnewclicknodes();
 				return;
 			}
 			//send all the indexnodes to server
-			// this.sendtoserver();
 			if(this.processcount===this.totalcount) {
-				console.log("-----------Call to show html method start----------------");
-				console.log("rendered from index click nodes method");
-				console.log("-----------Call to show html method end----------------");
-				// this.showhtml();
+				this.sendtoserver();
 				// setTimeout(function (){Voicepluginsdk.indexnewclicknodes();},POST_INTERVAL);
 			}
 		},
@@ -510,6 +502,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 			this.indexnewnodes=true;
 			this.currenturl=window.location.href;
 			this.indexdom(document.body);
+			// this.rerenderhtml=true;
 			this.processedclickobjectscount=this.processcount;
 			this.processingnodes=false;
 			this.totalcount=clickObjects.length;
@@ -523,10 +516,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 				return;
 			}
 			// send all the indexed nodes to server
-			if(this.processcount===this.totalcount) {
-				// this.addbuttonhtml();
-				// this.showhtml();
-			}
 			if(this.processedclickobjectscount===this.totalcount){
 				this.sendtoserver();
 			}
@@ -673,6 +662,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 				}
 
 				if(elementdata["element-labels"].length==0){
+					console.log(node);
 					return node;
 				}
 
@@ -777,6 +767,10 @@ if (typeof Voicepluginsdk == 'undefined') {
 				if(node.getAttribute("alt")){
 					inputlabels.push({"text":node.getAttribute("alt").toString(),"match":false});
 				}
+			}
+
+			if(inputlabels.length===0 && node.id!==""){
+				inputlabels.push({"text":(node.nodeName.toLowerCase()+"-"+node.id),"match":false});
 			}
 
 			return inputlabels;
@@ -1123,6 +1117,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 				};
 			}
 			postdata.clickednodename = this.getclickedinputlabels(node,fromdocument,selectchange);
+			this.rerenderhtml=true;
 			this.addclickedrecordcookie(postdata.clickednodename);
 			var outputdata = JSON.stringify(postdata);
 			var xhr = new XMLHttpRequest();
@@ -1184,6 +1179,16 @@ if (typeof Voicepluginsdk == 'undefined') {
 					}
 				case "textarea":
 					var textlabels = this.getInputLabels(node, [], 1, true, true, true);
+					if (textlabels.length > 0) {
+						var labels = [];
+						for (var j = 0; j < textlabels.length; j++) {
+							labels.push(textlabels[j].text);
+						}
+						inputlabels = labels.toString();
+					}
+					break;
+				case "img":
+					var textlabels = this.getInputLabels(node, [], 1, true, false, true);
 					if (textlabels.length > 0) {
 						var labels = [];
 						for (var j = 0; j < textlabels.length; j++) {
