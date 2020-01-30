@@ -6,16 +6,11 @@ var voicedebug = false;
 const POST_INTERVAL = 1000; //in milliseconds, each minute
 const API_URL = (voicedebug) ? "http://localhost:11080/voiceapi" : "https://voicetest.nistapp.com/voiceapi";
 const EXTENSION_VERSION = true;
-let newclickObjects = [];
-let addedbymutations = false;
-let startmutationslistner = false;
 let ignorepatterns = [{"patterntype": "nist-voice", "patternvalue": "any"}];
 let sitepatterns = [];
 let totalclickobjects=0;
 let processingtime=Date.now();
 let starttime=Date.now();
-let processcount=0;
-let postmessage=false;
 let udaauthdata={id:null,email: null};
 
 // adding the click object that is registered via javascript
@@ -165,9 +160,6 @@ var observer = new MutationObserver(function (mutations) {
         if (!mutation.addedNodes.length) {
             return;
         }
-        if (startmutationslistner) {
-            addedbymutations = true;
-        }
         [].some.call(mutation.addedNodes, processNode);
     });
 });
@@ -208,37 +200,3 @@ function getNodeLabel(node) {
     }
     return text;
 }
-
-// sending the available click objects to the sdk
-function doPost() {
-    var reindexevent;
-    var indexevent;
-    if (postmessage && lastPostCount != clickObjects.length) {
-        if (startmutationslistner !== true) {
-            indexevent = new CustomEvent("Indexnodes", {
-                detail: {data: "indexclicknodes"},
-                bubbles: false,
-                cancelable: false
-            });
-            document.dispatchEvent(indexevent);
-            lastPostTime = Date.now();
-            lastPostCount = clickObjects.length;
-        } else if (startmutationslistner && newclickObjects.length > 0) {
-            reindexevent = new CustomEvent("Indexnodes", {
-                detail: {data: "indexnewclicknodes"},
-                bubbles: false,
-                cancelable: false
-            });
-            lastPostCount = clickObjects.length;
-            document.dispatchEvent(reindexevent);
-            lastPostTime = Date.now();
-        }
-    }
-}
-
-// sending the data to the sdk for every interval time that is mentioned in the Post interval variable
-/*
-setInterval(function () {
-    doPost();
-}, POST_INTERVAL);
-*/

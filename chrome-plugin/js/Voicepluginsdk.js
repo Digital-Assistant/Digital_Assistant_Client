@@ -82,6 +82,8 @@ if (typeof Voicepluginsdk == 'undefined') {
 		elastic:{apiurl:"http://localhost:9200",indexname:"nistapp",currentpage:0,querystring:""},
 		navigationcookiename:"nistnavshow",
 		autoplay:false,
+		processcount:0,
+		totalcount:0,
 		processingnodes:false,
 		processedclickobjectscount:0,
 		inarray:function(value,object){
@@ -464,32 +466,29 @@ if (typeof Voicepluginsdk == 'undefined') {
 		},
 		// indexing all nodes after all the clicknodes are available
 		indexclicknodes: function(){
-			var processcount=clickObjects.length;
+			this.processcount=clickObjects.length;
 			this.previousurl=this.currenturl=window.location.href;
-			postmessage=false;
 			this.processingnodes=true;
-			this.processedclickobjectscount=processcount;
 			// indexing method called
 			this.indexdom(document.body);
-			var totalcount=clickObjects.length;
+			this.processedclickobjectscount=this.processcount;
+			this.totalcount=clickObjects.length;
 			this.processingnodes=false;
-			console.log("-----------Index click nodes method start----------------");
-			console.log("Processing count: "+processcount);
-			console.log("Total count: "+ totalcount);
-			console.log("-----------Index click nodes method end----------------");
-			if(processcount<totalcount){
+			/*console.log("-----------Index click nodes method start----------------");
+			console.log("Processing count: "+this.processcount);
+			console.log("Total count: "+ this.totalcount);
+			console.log("-----------Index click nodes method end----------------");*/
+			if(this.processcount<this.totalcount){
 				//	todo refine the processing nodes.
-				console.log("-----------Call to index new click nodes method start----------------");
+				/*console.log("-----------Call to index new click nodes method start----------------");
 				console.log("indexing new click nodes");
-				console.log("-----------Call to index new click nodes method end----------------");
+				console.log("-----------Call to index new click nodes method end----------------");*/
 				this.indexnewclicknodes();
 				return;
 			}
 			//send all the indexnodes to server
 			// this.sendtoserver();
-			if(processcount===totalcount) {
-				postmessage = true;
-				startmutationslistner = true;
+			if(this.processcount===this.totalcount) {
 				console.log("-----------Call to show html method start----------------");
 				console.log("rendered from index click nodes method");
 				console.log("-----------Call to show html method end----------------");
@@ -502,36 +501,33 @@ if (typeof Voicepluginsdk == 'undefined') {
 			if(this.processingnodes){
 				return;
 			}
-			var processcount=clickObjects.length;
-			if(this.processedclickobjectscount===processcount){
+			this.processcount=clickObjects.length;
+			if(this.processedclickobjectscount===this.processcount){
 				return;
 			}
-			postmessage=false;
 			this.processingnodes=true;
-			this.processedclickobjectscount=processcount;
 			this.removefromhtmlindex();
 			this.indexnewnodes=true;
 			this.currenturl=window.location.href;
 			this.indexdom(document.body);
-			postmessage=true;
+			this.processedclickobjectscount=this.processcount;
 			this.processingnodes=false;
-			var totalcount=clickObjects.length;
+			this.totalcount=clickObjects.length;
 			console.log("-----------Index new click nodes method start----------------");
-			console.log("Processing count: "+processcount);
-			console.log("Total count: "+ totalcount);
+			console.log("Processing count: "+this.processcount);
+			console.log("Total count: "+ this.totalcount);
 			console.log("-----------Index new click nodes method end----------------");
-			if(processcount<totalcount){
+			if(this.processcount<this.totalcount){
 				//todo new nodes added need to reprocess
-				this.indexnewclicknodes();
+				// this.indexnewclicknodes();
 				return;
 			}
 			// send all the indexed nodes to server
-			if(processcount===totalcount) {
-				// postmessage=false;
+			if(this.processcount===this.totalcount) {
 				// this.addbuttonhtml();
 				// this.showhtml();
 			}
-			if(this.processedclickobjectscount===totalcount){
+			if(this.processedclickobjectscount===this.totalcount){
 				this.sendtoserver();
 			}
 		},
@@ -1059,7 +1055,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 				xhr.onload = function(event){
 					if(xhr.status == 200){
-						startmutationslistner=true;
+
 					} else {
 						console.log(xhr.status+" : "+xhr.statusText);
 					}
@@ -1530,17 +1526,17 @@ if (typeof Voicepluginsdk == 'undefined') {
 			var matchnodes = [];
 			if(selectednode.objectdata) {
 				var originalnode=JSON.parse(selectednode.objectdata);
-				console.log(originalnode);
+				// console.log(originalnode);
 				if(selectednode && this.htmlindex.length>0){
 					for(var i=0;i<this.htmlindex.length;i++){
 						var searchnode = this.htmlindex[i];
 						var searchlabelexists=false;
 						var comparenode=domJSON.toJSON(searchnode["element-data"]);
 						var match=this.comparenodes(comparenode.node,originalnode.node);
-						console.log("--------------match count start---------------");
+						/*console.log("--------------match count start---------------");
 						console.log(comparenode);
 						console.log(match);
-						console.log("--------------match count end---------------");
+						console.log("--------------match count end---------------");*/
 						if((match.matched+26)>=match.count){
 							searchlabelexists=true;
 						}
