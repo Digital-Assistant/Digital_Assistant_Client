@@ -1,7 +1,7 @@
 'use strict';
 
 var updatedata=false;
-var voicedebug=false;
+var voicedebug=true;
 var apihost=(voicedebug)?"http://localhost:11080/voiceapi":"https://voicetest.nistapp.com/voiceapi";
 var cookiename="nist-voice-usersessionid";
 var activetabs=[];

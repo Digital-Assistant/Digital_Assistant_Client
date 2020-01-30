@@ -90,7 +90,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
-
 		// constructor for the sdk class which will be initialized on loading of the variable.
 		init: function() {
 			// loading jquery if not available
@@ -226,7 +225,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 					}
 				};
 			}
-			
+
 			this.ready = true;
 
 			// listen for when to start the indexing of the dom based on the clicknodes availability
@@ -572,7 +571,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 										});
 									}
 								}
-								if(this.ignoreelements.indexOf(childnode.nodeName.toLowerCase())==-1) {
+								if(this.ignoreelements.indexOf(childnode.nodeName.toLowerCase())===-1) {
 									if(ret){
 										if(textlabel==""){
 											textlabel = this.indexdom(childnode, ret, node, textlabel);
@@ -588,7 +587,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 					}
 					break;
 				case Node.TEXT_NODE:
-					if(node.nodeValue!="") {
+					if(node.nodeValue!=="") {
 						textlabel = node.nodeValue;
 					}
 					break;
@@ -685,7 +684,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 					}
 				}
 
-				if(elementdata["element-path"]=="") {
+				if(elementdata["element-path"]==="") {
 					if (node.hasOwnProperty("path")) {
 						elementdata["element-path"] = node.path;
 					}
@@ -1265,6 +1264,9 @@ if (typeof Voicepluginsdk == 'undefined') {
 			this.createstoragedata(this.recordingcookiename,JSON.stringify(recordingcookiedata));
 			// this.addbuttonhtml();
 			this.showhtml();
+
+			//add analtytics
+			this.recordclick('recordingstart',recordingcookiedata.domain);
 		},
 		//stop recording sequence that has been started and show recorded results
 		stoprecordingsequence:function(currenttimestamp){
@@ -1277,6 +1279,10 @@ if (typeof Voicepluginsdk == 'undefined') {
 				return false;
 			}
 			this.createstoragedata(this.recordingcookiename,JSON.stringify(recordingcookiedata));
+
+			//add analtytics
+			this.recordclick('recordingstop',recordingcookiedata.domain);
+
 			/*this.addbuttonhtml();
 			this.addvoicesearchmodal(true);*/
 			this.showhtml();
@@ -1305,6 +1311,10 @@ if (typeof Voicepluginsdk == 'undefined') {
 			this.createstoragedata(this.recordingcookiename,JSON.stringify(recordingcookiedata));
 			var navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
+
+			//add analtytics
+			this.recordclick('recordingcancel',recordingcookiedata.domain);
+
 			if(render) {
 				// this.addbuttonhtml();
 				// this.addvoicesearchmodal(true);
@@ -1381,6 +1391,11 @@ if (typeof Voicepluginsdk == 'undefined') {
 				var searchtext = jQuery("#voicesearchinput").val();
 			}
 			this.cancelrecordingsequence(false);
+
+			//add analtytics
+			this.recordclick('search',searchtext);
+
+			// console.log(searchtext);
 			var xhr = new XMLHttpRequest();
 			xhr.open("GET", this.apihost + "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host), true);
 			xhr.onload = function(event){
@@ -1430,6 +1445,8 @@ if (typeof Voicepluginsdk == 'undefined') {
 			navcookiedata.searchterm=jQuery("#voicesearchinput").val();
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 			this.showselectedrow(data,data.id,true, navcookiedata);
+			//add analtytics
+			this.recordclick('sequencerecord',data.name.toString(),data.id);
 		},
 		//showing the selected search result screen functionality
 		showselectedrow:function(data,index,shownodelist=false, navcookiedata={}){
@@ -1666,10 +1683,15 @@ if (typeof Voicepluginsdk == 'undefined') {
 			if(navcookiedata.autoplay){
 				navcookiedata.autoplay=false;
 				this.autoplay=false;
+				//add analtytics
+				this.recordclick('stop',navcookiedata.data.name.toString(),navcookiedata.data.id);
 			} else {
 				navcookiedata.autoplay=true;
 				this.autoplay=true;
+				//add analtytics
+				this.recordclick('play',navcookiedata.data.name.toString(),navcookiedata.data.id);
 			}
+
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 			this.showselectedrow(navcookiedata.data,navcookiedata.data.id,true, navcookiedata);
 		},
@@ -1685,8 +1707,28 @@ if (typeof Voicepluginsdk == 'undefined') {
 				this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata1));
 				this.autoplay=false;
 				jQuery("#voicesearchinput").val(navcookiedata.searchterm);
+
+				//add analtytics
+				this.recordclick('back',navcookiedata.data.name.toString(),navcookiedata.data.id);
+
 				this.searchinelastic(navcookiedata.searchterm);
 			}
+		},
+		recordclick:function (clicktype='sequencerecord',clickedname='',recordid=0) {
+			var senddata={usersessionid:this.sessionID,clicktype:clicktype,clickedname:clickedname,recordid:recordid};
+			console.log(senddata);
+			// return;
+			var xhr = new XMLHttpRequest();
+			xhr.open("PUT", this.apihost + "/clickevents/userclick", false);
+			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+			xhr.onload = function(event){
+				if(xhr.status == 200){
+					console.log(xhr.response);
+				} else {
+					console.log(xhr.status+" : "+xhr.statusText);
+				}
+			};
+			xhr.send(JSON.stringify(senddata));
 		}
 	};
 	Voicepluginsdk.init();
