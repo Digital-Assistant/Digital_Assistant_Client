@@ -345,7 +345,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 						'	<div class="voice-red-hr-line"></div>'+
 						// '	<button class="voice-suggesion-lbl">Create a new issue</button><button class="voice-suggesion-lbl">Assign an issue to Ajay</button><button class="voice-suggesion-lbl">Show list of issues assigned to me</button><br>'+
 						'	<div class="voice-srch-bg">'+
-						'		<span class="voice-srch"><img src="'+this.extensionpath+'assets/voice-search.png"></span><input type="search" class="voice-srch-fld"  id="voicesearchinput" placeholder="Search..." />' +
+						'		<span class="voice-srch"><img src="'+this.extensionpath+'assets/voice-search.png"></span><input type="search" class="voice-srch-fld" nist-voice="true" id="voicesearchinput" placeholder="Search..." />' +
 						'       <span id="nist-voice-icon-start" class="voice-voice-srch" nist-voice="true"><img nist-voice="true" src="'+this.extensionpath+'assets/voice-voice.png" /></span>'+
 						'       <span style="display:none;" class="voice-voice-srch" id="nist-voice-icon-stop" nist-voice="true"><img src="'+this.extensionpath+'assets/stop.png" nist-voice="true" /></span>' +
 						'	</div>'+
