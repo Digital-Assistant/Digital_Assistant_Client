@@ -13,10 +13,8 @@ if (typeof Voicepluginsdk == 'undefined') {
 
 	// initializing voice recognition library
 	if(!window.hasOwnProperty("webkitSpeechRecognition")){
-		// console.log("speechkit not available");
 		speechrecognitionavailable=false;
 	} else {
-		// console.log("speechkit available");
 		speechrecognitionavailable=true;
 		voiceRecognition = window.webkitSpeechRecognition;
 	}
@@ -27,18 +25,15 @@ if (typeof Voicepluginsdk == 'undefined') {
 	});
 
 	document.addEventListener("Usersessiondata", function(data) {
-		// console.log("received user session data");
 		Voicepluginsdk.createsession(JSON.parse(data.detail.data));
 	});
 
 	document.addEventListener("AuthenticatedUsersessiondata", function(data) {
-		// console.log("received authenticated user session data");
 		Voicepluginsdk.createsession(JSON.parse(data.detail.data));
 		Voicepluginsdk.openmodal();
 	});
 
 	document.addEventListener("Alertmessagedata", function(data) {
-		// console.log("received alert message");
 		alert(JSON.parse(data.detail.data));
 	});
 
@@ -195,23 +190,20 @@ if (typeof Voicepluginsdk == 'undefined') {
 
 			// adding speech recognition functionality based on the library availability
 			if(speechrecognitionavailable){
-				// console.log("speech recognition available");
 				this.recognition = new voiceRecognition();
 				this.speechrecognitionavailable = true;
 				
 				this.recognition.onstart = function() {
 					textfromspeech = "";
-					// console.log("speech started");
-					// console.log('Voice recognition activated. Try speaking into the microphone.');
 				};
 
 				this.recognition.onspeechend = function() {
-					// console.log("speech ended");
+
 				};
 
 				this.recognition.onerror = function(event) {
 					if(event.error === 'no-speech') {
-						// console.log('No speech was detected. Try again.');
+						alert('No speech was detected. Try again.');
 					};
 				};
 
@@ -230,7 +222,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 
 			// listen for when to start the indexing of the dom based on the clicknodes availability
 			document.addEventListener("Indexnodes", function(data) {
-				//console.log(data);
 				if(data.detail.data=="indexclicknodes") {
 					Voicepluginsdk.indexclicknodes();
 				} else if(data.detail.data=="indexnewclicknodes") {
@@ -363,7 +354,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 			jQuery("#voicesearchinput").keydown(function (e) {
 				if (e.keyCode == 13) {
 					jQuery("#nistvoicesearchresults").html("");
-					// Voicepluginsdk.searchnodes();
 					Voicepluginsdk.searchinelastic();
 					return false;
 				}
@@ -371,13 +361,11 @@ if (typeof Voicepluginsdk == 'undefined') {
 			if(speechrecognitionavailable){
 				jQuery("#nist-voice-icon-start").click(function () {
 					jQuery("#nistvoicesearchresults").html("");
-					// console.log("starting voice recognition");
 					Voicepluginsdk.recognition.start();
 					jQuery("#nist-voice-icon-start").hide();
 					jQuery("#nist-voice-icon-stop").show();
 				});
 				jQuery("#nist-voice-icon-stop").click(function () {
-					// console.log("stopping voice recognition");
 					Voicepluginsdk.recognition.stop();
 					jQuery("#nist-voice-icon-stop").hide();
 					jQuery("#nist-voice-icon-start").show();
@@ -505,10 +493,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 			this.processedclickobjectscount=this.processcount;
 			this.processingnodes=false;
 			this.totalcount=clickObjects.length;
-			console.log("-----------Index new click nodes method start----------------");
-			console.log("Processing count: "+this.processcount);
-			console.log("Total count: "+ this.totalcount);
-			console.log("-----------Index new click nodes method end----------------");
 			if(this.processcount<this.totalcount){
 				//todo new nodes added need to reprocess
 				// this.indexnewclicknodes();
@@ -525,7 +509,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 				for(var htmli=0;htmli<this.htmlindex.length;htmli++){
 					var checknode=this.htmlindex[htmli];
 					for (var i = 0; i < clickObjects.length; i++) {
-						// console.log(clickObjects[i]);
 						if(clickObjects[i].element==window){
 							continue;
 						}
@@ -624,7 +607,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 			}
 
 			for (var i = 0; i < clickObjects.length; i++) {
-				// console.log(clickObjects[i]);
 				if(clickObjects[i].element==window){
 					continue;
 				}
@@ -643,10 +625,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 				clickobject = node;
 			}
 
-			/*if(node.nodeName.toLowerCase()==='a'){
-				console.log(node);
-			}*/
-
 			if(clickobjectexists){
 				node.hasclick=true;
 				elementdata["element-type"] = node.nodeName.toLowerCase();
@@ -661,7 +639,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 				}
 
 				if(elementdata["element-labels"].length==0){
-					console.log(node);
 					return node;
 				}
 
@@ -699,17 +676,10 @@ if (typeof Voicepluginsdk == 'undefined') {
 
 				this.htmlindex.push(elementdata);
 
-				/*if(node.nodeName.toLowerCase()==='a'){
-					console.log(elementdata);
-				}*/
-
 				// add click to node to send what user has clicked.
 				this.addClickToNode(node);
-			} else {
-				/*if(node.nodeName.toLowerCase()==='a'){
-					console.log("clickobject not found");
-				}*/
 			}
+
 			return node;
 		},
 		// getting the text for the clicknodes.
@@ -1262,7 +1232,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 			}
 			recordingcookiedata.domain = window.location.host;
 			this.createstoragedata(this.recordingcookiename,JSON.stringify(recordingcookiedata));
-			// this.addbuttonhtml();
 			this.showhtml();
 
 			//add analtytics
@@ -1283,8 +1252,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 			//add analtytics
 			this.recordclick('recordingstop',recordingcookiedata.domain);
 
-			/*this.addbuttonhtml();
-			this.addvoicesearchmodal(true);*/
 			this.showhtml();
 			jQuery("#nistvoicesearchresults").html("");
 			var xhr = new XMLHttpRequest();
@@ -1395,7 +1362,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 			//add analtytics
 			this.recordclick('search',searchtext);
 
-			// console.log(searchtext);
 			var xhr = new XMLHttpRequest();
 			xhr.open("GET", this.apihost + "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host), true);
 			xhr.onload = function(event){
@@ -1548,22 +1514,20 @@ if (typeof Voicepluginsdk == 'undefined') {
 			var matchnodes = [];
 			if(selectednode.objectdata) {
 				var originalnode=JSON.parse(selectednode.objectdata);
-				// console.log(originalnode);
 				if(selectednode && this.htmlindex.length>0){
 					for(var i=0;i<this.htmlindex.length;i++){
 						var searchnode = this.htmlindex[i];
 						var searchlabelexists=false;
 						var comparenode=domJSON.toJSON(searchnode["element-data"]);
 						var match=this.comparenodes(comparenode.node,originalnode.node);
-						/*console.log("--------------match count start---------------");
-						console.log(comparenode);
-						console.log(match);
-						console.log("--------------match count end---------------");*/
+
 						if((match.matched+26)>=match.count){
 							searchlabelexists=true;
 						}
+
 						if(searchlabelexists){
 							var matchnodeexists=false;
+
 							if(matchnodes.length>0){
 								for(var j=0;j<matchnodes.length;j++){
 									if(matchnodes[j]["element-data"].isEqualNode(searchnode["element-data"])){
@@ -1571,6 +1535,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 									}
 								}
 							}
+
 							if(matchnodeexists===false) {
 								matchnodes.push(searchnode);
 							}
@@ -1578,6 +1543,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 					}
 				}
 			}
+
 			if(matchnodes.length == 1){
 				this.updatenavcookiedata(navcookiedata,selectednode.id);
 				this.matchaction(matchnodes[0],false,selectednode);
@@ -1593,20 +1559,20 @@ if (typeof Voicepluginsdk == 'undefined') {
 						}
 					}
 				});
+
 				if(finalmatchnode.hasOwnProperty("element-data")) {
 					this.updatenavcookiedata(navcookiedata,selectednode.id);
 					this.matchaction(finalmatchnode, false,selectednode);
 				}
+
 				return;
 			} else {
-				console.log("no clicknodes found");
 				alert("Unable to find the action");
 			}
 		},
 		//comparing nodes of indexed and the sequence step selected
 		comparenodes:function(comparenode,originalnode,match={count:0,matched:0}){
 			for(var key in originalnode){
-				// console.log(key);
 				if(key==="className" || key==='class'){
 					continue;
 				}
@@ -1716,14 +1682,12 @@ if (typeof Voicepluginsdk == 'undefined') {
 		},
 		recordclick:function (clicktype='sequencerecord',clickedname='',recordid=0) {
 			var senddata={usersessionid:this.sessionID,clicktype:clicktype,clickedname:clickedname,recordid:recordid};
-			console.log(senddata);
-			// return;
 			var xhr = new XMLHttpRequest();
 			xhr.open("PUT", this.apihost + "/clickevents/userclick", false);
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
 				if(xhr.status == 200){
-					console.log(xhr.response);
+					// console.log(xhr.response);
 				} else {
 					console.log(xhr.status+" : "+xhr.statusText);
 				}
