@@ -1101,7 +1101,9 @@ if (typeof Voicepluginsdk == 'undefined') {
 			};
 			xhr.send(outputdata);
 			//processing new clicknodes if available after the click action.
-			setTimeout(function (){Voicepluginsdk.indexnewclicknodes();},POST_INTERVAL);
+			// setTimeout(function (){Voicepluginsdk.indexnewclicknodes();},POST_INTERVAL);
+			// rerender html if recording is enabled.
+			setTimeout(function (){Voicepluginsdk.showhtml();},POST_INTERVAL);
 		},
 		//getting input label for the clicked node
 		getclickedinputlabels:function(node, fromdocument=false, selectchange=false){
@@ -1298,7 +1300,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 							'			<ul id="nist-recordresultrow" class="voice-sugggesion-bullet">'+
 							'			</ul>'+
 							'			<div>'+
-							'				<input id="nistsequencelabel" type="text" name="save-recrded" class="voice-save-recrded-inpt" placeholder="Enter label">'+
+							'				<input id="nistsequencelabel" type="text" name="save-recrded" class="voice-save-recrded-inpt" placeholder="Enter label" nist-voice="true">'+
 							'				<button class="voice-cancel-btn" onclick="Voicepluginsdk.cancelrecordingsequence();">Cancel and exit</button> <button onclick="Voicepluginsdk.submitrecordedlabel();" class="voice-submit-btn">Submit</button>'+
 							'			</div>'+
 							'		</div>'+
