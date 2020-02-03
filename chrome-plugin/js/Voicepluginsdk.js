@@ -489,7 +489,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 			this.indexnewnodes=true;
 			this.currenturl=window.location.href;
 			this.indexdom(document.body);
-			// this.rerenderhtml=true;
 			this.processedclickobjectscount=this.processcount;
 			this.processingnodes=false;
 			this.totalcount=clickObjects.length;
