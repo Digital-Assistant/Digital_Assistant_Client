@@ -1523,8 +1523,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 
 			if(matchnodes.length === 1){
-				this.updatenavcookiedata(navcookiedata,selectednode.id);
-				this.matchaction(matchnodes[0],false,selectednode);
+				if(this.updatenavcookiedata(navcookiedata,selectednode.id)){
+					this.matchaction(matchnodes[0],false,selectednode);
+				}
 				return;
 			} else if(matchnodes.length>1) {
 				//todo need to perform some user intervention
@@ -1539,10 +1540,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 				});
 
 				if(finalmatchnode.hasOwnProperty("element-data")) {
-					this.updatenavcookiedata(navcookiedata,selectednode.id);
-					this.matchaction(finalmatchnode, false,selectednode);
+					if(this.updatenavcookiedata(navcookiedata,selectednode.id)) {
+						this.matchaction(finalmatchnode, false, selectednode);
+					}
 				}
-
 				return;
 			} else {
 				alert("Unable to find the action");
@@ -1574,6 +1575,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 		//adding data to the storage
 		createstoragedata:function(key,value){
 			window.localStorage.setItem(key, value);
+			return true;
 		},
 		//getting the data from the storage
 		getstoragedata:function(key){
@@ -1642,7 +1644,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 		//updating the navigated data
 		updatenavcookiedata:function(navcookiedata,selectednodeid){
 			navcookiedata.navigateddata.push(selectednodeid);
-			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
+			return this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 		},
 		//back to search results functionality
 		backtosearchresults:function (navcookiedata) {
