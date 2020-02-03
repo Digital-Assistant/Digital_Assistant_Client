@@ -3,7 +3,7 @@ Voice plugin Javascript SDK Library
 IMPORTANT NOTE: Copying this library and hosting it locally is strongly discouraged.
  */
 // creating the sdk variable
-if (typeof Voicepluginsdk == 'undefined') {
+if (typeof Voicepluginsdk === 'undefined') {
 	var badBrowser=false;
 	if(navigator.appName.indexOf("Internet Explorer") !== -1){
 		badBrowser=(navigator.appVersion.indexOf("MSIE 1") === -1);
@@ -222,9 +222,9 @@ if (typeof Voicepluginsdk == 'undefined') {
 
 			// listen for when to start the indexing of the dom based on the clicknodes availability
 			document.addEventListener("Indexnodes", function(data) {
-				if(data.detail.data=="indexclicknodes") {
+				if(data.detail.data==="indexclicknodes") {
 					Voicepluginsdk.indexclicknodes();
-				} else if(data.detail.data=="indexnewclicknodes") {
+				} else if(data.detail.data==="indexnewclicknodes") {
 					Voicepluginsdk.indexnewclicknodes();
 				}
 			});
@@ -249,7 +249,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 
 				/* Removing whitespace at the beginning of the cookie name
 				and compare it with the given string */
-				if(cookiename == cookiePair[0].trim()) {
+				if(cookiename === cookiePair[0].trim()) {
 					// Decode the cookie value and return
 					cookievalue = decodeURIComponent(cookiePair[1]);
 				}
@@ -352,7 +352,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 				Voicepluginsdk.searchinelastic();
 			});
 			jQuery("#voicesearchinput").keydown(function (e) {
-				if (e.keyCode == 13) {
+				if (e.keyCode === 13) {
 					jQuery("#nistvoicesearchresults").html("");
 					Voicepluginsdk.searchinelastic();
 					return false;
@@ -465,14 +465,12 @@ if (typeof Voicepluginsdk == 'undefined') {
 			this.processingnodes=false;
 			if(this.processcount<this.totalcount){
 				//	todo refine the processing nodes.
-				// this.rerenderhtml=true;
 				this.indexnewclicknodes();
 				return;
 			}
 			//send all the indexnodes to server
 			if(this.processcount===this.totalcount) {
 				this.sendtoserver();
-				// setTimeout(function (){Voicepluginsdk.indexnewclicknodes();},POST_INTERVAL);
 			}
 		},
 		// indexing new clicknodes after new html got loaded
@@ -1094,6 +1092,8 @@ if (typeof Voicepluginsdk == 'undefined') {
 			xhr.onload = function(event){
 				if(xhr.status == 200){
 					// console.log(xhr.response);
+					// rerender html if recording is enabled.
+					setTimeout(function (){Voicepluginsdk.showhtml();},POST_INTERVAL);
 				} else {
 					console.log(xhr.status+" : "+xhr.statusText);
 				}
@@ -1101,8 +1101,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 			xhr.send(outputdata);
 			//processing new clicknodes if available after the click action.
 			// setTimeout(function (){Voicepluginsdk.indexnewclicknodes();},POST_INTERVAL);
-			// rerender html if recording is enabled.
-			setTimeout(function (){Voicepluginsdk.showhtml();},POST_INTERVAL);
 		},
 		//getting input label for the clicked node
 		getclickedinputlabels:function(node, fromdocument=false, selectchange=false){
@@ -1284,8 +1282,6 @@ if (typeof Voicepluginsdk == 'undefined') {
 			this.recordclick('recordingcancel',recordingcookiedata.domain);
 
 			if(render) {
-				// this.addbuttonhtml();
-				// this.addvoicesearchmodal(true);
 				this.showhtml();
 			}
 		},
@@ -1333,7 +1329,8 @@ if (typeof Voicepluginsdk == 'undefined') {
 				sequenceids.push(this.recordedsequenceids[i].id);
 			}
 
-			var sequencelistdata={name:sequencename,domain:window.location.host,usersessionid:this.sessionID,userclicknodelist:sequenceids.toString(),userclicknodesSet:this.recordedsequenceids};
+			// var sequencelistdata={name:sequencename,domain:window.location.host,usersessionid:this.sessionID,userclicknodelist:sequenceids.toString(),userclicknodesSet:this.recordedsequenceids};
+			var sequencelistdata={name:sequencename,domain:window.location.host,usersessionid:this.sessiondata.authdata.id.toString(),userclicknodelist:sequenceids.toString(),userclicknodesSet:this.recordedsequenceids};
 			this.cancelrecordingsequence(true);
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", this.apihost + "/clickevents/recordsequencedata", true);
@@ -1397,7 +1394,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 				}
 				path += data.userclicknodesSet[i].clickednodename;
 			}
-			var html=   '	<div class="voice-sugtns-list"><h4><a>'+data.name.toString()+'</a></h4>'+
+			var html=   '	<div nist-voice="true" class="voice-sugtns-list"><h4><a>'+data.name.toString()+'</a></h4>'+
 						'		<p>'+path+'</p>'+
 						'	</div>';
 			var element=jQuery(html);
@@ -1469,10 +1466,13 @@ if (typeof Voicepluginsdk == 'undefined') {
 				}
 				jQuery("#nistvoicesteps").append(this.rendersteps(data.userclicknodesSet[i],visited,navcookiedata));
 			}
-			if(this.sessionID===data.usersessionid){
+
+			if(this.sessionID===data.usersessionid || this.sessiondata.authdata.id===data.usersessionid){
 				jQuery("#deletesequence").click(function () {
 					Voicepluginsdk.deletesequencelist(data);
 				});
+			} else {
+				jQuery("#deletesequence").hide();
 			}
 
 			jQuery('#nist-upvote').click(function () {
@@ -1545,8 +1545,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 				}
 			}
 
-			console.log(matchnodes);
-			if(matchnodes.length == 1){
+			if(matchnodes.length === 1){
 				this.updatenavcookiedata(navcookiedata,selectednode.id);
 				this.matchaction(matchnodes[0],false,selectednode);
 				return;
@@ -1556,7 +1555,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 				matchnodes.forEach(function (matchnode, matchnodeindex) {
 					if(matchnode.hasOwnProperty("element-data")) {
 						var inputlabels = Voicepluginsdk.getclickedinputlabels(matchnode["element-data"]);
-						if (inputlabels == selectednode.clickednodename) {
+						if (inputlabels === selectednode.clickednodename) {
 							finalmatchnode = matchnode;
 						}
 					}
@@ -1672,15 +1671,17 @@ if (typeof Voicepluginsdk == 'undefined') {
 		backtosearchresults:function (navcookiedata) {
 			if(navcookiedata.searchterm!=''){
 				var navcookiedata1 = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:navcookiedata.searchterm};
-				this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata1));
-				this.autoplay=false;
-				jQuery("#voicesearchinput").val(navcookiedata.searchterm);
-
-				//add analtytics
-				this.recordclick('back',navcookiedata.data.name.toString(),navcookiedata.data.id);
-
-				this.searchinelastic(navcookiedata.searchterm);
+			} else {
+				var navcookiedata1 = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:""};
 			}
+			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata1));
+			this.autoplay=false;
+			jQuery("#voicesearchinput").val(navcookiedata.searchterm);
+
+			//add analtytics
+			this.recordclick('back',navcookiedata.data.name.toString(),navcookiedata.data.id);
+
+			this.searchinelastic(navcookiedata.searchterm);
 		},
 		recordclick:function (clicktype='sequencerecord',clickedname='',recordid=0) {
 			var senddata={usersessionid:this.sessionID,clicktype:clicktype,clickedname:clickedname,recordid:recordid};
