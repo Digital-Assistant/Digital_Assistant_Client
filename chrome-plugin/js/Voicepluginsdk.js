@@ -413,13 +413,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 		},
 		//render the required html for showing up the proper html
 		showhtml:function(){
-			/*var checkrecording = this.getstoragedata(this.recordingcookiename);
-			if(checkrecording) {
-				var checkrecordingdata = JSON.parse(checkrecording);
-				if (checkrecordingdata.hasOwnProperty("recording") && checkrecordingdata.recording) {
-					return false;
-				}
-			}*/
 			this.rerenderhtml=false;
 			var addnisticon=true;
 			var checkrecording = this.getstoragedata(this.recordingcookiename);
@@ -432,11 +425,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 			if(addnisticon){
 				this.addvoicesearchmodal(addnisticon);
-				/*window.onclick = function(event) {
-					if (event.target == modal) {
-						Voicepluginsdk.closemodal();
-					}
-				};*/
 				var navigationcookie=this.getstoragedata(this.navigationcookiename);
 				if(navigationcookie){
 					var navigationcookiedata = JSON.parse(navigationcookie);
@@ -538,19 +526,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 							for (var i=0;i<childnodes.length;i++){
 								var childnode=childnodes[i];
 								this.nodeid++;
-								if(node.hasOwnProperty("displaytype") && node.displaytype === "tab-content") {
-									childnode.displaytype = node.displaytype;
-									childnode.tabid = node.tabid;
-								}
-								if(node.hasOwnProperty("navtype") && node.navtype === "navtab") {
-									if(node.getAttribute("href")) {
-										this.menuitems.push({
-											'name': node.textContent.replace(/[\n\r]+|[\s]{2,}/g, ' ').trim(),
-											'refid': node.getAttribute("href").replace("#",""),
-											'menunode': node
-										});
-									}
-								}
 								if(this.ignoreelements.indexOf(childnode.nodeName.toLowerCase())===-1) {
 									if(ret){
 										if(textlabel==""){
@@ -1092,15 +1067,17 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.onload = function(event){
 				if(xhr.status == 200){
 					// console.log(xhr.response);
-					// rerender html if recording is enabled.
-					setTimeout(function (){Voicepluginsdk.showhtml();},POST_INTERVAL);
 				} else {
 					console.log(xhr.status+" : "+xhr.statusText);
 				}
 			};
 			xhr.send(outputdata);
+
 			//processing new clicknodes if available after the click action.
 			// setTimeout(function (){Voicepluginsdk.indexnewclicknodes();},POST_INTERVAL);
+
+			// rerender html if recording is enabled.
+			setTimeout(function (){Voicepluginsdk.showhtml();},POST_INTERVAL);
 		},
 		//getting input label for the clicked node
 		getclickedinputlabels:function(node, fromdocument=false, selectchange=false){
@@ -1686,7 +1663,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 		recordclick:function (clicktype='sequencerecord',clickedname='',recordid=0) {
 			var senddata={usersessionid:this.sessionID,clicktype:clicktype,clickedname:clickedname,recordid:recordid};
 			var xhr = new XMLHttpRequest();
-			xhr.open("PUT", this.apihost + "/clickevents/userclick", false);
+			xhr.open("PUT", this.apihost + "/clickevents/userclick", true);
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
 				if(xhr.status == 200){
