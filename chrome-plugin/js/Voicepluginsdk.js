@@ -1463,13 +1463,13 @@ if (typeof Voicepluginsdk == 'undefined') {
 					visited = this.inarray(data.userclicknodesSet[i].id, navcookiedata.navigateddata);
 				}
 				if(navcookiedata.autoplay && (!navcookiedata.pause || !navcookiedata.stop)){
-					if(visited==-1 && !performactionnode){
+					if(visited===-1 && !performactionnode){
 						performactionnode=data.userclicknodesSet[i];
 					}
 				}
 				jQuery("#nistvoicesteps").append(this.rendersteps(data.userclicknodesSet[i],visited,navcookiedata));
 			}
-			if(this.sessionID==data.usersessionid){
+			if(this.sessionID===data.usersessionid){
 				jQuery("#deletesequence").click(function () {
 					Voicepluginsdk.deletesequencelist(data);
 				});
@@ -1545,6 +1545,7 @@ if (typeof Voicepluginsdk == 'undefined') {
 				}
 			}
 
+			console.log(matchnodes);
 			if(matchnodes.length == 1){
 				this.updatenavcookiedata(navcookiedata,selectednode.id);
 				this.matchaction(matchnodes[0],false,selectednode);
