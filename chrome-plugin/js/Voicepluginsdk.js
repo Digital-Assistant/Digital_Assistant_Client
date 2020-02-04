@@ -413,6 +413,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 		},
 		//render the required html for showing up the proper html
 		showhtml:function(){
+			console.log("inside showhtml function");
 			this.rerenderhtml=false;
 			var addnisticon=true;
 			var checkrecording = this.getstoragedata(this.recordingcookiename);
@@ -1077,7 +1078,11 @@ if (typeof Voicepluginsdk === 'undefined') {
 			// setTimeout(function (){Voicepluginsdk.indexnewclicknodes();},POST_INTERVAL);
 
 			// rerender html if recording is enabled.
-			setTimeout(function (){Voicepluginsdk.showhtml();},POST_INTERVAL);
+			if(node.nodeName.toLowerCase()!=='select') {
+				setTimeout(function () {
+					Voicepluginsdk.showhtml();
+				}, POST_INTERVAL);
+			}
 		},
 		//getting input label for the clicked node
 		getclickedinputlabels:function(node, fromdocument=false, selectchange=false){
@@ -1467,6 +1472,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			if(typeof performactionnode=="object" && this.autoplay) {
 				this.performclickaction(performactionnode,navcookiedata);
 			} else if(this.autoplay){
+				console.log("invoked toogle autoplay function");
 				this.toggleautoplay(navcookiedata);
 			}
 			jQuery("#backtosearch").click(function () {
