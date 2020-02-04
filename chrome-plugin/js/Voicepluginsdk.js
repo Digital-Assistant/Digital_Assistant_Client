@@ -82,6 +82,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 		rerenderhtml:true,
 		processingnodes:false,
 		processedclickobjectscount:0,
+		recording:false,
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -413,7 +414,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 		},
 		//render the required html for showing up the proper html
 		showhtml:function(){
-			console.log("inside showhtml function");
 			this.rerenderhtml=false;
 			var addnisticon=true;
 			var checkrecording = this.getstoragedata(this.recordingcookiename);
@@ -421,6 +421,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				var checkrecordingdata=JSON.parse(checkrecording);
 				if(checkrecordingdata.hasOwnProperty("recording") && checkrecordingdata.recording){
 					addnisticon=false;
+					this.recording=true;
 					this.openmodal();
 				}
 			}
@@ -1078,7 +1079,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			// setTimeout(function (){Voicepluginsdk.indexnewclicknodes();},POST_INTERVAL);
 
 			// rerender html if recording is enabled.
-			if(node.nodeName.toLowerCase()!=='select') {
+			if(node.nodeName.toLowerCase()!=='select' && this.recording) {
 				setTimeout(function () {
 					Voicepluginsdk.showhtml();
 				}, POST_INTERVAL);
@@ -1472,7 +1473,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			if(typeof performactionnode=="object" && this.autoplay) {
 				this.performclickaction(performactionnode,navcookiedata);
 			} else if(this.autoplay){
-				console.log("invoked toogle autoplay function");
 				this.toggleautoplay(navcookiedata);
 			}
 			jQuery("#backtosearch").click(function () {
