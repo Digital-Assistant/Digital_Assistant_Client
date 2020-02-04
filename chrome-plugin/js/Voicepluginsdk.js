@@ -1574,13 +1574,23 @@ if (typeof Voicepluginsdk === 'undefined') {
 		},
 		//adding data to the storage
 		createstoragedata:function(key,value){
-			window.localStorage.setItem(key, value);
-			return true;
+			try {
+				window.localStorage.setItem(key, value);
+				return true;
+			} catch (e) {
+				console.log(e);
+				return false;
+			}
 		},
 		//getting the data from the storage
 		getstoragedata:function(key){
-			var result=window.localStorage.getItem(key);
-			return result;
+			try {
+				var result=window.localStorage.getItem(key);
+				return result;
+			} catch (e) {
+				console.log(e);
+				return false;
+			}
 		},
 		//delete sequence list functionality for the owner
 		deletesequencelist:function(data){
