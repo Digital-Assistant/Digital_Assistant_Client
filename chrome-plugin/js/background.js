@@ -55,6 +55,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 	} else if(request.action === "authtenicate") {
 		loginwithgoogle();
+	} else if(request.action === "Debugvalueset"){
+		voicedebug=request.data;
 	}
 });
 

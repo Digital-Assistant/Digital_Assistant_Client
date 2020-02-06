@@ -9,6 +9,10 @@ document.addEventListener("RequestSessiondata", function(data) {
 	chrome.runtime.sendMessage({action:data.detail.data,data:data.detail.data});
 });
 
+document.addEventListener("Debugsetevent", function(data) {
+	chrome.runtime.sendMessage({action:data.detail.data.action,data:data.detail.data.value});
+});
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	if(request.action==="Usersessiondata"){
 		var sessionevent = new CustomEvent("Usersessiondata", {detail: {data: request.data}, bubbles: false, cancelable: false});

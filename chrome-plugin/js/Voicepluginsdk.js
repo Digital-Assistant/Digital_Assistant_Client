@@ -37,6 +37,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 		alert(JSON.parse(data.detail.data));
 	});
 
+	var debugsetevent = new CustomEvent("Debugsetevent", {detail: {data: {action:'Debugvalueset',value:voicedebug}}, bubbles: false, cancelable: false});
+	document.dispatchEvent(debugsetevent);
+
 	// initializing the sdk variable need to change to a new variable in future.
 	var Voicepluginsdk = {
 		sdkUrl: "/",
@@ -232,7 +235,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 			// We need to wait till all dom content is loaded. We initially used a standard wait time but shifted to
 			//      use https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event
-			//      This still produces some discrepancy where some nodes are not being processed.
+			//      This still produces some discrepancy where it hangs up the web page.
 			//      This needs to be improved at some point.
 			window.addEventListener('load', (event) => {
 				Voicepluginsdk.modifybodyhtml();
@@ -248,15 +251,13 @@ if (typeof Voicepluginsdk === 'undefined') {
 			for(var i = 0; i < cookieArr.length; i++) {
 				var cookiePair = cookieArr[i].split("=");
 
-				/* Removing whitespace at the beginning of the cookie name
-				and compare it with the given string */
+				// Removing whitespace at the beginning of the cookie name and compare it with the given string
 				if(cookiename === cookiePair[0].trim()) {
 					// Decode the cookie value and return
 					cookievalue = decodeURIComponent(cookiePair[1]);
 				}
 			}
 
-			// Return null if not found
 			return cookievalue;
 		},
 		checkuserkeyexists:function(){
@@ -323,7 +324,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 		},
 		addvoicesearchmodal:function(addnisticon=true){
-			var recbtn ='	   <button nist-voice="true" id="nistvoicerecbtn" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-record.png"> <span nist-voice="true">Rec</span></button>';
+			// var recbtn ='	   <button nist-voice="true" id="nistvoicerecbtn" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-record.png"> <span nist-voice="true">Rec</span></button>';
+			var recbtn ='	   <button nist-voice="true" id="nistvoiceadvbtn" class="voice-record-img"><span nist-voice="true">Advanced</span></button>';
 
 			if(!addnisticon){
 				recbtn ='	   <button nist-voice="true" id="nistvoicerecstpbtn" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-stop.png"> <span nist-voice="true">Stop</span></button>';
@@ -376,8 +378,11 @@ if (typeof Voicepluginsdk === 'undefined') {
 				jQuery("#nist-voice-icon-stop").hide();
 			}
 			if(addnisticon) {
-				jQuery("#nistvoicerecbtn").click(function () {
+				/*jQuery("#nistvoicerecbtn").click(function () {
 					Voicepluginsdk.gettimestamp("start");
+				});*/
+				jQuery("#nistvoiceadvbtn").click(function () {
+					Voicepluginsdk.showadvancedhtml();
 				});
 			} else {
 				jQuery("#nistvoicerecstpbtn").click(function () {
@@ -460,7 +465,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 			//send all the indexnodes to server
 			if(this.processcount===this.totalcount) {
-				this.sendtoserver();
+				// this.sendtoserver();
 			}
 		},
 		// indexing new clicknodes after new html got loaded
@@ -487,7 +492,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 			// send all the indexed nodes to server
 			if(this.processedclickobjectscount===this.totalcount){
-				this.sendtoserver();
+				// this.sendtoserver();
 			}
 		},
 		removefromhtmlindex:function(){
@@ -1300,20 +1305,35 @@ if (typeof Voicepluginsdk === 'undefined') {
 			jQuery("#nist-recordresultrow").append(element);
 		},
 		// submit functionality of the recorded sequence.
-		submitrecordedlabel:function(){
+		submitrecordedlabel:function(submittype="recording"){
 			var sequencename=jQuery("#nistsequencelabel").val();
-			if(sequencename==''){
-				alert('Please enter proper label');
-				jQuery("#nistsequencelabel").focus();
-				return false;
+			var sequencelistdata={name:"",domain:window.location.host,usersessionid:this.sessiondata.authdata.id.toString(),userclicknodelist:[].toString(),userclicknodesSet:this.recordedsequenceids,isValid:1,isIgnored:0};
+			if(submittype==='recording') {
+				if (sequencename === '') {
+					alert('Please enter proper label');
+					jQuery("#nistsequencelabel").focus();
+					return false;
+				}
+			} else if(submittype === 'invalid'){
+				if(sequencename===''){
+					sequencename="Declared as not valid sequence by user";
+				}
+				sequencelistdata.isValid=0;
+			} else if(submittype === 'ignore'){
+				if(sequencename===''){
+					sequencename="Ignored by user";
+				}
+				sequencelistdata.isValid=0;
+				sequencelistdata.isIgnored=1;
 			}
 			var sequenceids = [];
 			for(var i=0;i<this.recordedsequenceids.length;i++){
 				sequenceids.push(this.recordedsequenceids[i].id);
 			}
-
+			sequencelistdata.name=sequencename;
+			sequencelistdata.userclicknodelist=sequenceids.toString();
 			// var sequencelistdata={name:sequencename,domain:window.location.host,usersessionid:this.sessionID,userclicknodelist:sequenceids.toString(),userclicknodesSet:this.recordedsequenceids};
-			var sequencelistdata={name:sequencename,domain:window.location.host,usersessionid:this.sessiondata.authdata.id.toString(),userclicknodelist:sequenceids.toString(),userclicknodesSet:this.recordedsequenceids};
+			console.log(sequencelistdata);
 			this.cancelrecordingsequence(true);
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", this.apihost + "/clickevents/recordsequencedata", true);
@@ -1607,7 +1627,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 		},
 		//confirmation for the deletion of the sequence list
 		confirmdelete:function (data) {
-			var senddata=JSON.stringify({usersessionid:this.sessionID,id:data.id});
+			// var senddata=JSON.stringify({usersessionid:this.sessionID,id:data.id});
+			var senddata=JSON.stringify({usersessionid:this.sessiondata.authdata.id,id:data.id});
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", this.apihost + "/clickevents/sequence/delete", true);
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
@@ -1691,6 +1712,47 @@ if (typeof Voicepluginsdk === 'undefined') {
 				}
 			};
 			xhr.send(JSON.stringify(senddata));
+		},
+		showadvancedhtml:function(){
+			jQuery("#nistvoicesearchresults").html('');
+			var html=   '<ul id="nistadvoptions">'+
+						'<li nist-voice="true"><a>Create your own action <button nist-voice="true" id="nistvoicerecbtn" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-record.png"> <span nist-voice="true">Rec</span></button></a></li>'+
+						'</ul>';
+			jQuery("#nistvoicesearchresults").append(html);
+			jQuery("#nistvoicerecbtn").click(function () {
+				Voicepluginsdk.gettimestamp("start");
+			});
+			var xhr = new XMLHttpRequest();
+			xhr.open("GET", this.apihost + "/clickevents/suggested?domain="+encodeURI(window.location.host), true);
+			xhr.onload = function(event){
+				if(xhr.status == 200){
+					Voicepluginsdk.showsuggestedhtml(JSON.parse(xhr.response));
+				} else {
+					console.log(xhr.status+" : "+xhr.statusText);
+				}
+			};
+			xhr.send();
+		},
+		showsuggestedhtml:function(data){
+			if(data.length>0) {
+				this.recordedsequenceids = data;
+				var html = '   <div class="voice-suggesion-card">' +
+					'		<div class="voice-card-left">' +
+					'			<h4>Name the sequence</h4>' +
+					'			<ul id="nist-recordresultrow" class="voice-sugggesion-bullet">' +
+					'			</ul>' +
+					'			<div>' +
+					'				<input id="nistsequencelabel" type="text" name="save-recrded" class="voice-save-recrded-inpt" placeholder="Enter label" nist-voice="true">' +
+					'				<button onclick="Voicepluginsdk.submitrecordedlabel(\'recording\');" class="voice-submit-btn">Submit</button><button class="voice-cancel-btn" onclick="Voicepluginsdk.submitrecordedlabel(\'invalid\');">Invalid Sequence</button><button class="voice-cancel-btn" onclick="Voicepluginsdk.submitrecordedlabel(\'ignore\');">Ignore</button>' +
+					'			</div>' +
+					'		</div>' +
+					'	</div>';
+
+				jQuery("#nistvoicesearchresults").append(html);
+				for (var i = 0; i < data.length; i++) {
+					this.renderrecordresultrow(data[i], i);
+				}
+			}
 		}
 	};
 	Voicepluginsdk.init();
