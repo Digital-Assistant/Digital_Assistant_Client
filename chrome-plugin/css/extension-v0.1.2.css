@@ -288,3 +288,9 @@
 .nist-clear {
   clear: both;
 }
+.voice-modalback-btn img{
+  cursor: pointer;
+}
+.name-heading{
+  padding-left: 10px;
+}
