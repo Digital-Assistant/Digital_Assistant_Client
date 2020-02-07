@@ -1340,7 +1340,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.setRequestHeader('Content-Type', 'application/json');
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					Voicepluginsdk.closemodal();
+					Voicepluginsdk.backtomodal();
 				} else {
 					console.log(xhr.status+" : "+xhr.statusText);
 				}
