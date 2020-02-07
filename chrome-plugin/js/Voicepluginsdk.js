@@ -1718,7 +1718,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 			jQuery("#nistvoicesearchresults").html('');
 			var html=   '<div class="voice-modalback-btn"><img nist-voice="true" id="nistvoiceback" src="'+this.extensionpath+'assets/voice-back.png"></div><br />'+
 						'<div class="nist-clear"></div>'+
-						'<div class="name-heading"><h2 nist-voice="true">Create your own action <button nist-voice="true" id="nistvoicerecbtn" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-record.png"> <span nist-voice="true">Rec</span></button></h2><br /></div>';
+						'   <div class="voice-suggesion-card">' +
+						'		<div class="voice-card-left">' +
+						'			<h4 class="voice-card-noborder">Create your own action <button nist-voice="true" id="nistvoicerecbtn" class="voice-modal-btn"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-record.png"> <span nist-voice="true">Rec</span></button></h4>' +
+						'       </div>'+
+						'   </div>';
+						// '<div class="name-heading"><h2 nist-voice="true">Create your own action <button nist-voice="true" id="nistvoicerecbtn" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-record.png"> <span nist-voice="true">Rec</span></button></h2><br /></div>';
 			jQuery("#nistvoicesearchresults").append(html);
 			jQuery("#nistvoicerecbtn").click(function () {
 				Voicepluginsdk.gettimestamp("start");
@@ -1742,7 +1747,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				this.recordedsequenceids = data;
 				var html = '   <div class="voice-suggesion-card">' +
 					'		<div class="voice-card-left">' +
-					'			<h4>Name the sequence</h4>' +
+					'			<h4>Our AI detected this sequence. <br /> Do you want to name it?</h4>' +
 					'			<ul id="nist-recordresultrow" class="voice-sugggesion-bullet">' +
 					'			</ul>' +
 					'			<div>' +

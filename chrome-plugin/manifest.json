@@ -13,7 +13,7 @@
 	  "run_at":"document_start"
 	},
 	{
-	  "matches": ["*://localhost/*","*://*.vantagecircle.com/*", "*://*.nistapp.com/*", "*://*.myplaceforparts.com/*", "*://*.rknowsys.com/*","*://yureshwar.atlassian.net/*"],
+	  "matches": ["*://localhost/*","*://*.vantagecircle.com/*", "*://*.nistapp.com/*", "*://*.myplaceforparts.com/*", "*://*.rknowsys.com/*","*://*.atlassian.net/*"],
 	  "js": ["js/injectsdk.js"],
 	  "run_at":"document_end"
 	}

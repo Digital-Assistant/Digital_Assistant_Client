@@ -294,3 +294,15 @@
 .name-heading{
 	padding-left: 10px;
 }
+.voice-modal-btn{
+	cursor: pointer;
+}
+
+h4.voice-card-noborder {
+	color: #333333;
+	padding-left: 20px;
+	text-align: center;
+	font-size: 16px;
+	border: none !important;
+	padding-bottom: 0px !important;
+}
