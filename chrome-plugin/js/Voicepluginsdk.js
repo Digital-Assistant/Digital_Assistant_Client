@@ -1747,7 +1747,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				this.recordedsequenceids = data;
 				var html = '   <div class="voice-suggesion-card">' +
 					'		<div class="voice-card-left">' +
-					'			<h4>Our AI detected this sequence. <br /> Do you want to name it?</h4>' +
+					'			<h4>Our AI detected this sequence. <br /> Do you want to name it? <br /><span style="color:#ff4800;font-weight:bold;">(Alpha version: Not reliable)</span></h4>' +
 					'			<ul id="nist-recordresultrow" class="voice-sugggesion-bullet">' +
 					'			</ul>' +
 					'			<div>' +
