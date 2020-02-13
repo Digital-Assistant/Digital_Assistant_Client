@@ -241,25 +241,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 				Voicepluginsdk.modifybodyhtml();
 			});
 		},
-		getcookievalue:function(cookiename){
-			var cookievalue=null;
-
-			// Split cookie string and get all individual name=value pairs in an array
-			var cookieArr = document.cookie.split(";");
-
-			// Loop through the array elements
-			for(var i = 0; i < cookieArr.length; i++) {
-				var cookiePair = cookieArr[i].split("=");
-
-				// Removing whitespace at the beginning of the cookie name and compare it with the given string
-				if(cookiename === cookiePair[0].trim()) {
-					// Decode the cookie value and return
-					cookievalue = decodeURIComponent(cookiePair[1]);
-				}
-			}
-
-			return cookievalue;
-		},
 		checkuserkeyexists:function(){
 			var sessiondata=this.getstoragedata(this.cookiename);
 			if(sessiondata){
@@ -271,12 +252,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 				var sessionevent = new CustomEvent("RequestSessiondata", {detail: {data: "getusersessiondata"}, bubbles: false, cancelable: false});
 				document.dispatchEvent(sessionevent);
 			}
-		},
-		createcookie:function(cookiename,cookievalue,expiringdays,path){
-			var d = new Date();
-			d.setTime(d.getTime() + (expiringdays*24*60*60*1000));
-			var expires = "expires="+ d.toUTCString();
-			document.cookie = cookiename + "=" + cookievalue + ";" + expires + ";path="+path;
 		},
 		createsession:function(data){
 			var sessiondata=this.getstoragedata(this.cookiename);
@@ -407,6 +382,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 		},
 		//closing the UDA screen
 		closemodal:function(){
+			jQuery("#nistvoiceadvbtn").show();
 			jQuery('#steps-content').hide();
 			jQuery("#nistModal").css("display","none");
 			jQuery("#nistvoicesearchresults").html("");

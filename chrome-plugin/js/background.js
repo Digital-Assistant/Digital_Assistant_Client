@@ -71,7 +71,7 @@ function storesessiondata(){
 //getting the sessionkey from backend server
 function getsessionkey(){
 	var xhr = new XMLHttpRequest();
-	xhr.open("Get", apihost+"/user/getsessionkey", false);
+	xhr.open("Get", apihost+"/user/getsessionkey", true);
 	xhr.onload = function(event){
 		if(xhr.status === 200){
 			sessiondata.sessionkey=xhr.response;
@@ -88,7 +88,7 @@ function getsessionkey(){
 function bindauthenticatedaccount(){
 	var xhr = new XMLHttpRequest();
 	var authdata={authid:sessiondata.authdata.id,emailid:sessiondata.authdata.email,authsource:sessiondata.authenticationsource};
-	xhr.open("POST", apihost+"/user/checkauthid", false);
+	xhr.open("POST", apihost+"/user/checkauthid", true);
 	xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 	xhr.onload = function(event){
 		if(xhr.status === 200){
@@ -104,7 +104,7 @@ function bindauthenticatedaccount(){
 function bindaccount(userauthdata){
 	var xhr = new XMLHttpRequest();
 	var usersessiondata={userauthid:userauthdata.id,usersessionid:sessiondata.sessionkey};
-	xhr.open("POST", apihost+"/user/checkusersession", false);
+	xhr.open("POST", apihost+"/user/checkusersession", true);
 	xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 	xhr.onload = function(event){
 		if(xhr.status === 200){
