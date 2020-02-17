@@ -1,15 +1,10 @@
-/**{
-  margin: 0px;
-  padding: 0px;
-}*/
-
 /* The Modal (background) */
 #original-content{
 	/*overflow: auto;*/
 }
-#steps-content{
-	/*position: relative;
-	z-index: 9999;*/
+
+#nist-steps-content{
+
 }
 #nistBtn{
 	width:50px;
@@ -281,9 +276,9 @@
 	cursor: pointer;
 }
 #nistvoicesearchresults{
-	height: 82vh;
+	height: 75vh;
 	overflow-y: scroll;
-	margin-top: 20px;
+	margin-top: 10px;
 }
 .nist-clear {
 	clear: both;

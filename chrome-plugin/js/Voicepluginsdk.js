@@ -86,6 +86,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 		processingnodes:false,
 		processedclickobjectscount:0,
 		recording:false,
+		addcustomcssdomains:["app.vantagecircle.com","dashboard.vantagecircle.com"],
+		containersections:[],
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -169,6 +171,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 			this.totalotherScripts=1;
 			this.loadCssScript(this.extensionpath+"css/extension.css");
 			this.loadOtherScript(this.extensionpath+"js/domJSON.js");
+			if(this.inarray(window.location.host,this.addcustomcssdomains) !== -1){
+				this.loadCssScript(this.extensionpath+"css/"+window.location.host+".css");
+			}
 		},
 		allReady: function() {
 			// execute the parsing method after everything is ready.
@@ -268,7 +273,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			this.recorddocumentclick();
 		},
 		modifybodyhtml:function(){
-			var html='<div id="nistBtn" nist-voice="true"></div><div id="original-content"></div><div id="steps-content" style="display: none;"><div id="voicemodalhtml" nist-voice="true"></div></div>';
+			var html='<div id="nistBtn" nist-voice="true"></div><div id="nist-steps-content" style="display: none;"><div id="voicemodalhtml" nist-voice="true"></div></div>';
 
 			jQuery(document.body).prepend(html);
 
@@ -368,12 +373,28 @@ if (typeof Voicepluginsdk === 'undefined') {
 		openmodal:function(focus=true){
 			if(this.sessiondata.authenticated) {
 				jQuery("#nistBtn").hide();
-				jQuery('#steps-content').show();
+				jQuery('#nist-steps-content').show();
 				jQuery("#nistModal").css("display", "block");
 				var searchinput=jQuery("#voicesearchinput");
 				searchinput.val("");
 				if (focus) {
 					searchinput.focus();
+				}
+				if(this.inarray(window.location.host,this.addcustomcssdomains) !== -1) {
+					let bodychildren = document.body.childNodes;
+					if (bodychildren.length > 0) {
+						bodychildren.forEach(function (childnode, childnodeindex) {
+							if (childnode.classList && childnode.classList.contains("container")) {
+								Voicepluginsdk.containersections.push(childnodeindex);
+								childnode.classList.remove("container");
+							}
+							if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'nistBtn' && childnode.id !== 'nist-steps-content') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
+								if (childnode.classList && !childnode.classList.contains("nist-original-content")) {
+									childnode.classList.add("nist-original-content");
+								}
+							}
+						});
+					}
 				}
 			} else {
 				var sessionevent = new CustomEvent("RequestSessiondata", {detail: {data: "authtenicate"}, bubbles: false, cancelable: false});
@@ -383,7 +404,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 		//closing the UDA screen
 		closemodal:function(){
 			jQuery("#nistvoiceadvbtn").show();
-			jQuery('#steps-content').hide();
+			jQuery('#nist-steps-content').hide();
 			jQuery("#nistModal").css("display","none");
 			jQuery("#nistvoicesearchresults").html("");
 			jQuery("#nistrecordresults").html("");
@@ -392,6 +413,21 @@ if (typeof Voicepluginsdk === 'undefined') {
 			var navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 			this.cancelrecordingsequence(false);
+			if(this.inarray(window.location.host,this.addcustomcssdomains) !== -1) {
+				let bodychildren = document.body.childNodes;
+				if (bodychildren.length > 0) {
+					bodychildren.forEach(function (childnode, childnodeindex) {
+						if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'nistBtn' && childnode.id !== 'nist-steps-content') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
+							if (childnode.classList && childnode.classList.contains("nist-original-content")) {
+								childnode.classList.remove("nist-original-content");
+							}
+						}
+						if (Voicepluginsdk.containersections.length > 0 && Voicepluginsdk.inarray(childnodeindex, Voicepluginsdk.containersections) !== -1) {
+							childnode.classList.add("container");
+						}
+					});
+				}
+			}
 		},
 		//render the required html for showing up the proper html
 		showhtml:function(){
