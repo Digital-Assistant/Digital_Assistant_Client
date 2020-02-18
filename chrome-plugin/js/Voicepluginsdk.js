@@ -86,6 +86,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 		processingnodes:false,
 		processedclickobjectscount:0,
 		recording:false,
+		introjs:[],
+		introjstotalsteps:0,
+		introjscurrentstepnumber:0,
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -169,6 +172,11 @@ if (typeof Voicepluginsdk === 'undefined') {
 			this.totalotherScripts=1;
 			this.loadCssScript(this.extensionpath+"css/extension.css");
 			this.loadOtherScript(this.extensionpath+"js/domJSON.js");
+			if(typeof introJs === 'undefined'){
+				this.totalotherScripts++;
+				this.loadOtherScript(this.extensionpath+"js/intro.min.js");
+				this.loadCssScript(this.extensionpath+"css/introjs.min.css");
+			}
 		},
 		allReady: function() {
 			// execute the parsing method after everything is ready.
@@ -191,6 +199,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 			// check user session exists and create if not available
 			this.checkuserkeyexists();
+
+
+			this.introjs=introJs().setOptions({showStepNumbers:false,showBullets:false,showProgress:false,exitOnOverlayClick:false,exitOnEsc:false,keyboardNavigation:false,doneLabel:'continue'}).oncomplete(function (){Voicepluginsdk.showhtml();});
 
 			// adding speech recognition functionality based on the library availability
 			if(speechrecognitionavailable){
@@ -491,6 +502,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 		},
 		// indexing functionality for the entire dom
 		indexdom: function( node, ret=false, parentnode="", textlabel="", hasparentnodeclick=false ) {
+			if(parentnode==="") {
+				console.log('indexing');
+			}
 			switch (node.nodeType) {
 				case Node.ELEMENT_NODE:
 
@@ -652,6 +666,24 @@ if (typeof Voicepluginsdk === 'undefined') {
 				}
 			}
 
+			if(node.nodeName.toLowerCase() === "input" || node.nodeName.toLowerCase() === "textarea" || node.nodeName.toLowerCase() === "img"){
+
+				if(node.getAttribute("placeholder") && node.getAttribute("placeholder")!=="") {
+					inputlabels.push({"text":node.getAttribute("placeholder").toString(),"match":false});
+				}
+				if(node.getAttribute("type") && (node.getAttribute("type").toLowerCase()==="submit" || node.getAttribute("type").toLowerCase()==="file")) {
+					if(node.getAttribute("value")){
+						inputlabels.push({"text":node.getAttribute("value").toString(),"match":false});
+						iterate=false;
+					}
+				}
+				if(node.getAttribute("alt")){
+					inputlabels.push({"text":node.getAttribute("alt").toString(),"match":false});
+				}
+			}
+
+
+
 			if(getchildlabels && node.childNodes.length>0){
 				var childnodes = node.childNodes;
 				childnodes.forEach(function (childnode, key) {
@@ -678,12 +710,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 				inputlabels = this.getInputLabels(node.parentNode,[], iterationno, iterate, getchildlabels, fromclick, iteratelimit);
 			}
 
-			if(node.nodeName.toLowerCase() === "input" || node.nodeName.toLowerCase() === "textarea" || node.nodeName.toLowerCase() === "img"){
+			/*if(node.nodeName.toLowerCase() === "input" || node.nodeName.toLowerCase() === "textarea" || node.nodeName.toLowerCase() === "img"){
 
 				if(node.getAttribute("placeholder") && node.getAttribute("placeholder")!=="") {
 					inputlabels.push({"text":node.getAttribute("placeholder").toString(),"match":false});
 				}
-				if(node.getAttribute("type") && (node.getAttribute("type")==="submit" || node.getAttribute("type")==="file")) {
+				if(node.getAttribute("type") && (node.getAttribute("type").toLowerCase()==="submit" || node.getAttribute("type").toLowerCase()==="file")) {
 					if(node.getAttribute("value")){
 						inputlabels.push({"text":node.getAttribute("value").toString(),"match":false});
 					}
@@ -691,7 +723,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				if(node.getAttribute("alt")){
 					inputlabels.push({"text":node.getAttribute("alt").toString(),"match":false});
 				}
-			}
+			}*/
 
 			if(inputlabels.length===0 && node.id!==""){
 				inputlabels.push({"text":(node.nodeName.toLowerCase()+"-"+node.id),"match":false});
@@ -859,7 +891,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			var timetoinvoke=1000;
 			switch (node.nodeName.toLowerCase()) {
 				case "input":
-					switch (node.getAttribute("type")) {
+					/*switch (node.getAttribute("type")) {
 						case "text":
 							node.focus();
 							break;
@@ -875,17 +907,35 @@ if (typeof Voicepluginsdk === 'undefined') {
 						default:
 							// node.click();
 							node.focus();
-					}
+					}*/
+					this.introjstotalsteps++;
+					this.introjscurrentstepnumber++;
+					this.introjs.addStep({
+						element: node,
+						intro: "Please input in the field and then continue."
+					}).goToStepNumber(this.introjscurrentstepnumber).start();
 					break;
 				case "textarea":
-					node.focus();
+					// node.focus();
+					this.introjstotalsteps++;
+					this.introjscurrentstepnumber++;
+					this.introjs.addStep({
+						element: node,
+						intro: "Please select the value and then continue."
+					}).goToStepNumber(this.introjscurrentstepnumber).start();
 					break;
 				case "select":
 					var inputlabel=this.getclickedinputlabels(node);
 					var labelmatch=false;
 					if (inputlabel.toLowerCase() === selectednode.clickednodename.toLowerCase()) {
 						labelmatch=true;
-						node.focus();
+						// node.focus();
+						this.introjstotalsteps++;
+						this.introjscurrentstepnumber++;
+						this.introjs.addStep({
+							element: node,
+							intro: "Please select the value and then continue."
+						}).goToStepNumber(this.introjscurrentstepnumber).start();
 					}
 					if(!labelmatch){
 						var childnodes=node.childNodes;
@@ -910,11 +960,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 					break;
 				case "checkbox":
 					node.click();
+					this.invokenextitem(node,timetoinvoke);
 					break;
 				default:
 					node.click();
+					this.invokenextitem(node,timetoinvoke);
 			}
-			this.invokenextitem(node,timetoinvoke);
 		},
 		//invoke the click of next item
 		invokenextitem:function(node,timetoinvoke){
