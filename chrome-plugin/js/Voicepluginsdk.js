@@ -97,7 +97,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			// loading jquery if not available
 			if(typeof jQuery === "undefined") {
 				// loading jquery from installed extension path
-				this.loadScript(this.extensionpath+"js/jquery-3.4.1.min.js");
+				this.loadScript(this.extensionpath+"js/jquery-3.3.0.min.js");
 			} else {
 				// load other scripts if jquery available
 				this.jqueryready=true;
@@ -201,7 +201,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			this.checkuserkeyexists();
 
 
-			this.introjs=introJs().setOptions({showStepNumbers:false,showBullets:false,showProgress:false,exitOnOverlayClick:false,exitOnEsc:false,keyboardNavigation:false,doneLabel:'continue'}).oncomplete(function (){Voicepluginsdk.showhtml();});
+			this.introjs=introJs().setOptions({showStepNumbers:false,showBullets:false,showProgress:false,exitOnOverlayClick:false,exitOnEsc:false,keyboardNavigation:false,doneLabel:'Continue',skipLabel: 'Exit'}).oncomplete(function (){Voicepluginsdk.showhtml();});
 
 			// adding speech recognition functionality based on the library availability
 			if(speechrecognitionavailable){
@@ -414,7 +414,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				if(checkrecordingdata.hasOwnProperty("recording") && checkrecordingdata.recording){
 					addnisticon=false;
 					this.recording=true;
-					this.openmodal();
+					this.openmodal(false);
 				}
 			}
 			if(addnisticon){
@@ -502,9 +502,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 		},
 		// indexing functionality for the entire dom
 		indexdom: function( node, ret=false, parentnode="", textlabel="", hasparentnodeclick=false ) {
-			if(parentnode==="") {
+			/*if(parentnode==="") {
 				console.log('indexing');
-			}
+			}*/
 			switch (node.nodeType) {
 				case Node.ELEMENT_NODE:
 
