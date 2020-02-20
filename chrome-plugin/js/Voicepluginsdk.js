@@ -92,6 +92,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 		introjs:[],
 		introjstotalsteps:0,
 		introjscurrentstepnumber:0,
+		introjsaddedstepnodes:[],
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -540,7 +541,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 						if (checknode['element-data'].isEqualNode(removedclickobject)) {
 							if(checknode['element-data'].nodeName.toLowerCase()==='textarea'){
-								jQuery(checknode['element-data']).unbind('click', Voicepluginsdk.recorduserclick(checknode['element-data'], false));
+								// jQuery(checknode['element-data']).unbind('click', Voicepluginsdk.recorduserclick());
 							}
 							foundremovedindexednode=k;
 							break removeclickobjectcounter;
@@ -924,6 +925,18 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 			var node=data["element-data"];
 			var timetoinvoke=1000;
+
+			// intro js issue fix
+			let addintrostep=true;
+			let introstepindex=0;
+			if(this.introjsaddedstepnodes.length>0){
+				for(var introi=0;introi<this.introjsaddedstepnodes.length;introi++){
+					if(node.isEqualNode(this.introjsaddedstepnodes[introi])){
+						addintrostep=false;
+						introstepindex=introi;
+					}
+				}
+			}
 			switch (node.nodeName.toLowerCase()) {
 				case "input":
 					/*switch (node.getAttribute("type")) {
@@ -943,34 +956,38 @@ if (typeof Voicepluginsdk === 'undefined') {
 							// node.click();
 							node.focus();
 					}*/
-					this.introjstotalsteps++;
-					this.introjscurrentstepnumber++;
-					this.introjs.addStep({
-						element: node,
-						intro: "Please input in the field and then continue."
-					}).goToStepNumber(this.introjscurrentstepnumber).start();
+					if(addintrostep) {
+						this.introjstotalsteps++;
+						this.introjscurrentstepnumber++;
+						this.introjsaddedstepnodes.push(node);
+						this.introjs.addStep({
+							element: node,
+							intro: "Please input in the field and then continue."
+						}).goToStepNumber(this.introjscurrentstepnumber).start();
+					} else {
+						this.introjs.goToStepNumber(introstepindex).start();
+					}
 					break;
 				case "textarea":
 					// node.focus();
-					this.introjstotalsteps++;
-					this.introjscurrentstepnumber++;
-					this.introjs.addStep({
-						element: node,
-						intro: "Please select the value and then continue."
-					}).goToStepNumber(this.introjscurrentstepnumber).start();
-					break;
-				case "select":
-					var inputlabel=this.getclickedinputlabels(node);
-					var labelmatch=false;
-					if (inputlabel.toLowerCase() === selectednode.clickednodename.toLowerCase()) {
-						labelmatch=true;
-						// node.focus();
+					if(addintrostep) {
 						this.introjstotalsteps++;
 						this.introjscurrentstepnumber++;
+						this.introjsaddedstepnodes.push(node);
 						this.introjs.addStep({
 							element: node,
 							intro: "Please select the value and then continue."
 						}).goToStepNumber(this.introjscurrentstepnumber).start();
+					} else {
+						this.introjs.goToStepNumber(introstepindex).start();
+					}
+					break;
+				case "select":
+					var inputlabel=this.getclickedinputlabels(node);
+					var labelmatch=false;
+					/*if (inputlabel.toLowerCase() === selectednode.clickednodename.toLowerCase()) {
+						labelmatch=true;
+						node.focus();
 					}
 					if(!labelmatch){
 						var childnodes=node.childNodes;
@@ -988,6 +1005,17 @@ if (typeof Voicepluginsdk === 'undefined') {
 						if(finalchildnode!==null){
 							jQuery(finalchildnode).attr("selected","selected");
 						}
+					}*/
+					if(addintrostep) {
+						this.introjstotalsteps++;
+						this.introjscurrentstepnumber++;
+						this.introjsaddedstepnodes.push(node);
+						this.introjs.addStep({
+							element: node,
+							intro: "Please select the value and then continue."
+						}).goToStepNumber(this.introjscurrentstepnumber).start();
+					} else {
+						this.introjs.goToStepNumber(introstepindex).start();
 					}
 					break;
 				case "option":
@@ -1061,7 +1089,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 					if(xhr.status === 200){
 
 					} else {
-						console.log(xhr.status+" : "+xhr.statusText);
+
 					}
 					Voicepluginsdk.addclickedrecordcookie("");
 				};
@@ -1135,9 +1163,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					// console.log(xhr.response);
+
 				} else {
-					console.log(xhr.status+" : "+xhr.statusText);
+
 				}
 			};
 			xhr.send(outputdata);
@@ -1263,7 +1291,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				if(xhr.status === 200){
 					Voicepluginsdk.addrecordresultshtml(JSON.parse(xhr.response));
 				} else {
-					console.log(xhr.status+" : "+xhr.statusText);
+
 				}
 			};
 			xhr.send();
@@ -1309,7 +1337,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				if(xhr.status === 200){
 					Voicepluginsdk.addrecordresultshtml(JSON.parse(xhr.response));
 				} else {
-					console.log(xhr.status+" : "+xhr.statusText);
+
 				}
 			};
 			xhr.send();
@@ -1403,7 +1431,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				if(xhr.status === 200){
 					Voicepluginsdk.backtomodal();
 				} else {
-					console.log(xhr.status+" : "+xhr.statusText);
+
 				}
 			};
 			xhr.send(JSON.stringify(sequencelistdata));
@@ -1430,7 +1458,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				if(xhr.status === 200){
 					Voicepluginsdk.renderelasticresults(JSON.parse(xhr.response));
 				} else {
-					console.log(xhr.status+" : "+xhr.statusText);
+
 				}
 			};
 			xhr.send();
@@ -1665,7 +1693,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 				window.localStorage.setItem(key, value);
 				return true;
 			} catch (e) {
-				console.log(e);
 				return false;
 			}
 		},
@@ -1675,7 +1702,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 				var result=window.localStorage.getItem(key);
 				return result;
 			} catch (e) {
-				console.log(e);
 				return false;
 			}
 		},
@@ -1697,7 +1723,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				if(xhr.status === 200){
 					Voicepluginsdk.closemodal();
 				} else {
-					console.log(xhr.status+" : "+xhr.statusText);
+
 				}
 			};
 			xhr.send(senddata);
@@ -1715,9 +1741,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					// console.log(xhr.response);
+
 				} else {
-					console.log(xhr.status+" : "+xhr.statusText);
+
 				}
 			};
 			xhr.send(JSON.stringify(senddata));
@@ -1767,9 +1793,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					// console.log(xhr.response);
+
 				} else {
-					console.log(xhr.status+" : "+xhr.statusText);
+
 				}
 			};
 			xhr.send(JSON.stringify(senddata));
@@ -1798,7 +1824,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				if(xhr.status === 200){
 					Voicepluginsdk.showsuggestedhtml(JSON.parse(xhr.response));
 				} else {
-					console.log(xhr.status+" : "+xhr.statusText);
+
 				}
 			};
 			xhr.send();
@@ -1833,25 +1859,3 @@ if (typeof Voicepluginsdk === 'undefined') {
 } else {
 	// this script has already been loaded
 }
-
-/**
- * Protect window.console method calls, e.g. console is not defined on IE
- * unless dev tools are open, and IE doesn't define console.debug
- */
-(function() {
-	if (!window.console) {
-		window.console = {};
-	}
-	// union of Chrome, FF, IE, and Safari console methods
-	var m = [
-		"log", "info", "warn", "error", "debug", "trace", "dir", "group",
-		"groupCollapsed", "groupEnd", "time", "timeEnd", "profile", "profileEnd",
-		"dirxml", "assert", "count", "markTimeline", "timeStamp", "clear"
-		];
-	// define undefined methods as to prevent errors
-	for (var i = 0; i < m.length; i++) {
-		if (!window.console[m[i]]) {
-			window.console[m[i]] = function() {};
-		}    
-	} 
-})();
