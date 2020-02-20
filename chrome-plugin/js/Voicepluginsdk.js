@@ -93,6 +93,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 		introjstotalsteps:0,
 		introjscurrentstepnumber:0,
 		introjsaddedstepnodes:[],
+		lastclickednode:'',
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -1104,6 +1105,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 			if(node.hasAttribute("nist-voice")){
 				return true;
 			}
+			if(this.lastclickednode!=='' && node.isEqualNode(this.lastclickednode)){
+				return ;
+			}
 			var processclick=true;
 			if(fromdocument && this.htmlindex.length>0){
 				for(var i=0;i<this.htmlindex.length;i++){
@@ -1157,6 +1161,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			postdata.clickednodename = this.getclickedinputlabels(node,fromdocument,selectchange);
 			this.rerenderhtml=true;
 			this.addclickedrecordcookie(postdata.clickednodename);
+			this.lastclickednode=node;
 			var outputdata = JSON.stringify(postdata);
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", this.apihost+"/user/clickednode");
