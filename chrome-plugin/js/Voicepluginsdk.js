@@ -17,6 +17,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 	} else {
 		speechrecognitionavailable=true;
 		voiceRecognition = window.webkitSpeechRecognition;
+		// speechrecognitionavailable=false;
 	}
 
 	// listening for user session data from extension call
@@ -30,7 +31,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 	document.addEventListener("AuthenticatedUsersessiondata", function(data) {
 		Voicepluginsdk.createsession(JSON.parse(data.detail.data));
-		Voicepluginsdk.openmodal();
+		Voicepluginsdk.openmodal(true);
 	});
 
 	document.addEventListener("Alertmessagedata", function(data) {
@@ -298,7 +299,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 				Voicepluginsdk.addbuttonhtml();
 			}
 			setInterval(function () {
-				Voicepluginsdk.indexnewclicknodes();
+				if(lastindextime!==0 && lastindextime<lastmutationtime) {
+					Voicepluginsdk.indexnewclicknodes();
+				}
 			},POST_INTERVAL);
 		},
 		addbuttonhtml:function(){
@@ -307,7 +310,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			var modal =jQuery("#nistBtn");
 			modal.append(buttonhtml);
 			modal.click(function () {
-				Voicepluginsdk.openmodal();
+				Voicepluginsdk.openmodal(true);
 			});
 			if(this.rerenderhtml) {
 				this.showhtml();
@@ -381,7 +384,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 		},
 		//opening the UDA screen
-		openmodal:function(focus=true){
+		openmodal:function(focus=false){
 			if(this.sessiondata.authenticated) {
 				jQuery("#nistBtn").hide();
 				jQuery('#nist-steps-content').show();
@@ -486,6 +489,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				this.indexnewclicknodes();
 				return;
 			}
+			lastindextime=Date.now();
 			//send all the indexnodes to server
 			if(this.processcount===this.totalcount) {
 				// this.sendtoserver();
@@ -497,9 +501,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 				return;
 			}
 			this.processcount=clickObjects.length;
-			if(this.processedclickobjectscount===this.processcount){
+			if(lastindextime!==0 && lastindextime>lastmutationtime){
 				return;
 			}
+			lastindextime=Date.now();
 			this.processingnodes=true;
 			this.removefromhtmlindex();
 			this.indexnewnodes=true;
@@ -519,28 +524,39 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 		},
 		removefromhtmlindex:function(){
-			var newhtmlindex=[];
 			if(this.htmlindex.length>0){
-				for(var htmli=0;htmli<this.htmlindex.length;htmli++){
-					var checknode=this.htmlindex[htmli];
-					for (var i = 0; i < clickObjects.length; i++) {
-						if(clickObjects[i].element === window){
+				let newhtmlindex=[];
+				let htmlindexlength=this.htmlindex.length;
+				for(var htmli=0;htmli<htmlindexlength;htmli++) {
+					let checknode=this.htmlindex[htmli];
+					let removedclickobjectslength=removedclickobjects.length;
+					let foundremovedindexednode=-1;
+					removeclickobjectcounter:
+					for (var k = 0; k < removedclickobjectslength; k++) {
+						if(removedclickobjects[k].element === window){
 							continue;
 						}
-						if (checknode['element-data'].isEqualNode(clickObjects[i].element)) {
-							newhtmlindex.push(checknode);
+						let removedclickobject=removedclickobjects[k].element;
+
+						if (checknode['element-data'].isEqualNode(removedclickobject)) {
+							if(checknode['element-data'].nodeName.toLowerCase()==='textarea'){
+								jQuery(checknode['element-data']).unbind('click', Voicepluginsdk.recorduserclick(checknode['element-data'], false));
+							}
+							foundremovedindexednode=k;
+							break removeclickobjectcounter;
 						}
 					}
+					if(foundremovedindexednode===-1){
+						newhtmlindex.push(checknode);
+					} else {
+						removedclickobjects.splice(foundremovedindexednode,1);
+					}
 				}
-				this.htmlindex=[];
 				this.htmlindex=newhtmlindex;
 			}
 		},
 		// indexing functionality for the entire dom
 		indexdom: function( node, ret=false, parentnode="", textlabel="", hasparentnodeclick=false ) {
-			/*if(parentnode==="") {
-				console.log('indexing');
-			}*/
 			switch (node.nodeType) {
 				case Node.ELEMENT_NODE:
 
@@ -746,21 +762,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 				inputlabels = this.getInputLabels(node.parentNode,[], iterationno, iterate, getchildlabels, fromclick, iteratelimit);
 			}
 
-			/*if(node.nodeName.toLowerCase() === "input" || node.nodeName.toLowerCase() === "textarea" || node.nodeName.toLowerCase() === "img"){
-
-				if(node.getAttribute("placeholder") && node.getAttribute("placeholder")!=="") {
-					inputlabels.push({"text":node.getAttribute("placeholder").toString(),"match":false});
-				}
-				if(node.getAttribute("type") && (node.getAttribute("type").toLowerCase()==="submit" || node.getAttribute("type").toLowerCase()==="file")) {
-					if(node.getAttribute("value")){
-						inputlabels.push({"text":node.getAttribute("value").toString(),"match":false});
-					}
-				}
-				if(node.getAttribute("alt")){
-					inputlabels.push({"text":node.getAttribute("alt").toString(),"match":false});
-				}
-			}*/
-
 			if(inputlabels.length===0 && node.id!==""){
 				inputlabels.push({"text":(node.nodeName.toLowerCase()+"-"+node.id),"match":false});
 			}
@@ -786,9 +787,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			var nodename=node.nodeName.toLowerCase();
 			switch (nodename) {
 				case "select":
-					jQuery(node).on({"change":function () {
-							Voicepluginsdk.recorduserclick(node, false, true);
-						},"focus":function(){
+					jQuery(node).on({"focus":function(){
 							Voicepluginsdk.recorduserclick(node, false,false);
 						}
 					});
@@ -1144,10 +1143,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.send(outputdata);
 
 			//processing new clicknodes if available after the click action.
-			// setTimeout(function (){Voicepluginsdk.indexnewclicknodes();},POST_INTERVAL);
+			setTimeout(function (){Voicepluginsdk.indexnewclicknodes();},POST_INTERVAL);
 
 			// rerender html if recording is enabled.
-			if(node.nodeName.toLowerCase()!=='select' && this.recording) {
+			if(this.recording) {
 				setTimeout(function () {
 					Voicepluginsdk.showhtml();
 				}, POST_INTERVAL);
@@ -1396,7 +1395,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			sequencelistdata.name=sequencename;
 			sequencelistdata.userclicknodelist=sequenceids.toString();
 			// var sequencelistdata={name:sequencename,domain:window.location.host,usersessionid:this.sessionID,userclicknodelist:sequenceids.toString(),userclicknodesSet:this.recordedsequenceids};
-			console.log(sequencelistdata);
 			this.cancelrecordingsequence(true);
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", this.apihost + "/clickevents/recordsequencedata", true);

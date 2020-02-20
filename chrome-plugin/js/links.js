@@ -1,28 +1,23 @@
 let clickObjects = [];
 let sessionID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-let lastPostTime = 0;
-let lastPostCount = 0;
 var voicedebug = false;
 const POST_INTERVAL = 1000; //in milliseconds, each minute
 const API_URL = (voicedebug) ? "http://localhost:11080/voiceapi" : "https://voicetest.nistapp.com/voiceapi";
 const EXTENSION_VERSION = true;
 let ignorepatterns = [{"patterntype": "nist-voice", "patternvalue": "any"}];
 let sitepatterns = [];
-let totalclickobjects=0;
-let processingtime=Date.now();
-let starttime=Date.now();
 let udaauthdata={id:null,email: null};
-
+let removedclickobjects=[];
+let lastmutationtime = 0;
+let lastindextime=0;
 // adding the click object that is registered via javascript
 EventTarget.prototype.addEventListener = function (addEventListener) {
     return function () {
         if (arguments[0] === "click") {
-            let newClickObject = {element: this, action: arguments[1]};
+            let newClickObject = {element: this};
             addNewElement(newClickObject);
-            // processNode(newClickObject);
         }
         addEventListener.call(this, arguments[0], arguments[1], arguments[2]);
-
     }
 }(EventTarget.prototype.addEventListener);
 
@@ -34,7 +29,7 @@ HTMLElement.prototype.realAddEventListener = HTMLAnchorElement.prototype.addEven
 HTMLElement.prototype.addEventListener = function (a, b, c) {
     this.realAddEventListener(a, b, c);
     if (a === "click") {
-        let newClickObject = {element: this, action: b};
+        let newClickObject = {element: this};
         addNewElement(newClickObject);
     }
 };
@@ -57,10 +52,11 @@ function addNewElement(clickObject) {
             return;
         }
     }
-    clickObject.text = clickObject.element.innerText;
+
+    /*clickObject.text = clickObject.element.innerText;
     if (clickObject.text === undefined || clickObject.text.length === 0) {
         //return;
-    }
+    }*/
     clickObject.id = clickObjects.length;
     clickObjects.push(clickObject);
 }
@@ -69,32 +65,32 @@ function addNewElement(clickObject) {
 function processNode(node) {
     var processchildren = true;
     if (node.onclick != undefined) {
-        let newClickObject = {element: node, action: node.onclick};
+        let newClickObject = {element: node};
         addNewElement(newClickObject);
     }
     if (node.tagName && node.tagName.toLowerCase() === "a" && node.href !== undefined) {
-        let newClickObject = {element: node, action: null};
+        let newClickObject = {element: node};
         addNewElement(newClickObject);
     }
     if (node.tagName && node.tagName.toLowerCase() === "input") {
-        let newClickObject = {element: node, action: null};
+        let newClickObject = {element: node};
         addNewElement(newClickObject);
     }
     if (node.tagName && node.tagName.toLowerCase() === "textarea") {
-        let newClickObject = {element: node, action: null};
+        let newClickObject = {element: node};
         addNewElement(newClickObject);
     }
     if (node.tagName && node.tagName.toLowerCase() === "option") {
-        let newClickObject = {element: node, action: null};
+        let newClickObject = {element: node};
         addNewElement(newClickObject);
     }
     if (node.tagName && node.tagName.toLowerCase() === "select") {
-        let newClickObject = {element: node, action: null};
+        let newClickObject = {element: node};
         addNewElement(newClickObject);
     }
 
     if(node.classList && node.classList.contains("dropdown-toggle")){
-        let newClickObject = {element: node, action: null};
+        let newClickObject = {element: node};
         addNewElement(newClickObject);
     }
 
@@ -138,7 +134,18 @@ function processNode(node) {
 // removal of clickbojects via mutation observer
 function processRemovedNode(node) {
     for (var j = 0; j < clickObjects.length; j++) {
-        if (node === clickObjects[j].element) {
+        if (node.isEqualNode(clickObjects[j].element)){
+            let addtoremovenodes=true;
+            removedclickobjectcounter:
+            for(var k=0;k<removedclickobjects.length;k++){
+                if(node.isEqualNode(removedclickobjects[k].element)){
+                    addtoremovenodes=false;
+                    break removedclickobjectcounter;
+                }
+            }
+            if(addtoremovenodes) {
+                removedclickobjects.push({element: clickObjects[j].element});
+            }
             clickObjects.splice(j, 1);
             break;
         }
@@ -152,7 +159,6 @@ function processRemovedNode(node) {
 
 //mutation observer initialization and adding the logic to process the clickobjects
 var observer = new MutationObserver(function (mutations) {
-
     mutations.forEach(function (mutation) {
         if (mutation.removedNodes.length) {
             [].some.call(mutation.removedNodes, processRemovedNode);
@@ -162,6 +168,7 @@ var observer = new MutationObserver(function (mutations) {
         }
         [].some.call(mutation.addedNodes, processNode);
     });
+    lastmutationtime=Date.now();
 });
 
 // starting the mutation observer
