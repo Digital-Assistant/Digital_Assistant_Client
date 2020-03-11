@@ -94,6 +94,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 		introjscurrentstepnumber:0,
 		introjsaddedstepnodes:[],
 		lastclickednode:'',
+		lastclickedtime:'',
+		maxstringlength:13,
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -558,12 +560,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 		},
 		// indexing functionality for the entire dom
-		indexdom: function( node, ret=false, parentnode="", textlabel="", hasparentnodeclick=false ) {
+		indexdom: function( node, ret=false, parentnode="", textlabel="", hasparentnodeclick=false, parentclicknode="" ) {
 			switch (node.nodeType) {
 				case Node.ELEMENT_NODE:
 
 					if(!ret && parentnode!=="") {
-						node = this.indexnode(node, parentnode);
+						node = this.indexnode(node, parentnode, hasparentnodeclick, false, parentclicknode);
 					}
 
 					if(node.hasChildNodes()){
@@ -571,6 +573,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 						var hasparentclick = false;
 						if(node.hasOwnProperty("hasclick")){
 							hasparentclick=true;
+							if(parentclicknode===""){
+								parentclicknode=node;
+							}
 						}
 
 						if(childnodes.length>0){
@@ -585,7 +590,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 											textlabel += " " + this.indexdom(childnode, ret, node, textlabel);
 										}
 									} else {
-										node.childNodes[i] = this.indexdom(childnode, ret, node,"", hasparentclick);
+										node.childNodes[i] = this.indexdom(childnode, ret, node,"", hasparentclick, parentclicknode);
 									}
 								}
 							}
@@ -606,7 +611,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 		},
 		// Check for each node and then match it with the available clicknodes which are identified by links.js
-		indexnode: function(node, parentnode, hasparentnodeclick=false, fromdocumentclick=false){
+		indexnode: function(node, parentnode, hasparentnodeclick=false, fromdocumentclick=false, parentclicknode=""){
 			var elementdata = {"element-type": "", "element-labels" : [], "element-action" : "", "element-path" : "","element-url":"", "element-data":[],"menu-items":[]};
 
 			if(parentnode.classList && parentnode.classList.contains("tab-content")){
@@ -701,6 +706,11 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 				// add click to node to send what user has clicked.
 				this.addClickToNode(node);
+
+				// remove parent click recording if childnode has click
+				if(hasparentnodeclick && parentclicknode!==""){
+					jQuery(parentclicknode).unbind('click', Voicepluginsdk.recorduserclick(parentclicknode));
+				}
 			}
 
 			return node;
@@ -940,23 +950,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 			switch (node.nodeName.toLowerCase()) {
 				case "input":
-					/*switch (node.getAttribute("type")) {
-						case "text":
-							node.focus();
-							break;
-						case "password":
-							node.focus();
-							break;
-						case "text":
-							node.focus();
-							break;
-						case "checkbox":
-							node.click();
-							break;
-						default:
-							// node.click();
-							node.focus();
-					}*/
 					if(addintrostep) {
 						this.introjstotalsteps++;
 						this.introjscurrentstepnumber++;
@@ -970,7 +963,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 					}
 					break;
 				case "textarea":
-					// node.focus();
 					if(addintrostep) {
 						this.introjstotalsteps++;
 						this.introjscurrentstepnumber++;
@@ -986,27 +978,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 				case "select":
 					var inputlabel=this.getclickedinputlabels(node);
 					var labelmatch=false;
-					/*if (inputlabel.toLowerCase() === selectednode.clickednodename.toLowerCase()) {
-						labelmatch=true;
-						node.focus();
-					}
-					if(!labelmatch){
-						var childnodes=node.childNodes;
-						var finalchildnode=null;
-						if(childnodes.length>0){
-							jQuery(node).find(":selected").attr("selected",null);
-							for(var i=0;i<childnodes.length;i++){
-								var childnode=childnodes[i];
-								var textcontent = childnode.textContent.replace(/[\n\r]+|[\s]{2,}/g, ' ').trim();
-								if(textcontent.toLowerCase()===selectednode.clickednodename.toLowerCase()){
-									finalchildnode=childnode;
-								}
-							}
-						}
-						if(finalchildnode!==null){
-							jQuery(finalchildnode).attr("selected","selected");
-						}
-					}*/
 					if(addintrostep) {
 						this.introjstotalsteps++;
 						this.introjscurrentstepnumber++;
@@ -1108,6 +1079,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 			if(this.lastclickednode!=='' && node.isEqualNode(this.lastclickednode)){
 				return ;
 			}
+			if(this.lastclickedtime===Date.now()){
+				return ;
+			}
 			var processclick=true;
 			if(fromdocument && this.htmlindex.length>0){
 				for(var i=0;i<this.htmlindex.length;i++){
@@ -1162,6 +1136,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			this.rerenderhtml=true;
 			this.addclickedrecordcookie(postdata.clickednodename);
 			this.lastclickednode=node;
+			this.lastclickedtime=Date.now();
 			var outputdata = JSON.stringify(postdata);
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", this.apihost+"/user/clickednode");
@@ -1393,8 +1368,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 		//render record row html of the sequence
 		renderrecordresultrow:function(data,index){
 			index++;
+			let clickedname=((data.clickednodename.length>this.maxstringlength)?data.clickednodename.substr(0,this.maxstringlength)+'...':data.clickednodename);
 			var html =  '<li nist-voice="true" class="active">' +
-							data.clickednodename +
+							clickedname +
 						'</li>';
 			var element=jQuery(html);
 			jQuery("#nist-recordresultrow").append(element);
@@ -1595,10 +1571,11 @@ if (typeof Voicepluginsdk === 'undefined') {
 		},
 		//showing the sequence steps html
 		rendersteps:function(data,visited=false, navcookiedata={}){
+			let clickedname=((data.clickednodename.length>this.maxstringlength)?data.clickednodename.substr(0,this.maxstringlength)+'...':data.clickednodename);
 			if(visited>-1) {
-				var template = jQuery("<li nist-voice=\"true\" class='active'>" + data.clickednodename + "</li>");
+				var template = jQuery("<li nist-voice=\"true\" class='active'>" + clickedname + "</li>");
 			} else {
-				var template = jQuery("<li nist-voice=\"true\" class=''>" + data.clickednodename + "</li>");
+				var template = jQuery("<li nist-voice=\"true\" class=''>" + clickedname + "</li>");
 			}
 			if(visited===-1) {
 				template.click(function () {
