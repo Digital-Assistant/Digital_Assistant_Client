@@ -112,7 +112,7 @@
 .voice-sugtns-list h4, .voice-sugtns-list a{
 	padding-top: 10px;
 	color: #333333;
-	white-space: nowrap;
+	/*white-space: nowrap;*/
 	width: 300px;
 	overflow: hidden;
 	/*text-overflow: "----";*/

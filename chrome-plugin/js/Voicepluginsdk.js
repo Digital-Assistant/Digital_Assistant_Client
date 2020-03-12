@@ -560,12 +560,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 		},
 		// indexing functionality for the entire dom
-		indexdom: function( node, ret=false, parentnode="", textlabel="", hasparentnodeclick=false, parentclicknode="" ) {
+		indexdom: function( node, ret=false, parentnode="", textlabel="", hasparentnodeclick=false ) {
 			switch (node.nodeType) {
 				case Node.ELEMENT_NODE:
 
 					if(!ret && parentnode!=="") {
-						node = this.indexnode(node, parentnode, hasparentnodeclick, false, parentclicknode);
+						node = this.indexnode(node, parentnode);
 					}
 
 					if(node.hasChildNodes()){
@@ -573,9 +573,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 						var hasparentclick = false;
 						if(node.hasOwnProperty("hasclick")){
 							hasparentclick=true;
-							if(parentclicknode===""){
-								parentclicknode=node;
-							}
 						}
 
 						if(childnodes.length>0){
@@ -590,7 +587,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 											textlabel += " " + this.indexdom(childnode, ret, node, textlabel);
 										}
 									} else {
-										node.childNodes[i] = this.indexdom(childnode, ret, node,"", hasparentclick, parentclicknode);
+										node.childNodes[i] = this.indexdom(childnode, ret, node,"", hasparentclick);
 									}
 								}
 							}
@@ -611,7 +608,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 		},
 		// Check for each node and then match it with the available clicknodes which are identified by links.js
-		indexnode: function(node, parentnode, hasparentnodeclick=false, fromdocumentclick=false, parentclicknode=""){
+		indexnode: function(node, parentnode, hasparentnodeclick=false, fromdocumentclick=false){
 			var elementdata = {"element-type": "", "element-labels" : [], "element-action" : "", "element-path" : "","element-url":"", "element-data":[],"menu-items":[]};
 
 			if(parentnode.classList && parentnode.classList.contains("tab-content")){
@@ -706,11 +703,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 				// add click to node to send what user has clicked.
 				this.addClickToNode(node);
-
-				// remove parent click recording if childnode has click
-				if(hasparentnodeclick && parentclicknode!==""){
-					jQuery(parentclicknode).unbind('click', Voicepluginsdk.recorduserclick(parentclicknode));
-				}
 			}
 
 			return node;
