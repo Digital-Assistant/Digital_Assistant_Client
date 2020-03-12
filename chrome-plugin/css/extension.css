@@ -115,7 +115,11 @@
 	white-space: nowrap;
 	width: 300px;
 	overflow: hidden;
-	text-overflow: "----";
+	/*text-overflow: "----";*/
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
 }
 .voice-sugtns-list:hover{
 	background: #FAFAFA;
