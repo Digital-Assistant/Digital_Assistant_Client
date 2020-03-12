@@ -95,7 +95,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 		introjsaddedstepnodes:[],
 		lastclickednode:'',
 		lastclickedtime:'',
-		maxstringlength:13,
+		maxstringlength:40,
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -328,11 +328,11 @@ if (typeof Voicepluginsdk === 'undefined') {
 				recbtn ='	   <button nist-voice="true" id="nistvoicerecstpbtn" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-stop.png"> <span nist-voice="true">Stop</span></button>';
 			}
 			var html =  '<div class="voice-redmine-rght">'+
-						'<div class="">'+
-						'	<div class="voice-hng-left"><h3>How Can I Help You Today?</h3></div>'+
-						'	<div class="voice-hng-right"><img id="closenistmodal" style="vertical-align:middle;" src="'+this.extensionpath+'assets/voice-close.png"></div>'+
-						'   <div class="nist-clear"></div>'+
-						'</div>'+
+						'   <div class="">'+
+						'	    <div class="voice-hng-left"><h3>How Can I Help You Today?</h3></div>'+
+						'	    <div class="voice-hng-right"><img id="closenistmodal" style="vertical-align:middle;" src="'+this.extensionpath+'assets/voice-close.png"></div>'+
+						'       <div class="nist-clear"></div>'+
+						'   </div>'+
 						'	<div class="voice-red-hr-line"></div>'+
 						// '	<button class="voice-suggesion-lbl">Create a new issue</button><button class="voice-suggesion-lbl">Assign an issue to Ajay</button><button class="voice-suggesion-lbl">Show list of issues assigned to me</button><br>'+
 						'	<div class="voice-srch-bg">'+
@@ -340,8 +340,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 						'       <span id="nist-voice-icon-start" class="voice-voice-srch" nist-voice="true"><img nist-voice="true" src="'+this.extensionpath+'assets/voice-voice.png" /></span>'+
 						'       <span style="display:none;" class="voice-voice-srch" id="nist-voice-icon-stop" nist-voice="true"><img src="'+this.extensionpath+'assets/stop.png" nist-voice="true" /></span>' +
 						'	</div>'+
+						'   <div>'+
 								recbtn +
-						'<div class="nist-clear"></div>'+
+						'   </div>'+
+						'   <div class="nist-clear"></div>'+
 						'   <div id="nistvoicesearchresults"></div>'+
 						'</div>';
 			jQuery("#voicemodalhtml").html(html);
@@ -1360,8 +1362,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 		//render record row html of the sequence
 		renderrecordresultrow:function(data,index){
 			index++;
-			// let clickedname=((data.clickednodename.length>this.maxstringlength)?data.clickednodename.substr(0,this.maxstringlength)+'...':data.clickednodename);
-			let clickedname=data.clickednodename;
+			let clickedname=((data.clickednodename.length>this.maxstringlength)?data.clickednodename.substr(0,this.maxstringlength)+'...':data.clickednodename);
+			// let clickedname=data.clickednodename;
 			var html =  '<li nist-voice="true" class="active">' +
 							clickedname +
 						'</li>';
@@ -1564,12 +1566,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 		},
 		//showing the sequence steps html
 		rendersteps:function(data,visited=false, navcookiedata={}){
-			// let clickedname=((data.clickednodename.length>this.maxstringlength)?data.clickednodename.substr(0,this.maxstringlength)+'...':data.clickednodename);
-			let clickedname=data.clickednodename;
+			let clickedname=((data.clickednodename.length>this.maxstringlength)?data.clickednodename.substr(0,this.maxstringlength)+'...':data.clickednodename);
+			// let clickedname=data.clickednodename;
 			if(visited>-1) {
 				var template = jQuery("<li nist-voice=\"true\" class='active'>" + clickedname + "</li>");
 			} else {
-				var template = jQuery("<li nist-voice=\"true\" class=''>" + clickedname + "</li>");
+				var template = jQuery("<li nist-voice=\"true\" class='inactive'>" + clickedname + "</li>");
 			}
 			if(visited===-1) {
 				template.click(function () {
