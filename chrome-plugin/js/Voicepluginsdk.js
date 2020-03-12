@@ -1360,7 +1360,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 		//render record row html of the sequence
 		renderrecordresultrow:function(data,index){
 			index++;
-			let clickedname=((data.clickednodename.length>this.maxstringlength)?data.clickednodename.substr(0,this.maxstringlength)+'...':data.clickednodename);
+			// let clickedname=((data.clickednodename.length>this.maxstringlength)?data.clickednodename.substr(0,this.maxstringlength)+'...':data.clickednodename);
+			let clickedname=data.clickednodename;
 			var html =  '<li nist-voice="true" class="active">' +
 							clickedname +
 						'</li>';
@@ -1563,7 +1564,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 		},
 		//showing the sequence steps html
 		rendersteps:function(data,visited=false, navcookiedata={}){
-			let clickedname=((data.clickednodename.length>this.maxstringlength)?data.clickednodename.substr(0,this.maxstringlength)+'...':data.clickednodename);
+			// let clickedname=((data.clickednodename.length>this.maxstringlength)?data.clickednodename.substr(0,this.maxstringlength)+'...':data.clickednodename);
+			let clickedname=data.clickednodename;
 			if(visited>-1) {
 				var template = jQuery("<li nist-voice=\"true\" class='active'>" + clickedname + "</li>");
 			} else {
