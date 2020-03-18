@@ -570,10 +570,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 						node = this.indexnode(node, parentnode, hasparentnodeclick, false, parentclicknode);
 					}
 
+					node.haschildclick=false;
+
 					if(node.hasChildNodes()){
 						var childnodes =  node.childNodes;
 						var hasparentclick = false;
-						if(node.hasOwnProperty("hasclick")){
+						if(node.hasOwnProperty("hasclick") || hasparentnodeclick){
 							hasparentclick=true;
 							if(parentclicknode===""){
 								parentclicknode=node;
@@ -593,11 +595,23 @@ if (typeof Voicepluginsdk === 'undefined') {
 										}
 									} else {
 										node.childNodes[i] = this.indexdom(childnode, ret, node,"", hasparentclick, parentclicknode);
+										if(node.childNodes[i].hasOwnProperty("hasclick") && node.childNodes[i].hasclick){
+											node.haschildclick=true;
+										}
+										if(hasparentclick && node.childNodes[i].hasOwnProperty("haschildclick") && node.childNodes[i].haschildclick){
+											node.haschildclick=true;
+										}
 									}
 								}
 							}
 						}
 					}
+
+					// add click to node to send what user has clicked.
+					if(node.hasOwnProperty("hasclick") && (node.nodeName.toLowerCase()==="select" || !node.haschildclick)){
+						node=this.addClickToNode(node);
+					}
+
 					break;
 				case Node.TEXT_NODE:
 					if(node.nodeValue!=="") {
@@ -631,6 +645,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			if(this.htmlindex.length>0){
 				for(var htmli=0;htmli<this.htmlindex.length;htmli++){
 					if(node.isEqualNode(this.htmlindex[htmli]['element-data'])){
+						node.hasclick=true;
 						return node;
 					}
 				}
@@ -707,12 +722,17 @@ if (typeof Voicepluginsdk === 'undefined') {
 				this.htmlindex.push(elementdata);
 
 				// add click to node to send what user has clicked.
-				this.addClickToNode(node);
+				// this.addClickToNode(node);
 
 				// remove parent click recording if childnode has click
-				if(hasparentnodeclick && parentclicknode!==""){
+				/*if(hasparentnodeclick && parentclicknode!==""){
+					console.log({parentnode:parentclicknode});
 					jQuery(parentclicknode).unbind('click', Voicepluginsdk.recorduserclick(parentclicknode));
-				}
+					// jQuery(parentclicknode).unbind('click');
+					if(parentclicknode.removeEventListener){
+						// parentclicknode.removeEventListener("click",Voicepluginsdk.recorduserclick);
+					}
+				}*/
 			}
 
 			return node;
@@ -778,6 +798,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 			if(inputlabels.length===0 && node.id!==""){
 				inputlabels.push({"text":(node.nodeName.toLowerCase()+"-"+node.id),"match":false});
+			}else if(inputlabels.length===0 && node.className && node.className!==""){
+				inputlabels.push({"text":(node.nodeName.toLowerCase()+"-"+node.className.replace(" ","-")),"match":false});
+			} else if(inputlabels.length===0){
+				inputlabels.push({"text":(node.nodeName.toLowerCase()),"match":false});
 			}
 
 			return inputlabels;
@@ -798,11 +822,15 @@ if (typeof Voicepluginsdk === 'undefined') {
 			return inputlabel;
 		},
 		addClickToNode:function(node){
+			if(node.hasOwnProperty("addedclickrecord") && node.addedclickrecord===true){
+				return;
+			}
+
 			var nodename=node.nodeName.toLowerCase();
 			switch (nodename) {
 				case "select":
-					jQuery(node).on({"focus":function(){
-							Voicepluginsdk.recorduserclick(node, false,false);
+					jQuery(node).on({"focus":function(event){
+							Voicepluginsdk.recorduserclick(node, false,false, event);
 						}
 					});
 					break;
@@ -835,28 +863,30 @@ if (typeof Voicepluginsdk === 'undefined') {
 						case "time":
 						case "url":
 						case "week":
-							jQuery(node).click(function () {
-								Voicepluginsdk.recorduserclick(node, false);
+							jQuery(node).click(function (event) {
+								Voicepluginsdk.recorduserclick(node, false, false, event);
 							});
 							break;
 						default:
-							jQuery(node).click(function () {
-								Voicepluginsdk.recorduserclick(node, false);
+							jQuery(node).click(function (event) {
+								Voicepluginsdk.recorduserclick(node, false, false, event);
 							});
 							break;
 					}
 					break;
 				case "mat-select":
-					jQuery(node).click(function () {
-						Voicepluginsdk.recorduserclick(node, false);
+					jQuery(node).click(function (event) {
+						Voicepluginsdk.recorduserclick(node, false, false, event);
 					});
 					break;
 				default:
-					jQuery(node).click(function () {
-						Voicepluginsdk.recorduserclick(node, false);
+					jQuery(node).click(function (event) {
+						Voicepluginsdk.recorduserclick(node, false, false, event);
 					});
 					break;
 			}
+			node.addedclickrecord=true;
+			return node;
 		},
 		//searching all the nodes for the given input
 		searchnodes: function(){
@@ -1071,13 +1101,16 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 		},
 		//adding user click to the processing node.
-		recorduserclick:function(node, fromdocument=false, selectchange=false){
+		recorduserclick:function(node, fromdocument=false, selectchange=false, event){
+
 			if(fromdocument){
 				// todo from document click functionality;
 			}
+
 			if(node.hasAttribute("nist-voice")){
 				return true;
 			}
+
 			if(this.lastclickednode!=='' && node.isEqualNode(this.lastclickednode)){
 				return ;
 			}
