@@ -96,6 +96,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 		lastclickednode:'',
 		lastclickedtime:'',
 		maxstringlength:40,
+		confirmednode:false,
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -595,7 +596,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 										}
 									} else {
 										node.childNodes[i] = this.indexdom(childnode, ret, node,"", hasparentclick, parentclicknode);
-										if(node.childNodes[i].hasOwnProperty("hasclick") && node.childNodes[i].hasclick){
+										if(node.childNodes[i].hasOwnProperty("hasclick") && node.childNodes[i].hasclick && node.childNodes[i].textContent!==""){
 											node.haschildclick=true;
 										}
 										if(hasparentclick && node.childNodes[i].hasOwnProperty("haschildclick") && node.childNodes[i].haschildclick){
@@ -608,8 +609,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 					}
 
 					// add click to node to send what user has clicked.
-					if(node.hasOwnProperty("hasclick") && (node.nodeName.toLowerCase()==="select" || !node.haschildclick)){
+					if(node.hasOwnProperty("hasclick") && node.hasclick && (node.nodeName.toLowerCase()==="select" || !node.haschildclick)){
 						node=this.addClickToNode(node);
+					} else if(node.hasOwnProperty("hasclick") && node.hasclick && node.haschildclick){
+						node=this.addClickToNode(node,true);
 					}
 
 					break;
@@ -798,8 +801,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 			if(inputlabels.length===0 && node.id!==""){
 				inputlabels.push({"text":(node.nodeName.toLowerCase()+"-"+node.id),"match":false});
-			}else if(inputlabels.length===0 && node.className && node.className!==""){
-				inputlabels.push({"text":(node.nodeName.toLowerCase()+"-"+node.className.replace(" ","-")),"match":false});
+			}else if(inputlabels.length===0 && node.hasAttribute("class") && node.className && node.className!==""){
+				var classname=node.className.toString();
+				inputlabels.push({"text":(node.nodeName.toLowerCase()+"-"+classname.replace(" ","-")),"match":false});
 			} else if(inputlabels.length===0){
 				inputlabels.push({"text":(node.nodeName.toLowerCase()),"match":false});
 			}
@@ -821,7 +825,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 			return inputlabel;
 		},
-		addClickToNode:function(node){
+		addClickToNode:function(node, confirmdialog=false){
 			if(node.hasOwnProperty("addedclickrecord") && node.addedclickrecord===true){
 				return;
 			}
@@ -830,7 +834,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			switch (nodename) {
 				case "select":
 					jQuery(node).on({"focus":function(event){
-							Voicepluginsdk.recorduserclick(node, false,false, event);
+							Voicepluginsdk.recorduserclick(node, false,false, event, confirmdialog);
 						}
 					});
 					break;
@@ -864,24 +868,24 @@ if (typeof Voicepluginsdk === 'undefined') {
 						case "url":
 						case "week":
 							jQuery(node).click(function (event) {
-								Voicepluginsdk.recorduserclick(node, false, false, event);
+								Voicepluginsdk.recorduserclick(node, false, false, event, confirmdialog);
 							});
 							break;
 						default:
 							jQuery(node).click(function (event) {
-								Voicepluginsdk.recorduserclick(node, false, false, event);
+								Voicepluginsdk.recorduserclick(node, false, false, event, confirmdialog);
 							});
 							break;
 					}
 					break;
 				case "mat-select":
 					jQuery(node).click(function (event) {
-						Voicepluginsdk.recorduserclick(node, false, false, event);
+						Voicepluginsdk.recorduserclick(node, false, false, event, confirmdialog);
 					});
 					break;
 				default:
 					jQuery(node).click(function (event) {
-						Voicepluginsdk.recorduserclick(node, false, false, event);
+						Voicepluginsdk.recorduserclick(node, false, false, event, confirmdialog);
 					});
 					break;
 			}
@@ -1101,7 +1105,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 		},
 		//adding user click to the processing node.
-		recorduserclick:function(node, fromdocument=false, selectchange=false, event){
+		recorduserclick:function(node, fromdocument=false, selectchange=false, event, confirmdialog=false){
 
 			if(fromdocument){
 				// todo from document click functionality;
@@ -1168,6 +1172,17 @@ if (typeof Voicepluginsdk === 'undefined') {
 				};
 			}
 			postdata.clickednodename = this.getclickedinputlabels(node,fromdocument,selectchange);
+
+			if(confirmdialog && this.recording && !this.confirmednode){
+				// event.preventDefault();
+				var confirmdialog=confirm("Did you clicked: "+ postdata.clickednodename);
+				if(confirmdialog === true){
+					Voicepluginsdk.confirmednode=true;
+					Voicepluginsdk.recorduserclick(node, fromdocument, selectchange, event, false);
+				}
+				return false;
+			}
+
 			this.rerenderhtml=true;
 			this.addclickedrecordcookie(postdata.clickednodename);
 			this.lastclickednode=node;
