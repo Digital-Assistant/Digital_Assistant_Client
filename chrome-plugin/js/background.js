@@ -1,8 +1,8 @@
 'use strict';
 
 var updatedata=false;
-var voicedebug=false;
-var apihost=(voicedebug)?"http://localhost:11080/voiceapi":"https://voicetest.nistapp.com/voiceapi";
+var voicedebug=true; //this variable exists in links.js file also
+var apihost=(voicedebug)?"http://localhost:11080/voiceapi":"https://voicetest.nistapp.com/voiceapi"; //this variable exists in links.js file also
 var cookiename="nist-voice-usersessionid";
 var activetabs=[];
 var sessionkey="";
