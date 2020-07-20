@@ -188,6 +188,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 				this.loadOtherScript(this.extensionpath+"js/intro.min.js");
 				this.loadCssScript(this.extensionpath+"css/introjs.min.css");
 			}
+			if(typeof swal === 'undefined'){
+				this.loadOtherScript(this.extensionpath+"js/sweetalert.min.js");
+			}
 		},
 		allReady: function() {
 			// execute the parsing method after everything is ready.
@@ -609,6 +612,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 					}
 
 					// add click to node to send what user has clicked.
+					// known scenario that node has parent click
 					if(node.hasOwnProperty("hasclick") && node.hasclick && (node.nodeName.toLowerCase()==="select" || !node.haschildclick)){
 						node=this.addClickToNode(node);
 					} else if(node.hasOwnProperty("hasclick") && node.hasclick && node.haschildclick){
@@ -736,6 +740,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 						// parentclicknode.removeEventListener("click",Voicepluginsdk.recorduserclick);
 					}
 				}*/
+				let dga = {hasparentclick: false, parentnode: {}};
+				if(hasparentnodeclick) {
+					dga.hasparentclick = true;
+					dga.parentnode = parentnode;
+				}
+				node.dga = dga;
 			}
 
 			return node;
@@ -1105,7 +1115,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 		},
 		//adding user click to the processing node.
-		recorduserclick:function(node, fromdocument=false, selectchange=false, event, confirmdialog=false){
+		recorduserclick:function(node, fromdocument=false, selectchange=false, event, confirmdialog=false, hasparentclick = false){
 
 			if(fromdocument){
 				// todo from document click functionality;
@@ -1118,9 +1128,11 @@ if (typeof Voicepluginsdk === 'undefined') {
 			if(this.lastclickednode!=='' && node.isEqualNode(this.lastclickednode)){
 				return ;
 			}
+
 			if(this.lastclickedtime===Date.now()){
 				return ;
 			}
+
 			var processclick=true;
 			if(fromdocument && this.htmlindex.length>0){
 				for(var i=0;i<this.htmlindex.length;i++){
@@ -1130,6 +1142,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 					}
 				}
 			}
+
 			if(processclick===false){
 				return true;
 			}
@@ -1173,13 +1186,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 			postdata.clickednodename = this.getclickedinputlabels(node,fromdocument,selectchange);
 
-			if(confirmdialog && this.recording && !this.confirmednode){
-				// event.preventDefault();
-				var confirmdialog=confirm("Did you clicked: "+ postdata.clickednodename);
-				if(confirmdialog === true){
-					Voicepluginsdk.confirmednode=true;
-					Voicepluginsdk.recorduserclick(node, fromdocument, selectchange, event, false);
-				}
+			// for known scenarios prompt user for input
+			if(confirmdialog && this.recording && !this.confirmednode && !this.autoplay){
+				this.confirmparentclick(node, fromdocument, selectchange, event);
 				return false;
 			}
 
@@ -1193,7 +1202,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-
+					Voicepluginsdk.confirmednode = false;
 				} else {
 
 				}
@@ -1209,6 +1218,55 @@ if (typeof Voicepluginsdk === 'undefined') {
 					Voicepluginsdk.showhtml();
 				}, POST_INTERVAL);
 			}
+		},
+		confirmparentclick:function(node, fromdocument, selectchange, event) {
+			var confirmtext = '';
+			console.log({node: node});
+			var prevclicktext = this.getclickedinputlabels(this.lastclickednode, fromdocument, selectchange);
+			if(node.hasChildNodes()) {
+				var childtextexists = this.processparentchildnodes(node, prevclicktext);
+				// confirmtext = this.getclickedinputlabels(node.dga.parentnode.childNodes[0],fromdocument,selectchange);
+				if(!childtextexists) {
+					var confirmdialog = confirm("Did you clicked: " + postdata.clickednodename);
+					if (confirmdialog === true) {
+						Voicepluginsdk.confirmednode = true;
+						Voicepluginsdk.recorduserclick(node, fromdocument, selectchange, event, false);
+					}
+					/*swal({
+                    title: "Did you clicked?",
+                    text: postdata.clickednodename,
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                    }).then((willDelete) => {
+                        console.log(willDelete);
+                        this.confirmednode = true;
+                        this.recorduserclick(node, fromdocument, selectchange, event, false);
+                    });*/
+					return false;
+				} else {
+					return false;
+				}
+			}
+		},
+		processparentchildnodes:function(node, prevtext) {
+			var childtextexists = false;
+			for(const childnode of node.childNodes) {
+				if (childnode.nodeType === Node.ELEMENT_NODE) {
+					let childtext = this.getclickedinputlabels(childnode);
+					console.log(childtext)
+					if(prevtext === childtext) {
+						childtextexists = true;
+						break;
+					} else if(childnode.hasChildNodes()){
+						childtextexists = this.processparentchildnodes(childnode, prevtext);
+						if(childtextexists) {
+							break;
+						}
+					}
+				}
+			}
+			return childtextexists
 		},
 		//getting input label for the clicked node
 		getclickedinputlabels:function(node, fromdocument=false, selectchange=false){

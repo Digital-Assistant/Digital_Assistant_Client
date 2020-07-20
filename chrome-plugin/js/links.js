@@ -1,11 +1,40 @@
 let clickObjects = [];
 let sessionID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-var voicedebug = false;
+const voicedebug = true; //this variable exists in background.js file also
 const POST_INTERVAL = 1000; //in milliseconds, each minute
-const API_URL = (voicedebug) ? "http://localhost:11080/voiceapi" : "https://voicetest.nistapp.com/voiceapi";
+const API_URL = (voicedebug) ? "http://localhost:11080/voiceapi" : "https://voicetest.nistapp.com/voiceapi"; //this variable exists in background.js file also
 const EXTENSION_VERSION = true;
 let ignorepatterns = [{"patterntype": "nist-voice", "patternvalue": "any"}];
 let sitepatterns = [];
+/*var xhr = new XMLHttpRequest();
+var domain=window.location.host;
+xhr.open("GET", API_URL+"/domain/patterns?domain="+domain);
+// xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+xhr.onload = function(event){
+  if(xhr.status == 200){
+    console.log(xhr.response);
+    sitepatterns=xhr.response;
+  } else {
+    console.log(xhr.status+" : "+xhr.statusText);
+  }
+};
+xhr.send`();*/
+/*
+if(window.location.host=="mail.google.com") {
+  sitepatterns = [
+    {"patterntype": "role", "patternvalue": "tab"},
+    {"patterntype": "role", "patternvalue": "button"},
+    {"patterntype": "role", "patternvalue": "menuitem"},
+    {"patterntype": "role", "patternvalue": "link"},
+    {"patterntype": "act", "patternvalue": "any"},
+    {"patterntype": "jsaction", "patternvalue": "any"}
+  ];
+} else if (window.location.host=="www.linkedin.com"){
+  sitepatterns = [
+    {"patterntype": "data-control-name", "patternvalue": "any"}
+  ];
+}
+*/
 let udaauthdata={id:null,email: null};
 let removedclickobjects=[];
 let lastmutationtime = 0;
@@ -68,25 +97,23 @@ function processNode(node) {
         let newClickObject = {element: node};
         addNewElement(newClickObject);
     }
-    if (node.tagName && node.tagName.toLowerCase() === "a" && node.href !== undefined) {
+
+    // switched to switch case condition from if condition
+    if (node.tagName) {
         let newClickObject = {element: node};
-        addNewElement(newClickObject);
-    }
-    if (node.tagName && node.tagName.toLowerCase() === "input") {
-        let newClickObject = {element: node};
-        addNewElement(newClickObject);
-    }
-    if (node.tagName && node.tagName.toLowerCase() === "textarea") {
-        let newClickObject = {element: node};
-        addNewElement(newClickObject);
-    }
-    if (node.tagName && node.tagName.toLowerCase() === "option") {
-        let newClickObject = {element: node};
-        addNewElement(newClickObject);
-    }
-    if (node.tagName && node.tagName.toLowerCase() === "select") {
-        let newClickObject = {element: node};
-        addNewElement(newClickObject);
+        switch (node.tagName.toLowerCase()) {
+            case 'a':
+                if(node.href !== undefined){
+                    addNewElement(newClickObject);
+                }
+                break;
+            case 'input':
+            case 'textarea':
+            case 'option':
+            case 'select':
+                addNewElement(newClickObject);
+                break;
+        }
     }
 
     if(node.classList && node.classList.contains("dropdown-toggle")){
@@ -95,7 +122,7 @@ function processNode(node) {
     }
 
     //processing site patterns and adding to the clickobjects
-    if (node.nodeType === Node.ELEMENT_NODE) {
+    /*if (node.nodeType === Node.ELEMENT_NODE) {
         var addtoclick = false;
         if (sitepatterns.length > 0 && node.attributes.length > 0) {
             for (var attributeindex = 0; attributeindex < node.attributes.length; attributeindex++) {
@@ -122,7 +149,7 @@ function processNode(node) {
                 addNewElement(newClickObject);
             }
         }
-    }
+    }*/
 
     if (node.children && processchildren) {
         for (var i = 0; i < node.children.length; i++) {
@@ -177,7 +204,7 @@ observer.observe(document, {
     subtree: true
 });
 
-function init() {
+/*function init() {
     let nodes = document.querySelector("*");
     [].some.call(nodes, processNodes);
 }
@@ -206,4 +233,4 @@ function getNodeLabel(node) {
         }
     }
     return text;
-}
+}*/
