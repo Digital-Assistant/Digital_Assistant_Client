@@ -1109,8 +1109,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					Voicepluginsdk.confirmednode = false;
-				} else {
-
 				}
 			};
 			xhr.send(outputdata);
@@ -1270,8 +1268,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					Voicepluginsdk.addrecordresultshtml(JSON.parse(xhr.response));
-				} else {
-
 				}
 			};
 			xhr.send();
@@ -1316,8 +1312,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					Voicepluginsdk.addrecordresultshtml(JSON.parse(xhr.response));
-				} else {
-
 				}
 			};
 			xhr.send();
@@ -1411,8 +1405,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					Voicepluginsdk.backtomodal();
-				} else {
-
 				}
 			};
 			xhr.send(JSON.stringify(sequencelistdata));
@@ -1438,8 +1430,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					Voicepluginsdk.renderelasticresults(JSON.parse(xhr.response));
-				} else {
-
 				}
 			};
 			xhr.send();
@@ -1704,8 +1694,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					Voicepluginsdk.closemodal();
-				} else {
-
 				}
 			};
 			xhr.send(senddata);
@@ -1721,13 +1709,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", this.apihost + "/clickevents/sequence/addvote", true);
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-			xhr.onload = function(event){
-				if(xhr.status === 200){
-
-				} else {
-
-				}
-			};
 			xhr.send(JSON.stringify(senddata));
 		},
 		//autoplay functionality to stop and play
@@ -1773,13 +1754,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			var xhr = new XMLHttpRequest();
 			xhr.open("PUT", this.apihost + "/clickevents/userclick", true);
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-			xhr.onload = function(event){
-				if(xhr.status === 200){
-
-				} else {
-
-				}
-			};
 			xhr.send(JSON.stringify(senddata));
 		},
 		showadvancedhtml:function(){
@@ -1805,8 +1779,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					Voicepluginsdk.showsuggestedhtml(JSON.parse(xhr.response));
-				} else {
-
 				}
 			};
 			xhr.send();
