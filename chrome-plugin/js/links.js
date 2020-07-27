@@ -1,6 +1,6 @@
 let clickObjects = [];
 let sessionID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-const voicedebug = true; //this variable exists in background.js file also
+const voicedebug = false; //this variable exists in background.js file also
 const POST_INTERVAL = 1000; //in milliseconds, each minute
 const API_URL = (voicedebug) ? "http://localhost:11080/voiceapi" : "https://voicetest.nistapp.com/voiceapi"; //this variable exists in background.js file also
 const EXTENSION_VERSION = true;
