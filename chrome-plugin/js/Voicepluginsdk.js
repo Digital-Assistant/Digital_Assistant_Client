@@ -349,6 +349,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 						'   </div>'+
 						'   <div class="nist-clear"></div>'+
 						'   <div id="nistvoicesearchresults"></div>'+
+						'	<br/><br/><br/>'+
 						'</div>';
 			jQuery("#voicemodalhtml").html(html);
 			jQuery("#closenistmodal").click(function(){
@@ -1121,6 +1122,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 				// todo from document click functionality;
 			}
 
+			if(this.autoplay){
+				return true;
+			}
+
 			if(node.hasAttribute("nist-voice")){
 				return true;
 			}
@@ -1189,7 +1194,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 			// for known scenarios prompt user for input
 			if(confirmdialog && this.recording && !this.confirmednode && !this.autoplay){
 				this.confirmparentclick(node, fromdocument, selectchange, event);
-				return false;
+				return true;
+			} else if(confirmdialog && !this.recording) {
+				return true;
 			}
 
 			this.rerenderhtml=true;
