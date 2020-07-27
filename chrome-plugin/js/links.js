@@ -6,39 +6,11 @@ const API_URL = (voicedebug) ? "http://localhost:11080/voiceapi" : "https://voic
 const EXTENSION_VERSION = true;
 let ignorepatterns = [{"patterntype": "nist-voice", "patternvalue": "any"}];
 let sitepatterns = [];
-/*var xhr = new XMLHttpRequest();
-var domain=window.location.host;
-xhr.open("GET", API_URL+"/domain/patterns?domain="+domain);
-// xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-xhr.onload = function(event){
-  if(xhr.status == 200){
-    console.log(xhr.response);
-    sitepatterns=xhr.response;
-  } else {
-    console.log(xhr.status+" : "+xhr.statusText);
-  }
-};
-xhr.send`();*/
-/*
-if(window.location.host=="mail.google.com") {
-  sitepatterns = [
-    {"patterntype": "role", "patternvalue": "tab"},
-    {"patterntype": "role", "patternvalue": "button"},
-    {"patterntype": "role", "patternvalue": "menuitem"},
-    {"patterntype": "role", "patternvalue": "link"},
-    {"patterntype": "act", "patternvalue": "any"},
-    {"patterntype": "jsaction", "patternvalue": "any"}
-  ];
-} else if (window.location.host=="www.linkedin.com"){
-  sitepatterns = [
-    {"patterntype": "data-control-name", "patternvalue": "any"}
-  ];
-}
-*/
 let udaauthdata={id:null,email: null};
 let removedclickobjects=[];
 let lastmutationtime = 0;
 let lastindextime=0;
+
 // adding the click object that is registered via javascript
 EventTarget.prototype.addEventListener = function (addEventListener) {
     return function () {
@@ -49,7 +21,6 @@ EventTarget.prototype.addEventListener = function (addEventListener) {
         addEventListener.call(this, arguments[0], arguments[1], arguments[2]);
     }
 }(EventTarget.prototype.addEventListener);
-
 
 // Duplicating original eventlistner prototype
 HTMLElement.prototype.realAddEventListener = HTMLAnchorElement.prototype.addEventListener;
@@ -82,10 +53,6 @@ function addNewElement(clickObject) {
         }
     }
 
-    /*clickObject.text = clickObject.element.innerText;
-    if (clickObject.text === undefined || clickObject.text.length === 0) {
-        //return;
-    }*/
     clickObject.id = clickObjects.length;
     clickObjects.push(clickObject);
 }
@@ -120,36 +87,6 @@ function processNode(node) {
         let newClickObject = {element: node};
         addNewElement(newClickObject);
     }
-
-    //processing site patterns and adding to the clickobjects
-    /*if (node.nodeType === Node.ELEMENT_NODE) {
-        var addtoclick = false;
-        if (sitepatterns.length > 0 && node.attributes.length > 0) {
-            for (var attributeindex = 0; attributeindex < node.attributes.length; attributeindex++) {
-                var attributemap = node.attributes[attributeindex];
-
-                for (var sitepatternindex = 0; sitepatternindex < sitepatterns.length; sitepatternindex++) {
-                    var sitepattern = sitepatterns[sitepatternindex];
-                    if (attributemap.nodeName === sitepattern.patterntype && (attributemap.nodeValue === sitepattern.patternvalue || sitepattern.patternvalue === "any")) {
-                        addtoclick = true;
-                    }
-                }
-
-                for (var ignorenodeindex = 0; ignorenodeindex < ignorepatterns.length; ignorenodeindex++) {
-                    var ignorenodemap = ignorepatterns[ignorenodeindex];
-                    if (attributemap.nodeName.toString().toLowerCase() === ignorenodemap.patterntype.toLowerCase() && (attributemap.nodeValue.toString().toLowerCase() === ignorenodemap.patternvalue.toString().toLowerCase() || ignorenodemap.patternvalue.toString().toLowerCase() === "any")) {
-                        processRemovedNode(node);
-                        processchildren = false;
-                        addtoclick = false;
-                    }
-                }
-            }
-            if (addtoclick) {
-                let newClickObject = {element: node, action: null};
-                addNewElement(newClickObject);
-            }
-        }
-    }*/
 
     if (node.children && processchildren) {
         for (var i = 0; i < node.children.length; i++) {
@@ -203,34 +140,3 @@ observer.observe(document, {
     childList: true,
     subtree: true
 });
-
-/*function init() {
-    let nodes = document.querySelector("*");
-    [].some.call(nodes, processNodes);
-}
-
-// trying to get the text label of the processing node.
-function getNodeLabel(node) {
-    // return "";
-    var text = node.innerText;
-    if (node.offsetWidth === 0 || node.offsetHeight === 0) {
-        return "";
-    }
-    if (node.style && node.visibility === "hidden") {
-        return "";
-    }
-    if (text === undefined || text.length === 0) {
-        text = node.getAttribute('placeholder');
-    }
-    if (text === undefined || text.length === 0) {
-        text = node.getAttribute('alt');
-    }
-    if (text === undefined || text.length === 0) {
-        if (node.parentNode) {
-            return getNodeLabel(node.parentNode);
-        } else {
-            return "";
-        }
-    }
-    return text;
-}*/

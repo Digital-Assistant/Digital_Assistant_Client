@@ -1,4 +1,4 @@
-/* 
+/*
 Voice plugin Javascript SDK Library
 IMPORTANT NOTE: Copying this library and hosting it locally is strongly discouraged.
  */
@@ -17,14 +17,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 	} else {
 		speechrecognitionavailable=true;
 		voiceRecognition = window.webkitSpeechRecognition;
-		// speechrecognitionavailable=false;
 	}
 
 	// listening for user session data from extension call
-	document.addEventListener("UserSessionkey", function(data) {
-		// Voicepluginsdk.createsession(data.detail.data);
-	});
-
 	document.addEventListener("Usersessiondata", function(data) {
 		Voicepluginsdk.createsession(JSON.parse(data.detail.data));
 	});
@@ -44,7 +39,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 	// initializing the sdk variable need to change to a new variable in future.
 	var Voicepluginsdk = {
 		sdkUrl: "/",
-		apihost: (voicedebug)?"http://localhost:11080/voiceapi":"https://voicetest.nistapp.com/voiceapi",
+		apihost: API_URL,
 		totalScripts: 0,
 		scriptsCompleted:0,
 		totalotherScripts:0,
@@ -100,6 +95,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
+
 		// constructor for the sdk class which will be initialized on loading of the variable.
 		init: function() {
 			// loading jquery if not available
@@ -188,33 +184,17 @@ if (typeof Voicepluginsdk === 'undefined') {
 				this.loadOtherScript(this.extensionpath+"js/intro.min.js");
 				this.loadCssScript(this.extensionpath+"css/introjs.min.css");
 			}
-			if(typeof swal === 'undefined'){
-				this.loadOtherScript(this.extensionpath+"js/sweetalert.min.js");
-			}
 		},
 		allReady: function() {
 			// execute the parsing method after everything is ready.
 			this.onReady();
 		},
-		queueOrRun: function(fname, param1, param2) {
-			if (!this.ready) {
-				this.functionsToRunWhenReady.push({
-					functionSelf: this[fname],
-					param1: param1,
-					param2: param2
-				});
-				return
-			}
-			this[fname](param1, param2)
-		},
-		onContent: function (data) {},
-		onComplete: function () {},
 		onReady: function () {
 
 			// check user session exists and create if not available
 			this.checkuserkeyexists();
 
-
+			// Intro js configuration has been added
 			this.introjs=introJs().setOptions({showStepNumbers:false,showBullets:false,showProgress:false,exitOnOverlayClick:false,exitOnEsc:false,keyboardNavigation:false,doneLabel:'Continue',skipLabel: 'Exit'}).oncomplete(function (){Voicepluginsdk.showhtml();});
 
 			// adding speech recognition functionality based on the library availability
@@ -325,7 +305,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 		},
 		addvoicesearchmodal:function(addnisticon=true){
-			// var recbtn ='	   <button nist-voice="true" id="nistvoicerecbtn" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-record.png"> <span nist-voice="true">Rec</span></button>';
 			var recbtn ='	   <button nist-voice="true" id="nistvoiceadvbtn" class="voice-record-img"><span nist-voice="true">Advanced</span></button>';
 
 			if(!addnisticon){
@@ -338,7 +317,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 						'       <div class="nist-clear"></div>'+
 						'   </div>'+
 						'	<div class="voice-red-hr-line"></div>'+
-						// '	<button class="voice-suggesion-lbl">Create a new issue</button><button class="voice-suggesion-lbl">Assign an issue to Ajay</button><button class="voice-suggesion-lbl">Show list of issues assigned to me</button><br>'+
 						'	<div class="voice-srch-bg">'+
 						'		<span class="voice-srch"><img src="'+this.extensionpath+'assets/voice-search.png"></span><input type="search" class="voice-srch-fld" nist-voice="true" id="voicesearchinput" placeholder="Search..." />' +
 						'       <span id="nist-voice-icon-start" class="voice-voice-srch" nist-voice="true"><img nist-voice="true" src="'+this.extensionpath+'assets/voice-voice.png" /></span>'+
@@ -382,9 +360,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 				jQuery("#nist-voice-icon-stop").hide();
 			}
 			if(addnisticon) {
-				/*jQuery("#nistvoicerecbtn").click(function () {
-					Voicepluginsdk.gettimestamp("start");
-				});*/
 				jQuery("#nistvoiceadvbtn").click(function () {
 					Voicepluginsdk.showadvancedhtml();
 				});
@@ -490,7 +465,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			this.processcount=clickObjects.length;
 			this.previousurl=this.currenturl=window.location.href;
 			this.processingnodes=true;
-			// indexing method called
+			// indexing nodes has been called for adding click detection
 			this.indexdom(document.body);
 			this.processedclickobjectscount=this.processcount;
 			this.totalcount=clickObjects.length;
@@ -501,10 +476,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 				return;
 			}
 			lastindextime=Date.now();
-			//send all the indexnodes to server
-			if(this.processcount===this.totalcount) {
-				// this.sendtoserver();
-			}
 		},
 		// indexing new clicknodes after new html got loaded
 		indexnewclicknodes:function(){
@@ -526,12 +497,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			this.totalcount=clickObjects.length;
 			if(this.processcount<this.totalcount){
 				//todo new nodes added need to reprocess
-				// this.indexnewclicknodes();
 				return;
-			}
-			// send all the indexed nodes to server
-			if(this.processedclickobjectscount===this.totalcount){
-				// this.sendtoserver();
 			}
 		},
 		removefromhtmlindex:function(){
@@ -550,9 +516,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 						let removedclickobject=removedclickobjects[k].element;
 
 						if (checknode['element-data'].isEqualNode(removedclickobject)) {
-							if(checknode['element-data'].nodeName.toLowerCase()==='textarea'){
-								// jQuery(checknode['element-data']).unbind('click', Voicepluginsdk.recorduserclick());
-							}
 							foundremovedindexednode=k;
 							break removeclickobjectcounter;
 						}
@@ -729,18 +692,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 				this.htmlindex.push(elementdata);
 
-				// add click to node to send what user has clicked.
-				// this.addClickToNode(node);
-
-				// remove parent click recording if childnode has click
-				/*if(hasparentnodeclick && parentclicknode!==""){
-					console.log({parentnode:parentclicknode});
-					jQuery(parentclicknode).unbind('click', Voicepluginsdk.recorduserclick(parentclicknode));
-					// jQuery(parentclicknode).unbind('click');
-					if(parentclicknode.removeEventListener){
-						// parentclicknode.removeEventListener("click",Voicepluginsdk.recorduserclick);
-					}
-				}*/
 				let dga = {hasparentclick: false, parentnode: {}};
 				if(hasparentnodeclick) {
 					dga.hasparentclick = true;
@@ -1070,51 +1021,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 				el.dispatchEvent(evObj);
 			}
 		},
-		//reindex all nodes
-		reindexnodes:function(){
-			this.indexdom(document.body);
-			this.sendtoserver();
-		},
-		// sending all the indexed nodes to server
-		sendtoserver: function(){
-			var indexednodes = this.htmlindex;
-			var items = [];
-			if(indexednodes.length>0){
-				for(var i=0;i<indexednodes.length;i++){
-					var itemdata = {id:'', textlabels:[], path:'', objectdata:''};
-					var indexednode = indexednodes[i];
-					itemdata.id = indexednode.clickobject.id;
-					if(indexednode["element-labels"].length>0){
-						var textlabels=[];
-						for(var j=0;j<indexednode["element-labels"].length;j++){
-							textlabels.push(indexednode["element-labels"][j].text);
-						}
-						itemdata.textlabels = textlabels.toString();
-					}
-					itemdata.path = indexednode["element-path"];
-					itemdata.objectdata=JSON.stringify(domJSON.toJSON(indexednode["element-data"]));
-					items.push(itemdata);
-				}
-				var data = {sessionid:this.sessionID,domain:window.location.host,urlpath:window.location.pathname, clickednodename:"", data:JSON.stringify(items)};
-				var clickednodenamedata=this.getstoragedata(this.recordclicknodecookiename);
-				if(clickednodenamedata){
-					data.clickednodename=clickednodenamedata;
-				}
-				var outputdata = JSON.stringify(data);
-				var xhr = new XMLHttpRequest();
-				xhr.open("POST", this.apihost+"/clickevents/", true);
-				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-				xhr.onload = function(event){
-					if(xhr.status === 200){
-
-					} else {
-
-					}
-					Voicepluginsdk.addclickedrecordcookie("");
-				};
-				xhr.send(outputdata);
-			}
-		},
 		//adding user click to the processing node.
 		recorduserclick:function(node, fromdocument=false, selectchange=false, event, confirmdialog=false, hasparentclick = false){
 
@@ -1210,8 +1116,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					Voicepluginsdk.confirmednode = false;
-				} else {
-
 				}
 			};
 			xhr.send(outputdata);
@@ -1227,29 +1131,15 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 		},
 		confirmparentclick:function(node, fromdocument, selectchange, event) {
-			var confirmtext = '';
-			console.log({node: node});
 			var prevclicktext = this.getclickedinputlabels(this.lastclickednode, fromdocument, selectchange);
 			if(node.hasChildNodes()) {
 				var childtextexists = this.processparentchildnodes(node, prevclicktext);
-				// confirmtext = this.getclickedinputlabels(node.dga.parentnode.childNodes[0],fromdocument,selectchange);
 				if(!childtextexists) {
 					var confirmdialog = confirm("Did you clicked: " + postdata.clickednodename);
 					if (confirmdialog === true) {
 						Voicepluginsdk.confirmednode = true;
 						Voicepluginsdk.recorduserclick(node, fromdocument, selectchange, event, false);
 					}
-					/*swal({
-                    title: "Did you clicked?",
-                    text: postdata.clickednodename,
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                    }).then((willDelete) => {
-                        console.log(willDelete);
-                        this.confirmednode = true;
-                        this.recorduserclick(node, fromdocument, selectchange, event, false);
-                    });*/
 					return false;
 				} else {
 					return false;
@@ -1385,8 +1275,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					Voicepluginsdk.addrecordresultshtml(JSON.parse(xhr.response));
-				} else {
-
 				}
 			};
 			xhr.send();
@@ -1431,8 +1319,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					Voicepluginsdk.addrecordresultshtml(JSON.parse(xhr.response));
-				} else {
-
 				}
 			};
 			xhr.send();
@@ -1519,7 +1405,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 			sequencelistdata.name=sequencename;
 			sequencelistdata.userclicknodelist=sequenceids.toString();
-			// var sequencelistdata={name:sequencename,domain:window.location.host,usersessionid:this.sessionID,userclicknodelist:sequenceids.toString(),userclicknodesSet:this.recordedsequenceids};
 			this.cancelrecordingsequence(true);
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", this.apihost + "/clickevents/recordsequencedata", true);
@@ -1527,8 +1412,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					Voicepluginsdk.backtomodal();
-				} else {
-
 				}
 			};
 			xhr.send(JSON.stringify(sequencelistdata));
@@ -1554,8 +1437,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					Voicepluginsdk.renderelasticresults(JSON.parse(xhr.response));
-				} else {
-
 				}
 			};
 			xhr.send();
@@ -1607,7 +1488,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 				navcookiedata.navcompleted=true;
 			}
 			var playiconhtml =  '<div class="voice-autoplay-stop">';
-								// '	<span><img nist-voice="true" id="nist-autoplay" src="' + this.extensionpath + 'assets/voice-pause.png"></span>'+
 
 			if(shownodelist) {
 				if (navcookiedata.navcompleted) {
@@ -1687,8 +1567,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 		},
 		//showing the sequence steps html
 		rendersteps:function(data,visited=false, navcookiedata={}){
+			// adding elipses if textlength is greater than specified characters
 			let clickedname=((data.clickednodename.length>this.maxstringlength)?data.clickednodename.substr(0,this.maxstringlength)+'...':data.clickednodename);
-			// let clickedname=data.clickednodename;
 			if(visited>-1) {
 				var template = jQuery("<li nist-voice=\"true\" class='active'>" + clickedname + "</li>");
 			} else {
@@ -1821,8 +1701,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					Voicepluginsdk.closemodal();
-				} else {
-
 				}
 			};
 			xhr.send(senddata);
@@ -1838,13 +1716,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", this.apihost + "/clickevents/sequence/addvote", true);
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-			xhr.onload = function(event){
-				if(xhr.status === 200){
-
-				} else {
-
-				}
-			};
 			xhr.send(JSON.stringify(senddata));
 		},
 		//autoplay functionality to stop and play
@@ -1890,13 +1761,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			var xhr = new XMLHttpRequest();
 			xhr.open("PUT", this.apihost + "/clickevents/userclick", true);
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-			xhr.onload = function(event){
-				if(xhr.status === 200){
-
-				} else {
-
-				}
-			};
 			xhr.send(JSON.stringify(senddata));
 		},
 		showadvancedhtml:function(){
@@ -1922,8 +1786,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					Voicepluginsdk.showsuggestedhtml(JSON.parse(xhr.response));
-				} else {
-
 				}
 			};
 			xhr.send();
@@ -1955,6 +1817,4 @@ if (typeof Voicepluginsdk === 'undefined') {
 		}
 	};
 	Voicepluginsdk.init();
-} else {
-	// this script has already been loaded
 }
