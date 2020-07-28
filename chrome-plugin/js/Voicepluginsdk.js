@@ -1637,6 +1637,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 					if(this.updatenavcookiedata(navcookiedata,selectednode.id)) {
 						this.matchaction(finalmatchnode, false, selectednode);
 					}
+				} else {
+					alert("Unable to find the action");
 				}
 				return;
 			} else {
