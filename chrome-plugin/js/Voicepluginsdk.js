@@ -1028,6 +1028,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 				// todo from document click functionality;
 			}
 
+			// console.log({clickednode:node});
+
 			if(this.autoplay){
 				return true;
 			}
@@ -1151,7 +1153,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			for(const childnode of node.childNodes) {
 				if (childnode.nodeType === Node.ELEMENT_NODE) {
 					let childtext = this.getclickedinputlabels(childnode);
-					console.log(childtext)
 					if(prevtext === childtext) {
 						childtextexists = true;
 						break;

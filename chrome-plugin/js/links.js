@@ -14,25 +14,13 @@ let lastindextime=0;
 // adding the click object that is registered via javascript
 EventTarget.prototype.addEventListener = function (addEventListener) {
     return function () {
+        let newClickObject = {element: this};
         if (arguments[0] === "click") {
-            let newClickObject = {element: this};
             addNewElement(newClickObject);
         }
         addEventListener.call(this, arguments[0], arguments[1], arguments[2]);
     }
 }(EventTarget.prototype.addEventListener);
-
-// Duplicating original eventlistner prototype
-HTMLElement.prototype.realAddEventListener = HTMLAnchorElement.prototype.addEventListener;
-
-// Modifying the original event listner function
-HTMLElement.prototype.addEventListener = function (a, b, c) {
-    this.realAddEventListener(a, b, c);
-    if (a === "click") {
-        let newClickObject = {element: this};
-        addNewElement(newClickObject);
-    }
-};
 
 // adding the clickobjects that were identified.
 function addNewElement(clickObject) {
@@ -43,6 +31,10 @@ function addNewElement(clickObject) {
 
     let tag = clickObject.element.tagName;
     if (tag && (tag.toLowerCase() === "body" || tag.toLowerCase() === "document" || tag.toLowerCase() === "window" || tag.toLowerCase() === "html")) {
+        return;
+    }
+
+    if(clickObject.element.hasAttribute && clickObject.element.hasAttribute('nist-voice')){
         return;
     }
 
@@ -60,14 +52,14 @@ function addNewElement(clickObject) {
 // processing node from mutation and then send to clickbojects addition
 function processNode(node) {
     var processchildren = true;
-    if (node.onclick != undefined) {
-        let newClickObject = {element: node};
+    let newClickObject = {element: node};
+
+    if (node.onclick !== undefined) {
         addNewElement(newClickObject);
     }
 
     // switched to switch case condition from if condition
     if (node.tagName) {
-        let newClickObject = {element: node};
         switch (node.tagName.toLowerCase()) {
             case 'a':
                 if(node.href !== undefined){
@@ -80,11 +72,15 @@ function processNode(node) {
             case 'select':
                 addNewElement(newClickObject);
                 break;
+            case 'button':
+                if(node.hasAttribute('ng-click') || node.hasAttribute('onclick')) {
+                    addNewElement(newClickObject);
+                }
+                break;
         }
     }
 
     if(node.classList && node.classList.contains("dropdown-toggle")){
-        let newClickObject = {element: node};
         addNewElement(newClickObject);
     }
 
