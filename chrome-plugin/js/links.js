@@ -14,16 +14,17 @@ let lastindextime=0;
 // adding the click object that is registered via javascript
 EventTarget.prototype.addEventListener = function (addEventListener) {
     return function () {
-        let newClickObject = {element: this};
         if (arguments[0] === "click") {
-            addNewElement(newClickObject);
+            addNewElement(this);
         }
         addEventListener.call(this, arguments[0], arguments[1], arguments[2]);
     }
 }(EventTarget.prototype.addEventListener);
 
 // adding the clickobjects that were identified.
-function addNewElement(clickObject) {
+function addNewElement(node) {
+    let clickObject = {element: node}
+
     //checking whether the element is window or not
     if (clickObject.element === window) {
         return;
@@ -52,10 +53,9 @@ function addNewElement(clickObject) {
 // processing node from mutation and then send to clickbojects addition
 function processNode(node) {
     var processchildren = true;
-    let newClickObject = {element: node};
 
-    if (node.onclick !== undefined) {
-        addNewElement(newClickObject);
+    if (node.onclick != undefined) {
+        addNewElement(node);
     }
 
     // switched to switch case condition from if condition
@@ -63,25 +63,25 @@ function processNode(node) {
         switch (node.tagName.toLowerCase()) {
             case 'a':
                 if(node.href !== undefined){
-                    addNewElement(newClickObject);
+                    addNewElement(node);
                 }
                 break;
             case 'input':
             case 'textarea':
             case 'option':
             case 'select':
-                addNewElement(newClickObject);
+                addNewElement(node);
                 break;
             case 'button':
                 if(node.hasAttribute('ng-click') || node.hasAttribute('onclick')) {
-                    addNewElement(newClickObject);
+                    addNewElement(node);
                 }
                 break;
         }
     }
 
     if(node.classList && node.classList.contains("dropdown-toggle")){
-        addNewElement(newClickObject);
+        addNewElement(node);
     }
 
     if (node.children && processchildren) {
@@ -97,12 +97,12 @@ function processRemovedNode(node) {
         if (node.isEqualNode(clickObjects[j].element)){
             let addtoremovenodes=true;
             removedclickobjectcounter:
-            for(var k=0;k<removedclickobjects.length;k++){
-                if(node.isEqualNode(removedclickobjects[k].element)){
-                    addtoremovenodes=false;
-                    break removedclickobjectcounter;
+                for(var k=0;k<removedclickobjects.length;k++){
+                    if(node.isEqualNode(removedclickobjects[k].element)){
+                        addtoremovenodes=false;
+                        break removedclickobjectcounter;
+                    }
                 }
-            }
             if(addtoremovenodes) {
                 removedclickobjects.push({element: clickObjects[j].element});
             }
