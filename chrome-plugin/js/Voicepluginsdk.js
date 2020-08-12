@@ -82,7 +82,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 		processingnodes:false,
 		processedclickobjectscount:0,
 		recording:false,
-		addcustomcssdomains:["app.vantagecircle.com","dashboard.vantagecircle.com"],
+		addcustomcssdomains:["app.vantagecircle.com","dashboard.vantagecircle.com","dashboard.vantagecircle.co.in"],
 		containersections:[],
 		introjs:[],
 		introjstotalsteps:0,

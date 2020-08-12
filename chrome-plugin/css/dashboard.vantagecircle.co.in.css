@@ -1,0 +1,13 @@
+.voice-redmine-rght{
+	position:fixed;
+	top:0px;
+	right: 0px;
+	bottom: 0px;
+}
+.nist-original-content{
+	max-width: 80%;
+	float: left;
+}
+.nist-original-content .kt-header,.nist-original-content .kt-header--fixed{
+	max-width: 80%;
+}
