@@ -92,6 +92,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 		lastclickedtime:'',
 		maxstringlength:40,
 		confirmednode:false,
+		ignoreattributes: ['translate','draggable','spellcheck','tabindex','clientHeight','clientLeft','clientTop','clientWidth','offsetHeight','offsetLeft','offsetTop','offsetWidth','scrollHeight','scrollLeft','scrollTop','scrollWidth','baseURI','isConnected','ariaPressed','aria-pressed'],
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -1588,19 +1589,17 @@ if (typeof Voicepluginsdk === 'undefined') {
 			if(selectednode.objectdata) {
 				var originalnode=JSON.parse(selectednode.objectdata);
 				if(selectednode && this.htmlindex.length>0){
-					for(var i=0;i<this.htmlindex.length;i++){
-						var searchnode = this.htmlindex[i];
-						var searchlabelexists=false;
-						var comparenode=domJSON.toJSON(searchnode["element-data"]);
-						var match=this.comparenodes(comparenode.node,originalnode.node);
+					for(let searchnode of this.htmlindex){
+						let searchlabelexists = false;
+						let comparenode = domJSON.toJSON(searchnode["element-data"]);
+						let match = this.comparenodes(comparenode.node,originalnode.node);
 
-						if((match.matched+26)>=match.count){
+						if((match.matched) >= match.count){
 							searchlabelexists=true;
 						}
 
 						if(searchlabelexists){
 							var matchnodeexists=false;
-
 							if(matchnodes.length>0){
 								for(var j=0;j<matchnodes.length;j++){
 									if(matchnodes[j]["element-data"].isEqualNode(searchnode["element-data"])){
@@ -1648,22 +1647,28 @@ if (typeof Voicepluginsdk === 'undefined') {
 		},
 		//comparing nodes of indexed and the sequence step selected
 		comparenodes:function(comparenode,originalnode,match={count:0,matched:0}){
-			for(var key in originalnode){
-				if(key==="className" || key==='class'){
+			for(let key in originalnode){
+				if(this.ignoreattributes.indexOf(key)!==-1){
 					continue;
+				} else if(key.indexOf('_ngcontent') !== -1 || key.indexOf('jQuery') !== -1 || key.indexOf('__zone_symbol__') !== -1){
+					continue;
+				} else {
+					match.count++;
 				}
-				match.count++;
 				if(comparenode.hasOwnProperty(key) && (typeof originalnode[key] === 'object') && (typeof comparenode[key] === 'object')){
-					match.matched++
+					match.matched++;
 					match=this.comparenodes(comparenode[key], originalnode[key],match);
 				} else if(comparenode.hasOwnProperty(key) && Array.isArray(originalnode[key]) && originalnode[key].length>0 && Array.isArray(comparenode[key]) && comparenode[key].length>0){
 					match.matched++;
 					if(comparenode[key].length===originalnode[key].length) {
+						match.matched++;
 						for (var i = 0; i < originalnode[key].length; i++) {
 							match=this.comparenodes(comparenode[key][i], originalnode[key][i],match);
 						}
 					}
 				} else if(comparenode.hasOwnProperty(key) && comparenode[key]===originalnode[key]){
+					match.matched++;
+				} else if(comparenode.hasOwnProperty(key) && comparenode[key]!==originalnode[key] && key==='href' && originalnode[key].indexOf(comparenode[key])!==-1){
 					match.matched++;
 				}
 			}
