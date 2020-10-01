@@ -286,7 +286,8 @@
         options.attributes = toShorthand(options.attributes);
         options.computedStyle = toShorthand(options.computedStyle);
         options.domProperties = toShorthand(options.domProperties);
-        options.serialProperties = toShorthand(options.serialProperties);
+        // options.serialProperties = toShorthand(options.serialProperties);
+        options.serialProperties = toShorthand(true);
         options.absoluteBase = win.location.origin + "/";
         if (options.serialProperties !== true) {
             if (options.serialProperties instanceof Array && options.serialProperties.length) {

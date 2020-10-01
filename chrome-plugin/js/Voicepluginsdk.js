@@ -93,6 +93,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 		maxstringlength:40,
 		confirmednode:false,
 		ignoreattributes: ['translate','draggable','spellcheck','tabindex','clientHeight','clientLeft','clientTop','clientWidth','offsetHeight','offsetLeft','offsetTop','offsetWidth','scrollHeight','scrollLeft','scrollTop','scrollWidth','baseURI','isConnected','ariaPressed', 'aria-pressed', 'nodePosition'],
+		innerTextWeight: 5,
+		logLevel: 0,
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -1598,7 +1600,19 @@ if (typeof Voicepluginsdk === 'undefined') {
 						let compareNode = domJSON.toJSON(searchNode["element-data"]);
 						let match = this.comparenodes(compareNode.node,originalNode.node);
 
-						if((match.matched) >= match.count){
+						if (this.logLevel && (match.innerTextFlag && Math.abs((match.matched) - match.count) <= ((searchNode["element-data"].childNodes.length * this.innerTextWeight))) || match.matched === match.count) {
+							console.log('----------------------------------------------------------');
+							// console.log(match);
+							console.log('Matched ' + match.matched + ' out of ' + match.count);
+        					console.log({node: originalNode.node});
+							console.log({node: compareNode.node, htmlNode: searchNode["element-data"]});
+							console.log('----------------------------------------------------------');
+						}
+
+						// we are incrementing 'matched' by 'innerTextWeight' for 'this' node and every child node
+						if(match.innerTextFlag && Math.abs((match.matched) - match.count) <= ((searchNode["element-data"].childNodes.length * this.innerTextWeight))){
+							searchLabelExists=true;
+						} else if (match.matched === match.count) {
 							searchLabelExists=true;
 						}
 
@@ -1660,7 +1674,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 		},
 		//comparing nodes of indexed and the sequence step selected
-		comparenodes:function(comparenode, originalnode, match={count:0, matched:0, unmatched:[]}){
+		comparenodes:function(comparenode, originalnode, match={count:0, matched:0, unmatched:[], innerTextFlag: false}){
 			for(let key in originalnode){
 				if(this.ignoreattributes.indexOf(key)!==-1){
 					continue;
@@ -1680,6 +1694,11 @@ if (typeof Voicepluginsdk === 'undefined') {
 							match=this.comparenodes(comparenode[key][i], originalnode[key][i],match);
 						}
 					}
+				} else if(key === 'innerText' && originalnode.hasOwnProperty(key) && comparenode.hasOwnProperty(key) && comparenode[key] === originalnode[key]) {
+					// matching inner text should be weighted more. We will add an arbitrarily large number - innerTextWeight.
+					// since this will match for every child node, we need to accommodate this logic whenever 'comparenodes' is called
+					match.innerTextFlag = true;
+					match.matched = match.matched + this.innerTextWeight;
 				} else if(comparenode.hasOwnProperty(key) && comparenode[key]===originalnode[key]){
 					match.matched++;
 				} else if(comparenode.hasOwnProperty(key) && comparenode[key]!==originalnode[key] && key==='href' && originalnode[key].indexOf(comparenode[key])!==-1){
