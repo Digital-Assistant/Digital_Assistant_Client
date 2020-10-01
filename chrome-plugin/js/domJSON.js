@@ -31,7 +31,8 @@
         htmlOnly: false,
         metadata: true,
         serialProperties: false,
-        stringify: false
+        stringify: false,
+        getNodePosition: true
     };
     var defaultsForToDOM = {
         noMeta: false
@@ -270,6 +271,9 @@
             }
             copy.childNodes = children;
         }
+        if (opts.getNodePosition === true && depth === 0) {
+            copy.nodePosition = node.getBoundingClientRect();
+        }
         return copy;
     };
     domJSON.toJSON = function(node, opts) {
@@ -308,7 +312,9 @@
                 options.domProperties = [ true ].concat(ignoring);
             }
         }
+
         copy = toJSON(node, options, 0);
+
         if (options.metadata) {
             output.meta = extend({}, metadata, {
                 clock: new Date().getTime() - timer,

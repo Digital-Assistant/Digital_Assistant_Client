@@ -92,7 +92,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 		lastclickedtime:'',
 		maxstringlength:40,
 		confirmednode:false,
-		ignoreattributes: ['translate','draggable','spellcheck','tabindex','clientHeight','clientLeft','clientTop','clientWidth','offsetHeight','offsetLeft','offsetTop','offsetWidth','scrollHeight','scrollLeft','scrollTop','scrollWidth','baseURI','isConnected','ariaPressed','aria-pressed'],
+		ignoreattributes: ['translate','draggable','spellcheck','tabindex','clientHeight','clientLeft','clientTop','clientWidth','offsetHeight','offsetLeft','offsetTop','offsetWidth','scrollHeight','scrollLeft','scrollTop','scrollWidth','baseURI','isConnected','ariaPressed', 'aria-pressed', 'nodePosition'],
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -1061,6 +1061,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 				return true;
 			}
 
+			var domjson = domJSON.toJSON(node);
+			domjson.meta = {};
+			// console.log(domjson);
+
 			if(node.nodeName.toLowerCase()==="input" && node.getAttribute("type")==="radio"){
 				var postdata = {
 					domain: window.location.host,
@@ -1072,7 +1076,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 					objectdata: ""
 				};
 				var cache = [];
-				var domjson=domJSON.toJSON(node);
 				var stringifiednode=JSON.stringify(domjson.node, function(key, value) {
 					if (typeof value === 'object' && value !== null) {
 						if (cache.indexOf(value) !== -1) {
@@ -1095,7 +1098,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 					clickednodename: "",
 					html5: 0,
 					clickedpath: "",
-					objectdata: domJSON.toJSON(node, {stringify: true})
+					objectdata: JSON.stringify(domjson)
 				};
 			}
 			postdata.clickednodename = this.getclickedinputlabels(node,fromdocument,selectchange);
@@ -1585,57 +1588,68 @@ if (typeof Voicepluginsdk === 'undefined') {
 		},
 		//perform click action of the sequence steps
 		performclickaction:function(selectednode,navcookiedata){
-			var matchnodes = [];
+			const matchNodes = [];
+			let originalNode = {};
 			if(selectednode.objectdata) {
-				var originalnode=JSON.parse(selectednode.objectdata);
+				originalNode = JSON.parse(selectednode.objectdata);
 				if(selectednode && this.htmlindex.length>0){
-					for(let searchnode of this.htmlindex){
-						let searchlabelexists = false;
-						let comparenode = domJSON.toJSON(searchnode["element-data"]);
-						let match = this.comparenodes(comparenode.node,originalnode.node);
+					for(let searchNode of this.htmlindex){
+						let searchLabelExists = false;
+						let compareNode = domJSON.toJSON(searchNode["element-data"]);
+						let match = this.comparenodes(compareNode.node,originalNode.node);
 
 						if((match.matched) >= match.count){
-							searchlabelexists=true;
+							searchLabelExists=true;
 						}
 
-						if(searchlabelexists){
-							var matchnodeexists=false;
-							if(matchnodes.length>0){
-								for(var j=0;j<matchnodes.length;j++){
-									if(matchnodes[j]["element-data"].isEqualNode(searchnode["element-data"])){
-										matchnodeexists=true;
+						if(searchLabelExists){
+							let matchNodeExists = false;
+							if(matchNodes.length>0){
+								for(let j=0; j<matchNodes.length; j++){
+									if(matchNodes[j].originalNode["element-data"].isEqualNode(searchNode["element-data"])){
+										matchNodeExists=true;
 									}
 								}
 							}
 
-							if(matchnodeexists===false) {
-								matchnodes.push(searchnode);
+							if(matchNodeExists===false) {
+								matchNodes.push({originalNode: searchNode, domJson: compareNode.node});
 							}
 						}
 					}
 				}
 			}
 
-			if(matchnodes.length === 1){
+			if(matchNodes.length === 1){
 				if(this.updatenavcookiedata(navcookiedata,selectednode.id)){
-					this.matchaction(matchnodes[0],false,selectednode);
+					this.matchaction(matchNodes[0].originalNode,false,selectednode);
 				}
 				return;
-			} else if(matchnodes.length>1) {
+			} else if(matchNodes.length>1) {
 				//todo need to perform some user intervention
-				var finalmatchnode={};
-				matchnodes.forEach(function (matchnode, matchnodeindex) {
-					if(matchnode.hasOwnProperty("element-data")) {
-						var inputlabels = Voicepluginsdk.getclickedinputlabels(matchnode["element-data"]);
-						if (inputlabels === selectednode.clickednodename) {
-							finalmatchnode = matchnode;
+				// for multiple matching nodes compare labels of the clickable nodes to get exact node match
+				let finalMatchNode = null;
+				let finalMatchNodes = [];
+				matchNodes.forEach(function (matchNode, matchnodeindex) {
+					if(matchNode.originalNode.hasOwnProperty("element-data")) {
+						const inputLabels = Voicepluginsdk.getclickedinputlabels(matchNode.originalNode["element-data"]);
+						if (inputLabels === selectednode.clickednodename) {
+							finalMatchNodes.push(matchNode);
 						}
 					}
 				});
 
-				if(finalmatchnode.hasOwnProperty("element-data")) {
+				// process matching nodes after comparing labels
+				if (finalMatchNodes.length === 1) {
+					finalMatchNode = finalMatchNodes[0].originalNode;
+				} else if(finalMatchNodes.length > 1) {
+					// compare element positions as there are multiple matching nodes with same labels
+					finalMatchNode = this.processDistanceOfNodes(finalMatchNodes, originalNode.node);
+				}
+
+				if(finalMatchNode.hasOwnProperty("element-data")) {
 					if(this.updatenavcookiedata(navcookiedata,selectednode.id)) {
-						this.matchaction(finalmatchnode, false, selectednode);
+						this.matchaction(finalMatchNode, false, selectednode);
 					}
 				} else {
 					alert("Unable to find the action");
@@ -1646,7 +1660,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 		},
 		//comparing nodes of indexed and the sequence step selected
-		comparenodes:function(comparenode,originalnode,match={count:0,matched:0}){
+		comparenodes:function(comparenode, originalnode, match={count:0, matched:0, unmatched:[]}){
 			for(let key in originalnode){
 				if(this.ignoreattributes.indexOf(key)!==-1){
 					continue;
@@ -1657,7 +1671,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				}
 				if(comparenode.hasOwnProperty(key) && (typeof originalnode[key] === 'object') && (typeof comparenode[key] === 'object')){
 					match.matched++;
-					match=this.comparenodes(comparenode[key], originalnode[key],match);
+					match=this.comparenodes(comparenode[key], originalnode[key], match);
 				} else if(comparenode.hasOwnProperty(key) && Array.isArray(originalnode[key]) && originalnode[key].length>0 && Array.isArray(comparenode[key]) && comparenode[key].length>0){
 					match.matched++;
 					if(comparenode[key].length===originalnode[key].length) {
@@ -1675,6 +1689,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 					if(weight>0.90) {
 						match.matched++;
 					}
+				} else {
+					match.unmatched.push(key);
 				}
 			}
 			return match;
@@ -1745,6 +1761,36 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 
 			return weight;
+		},
+		// getting distance between recorded node and matching nodes of same labels
+		processDistanceOfNodes: function(matchingnodes, selectedNode) {
+			if (selectedNode.hasOwnProperty('nodePosition') && matchingnodes.length>1) {
+				let leastDistanceNode = null;
+				let leastDistance = -1;
+				matchingnodes.forEach((node) => {
+					if (node.domJson.hasOwnProperty('nodePosition')) {
+						let dist = this.getDistance(selectedNode.nodePosition, node.domJson.nodePosition);
+						// default adding first element as least distance and then comparing with last distance calculated
+						if(leastDistance === -1) {
+							leastDistance = dist;
+							leastDistanceNode = node.originalNode;
+						} else if (dist < leastDistance) {
+							leastDistance = dist;
+							leastDistanceNode = node.originalNode;
+						}
+					}
+				});
+				return leastDistanceNode;
+			} else {
+				return false;
+			}
+		},
+		// calculate distance between selected node and matching node
+		getDistance: function (node1, node2) {
+			const x = node1.x - node2.x;
+			const y = node1.y - node2.y;
+			const dist = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+			return (dist);
 		},
 		//adding data to the storage
 		createstoragedata:function(key,value){
