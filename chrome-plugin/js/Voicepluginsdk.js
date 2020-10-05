@@ -1600,9 +1600,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 						let compareNode = domJSON.toJSON(searchNode["element-data"]);
 						let match = this.comparenodes(compareNode.node,originalNode.node);
 
-						if (this.logLevel && (match.innerTextFlag && Math.abs((match.matched) - match.count) <= ((searchNode["element-data"].childNodes.length * this.innerTextWeight))) || match.matched === match.count) {
+						if ((this.logLevel > 0)  && (match.innerTextFlag && Math.abs((match.matched) - match.count) <= ((searchNode["element-data"].childNodes.length * this.innerTextWeight))) || match.matched === match.count) {
 							console.log('----------------------------------------------------------');
-							// console.log(match);
+							console.log(match);
 							console.log('Matched ' + match.matched + ' out of ' + match.count);
         					console.log({node: originalNode.node});
 							console.log({node: compareNode.node, htmlNode: searchNode["element-data"]});
