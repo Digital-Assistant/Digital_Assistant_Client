@@ -92,7 +92,11 @@ if (typeof Voicepluginsdk === 'undefined') {
 		lastclickedtime:'',
 		maxstringlength:40,
 		confirmednode:false,
-		ignoreattributes: ['translate','draggable','spellcheck','tabindex','clientHeight','clientLeft','clientTop','clientWidth','offsetHeight','offsetLeft','offsetTop','offsetWidth','scrollHeight','scrollLeft','scrollTop','scrollWidth','baseURI','isConnected','ariaPressed', 'aria-pressed', 'nodePosition'],
+		ignoreattributes: [
+			'translate','draggable','spellcheck','tabindex','clientHeight','clientLeft','clientTop','clientWidth',
+			'offsetHeight','offsetLeft','offsetTop','offsetWidth','scrollHeight','scrollLeft','scrollTop','scrollWidth',
+			'baseURI','isConnected','ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style'
+		],
 		innerTextWeight: 5,
 		logLevel: 0,
 		inarray:function(value,object){
@@ -1594,18 +1598,20 @@ if (typeof Voicepluginsdk === 'undefined') {
 			let originalNode = {};
 			if(selectednode.objectdata) {
 				originalNode = JSON.parse(selectednode.objectdata);
+				if(this.logLevel > 0) {
+					console.log({recordedNode: originalNode.node});
+				}
 				if(selectednode && this.htmlindex.length>0){
 					for(let searchNode of this.htmlindex){
 						let searchLabelExists = false;
 						let compareNode = domJSON.toJSON(searchNode["element-data"]);
 						let match = this.comparenodes(compareNode.node,originalNode.node);
 
-						if ((this.logLevel > 0)  && (match.innerTextFlag && Math.abs((match.matched) - match.count) <= ((searchNode["element-data"].childNodes.length * this.innerTextWeight))) || match.matched === match.count) {
+						if ((this.logLevel > 0) && (match.matched+5) >= match.count) {
 							console.log('----------------------------------------------------------');
 							console.log(match);
 							console.log('Matched ' + match.matched + ' out of ' + match.count);
-        					console.log({node: originalNode.node});
-							console.log({node: compareNode.node, htmlNode: searchNode["element-data"]});
+        					console.log({node: compareNode.node, htmlNode: searchNode["element-data"]});
 							console.log('----------------------------------------------------------');
 						}
 
@@ -1699,6 +1705,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 					// since this will match for every child node, we need to accommodate this logic whenever 'comparenodes' is called
 					match.innerTextFlag = true;
 					match.matched = match.matched + this.innerTextWeight;
+					// match.matched++;
 				} else if(comparenode.hasOwnProperty(key) && comparenode[key]===originalnode[key]){
 					match.matched++;
 				} else if(comparenode.hasOwnProperty(key) && comparenode[key]!==originalnode[key] && key==='href' && originalnode[key].indexOf(comparenode[key])!==-1){
