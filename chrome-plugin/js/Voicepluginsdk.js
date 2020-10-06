@@ -95,7 +95,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 		ignoreattributes: [
 			'translate','draggable','spellcheck','tabindex','clientHeight','clientLeft','clientTop','clientWidth',
 			'offsetHeight','offsetLeft','offsetTop','offsetWidth','scrollHeight','scrollLeft','scrollTop','scrollWidth',
-			'baseURI','isConnected','ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style'
+			'baseURI','isConnected','ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
+			'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns'
 		],
 		innerTextWeight: 5,
 		logLevel: 0,
@@ -537,7 +538,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 		},
 		// indexing functionality for the entire dom
-		indexdom: function( node, ret=false, parentnode="", textlabel="", hasparentnodeclick=false, parentclicknode="" ) {
+		indexdom: function( node, ret=false, parentnode="", textlabel="", hasparentnodeclick=false, parentclicknode= null ) {
 			switch (node.nodeType) {
 				case Node.ELEMENT_NODE:
 
@@ -617,6 +618,13 @@ if (typeof Voicepluginsdk === 'undefined') {
 			var clickobject={};
 
 			if(node.hasAttribute("nist-voice") && node.getAttribute("nist-voice")){
+				return node;
+			}
+
+
+			// Multiple clicks are recorded for select2-selection class.
+			// This will create a problem during playback. We should record only one click to avoid this problem
+			if(node.classList && (node.classList.contains("select2-selection--multiple"))) {
 				return node;
 			}
 
@@ -1069,7 +1077,11 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 			var domjson = domJSON.toJSON(node);
 			domjson.meta = {};
-			// console.log(domjson);
+
+			if (this.logLevel > 0) {
+				console.log({originalnode: node});
+				console.log(domjson);
+			}
 
 			if(node.nodeName.toLowerCase()==="input" && node.getAttribute("type")==="radio"){
 				var postdata = {
