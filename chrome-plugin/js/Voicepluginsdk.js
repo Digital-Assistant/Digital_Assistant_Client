@@ -197,13 +197,21 @@ if (typeof Voicepluginsdk === 'undefined') {
 			// execute the parsing method after everything is ready.
 			this.onReady();
 		},
+		configureintojs: function() {
+			// Intro js configuration has been added
+			this.introjs=introJs().setOptions({showStepNumbers:false,showBullets:false,showProgress:false,exitOnOverlayClick:false,exitOnEsc:false,keyboardNavigation:false,doneLabel:'Continue',skipLabel: 'Exit'}).oncomplete(function (){Voicepluginsdk.showhtml();});
+			if (this.introjsaddedstepnodes.length>0) {
+				this.introjstotalsteps = 0;
+				this.introjscurrentstepnumber = 0;
+				this.introjsaddedstepnodes = [];
+			}
+		},
 		onReady: function () {
 
 			// check user session exists and create if not available
 			this.checkuserkeyexists();
 
-			// Intro js configuration has been added
-			this.introjs=introJs().setOptions({showStepNumbers:false,showBullets:false,showProgress:false,exitOnOverlayClick:false,exitOnEsc:false,keyboardNavigation:false,doneLabel:'Continue',skipLabel: 'Exit'}).oncomplete(function (){Voicepluginsdk.showhtml();});
+			this.configureintojs();
 
 			// adding speech recognition functionality based on the library availability
 			if(speechrecognitionavailable){
@@ -950,6 +958,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 			var node=data["element-data"];
 			var timetoinvoke=1000;
 
+			// console.log(node);
+
 			// intro js issue fix
 			let addintrostep=true;
 			let introstepindex=0;
@@ -1585,6 +1595,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 				this.toggleautoplay(navcookiedata);
 			}
 			jQuery("#backtosearch").click(function () {
+				// Voicepluginsdk.toggleautoplay(navcookiedata);
+				Voicepluginsdk.autoplay = false;
+				Voicepluginsdk.configureintojs();
+				Voicepluginsdk.introjs.refresh();
 				Voicepluginsdk.backtosearchresults(navcookiedata);
 			});
 		},
@@ -1887,6 +1901,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 			if(navcookiedata.autoplay){
 				navcookiedata.autoplay=false;
 				this.autoplay=false;
+				this.configureintojs();
+				this.introjs.refresh();
 				//add analtytics
 				this.recordclick('stop',navcookiedata.data.name.toString(),navcookiedata.data.id);
 			} else {
