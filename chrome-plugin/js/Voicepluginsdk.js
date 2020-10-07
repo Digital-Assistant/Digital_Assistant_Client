@@ -96,10 +96,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 			'translate','draggable','spellcheck','tabindex','clientHeight','clientLeft','clientTop','clientWidth',
 			'offsetHeight','offsetLeft','offsetTop','offsetWidth','scrollHeight','scrollLeft','scrollTop','scrollWidth',
 			'baseURI','isConnected','ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
-			'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns'
+			'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction'
 		],
 		innerTextWeight: 5,
-		logLevel: 0,
+		logLevel: 1,
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -1622,6 +1622,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 						if ((this.logLevel > 0) && (match.matched+5) >= match.count) {
 							console.log('----------------------------------------------------------');
 							console.log(match);
+							if(match.innerTextFlag) {
+								console.log(Math.abs((match.matched) - match.count));
+								console.log(((searchNode["element-data"].childNodes.length * this.innerTextWeight)));
+							}
 							console.log('Matched ' + match.matched + ' out of ' + match.count);
         					console.log({node: compareNode.node, htmlNode: searchNode["element-data"]});
 							console.log('----------------------------------------------------------');
@@ -1679,7 +1683,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 					finalMatchNode = this.processDistanceOfNodes(finalMatchNodes, originalNode.node);
 				}
 
-				if(finalMatchNode.hasOwnProperty("element-data")) {
+				if(finalMatchNode && finalMatchNode.hasOwnProperty("element-data")) {
 					if(this.updatenavcookiedata(navcookiedata,selectednode.id)) {
 						this.matchaction(finalMatchNode, false, selectednode);
 					}
@@ -1712,7 +1716,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 							match=this.comparenodes(comparenode[key][i], originalnode[key][i],match);
 						}
 					}
-				} else if(key === 'innerText' && originalnode.hasOwnProperty(key) && comparenode.hasOwnProperty(key) && comparenode[key] === originalnode[key]) {
+				} else if(key === 'innerText' && originalnode.hasOwnProperty(key) && comparenode.hasOwnProperty(key) && comparenode[key].trim() === originalnode[key].trim()) {
 					// matching inner text should be weighted more. We will add an arbitrarily large number - innerTextWeight.
 					// since this will match for every child node, we need to accommodate this logic whenever 'comparenodes' is called
 					match.innerTextFlag = true;
