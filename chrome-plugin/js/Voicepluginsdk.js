@@ -96,7 +96,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			'translate','draggable','spellcheck','tabindex','clientHeight','clientLeft','clientTop','clientWidth',
 			'offsetHeight','offsetLeft','offsetTop','offsetWidth','scrollHeight','scrollLeft','scrollTop','scrollWidth',
 			'baseURI','isConnected','ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
-			'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns'
+			'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction'
 		],
 		innerTextWeight: 5,
 		logLevel: 0,
@@ -1559,16 +1559,18 @@ if (typeof Voicepluginsdk === 'undefined') {
 						let compareNode = domJSON.toJSON(searchNode["element-data"]);
 						let match = this.comparenodes(compareNode.node,originalNode.node);
 
-						if ((this.logLevel > 1) && (match.matched+5) >= match.count) {
+						if ((this.logLevel > 0) && (match.matched+5) >= match.count) {
 							console.log('----------------------------------------------------------');
 							console.log(match);
+							console.log(Math.abs((match.matched) - match.count));
+							console.log(((searchNode["element-data"].childNodes.length * this.innerTextWeight)));
 							console.log('Matched ' + match.matched + ' out of ' + match.count);
         					console.log({node: compareNode.node, htmlNode: searchNode["element-data"]});
 							console.log('----------------------------------------------------------');
 						}
 
-						// we are incrementing 'matched' by 'innerTextWeight' for 'this' node and every child node
-						if(match.innerTextFlag && Math.abs((match.matched) - match.count) <= ((searchNode["element-data"].childNodes.length * this.innerTextWeight))){
+						// we are incrementing 'matched' by 'innerTextWeight' for 'this' node and every child node and we are matching innerchildcounts that were returned from comparenodes
+						if(match.innerTextFlag && Math.abs((match.matched) - match.count) <= (match.innerChildNodes * this.innerTextWeight)){
 							searchLabelExists=true;
 						} else if (match.matched === match.count) {
 							searchLabelExists=true;
@@ -1632,7 +1634,11 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 		},
 		//comparing nodes of indexed and the sequence step selected
-		comparenodes:function(comparenode, originalnode, match={count:0, matched:0, unmatched:[], innerTextFlag: false}){
+		comparenodes:function(comparenode, originalnode, match={count:0, matched:0, unmatched:[], innerTextFlag: false, innerChildNodes: 0}){
+			// sum the childnodes
+			if(comparenode.hasOwnProperty('childNodes')) {
+				match.innerChildNodes = match.innerChildNodes + comparenode.childNodes.length;
+			}
 			for(let key in originalnode){
 				if(this.ignoreattributes.indexOf(key)!==-1){
 					continue;
