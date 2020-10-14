@@ -99,7 +99,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 			'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction'
 		],
 		innerTextWeight: 5,
-		logLevel: 1,
+		logLevel: 0,
+		playNextAction: true,
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -197,13 +198,34 @@ if (typeof Voicepluginsdk === 'undefined') {
 			// execute the parsing method after everything is ready.
 			this.onReady();
 		},
+		configureintrojs: function() {
+			// Intro js configuration has been added
+			this.introjs=introJs().setOptions({
+				showStepNumbers:false,
+				showBullets:false,
+				showProgress:false,
+				exitOnOverlayClick:false,
+				exitOnEsc:false,
+				keyboardNavigation:false,
+				doneLabel:'Continue',
+				skipLabel: 'Exit',
+				tooltipPosition: 'right'
+			})
+				.onexit(function (){
+					Voicepluginsdk.resetIntrojs();
+				});
+			if (this.introjsaddedstepnodes.length>0) {
+				this.introjstotalsteps = 0;
+				this.introjscurrentstepnumber = 0;
+				this.introjsaddedstepnodes = [];
+			}
+		},
 		onReady: function () {
 
 			// check user session exists and create if not available
 			this.checkuserkeyexists();
 
-			// Intro js configuration has been added
-			this.introjs=introJs().setOptions({showStepNumbers:false,showBullets:false,showProgress:false,exitOnOverlayClick:false,exitOnEsc:false,keyboardNavigation:false,doneLabel:'Continue',skipLabel: 'Exit'}).oncomplete(function (){Voicepluginsdk.showhtml();});
+			this.configureintrojs();
 
 			// adding speech recognition functionality based on the library availability
 			if(speechrecognitionavailable){
@@ -437,8 +459,17 @@ if (typeof Voicepluginsdk === 'undefined') {
 				}
 			}
 		},
+		//Resetting introjs and continue to next playable action
+		resetIntrojs: function () {
+			this.configureintrojs();
+			this.playNextAction = true;
+			this.showhtml();
+		},
 		//render the required html for showing up the proper html
 		showhtml:function(){
+			if(!this.playNextAction) {
+				return;
+			}
 			this.rerenderhtml=false;
 			var addnisticon=true;
 			var checkrecording = this.getstoragedata(this.recordingcookiename);
@@ -869,79 +900,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			node.addedclickrecord=true;
 			return node;
 		},
-		//searching all the nodes for the given input
-		searchnodes: function(){
-			var searchtext = jQuery("#voicesearchinput").val();
-			var matchnodes = [];
-			if(searchtext !== "" && this.htmlindex.length>0){
-				for(var i=0;i<this.htmlindex.length;i++){
-					var searchnode = this.htmlindex[i];
-					var searchlabelexists=false;
-					for(var j=0;j<searchnode['element-labels'].length;j++){
-						var label = searchnode['element-labels'][j].text.toString().toLowerCase();
-						if(label.indexOf(searchtext.toString().toLowerCase()) !==-1){
-							searchlabelexists=true;
-							searchnode['element-labels'][j].match=true;
-						}
-					}
-					if(searchlabelexists){
-						matchnodes.push(searchnode);
-					}
-				}
-			}
-			if(matchnodes.length>0){
-				if(matchnodes.length===1){
-					this.matchaction(matchnodes[0]);
-					return;
-				}
-				this.rendersearchresults();
-				for(var k=0;k<matchnodes.length;k++){
-					this.renderresultrow(matchnodes[k],k);
-				}
-			}
-		},
-		//render results html
-		rendersearchresults:function(){
-			var html =  '<table class="nist-voice-search-tb" nist-voice="true">' +
-						'  <tbody id="nist-voiceresultrow" nist-voice="true">' +
-						'  </tbody>' +
-						'</table>';
-			jQuery("#nistvoicesearchresults").html(html);
-		},
-		//render result row html
-		renderresultrow:function(data,index){
-			var matchindex=0;
-			for(var i=0;i<data["element-labels"].length;i++){
-				if(data["element-labels"][i].match){
-					matchindex=i;
-				}
-			}
-			var html =  '<tr nist-voice="true">' +
-						'<td nist-voice="true">' +
-						' <h5 nist-voice="true">'+data["element-labels"][matchindex].text.toString()+'</h5>' +
-						' <ul class="nistbreadcrumb" id="nistbreadcrumb'+index+'" nist-voice="true">' +
-						' </ul>' +
-						'</td>' +
-						'</tr>';
-			var element=jQuery(html);
-			element.click(function(){
-				Voicepluginsdk.matchaction(data);
-			});
-			jQuery("#nist-voiceresultrow").append(element);
-			if(data['element-path']!==""){
-				var paths=data['element-path'].split(">");
-				if(paths.length>0){
-					for (var i=0;i<paths.length;i++){
-						jQuery("#nistbreadcrumb"+index).append(this.renderpathsearch(paths[i]));
-					}
-				}
-			}
-		},
-		//render path if available
-		renderpathsearch:function(data){
-			var template = jQuery("<li nist-voice=\"true\"><a nist-voice=\"true\">"+data+"</a></li>");
-			return template;
-		},
 		//matching the action of the node and invoking whether to click or focus
 		matchaction:function(data,close=true,selectednode){
 			if(close) {
@@ -950,58 +908,34 @@ if (typeof Voicepluginsdk === 'undefined') {
 			var node=data["element-data"];
 			var timetoinvoke=1000;
 
-			// intro js issue fix
-			let addintrostep=true;
-			let introstepindex=0;
-			if(this.introjsaddedstepnodes.length>0){
-				for(var introi=0;introi<this.introjsaddedstepnodes.length;introi++){
-					if(node.isEqualNode(this.introjsaddedstepnodes[introi])){
-						addintrostep=false;
-						introstepindex=introi;
-					}
-				}
+			if(!this.playNextAction) {
+				return;
 			}
+
 			switch (node.nodeName.toLowerCase()) {
 				case "input":
-					if(addintrostep) {
-						this.introjstotalsteps++;
-						this.introjscurrentstepnumber++;
-						this.introjsaddedstepnodes.push(node);
-						this.introjs.addStep({
-							element: node,
-							intro: "Please input in the field and then continue."
-						}).goToStepNumber(this.introjscurrentstepnumber).start();
-					} else {
-						this.introjs.goToStepNumber(introstepindex).start();
-					}
+					this.playNextAction = false;
+					this.introjs.addStep({
+						element: node,
+						intro: "Please input in the field and then continue.",
+						position: 'right',
+					}).start();
 					break;
 				case "textarea":
-					if(addintrostep) {
-						this.introjstotalsteps++;
-						this.introjscurrentstepnumber++;
-						this.introjsaddedstepnodes.push(node);
-						this.introjs.addStep({
-							element: node,
-							intro: "Please select the value and then continue."
-						}).goToStepNumber(this.introjscurrentstepnumber).start();
-					} else {
-						this.introjs.goToStepNumber(introstepindex).start();
-					}
+					this.playNextAction = false;
+					this.introjs.addStep({
+						element: node,
+						intro: "Please select the value and then continue.",
+						position: 'right'
+					}).start();
 					break;
 				case "select":
-					var inputlabel=this.getclickedinputlabels(node);
-					var labelmatch=false;
-					if(addintrostep) {
-						this.introjstotalsteps++;
-						this.introjscurrentstepnumber++;
-						this.introjsaddedstepnodes.push(node);
-						this.introjs.addStep({
-							element: node,
-							intro: "Please select the value and then continue."
-						}).goToStepNumber(this.introjscurrentstepnumber).start();
-					} else {
-						this.introjs.goToStepNumber(introstepindex).start();
-					}
+					this.playNextAction = false;
+					this.introjs.addStep({
+						element: node,
+						intro: "Please select the value and then continue.",
+						position: 'right',
+					}).start();
 					break;
 				case "option":
 					node.parentNode.focus();
@@ -1013,6 +947,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				default:
 					node.click();
 					this.invokenextitem(node,timetoinvoke);
+					break;
 			}
 		},
 		//invoke the click of next item
@@ -1042,8 +977,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			if(fromdocument){
 				// todo from document click functionality;
 			}
-
-			// console.log({clickednode:node});
 
 			if(this.autoplay){
 				return true;
@@ -1556,7 +1489,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 						performactionnode=data.userclicknodesSet[i];
 					}
 				}
-				jQuery("#nistvoicesteps").append(this.rendersteps(data.userclicknodesSet[i],visited,navcookiedata));
+				jQuery("#nistvoicesteps").append(this.rendersteps(data.userclicknodesSet[i], visited, navcookiedata));
 			}
 
 			if(this.sessionID===data.usersessionid || this.sessiondata.authdata.id===data.usersessionid){
@@ -1580,11 +1513,18 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 			// need to improve the autoplay functionality.
 			if(typeof performactionnode=="object" && this.autoplay) {
-				this.performclickaction(performactionnode,navcookiedata);
+				// console.trace();
+				if(this.playNextAction) {
+					this.performclickaction(performactionnode, navcookiedata);
+				}
 			} else if(this.autoplay){
 				this.toggleautoplay(navcookiedata);
 			}
 			jQuery("#backtosearch").click(function () {
+				// Voicepluginsdk.toggleautoplay(navcookiedata);
+				Voicepluginsdk.autoplay = false;
+				Voicepluginsdk.configureintrojs();
+				Voicepluginsdk.introjs.refresh();
 				Voicepluginsdk.backtosearchresults(navcookiedata);
 			});
 		},
@@ -1597,7 +1537,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			} else {
 				var template = jQuery("<li nist-voice=\"true\" class='inactive'>" + clickedname + "</li>");
 			}
-			if(visited===-1) {
+			if(visited === -1) {
 				template.click(function () {
 					Voicepluginsdk.performclickaction(data,navcookiedata);
 				});
@@ -1622,17 +1562,15 @@ if (typeof Voicepluginsdk === 'undefined') {
 						if ((this.logLevel > 0) && (match.matched+5) >= match.count) {
 							console.log('----------------------------------------------------------');
 							console.log(match);
-							if(match.innerTextFlag) {
-								console.log(Math.abs((match.matched) - match.count));
-								console.log(((searchNode["element-data"].childNodes.length * this.innerTextWeight)));
-							}
+							console.log(Math.abs((match.matched) - match.count));
+							console.log(((searchNode["element-data"].childNodes.length * this.innerTextWeight)));
 							console.log('Matched ' + match.matched + ' out of ' + match.count);
         					console.log({node: compareNode.node, htmlNode: searchNode["element-data"]});
 							console.log('----------------------------------------------------------');
 						}
 
-						// we are incrementing 'matched' by 'innerTextWeight' for 'this' node and every child node
-						if(match.innerTextFlag && Math.abs((match.matched) - match.count) <= ((searchNode["element-data"].childNodes.length * this.innerTextWeight))){
+						// we are incrementing 'matched' by 'innerTextWeight' for 'this' node and every child node and we are matching innerchildcounts that were returned from comparenodes
+						if(match.innerTextFlag && Math.abs((match.matched) - match.count) <= (match.innerChildNodes * this.innerTextWeight)){
 							searchLabelExists=true;
 						} else if (match.matched === match.count) {
 							searchLabelExists=true;
@@ -1683,7 +1621,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 					finalMatchNode = this.processDistanceOfNodes(finalMatchNodes, originalNode.node);
 				}
 
-				if(finalMatchNode && finalMatchNode.hasOwnProperty("element-data")) {
+				if(finalMatchNode.hasOwnProperty("element-data")) {
 					if(this.updatenavcookiedata(navcookiedata,selectednode.id)) {
 						this.matchaction(finalMatchNode, false, selectednode);
 					}
@@ -1696,7 +1634,11 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 		},
 		//comparing nodes of indexed and the sequence step selected
-		comparenodes:function(comparenode, originalnode, match={count:0, matched:0, unmatched:[], innerTextFlag: false}){
+		comparenodes:function(comparenode, originalnode, match={count:0, matched:0, unmatched:[], innerTextFlag: false, innerChildNodes: 0}){
+			// sum the childnodes
+			if(comparenode.hasOwnProperty('childNodes')) {
+				match.innerChildNodes = match.innerChildNodes + comparenode.childNodes.length;
+			}
 			for(let key in originalnode){
 				if(this.ignoreattributes.indexOf(key)!==-1){
 					continue;
@@ -1716,7 +1658,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 							match=this.comparenodes(comparenode[key][i], originalnode[key][i],match);
 						}
 					}
-				} else if(key === 'innerText' && originalnode.hasOwnProperty(key) && comparenode.hasOwnProperty(key) && comparenode[key].trim() === originalnode[key].trim()) {
+				} else if(key === 'innerText' && originalnode.hasOwnProperty(key) && comparenode.hasOwnProperty(key) && comparenode[key] === originalnode[key]) {
 					// matching inner text should be weighted more. We will add an arbitrarily large number - innerTextWeight.
 					// since this will match for every child node, we need to accommodate this logic whenever 'comparenodes' is called
 					match.innerTextFlag = true;
@@ -1891,6 +1833,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 			if(navcookiedata.autoplay){
 				navcookiedata.autoplay=false;
 				this.autoplay=false;
+				this.configureintrojs();
+				this.introjs.refresh();
 				//add analtytics
 				this.recordclick('stop',navcookiedata.data.name.toString(),navcookiedata.data.id);
 			} else {
