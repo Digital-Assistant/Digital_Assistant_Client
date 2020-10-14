@@ -1658,7 +1658,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 							match=this.comparenodes(comparenode[key][i], originalnode[key][i],match);
 						}
 					}
-				} else if(key === 'innerText' && originalnode.hasOwnProperty(key) && comparenode.hasOwnProperty(key) && comparenode[key] === originalnode[key]) {
+				} else if(key === 'innerText' && originalnode.hasOwnProperty(key) && comparenode.hasOwnProperty(key) && (comparenode[key].trim() === originalnode[key].trim())) {
 					// matching inner text should be weighted more. We will add an arbitrarily large number - innerTextWeight.
 					// since this will match for every child node, we need to accommodate this logic whenever 'comparenodes' is called
 					match.innerTextFlag = true;
