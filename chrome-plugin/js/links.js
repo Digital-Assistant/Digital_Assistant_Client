@@ -10,6 +10,7 @@ let udaauthdata={id:null,email: null};
 let removedclickobjects=[];
 let lastmutationtime = 0;
 let lastindextime=0;
+let logLevel = 0;
 
 // adding the click object that is registered via javascript
 EventTarget.prototype.addEventListener = function (addEventListener) {
@@ -104,7 +105,7 @@ function processRemovedNode(node) {
                     }
                 }
             if(addtoremovenodes) {
-                removedclickobjects.push({element: clickObjects[j].element});
+                removedclickobjects.push(clickObjects[j]);
             }
             clickObjects.splice(j, 1);
             break;
@@ -121,7 +122,13 @@ function processRemovedNode(node) {
 var observer = new MutationObserver(function (mutations) {
     mutations.forEach(function (mutation) {
         if (mutation.removedNodes.length) {
+            if(logLevel>0) {
+                console.log(clickObjects);
+            }
             [].some.call(mutation.removedNodes, processRemovedNode);
+            if(logLevel>0) {
+                console.log(removedclickobjects);
+            }
         }
         if (!mutation.addedNodes.length) {
             return;

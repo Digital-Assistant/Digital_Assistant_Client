@@ -517,7 +517,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			lastindextime=Date.now();
 		},
 		// indexing new clicknodes after new html got loaded
-		indexnewclicknodes:function(){
+		indexnewclicknodes: async function(){
 			if(this.processingnodes){
 				return;
 			}
@@ -527,19 +527,20 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 			lastindextime=Date.now();
 			this.processingnodes=true;
-			this.removefromhtmlindex();
-			this.indexnewnodes=true;
-			this.currenturl=window.location.href;
-			this.indexdom(document.body);
-			this.processedclickobjectscount=this.processcount;
-			this.processingnodes=false;
-			this.totalcount=clickObjects.length;
+			if(await this.removefromhtmlindex()) {
+				this.indexnewnodes = true;
+				this.currenturl = window.location.href;
+				this.indexdom(document.body);
+				this.processedclickobjectscount = this.processcount;
+				this.processingnodes = false;
+				this.totalcount = clickObjects.length;
+			}
 			if(this.processcount<this.totalcount){
 				//todo new nodes added need to reprocess
 				return;
 			}
 		},
-		removefromhtmlindex:function(){
+		removefromhtmlindex:async function(){
 			if(this.htmlindex.length>0){
 				let newhtmlindex=[];
 				let htmlindexlength=this.htmlindex.length;
@@ -554,7 +555,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 						}
 						let removedclickobject=removedclickobjects[k].element;
 
-						if (checknode['element-data'].isEqualNode(removedclickobject)) {
+						if (checknode['element-data'].isSameNode(removedclickobject)) {
 							foundremovedindexednode=k;
 							break removeclickobjectcounter;
 						}
@@ -566,6 +567,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 					}
 				}
 				this.htmlindex=newhtmlindex;
+				return Promise.resolve(1);
 			}
 		},
 		// indexing functionality for the entire dom
@@ -661,7 +663,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 			if(this.htmlindex.length>0){
 				for(var htmli=0;htmli<this.htmlindex.length;htmli++){
-					if(node.isEqualNode(this.htmlindex[htmli]['element-data'])){
+					if(node.isSameNode(this.htmlindex[htmli]['element-data'])){
 						node.hasclick=true;
 						return node;
 					}
@@ -672,7 +674,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				if(clickObjects[i].element===window){
 					continue;
 				}
-				if (node.isEqualNode(clickObjects[i].element)) {
+				if (node.isSameNode(clickObjects[i].element)) {
 					clickobjectexists = true;
 					clickobject = clickObjects[i];
 				}
@@ -738,7 +740,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 				this.htmlindex.push(elementdata);
 
-				let dga = {hasparentclick: false, parentnode: {}};
+				let dga = {hasparentclick: false, parentnode: {}, domJson: domJSON.toJSON(node)};
 				if(hasparentnodeclick) {
 					dga.hasparentclick = true;
 					dga.parentnode = parentnode;
@@ -786,7 +788,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				childnodes.forEach(function (childnode, key) {
 					if(childnode.nodeName.toLowerCase()!=="script" || childnode.nodeName.toLowerCase()!=="select") {
 						var textcontent = childnode.textContent.replace(/[\n\r]+|[\s]{2,}/g, ' ').trim();
-						if (textcontent !== "" && ignorenode.isEqualNode(childnode) === false) {
+						if (textcontent !== "" && ignorenode.isSameNode(childnode) === false) {
 							inputlabels.push({"text": textcontent, "match": false});
 						}
 					}
@@ -986,7 +988,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				return true;
 			}
 
-			if(this.lastclickednode!=='' && node.isEqualNode(this.lastclickednode)){
+			if(this.lastclickednode!=='' && node.isSameNode(this.lastclickednode)){
 				return ;
 			}
 
@@ -998,7 +1000,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			if(fromdocument && this.htmlindex.length>0){
 				for(var i=0;i<this.htmlindex.length;i++){
 					var processnode=this.htmlindex[i];
-					if(node.isEqualNode(processnode['element-data'])){
+					if(node.isSameNode(processnode['element-data'])){
 						processclick=false;
 					}
 				}
@@ -1008,8 +1010,13 @@ if (typeof Voicepluginsdk === 'undefined') {
 				return true;
 			}
 
-			var domjson = domJSON.toJSON(node);
-			domjson.meta = {};
+			// var domjson = domJSON.toJSON(node);
+			if (node.dga.domJson) {
+				var domjson = node.dga.domJson;
+				domjson.meta = {};
+			} else {
+				return ;
+			}
 
 			if (this.logLevel > 0) {
 				console.log({originalnode: node});
@@ -1559,7 +1566,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 						let compareNode = domJSON.toJSON(searchNode["element-data"]);
 						let match = this.comparenodes(compareNode.node,originalNode.node);
 
-						if ((this.logLevel > 0) && (match.matched+5) >= match.count) {
+						if ((this.logLevel > 1) && (match.matched+5) >= match.count) {
 							console.log('----------------------------------------------------------');
 							console.log(match);
 							console.log(Math.abs((match.matched) - match.count));
@@ -1580,7 +1587,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 							let matchNodeExists = false;
 							if(matchNodes.length>0){
 								for(let j=0; j<matchNodes.length; j++){
-									if(matchNodes[j].originalNode["element-data"].isEqualNode(searchNode["element-data"])){
+									if(matchNodes[j].originalNode["element-data"].isSameNode(searchNode["element-data"])){
 										matchNodeExists=true;
 									}
 								}
@@ -1622,6 +1629,15 @@ if (typeof Voicepluginsdk === 'undefined') {
 				}
 
 				if(finalMatchNode.hasOwnProperty("element-data")) {
+					if(this.logLevel > 0) {
+						console.log('----------------------------------------------------------');
+						console.log('Multiple nodes found comparing nearnode');
+						console.log({recordedNode: originalNode.node});
+						console.log({domnode: finalMatchNode['element-data']});
+						console.log(domJSON.toJSON(finalMatchNode['element-data']));
+						console.log('----------------------------------------------------------');
+						// return ;
+					}
 					if(this.updatenavcookiedata(navcookiedata,selectednode.id)) {
 						this.matchaction(finalMatchNode, false, selectednode);
 					}
