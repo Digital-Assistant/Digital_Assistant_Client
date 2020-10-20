@@ -1441,6 +1441,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			var navcookiedata = {shownav: true, data: data, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
 			navcookiedata.searchterm=jQuery("#voicesearchinput").val();
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
+			this.autoplay = false;
 			this.showselectedrow(data,data.id,true, navcookiedata);
 			//add analtytics
 			this.recordclick('sequencerecord',data.name.toString(),data.id);
