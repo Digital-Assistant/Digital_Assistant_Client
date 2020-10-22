@@ -657,7 +657,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 			// Multiple clicks are recorded for select2-selection class.
 			// This will create a problem during playback. We should record only one click to avoid this problem
-			if(node.classList && (node.classList.contains("select2-selection--multiple"))) {
+			if(node.classList && (node.classList.contains("select2-selection--multiple") || node.classList.contains('cdk-overlay-backdrop'))) {
 				return node;
 			}
 
@@ -735,17 +735,18 @@ if (typeof Voicepluginsdk === 'undefined') {
 					node.navtype="navtab";
 					elementdata["element-action"] = "navtab";
 				}
+
+				let uda_custom = {hasparentclick: false, parentnode: {}, domJson: domJSON.toJSON(node)};
+				if(hasparentnodeclick) {
+					uda_custom.hasparentclick = true;
+					uda_custom.parentnode = parentnode;
+				}
+				node.uda_custom = uda_custom;
+
 				elementdata["element-data"] = node;
 				elementdata["clickobject"] = clickobject;
 
 				this.htmlindex.push(elementdata);
-
-				let dga = {hasparentclick: false, parentnode: {}, domJson: domJSON.toJSON(node)};
-				if(hasparentnodeclick) {
-					dga.hasparentclick = true;
-					dga.parentnode = parentnode;
-				}
-				node.dga = dga;
 			}
 
 			return node;
@@ -946,6 +947,46 @@ if (typeof Voicepluginsdk === 'undefined') {
 					node.click();
 					this.invokenextitem(node,timetoinvoke);
 					break;
+				case "button":
+					if(node.hasAttribute('aria-label') && node.getAttribute('aria-label').toLowerCase() === 'open calendar') {
+						// node.click();
+						/*this.introjs.addStep({
+							element: node,
+							intro: "Please select the value and then continue.",
+							position: 'right',
+						}).start();*/
+						let showalert = false;
+						var navigationcookie=this.getstoragedata(this.navigationcookiename);
+						if(navigationcookie){
+							var navigationcookiedata = JSON.parse(navigationcookie);
+							if(navigationcookiedata) {
+								for (var i = 0; i < navigationcookiedata.data.userclicknodesSet.length; i++) {
+									var visited = -1;
+									if (navigationcookiedata.navigateddata.length > 0) {
+										visited = this.inarray(navigationcookiedata.data.userclicknodesSet[i].id, navigationcookiedata.navigateddata);
+									}
+									if (navigationcookiedata.data.userclicknodesSet[i].id !== selectednode.id && navigationcookiedata.data.userclicknodesSet[i].clickednodename === selectednode.clickednodename) {
+										showalert = true;
+									}
+								}
+							}
+						}
+						if(showalert) {
+							alert("Please select the appropriate calendar. After you are done, please select \"play\" in the \"Assistant\" pane to the right.");
+							if(navigationcookiedata && navigationcookiedata.autoplay) {
+								this.autoplay = false;
+								this.toggleautoplay(navigationcookiedata);
+							} else {
+								this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
+							}
+						} else {
+							node.click();
+							this.invokenextitem(node,timetoinvoke);
+						}
+					} else {
+						node.click();
+					}
+					break;
 				default:
 					node.click();
 					this.invokenextitem(node,timetoinvoke);
@@ -1011,8 +1052,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 
 			// var domjson = domJSON.toJSON(node);
-			if (node.dga.domJson) {
-				var domjson = node.dga.domJson;
+			if (node.uda_custom.domJson) {
+				var domjson = node.uda_custom.domJson;
 				domjson.meta = {};
 			} else {
 				return ;
@@ -1636,6 +1677,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 						console.log({recordedNode: originalNode.node});
 						console.log({domnode: finalMatchNode['element-data']});
 						console.log(domJSON.toJSON(finalMatchNode['element-data']));
+						console.log({finalMatchNode: finalMatchNode});
 						console.log('----------------------------------------------------------');
 						// return ;
 					}
@@ -1769,7 +1811,23 @@ if (typeof Voicepluginsdk === 'undefined') {
 				let leastDistanceNode = null;
 				let leastDistance = -1;
 				matchingnodes.forEach((node) => {
-					if (node.domJson.hasOwnProperty('nodePosition')) {
+					if (node.originalNode['element-data'].hasAttribute('aria-label')
+						&& node.originalNode['element-data'].getAttribute('aria-label').toLowerCase() === 'open calendar') {
+						let dist = this.getDistance(selectedNode.nodePosition, node.originalNode['element-data'].uda_custom.domJson.node.nodePosition);
+						if (this.logLevel > 1) {
+							console.log(selectedNode.nodePosition);
+							console.log(node.originalNode['element-data'].uda_custom.domJson.node.nodePosition);
+							console.log(dist);
+						}
+						// default adding first element as least distance and then comparing with last distance calculated
+						if(leastDistance === -1) {
+							leastDistance = dist;
+							leastDistanceNode = node.originalNode;
+						} else if (dist < leastDistance) {
+							leastDistance = dist;
+							leastDistanceNode = node.originalNode;
+						}
+					} else if (node.domJson.hasOwnProperty('nodePosition')) {
 						let dist = this.getDistance(selectedNode.nodePosition, node.domJson.nodePosition);
 						// default adding first element as least distance and then comparing with last distance calculated
 						if(leastDistance === -1) {
@@ -1790,8 +1848,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 		getDistance: function (node1, node2) {
 			const x = node1.x - node2.x;
 			const y = node1.y - node2.y;
-			const dist = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-			return (dist);
+			const dist = Math.abs(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
+			return dist;
 		},
 		//adding data to the storage
 		createstoragedata:function(key,value){
