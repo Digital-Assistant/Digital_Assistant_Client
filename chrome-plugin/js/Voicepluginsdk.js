@@ -1040,6 +1040,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 			if(this.recording && node.hasAttribute('ngxdaterangepickermd')) {
 				alert('Sorry currently we do not support daterange selector. Please re-record the sequence without selecting daterange selector');
+				this.recording=false;
 				this.cancelrecordingsequence();
 				this.showadvancedhtml();
 				return ;
