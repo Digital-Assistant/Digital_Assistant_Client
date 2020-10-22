@@ -985,6 +985,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 						}
 					} else {
 						node.click();
+						this.invokenextitem(node,timetoinvoke);
 					}
 					break;
 				default:
