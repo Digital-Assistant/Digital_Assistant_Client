@@ -1038,6 +1038,13 @@ if (typeof Voicepluginsdk === 'undefined') {
 				return ;
 			}
 
+			if(node.hasAttribute('ngxdaterangepickermd')) {
+				alert('Sorry currently we do not support daterange selector. Please re-record the sequence without selecting daterange selector');
+				this.cancelrecordingsequence();
+				this.showadvancedhtml();
+				return ;
+			}
+
 			var processclick=true;
 			if(fromdocument && this.htmlindex.length>0){
 				for(var i=0;i<this.htmlindex.length;i++){
