@@ -972,7 +972,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 							}
 						}
 						if(showalert) {
-							alert("Please select the appropriate calendar. After you are done, please select \"play\" in the \"Assistant\" pane to the right.");
+							alert("Please select the date in the appropriate calendar. After you are done, please click on \"play\" in the \"Assistant\" pane to the right.");
 							if(navigationcookiedata && navigationcookiedata.autoplay) {
 								this.autoplay = false;
 								this.toggleautoplay(navigationcookiedata);
@@ -981,7 +981,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 							}
 						} else {
 							node.click();
-							this.invokenextitem(node,timetoinvoke);
+							// this.invokenextitem(node,timetoinvoke);
+							alert("Please select the date in the appropriate calendar. After you are done, please click on \"play\" in the \"Assistant\" pane to the right.");
+							this.autoplay = false;
+							this.toggleautoplay(navigationcookiedata);
 						}
 					} else {
 						node.click();
