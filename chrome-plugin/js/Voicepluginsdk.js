@@ -99,7 +99,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction'
 		],
 		innerTextWeight: 5,
-		logLevel: 2,
+		logLevel: 0,
 		playNextAction: true,
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
