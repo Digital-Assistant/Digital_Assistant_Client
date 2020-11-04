@@ -327,3 +327,67 @@ h4.voice-card-noborder {
 	border: none !important;
 	padding-bottom: 0px !important;
 }
+
+
+/* tooltip css classes */
+.tooltip-dsa {
+	display:inline-block;
+	position:relative;
+	border-bottom:1px dotted #666;
+	text-align:left;
+}
+
+.tooltip-dsa h3 {margin:12px 0;}
+
+.tooltip-dsa .tooltip-dsa-right {
+	min-width:200px;
+	max-width:400px;
+	top:50%;
+	left:100%;
+	margin-left:20px;
+	transform:translate(0, -50%);
+	padding:0;
+	color:#EEEEEE;
+	background-color:#444444;
+	font-weight:normal;
+	font-size:13px;
+	border-radius:8px;
+	position:absolute;
+	z-index:99999999;
+	box-sizing:border-box;
+	box-shadow:0 1px 8px rgba(0,0,0,0.5);
+	visibility:hidden; opacity:0; transition:opacity 0.8s;
+}
+
+.tooltip-dsa .tooltip-dsa-right {
+	visibility:visible; opacity:1;
+}
+
+.tooltip-dsa .tooltip-dsa-right img {
+	width:400px;
+	border-radius:8px 8px 0 0;
+}
+.tooltip-dsa .tooltip-dsa-text-content {
+	padding:10px 20px;
+}
+
+.tooltip-dsa .tooltip-dsa-right i {
+	position:absolute;
+	top:50%;
+	right:100%;
+	margin-top:-12px;
+	width:12px;
+	height:24px;
+	overflow:hidden;
+}
+.tooltip-dsa .tooltip-dsa-right i::after {
+	content:'';
+	position:absolute;
+	width:12px;
+	height:12px;
+	left:0;
+	top:50%;
+	transform:translate(50%,-50%) rotate(-45deg);
+	background-color:#444444;
+	box-shadow:0 1px 8px rgba(0,0,0,0.5);
+}

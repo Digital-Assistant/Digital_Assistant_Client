@@ -99,7 +99,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction'
 		],
 		innerTextWeight: 5,
-		logLevel: 0,
+		logLevel: 2,
 		playNextAction: true,
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
@@ -198,7 +198,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			// execute the parsing method after everything is ready.
 			this.onReady();
 		},
-		configureintrojs: function() {
+		configureintrojs: function(label = 'Continue') {
 			// Intro js configuration has been added
 			this.introjs=introJs().setOptions({
 				showStepNumbers:false,
@@ -207,7 +207,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				exitOnOverlayClick:false,
 				exitOnEsc:false,
 				keyboardNavigation:false,
-				doneLabel:'Continue',
+				doneLabel: label,
 				skipLabel: 'Exit',
 				tooltipPosition: 'right'
 			})
@@ -581,7 +581,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 					node.haschildclick=false;
 
-					if(node.hasChildNodes()){
+					// Checking for multiselect value nodes during indexing
+					if ((node.nodeName.toLowerCase() === 'ng-dropdown-panel')) {
+						console.log('multiselect');
+					}else if(node.hasChildNodes()){
 						var childnodes =  node.childNodes;
 						var hasparentclick = false;
 						if(node.hasOwnProperty("hasclick") || hasparentnodeclick){
@@ -915,14 +918,44 @@ if (typeof Voicepluginsdk === 'undefined') {
 				return;
 			}
 
+			// remove added tooltips before invoking
+			let tooltipnode = $('.tooltip-dsa');
+			if (tooltipnode) {
+				tooltipnode.removeClass('tooltip-dsa');
+				$('.tooltip-dsa-right').remove();
+			} else if(this.logLevel>0) {
+				console.log('tooltip node not found');
+			}
+
 			switch (node.nodeName.toLowerCase()) {
 				case "input":
 					this.playNextAction = false;
-					this.introjs.addStep({
-						element: node,
-						intro: "Please input in the field and then continue.",
-						position: 'right',
-					}).start();
+					// functionality for detecting multi select box and highlighting the recorded node
+					if (node.classList && node.classList.contains('select2-search__field')){
+						var navigationcookie=this.getstoragedata(this.navigationcookiename);
+						if(navigationcookie){
+							var navigationcookiedata = JSON.parse(navigationcookie);
+							if(navigationcookiedata && navigationcookiedata.autoplay) {
+								this.autoplay = false;
+								this.toggleautoplay(navigationcookiedata);
+							} else {
+								this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
+							}
+						}
+						/*this.introjs.addStep({
+							element: node,
+							intro: "Please select the value and then click on play",
+							position: 'right',
+						}).start();*/
+						node.focus();
+						$(node.parentNode.parentNode.parentNode.parentNode.parentNode).addClass('tooltip-dsa').append('<div class="tooltip-dsa-right"><div class="tooltip-dsa-text-content">Please select the value and then click on play</div></div>');
+					} else {
+						this.introjs.addStep({
+							element: node,
+							intro: "Please input in the field and then continue.",
+							position: 'right',
+						}).start();
+					}
 					break;
 				case "textarea":
 					this.playNextAction = false;
@@ -947,6 +980,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 					node.click();
 					this.invokenextitem(node,timetoinvoke);
 					break;
+				// Additional processing for calendar selection
 				case "button":
 					if(node.hasAttribute('aria-label') && node.getAttribute('aria-label').toLowerCase() === 'open calendar') {
 						// node.click();
@@ -956,6 +990,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 							position: 'right',
 						}).start();*/
 						let showalert = false;
+						this.configureintrojs('Continue to select');
 						var navigationcookie=this.getstoragedata(this.navigationcookiename);
 						if(navigationcookie){
 							var navigationcookiedata = JSON.parse(navigationcookie);
@@ -983,6 +1018,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 							node.click();
 							// this.invokenextitem(node,timetoinvoke);
 							alert("Please select the date in the appropriate calendar. After you are done, please click on \"play\" in the \"Assistant\" pane to the right.");
+							// show same introjs for calendar
 							this.autoplay = false;
 							this.toggleautoplay(navigationcookiedata);
 						}
@@ -1041,6 +1077,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				return ;
 			}
 
+			// stopping recording as date range picker is clicked as we do not support it.
 			if(this.recording && node.hasAttribute('ngxdaterangepickermd')) {
 				alert('Sorry currently we do not support daterange selector. Please re-record the sequence without selecting daterange selector');
 				this.recording=false;
@@ -1745,7 +1782,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 						match.matched++;
 					}
 				} else {
-					match.unmatched.push(key);
+					match.unmatched.push({key: key, values: comparenode[key]});
 				}
 			}
 			return match;
@@ -1927,6 +1964,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			} else {
 				navcookiedata.autoplay=true;
 				this.autoplay=true;
+				this.playNextAction = true;
 				//add analtytics
 				this.recordclick('play',navcookiedata.data.name.toString(),navcookiedata.data.id);
 			}
