@@ -96,7 +96,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 			'translate','draggable','spellcheck','tabindex','clientHeight','clientLeft','clientTop','clientWidth',
 			'offsetHeight','offsetLeft','offsetTop','offsetWidth','scrollHeight','scrollLeft','scrollTop','scrollWidth',
 			'baseURI','isConnected','ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
-			'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction'
+			'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
+			'ng-star-inserted', 'ng-star'
 		],
 		innerTextWeight: 5,
 		logLevel: 0,
@@ -947,8 +948,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 							intro: "Please select the value and then click on play",
 							position: 'right',
 						}).start();*/
-						node.focus();
-						$(node.parentNode.parentNode.parentNode.parentNode.parentNode).addClass('tooltip-dsa').append('<div class="tooltip-dsa-right"><div class="tooltip-dsa-text-content">Please select the value and then click on play</div></div>');
+						$('html, body').animate({
+							scrollTop: ($(node).offset().top - 200)
+						}, 2000, function(){
+							$(node.parentNode.parentNode.parentNode.parentNode.parentNode).addClass('tooltip-dsa').append('<div class="tooltip-dsa-right"><div class="tooltip-dsa-text-content">Please select the value and then click on play</div></div>');
+							node.focus();
+						});
 					} else {
 						this.introjs.addStep({
 							element: node,
@@ -992,35 +997,28 @@ if (typeof Voicepluginsdk === 'undefined') {
 						let showalert = false;
 						this.configureintrojs('Continue to select');
 						var navigationcookie=this.getstoragedata(this.navigationcookiename);
+						var navigationcookiedata = null;
 						if(navigationcookie){
-							var navigationcookiedata = JSON.parse(navigationcookie);
+							navigationcookiedata = JSON.parse(navigationcookie);
 							if(navigationcookiedata) {
 								for (var i = 0; i < navigationcookiedata.data.userclicknodesSet.length; i++) {
-									var visited = -1;
-									if (navigationcookiedata.navigateddata.length > 0) {
-										visited = this.inarray(navigationcookiedata.data.userclicknodesSet[i].id, navigationcookiedata.navigateddata);
-									}
 									if (navigationcookiedata.data.userclicknodesSet[i].id !== selectednode.id && navigationcookiedata.data.userclicknodesSet[i].clickednodename === selectednode.clickednodename) {
 										showalert = true;
 									}
 								}
 							}
 						}
-						if(showalert) {
-							alert("Please select the date in the appropriate calendar. After you are done, please click on \"play\" in the \"Assistant\" pane to the right.");
-							if(navigationcookiedata && navigationcookiedata.autoplay) {
-								this.autoplay = false;
-								this.toggleautoplay(navigationcookiedata);
-							} else {
-								this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
-							}
-						} else {
+						$('html, body').animate({
+							scrollTop: ($(node).offset().top - 200)
+						}, 2000, function() {
+							$(node.parentNode).addClass('tooltip-dsa').append('<div class="tooltip-dsa-right"><div class="tooltip-dsa-text-content">Please select the date in the calendar. After you are done, please click on "play" in the "Assistant" pane to the right.</div></div>');
 							node.click();
-							// this.invokenextitem(node,timetoinvoke);
-							alert("Please select the date in the appropriate calendar. After you are done, please click on \"play\" in the \"Assistant\" pane to the right.");
-							// show same introjs for calendar
+						});
+						if(navigationcookiedata && navigationcookiedata.autoplay) {
 							this.autoplay = false;
 							this.toggleautoplay(navigationcookiedata);
+						} else {
+							this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
 						}
 					} else {
 						node.click();
@@ -1661,7 +1659,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 							console.log('----------------------------------------------------------');
 							console.log(match);
 							console.log(Math.abs((match.matched) - match.count));
-							console.log(((searchNode["element-data"].childNodes.length * this.innerTextWeight)));
+							console.log(match.innerChildNodes * this.innerTextWeight);
 							console.log('Matched ' + match.matched + ' out of ' + match.count);
         					console.log({node: compareNode.node, htmlNode: searchNode["element-data"]});
 							console.log('----------------------------------------------------------');
@@ -1719,7 +1717,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 					finalMatchNode = this.processDistanceOfNodes(finalMatchNodes, originalNode.node);
 				}
 
-				if(finalMatchNode.hasOwnProperty("element-data")) {
+				if(finalMatchNode && finalMatchNode.hasOwnProperty("element-data")) {
 					if(this.logLevel > 0) {
 						console.log('----------------------------------------------------------');
 						console.log('Multiple nodes found comparing nearnode');
@@ -1734,6 +1732,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 						this.matchaction(finalMatchNode, false, selectednode);
 					}
 				} else {
+					if(this.logLevel>2) {
+						console.log('----------------------------------------------------------');
+						console.log('Unable to find final matchnode with distance calculation');
+						console.log(matchNodes);
+						console.log('----------------------------------------------------------');
+					}
 					alert("Unable to find the action");
 				}
 				return;
@@ -1766,6 +1770,15 @@ if (typeof Voicepluginsdk === 'undefined') {
 							match=this.comparenodes(comparenode[key][i], originalnode[key][i],match);
 						}
 					}
+				} else if(key === 'class' && originalnode.hasOwnProperty(key) && comparenode.hasOwnProperty(key)) {
+					// fix for calendar issue
+					comparenode[key] = comparenode[key].replace(' ng-star-inserted','');
+					originalnode[key] = originalnode[key].replace(' ng-star-inserted','');
+					if (comparenode[key]===originalnode[key]) {
+						match.matched++;
+					} else {
+						match.unmatched.push({key: key, compareNodeValues: comparenode[key], recordedNodeValues: originalnode[key]});
+					}
 				} else if(key === 'innerText' && originalnode.hasOwnProperty(key) && comparenode.hasOwnProperty(key) && (comparenode[key].trim() === originalnode[key].trim())) {
 					// matching inner text should be weighted more. We will add an arbitrarily large number - innerTextWeight.
 					// since this will match for every child node, we need to accommodate this logic whenever 'comparenodes' is called
@@ -1782,7 +1795,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 						match.matched++;
 					}
 				} else {
-					match.unmatched.push({key: key, values: comparenode[key]});
+					match.unmatched.push({key: key, compareNodeValues: comparenode[key], recordedNodeValues: originalnode[key]});
 				}
 			}
 			return match;
