@@ -954,6 +954,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 							$(node.parentNode.parentNode.parentNode.parentNode.parentNode).addClass('tooltip-dsa').append('<div class="tooltip-dsa-right"><div class="tooltip-dsa-text-content">Please select the value and then click on play</div></div>');
 							node.focus();
 						});
+					} else if(node.hasAttribute('type') && node.getAttribute('type')==='checkbox' && node.classList && node.classList.contains('mat-checkbox-input')) {
+						this.introjs.addStep({
+							element: node.parentNode.parentNode,
+							intro: "Please input in the field and then continue.",
+							position: 'right',
+						}).start();
 					} else {
 						this.introjs.addStep({
 							element: node,
