@@ -39,7 +39,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 	// initializing the sdk variable need to change to a new variable in future.
 	var Voicepluginsdk = {
 		sdkUrl: "/",
-		apihost: API_URL,
+		apihost: DSA_API_URL,
 		totalScripts: 0,
 		scriptsCompleted:0,
 		totalotherScripts:0,
@@ -296,7 +296,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				this.sessionID=data.sessionkey;
 				this.createstoragedata(this.cookiename,JSON.stringify(data));
 			}else{
-				sessionID=data.sessionkey;
+				dsaSessionID=data.sessionkey;
 				this.sessiondata=data;
 				this.sessionID=data.sessionkey;
 				this.createstoragedata(this.cookiename,JSON.stringify(data));
@@ -321,7 +321,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				if(lastindextime!==0 && lastindextime<lastmutationtime) {
 					Voicepluginsdk.indexnewclicknodes();
 				}
-			},POST_INTERVAL);
+			},DSA_POST_INTERVAL);
 		},
 		addbuttonhtml:function(){
 			jQuery("#nistBtn").unbind("click").html("");
@@ -502,13 +502,13 @@ if (typeof Voicepluginsdk === 'undefined') {
 		},
 		// indexing all nodes after all the clicknodes are available
 		indexclicknodes: function(){
-			this.processcount=clickObjects.length;
+			this.processcount=dsaClickObjects.length;
 			this.previousurl=this.currenturl=window.location.href;
 			this.processingnodes=true;
 			// indexing nodes has been called for adding click detection
 			this.indexdom(document.body);
 			this.processedclickobjectscount=this.processcount;
-			this.totalcount=clickObjects.length;
+			this.totalcount=dsaClickObjects.length;
 			this.processingnodes=false;
 			if(this.processcount<this.totalcount){
 				//	todo refine the processing nodes.
@@ -522,7 +522,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			if(this.processingnodes){
 				return;
 			}
-			this.processcount=clickObjects.length;
+			this.processcount=dsaClickObjects.length;
 			if(lastindextime!==0 && lastindextime>lastmutationtime){
 				return;
 			}
@@ -534,7 +534,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				this.indexdom(document.body);
 				this.processedclickobjectscount = this.processcount;
 				this.processingnodes = false;
-				this.totalcount = clickObjects.length;
+				this.totalcount = dsaClickObjects.length;
 			}
 			if(this.processcount<this.totalcount){
 				//todo new nodes added need to reprocess
@@ -674,13 +674,13 @@ if (typeof Voicepluginsdk === 'undefined') {
 				}
 			}
 
-			for (var i = 0; i < clickObjects.length; i++) {
-				if(clickObjects[i].element===window){
+			for (var i = 0; i < dsaClickObjects.length; i++) {
+				if(dsaClickObjects[i].element===window){
 					continue;
 				}
-				if (node.isSameNode(clickObjects[i].element)) {
+				if (node.isSameNode(dsaClickObjects[i].element)) {
 					clickobjectexists = true;
-					clickobject = clickObjects[i];
+					clickobject = dsaClickObjects[i];
 				}
 			}
 
@@ -1179,13 +1179,13 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.send(outputdata);
 
 			//processing new clicknodes if available after the click action.
-			setTimeout(function (){Voicepluginsdk.indexnewclicknodes();},POST_INTERVAL);
+			setTimeout(function (){Voicepluginsdk.indexnewclicknodes();},DSA_POST_INTERVAL);
 
 			// rerender html if recording is enabled.
 			if(this.recording) {
 				setTimeout(function () {
 					Voicepluginsdk.showhtml();
-				}, POST_INTERVAL);
+				}, DSA_POST_INTERVAL);
 			}
 		},
 		confirmparentclick:function(node, fromdocument, selectchange, event) {
@@ -1946,7 +1946,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 		},
 		//confirmation for the deletion of the sequence list
 		confirmdelete:function (data) {
-			// var senddata=JSON.stringify({usersessionid:this.sessionID,id:data.id});
+			// var senddata=JSON.stringify({usersessionid:this.dsaSessionID,id:data.id});
 			var senddata=JSON.stringify({usersessionid:this.sessiondata.authdata.id,id:data.id});
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", this.apihost + "/clickevents/sequence/delete", true);

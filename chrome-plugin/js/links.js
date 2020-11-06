@@ -1,8 +1,8 @@
-let clickObjects = [];
-let sessionID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+let dsaClickObjects = [];
+let dsaSessionID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 const voicedebug = false; //this variable exists in background.js file also
-const POST_INTERVAL = 1000; //in milliseconds, each minute
-const API_URL = (voicedebug) ? "http://localhost:11080/voiceapi" : "https://voicetest.nistapp.com/voiceapi"; //this variable exists in background.js file also
+const DSA_POST_INTERVAL = 1000; //in milliseconds, each minute
+const DSA_API_URL = (voicedebug) ? "http://localhost:11080/voiceapi" : "https://voicetest.nistapp.com/voiceapi"; //this variable exists in background.js file also
 const EXTENSION_VERSION = true;
 let ignorepatterns = [{"patterntype": "nist-voice", "patternvalue": "any"}];
 let sitepatterns = [];
@@ -16,14 +16,14 @@ let logLevel = 0;
 EventTarget.prototype.addEventListener = function (addEventListener) {
     return function () {
         if (arguments[0] === "click") {
-            addNewElement(this);
+            dsaAddNewElement(this);
         }
         addEventListener.call(this, arguments[0], arguments[1], arguments[2]);
     }
 }(EventTarget.prototype.addEventListener);
 
 // adding the clickobjects that were identified.
-function addNewElement(node) {
+function dsaAddNewElement(node) {
     let clickObject = {element: node}
 
     //checking whether the element is window or not
@@ -40,23 +40,23 @@ function addNewElement(node) {
         return;
     }
 
-    for (var i = 0; i < clickObjects.length; i++) {
-        if (clickObjects[i].element === clickObject.element) {
+    for (var i = 0; i < dsaClickObjects.length; i++) {
+        if (dsaClickObjects[i].element === clickObject.element) {
             //todo, discuss , how better to call actions, if multiple actions should be stored, or selector better.
             return;
         }
     }
 
-    clickObject.id = clickObjects.length;
-    clickObjects.push(clickObject);
+    clickObject.id = dsaClickObjects.length;
+    dsaClickObjects.push(clickObject);
 }
 
 // processing node from mutation and then send to clickbojects addition
-function processNode(node) {
+function dsaProcessNode(node) {
     var processchildren = true;
 
     if (node.onclick != undefined) {
-        addNewElement(node);
+        dsaAddNewElement(node);
     }
 
     // switched to switch case condition from if condition
@@ -64,38 +64,38 @@ function processNode(node) {
         switch (node.tagName.toLowerCase()) {
             case 'a':
                 if(node.href !== undefined){
-                    addNewElement(node);
+                    dsaAddNewElement(node);
                 }
                 break;
             case 'input':
             case 'textarea':
             case 'option':
             case 'select':
-                addNewElement(node);
+                dsaAddNewElement(node);
                 break;
             case 'button':
                 if(node.hasAttribute('ng-click') || node.hasAttribute('onclick')) {
-                    addNewElement(node);
+                    dsaAddNewElement(node);
                 }
                 break;
         }
     }
 
     if(node.classList && node.classList.contains("dropdown-toggle")){
-        addNewElement(node);
+        dsaAddNewElement(node);
     }
 
     if (node.children && processchildren) {
         for (var i = 0; i < node.children.length; i++) {
-            processNode(node.children[i]);
+            dsaProcessNode(node.children[i]);
         }
     }
 }
 
 // removal of clickbojects via mutation observer
-function processRemovedNode(node) {
-    for (var j = 0; j < clickObjects.length; j++) {
-        if (node.isEqualNode(clickObjects[j].element)){
+function dsaProcessRemovedNode(node) {
+    for (var j = 0; j < dsaClickObjects.length; j++) {
+        if (node.isEqualNode(dsaClickObjects[j].element)){
             let addtoremovenodes=true;
             removedclickobjectcounter:
                 for(var k=0;k<removedclickobjects.length;k++){
@@ -105,27 +105,27 @@ function processRemovedNode(node) {
                     }
                 }
             if(addtoremovenodes) {
-                removedclickobjects.push(clickObjects[j]);
+                removedclickobjects.push(dsaClickObjects[j]);
             }
-            clickObjects.splice(j, 1);
+            dsaClickObjects.splice(j, 1);
             break;
         }
     }
     if (node.children) {
         for (var i = 0; i < node.children.length; i++) {
-            processRemovedNode(node.children[i]);
+            dsaProcessRemovedNode(node.children[i]);
         }
     }
 }
 
 //mutation observer initialization and adding the logic to process the clickobjects
-var observer = new MutationObserver(function (mutations) {
+var dsa_observer = new MutationObserver(function (mutations) {
     mutations.forEach(function (mutation) {
         if (mutation.removedNodes.length) {
             if(logLevel>0) {
-                console.log(clickObjects);
+                console.log(dsaClickObjects);
             }
-            [].some.call(mutation.removedNodes, processRemovedNode);
+            [].some.call(mutation.removedNodes, dsaProcessRemovedNode);
             if(logLevel>0) {
                 console.log(removedclickobjects);
             }
@@ -133,13 +133,13 @@ var observer = new MutationObserver(function (mutations) {
         if (!mutation.addedNodes.length) {
             return;
         }
-        [].some.call(mutation.addedNodes, processNode);
+        [].some.call(mutation.addedNodes, dsaProcessNode);
     });
     lastmutationtime=Date.now();
 });
 
 // starting the mutation observer
-observer.observe(document, {
+dsa_observer.observe(document, {
     childList: true,
     subtree: true
 });
