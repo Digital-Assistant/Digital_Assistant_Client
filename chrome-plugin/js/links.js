@@ -78,6 +78,11 @@ function dsaProcessNode(node) {
                     dsaAddNewElement(node);
                 }
                 break;
+            case 'span':
+                if (node.classList && node.classList.contains('select2-selection')) {
+                    dsaAddNewElement(node);
+                }
+                break;
         }
     }
 

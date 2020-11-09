@@ -1031,6 +1031,27 @@ if (typeof Voicepluginsdk === 'undefined') {
 						this.invokenextitem(node,timetoinvoke);
 					}
 					break;
+				case 'span':
+					if (node.classList && node.classList.contains('select2-selection')) {
+						this.playNextAction = false;
+						var navigationcookie=this.getstoragedata(this.navigationcookiename);
+						if(navigationcookie){
+							var navigationcookiedata = JSON.parse(navigationcookie);
+							if(navigationcookiedata && navigationcookiedata.autoplay) {
+								this.autoplay = false;
+								this.toggleautoplay(navigationcookiedata);
+							} else {
+								this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
+							}
+						}
+						$('html, body').animate({
+							scrollTop: ($(node).offset().top - 200)
+						}, 2000, function(){
+							$(node.parentNode.parentNode).addClass('tooltip-dsa').append('<div class="tooltip-dsa-right"><div class="tooltip-dsa-text-content">Please select the value and then click on play</div></div>');
+							node.click();
+						});
+					}
+					break;
 				default:
 					node.click();
 					this.invokenextitem(node,timetoinvoke);
@@ -1224,6 +1245,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 		},
 		//getting input label for the clicked node
 		getclickedinputlabels:function(node, fromdocument=false, selectchange=false){
+			if(this.logLevel > 0) {
+				console.log({node: node});
+			}
+			if (!node) {
+				return null;
+			}
 			var inputlabels="";
 			var nodename=node.nodeName.toLowerCase();
 			switch (nodename) {
