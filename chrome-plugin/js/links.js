@@ -76,6 +76,8 @@ function dsaProcessNode(node) {
             case 'button':
                 if(node.hasAttribute('ng-click') || node.hasAttribute('onclick')) {
                     dsaAddNewElement(node);
+                } else if (node.hasAttribute('type') && node.getAttribute('type') === 'submit') {
+                    dsaAddNewElement(node);
                 }
                 break;
             case 'span':
