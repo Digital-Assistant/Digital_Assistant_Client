@@ -97,7 +97,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			'offsetHeight','offsetLeft','offsetTop','offsetWidth','scrollHeight','scrollLeft','scrollTop','scrollWidth',
 			'baseURI','isConnected','ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
 			'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
-			'ng-star-inserted', 'ng-star'
+			'ng-star-inserted', 'ng-star', 'aria-describedby'
 		],
 		innerTextWeight: 5,
 		logLevel: 0,
@@ -584,7 +584,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 					// Checking for multiselect value nodes during indexing
 					if ((node.nodeName.toLowerCase() === 'ng-dropdown-panel')) {
-						console.log('multiselect');
+						// console.log('multiselect');
 					}else if(node.hasChildNodes()){
 						var childnodes =  node.childNodes;
 						var hasparentclick = false;
@@ -786,7 +786,11 @@ if (typeof Voicepluginsdk === 'undefined') {
 				}
 			}
 
-
+			/*if(node.nodeName.toLowerCase() === "button" && node.textContent && node.textContent !== '') {
+				console.log(node.textContent);
+				inputlabels.push({"text":node.textContent,"match":false});
+				console.log(inputlabels);
+			}*/
 
 			if(getchildlabels && node.childNodes.length>0){
 				var childnodes = node.childNodes;
@@ -1738,6 +1742,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 						const inputLabels = Voicepluginsdk.getclickedinputlabels(matchNode.originalNode["element-data"]);
 						if (inputLabels === selectednode.clickednodename) {
 							finalMatchNodes.push(matchNode);
+						} else if(matchNode.originalNode["element-data"].classList && matchNode.originalNode["element-data"].classList.contains('expand-button')){
+							// collapsable buttons are treated as matched nodes to check distance for further processing
+							finalMatchNodes.push(matchNode);
 						}
 					}
 				});
@@ -1803,14 +1810,24 @@ if (typeof Voicepluginsdk === 'undefined') {
 							match=this.comparenodes(comparenode[key][i], originalnode[key][i],match);
 						}
 					}
-				} else if(key === 'class' && originalnode.hasOwnProperty(key) && comparenode.hasOwnProperty(key)) {
+				} else if((key === 'class' || key === 'className') && originalnode.hasOwnProperty(key) && comparenode.hasOwnProperty(key)) {
 					// fix for calendar issue
 					comparenode[key] = comparenode[key].replace(' ng-star-inserted','');
 					originalnode[key] = originalnode[key].replace(' ng-star-inserted','');
 					if (comparenode[key]===originalnode[key]) {
 						match.matched++;
 					} else {
-						match.unmatched.push({key: key, compareNodeValues: comparenode[key], recordedNodeValues: originalnode[key]});
+						// jaro wrinker comparision for classname
+						let weight = this.JaroWrinker(originalnode[key], comparenode[key]);
+						if(weight > 0.90) {
+							match.matched++;
+						} else {
+							match.unmatched.push({
+								key: key,
+								compareNodeValues: comparenode[key],
+								recordedNodeValues: originalnode[key]
+							});
+						}
 					}
 				} else if(key === 'innerText' && originalnode.hasOwnProperty(key) && comparenode.hasOwnProperty(key) && (comparenode[key].trim() === originalnode[key].trim())) {
 					// matching inner text should be weighted more. We will add an arbitrarily large number - innerTextWeight.

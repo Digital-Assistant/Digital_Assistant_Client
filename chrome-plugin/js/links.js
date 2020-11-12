@@ -78,6 +78,12 @@ function dsaProcessNode(node) {
                     dsaAddNewElement(node);
                 } else if (node.hasAttribute('type') && node.getAttribute('type') === 'submit') {
                     dsaAddNewElement(node);
+                } else if (node.classList && (node.classList.contains('expand-button') || node.classList.contains('btn-pill'))) {
+                    dsaAddNewElement(node);
+                } else {
+                    if (logLevel > 0) {
+                        console.log({node: node});
+                    }
                 }
                 break;
             case 'span':
@@ -129,11 +135,11 @@ function dsaProcessRemovedNode(node) {
 var dsa_observer = new MutationObserver(function (mutations) {
     mutations.forEach(function (mutation) {
         if (mutation.removedNodes.length) {
-            if(logLevel>0) {
+            if(logLevel > 1) {
                 console.log(dsaClickObjects);
             }
             [].some.call(mutation.removedNodes, dsaProcessRemovedNode);
-            if(logLevel>0) {
+            if(logLevel > 1) {
                 console.log(removedclickobjects);
             }
         }
