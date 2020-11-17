@@ -102,6 +102,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 		innerTextWeight: 5,
 		logLevel: 0,
 		playNextAction: true,
+		forceReindex: false,
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -538,10 +539,17 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 			if(this.processcount<this.totalcount){
 				//todo new nodes added need to reprocess
-				return;
+				console.log('Need to do the processing');
+				return ;
 			}
 		},
 		removefromhtmlindex:async function(){
+			if (this.forceReindex) {
+				console.log('Forced reindexing');
+				this.htmlindex = [];
+				this.forceReindex = false;
+				return Promise.resolve(1);
+			}
 			if(this.htmlindex.length>0){
 				let newhtmlindex=[];
 				let htmlindexlength=this.htmlindex.length;
@@ -1030,6 +1038,11 @@ if (typeof Voicepluginsdk === 'undefined') {
 						} else {
 							this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
 						}
+					} else if(node.classList && node.classList.contains('btn-pill')) {
+						// fix for navigation issue
+						// this.forceReindex = true;
+						node.click();
+						this.invokenextitem(node,timetoinvoke);
 					} else {
 						node.click();
 						this.invokenextitem(node,timetoinvoke);
@@ -1091,6 +1104,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 
 			if(this.autoplay){
+				this.forceReindex = true;
+				setTimeout(function (){Voicepluginsdk.indexnewclicknodes();},DSA_POST_INTERVAL);
 				return true;
 			}
 
@@ -1203,8 +1218,19 @@ if (typeof Voicepluginsdk === 'undefined') {
 			};
 			xhr.send(outputdata);
 
-			//processing new clicknodes if available after the click action.
-			setTimeout(function (){Voicepluginsdk.indexnewclicknodes();},DSA_POST_INTERVAL);
+			// reindexing whole document again for collapsable nodes
+			if(this.logLevel>0) {
+				console.log({clickednode: node});
+			}
+			if(node.hasAttribute('mattreenodetoggle')) {
+				this.forceReindex = true;
+				Voicepluginsdk.indexnewclicknodes();
+			} else {
+				//processing new clicknodes if available after the click action.
+				this.forceReindex = true;
+				setTimeout(function (){Voicepluginsdk.indexnewclicknodes();},DSA_POST_INTERVAL);
+				// Voicepluginsdk.indexnewclicknodes();
+			}
 
 			// rerender html if recording is enabled.
 			if(this.recording) {
@@ -1249,7 +1275,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 		},
 		//getting input label for the clicked node
 		getclickedinputlabels:function(node, fromdocument=false, selectchange=false){
-			if(this.logLevel > 0) {
+			if(this.logLevel > 4) {
 				console.log({node: node});
 			}
 			if (!node) {
