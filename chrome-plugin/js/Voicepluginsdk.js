@@ -1105,7 +1105,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 			if(this.autoplay){
 				this.forceReindex = true;
-				setTimeout(function (){Voicepluginsdk.indexnewclicknodes();},DSA_POST_INTERVAL);
+				Voicepluginsdk.indexnewclicknodes();
 				return true;
 			}
 
@@ -1219,17 +1219,21 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.send(outputdata);
 
 			// reindexing whole document again for collapsable nodes
-			if(this.logLevel>0) {
-				console.log({clickednode: node});
-			}
-			if(node.hasAttribute('mattreenodetoggle')) {
-				this.forceReindex = true;
-				Voicepluginsdk.indexnewclicknodes();
-			} else {
-				//processing new clicknodes if available after the click action.
-				this.forceReindex = true;
-				setTimeout(function (){Voicepluginsdk.indexnewclicknodes();},DSA_POST_INTERVAL);
-				// Voicepluginsdk.indexnewclicknodes();
+			if(this.recording) {
+				if(this.logLevel>0) {
+					console.log({clickednode: node});
+				}
+				if (node.hasAttribute('mattreenodetoggle')) {
+					this.forceReindex = true;
+					Voicepluginsdk.indexnewclicknodes();
+				} else {
+					//processing new clicknodes if available after the click action.
+					this.forceReindex = true;
+					setTimeout(function () {
+						Voicepluginsdk.indexnewclicknodes();
+					}, DSA_POST_INTERVAL);
+					// Voicepluginsdk.indexnewclicknodes();
+				}
 			}
 
 			// rerender html if recording is enabled.
