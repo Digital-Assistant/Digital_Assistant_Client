@@ -930,6 +930,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 				return;
 			}
 
+			if(this.logLevel>2) {
+				console.log({invokingnode: node});
+			}
+
 			// remove added tooltips before invoking
 			let tooltipnode = $('.tooltip-dsa');
 			if (tooltipnode) {
@@ -941,7 +945,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				case "input":
 					this.playNextAction = false;
 					// functionality for detecting multi select box and highlighting the recorded node
-					if (node.classList && node.classList.contains('select2-search__field')){
+					if (node.classList && (node.classList.contains('select2-search__field') || node.classList.contains('mat-autocomplete-trigger'))){
 						var navigationcookie=this.getstoragedata(this.navigationcookiename);
 						if(navigationcookie){
 							var navigationcookiedata = JSON.parse(navigationcookie);
