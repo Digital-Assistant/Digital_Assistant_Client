@@ -100,7 +100,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			'ng-star-inserted', 'ng-star', 'aria-describedby'
 		],
 		innerTextWeight: 5,
-		logLevel: 3,
+		logLevel: 0,
 		playNextAction: true,
 		forceReindex: false,
 		inarray:function(value,object){
@@ -557,7 +557,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 					let checknode=this.htmlindex[htmli];
 					let removedclickobjectslength=removedclickobjects.length;
 					let foundremovedindexednode=-1;
-					removeclickobjectcounter:
 					for (var k = 0; k < removedclickobjectslength; k++) {
 						if(removedclickobjects[k].element === window){
 							continue;
