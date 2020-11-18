@@ -100,7 +100,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			'ng-star-inserted', 'ng-star', 'aria-describedby'
 		],
 		innerTextWeight: 5,
-		logLevel: 0,
+		logLevel: 3,
 		playNextAction: true,
 		forceReindex: false,
 		inarray:function(value,object){
@@ -540,7 +540,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			if(this.processcount<this.totalcount){
 				//todo new nodes added need to reprocess
 				console.log('Need to do the processing');
-				return ;
+
 			}
 		},
 		removefromhtmlindex:async function(){
@@ -566,7 +566,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 						if (checknode['element-data'].isSameNode(removedclickobject)) {
 							foundremovedindexednode=k;
-							break removeclickobjectcounter;
+							break;
 						}
 					}
 					if(foundremovedindexednode===-1){
@@ -616,7 +616,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 										}
 									} else {
 										node.childNodes[i] = this.indexdom(childnode, ret, node,"", hasparentclick, parentclicknode);
-										if(node.childNodes[i].hasOwnProperty("hasclick") && node.childNodes[i].hasclick && node.childNodes[i].textContent!==""){
+										if(node.childNodes[i].hasOwnProperty("hasclick") && node.childNodes[i].hasclick){
 											node.haschildclick=true;
 										}
 										if(hasparentclick && node.childNodes[i].hasOwnProperty("haschildclick") && node.childNodes[i].haschildclick){
@@ -936,8 +936,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 			if (tooltipnode) {
 				tooltipnode.removeClass('tooltip-dsa');
 				$('.tooltip-dsa-right').remove();
-			} else if(this.logLevel>0) {
-				console.log('tooltip node not found');
 			}
 
 			switch (node.nodeName.toLowerCase()) {
@@ -1152,11 +1150,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 				return ;
 			}
 
-			if (this.logLevel > 0) {
-				console.log({originalnode: node});
-				console.log(domjson);
-			}
-
 			if(node.nodeName.toLowerCase()==="input" && node.getAttribute("type")==="radio"){
 				var postdata = {
 					domain: window.location.host,
@@ -1197,7 +1190,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 			// for known scenarios prompt user for input
 			if(confirmdialog && this.recording && !this.confirmednode && !this.autoplay){
-				this.confirmparentclick(node, fromdocument, selectchange, event);
+				this.confirmparentclick(node, fromdocument, selectchange, event, postdata);
 				return true;
 			} else if(confirmdialog && !this.recording) {
 				return true;
@@ -1221,7 +1214,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 			// reindexing whole document again for collapsable nodes
 			if(this.recording) {
 				if(this.logLevel>0) {
+					console.log('-------------------------------------------------------------');
+					console.log(this.lastclickedtime);
 					console.log({clickednode: node});
+					console.log('-------------------------------------------------------------');
 				}
 				if (node.hasAttribute('mattreenodetoggle')) {
 					this.forceReindex = true;
@@ -1243,7 +1239,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				}, DSA_POST_INTERVAL);
 			}
 		},
-		confirmparentclick:function(node, fromdocument, selectchange, event) {
+		confirmparentclick:function(node, fromdocument, selectchange, event, postdata) {
 			var prevclicktext = this.getclickedinputlabels(this.lastclickednode, fromdocument, selectchange);
 			if(node.hasChildNodes()) {
 				var childtextexists = this.processparentchildnodes(node, prevclicktext);
@@ -1263,6 +1259,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 			var childtextexists = false;
 			for(const childnode of node.childNodes) {
 				if (childnode.nodeType === Node.ELEMENT_NODE) {
+					if (childnode.isSameNode(this.lastclickednode)) {
+						childtextexists = true;
+						break;
+					}
 					let childtext = this.getclickedinputlabels(childnode);
 					if(prevtext === childtext) {
 						childtextexists = true;
@@ -1761,7 +1761,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				if(this.updatenavcookiedata(navcookiedata,selectednode.id)){
 					this.matchaction(matchNodes[0].originalNode,false,selectednode);
 				}
-				return;
+
 			} else if(matchNodes.length>1) {
 				//todo need to perform some user intervention
 				// for multiple matching nodes compare labels of the clickable nodes to get exact node match
@@ -1810,7 +1810,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 					}
 					alert("Unable to find the action");
 				}
-				return;
+
 			} else {
 				alert("Unable to find the action");
 			}
