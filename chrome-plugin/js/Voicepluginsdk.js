@@ -1070,6 +1070,30 @@ if (typeof Voicepluginsdk === 'undefined') {
 						});
 					}
 					break;
+				case 'div':
+					if(node.classList && (node.classList.contains('mat-form-field-flex') || node.classList.contains('mat-select-trigger'))) {
+						this.playNextAction = false;
+						var navigationcookie=this.getstoragedata(this.navigationcookiename);
+						if(navigationcookie){
+							var navigationcookiedata = JSON.parse(navigationcookie);
+							if(navigationcookiedata && navigationcookiedata.autoplay) {
+								this.autoplay = false;
+								this.toggleautoplay(navigationcookiedata);
+							} else {
+								this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
+							}
+						}
+						$('html, body').animate({
+							scrollTop: ($(node).offset().top - 200)
+						}, 2000, function(){
+							$(node.parentNode.parentNode).addClass('tooltip-dsa').append('<div class="tooltip-dsa-right"><div class="tooltip-dsa-text-content">Please select the value and then click on play</div></div>');
+							node.click();
+						});
+					} else {
+						node.click();
+						this.invokenextitem(node,timetoinvoke);
+					}
+					break;
 				default:
 					node.click();
 					this.invokenextitem(node,timetoinvoke);
