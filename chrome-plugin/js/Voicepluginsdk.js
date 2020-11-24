@@ -1595,6 +1595,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			var xhr = new XMLHttpRequest();
 			xhr.open("GET", this.apihost + "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host), true);
 			xhr.onload = function(event){
+				Voicepluginsdk.searchInProgress=false;
 				if(xhr.status === 200){
 					Voicepluginsdk.renderelasticresults(JSON.parse(xhr.response));
 				}
