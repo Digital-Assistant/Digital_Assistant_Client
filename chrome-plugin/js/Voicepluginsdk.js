@@ -103,6 +103,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 		logLevel: 0,
 		playNextAction: true,
 		forceReindex: false,
+		searchText: null,
+		searchInProgress: false,
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -1573,6 +1575,19 @@ if (typeof Voicepluginsdk === 'undefined') {
 				var searchtext = jQuery("#voicesearchinput").val();
 			}
 			this.cancelrecordingsequence(false);
+
+
+			if (this.searchInProgress) {
+				alert('Previous search in progress');
+				return false;
+			}
+
+			if(this.logLevel>0) {
+				console.log(searchtext);
+			}
+
+			this.searchText = searchtext;
+			this.searchInProgress = true;
 
 			//add analtytics
 			this.recordclick('search',searchtext);
