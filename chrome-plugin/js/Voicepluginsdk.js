@@ -105,6 +105,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 		forceReindex: false,
 		searchText: null,
 		searchInProgress: false,
+		ignoreNodes: ['ng-dropdown-panel','ckeditor'],
+		tooltipDisplayedNodes: [],
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -591,9 +593,19 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 					node.haschildclick=false;
 
-					// Checking for multiselect value nodes during indexing
-					if ((node.nodeName.toLowerCase() === 'ng-dropdown-panel')) {
-						// console.log('multiselect');
+					// Checking for ignore nodes during indexing
+					if (this.inarray(node.nodeName.toLowerCase(), this.ignoreNodes) !== -1) {
+						if(node.nodeName.toLowerCase() === 'ckeditor' && node.childNodes.length>2 && this.recording){
+							// console.log({editoriframe:node.childNodes[2].childNodes[1].childNodes[1].childNodes[1]});
+							jQuery(node.childNodes[2].childNodes[1].childNodes[1].childNodes[1]).bind("mousedown, mouseup, click",function(){
+								jQuery(this).contents().on("mousedown, mouseup, click", function(){
+
+								});
+								alert("Click detected inside iframe.");
+								console.log('record user click');
+								// Voicepluginsdk.recorduserclick(node, false, false, event, confirmdialog);
+							});
+						}
 					}else if(node.hasChildNodes()){
 						var childnodes =  node.childNodes;
 						var hasparentclick = false;
@@ -690,6 +702,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 				if (node.isSameNode(dsaClickObjects[i].element)) {
 					clickobjectexists = true;
 					clickobject = dsaClickObjects[i];
+				}
+			}
+
+			if(this.logLevel>2) {
+				if(this.inarray(node.nodeName.toLowerCase(), this.ignoreNodes) !== -1) {
+					console.log({indexingnode: node});
 				}
 			}
 
@@ -1095,6 +1113,26 @@ if (typeof Voicepluginsdk === 'undefined') {
 						node.click();
 						this.invokenextitem(node,timetoinvoke);
 					}
+					break;
+				//	fix for text editor during playback
+				case 'ckeditor':
+					this.playNextAction = false;
+					var navigationcookie=this.getstoragedata(this.navigationcookiename);
+					if(navigationcookie){
+						var navigationcookiedata = JSON.parse(navigationcookie);
+						if(navigationcookiedata && navigationcookiedata.autoplay) {
+							this.autoplay = false;
+							this.toggleautoplay(navigationcookiedata);
+						} else {
+							this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
+						}
+					}
+					$('html, body').animate({
+						scrollTop: ($(node).offset().top - 200)
+					}, 2000, function(){
+						$(node).addClass('tooltip-dsa').append('<div class="tooltip-dsa-right"><div class="tooltip-dsa-text-content">Please input into text editor and click on play</div></div>');
+						node.click();
+					});
 					break;
 				default:
 					node.click();
@@ -1779,6 +1817,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 						if(match.innerTextFlag && Math.abs((match.matched) - match.count) <= (match.innerChildNodes * this.innerTextWeight)){
 							searchLabelExists=true;
 						} else if (match.matched === match.count) {
+							searchLabelExists=true;
+						} else if(originalNode.node.nodeName === 'CKEDITOR' && (match.matched+1) >= match.count) {
+							// fix for editor playback
 							searchLabelExists=true;
 						}
 

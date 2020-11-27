@@ -91,6 +91,11 @@ function dsaProcessNode(node) {
                     dsaAddNewElement(node);
                 }
                 break;
+            // fix for editor issue
+            case 'ckeditor':
+                console.log({processingnode:node});
+                dsaAddNewElement(node);
+                break;
         }
     }
 
@@ -114,7 +119,7 @@ function dsaProcessRemovedNode(node) {
                 for(var k=0;k<removedclickobjects.length;k++){
                     if(node.isEqualNode(removedclickobjects[k].element)){
                         addtoremovenodes=false;
-                        break removedclickobjectcounter;
+                        break;
                     }
                 }
             if(addtoremovenodes) {
