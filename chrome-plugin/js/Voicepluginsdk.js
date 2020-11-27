@@ -597,14 +597,24 @@ if (typeof Voicepluginsdk === 'undefined') {
 					if (this.inarray(node.nodeName.toLowerCase(), this.ignoreNodes) !== -1) {
 						if(node.nodeName.toLowerCase() === 'ckeditor' && node.childNodes.length>2 && this.recording){
 							// console.log({editoriframe:node.childNodes[2].childNodes[1].childNodes[1].childNodes[1]});
-							jQuery(node.childNodes[2].childNodes[1].childNodes[1].childNodes[1]).bind("mousedown, mouseup, click",function(){
+							/*jQuery(node.childNodes[2].childNodes[1].childNodes[1].childNodes[1]).bind("mousedown, mouseup, click",function(){
 								jQuery(this).contents().on("mousedown, mouseup, click", function(){
 
 								});
 								alert("Click detected inside iframe.");
 								console.log('record user click');
 								// Voicepluginsdk.recorduserclick(node, false, false, event, confirmdialog);
-							});
+							});*/
+							let addToolTip = true;
+							for(let checknode of this.tooltipDisplayedNodes){
+								if(node.isSameNode(checknode)) {
+									addToolTip = false;
+								}
+							}
+							if(addToolTip) {
+								this.tooltipDisplayedNodes.push(node);
+								$(node).addClass('tooltip-dsa').append('<div class="tooltip-dsa-right"><div class="tooltip-dsa-text-content">We have detected a rich text editor. To record this in your sequence, Please click on the editor menu. We are unable to record clicks on the text area.</div></div>');
+							}
 						}
 					}else if(node.hasChildNodes()){
 						var childnodes =  node.childNodes;
