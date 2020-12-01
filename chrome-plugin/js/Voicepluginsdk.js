@@ -1625,8 +1625,13 @@ if (typeof Voicepluginsdk === 'undefined') {
 			this.cancelrecordingsequence(false);
 
 
-			if (this.searchInProgress) {
+			if (this.searchInProgress === true) {
 				alert('Previous search in progress');
+				return false;
+			}
+
+			if (this.autoplay) {
+				this.searchInProgress = false;
 				return false;
 			}
 
@@ -1643,10 +1648,13 @@ if (typeof Voicepluginsdk === 'undefined') {
 			var xhr = new XMLHttpRequest();
 			xhr.open("GET", this.apihost + "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host), true);
 			xhr.onload = function(event){
-				Voicepluginsdk.searchInProgress=false;
 				if(xhr.status === 200){
+					Voicepluginsdk.searchInProgress=false;
 					Voicepluginsdk.renderelasticresults(JSON.parse(xhr.response));
+				} else {
+					Voicepluginsdk.searchInProgress=false;
 				}
+				console.log(Voicepluginsdk.searchInProgress);
 			};
 			xhr.send();
 		},
@@ -1777,6 +1785,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			jQuery("#backtosearch").click(function () {
 				// Voicepluginsdk.toggleautoplay(navcookiedata);
 				Voicepluginsdk.autoplay = false;
+				Voicepluginsdk.searchInProgress=false;
 				Voicepluginsdk.configureintrojs();
 				Voicepluginsdk.introjs.refresh();
 				Voicepluginsdk.backtosearchresults(navcookiedata);
