@@ -107,6 +107,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 		searchInProgress: false,
 		ignoreNodes: ['ng-dropdown-panel','ckeditor'],
 		tooltipDisplayedNodes: [],
+		//replayvariables
+		autoplayCompleted: false,
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -1709,6 +1711,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 			if(shownodelist) {
 				if (navcookiedata.navcompleted) {
+					this.autoplayCompleted = true;
 					playiconhtml += '	<span><img nist-voice="true" id="nist-autoplay" src="' + this.extensionpath + 'assets/voice-play.png"></span>'+
 									'   <span><img nist-voice="true" src="' + this.extensionpath + 'assets/voice-stop-disable.png"></span>';
 				} else {
@@ -2163,6 +2166,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 				this.playNextAction = true;
 				//add analtytics
 				this.recordclick('play',navcookiedata.data.name.toString(),navcookiedata.data.id);
+				// issue fix for replay
+				if(this.autoplayCompleted) {
+					navcookiedata.navigateddata = [];
+					navcookiedata.navcompleted = false;
+					this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
+				}
 			}
 
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
