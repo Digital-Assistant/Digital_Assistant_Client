@@ -109,6 +109,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 		tooltipDisplayedNodes: [],
 		//replayvariables
 		autoplayCompleted: false,
+		// manual click variables
+		invokedActionManually: false,
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -1699,6 +1701,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 			this.autoplay = false;
 			this.showselectedrow(data,data.id,true, navcookiedata);
+			this.invokedActionManually=false;
 			//add analtytics
 			this.recordclick('sequencerecord',data.name.toString(),data.id);
 		},
@@ -1805,6 +1808,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 			if(visited === -1) {
 				template.click(function () {
+					Voicepluginsdk.invokedActionManually = true;
 					Voicepluginsdk.performclickaction(data,navcookiedata);
 				});
 			}
@@ -2167,7 +2171,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				//add analtytics
 				this.recordclick('play',navcookiedata.data.name.toString(),navcookiedata.data.id);
 				// issue fix for replay
-				if(this.autoplayCompleted) {
+				if(this.autoplayCompleted || this.invokedActionManually) {
 					navcookiedata.navigateddata = [];
 					navcookiedata.navcompleted = false;
 					this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
