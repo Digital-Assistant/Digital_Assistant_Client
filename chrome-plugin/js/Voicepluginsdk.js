@@ -105,7 +105,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 		forceReindex: false,
 		searchText: null,
 		searchInProgress: false,
-		ignoreNodes: ['ng-dropdown-panel','ckeditor'],
+		ignoreNodes: ['ng-dropdown-panel','ckeditor','fusioncharts'],
 		tooltipDisplayedNodes: [],
 		//replayvariables
 		autoplayCompleted: false,
@@ -619,6 +619,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 								this.tooltipDisplayedNodes.push(node);
 								$(node).addClass('tooltip-dsa').append('<div class="tooltip-dsa-right"><div class="tooltip-dsa-text-content">We have detected a rich text editor. To record this in your sequence, Please click on the editor menu. We are unable to record clicks on the text area.</div></div>');
 							}
+						} else {
+							$(node).click(function (){
+								alert('currently we do not support this action to be recorded');
+							})
 						}
 					}else if(node.hasChildNodes()){
 						var childnodes =  node.childNodes;
