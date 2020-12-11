@@ -109,6 +109,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 		tooltipDisplayedNodes: [],
 		//replayvariables
 		autoplayCompleted: false,
+		autoplayPaused: false,
 		// manual click variables
 		invokedActionManually: false,
 		// personal node ignore attributes
@@ -557,7 +558,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 		},
 		removefromhtmlindex:async function(){
 			if (this.forceReindex) {
-				console.log('Forced reindexing');
 				this.htmlindex = [];
 				this.forceReindex = false;
 				return Promise.resolve(1);
@@ -979,6 +979,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				$('.tooltip-dsa-right').remove();
 			}
 
+			this.simulateHover(node);
 			switch (node.nodeName.toLowerCase()) {
 				case "input":
 					this.playNextAction = false;
@@ -989,6 +990,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 							var navigationcookiedata = JSON.parse(navigationcookie);
 							if(navigationcookiedata && navigationcookiedata.autoplay) {
 								this.autoplay = false;
+								this.autoplayPaused = true;
 								this.toggleautoplay(navigationcookiedata);
 							} else {
 								this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
@@ -1073,6 +1075,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 						});
 						if(navigationcookiedata && navigationcookiedata.autoplay) {
 							this.autoplay = false;
+							this.autoplayPaused = true;
 							this.toggleautoplay(navigationcookiedata);
 						} else {
 							this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
@@ -1095,6 +1098,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 							var navigationcookiedata = JSON.parse(navigationcookie);
 							if(navigationcookiedata && navigationcookiedata.autoplay) {
 								this.autoplay = false;
+								this.autoplayPaused = true;
 								this.toggleautoplay(navigationcookiedata);
 							} else {
 								this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
@@ -1116,6 +1120,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 							var navigationcookiedata = JSON.parse(navigationcookie);
 							if(navigationcookiedata && navigationcookiedata.autoplay) {
 								this.autoplay = false;
+								this.autoplayPaused = true;
 								this.toggleautoplay(navigationcookiedata);
 							} else {
 								this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
@@ -1140,6 +1145,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 						var navigationcookiedata = JSON.parse(navigationcookie);
 						if(navigationcookiedata && navigationcookiedata.autoplay) {
 							this.autoplay = false;
+							this.autoplayPaused = true;
 							this.toggleautoplay(navigationcookiedata);
 						} else {
 							this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
@@ -1167,6 +1173,24 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 			if(!link) {
 				setTimeout(function(){Voicepluginsdk.showhtml();}, timetoinvoke);
+			}
+		},
+		//simulate hover functionality
+		simulateHover: function(node){
+			var event = new MouseEvent('mouseover', {
+				'view': window,
+				'bubbles': true,
+				'cancelable': true
+			});
+			var canceled = !node.dispatchEvent(event);
+			if(this.logLevel>0) {
+				if (canceled) {
+					// A handler called preventDefault.
+					console.log('hover cancelled');
+				} else {
+					// None of the handlers called preventDefault.
+					console.log('hover not cancelled');
+				}
 			}
 		},
 		//firing an event if event available for the node. Currently not implemented
@@ -1843,6 +1867,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 					this.performclickaction(performactionnode, navcookiedata);
 				}
 			} else if(this.autoplay){
+				this.autoplayPaused = false;
 				this.toggleautoplay(navcookiedata);
 			}
 			jQuery("#backtosearch").click(function () {
@@ -1966,10 +1991,11 @@ if (typeof Voicepluginsdk === 'undefined') {
 				}
 
 				if(finalMatchNode && finalMatchNode.hasOwnProperty("element-data")) {
-					if(this.logLevel > 0) {
+					if(this.logLevel > 0 && finalMatchNodes.length>1) {
 						console.log('----------------------------------------------------------');
 						console.log('Multiple nodes found comparing nearnode');
 						console.log({recordedNode: originalNode.node});
+						console.log(finalMatchNodes);
 						console.log({domnode: finalMatchNode['element-data']});
 						console.log(domJSON.toJSON(finalMatchNode['element-data']));
 						console.log({finalMatchNode: finalMatchNode});
@@ -2143,10 +2169,13 @@ if (typeof Voicepluginsdk === 'undefined') {
 				matchingnodes.forEach((node) => {
 					if (node.originalNode['element-data'].hasAttribute('aria-label')
 						&& node.originalNode['element-data'].getAttribute('aria-label').toLowerCase() === 'open calendar') {
-						let dist = this.getDistance(selectedNode.nodePosition, node.originalNode['element-data'].uda_custom.domJson.node.nodePosition);
+						// let dist = this.getDistance(selectedNode.nodePosition, node.originalNode['element-data'].uda_custom.domJson.node.nodePosition);
+						let domJsonData = domJSON.toJSON(node.originalNode['element-data']);
+						let dist = this.getDistance(selectedNode.nodePosition, domJsonData.node.nodePosition);
 						if (this.logLevel > 1) {
 							console.log(selectedNode.nodePosition);
 							console.log(node.originalNode['element-data'].uda_custom.domJson.node.nodePosition);
+							console.log(domJsonData.node.nodePosition);
 							console.log(dist);
 						}
 						// default adding first element as least distance and then comparing with last distance calculated
@@ -2249,7 +2278,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				//add analtytics
 				this.recordclick('play',navcookiedata.data.name.toString(),navcookiedata.data.id);
 				// issue fix for replay
-				if(this.autoplayCompleted || this.invokedActionManually) {
+				if(!this.autoplayPaused && (this.autoplayCompleted || this.invokedActionManually)) {
 					navcookiedata.navigateddata = [];
 					navcookiedata.navcompleted = false;
 					this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
