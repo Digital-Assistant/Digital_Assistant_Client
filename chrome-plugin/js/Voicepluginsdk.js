@@ -105,7 +105,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 		forceReindex: false,
 		searchText: null,
 		searchInProgress: false,
-		ignoreNodes: ['ng-dropdown-panel','ckeditor'],
+		ignoreNodes: ['ng-dropdown-panel','ckeditor','fusioncharts','ngb-datepicker','ngx-daterangepicker-material'],
+		cancelRecordingDuringRecordingNodes: ['ngb-datepicker'],
 		tooltipDisplayedNodes: [],
 		//replayvariables
 		autoplayCompleted: false,
@@ -623,6 +624,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 								this.tooltipDisplayedNodes.push(node);
 								$(node).addClass('tooltip-dsa').append('<div class="tooltip-dsa-right"><div class="tooltip-dsa-text-content">We have detected a rich text editor. To record this in your sequence, Please click on the editor menu. We are unable to record clicks on the text area.</div></div>');
 							}
+						} else if(this.cancelRecordingDuringRecordingNodes.indexOf(node.nodeName.toLowerCase()) !== -1) {
+							this.addClickToNode(node);
+						} else {
+							/*$(node).click(function (){
+								alert('currently we do not support this action to be recorded');
+							});*/
 						}
 					}else if(node.hasChildNodes()){
 						var childnodes =  node.childNodes;
@@ -973,10 +980,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 
 			// remove added tooltips before invoking
-			let tooltipnode = $('.tooltip-dsa');
-			if (tooltipnode) {
-				tooltipnode.removeClass('tooltip-dsa');
-				$('.tooltip-dsa-right').remove();
+			let tooltipnodes = $('.tooltip-dsa');
+			if (tooltipnodes.length > 0) {
+				$('.tooltip-dsa').each(function() {
+					$(this).removeClass('tooltip-dsa');
+					$(this).find('.tooltip-dsa-right').remove();
+				});
 			}
 
 			this.simulateHover(node);
@@ -1231,6 +1240,14 @@ if (typeof Voicepluginsdk === 'undefined') {
 			// stopping recording as date range picker is clicked as we do not support it.
 			if(this.recording && node.hasAttribute('ngxdaterangepickermd')) {
 				alert('Sorry currently we do not support daterange selector. Please re-record the sequence without selecting daterange selector');
+				this.recording=false;
+				this.cancelrecordingsequence();
+				this.showadvancedhtml();
+				return ;
+			}
+
+			if(this.cancelRecordingDuringRecordingNodes.indexOf(node.nodeName.toLowerCase()) !== -1) {
+				alert('Sorry currently we do not support this '+node.nodeName+' selector. Please re-record the sequence without selecting '+node.nodeName+' selector');
 				this.recording=false;
 				this.cancelrecordingsequence();
 				this.showadvancedhtml();
