@@ -1268,6 +1268,11 @@ if (typeof Voicepluginsdk === 'undefined') {
 			if (node.uda_custom.domJson) {
 				var domjson = node.uda_custom.domJson;
 				domjson.meta = {};
+				//fix for position issue #89
+				if(domjson.node.nodePosition.x === 0 && domjson.node.nodePosition.y === 0) {
+					var domjson1 = domJSON.toJSON(node);
+					domjson.node.nodePosition = domjson1.node.nodePosition;
+				}
 			} else {
 				return ;
 			}
@@ -1337,8 +1342,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 			if(this.recording) {
 				if(this.logLevel>0) {
 					console.log('-------------------------------------------------------------');
-					console.log(this.lastclickedtime);
-					console.log({clickednode: node});
+					// console.log(this.lastclickedtime);
+					// console.log({clickednode: node});
+					console.log({indexedpos: node.uda_custom.domJson.node.nodePosition});
+					console.log({domjson: domjson.node.nodePosition});
 					console.log('-------------------------------------------------------------');
 				}
 				if (node.hasAttribute('mattreenodetoggle')) {
@@ -1346,8 +1353,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 					Voicepluginsdk.indexnewclicknodes();
 				} else {
 					//processing new clicknodes if available after the click action.
-					this.forceReindex = true;
 					setTimeout(function () {
+						this.forceReindex = true;
 						Voicepluginsdk.indexnewclicknodes();
 					}, DSA_POST_INTERVAL);
 					// Voicepluginsdk.indexnewclicknodes();
