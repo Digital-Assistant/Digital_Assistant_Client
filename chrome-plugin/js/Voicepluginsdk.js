@@ -491,6 +491,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 					addnisticon=false;
 					this.recording=true;
 					this.openmodal(false);
+				} else {
+					this.recording = false;
 				}
 			}
 			if(addnisticon){
@@ -1242,7 +1244,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				return ;
 			}
 
-			if(this.cancelRecordingDuringRecordingNodes.indexOf(node.nodeName.toLowerCase()) !== -1) {
+			if(this.recording && this.cancelRecordingDuringRecordingNodes.indexOf(node.nodeName.toLowerCase()) !== -1) {
 				alert('Sorry currently we do not support this '+node.nodeName+' selector. Please re-record the sequence without selecting '+node.nodeName+' selector');
 				this.recording=false;
 				this.cancelrecordingsequence();
@@ -1265,7 +1267,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 
 			// var domjson = domJSON.toJSON(node);
-			if (node.uda_custom.domJson) {
+			if (node.hasOwnProperty('uda_custom') && node.uda_custom.domJson) {
 				var domjson = node.uda_custom.domJson;
 				domjson.meta = {};
 				//fix for position issue #89
