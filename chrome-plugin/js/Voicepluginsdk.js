@@ -629,7 +629,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 								alert('currently we do not support this action to be recorded');
 							});*/
 						}
-					}else if(node.hasChildNodes()){
+					} else if(node.classList && node.classList.contains('select2-container--open') && !node.classList.contains('select2-container--focus')){
+					//	do nothing as we are not going to deal with special classes
+						if(this.logLevel>0){
+							console.log('select2 dropdown issue fix');
+						}
+					} else if(node.hasChildNodes()){
 						var childnodes =  node.childNodes;
 						var hasparentclick = false;
 						if(node.hasOwnProperty("hasclick") || hasparentnodeclick){
@@ -703,9 +708,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 
 
-			// Multiple clicks are recorded for select2-selection class.
+			// Multiple clicks are recorded for select2-selection class. select2-selection--multiple
 			// This will create a problem during playback. We should record only one click to avoid this problem
-			if(node.classList && (node.classList.contains("select2-selection--multiple") || node.classList.contains('cdk-overlay-backdrop'))) {
+			if(node.classList && (node.classList.contains("select2-search__field") || node.classList.contains('cdk-overlay-backdrop'))) {
 				return node;
 			}
 
