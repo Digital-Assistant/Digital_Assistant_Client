@@ -97,7 +97,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			'offsetHeight','offsetLeft','offsetTop','offsetWidth','scrollHeight','scrollLeft','scrollTop','scrollWidth',
 			'baseURI','isConnected','ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
 			'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
-			'ng-star-inserted', 'ng-star', 'aria-describedby'
+			'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y'
 		],
 		innerTextWeight: 5,
 		logLevel: 0,
@@ -495,6 +495,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 					addnisticon=false;
 					this.recording=true;
 					this.openmodal(false);
+				} else {
+					this.recording = false;
 				}
 			}
 			if(addnisticon){
@@ -631,7 +633,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 								alert('currently we do not support this action to be recorded');
 							});*/
 						}
-					}else if(node.hasChildNodes()){
+					} else if(node.classList && node.classList.contains('select2-container--open') && !node.classList.contains('select2-container--focus')){
+					//	do nothing as we are not going to deal with special classes
+						if(this.logLevel>0){
+							console.log('select2 dropdown issue fix');
+						}
+					} else if(node.hasChildNodes()){
 						var childnodes =  node.childNodes;
 						var hasparentclick = false;
 						if(node.hasOwnProperty("hasclick") || hasparentnodeclick){
@@ -705,9 +712,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 
 
-			// Multiple clicks are recorded for select2-selection class.
+			// Multiple clicks are recorded for select2-selection class. select2-selection--multiple
 			// This will create a problem during playback. We should record only one click to avoid this problem
-			if(node.classList && (node.classList.contains("select2-selection--multiple") || node.classList.contains('cdk-overlay-backdrop'))) {
+			if(node.classList && (node.classList.contains("select2-search__field") || node.classList.contains('cdk-overlay-backdrop'))) {
 				return node;
 			}
 
@@ -1246,7 +1253,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				return ;
 			}
 
-			if(this.cancelRecordingDuringRecordingNodes.indexOf(node.nodeName.toLowerCase()) !== -1) {
+			if(this.recording && this.cancelRecordingDuringRecordingNodes.indexOf(node.nodeName.toLowerCase()) !== -1) {
 				alert('Sorry currently we do not support this '+node.nodeName+' selector. Please re-record the sequence without selecting '+node.nodeName+' selector');
 				this.recording=false;
 				this.cancelrecordingsequence();
@@ -1269,9 +1276,14 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 
 			// var domjson = domJSON.toJSON(node);
-			if (node.uda_custom.domJson) {
+			if (node.hasOwnProperty('uda_custom') && node.uda_custom.domJson) {
 				var domjson = node.uda_custom.domJson;
 				domjson.meta = {};
+				//fix for position issue #89
+				if(domjson.node.nodePosition.x === 0 && domjson.node.nodePosition.y === 0) {
+					var domjson1 = domJSON.toJSON(node);
+					domjson.node.nodePosition = domjson1.node.nodePosition;
+				}
 			} else {
 				return ;
 			}
@@ -1341,8 +1353,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 			if(this.recording) {
 				if(this.logLevel>0) {
 					console.log('-------------------------------------------------------------');
-					console.log(this.lastclickedtime);
-					console.log({clickednode: node});
+					// console.log(this.lastclickedtime);
+					// console.log({clickednode: node});
+					console.log({indexedpos: node.uda_custom.domJson.node.nodePosition});
+					console.log({domjson: domjson.node.nodePosition});
 					console.log('-------------------------------------------------------------');
 				}
 				if (node.hasAttribute('mattreenodetoggle')) {
@@ -1350,8 +1364,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 					Voicepluginsdk.indexnewclicknodes();
 				} else {
 					//processing new clicknodes if available after the click action.
-					this.forceReindex = true;
 					setTimeout(function () {
+						this.forceReindex = true;
 						Voicepluginsdk.indexnewclicknodes();
 					}, DSA_POST_INTERVAL);
 					// Voicepluginsdk.indexnewclicknodes();
