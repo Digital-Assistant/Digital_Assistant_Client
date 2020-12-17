@@ -1933,9 +1933,28 @@ if (typeof Voicepluginsdk === 'undefined') {
 				// for multiple matching nodes compare labels of the clickable nodes to get exact node match
 				let finalMatchNode = null;
 				let finalMatchNodes = [];
+
+				if(this.logLevel>0){
+					console.log('----------------------------------------------------------');
+					console.log('matched nodes');
+					console.log(matchNodes);
+					console.log('----------------------------------------------------------');
+				}
+
+				if(this.logLevel>0 && matchNodes.length>1){
+					console.log('----------------------------------------------------------');
+					console.log('recordednode label:'+selectednode.clickednodename);
+					console.log('----------------------------------------------------------');
+				}
+
 				matchNodes.forEach(function (matchNode, matchnodeindex) {
 					if(matchNode.originalNode.hasOwnProperty("element-data")) {
 						const inputLabels = Voicepluginsdk.getclickedinputlabels(matchNode.originalNode["element-data"]);
+						if(Voicepluginsdk.logLevel>0){
+							console.log('----------------------------------------------------------');
+							console.log(inputLabels);
+							console.log('----------------------------------------------------------');
+						}
 						if (inputLabels === selectednode.clickednodename) {
 							finalMatchNodes.push(matchNode);
 						} else if(matchNode.originalNode["element-data"].classList && matchNode.originalNode["element-data"].classList.contains('expand-button')){
@@ -1945,20 +1964,30 @@ if (typeof Voicepluginsdk === 'undefined') {
 					}
 				});
 
+				if(finalMatchNodes.length===0 && matchNodes.length>=1){
+					finalMatchNodes = matchNodes;
+				}
+
 				// process matching nodes after comparing labels
 				if (finalMatchNodes.length === 1) {
 					finalMatchNode = finalMatchNodes[0].originalNode;
 				} else if(finalMatchNodes.length > 1) {
 					// compare element positions as there are multiple matching nodes with same labels
+					if(this.logLevel > 0 && finalMatchNodes.length>1) {
+						console.log('----------------------------------------------------------');
+						console.log('Multiple nodes found comparing nearnode');
+						console.log({recordedNode: originalNode.node});
+						console.log(finalMatchNodes);
+						console.log('----------------------------------------------------------');
+						// return ;
+					}
 					finalMatchNode = this.processDistanceOfNodes(finalMatchNodes, originalNode.node);
 				}
 
 				if(finalMatchNode && finalMatchNode.hasOwnProperty("element-data")) {
 					if(this.logLevel > 0 && finalMatchNodes.length>1) {
 						console.log('----------------------------------------------------------');
-						console.log('Multiple nodes found comparing nearnode');
-						console.log({recordedNode: originalNode.node});
-						console.log(finalMatchNodes);
+						console.log('Final matched node');
 						console.log({domnode: finalMatchNode['element-data']});
 						console.log(domJSON.toJSON(finalMatchNode['element-data']));
 						console.log({finalMatchNode: finalMatchNode});
@@ -1972,7 +2001,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 					if(this.logLevel>2) {
 						console.log('----------------------------------------------------------');
 						console.log('Unable to find final matchnode with distance calculation');
-						console.log(matchNodes);
 						console.log('----------------------------------------------------------');
 					}
 					alert("Unable to find the action");
