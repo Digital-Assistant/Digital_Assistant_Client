@@ -115,7 +115,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 		invokedActionManually: false,
 		// personal node ignore attributes
 		personalNodeIgnoreAttributes: [
-			'innerText', 'innerHTML', 'outerText', 'outerHTML', 'nodeValue'
+			'innerText', 'innerHTML', 'outerText', 'outerHTML', 'nodeValue', 'src', 'naturalWidth', 'naturalHeight', 'currentSrc'
 		],
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
