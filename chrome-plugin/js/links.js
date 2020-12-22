@@ -41,7 +41,7 @@ function dsaAddNewElement(node) {
     }
 
     for (var i = 0; i < dsaClickObjects.length; i++) {
-        if (dsaClickObjects[i].element === clickObject.element) {
+        if (dsaClickObjects[i].element.isSameNode(clickObject.element)) {
             //todo, discuss , how better to call actions, if multiple actions should be stored, or selector better.
             return;
         }
@@ -93,8 +93,10 @@ function dsaProcessNode(node) {
                 break;
             // fix for editor issue
             case 'ckeditor':
-                console.log({processingnode:node});
                 dsaAddNewElement(node);
+                break;
+            case 'p':
+                console.log(node);
                 break;
         }
     }

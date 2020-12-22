@@ -1713,7 +1713,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 				} else {
 					Voicepluginsdk.searchInProgress=false;
 				}
-				console.log(Voicepluginsdk.searchInProgress);
 			};
 			xhr.send();
 		},
