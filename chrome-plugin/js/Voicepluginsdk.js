@@ -113,6 +113,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 		autoplayPaused: false,
 		// manual click variables
 		invokedActionManually: false,
+		// personal node ignore attributes
+		personalNodeIgnoreAttributes: [
+			'innerText', 'innerHTML', 'outerText', 'outerHTML', 'nodeValue', 'src', 'naturalWidth', 'naturalHeight', 'currentSrc'
+		],
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -1615,21 +1619,74 @@ if (typeof Voicepluginsdk === 'undefined') {
 							'	</div>';
 				jQuery("#nistvoicesearchresults").html(html);
 				for(var i=0;i<data.length;i++){
-					this.renderrecordresultrow(data[i],i);
+					// modification for personal button addition
+					if(i===(data.length-1)){
+						this.renderrecordresultrow(data[i],i,true);
+					} else {
+						this.renderrecordresultrow(data[i],i,false);
+					}
 				}
 				this.openmodal(false);
 			}
 		},
 		//render record row html of the sequence
-		renderrecordresultrow:function(data,index){
+		renderrecordresultrow:function(data,index, showPersonalButton=false){
 			index++;
 			let clickedname=((data.clickednodename.length>this.maxstringlength)?data.clickednodename.substr(0,this.maxstringlength)+'...':data.clickednodename);
 			// let clickedname=data.clickednodename;
-			var html =  '<li nist-voice="true" class="active">' +
-							clickedname +
-						'</li>';
-			var element=jQuery(html);
-			jQuery("#nist-recordresultrow").append(element);
+			// personal button appearance
+			let nodeData = JSON.parse(data.objectdata);
+			if(showPersonalButton){
+				clickedname=((data.clickednodename.length>(this.maxstringlength-24))?data.clickednodename.substr(0,(this.maxstringlength-24))+'...':data.clickednodename);
+				if(nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal){
+					// var personalHtml = '&nbsp; &nbsp; (personal)';
+					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" nist-voice="true" id="isPersonal" checked /> is personal';
+				} else {
+					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" nist-voice="true" id="isPersonal" /> is personal';
+				}
+				// var personalHtml = '&nbsp; &nbsp;<input type="checkbox" nist-voice="true" id="isPersonal" /> is personal';
+				/*var personalElement = jQuery(personalHtml);
+				personalElement.click(function (){
+					Voicepluginsdk.personalNode(data);
+				});*/
+				var html = '<li nist-voice="true" class="active">' +
+					clickedname + personalHtml +
+					'</li>';
+				var element = jQuery(html);
+				jQuery("#nist-recordresultrow").append(element);
+				jQuery("#isPersonal").click(function (){
+					Voicepluginsdk.personalNode(data);
+				});
+			} else {
+				clickedname += (nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal)?'&nbsp; &nbsp;(personal)':'';
+				var html = '<li nist-voice="true" class="active">' +
+					clickedname +
+					'</li>';
+				var element = jQuery(html);
+				jQuery("#nist-recordresultrow").append(element);
+			}
+		},
+		//personal modification button clicked
+		personalNode:function(data){
+			let nodeData = JSON.parse(data.objectdata);
+			if(nodeData.meta.hasOwnProperty("isPersonal")){
+				if(nodeData.meta.isPersonal) {
+					nodeData.meta.isPersonal = false;
+				} else {
+					nodeData.meta.isPersonal = true;
+				}
+			} else {
+				nodeData.meta.isPersonal = true;
+			}
+			data.objectdata = JSON.stringify(nodeData);
+			var outputdata = JSON.stringify(data);
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", this.apihost+"/user/updateclickednode");
+			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+			xhr.onload = function(event){
+				Voicepluginsdk.showhtml();
+			};
+			xhr.send(outputdata);
 		},
 		// submit functionality of the recorded sequence.
 		submitrecordedlabel:function(submittype="recording"){
@@ -1855,7 +1912,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 		//showing the sequence steps html
 		rendersteps:function(data,visited=false, navcookiedata={}){
 			// adding elipses if textlength is greater than specified characters
-			let clickedname=((data.clickednodename.length>this.maxstringlength)?data.clickednodename.substr(0,this.maxstringlength)+'...':data.clickednodename);
+			// display personal tag for the personal nodes
+			let nodeData = JSON.parse(data.objectdata);
+			let clickedname = ((data.clickednodename.length > this.maxstringlength) ? data.clickednodename.substr(0, this.maxstringlength) + '...' : data.clickednodename);
+			if(nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal){
+				clickedname=((data.clickednodename.length>(this.maxstringlength-26))?data.clickednodename.substr(0,(this.maxstringlength-26))+'... (personal)':data.clickednodename);
+			}
 			if(visited>-1) {
 				var template = jQuery("<li nist-voice=\"true\" class='active'>" + clickedname + "</li>");
 			} else {
@@ -1879,10 +1941,16 @@ if (typeof Voicepluginsdk === 'undefined') {
 					console.log({recordedNode: originalNode.node});
 				}
 				if(selectednode && this.htmlindex.length>0){
+					// personal tag check
+					let isPersonalNode = false;
+					if(originalNode.meta.hasOwnProperty('isPersonal') && originalNode.meta.isPersonal){
+						isPersonalNode = true;
+					}
 					for(let searchNode of this.htmlindex){
 						let searchLabelExists = false;
 						let compareNode = domJSON.toJSON(searchNode["element-data"]);
-						let match = this.comparenodes(compareNode.node,originalNode.node);
+						// compare recorded node with personal node tag or not
+						let match = this.comparenodes(compareNode.node,originalNode.node, isPersonalNode);
 
 						if ((this.logLevel > 1) && (match.matched+5) >= match.count) {
 							console.log('----------------------------------------------------------');
@@ -2010,7 +2078,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 		},
 		//comparing nodes of indexed and the sequence step selected
-		comparenodes:function(comparenode, originalnode, match={count:0, matched:0, unmatched:[], innerTextFlag: false, innerChildNodes: 0}){
+		comparenodes:function(comparenode, originalnode, isPersonalNode=false, match={count:0, matched:0, unmatched:[], innerTextFlag: false, innerChildNodes: 0}){
 			// sum the childnodes
 			if(comparenode.hasOwnProperty('childNodes')) {
 				match.innerChildNodes = match.innerChildNodes + comparenode.childNodes.length;
@@ -2025,13 +2093,13 @@ if (typeof Voicepluginsdk === 'undefined') {
 				}
 				if(comparenode.hasOwnProperty(key) && (typeof originalnode[key] === 'object') && (typeof comparenode[key] === 'object')){
 					match.matched++;
-					match=this.comparenodes(comparenode[key], originalnode[key], match);
+					match=this.comparenodes(comparenode[key], originalnode[key], isPersonalNode, match);
 				} else if(comparenode.hasOwnProperty(key) && Array.isArray(originalnode[key]) && originalnode[key].length>0 && Array.isArray(comparenode[key]) && comparenode[key].length>0){
 					match.matched++;
 					if(comparenode[key].length===originalnode[key].length) {
 						match.matched++;
 						for (var i = 0; i < originalnode[key].length; i++) {
-							match=this.comparenodes(comparenode[key][i], originalnode[key][i],match);
+							match=this.comparenodes(comparenode[key][i], originalnode[key][i], isPersonalNode, match);
 						}
 					}
 				} else if((key === 'class' || key === 'className') && originalnode.hasOwnProperty(key) && comparenode.hasOwnProperty(key)) {
@@ -2066,6 +2134,16 @@ if (typeof Voicepluginsdk === 'undefined') {
 				} else if(comparenode.hasOwnProperty(key) && (key === 'id' || key === 'name') && comparenode[key]!==originalnode[key]){
 					let weight = this.JaroWrinker(originalnode[key], comparenode[key]);
 					if(weight>0.90) {
+						match.matched++;
+					}
+				}
+				// matching personal node key value pairs for personal tag true
+				else if (isPersonalNode && this.personalNodeIgnoreAttributes.indexOf(key)!==-1) {
+					// make inner text flag to true if personal tag is true
+					if(key==='innerText'){
+						match.innerTextFlag = true;
+						match.matched = match.matched + this.innerTextWeight;
+					} else {
 						match.matched++;
 					}
 				} else {
