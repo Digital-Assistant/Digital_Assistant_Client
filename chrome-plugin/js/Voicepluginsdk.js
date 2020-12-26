@@ -633,10 +633,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 								alert('currently we do not support this action to be recorded');
 							});*/
 						}
-					} else if(node.classList && node.classList.contains('select2-container--open') && !node.classList.contains('select2-container--focus')){
+					} else if(node.classList && ((node.classList.contains('select2-container--open') && !node.classList.contains('select2-container--focus')) || node.classList.contains('cdk-overlay-pane'))){
 					//	do nothing as we are not going to deal with special classes
 						if(this.logLevel>0){
-							console.log('select2 dropdown issue fix');
+							console.log('unwanted indexing prevention');
 						}
 					} else if(node.hasChildNodes()){
 						var childnodes =  node.childNodes;
@@ -714,7 +714,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 			// Multiple clicks are recorded for select2-selection class. select2-selection--multiple
 			// This will create a problem during playback. We should record only one click to avoid this problem
-			if(node.classList && (node.classList.contains("select2-search__field") || node.classList.contains('cdk-overlay-backdrop'))) {
+			if(node.classList && (node.classList.contains("select2-search__field") || node.classList.contains('cdk-overlay-backdrop') || node.classList.contains('cdk-overlay-pane'))) {
+				console.log(node.classList);
 				return node;
 			}
 

@@ -95,9 +95,6 @@ function dsaProcessNode(node) {
             case 'ckeditor':
                 dsaAddNewElement(node);
                 break;
-            case 'p':
-                console.log(node);
-                break;
         }
     }
 
