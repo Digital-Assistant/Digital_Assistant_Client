@@ -1702,7 +1702,6 @@ if (typeof Voicepluginsdk === 'undefined') {
 		},
 		//edit modification button clicked
 		editAndSave:function(data){
-			console.log($("ul#nist-recordresultrow li:last").text());
 			if(data.hasOwnProperty("clickednodename")){
 				data.clickednodename = $("ul#nist-recordresultrow li:last").text();
 			} 
