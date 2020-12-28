@@ -1649,13 +1649,25 @@ if (typeof Voicepluginsdk === 'undefined') {
 				personalElement.click(function (){
 					Voicepluginsdk.personalNode(data);
 				});*/
+				var editBtn = "&nbsp; &nbsp;<button nist-voice='true' id='edit-list'>Edit</button>";
 				var html = '<li nist-voice="true" class="active">' +
-					clickedname + personalHtml +
-					'</li>';
+					clickedname + 
+					'</li>' + personalHtml + editBtn;
 				var element = jQuery(html);
 				jQuery("#nist-recordresultrow").append(element);
 				jQuery("#isPersonal").click(function (){
 					Voicepluginsdk.personalNode(data);
+				});
+				var befroeEditText = $(".voice-card-left ul li:last").text();
+				jQuery("#edit-list").click(function (){
+					$(".voice-card-left ul li:last").css("border", "1px solid");
+					$(".voice-card-left ul li:last").attr("contenteditable","true");
+				});
+				$('.voice-card-left ul li:last').blur(function() {
+					$(".voice-card-left ul li:last").css("border", "0px solid");
+					if(befroeEditText.trim() != $(".voice-card-left ul li:last").text().trim()){
+						Voicepluginsdk.editAndSave(data);
+					}
 				});
 			} else {
 				clickedname += (nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal)?'&nbsp; &nbsp;(personal)':'';
@@ -1679,6 +1691,21 @@ if (typeof Voicepluginsdk === 'undefined') {
 				nodeData.meta.isPersonal = true;
 			}
 			data.objectdata = JSON.stringify(nodeData);
+			var outputdata = JSON.stringify(data);
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", this.apihost+"/user/updateclickednode");
+			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+			xhr.onload = function(event){
+				Voicepluginsdk.showhtml();
+			};
+			xhr.send(outputdata);
+		},
+		//edit modification button clicked
+		editAndSave:function(data){
+			console.log($("ul#nist-recordresultrow li:last").text());
+			if(data.hasOwnProperty("clickednodename")){
+				data.clickednodename = $("ul#nist-recordresultrow li:last").text();
+			} 
 			var outputdata = JSON.stringify(data);
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", this.apihost+"/user/updateclickednode");
