@@ -370,6 +370,7 @@ h4.voice-card-noborder {
 .tooltip-dsa .tooltip-dsa-text-content {
 	padding:10px 20px;
 	white-space: initial;
+	line-height: normal !important;
 }
 
 .tooltip-dsa .tooltip-dsa-right i {

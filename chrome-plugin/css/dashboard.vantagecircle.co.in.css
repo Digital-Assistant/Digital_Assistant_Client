@@ -11,3 +11,10 @@
 .nist-original-content .kt-header,.nist-original-content .kt-header--fixed{
 	max-width: 80%;
 }
+.duration-picker .pick{
+	position: relative;
+	overflow:inherit !important;
+}
+.duration-picker .pick input{
+	border:1px solid #e2e5ec !important;
+}
