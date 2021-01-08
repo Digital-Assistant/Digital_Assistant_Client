@@ -100,7 +100,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y'
 		],
 		innerTextWeight: 5,
-		logLevel: 3,
+		logLevel: 0,
 		playNextAction: true,
 		forceReindex: false,
 		searchText: null,
