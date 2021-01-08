@@ -1,0 +1,14 @@
+.nist-original-content{
+	max-width: 80%;
+	float: left;
+}
+.nist-original-content .navbar-fixed-top{
+	max-width: 80%;
+}
+.nist-original-content .vc_topbar{
+	max-width: 80%;
+}
+.uib-datepicker-popup.dropdown-menu {
+    position: absolute;
+    z-index: 9999999 !important;
+}

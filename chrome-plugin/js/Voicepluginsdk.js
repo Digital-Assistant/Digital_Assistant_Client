@@ -82,7 +82,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 		processingnodes:false,
 		processedclickobjectscount:0,
 		recording:false,
-		addcustomcssdomains:["app.vantagecircle.com","dashboard.vantagecircle.com","dashboard.vantagecircle.co.in"],
+		addcustomcssdomains:["app.vantagecircle.co.in","app.vantagecircle.com","dashboard.vantagecircle.com","dashboard.vantagecircle.co.in"],
 		containersections:[],
 		introjs:[],
 		introjstotalsteps:0,
@@ -100,7 +100,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y'
 		],
 		innerTextWeight: 5,
-		logLevel: 0,
+		logLevel: 3,
 		playNextAction: true,
 		forceReindex: false,
 		searchText: null,
@@ -637,6 +637,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 					//	do nothing as we are not going to deal with special classes
 						if(this.logLevel>0){
 							console.log('select2 dropdown issue fix');
+						}
+					} else if(node.nodeName.toLowerCase() === "div" && node.hasAttribute("uib-datepicker-popup-wrap")){
+						if(this.logLevel>0){
+							console.log('date picker in javascript');
 						}
 					} else if(node.hasChildNodes()){
 						var childnodes =  node.childNodes;
