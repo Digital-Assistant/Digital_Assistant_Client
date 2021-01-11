@@ -12,3 +12,9 @@
     position: absolute;
     z-index: 9999999 !important;
 }
+.voice-redmine-rght{
+	position:fixed;
+	top:0px;
+	right: 0px;
+	bottom: 0px;
+}
