@@ -638,7 +638,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 						if(this.logLevel>0){
 							console.log('unwanted indexing prevention');
 						}
-					} else if(node.nodeName.toLowerCase() === "div" && node.hasAttribute("uib-datepicker-popup-wrap")){
+					} else if(node.nodeName.toLowerCase() === "div" && (node.hasAttribute("uib-datepicker-popup-wrap") || (node.id && node.id==='recognize_modal'))){
+						// fix for not indexing datepicker popup and nominate popup
 						if(this.logLevel>0){
 							console.log('date picker in javascript');
 						}
@@ -1260,6 +1261,13 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 			if(this.recording && this.cancelRecordingDuringRecordingNodes.indexOf(node.nodeName.toLowerCase()) !== -1) {
 				alert('Sorry currently we do not support this '+node.nodeName+' selector. Please re-record the sequence without selecting '+node.nodeName+' selector');
+				this.recording=false;
+				this.cancelrecordingsequence();
+				this.showadvancedhtml();
+				return ;
+			} else if(this.recording && (node.parentNode.hasAttribute("ng-controller") && node.parentNode.getAttribute("ng-controller")==='recognize_modal')) {
+				// fix for nominate recording functionality.
+				alert('Sorry currently we do not support this Nominate feature. Please re-record the sequence without selecting Nominate feature');
 				this.recording=false;
 				this.cancelrecordingsequence();
 				this.showadvancedhtml();
