@@ -1250,6 +1250,19 @@ if (typeof Voicepluginsdk === 'undefined') {
 				return ;
 			}
 
+			// fix for file upload click
+			if(node.style && node.style.display && node.style.display === 'none'){
+				return ;
+			}
+
+			if(this.logLevel>0) {
+				console.log('-------------------------------------------------------------');
+				// console.log(this.lastclickedtime);
+				console.log({clickednode: node});
+				// console.log({indexedpos: node.uda_custom.domJson.node.nodePosition});
+				console.log('-------------------------------------------------------------');
+			}
+
 			// stopping recording as date range picker is clicked as we do not support it.
 			if(this.recording && node.hasAttribute('ngxdaterangepickermd')) {
 				alert('Sorry currently we do not support daterange selector. Please re-record the sequence without selecting daterange selector');
@@ -1265,7 +1278,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				this.cancelrecordingsequence();
 				this.showadvancedhtml();
 				return ;
-			} else if(this.recording && (node.parentNode.hasAttribute("ng-controller") && node.parentNode.getAttribute("ng-controller")==='recognize_modal')) {
+			} else if(this.recording && (node.parentNode && node.parentNode.hasAttribute("ng-controller") && node.parentNode.getAttribute("ng-controller")==='recognize_modal')) {
 				// fix for nominate recording functionality.
 				alert('Sorry currently we do not support this Nominate feature. Please re-record the sequence without selecting Nominate feature');
 				this.recording=false;
