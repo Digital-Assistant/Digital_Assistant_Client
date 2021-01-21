@@ -97,7 +97,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			'offsetHeight','offsetLeft','offsetTop','offsetWidth','scrollHeight','scrollLeft','scrollTop','scrollWidth',
 			'baseURI','isConnected','ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
 			'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
-			'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y'
+			'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y', 'selectionStart', 'selectionEnd', 'required', 'validationMessage', 'selectionDirection'
 		],
 		innerTextWeight: 5,
 		logLevel: 0,
@@ -1002,14 +1002,21 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 
 			this.simulateHover(node);
+
+			var navigationcookie=this.getstoragedata(this.navigationcookiename);
+			var navigationcookiedata = null;
+			if(navigationcookie) {
+				navigationcookiedata = JSON.parse(navigationcookie);
+			}
+
 			switch (node.nodeName.toLowerCase()) {
 				case "input":
 					this.playNextAction = false;
 					// functionality for detecting multi select box and highlighting the recorded node
 					if (node.classList && (node.classList.contains('select2-search__field') || node.classList.contains('mat-autocomplete-trigger'))){
-						var navigationcookie=this.getstoragedata(this.navigationcookiename);
+						// var navigationcookie=this.getstoragedata(this.navigationcookiename);
 						if(navigationcookie){
-							var navigationcookiedata = JSON.parse(navigationcookie);
+							// var navigationcookiedata = JSON.parse(navigationcookie);
 							if(navigationcookiedata && navigationcookiedata.autoplay) {
 								this.autoplay = false;
 								this.autoplayPaused = true;
@@ -1035,6 +1042,46 @@ if (typeof Voicepluginsdk === 'undefined') {
 							intro: "Please input in the field and then continue.",
 							position: 'right',
 						}).start();
+					} else if(node.hasAttribute('type')){
+						switch (node.getAttribute('type').toLowerCase()) {
+							case 'checkbox':
+								if(node.parentNode && node.parentNode.classList && node.parentNode.classList.contains('vc_checkbox')) {
+									this.introjs.addStep({
+										element: node.parentNode,
+										intro: "Please input in the field and then continue.",
+										position: 'right',
+									}).start();
+								} else {
+									this.introjs.addStep({
+										element: node,
+										intro: "Please input in the field and then continue.",
+										position: 'right',
+									}).start();
+								}
+								break;
+							case 'radio':
+								if(node.parentNode && node.parentNode.classList && node.parentNode.classList.contains('vc_label')) {
+									this.introjs.addStep({
+										element: node.parentNode,
+										intro: "Please input in the field and then continue.",
+										position: 'right',
+									}).start();
+								} else {
+									this.introjs.addStep({
+										element: node,
+										intro: "Please input in the field and then continue.",
+										position: 'right',
+									}).start();
+								}
+								break;
+							default:
+								this.introjs.addStep({
+									element: node,
+									intro: "Please input in the field and then continue.",
+									position: 'right',
+								}).start();
+								break;
+						}
 					} else {
 						this.introjs.addStep({
 							element: node,
@@ -1077,10 +1124,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 						}).start();*/
 						let showalert = false;
 						this.configureintrojs('Continue to select');
-						var navigationcookie=this.getstoragedata(this.navigationcookiename);
-						var navigationcookiedata = null;
+						// var navigationcookie=this.getstoragedata(this.navigationcookiename);
+						// var navigationcookiedata = null;
 						if(navigationcookie){
-							navigationcookiedata = JSON.parse(navigationcookie);
+							// navigationcookiedata = JSON.parse(navigationcookie);
 							if(navigationcookiedata) {
 								for (var i = 0; i < navigationcookiedata.data.userclicknodesSet.length; i++) {
 									if (navigationcookiedata.data.userclicknodesSet[i].id !== selectednode.id && navigationcookiedata.data.userclicknodesSet[i].clickednodename === selectednode.clickednodename) {
@@ -1115,9 +1162,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 				case 'span':
 					if (node.classList && node.classList.contains('select2-selection')) {
 						this.playNextAction = false;
-						var navigationcookie=this.getstoragedata(this.navigationcookiename);
+						// var navigationcookie=this.getstoragedata(this.navigationcookiename);
 						if(navigationcookie){
-							var navigationcookiedata = JSON.parse(navigationcookie);
+							// var navigationcookiedata = JSON.parse(navigationcookie);
 							if(navigationcookiedata && navigationcookiedata.autoplay) {
 								this.autoplay = false;
 								this.autoplayPaused = true;
@@ -1137,9 +1184,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 				case 'div':
 					if(node.classList && (node.classList.contains('mat-form-field-flex') || node.classList.contains('mat-select-trigger'))) {
 						this.playNextAction = false;
-						var navigationcookie=this.getstoragedata(this.navigationcookiename);
+						// var navigationcookie=this.getstoragedata(this.navigationcookiename);
 						if(navigationcookie){
-							var navigationcookiedata = JSON.parse(navigationcookie);
+							// var navigationcookiedata = JSON.parse(navigationcookie);
 							if(navigationcookiedata && navigationcookiedata.autoplay) {
 								this.autoplay = false;
 								this.autoplayPaused = true;
@@ -1162,9 +1209,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 				//	fix for text editor during playback
 				case 'ckeditor':
 					this.playNextAction = false;
-					var navigationcookie=this.getstoragedata(this.navigationcookiename);
+					// var navigationcookie=this.getstoragedata(this.navigationcookiename);
 					if(navigationcookie){
-						var navigationcookiedata = JSON.parse(navigationcookie);
+						// var navigationcookiedata = JSON.parse(navigationcookie);
 						if(navigationcookiedata && navigationcookiedata.autoplay) {
 							this.autoplay = false;
 							this.autoplayPaused = true;
