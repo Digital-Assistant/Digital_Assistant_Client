@@ -204,6 +204,16 @@ if (typeof Voicepluginsdk === 'undefined') {
 			if(this.inarray(window.location.host,this.addcustomcssdomains) !== -1){
 				this.loadCssScript(this.extensionpath+"css/"+window.location.host+".css");
 			}
+			if(window.location.host === 'localhost:4200' && window.location.path.includes('portal')){
+				this.loadCssScript(this.extensionpath+"css/dashboard.vantagecircle.com.css");
+			}
+			if(window.location.host.includes('vantagecircle')){
+				if(window.location.path && window.location.path.includes('portal')) {
+					this.loadCssScript(this.extensionpath + "css/dashboard.vantagecircle.com.css");
+				} else {
+					this.loadCssScript(this.extensionpath + "css/app.vantagecircle.com.css");
+				}
+			}
 			if(typeof introJs === 'undefined'){
 				this.totalotherScripts++;
 				this.loadOtherScript(this.extensionpath+"js/intro.min.js");
