@@ -1084,6 +1084,11 @@ if (typeof Voicepluginsdk === 'undefined') {
 									}).start();
 								}
 								break;
+							case 'submit':
+								node.click();
+								this.invokenextitem(node,timetoinvoke);
+								this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
+                            	break;
 							default:
 								this.introjs.addStep({
 									element: node,
