@@ -1089,6 +1089,31 @@ if (typeof Voicepluginsdk === 'undefined') {
 								this.invokenextitem(node,timetoinvoke);
 								this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
                             	break;
+							case 'text':
+								if(node.attributes && node.attributes.length>0 && node.hasAttribute('uib-datepicker-popup')) {
+									if(navigationcookie){
+										if(navigationcookiedata && navigationcookiedata.autoplay) {
+											this.autoplay = false;
+											this.autoplayPaused = true;
+											this.toggleautoplay(navigationcookiedata);
+										} else {
+											this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
+										}
+									}
+									$('html, body').animate({
+										scrollTop: ($(node).offset().top - 200)
+									}, 2000, function(){
+										$(node.parentNode.parentNode).addClass('tooltip-dsa').append('<div class="tooltip-dsa-right"><div class="tooltip-dsa-text-content">Please select the date in the calendar. After you are done, please click on "play" in the "Assistant" pane to the right.</div></div>');
+										node.click();
+									});
+								} else {
+									this.introjs.addStep({
+										element: node,
+										intro: "Please input in the field and then continue.",
+										position: 'right',
+									}).start();
+								}
+								break;
 							default:
 								this.introjs.addStep({
 									element: node,
