@@ -870,7 +870,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			if(getchildlabels && node.childNodes.length>0){
 				var childnodes = node.childNodes;
 				childnodes.forEach(function (childnode, key) {
-					if(childnode.nodeName.toLowerCase()!=="script" || childnode.nodeName.toLowerCase()!=="select") {
+					if(childnode.nodeName.toLowerCase() !=="script" && childnode.nodeName.toLowerCase() !== "select" && childnode.nodeName.toLowerCase() !== '#comment') {
 						var textcontent = childnode.textContent.replace(/[\n\r]+|[\s]{2,}/g, ' ').trim();
 						if (textcontent !== "" && ignorenode.isSameNode(childnode) === false) {
 							inputlabels.push({"text": textcontent, "match": false});
@@ -1609,6 +1609,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 						inputlabels = labels.toString();
 					}
 			}
+			if(this.logLevel>2){
+				console.log(inputlabels);
+			}
 			return inputlabels;
 		},
 		//record page click todo functionality
@@ -2057,10 +2060,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 			if(nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal){
 				clickedname=((data.clickednodename.length>(this.maxstringlength-26))?data.clickednodename.substr(0,(this.maxstringlength-26))+'... (personal)':data.clickednodename);
 			}
+			// var clickedtext = '<pre>'+clickedname+'</pre>';
+			var clickedtext = clickedname;
 			if(visited>-1) {
-				var template = jQuery("<li nist-voice=\"true\" class='active'>" + clickedname + "</li>");
+				var template = jQuery("<li nist-voice=\"true\" class='active'>" + clickedtext + "</li>");
 			} else {
-				var template = jQuery("<li nist-voice=\"true\" class='inactive'>" + clickedname + "</li>");
+				var template = jQuery("<li nist-voice=\"true\" class='inactive'>" + clickedtext + "</li>");
 			}
 			if(visited === -1) {
 				template.click(function () {
