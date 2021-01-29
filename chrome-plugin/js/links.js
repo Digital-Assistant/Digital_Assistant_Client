@@ -1,5 +1,6 @@
 var UDALinkScriptloaded = UDALinkScriptloaded || false;
 // if(!UDALinkScriptloaded) {
+    console.log('defining');
     let udaauthdata = {id: null, email: null};
     let dsaClickObjects = [];
     let dsaSessionID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);

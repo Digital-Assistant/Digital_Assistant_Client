@@ -97,7 +97,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			'offsetHeight','offsetLeft','offsetTop','offsetWidth','scrollHeight','scrollLeft','scrollTop','scrollWidth',
 			'baseURI','isConnected','ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
 			'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
-			'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y'
+			'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y', 'selectionStart', 'selectionEnd', 'required', 'validationMessage', 'selectionDirection'
 		],
 		innerTextWeight: 5,
 		logLevel: 0,
@@ -218,6 +218,16 @@ if (typeof Voicepluginsdk === 'undefined') {
 			this.loadOtherScript(this.extensionpath+"js/domJSON.js");
 			if(this.inarray(window.location.host,this.addcustomcssdomains) !== -1){
 				this.loadCssScript(this.extensionpath+"css/"+window.location.host+".css");
+			}
+			if(window.location.host === 'localhost:4200' && window.location.path.includes('portal')){
+				this.loadCssScript(this.extensionpath+"css/dashboard.vantagecircle.com.css");
+			}
+			if(window.location.host.includes('vantagecircle')){
+				if(window.location.path && window.location.path.includes('portal')) {
+					this.loadCssScript(this.extensionpath + "css/dashboard.vantagecircle.com.css");
+				} else {
+					this.loadCssScript(this.extensionpath + "css/app.vantagecircle.com.css");
+				}
 			}
 			if(typeof introJs === 'undefined'){
 				this.totalotherScripts++;
@@ -875,7 +885,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			if(getchildlabels && node.childNodes.length>0){
 				var childnodes = node.childNodes;
 				childnodes.forEach(function (childnode, key) {
-					if(childnode.nodeName.toLowerCase()!=="script" || childnode.nodeName.toLowerCase()!=="select") {
+					if(childnode.nodeName.toLowerCase() !=="script" && childnode.nodeName.toLowerCase() !== "select" && childnode.nodeName.toLowerCase() !== '#comment') {
 						var textcontent = childnode.textContent.replace(/[\n\r]+|[\s]{2,}/g, ' ').trim();
 						if (textcontent !== "" && ignorenode.isSameNode(childnode) === false) {
 							inputlabels.push({"text": textcontent, "match": false});
@@ -1017,14 +1027,21 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 
 			this.simulateHover(node);
+
+			var navigationcookie=this.getstoragedata(this.navigationcookiename);
+			var navigationcookiedata = null;
+			if(navigationcookie) {
+				navigationcookiedata = JSON.parse(navigationcookie);
+			}
+
 			switch (node.nodeName.toLowerCase()) {
 				case "input":
 					this.playNextAction = false;
 					// functionality for detecting multi select box and highlighting the recorded node
 					if (node.classList && (node.classList.contains('select2-search__field') || node.classList.contains('mat-autocomplete-trigger'))){
-						var navigationcookie=this.getstoragedata(this.navigationcookiename);
+						// var navigationcookie=this.getstoragedata(this.navigationcookiename);
 						if(navigationcookie){
-							var navigationcookiedata = JSON.parse(navigationcookie);
+							// var navigationcookiedata = JSON.parse(navigationcookie);
 							if(navigationcookiedata && navigationcookiedata.autoplay) {
 								this.autoplay = false;
 								this.autoplayPaused = true;
@@ -1050,6 +1067,76 @@ if (typeof Voicepluginsdk === 'undefined') {
 							intro: "Please input in the field and then continue.",
 							position: 'right',
 						}).start();
+					} else if(node.hasAttribute('type')){
+						switch (node.getAttribute('type').toLowerCase()) {
+							case 'checkbox':
+								if(node.parentNode && node.parentNode.classList && node.parentNode.classList.contains('vc_checkbox')) {
+									this.introjs.addStep({
+										element: node.parentNode,
+										intro: "Please input in the field and then continue.",
+										position: 'right',
+									}).start();
+								} else {
+									this.introjs.addStep({
+										element: node,
+										intro: "Please input in the field and then continue.",
+										position: 'right',
+									}).start();
+								}
+								break;
+							case 'radio':
+								if(node.parentNode && node.parentNode.classList && node.parentNode.classList.contains('vc_label')) {
+									this.introjs.addStep({
+										element: node.parentNode,
+										intro: "Please input in the field and then continue.",
+										position: 'right',
+									}).start();
+								} else {
+									this.introjs.addStep({
+										element: node,
+										intro: "Please input in the field and then continue.",
+										position: 'right',
+									}).start();
+								}
+								break;
+							case 'submit':
+								node.click();
+								this.invokenextitem(node,timetoinvoke);
+								this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
+                            	break;
+							case 'text':
+								if(node.attributes && node.attributes.length>0 && node.hasAttribute('uib-datepicker-popup')) {
+									if(navigationcookie){
+										if(navigationcookiedata && navigationcookiedata.autoplay) {
+											this.autoplay = false;
+											this.autoplayPaused = true;
+											this.toggleautoplay(navigationcookiedata);
+										} else {
+											this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
+										}
+									}
+									$('html, body').animate({
+										scrollTop: ($(node).offset().top - 200)
+									}, 2000, function(){
+										$(node.parentNode.parentNode).addClass('tooltip-dsa').append('<div class="tooltip-dsa-right"><div class="tooltip-dsa-text-content">Please select the date in the calendar. After you are done, please click on "play" in the "Assistant" pane to the right.</div></div>');
+										node.click();
+									});
+								} else {
+									this.introjs.addStep({
+										element: node,
+										intro: "Please input in the field and then continue.",
+										position: 'right',
+									}).start();
+								}
+								break;
+							default:
+								this.introjs.addStep({
+									element: node,
+									intro: "Please input in the field and then continue.",
+									position: 'right',
+								}).start();
+								break;
+						}
 					} else {
 						this.introjs.addStep({
 							element: node,
@@ -1092,10 +1179,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 						}).start();*/
 						let showalert = false;
 						this.configureintrojs('Continue to select');
-						var navigationcookie=this.getstoragedata(this.navigationcookiename);
-						var navigationcookiedata = null;
+						// var navigationcookie=this.getstoragedata(this.navigationcookiename);
+						// var navigationcookiedata = null;
 						if(navigationcookie){
-							navigationcookiedata = JSON.parse(navigationcookie);
+							// navigationcookiedata = JSON.parse(navigationcookie);
 							if(navigationcookiedata) {
 								for (var i = 0; i < navigationcookiedata.data.userclicknodesSet.length; i++) {
 									if (navigationcookiedata.data.userclicknodesSet[i].id !== selectednode.id && navigationcookiedata.data.userclicknodesSet[i].clickednodename === selectednode.clickednodename) {
@@ -1130,9 +1217,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 				case 'span':
 					if (node.classList && node.classList.contains('select2-selection')) {
 						this.playNextAction = false;
-						var navigationcookie=this.getstoragedata(this.navigationcookiename);
+						// var navigationcookie=this.getstoragedata(this.navigationcookiename);
 						if(navigationcookie){
-							var navigationcookiedata = JSON.parse(navigationcookie);
+							// var navigationcookiedata = JSON.parse(navigationcookie);
 							if(navigationcookiedata && navigationcookiedata.autoplay) {
 								this.autoplay = false;
 								this.autoplayPaused = true;
@@ -1152,9 +1239,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 				case 'div':
 					if(node.classList && (node.classList.contains('mat-form-field-flex') || node.classList.contains('mat-select-trigger'))) {
 						this.playNextAction = false;
-						var navigationcookie=this.getstoragedata(this.navigationcookiename);
+						// var navigationcookie=this.getstoragedata(this.navigationcookiename);
 						if(navigationcookie){
-							var navigationcookiedata = JSON.parse(navigationcookie);
+							// var navigationcookiedata = JSON.parse(navigationcookie);
 							if(navigationcookiedata && navigationcookiedata.autoplay) {
 								this.autoplay = false;
 								this.autoplayPaused = true;
@@ -1177,9 +1264,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 				//	fix for text editor during playback
 				case 'ckeditor':
 					this.playNextAction = false;
-					var navigationcookie=this.getstoragedata(this.navigationcookiename);
+					// var navigationcookie=this.getstoragedata(this.navigationcookiename);
 					if(navigationcookie){
-						var navigationcookiedata = JSON.parse(navigationcookie);
+						// var navigationcookiedata = JSON.parse(navigationcookie);
 						if(navigationcookiedata && navigationcookiedata.autoplay) {
 							this.autoplay = false;
 							this.autoplayPaused = true;
@@ -1265,6 +1352,19 @@ if (typeof Voicepluginsdk === 'undefined') {
 				return ;
 			}
 
+			// fix for file upload click
+			if(node.style && node.style.display && node.style.display === 'none'){
+				return ;
+			}
+
+			if(this.logLevel>0) {
+				console.log('-------------------------------------------------------------');
+				// console.log(this.lastclickedtime);
+				console.log({clickednode: node});
+				// console.log({indexedpos: node.uda_custom.domJson.node.nodePosition});
+				console.log('-------------------------------------------------------------');
+			}
+
 			// stopping recording as date range picker is clicked as we do not support it.
 			if(this.recording && node.hasAttribute('ngxdaterangepickermd')) {
 				alert('Sorry currently we do not support daterange selector. Please re-record the sequence without selecting daterange selector');
@@ -1280,7 +1380,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				this.cancelrecordingsequence();
 				this.showadvancedhtml();
 				return ;
-			} else if(this.recording && (node.parentNode.hasAttribute("ng-controller") && node.parentNode.getAttribute("ng-controller")==='recognize_modal')) {
+			} else if(this.recording && (node.parentNode && node.parentNode.hasAttribute("ng-controller") && node.parentNode.getAttribute("ng-controller")==='recognize_modal')) {
 				// fix for nominate recording functionality.
 				alert('Sorry currently we do not support this Nominate feature. Please re-record the sequence without selecting Nominate feature');
 				this.recording=false;
@@ -1523,6 +1623,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 						}
 						inputlabels = labels.toString();
 					}
+			}
+			if(this.logLevel>2){
+				console.log(inputlabels);
 			}
 			return inputlabels;
 		},
@@ -1972,10 +2075,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 			if(nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal){
 				clickedname=((data.clickednodename.length>(this.maxstringlength-26))?data.clickednodename.substr(0,(this.maxstringlength-26))+'... (personal)':data.clickednodename);
 			}
+			// var clickedtext = '<pre>'+clickedname+'</pre>';
+			var clickedtext = clickedname;
 			if(visited>-1) {
-				var template = jQuery("<li nist-voice=\"true\" class='active'>" + clickedname + "</li>");
+				var template = jQuery("<li nist-voice=\"true\" class='active'>" + clickedtext + "</li>");
 			} else {
-				var template = jQuery("<li nist-voice=\"true\" class='inactive'>" + clickedname + "</li>");
+				var template = jQuery("<li nist-voice=\"true\" class='inactive'>" + clickedtext + "</li>");
 			}
 			if(visited === -1) {
 				template.click(function () {
