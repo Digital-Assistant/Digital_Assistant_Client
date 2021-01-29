@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	  <!--<script src="https://yureshwar.github.io/Test/chrome-plugin/js/links.js"></script>-->
+	  <script src="/uda/chrome-plugin/js/links.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     <!-- Bootstrap CSS -->
@@ -149,6 +150,7 @@
 			    </div>
 		    </div>
 	    </div>
+	</div>
   </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -190,6 +192,14 @@
 			    var uda = document.createElement('script'); uda.type = 'text/javascript'; uda.src = 'https://yureshwar.github.io/Test/lib/include.js';
 			    document.body.appendChild(uda);
 		    })();*/
+			(function(){
+				if(typeof udaauthdata !== 'undefined') {
+					udaauthdata.id = '123456789';
+					udaauthdata.email = 'dummy@dummy.com';
+				}
+				var uda = document.createElement('script'); uda.type = 'text/javascript'; uda.src = '/uda/lib/include.js';
+				document.body.appendChild(uda);
+			})();
 	    </script>
   </body>
 </html>

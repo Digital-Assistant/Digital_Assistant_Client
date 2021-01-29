@@ -123,6 +123,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 		// constructor for the sdk class which will be initialized on loading of the variable.
 		init: function() {
+
+			if(!this.checkBrowser()){
+				console.log('UDA panel not added');
+				return;
+			}
+
 			// loading jquery if not available
 			if(typeof jQuery === "undefined") {
 				// loading jquery from installed extension path
@@ -131,6 +137,15 @@ if (typeof Voicepluginsdk === 'undefined') {
 				// load other scripts if jquery available
 				this.jqueryready=true;
 				this.otherscripts();
+			}
+		},
+
+		// check browser and allow only for chrome
+		checkBrowser: function(){
+			if(isUDAAllowed < 0){
+				return false;
+			} else {
+				return true;
 			}
 		},
 
