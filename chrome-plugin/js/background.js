@@ -18,14 +18,14 @@ function loginwithgoogle(){
 			sessiondata.authdata = data;
 			bindauthenticatedaccount();
 		} else {
-			sendsessiondata("Alertmessagedata","UDA: UserID not set. Digital assistant will not work.")
+			sendsessiondata("UDAAlertMessageData","UDA: UserID not set. Digital assistant will not work.")
 		}
 	});
 }
 
 //send the sessiondata to the webpage functionality
-function sendsessiondata(sendaction="Usersessiondata",message=''){
-	if(sendaction==="Alertmessagedata"){
+function sendsessiondata(sendaction="UDAUserSessionData",message=''){
+	if(sendaction==="UDAAlertMessageData"){
 		chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
 			chrome.tabs.sendMessage(tabs[0].id, {action: sendaction, data: JSON.stringify(message)});
 		});
@@ -109,7 +109,7 @@ function bindaccount(userauthdata){
 	xhr.onload = function(event){
 		if(xhr.status === 200){
 			storesessiondata();
-			sendsessiondata("AuthenticatedUsersessiondata");
+			sendsessiondata("UDAAuthenticatedUserSessionData");
 		} else {
 			console.log(xhr.status+" : "+xhr.statusText);
 		}

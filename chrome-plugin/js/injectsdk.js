@@ -5,23 +5,23 @@ s.onload = function() {
 };
 (document.body || document.documentElement).appendChild(s);
 
-document.addEventListener("RequestSessiondata", function(data) {
+document.addEventListener("RequestUDASessionData", function(data) {
 	chrome.runtime.sendMessage({action:data.detail.data,data:data.detail.data});
 });
 
-document.addEventListener("Debugsetevent", function(data) {
+document.addEventListener("UDADebugSetEvent", function(data) {
 	chrome.runtime.sendMessage({action:data.detail.data.action,data:data.detail.data.value});
 });
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-	if(request.action==="Usersessiondata"){
-		var sessionevent = new CustomEvent("Usersessiondata", {detail: {data: request.data}, bubbles: false, cancelable: false});
+	if(request.action==="UDAUserSessionData"){
+		var sessionevent = new CustomEvent("UDAUserSessionData", {detail: {data: request.data}, bubbles: false, cancelable: false});
 		document.dispatchEvent(sessionevent);
-	} else if(request.action==="AuthenticatedUsersessiondata"){
-		var sessionevent = new CustomEvent("AuthenticatedUsersessiondata", {detail: {data: request.data}, bubbles: false, cancelable: false});
+	} else if(request.action==="UDAAuthenticatedUserSessionData"){
+		var sessionevent = new CustomEvent("UDAAuthenticatedUserSessionData", {detail: {data: request.data}, bubbles: false, cancelable: false});
 		document.dispatchEvent(sessionevent);
-	} else if(request.action==="Alertmessagedata"){
-		var sessionevent = new CustomEvent("Alertmessagedata", {detail: {data: request.data}, bubbles: false, cancelable: false});
+	} else if(request.action==="UDAAlertMessageData"){
+		var sessionevent = new CustomEvent("UDAAlertMessageData", {detail: {data: request.data}, bubbles: false, cancelable: false});
 		document.dispatchEvent(sessionevent);
 	}
 });

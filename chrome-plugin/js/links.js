@@ -1,8 +1,26 @@
 var UDALinkScriptloaded = UDALinkScriptloaded || false;
 // if(!UDALinkScriptloaded) {
-    let udaauthdata = {id: null, email: null};
+    let UDAUserAuthData = {id: null, email: null};
+    var udaauthdata = {
+        set id(val){
+            UDAUserAuthData.id = val;
+            var sessionevent = new CustomEvent("UDAClearSessionData", {detail: {data: "clearsession"}, bubbles: false, cancelable: false});
+            document.dispatchEvent(sessionevent);
+        },
+        get id() {
+            return UDAUserAuthData.id;
+        },
+        set email(val) {
+            UDAUserAuthData.email = val;
+            var sessionevent = new CustomEvent("UDAClearSessionData", {detail: {data: "clearsession"}, bubbles: false, cancelable: false});
+            document.dispatchEvent(sessionevent);
+        },
+        get email() {
+            return UDAUserAuthData.email;
+        }
+    };
     let dsaClickObjects = [];
-    let dsaSessionID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    let UDASessionID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     const voicedebug = false; //this variable exists in background.js file also
     const DSA_POST_INTERVAL = 1000; //in milliseconds, each minute
     const DSA_API_URL = (voicedebug) ? "http://localhost:11080/voiceapi" : "https://voicetest.nistapp.com/voiceapi"; //this variable exists in background.js file also

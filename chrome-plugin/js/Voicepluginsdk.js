@@ -3,41 +3,46 @@ Voice plugin Javascript SDK Library
 IMPORTANT NOTE: Copying this library and hosting it locally is strongly discouraged.
  */
 // creating the sdk variable
-if (typeof Voicepluginsdk === 'undefined') {
-	var badBrowser=false;
+if (typeof UDAPluginSDK === 'undefined') {
+	var UDABadBrowser=false;
 	if(navigator.appName.indexOf("Internet Explorer") !== -1){
-		badBrowser=(navigator.appVersion.indexOf("MSIE 1") === -1);
+		UDABadBrowser=(navigator.appVersion.indexOf("MSIE 1") === -1);
 	}
-	var speechrecognitionavailable=false;
-	var voiceRecognition;
+	var UDASpeechRecognitionAvailable=false;
+	var UDAVoiceRecognition;
 
 	// initializing voice recognition library
 	if(!window.hasOwnProperty("webkitSpeechRecognition")){
-		speechrecognitionavailable=false;
+		UDASpeechRecognitionAvailable=false;
 	} else {
-		speechrecognitionavailable=true;
-		voiceRecognition = window.webkitSpeechRecognition;
+		UDASpeechRecognitionAvailable=true;
+		UDAVoiceRecognition = window.webkitSpeechRecognition;
 	}
 
 	// listening for user session data from extension call
-	document.addEventListener("Usersessiondata", function(data) {
-		Voicepluginsdk.createsession(JSON.parse(data.detail.data));
+	document.addEventListener("UDAUserSessionData", function(data) {
+		UDAPluginSDK.createsession(JSON.parse(data.detail.data));
 	});
 
-	document.addEventListener("AuthenticatedUsersessiondata", function(data) {
-		Voicepluginsdk.createsession(JSON.parse(data.detail.data));
-		Voicepluginsdk.openmodal(true);
+	// Clearing user session in case if the id gets changed
+	document.addEventListener("UDAClearSessionData", function(data) {
+		UDAPluginSDK.clearSession();
 	});
 
-	document.addEventListener("Alertmessagedata", function(data) {
+	document.addEventListener("UDAAuthenticatedUserSessionData", function(data) {
+		UDAPluginSDK.createsession(JSON.parse(data.detail.data));
+		UDAPluginSDK.openmodal(true);
+	});
+
+	document.addEventListener("UDAAlertMessageData", function(data) {
 		alert(JSON.parse(data.detail.data));
 	});
 
-	var debugsetevent = new CustomEvent("Debugsetevent", {detail: {data: {action:'Debugvalueset',value:voicedebug}}, bubbles: false, cancelable: false});
-	document.dispatchEvent(debugsetevent);
+	let UDADebugSetEvent = new CustomEvent("UDADebugSetEvent", {detail: {data: {action:'Debugvalueset',value:voicedebug}}, bubbles: false, cancelable: false});
+	document.dispatchEvent(UDADebugSetEvent);
 
 	// initializing the sdk variable need to change to a new variable in future.
-	var Voicepluginsdk = {
+	var UDAPluginSDK = {
 		sdkUrl: "/",
 		apihost: DSA_API_URL,
 		totalScripts: 0,
@@ -159,20 +164,20 @@ if (typeof Voicepluginsdk === 'undefined') {
 				script.onreadystatechange = function(){
 					if (script.readyState === "loaded" || script.readyState === "complete"){
 						script.onreadystatechange = null;
-						Voicepluginsdk.scriptsCompleted++;
+						UDAPluginSDK.scriptsCompleted++;
 						if (typeof jQuery !== 'undefined') {
 							this.jqueryready=true;
-							Voicepluginsdk.otherscripts();
+							UDAPluginSDK.otherscripts();
 						}
 					}
 				};
 			} else {
 				script.onload = function(){
-					Voicepluginsdk.scriptsCompleted++;
+					UDAPluginSDK.scriptsCompleted++;
 					if (typeof jQuery !== 'undefined') {
 						this.jqueryready=true;
 						if(this.ready !== true){
-							Voicepluginsdk.otherscripts();
+							UDAPluginSDK.otherscripts();
 						}
 					}
 				};
@@ -189,17 +194,17 @@ if (typeof Voicepluginsdk === 'undefined') {
 				script.onreadystatechange = function(){
 					if (script.readyState === "loaded" || script.readyState === "complete"){
 						script.onreadystatechange = null;
-						Voicepluginsdk.totalotherScriptsCompleted++;
-						if (Voicepluginsdk.totalotherScriptsCompleted === Voicepluginsdk.totalotherScripts) {
-							Voicepluginsdk.allReady();
+						UDAPluginSDK.totalotherScriptsCompleted++;
+						if (UDAPluginSDK.totalotherScriptsCompleted === UDAPluginSDK.totalotherScripts) {
+							UDAPluginSDK.allReady();
 						}
 					}
 				};
 			} else {
 				script.onload = function(){
-					Voicepluginsdk.totalotherScriptsCompleted++;
-					if (Voicepluginsdk.totalotherScriptsCompleted === Voicepluginsdk.totalotherScripts) {
-						Voicepluginsdk.allReady();
+					UDAPluginSDK.totalotherScriptsCompleted++;
+					if (UDAPluginSDK.totalotherScriptsCompleted === UDAPluginSDK.totalotherScripts) {
+						UDAPluginSDK.allReady();
 					}
 				};
 			}
@@ -253,7 +258,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				tooltipPosition: 'right'
 			})
 				.onexit(function (){
-					Voicepluginsdk.resetIntrojs();
+					UDAPluginSDK.resetIntrojs();
 				});
 			if (this.introjsaddedstepnodes.length>0) {
 				this.introjstotalsteps = 0;
@@ -269,8 +274,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 			this.configureintrojs();
 
 			// adding speech recognition functionality based on the library availability
-			if(speechrecognitionavailable){
-				this.recognition = new voiceRecognition();
+			if(UDASpeechRecognitionAvailable){
+				this.recognition = new UDAVoiceRecognition();
 				this.speechrecognitionavailable = true;
 				
 				this.recognition.onstart = function() {
@@ -293,7 +298,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 						// Get a transcript of what was said.
 						var transcript = event.results[current][0].transcript;
 						jQuery("#voicesearchinput").val(transcript);
-						Voicepluginsdk.searchinelastic();
+						UDAPluginSDK.searchinelastic();
 					}
 				};
 			}
@@ -303,9 +308,9 @@ if (typeof Voicepluginsdk === 'undefined') {
 			// listen for when to start the indexing of the dom based on the clicknodes availability
 			document.addEventListener("Indexnodes", function(data) {
 				if(data.detail.data==="indexclicknodes") {
-					Voicepluginsdk.indexclicknodes();
+					UDAPluginSDK.indexclicknodes();
 				} else if(data.detail.data==="indexnewclicknodes") {
-					Voicepluginsdk.indexnewclicknodes();
+					UDAPluginSDK.indexnewclicknodes();
 				}
 			});
 
@@ -314,52 +319,64 @@ if (typeof Voicepluginsdk === 'undefined') {
 			//      This still produces some discrepancy where it hangs up the web page.
 			//      This needs to be improved at some point.
 			window.addEventListener('load', (event) => {
-				Voicepluginsdk.modifybodyhtml();
+				UDAPluginSDK.modifybodyhtml();
 			});
 		},
 		checkuserkeyexists:function(){
-			var sessiondata=this.getstoragedata(this.cookiename);
+			/*var sessiondata=this.getstoragedata(this.cookiename);
 			if(sessiondata){
 				var parsedsessiondata=JSON.parse(sessiondata);
 				this.sessiondata=parsedsessiondata;
 				this.sessionID=parsedsessiondata.sessionkey;
 				this.recorddocumentclick();
 			}else{
-				var sessionevent = new CustomEvent("RequestSessiondata", {detail: {data: "getusersessiondata"}, bubbles: false, cancelable: false});
+				var sessionevent = new CustomEvent("RequestUDASessionData", {detail: {data: "getusersessiondata"}, bubbles: false, cancelable: false});
 				document.dispatchEvent(sessionevent);
-			}
+			}*/
+			var sessionevent = new CustomEvent("RequestUDASessionData", {detail: {data: "getusersessiondata"}, bubbles: false, cancelable: false});
+			document.dispatchEvent(sessionevent);
 		},
 		createsession:function(data){
-			var sessiondata=this.getstoragedata(this.cookiename);
+			/*var sessiondata=this.getstoragedata(this.cookiename);
 			if(sessiondata){
 				this.sessiondata=data;
 				this.sessionID=data.sessionkey;
 				this.createstoragedata(this.cookiename,JSON.stringify(data));
 			}else{
-				dsaSessionID=data.sessionkey;
+				UDASessionID=data.sessionkey;
 				this.sessiondata=data;
 				this.sessionID=data.sessionkey;
 				this.createstoragedata(this.cookiename,JSON.stringify(data));
-			}
+			}*/
+			
+			UDASessionID=data.sessionkey;
+			this.sessiondata=data;
+			this.sessionID=data.sessionkey;
+			
 			this.recorddocumentclick();
+		},
+		clearSession: function(){
+			this.sessionID = "";
+			this.sessiondata = {sessionkey:"",authenticated:false,authenticationsource:"",authdata:{}};
+			this.closemodal();
 		},
 		modifybodyhtml:function(){
 			var html='<div id="nistBtn" nist-voice="true"></div><div id="nist-steps-content" style="display: none;"><div id="voicemodalhtml" nist-voice="true"></div></div>';
 
 			jQuery(document.body).prepend(html);
 
-			if(typeof isvoicesdk === 'undefined') {
+			if(typeof isUDASdk === 'undefined') {
 				jQuery(window).trigger('resize').promise().done(function () {
-					Voicepluginsdk.indexclicknodes();
-					Voicepluginsdk.addbuttonhtml();
+					UDAPluginSDK.indexclicknodes();
+					UDAPluginSDK.addbuttonhtml();
 				});
 			} else {
-				Voicepluginsdk.indexclicknodes();
-				Voicepluginsdk.addbuttonhtml();
+				UDAPluginSDK.indexclicknodes();
+				UDAPluginSDK.addbuttonhtml();
 			}
 			setInterval(function () {
 				if(lastindextime!==0 && lastindextime<lastmutationtime) {
-					Voicepluginsdk.indexnewclicknodes();
+					UDAPluginSDK.indexnewclicknodes();
 				}
 			},DSA_POST_INTERVAL);
 		},
@@ -369,7 +386,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			var modal =jQuery("#nistBtn");
 			modal.append(buttonhtml);
 			modal.click(function () {
-				Voicepluginsdk.openmodal(true);
+				UDAPluginSDK.openmodal(true);
 			});
 			if(this.rerenderhtml) {
 				this.showhtml();
@@ -402,27 +419,27 @@ if (typeof Voicepluginsdk === 'undefined') {
 						'</div>';
 			jQuery("#voicemodalhtml").html(html);
 			jQuery("#closenistmodal").click(function(){
-				Voicepluginsdk.closemodal();
+				UDAPluginSDK.closemodal();
 			});
 			jQuery("#voicesearch").click(function(){
-				Voicepluginsdk.searchinelastic();
+				UDAPluginSDK.searchinelastic();
 			});
 			jQuery("#voicesearchinput").keydown(function (e) {
 				if (e.keyCode === 13) {
 					jQuery("#nistvoicesearchresults").html("");
-					Voicepluginsdk.searchinelastic();
+					UDAPluginSDK.searchinelastic();
 					return false;
 				}
 			});
-			if(speechrecognitionavailable){
+			if(UDASpeechRecognitionAvailable){
 				jQuery("#nist-voice-icon-start").click(function () {
 					jQuery("#nistvoicesearchresults").html("");
-					Voicepluginsdk.recognition.start();
+					UDAPluginSDK.recognition.start();
 					jQuery("#nist-voice-icon-start").hide();
 					jQuery("#nist-voice-icon-stop").show();
 				});
 				jQuery("#nist-voice-icon-stop").click(function () {
-					Voicepluginsdk.recognition.stop();
+					UDAPluginSDK.recognition.stop();
 					jQuery("#nist-voice-icon-stop").hide();
 					jQuery("#nist-voice-icon-start").show();
 				});
@@ -432,11 +449,11 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 			if(addnisticon) {
 				jQuery("#nistvoiceadvbtn").click(function () {
-					Voicepluginsdk.showadvancedhtml();
+					UDAPluginSDK.showadvancedhtml();
 				});
 			} else {
 				jQuery("#nistvoicerecstpbtn").click(function () {
-					Voicepluginsdk.gettimestamp("stop");
+					UDAPluginSDK.gettimestamp("stop");
 				});
 			}
 		},
@@ -456,7 +473,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 					if (bodychildren.length > 0) {
 						bodychildren.forEach(function (childnode, childnodeindex) {
 							if (childnode.classList && childnode.classList.contains("container")) {
-								Voicepluginsdk.containersections.push(childnodeindex);
+								UDAPluginSDK.containersections.push(childnodeindex);
 								childnode.classList.remove("container");
 							}
 							if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'nistBtn' && childnode.id !== 'nist-steps-content') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
@@ -468,7 +485,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 					}
 				}
 			} else {
-				var sessionevent = new CustomEvent("RequestSessiondata", {detail: {data: "authtenicate"}, bubbles: false, cancelable: false});
+				var sessionevent = new CustomEvent("RequestUDASessionData", {detail: {data: "authtenicate"}, bubbles: false, cancelable: false});
 				document.dispatchEvent(sessionevent);
 			}
 		},
@@ -493,7 +510,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 								childnode.classList.remove("nist-original-content");
 							}
 						}
-						if (Voicepluginsdk.containersections.length > 0 && Voicepluginsdk.inarray(childnodeindex, Voicepluginsdk.containersections) !== -1) {
+						if (UDAPluginSDK.containersections.length > 0 && UDAPluginSDK.inarray(childnodeindex, UDAPluginSDK.containersections) !== -1) {
 							childnode.classList.add("container");
 						}
 					});
@@ -639,7 +656,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 								});
 								alert("Click detected inside iframe.");
 								console.log('record user click');
-								// Voicepluginsdk.recorduserclick(node, false, false, event, confirmdialog);
+								// UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
 							});*/
 							let addToolTip = true;
 							for(let checknode of this.tooltipDisplayedNodes){
@@ -943,7 +960,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			switch (nodename) {
 				case "select":
 					jQuery(node).on({"focus":function(event){
-							Voicepluginsdk.recorduserclick(node, false,false, event, confirmdialog);
+							UDAPluginSDK.recorduserclick(node, false,false, event, confirmdialog);
 						}
 					});
 					break;
@@ -977,24 +994,24 @@ if (typeof Voicepluginsdk === 'undefined') {
 						case "url":
 						case "week":
 							jQuery(node).click(function (event) {
-								Voicepluginsdk.recorduserclick(node, false, false, event, confirmdialog);
+								UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
 							});
 							break;
 						default:
 							jQuery(node).click(function (event) {
-								Voicepluginsdk.recorduserclick(node, false, false, event, confirmdialog);
+								UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
 							});
 							break;
 					}
 					break;
 				case "mat-select":
 					jQuery(node).click(function (event) {
-						Voicepluginsdk.recorduserclick(node, false, false, event, confirmdialog);
+						UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
 					});
 					break;
 				default:
 					jQuery(node).click(function (event) {
-						Voicepluginsdk.recorduserclick(node, false, false, event, confirmdialog);
+						UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
 					});
 					break;
 			}
@@ -1296,7 +1313,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				link=true;
 			}
 			if(!link) {
-				setTimeout(function(){Voicepluginsdk.showhtml();}, timetoinvoke);
+				setTimeout(function(){UDAPluginSDK.showhtml();}, timetoinvoke);
 			}
 		},
 		//simulate hover functionality
@@ -1336,7 +1353,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 			if(this.autoplay){
 				this.forceReindex = true;
-				Voicepluginsdk.indexnewclicknodes();
+				UDAPluginSDK.indexnewclicknodes();
 				return true;
 			}
 
@@ -1472,7 +1489,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					Voicepluginsdk.confirmednode = false;
+					UDAPluginSDK.confirmednode = false;
 				}
 			};
 			xhr.send(outputdata);
@@ -1489,21 +1506,21 @@ if (typeof Voicepluginsdk === 'undefined') {
 				}
 				if (node.hasAttribute('mattreenodetoggle')) {
 					this.forceReindex = true;
-					Voicepluginsdk.indexnewclicknodes();
+					UDAPluginSDK.indexnewclicknodes();
 				} else {
 					//processing new clicknodes if available after the click action.
 					setTimeout(function () {
 						this.forceReindex = true;
-						Voicepluginsdk.indexnewclicknodes();
+						UDAPluginSDK.indexnewclicknodes();
 					}, DSA_POST_INTERVAL);
-					// Voicepluginsdk.indexnewclicknodes();
+					// UDAPluginSDK.indexnewclicknodes();
 				}
 			}
 
 			// rerender html if recording is enabled.
 			if(this.recording) {
 				setTimeout(function () {
-					Voicepluginsdk.showhtml();
+					UDAPluginSDK.showhtml();
 				}, DSA_POST_INTERVAL);
 			}
 		},
@@ -1514,8 +1531,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 				if(!childtextexists) {
 					var confirmdialog = confirm("Did you clicked: " + postdata.clickednodename);
 					if (confirmdialog === true) {
-						Voicepluginsdk.confirmednode = true;
-						Voicepluginsdk.recorduserclick(node, fromdocument, selectchange, event, false);
+						UDAPluginSDK.confirmednode = true;
+						UDAPluginSDK.recorduserclick(node, fromdocument, selectchange, event, false);
 					}
 					return false;
 				} else {
@@ -1660,10 +1677,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 			jQuery("#nistvoicesearchresults").html("");
 			var xhr = new XMLHttpRequest();
-			xhr.open("GET", this.apihost+"/clickevents/fetchrecorddata?start="+starttime+"&end="+endtime+"&sessionid="+Voicepluginsdk.sessionID+"&domain="+recordingcookiedata.domain, true);
+			xhr.open("GET", this.apihost+"/clickevents/fetchrecorddata?start="+starttime+"&end="+endtime+"&sessionid="+UDAPluginSDK.sessionID+"&domain="+recordingcookiedata.domain, true);
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					Voicepluginsdk.addrecordresultshtml(JSON.parse(xhr.response));
+					UDAPluginSDK.addrecordresultshtml(JSON.parse(xhr.response));
 				}
 			};
 			xhr.send();
@@ -1704,10 +1721,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 			this.showhtml();
 			jQuery("#nistvoicesearchresults").html("");
 			var xhr = new XMLHttpRequest();
-			xhr.open("GET", this.apihost+"/clickevents/fetchrecorddata?start="+recordingcookiedata.starttime+"&end="+recordingcookiedata.endtime+"&sessionid="+Voicepluginsdk.sessionID+"&domain="+recordingcookiedata.domain, true);
+			xhr.open("GET", this.apihost+"/clickevents/fetchrecorddata?start="+recordingcookiedata.starttime+"&end="+recordingcookiedata.endtime+"&sessionid="+UDAPluginSDK.sessionID+"&domain="+recordingcookiedata.domain, true);
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					Voicepluginsdk.addrecordresultshtml(JSON.parse(xhr.response));
+					UDAPluginSDK.addrecordresultshtml(JSON.parse(xhr.response));
 				}
 			};
 			xhr.send();
@@ -1744,7 +1761,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 							'			</ul>'+
 							'			<div>'+
 							'				<input id="nistsequencelabel" type="text" name="save-recrded" class="voice-save-recrded-inpt" placeholder="Enter label" nist-voice="true">'+
-							'				<button class="voice-cancel-btn" onclick="Voicepluginsdk.cancelrecordingsequence();">Cancel and exit</button> <button onclick="Voicepluginsdk.submitrecordedlabel();" class="voice-submit-btn">Submit</button>'+
+							'				<button class="voice-cancel-btn" onclick="UDAPluginSDK.cancelrecordingsequence();">Cancel and exit</button> <button onclick="UDAPluginSDK.submitrecordedlabel();" class="voice-submit-btn">Submit</button>'+
 							'			</div>'+
 							'		</div>'+
 							'	</div>';
@@ -1778,7 +1795,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				// var personalHtml = '&nbsp; &nbsp;<input type="checkbox" nist-voice="true" id="isPersonal" /> is personal';
 				/*var personalElement = jQuery(personalHtml);
 				personalElement.click(function (){
-					Voicepluginsdk.personalNode(data);
+					UDAPluginSDK.personalNode(data);
 				});*/
 				var editBtn = "&nbsp; &nbsp;<button nist-voice='true' id='edit-list'>Edit</button>";
 				var html = '<li nist-voice="true" class="active">' +
@@ -1787,7 +1804,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				var element = jQuery(html);
 				jQuery("#nist-recordresultrow").append(element);
 				jQuery("#isPersonal").click(function (){
-					Voicepluginsdk.personalNode(data);
+					UDAPluginSDK.personalNode(data);
 				});
 				var befroeEditText = $(".voice-card-left ul li:last").text();
 				jQuery("#edit-list").click(function (){
@@ -1797,7 +1814,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 				$('.voice-card-left ul li:last').blur(function() {
 					$(".voice-card-left ul li:last").css("border", "0px solid");
 					if(befroeEditText.trim() != $(".voice-card-left ul li:last").text().trim()){
-						Voicepluginsdk.editAndSave(data);
+						UDAPluginSDK.editAndSave(data);
 					}
 				});
 			} else {
@@ -1827,7 +1844,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.open("POST", this.apihost+"/user/updateclickednode");
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
-				Voicepluginsdk.showhtml();
+				UDAPluginSDK.showhtml();
 			};
 			xhr.send(outputdata);
 		},
@@ -1841,7 +1858,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.open("POST", this.apihost+"/user/updateclickednode");
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
-				Voicepluginsdk.showhtml();
+				UDAPluginSDK.showhtml();
 			};
 			xhr.send(outputdata);
 		},
@@ -1879,7 +1896,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.setRequestHeader('Content-Type', 'application/json');
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					Voicepluginsdk.backtomodal();
+					UDAPluginSDK.backtomodal();
 				}
 			};
 			xhr.send(JSON.stringify(sequencelistdata));
@@ -1922,10 +1939,10 @@ if (typeof Voicepluginsdk === 'undefined') {
 			xhr.open("GET", this.apihost + "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host), true);
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					Voicepluginsdk.searchInProgress=false;
-					Voicepluginsdk.renderelasticresults(JSON.parse(xhr.response));
+					UDAPluginSDK.searchInProgress=false;
+					UDAPluginSDK.renderelasticresults(JSON.parse(xhr.response));
 				} else {
-					Voicepluginsdk.searchInProgress=false;
+					UDAPluginSDK.searchInProgress=false;
 				}
 			};
 			xhr.send();
@@ -1958,7 +1975,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 						'	</div>';
 			var element=jQuery(html);
 			element.click(function () {
-				Voicepluginsdk.elasticresultaction(data);
+				UDAPluginSDK.elasticresultaction(data);
 			});
 			jQuery("#nistvoicesearchresults").append(element);
 		},
@@ -2030,21 +2047,21 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 			if(this.sessionID===data.usersessionid || this.sessiondata.authdata.id===data.usersessionid){
 				jQuery("#deletesequence").click(function () {
-					Voicepluginsdk.deletesequencelist(data);
+					UDAPluginSDK.deletesequencelist(data);
 				});
 			} else {
 				jQuery("#deletesequence").hide();
 			}
 
 			jQuery('#nist-upvote').click(function () {
-				Voicepluginsdk.addvote("up",data);
+				UDAPluginSDK.addvote("up",data);
 			});
 			jQuery('#nist-downvote').click(function () {
-				Voicepluginsdk.addvote("down",data);
+				UDAPluginSDK.addvote("down",data);
 			});
 
 			jQuery("#nist-autoplay").click(function () {
-				Voicepluginsdk.toggleautoplay(navcookiedata);
+				UDAPluginSDK.toggleautoplay(navcookiedata);
 			});
 
 			// need to improve the autoplay functionality.
@@ -2058,12 +2075,12 @@ if (typeof Voicepluginsdk === 'undefined') {
 				this.toggleautoplay(navcookiedata);
 			}
 			jQuery("#backtosearch").click(function () {
-				// Voicepluginsdk.toggleautoplay(navcookiedata);
-				Voicepluginsdk.autoplay = false;
-				Voicepluginsdk.searchInProgress=false;
-				Voicepluginsdk.configureintrojs();
-				Voicepluginsdk.introjs.refresh();
-				Voicepluginsdk.backtosearchresults(navcookiedata);
+				// UDAPluginSDK.toggleautoplay(navcookiedata);
+				UDAPluginSDK.autoplay = false;
+				UDAPluginSDK.searchInProgress=false;
+				UDAPluginSDK.configureintrojs();
+				UDAPluginSDK.introjs.refresh();
+				UDAPluginSDK.backtosearchresults(navcookiedata);
 			});
 		},
 		//showing the sequence steps html
@@ -2084,8 +2101,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 			}
 			if(visited === -1) {
 				template.click(function () {
-					Voicepluginsdk.invokedActionManually = true;
-					Voicepluginsdk.performclickaction(data,navcookiedata);
+					UDAPluginSDK.invokedActionManually = true;
+					UDAPluginSDK.performclickaction(data,navcookiedata);
 				});
 			}
 			return template;
@@ -2175,8 +2192,8 @@ if (typeof Voicepluginsdk === 'undefined') {
 
 				matchNodes.forEach(function (matchNode, matchnodeindex) {
 					if(matchNode.originalNode.hasOwnProperty("element-data")) {
-						const inputLabels = Voicepluginsdk.getclickedinputlabels(matchNode.originalNode["element-data"]);
-						if(Voicepluginsdk.logLevel>0){
+						const inputLabels = UDAPluginSDK.getclickedinputlabels(matchNode.originalNode["element-data"]);
+						if(UDAPluginSDK.logLevel>0){
 							console.log('----------------------------------------------------------');
 							console.log(inputLabels);
 							console.log('----------------------------------------------------------');
@@ -2449,19 +2466,19 @@ if (typeof Voicepluginsdk === 'undefined') {
 		deletesequencelist:function(data){
 			var confirmdialog=confirm("Are you sure want to delete "+data.name);
 			if(confirmdialog === true){
-				Voicepluginsdk.confirmdelete(data);
+				UDAPluginSDK.confirmdelete(data);
 			}
 		},
 		//confirmation for the deletion of the sequence list
 		confirmdelete:function (data) {
-			// var senddata=JSON.stringify({usersessionid:this.dsaSessionID,id:data.id});
+			// var senddata=JSON.stringify({usersessionid:this.UDASessionID,id:data.id});
 			var senddata=JSON.stringify({usersessionid:this.sessiondata.authdata.id,id:data.id});
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", this.apihost + "/clickevents/sequence/delete", true);
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					Voicepluginsdk.closemodal();
+					UDAPluginSDK.closemodal();
 				}
 			};
 			xhr.send(senddata);
@@ -2546,16 +2563,16 @@ if (typeof Voicepluginsdk === 'undefined') {
 						// '<div class="name-heading"><h2 nist-voice="true">Create your own action <button nist-voice="true" id="nistvoicerecbtn" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-record.png"> <span nist-voice="true">Rec</span></button></h2><br /></div>';
 			jQuery("#nistvoicesearchresults").append(html);
 			jQuery("#nistvoicerecbtn").click(function () {
-				Voicepluginsdk.gettimestamp("start");
+				UDAPluginSDK.gettimestamp("start");
 			});
 			jQuery("#nistvoiceback").click(function () {
-				Voicepluginsdk.backtomodal();
+				UDAPluginSDK.backtomodal();
 			});
 			var xhr = new XMLHttpRequest();
 			xhr.open("GET", this.apihost + "/clickevents/suggested?domain="+encodeURI(window.location.host), true);
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					Voicepluginsdk.showsuggestedhtml(JSON.parse(xhr.response));
+					UDAPluginSDK.showsuggestedhtml(JSON.parse(xhr.response));
 				}
 			};
 			xhr.send();
@@ -2570,7 +2587,7 @@ if (typeof Voicepluginsdk === 'undefined') {
 					'			</ul>' +
 					'			<div>' +
 					'				<input id="nistsequencelabel" type="text" name="save-recrded" class="voice-save-recrded-inpt" placeholder="Enter label" nist-voice="true">' +
-					'				<button onclick="Voicepluginsdk.submitrecordedlabel(\'recording\');" class="voice-submit-btn">Submit</button><button class="voice-cancel-btn" onclick="Voicepluginsdk.submitrecordedlabel(\'invalid\');">Invalid Sequence</button><button class="voice-cancel-btn" onclick="Voicepluginsdk.submitrecordedlabel(\'ignore\');">Ignore</button>' +
+					'				<button onclick="UDAPluginSDK.submitrecordedlabel(\'recording\');" class="voice-submit-btn">Submit</button><button class="voice-cancel-btn" onclick="UDAPluginSDK.submitrecordedlabel(\'invalid\');">Invalid Sequence</button><button class="voice-cancel-btn" onclick="UDAPluginSDK.submitrecordedlabel(\'ignore\');">Ignore</button>' +
 					'			</div>' +
 					'		</div>' +
 					'	</div>';
@@ -2586,5 +2603,5 @@ if (typeof Voicepluginsdk === 'undefined') {
 			jQuery("#nistvoicesearchresults").html('');
 		}
 	};
-	Voicepluginsdk.init();
+	UDAPluginSDK.init();
 }
