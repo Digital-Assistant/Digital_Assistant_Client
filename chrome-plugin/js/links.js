@@ -32,6 +32,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
                 !userAgent.includes('Chromium') &&
                 !userAgent.includes('OPR') &&
                 !userAgent.includes('Edge') &&
+                !userAgent.includes('Edg') &&
                 !userAgent.includes('SamsungBrowser');
         },
 
@@ -44,6 +45,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
             return userAgent.includes('Safari') &&
                 !userAgent.includes('Chrome') &&
                 !userAgent.includes('Chromium') &&
+                !userAgent.includes('Edg') &&
                 !userAgent.includes('Android');
         },
 
@@ -109,7 +111,8 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
          * @return {boolean}
          */
         isEdge: function (userAgent) {
-            return userAgent.includes('Edge') && userAgent.includes('Chrome');
+            return userAgent.match(/\b(Edge|Edgios|Edga|Edg)\/(\d+)/);
+            // return ((userAgent.includes('Edge') || userAgent.includes('Edgeios') || userAgent.includes('Edga') || userAgent.includes('Edg')) && userAgent.includes('Chrome'));
         },
 
         /**
@@ -192,7 +195,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
                 }
 
                 case 'Edge': {
-                    const temp = userAgent.match(/\b(Edge)\/(\d+)/);
+                    const temp = userAgent.match(/\b(Edge|Edgios|Edga|Edg)\/(\d+)/);
                     return Number(temp[2]);
                 }
             }
