@@ -2071,46 +2071,64 @@ if (typeof UDAPluginSDK === 'undefined') {
 			//add analtytics
 			this.recordclick('sequencerecord',data.name.toString(),data.id);
 		},
+		// renderSelectedSequenceHtml: fu
+		renderSelectedSequenceHtml: function (data, isPlaying){
+			var html =	'<div class="uda-card-details" style="border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;">'
+						+'    <div class="uda-card-btns">'
+						+'        <button class="uda-play-btn" '+((isPlaying)?'disabled="disabled"':'id="nist-autoplay"')+'><img src="'+this.extensionpath+'images/icons/play-icon.png"></button>'
+						+'        <button class="uda-stop-btn" '+((!isPlaying)?'disabled="disabled"':'id="nist-autoplay"')+'><img src="'+this.extensionpath+'images/icons/stop-icon.png"></button>'
+						+'    </div>'
+						+'    <div class="uda-card-right-dbl-arrow" id="uda-backto-search"><img src="'+this.extensionpath+'images/icons/right-duble-arrow.png"></div>'
+						+'    <h5>'+data.name.toString()+'</h5>'
+						+'    <hr>'
+						+'    <ul class="uda-suggestion-list" id="uda-sequence-steps">'
+						+'    </ul>'
+						+'</div>'
+						+'<div class="uda-details-footer">'
+						+'    <div class="uda-details-footer-left">'
+						+'        <img src="'+this.extensionpath+'images/icons/trash.png" class="uda-trash-img" id="uda-delete-sequence">'
+						+'    </div>'
+						+'    <div class="uda-details-footer-right">'
+						+'        <img src="'+this.extensionpath+'images/icons/like.png" class="uda-like-img" id="uda-upvote" style="border-left: 1px solid #dce0f7;">'
+						+'        <img src="'+this.extensionpath+'images/icons/dislike.png" class="uda-dislike-img" id="uda-downvote" style="border-right:none;">'
+						+'    </div>'
+						+'</div>';
+			return html;
+		},
 		//showing the selected search result screen functionality
 		showselectedrow:function(data,index,shownodelist=false, navcookiedata={}){
 			if(shownodelist && navcookiedata.data.userclicknodesSet.length===navcookiedata.navigateddata.length){
 				navcookiedata.navcompleted=true;
 			}
-			var playiconhtml =  '<div class="voice-autoplay-stop">';
+			var isPlaying =  false
 
 			if(shownodelist) {
 				if (navcookiedata.navcompleted) {
 					this.autoplayCompleted = true;
-					playiconhtml += '	<span><img nist-voice="true" id="nist-autoplay" src="' + this.extensionpath + 'assets/voice-play.png"></span>'+
-									'   <span><img nist-voice="true" src="' + this.extensionpath + 'assets/voice-stop-disable.png"></span>';
 				} else {
 					if(navcookiedata.autoplay) {
-						playiconhtml += '	<span><img nist-voice="true" src="' + this.extensionpath + 'assets/voice-play-disable.png"></span>'+
-										'	<span><img nist-voice="true" id="nist-autoplay" src="' + this.extensionpath + 'assets/voice-stop.png"></span>';
-					} else {
-						playiconhtml += '	<span><img nist-voice="true" id="nist-autoplay" src="' + this.extensionpath + 'assets/voice-play.png"></span>'+
-										'   <span><img nist-voice="true" src="' + this.extensionpath + 'assets/voice-stop-disable.png"></span>';
+						isPlaying = true;
 					}
-
 				}
 			}
-			playiconhtml   +=   '</div>';
-			var html =  '<div class="voice-suggesion-card">'+
+
+			/*var html =  '<div class="voice-suggesion-card">'+
 						'	<div class="voice-card-left">'+
-						'		<div class="voice-back-btn"><img nist-voice="true" id="backtosearch" src="'+this.extensionpath+'assets/voice-back.png"></div>'+
+						'		<div class="voice-back-btn"><img nist-voice="true" id="uda-backto-search" src="'+this.extensionpath+'assets/voice-back.png"></div>'+
 						'       <div class="voice-feedback-btns">' +
-						'		    <img nist-voice="true" id="nist-upvote" class="voice-like-violet" src="'+this.extensionpath+'assets/voice-like.png">'+
-						'		    <img nist-voice="true" id="nist-downvote" class="voice-dislike-violet" src="'+this.extensionpath+'assets/voice-dislike.png">'+
-						'		    <img nist-voice="true" id="deletesequence" class="voice-delete-violet" src="'+this.extensionpath+'assets/voice-delete.png">'+
+						'		    <img nist-voice="true" id="uda-upvote" class="voice-like-violet" src="'+this.extensionpath+'assets/voice-like.png">'+
+						'		    <img nist-voice="true" id="uda-downvote" class="voice-dislike-violet" src="'+this.extensionpath+'assets/voice-dislike.png">'+
+						'		    <img nist-voice="true" id="uda-delete-sequence" class="voice-delete-violet" src="'+this.extensionpath+'assets/voice-delete.png">'+
 						'       </div>'+
 						'		<h4>'+data.name.toString()+'</h4>'+
-						'		<ul class="voice-sugggesion-bullet" id="nistvoicesteps">'+
+						'		<ul class="voice-sugggesion-bullet" id="uda-sequence-steps">'+
 						'		</ul>'+
 						'	</div>'+
 						'   <div class="nist-clear"></div>'+
 						'</div>'+
-						playiconhtml;
-			var element=jQuery(html);
+						playiconhtml;*/
+
+			var element=jQuery(this.renderSelectedSequenceHtml(data, isPlaying));
 			jQuery("#uda-content-container").html(element);
 			var performactionnode=false;
 			for(var i=0;i<data.userclicknodesSet.length;i++){
@@ -2123,21 +2141,21 @@ if (typeof UDAPluginSDK === 'undefined') {
 						performactionnode=data.userclicknodesSet[i];
 					}
 				}
-				jQuery("#nistvoicesteps").append(this.rendersteps(data.userclicknodesSet[i], visited, navcookiedata));
+				jQuery("#uda-sequence-steps").append(this.rendersteps(data.userclicknodesSet[i], visited, navcookiedata));
 			}
 
 			if(this.sessionID===data.usersessionid || this.sessiondata.authdata.id===data.usersessionid){
-				jQuery("#deletesequence").click(function () {
-					UDAPluginSDK.deletesequencelist(data);
+				jQuery("#uda-delete-sequence").click(function () {
+					UDAPluginSDK.deleteSequence(data);
 				});
 			} else {
-				jQuery("#deletesequence").hide();
+				jQuery("#uda-delete-sequence").hide();
 			}
 
-			jQuery('#nist-upvote').click(function () {
+			jQuery('#uda-upvote').click(function () {
 				UDAPluginSDK.addvote("up",data);
 			});
-			jQuery('#nist-downvote').click(function () {
+			jQuery('#uda-downvote').click(function () {
 				UDAPluginSDK.addvote("down",data);
 			});
 
@@ -2155,7 +2173,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.autoplayPaused = false;
 				this.toggleautoplay(navcookiedata);
 			}
-			jQuery("#backtosearch").click(function () {
+			jQuery("#uda-backto-search").click(function () {
 				// UDAPluginSDK.toggleautoplay(navcookiedata);
 				UDAPluginSDK.autoplay = false;
 				UDAPluginSDK.searchInProgress=false;
@@ -2176,9 +2194,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 			// var clickedtext = '<pre>'+clickedname+'</pre>';
 			var clickedtext = clickedname;
 			if(visited>-1) {
-				var template = jQuery("<li nist-voice=\"true\" class='active'>" + clickedtext + "</li>");
+				var template = jQuery("<li class='completed'>" + clickedtext + "</li>");
 			} else {
-				var template = jQuery("<li nist-voice=\"true\" class='inactive'>" + clickedtext + "</li>");
+				var template = jQuery("<li class='inactive'>" + clickedtext + "</li>");
 			}
 			if(visited === -1) {
 				template.click(function () {
@@ -2544,7 +2562,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 		},
 		//delete sequence list functionality for the owner
-		deletesequencelist:function(data){
+		deleteSequence:function(data){
 			var confirmdialog=confirm("Are you sure want to delete "+data.name);
 			if(confirmdialog === true){
 				UDAPluginSDK.confirmdelete(data);
@@ -2656,7 +2674,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					UDAPluginSDK.showsuggestedhtml(JSON.parse(xhr.response));
 				}
 			};
-			xhr.send();
+			// xhr.send();
 		},
 		// advanced html
 		getAdvancedHtml: function (){

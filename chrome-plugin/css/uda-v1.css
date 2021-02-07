@@ -341,12 +341,29 @@
     position: relative;
     line-height: 32px;
     text-align: left;
+    /*list-style: none url('../images/icons/bullet.png');*/
+    list-style: none;
+    margin: 0;
+}
+
+.uda-recording {
+    position: relative;
+    line-height: 32px;
+    text-align: left;
     list-style: none url('../images/icons/bullet.png');
     margin: 0;
 }
 
-.uda-suggestion-list li {
+.uda-suggestion-list li, .uda-recording li {
     font-size: 14px;
+}
+
+.uda-suggestion-list li::before {
+    content: '\00a0 \00a0 \00a0 \00a0 ';
+}
+
+.uda-suggestion-list li.completed::before {
+    content: url('../images/icons/bullet.png');
 }
 
 .uda-details-footer {
