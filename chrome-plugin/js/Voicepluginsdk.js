@@ -110,7 +110,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		forceReindex: false,
 		searchText: null,
 		searchInProgress: false,
-		ignoreNodes: ['ng-dropdown-panel','ckeditor','fusioncharts','ngb-datepicker','ngx-daterangepicker-material'],
+		ignoreNodes: ['ng-dropdown-panel','ckeditor','fusioncharts','ngb-datepicker','ngx-daterangepicker-material','uda-panel'],
 		cancelRecordingDuringRecordingNodes: ['ngb-datepicker'],
 		tooltipDisplayedNodes: [],
 		//replayvariables
@@ -219,7 +219,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		otherscripts: function(){
 			this.totalotherScripts=1;
-			this.loadCssScript(this.extensionpath+"css/extension.css");
+			// this.loadCssScript(this.extensionpath+"css/extension.css");
+			this.loadCssScript(this.extensionpath+"css/uda-v1.css");
 			this.loadOtherScript(this.extensionpath+"js/domJSON.js");
 			if(this.inarray(window.location.host,this.addcustomcssdomains) !== -1){
 				this.loadCssScript(this.extensionpath+"css/"+window.location.host+".css");
@@ -297,8 +298,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 						var current = event.resultIndex;
 						// Get a transcript of what was said.
 						var transcript = event.results[current][0].transcript;
-						jQuery("#voicesearchinput").val(transcript);
+						jQuery("#uda-search-input").val(transcript);
 						UDAPluginSDK.searchinelastic();
+						UDAPluginSDK.recognition.stop();
+						jQuery("#uda-voice-icon-stop").hide();
+						jQuery("#uda-voice-icon-start").show();
 					}
 				};
 			}
@@ -382,7 +386,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		addbuttonhtml:function(){
 			jQuery("#nistBtn").unbind("click").html("");
-			var buttonhtml='<img src="'+this.extensionpath+'assets/uda-logo.png" width="50px" height="50px" nist-voice="true">';
+			// var buttonhtml='<img src="'+this.extensionpath+'assets/uda-logo.png" width="50px" height="50px" nist-voice="true">';
+			var buttonhtml	=	'<div class="uda-nistapp-logo">'
+								+'	<div class="uda-icon" style="text-align: center;"><img src="'+this.extensionpath+'images/icons/nist-logo.png"><p style="padding:0; margin:0px;">Assist</p><span><img src="'+this.extensionpath+'images/icons/backarrow-orange.png"></span></div>'
+								+'</div>';
 			var modal =jQuery("#nistBtn");
 			modal.append(buttonhtml);
 			modal.click(function () {
@@ -392,8 +399,65 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.showhtml();
 			}
 		},
+		addRightPanel: function() {
+			var template = this.rightPanelHtml();
+			return template;
+		},
+		rightPanelHtml: function(){
+			var html = 	'<uda-panel>'
+						+'<div class="uda-page-right-bar">'
+						+'<div>'
+							+'<div class="uda-ribbon-arrow" id="closenistmodal"><img src="'+this.extensionpath+'images/icons/right-arrow.png"></div>'
+							+'<div class="uda-icon-txt">'
+								+'<img src="'+this.extensionpath+'images/icons/nist-logo.png"><span class="uda-help-bg-tooltip">Need Help?</span>'
+							+'</div>'
+							+'<div class="uda-container" style="text-align: center; margin-top: 10px;">'
+								+'<div class="uda-search-div">'
+									+'<button class="uda-search-btn"><img src="'+this.extensionpath+'images/icons/search-icon.png"></button>'
+									+'<input type="text" name="uda-search-input" class="uda-input-cntrl" placeholder="search..." id="uda-search-input" />'
+									+'<button class="uda-search-btn" style="border-radius: 0px 5px 5px 0px;" id="uda-voice-icon-start">'
+									+'	<img src="'+this.extensionpath+'images/icons/mic-icon.png">'
+									+'</button>'
+									+'<button class="uda-search-btn" style="border-radius: 0px 5px 5px 0px; display:none;" id="uda-voice-icon-stop">'
+									+'	<img src="'+this.extensionpath+'images/icons/color-stop-btn.png">'
+									+'</button>'
+								+'</div>'
+							+'</div>'
+						+'</div>'
+						+'<hr>'
+						+'<div class="uda-container uda-clear uda-cards-scroller" id="uda-content-container">'
+						+'</div>'
+						+'<div>'
+							+'<div class="uda-footer-bar">'
+								+'<div class="uda-container">'
+									+'<div class="uda-dropdown">'
+										+'<button class="uda-advanced-btn">'
+											+'<img src="'+this.extensionpath+'images/icons/advanced-icon.png"><span>Advanced</span>'
+										+'</button>'
+										+'<div class="uda-advanced-btn-content">'
+											+'<a id="uda-advance-section"><img src="'+this.extensionpath+'images/icons/new-record.png" width="23px" height="23px"><span> New Record</span></a>'
+											// +'<a><img src="'+this.extensionpath+'images/icons/new-record.png" width="23px" height="23px"><span> New Record</span></a>'
+										+'</div>'
+									+'</div>'
+								+'</div>'
+								+'<br>'
+								+'<div class="uda-container" style="border-top:1px solid #969696; margin-top: 30px;">'
+									+'<div class="uda-footer-left">Copyrights Reserved 2021.</div>'
+									+'<div class="uda-footer-right" style="padding-top:5px; text-align:right;">'
+										+'<a href="#">Know More</a>'
+										+'<img src="'+this.extensionpath+'images/icons/nist-logo.png" width="15px" height="15px;">'
+									+'</div>'
+								+'</div>'
+							+'</div>'
+						+'</div>'
+					+'</div>'
+					+'</uda-panel>';
+
+			return html;
+		},
 		addvoicesearchmodal:function(addnisticon=true){
-			var recbtn ='	   <button nist-voice="true" id="nistvoiceadvbtn" class="voice-record-img"><span nist-voice="true">Advanced</span></button>';
+			/*
+			var recbtn ='	   <button nist-voice="true" id="uda-advance-section" class="voice-record-img"><span nist-voice="true">Advanced</span></button>';
 
 			if(!addnisticon){
 				recbtn ='	   <button nist-voice="true" id="nistvoicerecstpbtn" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-stop.png"> <span nist-voice="true">Stop</span></button>';
@@ -406,49 +470,49 @@ if (typeof UDAPluginSDK === 'undefined') {
 						'   </div>'+
 						'	<div class="voice-red-hr-line"></div>'+
 						'	<div class="voice-srch-bg">'+
-						'		<span class="voice-srch"><img src="'+this.extensionpath+'assets/voice-search.png"></span><input type="search" class="voice-srch-fld" nist-voice="true" id="voicesearchinput" placeholder="Search..." />' +
-						'       <span id="nist-voice-icon-start" class="voice-voice-srch" nist-voice="true"><img nist-voice="true" src="'+this.extensionpath+'assets/voice-voice.png" /></span>'+
-						'       <span style="display:none;" class="voice-voice-srch" id="nist-voice-icon-stop" nist-voice="true"><img src="'+this.extensionpath+'assets/stop.png" nist-voice="true" /></span>' +
+						'		<span class="voice-srch"><img src="'+this.extensionpath+'assets/voice-search.png"></span><input type="search" class="voice-srch-fld" nist-voice="true" id="uda-search-input" placeholder="Search..." />' +
+						'       <span id="uda-voice-icon-start" class="voice-voice-srch" nist-voice="true"><img nist-voice="true" src="'+this.extensionpath+'assets/voice-voice.png" /></span>'+
+						'       <span style="display:none;" class="voice-voice-srch" id="uda-voice-icon-stop" nist-voice="true"><img src="'+this.extensionpath+'assets/stop.png" nist-voice="true" /></span>' +
 						'	</div>'+
 						'   <div>'+
 								recbtn +
 						'   </div>'+
 						'   <div class="nist-clear"></div>'+
-						'   <div id="nistvoicesearchresults"></div>'+
+						'   <div id="uda-content-container"></div>'+
 						'	<br/><br/><br/>'+
-						'</div>';
-			jQuery("#voicemodalhtml").html(html);
+						'</div>';*/
+			jQuery("#voicemodalhtml").html(this.addRightPanel());
 			jQuery("#closenistmodal").click(function(){
 				UDAPluginSDK.closemodal();
 			});
 			jQuery("#voicesearch").click(function(){
 				UDAPluginSDK.searchinelastic();
 			});
-			jQuery("#voicesearchinput").keydown(function (e) {
+			jQuery("#uda-search-input").keydown(function (e) {
 				if (e.keyCode === 13) {
-					jQuery("#nistvoicesearchresults").html("");
+					jQuery("#uda-content-container").html("");
 					UDAPluginSDK.searchinelastic();
 					return false;
 				}
 			});
 			if(UDASpeechRecognitionAvailable){
-				jQuery("#nist-voice-icon-start").click(function () {
-					jQuery("#nistvoicesearchresults").html("");
+				jQuery("#uda-voice-icon-start").click(function () {
+					jQuery("#uda-content-container").html("");
 					UDAPluginSDK.recognition.start();
-					jQuery("#nist-voice-icon-start").hide();
-					jQuery("#nist-voice-icon-stop").show();
+					jQuery("#uda-voice-icon-start").hide();
+					jQuery("#uda-voice-icon-stop").show();
 				});
-				jQuery("#nist-voice-icon-stop").click(function () {
+				jQuery("#uda-voice-icon-stop").click(function () {
 					UDAPluginSDK.recognition.stop();
-					jQuery("#nist-voice-icon-stop").hide();
-					jQuery("#nist-voice-icon-start").show();
+					jQuery("#uda-voice-icon-stop").hide();
+					jQuery("#uda-voice-icon-start").show();
 				});
 			} else {
-				jQuery("#nist-voice-icon-start").hide();
-				jQuery("#nist-voice-icon-stop").hide();
+				jQuery("#uda-voice-icon-start").hide();
+				jQuery("#uda-voice-icon-stop").hide();
 			}
 			if(addnisticon) {
-				jQuery("#nistvoiceadvbtn").click(function () {
+				jQuery("#uda-advance-section").click(function () {
 					UDAPluginSDK.showadvancedhtml();
 				});
 			} else {
@@ -463,7 +527,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				jQuery("#nistBtn").hide();
 				jQuery('#nist-steps-content').show();
 				jQuery("#nistModal").css("display", "block");
-				var searchinput=jQuery("#voicesearchinput");
+				var searchinput=jQuery("#uda-search-input");
 				searchinput.val("");
 				if (focus) {
 					searchinput.focus();
@@ -477,8 +541,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 								childnode.classList.remove("container");
 							}
 							if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'nistBtn' && childnode.id !== 'nist-steps-content') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
-								if (childnode.classList && !childnode.classList.contains("nist-original-content")) {
-									childnode.classList.add("nist-original-content");
+								if (childnode.classList && !childnode.classList.contains("uda-original-content")) {
+									childnode.classList.add("uda-original-content");
 								}
 							}
 						});
@@ -491,10 +555,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		//closing the UDA screen
 		closemodal:function(){
-			jQuery("#nistvoiceadvbtn").show();
+			jQuery("#uda-advance-section").show();
 			jQuery('#nist-steps-content').hide();
 			jQuery("#nistModal").css("display","none");
-			jQuery("#nistvoicesearchresults").html("");
+			jQuery("#uda-content-container").html("");
 			jQuery("#nistrecordresults").html("");
 			this.recordedsequenceids=[];
 			jQuery("#nistBtn").show();
@@ -1675,7 +1739,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				return false;
 			}
 
-			jQuery("#nistvoicesearchresults").html("");
+			jQuery("#uda-content-container").html("");
 			var xhr = new XMLHttpRequest();
 			xhr.open("GET", this.apihost+"/clickevents/fetchrecorddata?start="+starttime+"&end="+endtime+"&sessionid="+UDAPluginSDK.sessionID+"&domain="+recordingcookiedata.domain, true);
 			xhr.onload = function(event){
@@ -1719,7 +1783,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.recordclick('recordingstop',recordingcookiedata.domain);
 
 			this.showhtml();
-			jQuery("#nistvoicesearchresults").html("");
+			jQuery("#uda-content-container").html("");
 			var xhr = new XMLHttpRequest();
 			xhr.open("GET", this.apihost+"/clickevents/fetchrecorddata?start="+recordingcookiedata.starttime+"&end="+recordingcookiedata.endtime+"&sessionid="+UDAPluginSDK.sessionID+"&domain="+recordingcookiedata.domain, true);
 			xhr.onload = function(event){
@@ -1754,18 +1818,18 @@ if (typeof UDAPluginSDK === 'undefined') {
 		addrecordresultshtml:function(data){
 			if(data.length>0) {
 				this.recordedsequenceids=data;
-				var html =  '   <div class="voice-suggesion-card">'+
+				/*var html =  '   <div class="voice-suggesion-card">'+
 							'		<div class="voice-card-left">'+
 							'			<h4>Recorded Sequence</h4>'+
-							'			<ul id="nist-recordresultrow" class="voice-sugggesion-bullet">'+
+							'			<ul id="uda-recorded-results" class="voice-sugggesion-bullet">'+
 							'			</ul>'+
 							'			<div>'+
-							'				<input id="nistsequencelabel" type="text" name="save-recrded" class="voice-save-recrded-inpt" placeholder="Enter label" nist-voice="true">'+
+							'				<input id="uda-recorded-name" type="text" name="uda-recorded-name" class="voice-save-recrded-inpt" placeholder="Enter label" nist-voice="true">'+
 							'				<button class="voice-cancel-btn" onclick="UDAPluginSDK.cancelrecordingsequence();">Cancel and exit</button> <button onclick="UDAPluginSDK.submitrecordedlabel();" class="voice-submit-btn">Submit</button>'+
 							'			</div>'+
 							'		</div>'+
-							'	</div>';
-				jQuery("#nistvoicesearchresults").html(html);
+							'	</div>';*/
+				jQuery("#uda-content-container").html(this.renderRecordedSequenceHtml());
 				for(var i=0;i<data.length;i++){
 					// modification for personal button addition
 					if(i===(data.length-1)){
@@ -1777,53 +1841,95 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.openmodal(false);
 			}
 		},
+		renderRecordedSequenceHtml: function(){
+			var html =	'<div class="uda-card-details">'
+						+'	<h5>Recorded Sequence</h5>'
+						+'	<hr>'
+						+'	<ul class="uda-recording" id="uda-recorded-results">'
+						+'	</ul>'
+						+'	<div class="uda-recording" style="text-align: center;">'
+						+'		<input type="text" id="uda-recorded-name" name="uda-save-recorded" class="uda-form-input" placeholder="Enter Label">'
+						+'		<p></p>'
+						+'		<button class="uda-record-btn" style="padding:8px 12px;" onclick="UDAPluginSDK.cancelrecordingsequence();">Cancel and Exit</button>'
+						+'		<button class="uda-tutorial-btn" onclick="UDAPluginSDK.submitrecordedlabel();">Submit</button>'
+						+'	</div>'
+						+'</div>';
+			return html;
+		},
 		//render record row html of the sequence
 		renderrecordresultrow:function(data,index, showPersonalButton=false){
 			index++;
-			let clickedname=((data.clickednodename.length>this.maxstringlength)?data.clickednodename.substr(0,this.maxstringlength)+'...':data.clickednodename);
+			// let clickedname=((data.clickednodename.length>this.maxstringlength)?data.clickednodename.substr(0,this.maxstringlength)+'...':data.clickednodename);
+			let nodeData = JSON.parse(data.objectdata);
+			var originalName = '';
+			if(nodeData.meta.hasOwnProperty('displayText') && nodeData.meta.displayText !== ''){
+				var clickedname = ((nodeData.meta.displayText.length > this.maxstringlength) ? nodeData.meta.displayText.substr(0, this.maxstringlength) + '...' : nodeData.meta.displayText);
+				originalName = nodeData.meta.displayText;
+			} else {
+				var clickedname = ((data.clickednodename.length > this.maxstringlength) ? data.clickednodename.substr(0, this.maxstringlength) + '...' : data.clickednodename);
+				originalName = data.clickednodename;
+			}
 			// let clickedname=data.clickednodename;
 			// personal button appearance
-			let nodeData = JSON.parse(data.objectdata);
 			if(showPersonalButton){
-				clickedname=((data.clickednodename.length>(this.maxstringlength-24))?data.clickednodename.substr(0,(this.maxstringlength-24))+'...':data.clickednodename);
+				// clickedname=((data.clickednodename.length>(this.maxstringlength-24))?data.clickednodename.substr(0,(this.maxstringlength-24))+'...':data.clickednodename);
+				var editBtn = 	'			<span style="position: absolute; top: 66px; left: 91px;">'
+								+'				<button class="uda-tutorial-btn" style="padding:2px;" type="button" id="uda-edit-clickedname"><img src="'+this.extensionpath+'images/icons/edit.png"></button>'
+								+'			</span>'
+								+'			<input type="text" id="uda-edited-name" name="uda-edited-name" class="uda-form-input" placeholder="Enter Name" value="'+originalName+'" style="display: none;">';
 				if(nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal){
 					// var personalHtml = '&nbsp; &nbsp; (personal)';
-					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" nist-voice="true" id="isPersonal" checked /> is personal';
+					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" checked /> <label style="font-size:14px;">Is personal</label>';
 				} else {
-					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" nist-voice="true" id="isPersonal" /> is personal';
+					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" /> <label style="font-size:14px;">Is personal</label>';
 				}
+				personalHtml += '			<span style="position: relative; top: 4px;"><img src="'+this.extensionpath+'images/icons/info.png"></span>';
 				// var personalHtml = '&nbsp; &nbsp;<input type="checkbox" nist-voice="true" id="isPersonal" /> is personal';
 				/*var personalElement = jQuery(personalHtml);
 				personalElement.click(function (){
 					UDAPluginSDK.personalNode(data);
 				});*/
-				var editBtn = "&nbsp; &nbsp;<button nist-voice='true' id='edit-list'>Edit</button>";
-				var html = '<li nist-voice="true" class="active">' +
-					clickedname + 
-					'</li>' + personalHtml + editBtn;
+				// var editBtn = "&nbsp; &nbsp;<button nist-voice='true' id='edit-list'>Edit</button>";
+				var html =	'<li><i>'
+								+clickedname
+								+'</i><br />'
+								+editBtn
+								+'<br />'
+								+personalHtml
+								+'<br />'
+							+'</li>';
 				var element = jQuery(html);
-				jQuery("#nist-recordresultrow").append(element);
+				jQuery("#uda-recorded-results").append(element);
 				jQuery("#isPersonal").click(function (){
 					UDAPluginSDK.personalNode(data);
 				});
-				var befroeEditText = $(".voice-card-left ul li:last").text();
-				jQuery("#edit-list").click(function (){
-					$(".voice-card-left ul li:last").css("border", "1px solid");
-					$(".voice-card-left ul li:last").attr("contenteditable","true");
+				var beforeEditText = originalName;
+				jQuery("#uda-edit-clickedname").click(function (){
+					// $(".voice-card-left ul li:last").css("border", "1px solid");
+					// $(".voice-card-left ul li:last").attr("contenteditable","true");
+					jQuery("#uda-edited-name").show();
 				});
-				$('.voice-card-left ul li:last').blur(function() {
-					$(".voice-card-left ul li:last").css("border", "0px solid");
-					if(befroeEditText.trim() != $(".voice-card-left ul li:last").text().trim()){
-						UDAPluginSDK.editAndSave(data);
+				jQuery('#uda-edited-name').blur(function() {
+					let editedName = $("#uda-edited-name").val();
+					if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
+						UDAPluginSDK.editAndSave(data, editedName);
+					}
+				});
+				jQuery("#uda-edited-name").keydown(function (e) {
+					if (e.keyCode === 13) {
+						let editedName = $("#uda-edited-name").val();
+						if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
+							UDAPluginSDK.editAndSave(data, editedName);
+						}
 					}
 				});
 			} else {
 				clickedname += (nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal)?'&nbsp; &nbsp;(personal)':'';
-				var html = '<li nist-voice="true" class="active">' +
+				var html = '<li><i>' +
 					clickedname +
-					'</li>';
+					'</i></li>';
 				var element = jQuery(html);
-				jQuery("#nist-recordresultrow").append(element);
+				jQuery("#uda-recorded-results").append(element);
 			}
 		},
 		//personal modification button clicked
@@ -1849,10 +1955,15 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.send(outputdata);
 		},
 		//edit modification button clicked
-		editAndSave:function(data){
-			if(data.hasOwnProperty("clickednodename")){
-				data.clickednodename = $("ul#nist-recordresultrow li:last").text();
-			} 
+		editAndSave:function(data, value){
+			let nodeData = JSON.parse(data.objectdata);
+			if(nodeData.meta && nodeData.meta.hasOwnProperty("displayText")){
+				nodeData.meta.displayText = value;
+			} else {
+				nodeData.meta = {};
+				nodeData.meta.displayText = value;
+			}
+			data.objectdata = JSON.stringify(nodeData);
 			var outputdata = JSON.stringify(data);
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", this.apihost+"/user/updateclickednode");
@@ -1864,12 +1975,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		// submit functionality of the recorded sequence.
 		submitrecordedlabel:function(submittype="recording"){
-			var sequencename=jQuery("#nistsequencelabel").val();
+			var sequencename=jQuery("#uda-recorded-name").val();
 			var sequencelistdata={name:"",domain:window.location.host,usersessionid:this.sessiondata.authdata.id.toString(),userclicknodelist:[].toString(),userclicknodesSet:this.recordedsequenceids,isValid:1,isIgnored:0};
 			if(submittype==='recording') {
 				if (sequencename === '') {
 					alert('Please enter proper label');
-					jQuery("#nistsequencelabel").focus();
+					jQuery("#uda-recorded-name").focus();
 					return false;
 				}
 			} else if(submittype === 'invalid'){
@@ -1896,7 +2007,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.setRequestHeader('Content-Type', 'application/json');
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					UDAPluginSDK.backtomodal();
+					// UDAPluginSDK.backtomodal();
+					UDAPluginSDK.showSelectedSequence(JSON.parse(xhr.response))
 				}
 			};
 			xhr.send(JSON.stringify(sequencelistdata));
@@ -1910,7 +2022,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(searchterm) {
 				var searchtext = searchterm;
 			} else {
-				var searchtext = jQuery("#voicesearchinput").val();
+				var searchtext = jQuery("#uda-search-input").val();
 			}
 			this.cancelrecordingsequence(false);
 
@@ -1940,7 +2052,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					UDAPluginSDK.searchInProgress=false;
-					UDAPluginSDK.renderelasticresults(JSON.parse(xhr.response));
+					UDAPluginSDK.renderSearchResults(JSON.parse(xhr.response));
 				} else {
 					UDAPluginSDK.searchInProgress=false;
 				}
@@ -1948,41 +2060,59 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.send();
 		},
 		//rendering search results screen
-		renderelasticresults:function(data){
+		renderSearchResults:function(data){
 			var matchnodes = data;
 			if(matchnodes.length>0){
-				jQuery("#nistvoicesearchresults").html('');
+				jQuery("#uda-content-container").html('');
 				for(var k=0;k<matchnodes.length;k++){
 					if(matchnodes[k].hasOwnProperty("deleted") && matchnodes[k].deleted===0) {
-						this.renderelasticresultrow(matchnodes[k], k);
+						this.renderSequenceRow(matchnodes[k], k);
 					} else if(!matchnodes[k].hasOwnProperty("deleted")) {
-						this.renderelasticresultrow(matchnodes[k], k);
+						this.renderSequenceRow(matchnodes[k], k);
 					}
 				}
+			} else {
+				this.renderEmptySearchResults();
 			}
 		},
+		// rendering empty results html
+		renderEmptySearchResults: function(){
+			jQuery("#uda-content-container").html(this.getEmptyResultsHtml());
+		},
+		getEmptyResultsHtml: function() {
+			let html =	'<div class="uda-no-results">'
+						+'	<svg class="uda-no-src" xmlns="http://www.w3.org/2000/svg" id="Capa_1" enable-background="new 0 0 512 512" height="512" viewBox="0 0 512 512" width="512"><g><path d="m317 90c-57.891 0-105 47.109-105 105s47.109 105 105 105 105-47.109 105-105-47.109-105-105-105zm51.211 135-21.211 21.211-30-30-30 30-21.211-21.211 30-30-30-30 21.211-21.211 30 30 30-30 21.211 21.211-30 30z"/><path d="m317 0c-107.52 0-195 87.48-195 195 0 48.371 17.809 92.591 47.08 126.709l-23.086 23.086-21.211-21.211-111.631 111.629c-17.534 17.534-17.534 46.069-.015 63.633l.015.015c17.549 17.52 46.124 17.523 63.633-.015l111.631-111.629-21.211-21.211 23.086-23.086c34.118 29.271 78.338 47.08 126.709 47.08 107.52 0 195-87.48 195-195s-87.48-195-195-195zm0 330c-74.443 0-135-60.557-135-135s60.557-135 135-135 135 60.557 135 135-60.557 135-135 135z"/></g></svg>'
+						+'	<p>No results found</p>'
+						+'</div>';
+			return html;
+		},
 		//rendering each row html of the search result
-		renderelasticresultrow:function(data){
+		renderSequenceRow:function(data){
+			var element=jQuery(this.getRowHtml(data));
+			element.click(function () {
+				UDAPluginSDK.showSelectedSequence(data);
+			});
+			jQuery("#uda-content-container").append(element);
+		},
+		//Sequence row html
+		getRowHtml: function(data){
 			var path='';
 			for(var i=0;i<data.userclicknodesSet.length;i++){
 				if(path!==''){
-					path +=' > ';
+					path +=' >> ';
 				}
 				path += data.userclicknodesSet[i].clickednodename;
 			}
-			var html=   '	<div nist-voice="true" class="voice-sugtns-list"><h4><a>'+data.name.toString()+'</a></h4>'+
-						'		<p>'+path+'</p>'+
-						'	</div>';
-			var element=jQuery(html);
-			element.click(function () {
-				UDAPluginSDK.elasticresultaction(data);
-			});
-			jQuery("#nistvoicesearchresults").append(element);
+			var html =	'<div class="uda-card">'
+						+'	<h5>'+data.name.toString()+'</h5>'
+						+'	<i>'+path+'</i>'
+						+'</div>';
+			return html;
 		},
 		//selected search result functionality
-		elasticresultaction:function(data){
+		showSelectedSequence:function(data){
 			var navcookiedata = {shownav: true, data: data, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
-			navcookiedata.searchterm=jQuery("#voicesearchinput").val();
+			navcookiedata.searchterm=jQuery("#uda-search-input").val();
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 			this.autoplay = false;
 			this.showselectedrow(data,data.id,true, navcookiedata);
@@ -1990,47 +2120,65 @@ if (typeof UDAPluginSDK === 'undefined') {
 			//add analtytics
 			this.recordclick('sequencerecord',data.name.toString(),data.id);
 		},
+		// renderSelectedSequenceHtml: fu
+		renderSelectedSequenceHtml: function (data, isPlaying){
+			var html =	'<div class="uda-card-details" style="border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;">'
+						+'    <div class="uda-card-btns">'
+						+'        <button class="uda-play-btn" '+((isPlaying)?'disabled="disabled"':'id="nist-autoplay"')+'><img src="'+this.extensionpath+'images/icons/play-icon.png"></button>'
+						+'        <button class="uda-stop-btn" '+((!isPlaying)?'disabled="disabled"':'id="nist-autoplay"')+'><img src="'+this.extensionpath+'images/icons/stop-icon.png"></button>'
+						+'    </div>'
+						+'    <div class="uda-card-right-dbl-arrow" id="uda-backto-search"><img src="'+this.extensionpath+'images/icons/right-duble-arrow.png"></div>'
+						+'    <h5>'+data.name.toString()+'</h5>'
+						+'    <hr>'
+						+'    <ul class="uda-suggestion-list" id="uda-sequence-steps">'
+						+'    </ul>'
+						+'</div>'
+						+'<div class="uda-details-footer">'
+						+'    <div class="uda-details-footer-left">'
+						+'        <img src="'+this.extensionpath+'images/icons/trash.png" class="uda-trash-img" id="uda-delete-sequence">'
+						+'    </div>'
+						+'    <div class="uda-details-footer-right">'
+						+'        <img src="'+this.extensionpath+'images/icons/like.png" class="uda-like-img" id="uda-upvote" style="border-left: 1px solid #dce0f7;">'
+						+'        <img src="'+this.extensionpath+'images/icons/dislike.png" class="uda-dislike-img" id="uda-downvote" style="border-right:none;">'
+						+'    </div>'
+						+'</div>';
+			return html;
+		},
 		//showing the selected search result screen functionality
 		showselectedrow:function(data,index,shownodelist=false, navcookiedata={}){
 			if(shownodelist && navcookiedata.data.userclicknodesSet.length===navcookiedata.navigateddata.length){
 				navcookiedata.navcompleted=true;
 			}
-			var playiconhtml =  '<div class="voice-autoplay-stop">';
+			var isPlaying =  false
 
 			if(shownodelist) {
 				if (navcookiedata.navcompleted) {
 					this.autoplayCompleted = true;
-					playiconhtml += '	<span><img nist-voice="true" id="nist-autoplay" src="' + this.extensionpath + 'assets/voice-play.png"></span>'+
-									'   <span><img nist-voice="true" src="' + this.extensionpath + 'assets/voice-stop-disable.png"></span>';
 				} else {
 					if(navcookiedata.autoplay) {
-						playiconhtml += '	<span><img nist-voice="true" src="' + this.extensionpath + 'assets/voice-play-disable.png"></span>'+
-										'	<span><img nist-voice="true" id="nist-autoplay" src="' + this.extensionpath + 'assets/voice-stop.png"></span>';
-					} else {
-						playiconhtml += '	<span><img nist-voice="true" id="nist-autoplay" src="' + this.extensionpath + 'assets/voice-play.png"></span>'+
-										'   <span><img nist-voice="true" src="' + this.extensionpath + 'assets/voice-stop-disable.png"></span>';
+						isPlaying = true;
 					}
-
 				}
 			}
-			playiconhtml   +=   '</div>';
-			var html =  '<div class="voice-suggesion-card">'+
+
+			/*var html =  '<div class="voice-suggesion-card">'+
 						'	<div class="voice-card-left">'+
-						'		<div class="voice-back-btn"><img nist-voice="true" id="backtosearch" src="'+this.extensionpath+'assets/voice-back.png"></div>'+
+						'		<div class="voice-back-btn"><img nist-voice="true" id="uda-backto-search" src="'+this.extensionpath+'assets/voice-back.png"></div>'+
 						'       <div class="voice-feedback-btns">' +
-						'		    <img nist-voice="true" id="nist-upvote" class="voice-like-violet" src="'+this.extensionpath+'assets/voice-like.png">'+
-						'		    <img nist-voice="true" id="nist-downvote" class="voice-dislike-violet" src="'+this.extensionpath+'assets/voice-dislike.png">'+
-						'		    <img nist-voice="true" id="deletesequence" class="voice-delete-violet" src="'+this.extensionpath+'assets/voice-delete.png">'+
+						'		    <img nist-voice="true" id="uda-upvote" class="voice-like-violet" src="'+this.extensionpath+'assets/voice-like.png">'+
+						'		    <img nist-voice="true" id="uda-downvote" class="voice-dislike-violet" src="'+this.extensionpath+'assets/voice-dislike.png">'+
+						'		    <img nist-voice="true" id="uda-delete-sequence" class="voice-delete-violet" src="'+this.extensionpath+'assets/voice-delete.png">'+
 						'       </div>'+
 						'		<h4>'+data.name.toString()+'</h4>'+
-						'		<ul class="voice-sugggesion-bullet" id="nistvoicesteps">'+
+						'		<ul class="voice-sugggesion-bullet" id="uda-sequence-steps">'+
 						'		</ul>'+
 						'	</div>'+
 						'   <div class="nist-clear"></div>'+
 						'</div>'+
-						playiconhtml;
-			var element=jQuery(html);
-			jQuery("#nistvoicesearchresults").html(element);
+						playiconhtml;*/
+
+			var element=jQuery(this.renderSelectedSequenceHtml(data, isPlaying));
+			jQuery("#uda-content-container").html(element);
 			var performactionnode=false;
 			for(var i=0;i<data.userclicknodesSet.length;i++){
 				var visited = -1;
@@ -2042,21 +2190,21 @@ if (typeof UDAPluginSDK === 'undefined') {
 						performactionnode=data.userclicknodesSet[i];
 					}
 				}
-				jQuery("#nistvoicesteps").append(this.rendersteps(data.userclicknodesSet[i], visited, navcookiedata));
+				jQuery("#uda-sequence-steps").append(this.rendersteps(data.userclicknodesSet[i], visited, navcookiedata));
 			}
 
 			if(this.sessionID===data.usersessionid || this.sessiondata.authdata.id===data.usersessionid){
-				jQuery("#deletesequence").click(function () {
-					UDAPluginSDK.deletesequencelist(data);
+				jQuery("#uda-delete-sequence").click(function () {
+					UDAPluginSDK.deleteSequence(data);
 				});
 			} else {
-				jQuery("#deletesequence").hide();
+				jQuery("#uda-delete-sequence").hide();
 			}
 
-			jQuery('#nist-upvote').click(function () {
+			jQuery('#uda-upvote').click(function () {
 				UDAPluginSDK.addvote("up",data);
 			});
-			jQuery('#nist-downvote').click(function () {
+			jQuery('#uda-downvote').click(function () {
 				UDAPluginSDK.addvote("down",data);
 			});
 
@@ -2074,7 +2222,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.autoplayPaused = false;
 				this.toggleautoplay(navcookiedata);
 			}
-			jQuery("#backtosearch").click(function () {
+			jQuery("#uda-backto-search").click(function () {
 				// UDAPluginSDK.toggleautoplay(navcookiedata);
 				UDAPluginSDK.autoplay = false;
 				UDAPluginSDK.searchInProgress=false;
@@ -2087,17 +2235,22 @@ if (typeof UDAPluginSDK === 'undefined') {
 		rendersteps:function(data,visited=false, navcookiedata={}){
 			// adding elipses if textlength is greater than specified characters
 			// display personal tag for the personal nodes
+			let clickedname = '';
 			let nodeData = JSON.parse(data.objectdata);
-			let clickedname = ((data.clickednodename.length > this.maxstringlength) ? data.clickednodename.substr(0, this.maxstringlength) + '...' : data.clickednodename);
+			if(nodeData.meta.hasOwnProperty('displayText') && nodeData.meta.displayText !== ''){
+				clickedname = ((nodeData.meta.displayText.length > this.maxstringlength) ? nodeData.meta.displayText.substr(0, this.maxstringlength) + '...' : nodeData.meta.displayText);
+			} else {
+				clickedname = ((data.clickednodename.length > this.maxstringlength) ? data.clickednodename.substr(0, this.maxstringlength) + '...' : data.clickednodename);
+			}
 			if(nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal){
 				clickedname=((data.clickednodename.length>(this.maxstringlength-26))?data.clickednodename.substr(0,(this.maxstringlength-26))+'... (personal)':data.clickednodename);
 			}
 			// var clickedtext = '<pre>'+clickedname+'</pre>';
 			var clickedtext = clickedname;
 			if(visited>-1) {
-				var template = jQuery("<li nist-voice=\"true\" class='active'>" + clickedtext + "</li>");
+				var template = jQuery("<li class='completed'><i>" + clickedtext + "</i></li>");
 			} else {
-				var template = jQuery("<li nist-voice=\"true\" class='inactive'>" + clickedtext + "</li>");
+				var template = jQuery("<li class='inactive'><i>" + clickedtext + "</i></li>");
 			}
 			if(visited === -1) {
 				template.click(function () {
@@ -2463,7 +2616,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 		},
 		//delete sequence list functionality for the owner
-		deletesequencelist:function(data){
+		deleteSequence:function(data){
 			var confirmdialog=confirm("Are you sure want to delete "+data.name);
 			if(confirmdialog === true){
 				UDAPluginSDK.confirmdelete(data);
@@ -2536,7 +2689,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata1));
 			this.autoplay=false;
-			jQuery("#voicesearchinput").val(navcookiedata.searchterm);
+			jQuery("#uda-search-input").val(navcookiedata.searchterm);
 
 			//add analtytics
 			this.recordclick('back',navcookiedata.data.name.toString(),navcookiedata.data.id);
@@ -2551,18 +2704,18 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.send(JSON.stringify(senddata));
 		},
 		showadvancedhtml:function(){
-			jQuery("#nistvoiceadvbtn").hide();
-			jQuery("#nistvoicesearchresults").html('');
-			var html=   '<div class="voice-modalback-btn"><img nist-voice="true" id="nistvoiceback" src="'+this.extensionpath+'assets/voice-back.png"></div><br />'+
+			jQuery("#uda-advance-section").hide();
+			jQuery("#uda-content-container").html('');
+			/*var html=   '<div class="voice-modalback-btn"><img nist-voice="true" id="nistvoiceback" src="'+this.extensionpath+'assets/voice-back.png"></div><br />'+
 						'<div class="nist-clear"></div>'+
 						'   <div class="voice-suggesion-card">' +
 						'		<div class="voice-card-left">' +
-						'			<h4 class="voice-card-noborder">Create your own action <button nist-voice="true" id="nistvoicerecbtn" class="voice-modal-btn"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-record.png"> <span nist-voice="true">Rec</span></button></h4>' +
+						'			<h4 class="voice-card-noborder">Create your own action <button nist-voice="true" id="uda-enable-record" class="voice-modal-btn"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-record.png"> <span nist-voice="true">Rec</span></button></h4>' +
 						'       </div>'+
-						'   </div>';
-						// '<div class="name-heading"><h2 nist-voice="true">Create your own action <button nist-voice="true" id="nistvoicerecbtn" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-record.png"> <span nist-voice="true">Rec</span></button></h2><br /></div>';
-			jQuery("#nistvoicesearchresults").append(html);
-			jQuery("#nistvoicerecbtn").click(function () {
+						'   </div>';*/
+						// '<div class="name-heading"><h2 nist-voice="true">Create your own action <button nist-voice="true" id="uda-enable-record" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-record.png"> <span nist-voice="true">Rec</span></button></h2><br /></div>';
+			jQuery("#uda-content-container").append(this.getAdvancedHtml());
+			jQuery("#uda-enable-record").click(function () {
 				UDAPluginSDK.gettimestamp("start");
 			});
 			jQuery("#nistvoiceback").click(function () {
@@ -2575,7 +2728,17 @@ if (typeof UDAPluginSDK === 'undefined') {
 					UDAPluginSDK.showsuggestedhtml(JSON.parse(xhr.response));
 				}
 			};
-			xhr.send();
+			// xhr.send();
+		},
+		// advanced html
+		getAdvancedHtml: function (){
+			var html =	'<div class="uda-card-details">'
+							+'<div><button class="uda-tutorial-btn" type="button">Tutorial</button></div>'
+							+'<hr>'
+							+'<h5>Create your own action</h5>'
+							+'<div><button class="uda-record-btn" id="uda-enable-record"><img src="'+this.extensionpath+'images/icons/new-record.png" width="23px" height="23px"> Rec</button></div>'
+						+'</div>';
+			return html;
 		},
 		showsuggestedhtml:function(data){
 			if(data.length>0) {
@@ -2583,24 +2746,24 @@ if (typeof UDAPluginSDK === 'undefined') {
 				var html = '   <div class="voice-suggesion-card">' +
 					'		<div class="voice-card-left">' +
 					'			<h4>Our AI detected this sequence. <br /> Do you want to name it? <br /><span style="color:#ff4800;font-weight:bold;">(Alpha version: Not reliable)</span></h4>' +
-					'			<ul id="nist-recordresultrow" class="voice-sugggesion-bullet">' +
+					'			<ul id="uda-recorded-results" class="voice-sugggesion-bullet">' +
 					'			</ul>' +
 					'			<div>' +
-					'				<input id="nistsequencelabel" type="text" name="save-recrded" class="voice-save-recrded-inpt" placeholder="Enter label" nist-voice="true">' +
+					'				<input id="uda-recorded-name" type="text" name="uda-recorded-name" class="voice-save-recrded-inpt" placeholder="Enter label" nist-voice="true">' +
 					'				<button onclick="UDAPluginSDK.submitrecordedlabel(\'recording\');" class="voice-submit-btn">Submit</button><button class="voice-cancel-btn" onclick="UDAPluginSDK.submitrecordedlabel(\'invalid\');">Invalid Sequence</button><button class="voice-cancel-btn" onclick="UDAPluginSDK.submitrecordedlabel(\'ignore\');">Ignore</button>' +
 					'			</div>' +
 					'		</div>' +
 					'	</div>';
 
-				jQuery("#nistvoicesearchresults").append(html);
+				jQuery("#uda-content-container").append(html);
 				for (var i = 0; i < data.length; i++) {
 					this.renderrecordresultrow(data[i], i);
 				}
 			}
 		},
 		backtomodal:function(){
-			jQuery("#nistvoiceadvbtn").show();
-			jQuery("#nistvoicesearchresults").html('');
+			jQuery("#uda-advance-section").show();
+			jQuery("#uda-content-container").html('');
 		}
 	};
 	UDAPluginSDK.init();
