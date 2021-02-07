@@ -110,7 +110,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		forceReindex: false,
 		searchText: null,
 		searchInProgress: false,
-		ignoreNodes: ['ng-dropdown-panel','ckeditor','fusioncharts','ngb-datepicker','ngx-daterangepicker-material'],
+		ignoreNodes: ['ng-dropdown-panel','ckeditor','fusioncharts','ngb-datepicker','ngx-daterangepicker-material','uda-panel'],
 		cancelRecordingDuringRecordingNodes: ['ngb-datepicker'],
 		tooltipDisplayedNodes: [],
 		//replayvariables
@@ -219,7 +219,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		otherscripts: function(){
 			this.totalotherScripts=1;
-			this.loadCssScript(this.extensionpath+"css/extension.css");
+			// this.loadCssScript(this.extensionpath+"css/extension.css");
+			this.loadCssScript(this.extensionpath+"css/uda-v1.css");
 			this.loadOtherScript(this.extensionpath+"js/domJSON.js");
 			if(this.inarray(window.location.host,this.addcustomcssdomains) !== -1){
 				this.loadCssScript(this.extensionpath+"css/"+window.location.host+".css");
@@ -297,7 +298,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						var current = event.resultIndex;
 						// Get a transcript of what was said.
 						var transcript = event.results[current][0].transcript;
-						jQuery("#voicesearchinput").val(transcript);
+						jQuery("#uda-search-input").val(transcript);
 						UDAPluginSDK.searchinelastic();
 					}
 				};
@@ -382,7 +383,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		addbuttonhtml:function(){
 			jQuery("#nistBtn").unbind("click").html("");
-			var buttonhtml='<img src="'+this.extensionpath+'assets/uda-logo.png" width="50px" height="50px" nist-voice="true">';
+			// var buttonhtml='<img src="'+this.extensionpath+'assets/uda-logo.png" width="50px" height="50px" nist-voice="true">';
+			var buttonhtml	=	'<div class="uda-nistapp-logo">'
+								+'	<div class="uda-icon" style="text-align: center;"><img src="'+this.extensionpath+'images/icons/nist-logo.png"><p style="padding:0; margin:0px;">Assist</p><span><img src="'+this.extensionpath+'images/icons/backarrow-orange.png"></span></div>'
+								+'</div>';
 			var modal =jQuery("#nistBtn");
 			modal.append(buttonhtml);
 			modal.click(function () {
@@ -392,8 +396,65 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.showhtml();
 			}
 		},
+		addRightPanel: function() {
+			var template = this.rightPanelHtml();
+			return template;
+		},
+		rightPanelHtml: function(){
+			var html = 	'<uda-panel>'
+						+'<div class="uda-page-right-bar">'
+						+'<div>'
+							+'<div class="uda-ribbon-arrow" id="closenistmodal"><img src="'+this.extensionpath+'images/icons/right-arrow.png"></div>'
+							+'<div class="uda-icon-txt">'
+								+'<img src="'+this.extensionpath+'images/icons/nist-logo.png"><span class="uda-help-bg-tooltip">Need Help?</span>'
+							+'</div>'
+							+'<div class="uda-container" style="text-align: center; margin-top: 10px;">'
+								+'<div class="uda-search-div">'
+									+'<button class="uda-search-btn"><img src="'+this.extensionpath+'images/icons/search-icon.png"></button>'
+									+'<input type="text" name="search" class="uda-input-cntrl" placeholder="search..." id="uda-search-input" />'
+									+'<button class="uda-search-btn" style="border-radius: 0px 5px 5px 0px;" id="uda-voice-icon-start">'
+									+'	<img src="'+this.extensionpath+'images/icons/mic-icon.png">'
+									+'</button>'
+									+'<button class="uda-search-btn" style="border-radius: 0px 5px 5px 0px; display:none;" id="uda-voice-icon-stop">'
+									+'	<img src="'+this.extensionpath+'images/icons/color-stop-btn.png">'
+									+'</button>'
+								+'</div>'
+							+'</div>'
+						+'</div>'
+						+'<hr>'
+						+'<div class="uda-container uda-clear uda-cards-scroller" id="uda-content-container">'
+						+'</div>'
+						+'<div>'
+							+'<div class="uda-footer-bar">'
+								+'<div class="uda-container">'
+									+'<div class="uda-dropdown">'
+										+'<button class="uda-advanced-btn">'
+											+'<img src="'+this.extensionpath+'images/icons/advanced-icon.png"><span>Advanced</span>'
+										+'</button>'
+										+'<div class="uda-advanced-btn-content">'
+											+'<a id="uda-advance-section"><img src="'+this.extensionpath+'images/icons/new-record.png" width="23px" height="23px"><span> New Record</span></a>'
+											// +'<a><img src="'+this.extensionpath+'images/icons/new-record.png" width="23px" height="23px"><span> New Record</span></a>'
+										+'</div>'
+									+'</div>'
+								+'</div>'
+								+'<br>'
+								+'<div class="uda-container" style="border-top:1px solid #969696; margin-top: 30px;">'
+									+'<div class="uda-footer-left">Copyrights Reserved 2021.</div>'
+									+'<div class="uda-footer-right" style="padding-top:5px; text-align:right;">'
+										+'<a href="#">Know More</a>'
+										+'<img src="'+this.extensionpath+'images/icons/nist-logo.png" width="15px" height="15px;">'
+									+'</div>'
+								+'</div>'
+							+'</div>'
+						+'</div>'
+					+'</div>'
+					+'</uda-panel>';
+
+			return html;
+		},
 		addvoicesearchmodal:function(addnisticon=true){
-			var recbtn ='	   <button nist-voice="true" id="nistvoiceadvbtn" class="voice-record-img"><span nist-voice="true">Advanced</span></button>';
+			/*
+			var recbtn ='	   <button nist-voice="true" id="uda-advance-section" class="voice-record-img"><span nist-voice="true">Advanced</span></button>';
 
 			if(!addnisticon){
 				recbtn ='	   <button nist-voice="true" id="nistvoicerecstpbtn" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-stop.png"> <span nist-voice="true">Stop</span></button>';
@@ -406,17 +467,18 @@ if (typeof UDAPluginSDK === 'undefined') {
 						'   </div>'+
 						'	<div class="voice-red-hr-line"></div>'+
 						'	<div class="voice-srch-bg">'+
-						'		<span class="voice-srch"><img src="'+this.extensionpath+'assets/voice-search.png"></span><input type="search" class="voice-srch-fld" nist-voice="true" id="voicesearchinput" placeholder="Search..." />' +
-						'       <span id="nist-voice-icon-start" class="voice-voice-srch" nist-voice="true"><img nist-voice="true" src="'+this.extensionpath+'assets/voice-voice.png" /></span>'+
-						'       <span style="display:none;" class="voice-voice-srch" id="nist-voice-icon-stop" nist-voice="true"><img src="'+this.extensionpath+'assets/stop.png" nist-voice="true" /></span>' +
+						'		<span class="voice-srch"><img src="'+this.extensionpath+'assets/voice-search.png"></span><input type="search" class="voice-srch-fld" nist-voice="true" id="uda-search-input" placeholder="Search..." />' +
+						'       <span id="uda-voice-icon-start" class="voice-voice-srch" nist-voice="true"><img nist-voice="true" src="'+this.extensionpath+'assets/voice-voice.png" /></span>'+
+						'       <span style="display:none;" class="voice-voice-srch" id="uda-voice-icon-stop" nist-voice="true"><img src="'+this.extensionpath+'assets/stop.png" nist-voice="true" /></span>' +
 						'	</div>'+
 						'   <div>'+
 								recbtn +
 						'   </div>'+
 						'   <div class="nist-clear"></div>'+
-						'   <div id="nistvoicesearchresults"></div>'+
+						'   <div id="uda-content-container"></div>'+
 						'	<br/><br/><br/>'+
-						'</div>';
+						'</div>';*/
+			var html = this.addRightPanel();
 			jQuery("#voicemodalhtml").html(html);
 			jQuery("#closenistmodal").click(function(){
 				UDAPluginSDK.closemodal();
@@ -424,31 +486,31 @@ if (typeof UDAPluginSDK === 'undefined') {
 			jQuery("#voicesearch").click(function(){
 				UDAPluginSDK.searchinelastic();
 			});
-			jQuery("#voicesearchinput").keydown(function (e) {
+			jQuery("#uda-search-input").keydown(function (e) {
 				if (e.keyCode === 13) {
-					jQuery("#nistvoicesearchresults").html("");
+					jQuery("#uda-content-container").html("");
 					UDAPluginSDK.searchinelastic();
 					return false;
 				}
 			});
 			if(UDASpeechRecognitionAvailable){
-				jQuery("#nist-voice-icon-start").click(function () {
-					jQuery("#nistvoicesearchresults").html("");
+				jQuery("#uda-voice-icon-start").click(function () {
+					jQuery("#uda-content-container").html("");
 					UDAPluginSDK.recognition.start();
-					jQuery("#nist-voice-icon-start").hide();
-					jQuery("#nist-voice-icon-stop").show();
+					jQuery("#uda-voice-icon-start").hide();
+					jQuery("#uda-voice-icon-stop").show();
 				});
-				jQuery("#nist-voice-icon-stop").click(function () {
+				jQuery("#uda-voice-icon-stop").click(function () {
 					UDAPluginSDK.recognition.stop();
-					jQuery("#nist-voice-icon-stop").hide();
-					jQuery("#nist-voice-icon-start").show();
+					jQuery("#uda-voice-icon-stop").hide();
+					jQuery("#uda-voice-icon-start").show();
 				});
 			} else {
-				jQuery("#nist-voice-icon-start").hide();
-				jQuery("#nist-voice-icon-stop").hide();
+				jQuery("#uda-voice-icon-start").hide();
+				jQuery("#uda-voice-icon-stop").hide();
 			}
 			if(addnisticon) {
-				jQuery("#nistvoiceadvbtn").click(function () {
+				jQuery("#uda-advance-section").click(function () {
 					UDAPluginSDK.showadvancedhtml();
 				});
 			} else {
@@ -463,7 +525,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				jQuery("#nistBtn").hide();
 				jQuery('#nist-steps-content').show();
 				jQuery("#nistModal").css("display", "block");
-				var searchinput=jQuery("#voicesearchinput");
+				var searchinput=jQuery("#uda-search-input");
 				searchinput.val("");
 				if (focus) {
 					searchinput.focus();
@@ -491,10 +553,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		//closing the UDA screen
 		closemodal:function(){
-			jQuery("#nistvoiceadvbtn").show();
+			jQuery("#uda-advance-section").show();
 			jQuery('#nist-steps-content').hide();
 			jQuery("#nistModal").css("display","none");
-			jQuery("#nistvoicesearchresults").html("");
+			jQuery("#uda-content-container").html("");
 			jQuery("#nistrecordresults").html("");
 			this.recordedsequenceids=[];
 			jQuery("#nistBtn").show();
@@ -1675,7 +1737,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				return false;
 			}
 
-			jQuery("#nistvoicesearchresults").html("");
+			jQuery("#uda-content-container").html("");
 			var xhr = new XMLHttpRequest();
 			xhr.open("GET", this.apihost+"/clickevents/fetchrecorddata?start="+starttime+"&end="+endtime+"&sessionid="+UDAPluginSDK.sessionID+"&domain="+recordingcookiedata.domain, true);
 			xhr.onload = function(event){
@@ -1719,7 +1781,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.recordclick('recordingstop',recordingcookiedata.domain);
 
 			this.showhtml();
-			jQuery("#nistvoicesearchresults").html("");
+			jQuery("#uda-content-container").html("");
 			var xhr = new XMLHttpRequest();
 			xhr.open("GET", this.apihost+"/clickevents/fetchrecorddata?start="+recordingcookiedata.starttime+"&end="+recordingcookiedata.endtime+"&sessionid="+UDAPluginSDK.sessionID+"&domain="+recordingcookiedata.domain, true);
 			xhr.onload = function(event){
@@ -1765,7 +1827,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 							'			</div>'+
 							'		</div>'+
 							'	</div>';
-				jQuery("#nistvoicesearchresults").html(html);
+				jQuery("#uda-content-container").html(html);
 				for(var i=0;i<data.length;i++){
 					// modification for personal button addition
 					if(i===(data.length-1)){
@@ -1896,7 +1958,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.setRequestHeader('Content-Type', 'application/json');
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					UDAPluginSDK.backtomodal();
+					// UDAPluginSDK.backtomodal();
+					console.log(xhr);
 				}
 			};
 			xhr.send(JSON.stringify(sequencelistdata));
@@ -1910,7 +1973,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(searchterm) {
 				var searchtext = searchterm;
 			} else {
-				var searchtext = jQuery("#voicesearchinput").val();
+				var searchtext = jQuery("#uda-search-input").val();
 			}
 			this.cancelrecordingsequence(false);
 
@@ -1940,7 +2003,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					UDAPluginSDK.searchInProgress=false;
-					UDAPluginSDK.renderelasticresults(JSON.parse(xhr.response));
+					UDAPluginSDK.renderSearchResults(JSON.parse(xhr.response));
 				} else {
 					UDAPluginSDK.searchInProgress=false;
 				}
@@ -1948,41 +2011,59 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.send();
 		},
 		//rendering search results screen
-		renderelasticresults:function(data){
+		renderSearchResults:function(data){
 			var matchnodes = data;
 			if(matchnodes.length>0){
-				jQuery("#nistvoicesearchresults").html('');
+				jQuery("#uda-content-container").html('');
 				for(var k=0;k<matchnodes.length;k++){
 					if(matchnodes[k].hasOwnProperty("deleted") && matchnodes[k].deleted===0) {
-						this.renderelasticresultrow(matchnodes[k], k);
+						this.renderSequenceRow(matchnodes[k], k);
 					} else if(!matchnodes[k].hasOwnProperty("deleted")) {
-						this.renderelasticresultrow(matchnodes[k], k);
+						this.renderSequenceRow(matchnodes[k], k);
 					}
 				}
+			} else {
+				this.renderEmptySearchResults();
 			}
 		},
+		// rendering empty results html
+		renderEmptySearchResults: function(){
+			jQuery("#uda-content-container").html(this.getEmptyResultsHtml());
+		},
+		getEmptyResultsHtml: function() {
+			let html =	'<div class="uda-no-results">'
+						+'	<svg class="uda-no-src" xmlns="http://www.w3.org/2000/svg" id="Capa_1" enable-background="new 0 0 512 512" height="512" viewBox="0 0 512 512" width="512"><g><path d="m317 90c-57.891 0-105 47.109-105 105s47.109 105 105 105 105-47.109 105-105-47.109-105-105-105zm51.211 135-21.211 21.211-30-30-30 30-21.211-21.211 30-30-30-30 21.211-21.211 30 30 30-30 21.211 21.211-30 30z"/><path d="m317 0c-107.52 0-195 87.48-195 195 0 48.371 17.809 92.591 47.08 126.709l-23.086 23.086-21.211-21.211-111.631 111.629c-17.534 17.534-17.534 46.069-.015 63.633l.015.015c17.549 17.52 46.124 17.523 63.633-.015l111.631-111.629-21.211-21.211 23.086-23.086c34.118 29.271 78.338 47.08 126.709 47.08 107.52 0 195-87.48 195-195s-87.48-195-195-195zm0 330c-74.443 0-135-60.557-135-135s60.557-135 135-135 135 60.557 135 135-60.557 135-135 135z"/></g></svg>'
+						+'	<p>No results found</p>'
+						+'</div>';
+			return html;
+		},
 		//rendering each row html of the search result
-		renderelasticresultrow:function(data){
+		renderSequenceRow:function(data){
+			var element=jQuery(this.getRowHtml(data));
+			element.click(function () {
+				UDAPluginSDK.showSelectedSequence(data);
+			});
+			jQuery("#uda-content-container").append(element);
+		},
+		//Sequence row html
+		getRowHtml: function(data){
 			var path='';
 			for(var i=0;i<data.userclicknodesSet.length;i++){
 				if(path!==''){
-					path +=' > ';
+					path +=' >> ';
 				}
 				path += data.userclicknodesSet[i].clickednodename;
 			}
-			var html=   '	<div nist-voice="true" class="voice-sugtns-list"><h4><a>'+data.name.toString()+'</a></h4>'+
-						'		<p>'+path+'</p>'+
-						'	</div>';
-			var element=jQuery(html);
-			element.click(function () {
-				UDAPluginSDK.elasticresultaction(data);
-			});
-			jQuery("#nistvoicesearchresults").append(element);
+			var html =	'<div class="uda-card">'
+						+'	<h5>'+data.name.toString()+'</h5>'
+						+'	<i>'+path+'</i>'
+						+'</div>';
+			return html;
 		},
 		//selected search result functionality
-		elasticresultaction:function(data){
+		showSelectedSequence:function(data){
 			var navcookiedata = {shownav: true, data: data, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
-			navcookiedata.searchterm=jQuery("#voicesearchinput").val();
+			navcookiedata.searchterm=jQuery("#uda-search-input").val();
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 			this.autoplay = false;
 			this.showselectedrow(data,data.id,true, navcookiedata);
@@ -2030,7 +2111,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						'</div>'+
 						playiconhtml;
 			var element=jQuery(html);
-			jQuery("#nistvoicesearchresults").html(element);
+			jQuery("#uda-content-container").html(element);
 			var performactionnode=false;
 			for(var i=0;i<data.userclicknodesSet.length;i++){
 				var visited = -1;
@@ -2536,7 +2617,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata1));
 			this.autoplay=false;
-			jQuery("#voicesearchinput").val(navcookiedata.searchterm);
+			jQuery("#uda-search-input").val(navcookiedata.searchterm);
 
 			//add analtytics
 			this.recordclick('back',navcookiedata.data.name.toString(),navcookiedata.data.id);
@@ -2551,18 +2632,18 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.send(JSON.stringify(senddata));
 		},
 		showadvancedhtml:function(){
-			jQuery("#nistvoiceadvbtn").hide();
-			jQuery("#nistvoicesearchresults").html('');
-			var html=   '<div class="voice-modalback-btn"><img nist-voice="true" id="nistvoiceback" src="'+this.extensionpath+'assets/voice-back.png"></div><br />'+
+			jQuery("#uda-advance-section").hide();
+			jQuery("#uda-content-container").html('');
+			/*var html=   '<div class="voice-modalback-btn"><img nist-voice="true" id="nistvoiceback" src="'+this.extensionpath+'assets/voice-back.png"></div><br />'+
 						'<div class="nist-clear"></div>'+
 						'   <div class="voice-suggesion-card">' +
 						'		<div class="voice-card-left">' +
-						'			<h4 class="voice-card-noborder">Create your own action <button nist-voice="true" id="nistvoicerecbtn" class="voice-modal-btn"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-record.png"> <span nist-voice="true">Rec</span></button></h4>' +
+						'			<h4 class="voice-card-noborder">Create your own action <button nist-voice="true" id="uda-enable-record" class="voice-modal-btn"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-record.png"> <span nist-voice="true">Rec</span></button></h4>' +
 						'       </div>'+
-						'   </div>';
-						// '<div class="name-heading"><h2 nist-voice="true">Create your own action <button nist-voice="true" id="nistvoicerecbtn" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-record.png"> <span nist-voice="true">Rec</span></button></h2><br /></div>';
-			jQuery("#nistvoicesearchresults").append(html);
-			jQuery("#nistvoicerecbtn").click(function () {
+						'   </div>';*/
+						// '<div class="name-heading"><h2 nist-voice="true">Create your own action <button nist-voice="true" id="uda-enable-record" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-record.png"> <span nist-voice="true">Rec</span></button></h2><br /></div>';
+			jQuery("#uda-content-container").append(this.getAdvancedHtml());
+			jQuery("#uda-enable-record").click(function () {
 				UDAPluginSDK.gettimestamp("start");
 			});
 			jQuery("#nistvoiceback").click(function () {
@@ -2576,6 +2657,16 @@ if (typeof UDAPluginSDK === 'undefined') {
 				}
 			};
 			xhr.send();
+		},
+		// advanced html
+		getAdvancedHtml: function (){
+			var html =	'<div class="uda-card-details">'
+							+'<div><button class="uda-tutorial-btn" type="button">Tutorial</button></div>'
+							+'<hr>'
+							+'<h5>Create your own action</h5>'
+							+'<div><button class="uda-record-btn" id="uda-enable-record"><img src="'+this.extensionpath+'images/icons/new-record.png" width="23px" height="23px"> Rec</button></div>'
+						+'</div>';
+			return html;
 		},
 		showsuggestedhtml:function(data){
 			if(data.length>0) {
@@ -2592,15 +2683,15 @@ if (typeof UDAPluginSDK === 'undefined') {
 					'		</div>' +
 					'	</div>';
 
-				jQuery("#nistvoicesearchresults").append(html);
+				jQuery("#uda-content-container").append(html);
 				for (var i = 0; i < data.length; i++) {
 					this.renderrecordresultrow(data[i], i);
 				}
 			}
 		},
 		backtomodal:function(){
-			jQuery("#nistvoiceadvbtn").show();
-			jQuery("#nistvoicesearchresults").html('');
+			jQuery("#uda-advance-section").show();
+			jQuery("#uda-content-container").html('');
 		}
 	};
 	UDAPluginSDK.init();

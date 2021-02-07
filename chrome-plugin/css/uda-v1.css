@@ -1,0 +1,486 @@
+.uda-nistapp-logo {
+    cursor: pointer;
+    width: 75px;
+    height: 80px;
+    background-color: #fff;
+    position: absolute;
+    top: 40%;
+    right: 0;
+    padding: 1px;
+    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    z-index: 9999;
+}
+
+.uda-icon span {
+    position: relative;
+    right: 0;
+    left: 30px;
+    top: -41px;
+}
+
+.uda-container {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.uda-mrng {
+    margin: 10px;
+}
+
+.uda-page-right-bar {
+    width: 23%;
+    height: 100%;
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: #ffffff;
+    box-shadow: 0 -5px 5px 5px #e0e0e0;
+    z-index: 9999;
+}
+
+.uda-ribbon-arrow {
+    width: 40px;
+    height: 35px;
+    background-color: #303f9f;
+    border-radius: 0 37% 37% 0;
+    position: absolute;
+    top: 1%;
+    left: -2%;
+    box-shadow: 0px 1px 7px 2px #e0e0e0;
+    text-align: center;
+    cursor: pointer;
+}
+
+.uda-ribbon-arrow img {
+    padding: 10px;
+}
+
+.uda-icon-txt {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.uda-icon-txt img {
+    cursor: pointer;
+}
+
+.uda-help-bg-tooltip {
+    background-color: #ff5722;
+    padding: 5px 22px;
+    color: #fff;
+    font-weight: 500;
+    border-radius: 5px;
+    position: relative;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    margin-left: 20px;
+    top: -11px;
+}
+
+.uda-help-bg-tooltip:after {
+    content: "";
+    position: absolute;
+    right: 100%;
+    top: 12px;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-right: 16px solid red;
+    border-bottom: 5px solid transparent;
+}
+
+.uda-search-btn {
+    /*padding: 8px 10px;*/
+    background-color: #dce0f7;
+    border-radius: 5px 0px 0px 5px;
+    border: none;
+    width: 15%;
+    cursor: pointer;
+}
+
+.uda-search-btn:focus {
+    outline: none;
+}
+
+.uda-search-div {
+    display: flex;
+}
+
+.uda-input-cntrl {
+    background-color: #eceffd;
+    /*padding: 8px 10px;*/
+    border: none;
+    width: 70%;
+    height: 35px;
+}
+
+.uda-input-cntrl:focus {
+    outline: none !important;
+}
+
+.uda-clear {
+    clear: both;
+}
+
+.uda-card {
+    padding: 20px;
+    background-color: #f2f4fe;
+    border-radius: 5px;
+    background-image: url('../images/icons/sign-arrow.png');
+    background-repeat: no-repeat;
+    background-position: bottom 5px right 5px;
+    margin-bottom: 15px;
+    margin-right: 5px;
+    box-shadow: 2px 1px 6px 1px #cdcdcd;
+}
+
+.uda-cards-scroller {
+    min-height: 320px;
+    overflow-y: auto;
+    max-height: 78%;
+}
+
+.uda-card:hover {
+    background-color: #e6eaff;
+    background-image: url('../images/icons/sign-hover-arrow.png');
+    cursor: pointer;
+}
+
+.uda-card h5 {
+    font-size: 14px;
+    margin: 5px 0px;
+}
+
+.uda-card h5:hover {
+    color: #303f9f;
+}
+
+.uda-card i {
+    opacity: 80%;
+    font-size: 12px;
+}
+
+.uda-advanced-btn {
+    background-color: #fff;
+    border: 1px solid #303f9f;
+    border-radius: 5px;
+    color: #303f9f;
+    display: inline-flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.uda-dropdown {
+    position: relative;
+    display: inline-block;
+    float: right;
+}
+
+.uda-advanced-btn-content {
+    display: none;
+    position: absolute;
+    color: #fff;
+    padding: 5px;
+    z-index: 1;
+    top: -35px;
+    left: -60px;
+    right: 0;
+    min-width: 160px;
+    /*border:1px solid #ff5722; 
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    border-radius: 5px 5px 0px 0px;
+     background-color: #fff;
+    */
+}
+
+.uda-advanced-btn-content a {
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+    border-top: 1px solid #fff;
+    background-color: #ff5722;
+    font-size: 14px;
+    align-items: center;
+}
+
+.uda-advanced-btn-content a:hover {
+    background-color: #303f9f;
+    cursor: pointer;
+}
+
+.uda-dropdown:hover .uda-advanced-btn-content {
+    display: block !important;
+}
+
+.uda-advanced-btn:hover {
+    background-color: #f2f4fe;
+    cursor: pointer;
+}
+
+.uda-advanced-btn:focus {
+    outline: none;
+}
+
+.uda-footer-left {
+    width: 50%;
+    float: left;
+    font-size: 10px;
+    padding: 10px 0px;
+    opacity: 80%;
+}
+
+.uda-footer-right {
+    width: 50%;
+    float: right;
+}
+
+.uda-footer-right a {
+    font-size: 10px;
+    color: #303f9f !important;
+    text-decoration: none;
+}
+
+.uda-footer-right a:hover {
+    text-decoration: underline;
+}
+
+.uda-footer-right img {
+    cursor: pointer;
+}
+
+.uda-footer-bar {
+    background-color: #fff;
+    position: fixed;
+    bottom: 0;
+    width: 23%;
+    right: 0;
+}
+
+
+.uda-card-details {
+    padding: 20px;
+    background-color: #f2f4fe;
+    border-radius: 5px;
+    margin-top: 20px;
+    text-align: center;
+    box-shadow: 2px 1px 6px 1px #cdcdcd;
+}
+
+.uda-card-btns {
+    display: inline-block;
+    margin-top: -35px;
+}
+
+.uda-play-btn {
+    background-color: #ff5722;
+    outline: none;
+    border-radius: 5px 0px 0px 5px;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.uda-play-btn:hover {
+    background-color: #303f9f;
+}
+
+.uda-play-btn:active {
+    background-color: #303f9f;
+}
+
+.uda-play-btn:disabled {
+    background-color: #303f9f;
+    opacity: 60%;
+}
+
+.uda-stop-btn {
+    background-color: #ff5722;
+    outline: none;
+    border-radius: 0px 5px 5px 0px;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.uda-stop-btn:hover {
+    background-color: #303f9f;
+}
+
+.uda-stop-btn:active {
+    background-color: #303f9f;
+}
+
+.uda-stop-btn:disabled {
+    background-color: #303f9f;
+    opacity: 60%;
+}
+
+.uda-card-right-dbl-arrow {
+    width: 25px;
+    height: 25px;
+    background-color: #303f9f;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-left: -10px;
+    margin-top: -10px
+}
+
+.uda-card-right-dbl-arrow img {
+    padding: 6px;
+}
+
+.uda-card-details h5 {
+    font-size: 14px;
+    margin: 5px 0px;
+}
+
+.uda-suggestion-list {
+    position: relative;
+    line-height: 32px;
+    text-align: left;
+    list-style: none url('../images/icons/bullet.png');
+    margin: 0;
+}
+
+.uda-suggestion-list li {
+    font-size: 14px;
+}
+
+.uda-details-footer {
+    background-color: #e5eafe;
+    height: 40px;
+    border-radius: 0px 0px 5px 5px;
+}
+
+.uda-details-footer-left {
+    width: 30%;
+    float: left;
+}
+
+.uda-trash-img, .uda-like-img, .uda-dislike-img {
+    width: 25px;
+    height: 25px;
+    padding: 7px;
+    border-right: 1px solid #dce0f7;
+    cursor: pointer;
+}
+
+.uda-trash-img:hover, .uda-like-img:hover, .uda-dislike-img:hover {
+    background-color: #dce0f7;
+}
+
+.uda-details-footer-right {
+    width: 70%;
+    float: right;
+    text-align: right;
+}
+
+.uda-tutorial-btn {
+    background-color: #303f9f;
+    border: none;
+    outline: none;
+    color: #fff;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.uda-tutorial-btn:hover {
+    background-color: #ff5722;
+}
+
+.uda-record-btn {
+    display: inline-flex;
+    background-color: #ff5722;
+    border: none;
+    outline: none;
+    color: #fff;
+    border-radius: 5px;
+    padding: 5px 12px;
+    align-items: center;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.uda-record-btn:hover {
+    background-color: #303f9f;
+}
+
+.uda-form-input {
+    background-color: #dce0f7;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+}
+
+.uda-form-input:focus {
+    outline: none;
+}
+
+.uda-no-results {
+    text-align: center;
+    margin: 30px 0px;
+    padding: 20px;
+    background-color: #f2f4fe;
+    box-shadow: 2px 1px 6px 1px #cdcdcd;
+}
+
+.uda-no-results p {
+    font-weight: 500;
+    font-size: 18px;
+    color: #ff5722;
+    margin: 5px;
+}
+
+.uda-no-src {
+    fill: #303f9f;
+    width: 45px;
+    height: 45px;
+    transform: scaleX(-1);
+}
+
+
+@media screen and (max-width: 1920px), screen and ( max-height: 1080px) {
+    .uda-help-bg-tooltip:after {
+        top: 8px;
+    }
+}
+
+@media screen and (max-width: 1600px), screen and( max-height: 900px) {
+
+    .uda-help-bg-tooltip:after {
+        top: 9px;
+    }
+}
+
+@media screen and (max-width: 1536px), screen and( max-height: 864px) {
+
+    .uda-help-bg-tooltip:after {
+        top: 9px;
+    }
+}
+
+@media screen and (max-width: 1440px), screen and( max-height: 900px) {
+    .uda-help-bg-tooltip:after {
+        top: 10px;
+    }
+}
+
+@media screen and (max-width: 1366px), screen and( max-height: 768px) {
+
+}
+
+@media screen and (max-width: 1280px), screen and( max-height: 720px) {
+
+}
+
+@media screen and (max-width: 1280px), screen and( max-height: 768px) {
+    .uda-help-bg-tooltip:after {
+        top: 11px;
+    }
+}
+
