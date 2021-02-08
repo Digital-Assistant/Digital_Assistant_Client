@@ -478,8 +478,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						'   <div id="uda-content-container"></div>'+
 						'	<br/><br/><br/>'+
 						'</div>';*/
-			var html = this.addRightPanel();
-			jQuery("#voicemodalhtml").html(html);
+			jQuery("#voicemodalhtml").html(this.addRightPanel());
 			jQuery("#closenistmodal").click(function(){
 				UDAPluginSDK.closemodal();
 			});
@@ -539,8 +538,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 								childnode.classList.remove("container");
 							}
 							if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'nistBtn' && childnode.id !== 'nist-steps-content') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
-								if (childnode.classList && !childnode.classList.contains("nist-original-content")) {
-									childnode.classList.add("nist-original-content");
+								if (childnode.classList && !childnode.classList.contains("uda-original-content")) {
+									childnode.classList.add("uda-original-content");
 								}
 							}
 						});
@@ -1816,18 +1815,18 @@ if (typeof UDAPluginSDK === 'undefined') {
 		addrecordresultshtml:function(data){
 			if(data.length>0) {
 				this.recordedsequenceids=data;
-				var html =  '   <div class="voice-suggesion-card">'+
+				/*var html =  '   <div class="voice-suggesion-card">'+
 							'		<div class="voice-card-left">'+
 							'			<h4>Recorded Sequence</h4>'+
-							'			<ul id="nist-recordresultrow" class="voice-sugggesion-bullet">'+
+							'			<ul id="uda-recorded-results" class="voice-sugggesion-bullet">'+
 							'			</ul>'+
 							'			<div>'+
-							'				<input id="nistsequencelabel" type="text" name="save-recrded" class="voice-save-recrded-inpt" placeholder="Enter label" nist-voice="true">'+
+							'				<input id="uda-recorded-name" type="text" name="uda-recorded-name" class="voice-save-recrded-inpt" placeholder="Enter label" nist-voice="true">'+
 							'				<button class="voice-cancel-btn" onclick="UDAPluginSDK.cancelrecordingsequence();">Cancel and exit</button> <button onclick="UDAPluginSDK.submitrecordedlabel();" class="voice-submit-btn">Submit</button>'+
 							'			</div>'+
 							'		</div>'+
-							'	</div>';
-				jQuery("#uda-content-container").html(html);
+							'	</div>';*/
+				jQuery("#uda-content-container").html(this.renderRecordedSequenceHtml());
 				for(var i=0;i<data.length;i++){
 					// modification for personal button addition
 					if(i===(data.length-1)){
@@ -1839,53 +1838,95 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.openmodal(false);
 			}
 		},
+		renderRecordedSequenceHtml: function(){
+			var html =	'<div class="uda-card-details">'
+						+'	<h5>Recorded Sequence</h5>'
+						+'	<hr>'
+						+'	<ul class="uda-recording" id="uda-recorded-results">'
+						+'	</ul>'
+						+'	<div class="uda-recording" style="text-align: center;">'
+						+'		<input type="text" id="uda-recorded-name" name="uda-save-recorded" class="uda-form-input" placeholder="Enter Label">'
+						+'		<p></p>'
+						+'		<button class="uda-record-btn" style="padding:8px 12px;" onclick="UDAPluginSDK.cancelrecordingsequence();">Cancel and Exit</button>'
+						+'		<button class="uda-tutorial-btn" onclick="UDAPluginSDK.submitrecordedlabel();">Submit</button>'
+						+'	</div>'
+						+'</div>';
+			return html;
+		},
 		//render record row html of the sequence
 		renderrecordresultrow:function(data,index, showPersonalButton=false){
 			index++;
-			let clickedname=((data.clickednodename.length>this.maxstringlength)?data.clickednodename.substr(0,this.maxstringlength)+'...':data.clickednodename);
+			// let clickedname=((data.clickednodename.length>this.maxstringlength)?data.clickednodename.substr(0,this.maxstringlength)+'...':data.clickednodename);
+			let nodeData = JSON.parse(data.objectdata);
+			var originalName = '';
+			if(nodeData.meta.hasOwnProperty('displayText') && nodeData.meta.displayText !== ''){
+				var clickedname = ((nodeData.meta.displayText.length > this.maxstringlength) ? nodeData.meta.displayText.substr(0, this.maxstringlength) + '...' : nodeData.meta.displayText);
+				originalName = nodeData.meta.displayText;
+			} else {
+				var clickedname = ((data.clickednodename.length > this.maxstringlength) ? data.clickednodename.substr(0, this.maxstringlength) + '...' : data.clickednodename);
+				originalName = data.clickednodename;
+			}
 			// let clickedname=data.clickednodename;
 			// personal button appearance
-			let nodeData = JSON.parse(data.objectdata);
 			if(showPersonalButton){
-				clickedname=((data.clickednodename.length>(this.maxstringlength-24))?data.clickednodename.substr(0,(this.maxstringlength-24))+'...':data.clickednodename);
+				// clickedname=((data.clickednodename.length>(this.maxstringlength-24))?data.clickednodename.substr(0,(this.maxstringlength-24))+'...':data.clickednodename);
+				var editBtn = 	'			<span style="position: absolute; top: 66px; left: 91px;">'
+								+'				<button class="uda-tutorial-btn" style="padding:2px;" type="button" id="uda-edit-clickedname"><img src="'+this.extensionpath+'images/icons/edit.png"></button>'
+								+'			</span>'
+								+'			<input type="text" id="uda-edited-name" name="uda-edited-name" class="uda-form-input" placeholder="Enter Name" value="'+originalName+'" style="display: none;">';
 				if(nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal){
 					// var personalHtml = '&nbsp; &nbsp; (personal)';
-					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" nist-voice="true" id="isPersonal" checked /> is personal';
+					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" checked /> <label style="font-size:14px;">Is personal</label>';
 				} else {
-					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" nist-voice="true" id="isPersonal" /> is personal';
+					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" /> <label style="font-size:14px;">Is personal</label>';
 				}
+				personalHtml += '			<span style="position: relative; top: 4px;"><img src="'+this.extensionpath+'images/icons/info.png"></span>';
 				// var personalHtml = '&nbsp; &nbsp;<input type="checkbox" nist-voice="true" id="isPersonal" /> is personal';
 				/*var personalElement = jQuery(personalHtml);
 				personalElement.click(function (){
 					UDAPluginSDK.personalNode(data);
 				});*/
-				var editBtn = "&nbsp; &nbsp;<button nist-voice='true' id='edit-list'>Edit</button>";
-				var html = '<li nist-voice="true" class="active">' +
-					clickedname + 
-					'</li>' + personalHtml + editBtn;
+				// var editBtn = "&nbsp; &nbsp;<button nist-voice='true' id='edit-list'>Edit</button>";
+				var html =	'<li><i>'
+								+clickedname
+								+'</i><br />'
+								+editBtn
+								+'<br />'
+								+personalHtml
+								+'<br />'
+							+'</li>';
 				var element = jQuery(html);
-				jQuery("#nist-recordresultrow").append(element);
+				jQuery("#uda-recorded-results").append(element);
 				jQuery("#isPersonal").click(function (){
 					UDAPluginSDK.personalNode(data);
 				});
-				var befroeEditText = $(".voice-card-left ul li:last").text();
-				jQuery("#edit-list").click(function (){
-					$(".voice-card-left ul li:last").css("border", "1px solid");
-					$(".voice-card-left ul li:last").attr("contenteditable","true");
+				var beforeEditText = originalName;
+				jQuery("#uda-edit-clickedname").click(function (){
+					// $(".voice-card-left ul li:last").css("border", "1px solid");
+					// $(".voice-card-left ul li:last").attr("contenteditable","true");
+					jQuery("#uda-edited-name").show();
 				});
-				$('.voice-card-left ul li:last').blur(function() {
-					$(".voice-card-left ul li:last").css("border", "0px solid");
-					if(befroeEditText.trim() != $(".voice-card-left ul li:last").text().trim()){
-						UDAPluginSDK.editAndSave(data);
+				jQuery('#uda-edited-name').blur(function() {
+					let editedName = $("#uda-edited-name").val();
+					if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
+						UDAPluginSDK.editAndSave(data, editedName);
+					}
+				});
+				jQuery("#uda-edited-name").keydown(function (e) {
+					if (e.keyCode === 13) {
+						let editedName = $("#uda-edited-name").val();
+						if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
+							UDAPluginSDK.editAndSave(data, editedName);
+						}
 					}
 				});
 			} else {
 				clickedname += (nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal)?'&nbsp; &nbsp;(personal)':'';
-				var html = '<li nist-voice="true" class="active">' +
+				var html = '<li><i>' +
 					clickedname +
-					'</li>';
+					'</i></li>';
 				var element = jQuery(html);
-				jQuery("#nist-recordresultrow").append(element);
+				jQuery("#uda-recorded-results").append(element);
 			}
 		},
 		//personal modification button clicked
@@ -1911,10 +1952,15 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.send(outputdata);
 		},
 		//edit modification button clicked
-		editAndSave:function(data){
-			if(data.hasOwnProperty("clickednodename")){
-				data.clickednodename = $("ul#nist-recordresultrow li:last").text();
-			} 
+		editAndSave:function(data, value){
+			let nodeData = JSON.parse(data.objectdata);
+			if(nodeData.meta && nodeData.meta.hasOwnProperty("displayText")){
+				nodeData.meta.displayText = value;
+			} else {
+				nodeData.meta = {};
+				nodeData.meta.displayText = value;
+			}
+			data.objectdata = JSON.stringify(nodeData);
 			var outputdata = JSON.stringify(data);
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", this.apihost+"/user/updateclickednode");
@@ -1926,12 +1972,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		// submit functionality of the recorded sequence.
 		submitrecordedlabel:function(submittype="recording"){
-			var sequencename=jQuery("#nistsequencelabel").val();
+			var sequencename=jQuery("#uda-recorded-name").val();
 			var sequencelistdata={name:"",domain:window.location.host,usersessionid:this.sessiondata.authdata.id.toString(),userclicknodelist:[].toString(),userclicknodesSet:this.recordedsequenceids,isValid:1,isIgnored:0};
 			if(submittype==='recording') {
 				if (sequencename === '') {
 					alert('Please enter proper label');
-					jQuery("#nistsequencelabel").focus();
+					jQuery("#uda-recorded-name").focus();
 					return false;
 				}
 			} else if(submittype === 'invalid'){
@@ -1959,7 +2005,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					// UDAPluginSDK.backtomodal();
-					console.log(xhr);
+					UDAPluginSDK.showSelectedSequence(JSON.parse(xhr.response))
 				}
 			};
 			xhr.send(JSON.stringify(sequencelistdata));
@@ -2187,16 +2233,20 @@ if (typeof UDAPluginSDK === 'undefined') {
 			// adding elipses if textlength is greater than specified characters
 			// display personal tag for the personal nodes
 			let nodeData = JSON.parse(data.objectdata);
-			let clickedname = ((data.clickednodename.length > this.maxstringlength) ? data.clickednodename.substr(0, this.maxstringlength) + '...' : data.clickednodename);
+			if(nodeData.meta.hasOwnProperty('displayText') && nodeData.meta.displayText !== ''){
+				let clickedname = ((nodeData.meta.displayText.length > this.maxstringlength) ? nodeData.meta.displayText.substr(0, this.maxstringlength) + '...' : nodeData.meta.displayText);
+			} else {
+				let clickedname = ((data.clickednodename.length > this.maxstringlength) ? data.clickednodename.substr(0, this.maxstringlength) + '...' : data.clickednodename);
+			}
 			if(nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal){
 				clickedname=((data.clickednodename.length>(this.maxstringlength-26))?data.clickednodename.substr(0,(this.maxstringlength-26))+'... (personal)':data.clickednodename);
 			}
 			// var clickedtext = '<pre>'+clickedname+'</pre>';
 			var clickedtext = clickedname;
 			if(visited>-1) {
-				var template = jQuery("<li class='completed'>" + clickedtext + "</li>");
+				var template = jQuery("<li class='completed'><i>" + clickedtext + "</i></li>");
 			} else {
-				var template = jQuery("<li class='inactive'>" + clickedtext + "</li>");
+				var template = jQuery("<li class='inactive'><i>" + clickedtext + "</i></li>");
 			}
 			if(visited === -1) {
 				template.click(function () {
@@ -2692,10 +2742,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 				var html = '   <div class="voice-suggesion-card">' +
 					'		<div class="voice-card-left">' +
 					'			<h4>Our AI detected this sequence. <br /> Do you want to name it? <br /><span style="color:#ff4800;font-weight:bold;">(Alpha version: Not reliable)</span></h4>' +
-					'			<ul id="nist-recordresultrow" class="voice-sugggesion-bullet">' +
+					'			<ul id="uda-recorded-results" class="voice-sugggesion-bullet">' +
 					'			</ul>' +
 					'			<div>' +
-					'				<input id="nistsequencelabel" type="text" name="save-recrded" class="voice-save-recrded-inpt" placeholder="Enter label" nist-voice="true">' +
+					'				<input id="uda-recorded-name" type="text" name="uda-recorded-name" class="voice-save-recrded-inpt" placeholder="Enter label" nist-voice="true">' +
 					'				<button onclick="UDAPluginSDK.submitrecordedlabel(\'recording\');" class="voice-submit-btn">Submit</button><button class="voice-cancel-btn" onclick="UDAPluginSDK.submitrecordedlabel(\'invalid\');">Invalid Sequence</button><button class="voice-cancel-btn" onclick="UDAPluginSDK.submitrecordedlabel(\'ignore\');">Ignore</button>' +
 					'			</div>' +
 					'		</div>' +

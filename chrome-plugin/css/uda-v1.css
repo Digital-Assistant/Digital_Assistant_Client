@@ -30,7 +30,7 @@
 }
 
 .uda-page-right-bar {
-    width: 23%;
+    max-width: 23%;
     height: 100%;
     position: fixed;
     right: 0;
@@ -185,7 +185,7 @@
     color: #fff;
     padding: 5px;
     z-index: 1;
-    top: -35px;
+    top: -75px;
     left: -60px;
     right: 0;
     min-width: 160px;
@@ -360,10 +360,12 @@
 
 .uda-suggestion-list li::before {
     content: '\00a0 \00a0 \00a0 \00a0 ';
+    padding-right: 15px;
 }
 
 .uda-suggestion-list li.completed::before {
     content: url('../images/icons/bullet.png');
+    padding-right: 10px;
 }
 
 .uda-details-footer {

@@ -4,11 +4,11 @@
 	right: 0px;
 	bottom: 0px;
 }
-.nist-original-content{
+.uda-original-content{
 	max-width: 80%;
 	float: left;
 }
-.nist-original-content .kt-header,.nist-original-content .kt-header--fixed{
+.uda-original-content .kt-header,.uda-original-content .kt-header--fixed{
 	max-width: 80%;
 }
 .duration-picker .pick{
