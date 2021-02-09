@@ -1847,7 +1847,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'	<div class="uda-recording" style="text-align: center;">'
 						+'		<input type="text" id="uda-recorded-name" name="uda-save-recorded" class="uda-form-input" placeholder="Enter Label">'
 						+'		<p></p>'
-						+'		<button class="uda-record-btn" style="padding:8px 12px;" onclick="UDAPluginSDK.cancelrecordingsequence();">Cancel and Exit</button>'
+						+'		<button class="uda-record-btn" onclick="UDAPluginSDK.cancelrecordingsequence();">Cancel and Exit</button>'
 						+'		<button class="uda-tutorial-btn" onclick="UDAPluginSDK.submitrecordedlabel();">Submit</button>'
 						+'	</div>'
 						+'</div>';
@@ -1870,7 +1870,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			// personal button appearance
 			if(showPersonalButton){
 				// clickedname=((data.clickednodename.length>(this.maxstringlength-24))?data.clickednodename.substr(0,(this.maxstringlength-24))+'...':data.clickednodename);
-				var editBtn = 	'			<span style="position: absolute; top: 66px; left: 91px;">'
+				var editBtn = 	'			<span>'
 								+'				<button class="uda-tutorial-btn" style="padding:2px;" type="button" id="uda-edit-clickedname"><img src="'+this.extensionpath+'images/icons/edit.png"></button>'
 								+'			</span>'
 								+'			<input type="text" id="uda-edited-name" name="uda-edited-name" class="uda-form-input" placeholder="Enter Name" value="'+originalName+'" style="display: none;">';
@@ -1889,9 +1889,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 				// var editBtn = "&nbsp; &nbsp;<button nist-voice='true' id='edit-list'>Edit</button>";
 				var html =	'<li><i>'
 								+clickedname
-								+'</i><br />'
 								+editBtn
-								+'<br />'
+								+'</i><br/>'
 								+personalHtml
 								+'<br />'
 							+'</li>';
