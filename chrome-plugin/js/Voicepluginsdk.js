@@ -365,7 +365,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.closemodal();
 		},
 		modifybodyhtml:function(){
-			var html='<div id="nistBtn" nist-voice="true"></div><div id="nist-steps-content" style="display: none;"><div id="voicemodalhtml" nist-voice="true"></div></div>';
+			var html='<div id="uda-btn" nist-voice="true"></div><div id="nist-steps-content" style="display: none;"><div id="voicemodalhtml" nist-voice="true"></div></div>';
 
 			jQuery(document.body).prepend(html);
 
@@ -385,12 +385,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 			},DSA_POST_INTERVAL);
 		},
 		addbuttonhtml:function(){
-			jQuery("#nistBtn").unbind("click").html("");
+			jQuery("#uda-btn").unbind("click").html("");
 			// var buttonhtml='<img src="'+this.extensionpath+'assets/uda-logo.png" width="50px" height="50px" nist-voice="true">';
 			var buttonhtml	=	'<div class="uda-nistapp-logo">'
 								+'	<div class="uda-icon" style="text-align: center;"><img src="'+this.extensionpath+'images/icons/nist-logo.png"><p style="padding:0; margin:0px;">Assist</p><span><img src="'+this.extensionpath+'images/icons/backarrow-orange.png"></span></div>'
 								+'</div>';
-			var modal =jQuery("#nistBtn");
+			var modal =jQuery("#uda-btn");
 			modal.append(buttonhtml);
 			modal.click(function () {
 				UDAPluginSDK.openmodal(true);
@@ -524,7 +524,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		//opening the UDA screen
 		openmodal:function(focus=false){
 			if(this.sessiondata.authenticated) {
-				jQuery("#nistBtn").hide();
+				jQuery("#uda-btn").hide();
 				jQuery('#nist-steps-content').show();
 				jQuery("#nistModal").css("display", "block");
 				var searchinput=jQuery("#uda-search-input");
@@ -540,7 +540,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 								UDAPluginSDK.containersections.push(childnodeindex);
 								childnode.classList.remove("container");
 							}
-							if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'nistBtn' && childnode.id !== 'nist-steps-content') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
+							if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'nist-steps-content') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
 								if (childnode.classList && !childnode.classList.contains("uda-original-content")) {
 									childnode.classList.add("uda-original-content");
 								}
@@ -561,7 +561,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			jQuery("#uda-content-container").html("");
 			jQuery("#nistrecordresults").html("");
 			this.recordedsequenceids=[];
-			jQuery("#nistBtn").show();
+			jQuery("#uda-btn").show();
 			var navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 			this.cancelrecordingsequence(false);
@@ -569,9 +569,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 				let bodychildren = document.body.childNodes;
 				if (bodychildren.length > 0) {
 					bodychildren.forEach(function (childnode, childnodeindex) {
-						if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'nistBtn' && childnode.id !== 'nist-steps-content') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
-							if (childnode.classList && childnode.classList.contains("nist-original-content")) {
-								childnode.classList.remove("nist-original-content");
+						if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'nist-steps-content') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
+							if (childnode.classList && childnode.classList.contains("uda-original-content")) {
+								childnode.classList.remove("uda-original-content");
 							}
 						}
 						if (UDAPluginSDK.containersections.length > 0 && UDAPluginSDK.inarray(childnodeindex, UDAPluginSDK.containersections) !== -1) {
@@ -1850,7 +1850,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'	<div class="uda-recording" style="text-align: center;">'
 						+'		<input type="text" id="uda-recorded-name" name="uda-save-recorded" class="uda-form-input" placeholder="Enter Label">'
 						+'		<p></p>'
-						+'		<button class="uda-record-btn" style="padding:8px 12px;" onclick="UDAPluginSDK.cancelrecordingsequence();">Cancel and Exit</button>'
+						+'		<button class="uda-record-btn" onclick="UDAPluginSDK.cancelrecordingsequence();">Cancel and Exit</button>'
 						+'		<button class="uda-tutorial-btn" onclick="UDAPluginSDK.submitrecordedlabel();">Submit</button>'
 						+'	</div>'
 						+'</div>';
@@ -1873,7 +1873,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			// personal button appearance
 			if(showPersonalButton){
 				// clickedname=((data.clickednodename.length>(this.maxstringlength-24))?data.clickednodename.substr(0,(this.maxstringlength-24))+'...':data.clickednodename);
-				var editBtn = 	'			<span style="position: absolute; top: 66px; left: 91px;">'
+				var editBtn = 	'			<span>'
 								+'				<button class="uda-tutorial-btn" style="padding:2px;" type="button" id="uda-edit-clickedname"><img src="'+this.extensionpath+'images/icons/edit.png"></button>'
 								+'			</span>'
 								+'			<input type="text" id="uda-edited-name" name="uda-edited-name" class="uda-form-input" placeholder="Enter Name" value="'+originalName+'" style="display: none;">';
@@ -1892,9 +1892,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 				// var editBtn = "&nbsp; &nbsp;<button nist-voice='true' id='edit-list'>Edit</button>";
 				var html =	'<li><i>'
 								+clickedname
-								+'</i><br />'
 								+editBtn
 								+'<br />'
+								+'</i><br />'
 								+personalHtml
 								+'<br />'
 							+'</li>';

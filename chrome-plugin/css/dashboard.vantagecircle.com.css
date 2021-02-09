@@ -1,15 +1,5 @@
-.voice-redmine-rght{
-	position:fixed;
-	top:0px;
-	right: 0px;
-	bottom: 0px;
-}
-.uda-original-content{
-	max-width: 80%;
-	float: left;
-}
 .uda-original-content .kt-header,.uda-original-content .kt-header--fixed{
-	max-width: 80%;
+	max-width: 77%;
 }
 .duration-picker .pick{
 	position: relative;

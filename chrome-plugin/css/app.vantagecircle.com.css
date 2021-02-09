@@ -1,16 +1,6 @@
-.voice-redmine-rght{
-	position:fixed;
-	top:0px;
-	right: 0px;
-	bottom: 0px;
-}
-.uda-original-content{
-	max-width: 80%;
-	float: left;
-}
 .uda-original-content .navbar-fixed-top{
-	max-width: 80%;
+	max-width: 77%;
 }
 .uda-original-content .vc_topbar{
-	max-width: 80%;
+	max-width: 77%;
 }

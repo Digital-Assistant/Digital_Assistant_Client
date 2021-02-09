@@ -1,3 +1,7 @@
+.uda-original-content{
+    max-width: 77%;
+    float: left;
+}
 .uda-nistapp-logo {
     cursor: pointer;
     width: 75px;
