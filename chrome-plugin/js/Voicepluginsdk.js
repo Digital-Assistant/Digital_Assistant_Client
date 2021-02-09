@@ -731,7 +731,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 							}
 							if(addToolTip) {
 								this.tooltipDisplayedNodes.push(node);
-								$(node).addClass('tooltip-dsa').append('<div class="tooltip-dsa-right"><div class="tooltip-dsa-text-content">We have detected a rich text editor. To record this in your sequence, Please click on the editor menu. We are unable to record clicks on the text area.</div></div>');
+								$(node).addClass('uda-tooltip').append('<div class="uda-tooltip-right"><div class="uda-tooltip-text-content">We have detected a rich text editor. To record this in your sequence, Please click on the editor menu. We are unable to record clicks on the text area.</div></div>');
 							}
 						} else if(this.cancelRecordingDuringRecordingNodes.indexOf(node.nodeName.toLowerCase()) !== -1) {
 							this.addClickToNode(node);
@@ -1100,11 +1100,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 
 			// remove added tooltips before invoking
-			let tooltipnodes = $('.tooltip-dsa');
+			let tooltipnodes = $('.uda-tooltip');
 			if (tooltipnodes.length > 0) {
-				$('.tooltip-dsa').each(function() {
-					$(this).removeClass('tooltip-dsa');
-					$(this).find('.tooltip-dsa-right').remove();
+				$('.uda-tooltip').each(function() {
+					$(this).removeClass('uda-tooltip');
+					$(this).find('.uda-tooltip-right').remove();
 				});
 			}
 
@@ -1140,7 +1140,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						$('html, body').animate({
 							scrollTop: ($(node).offset().top - 200)
 						}, 2000, function(){
-							$(node.parentNode.parentNode.parentNode.parentNode.parentNode).addClass('tooltip-dsa').append('<div class="tooltip-dsa-right"><div class="tooltip-dsa-text-content">Please select the value and then click on play</div></div>');
+							$(node.parentNode.parentNode.parentNode.parentNode.parentNode).addClass('uda-tooltip').append('<div class="uda-tooltip-right"><div class="uda-tooltip-text-content">Please select the value and then click on play</div></div>');
 							node.focus();
 						});
 					} else if(node.hasAttribute('type') && (node.getAttribute('type')==='checkbox' || node.getAttribute('type')==='radio') && node.classList && (node.classList.contains('mat-checkbox-input') || node.classList.contains('mat-radio-input'))) {
@@ -1200,7 +1200,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 									$('html, body').animate({
 										scrollTop: ($(node).offset().top - 200)
 									}, 2000, function(){
-										$(node.parentNode.parentNode).addClass('tooltip-dsa').append('<div class="tooltip-dsa-right"><div class="tooltip-dsa-text-content">Please select the date in the calendar. After you are done, please click on "play" in the "Assistant" pane to the right.</div></div>');
+										$(node.parentNode.parentNode).addClass('uda-tooltip').append('<div class="uda-tooltip-right"><div class="uda-tooltip-text-content">Please select the date in the calendar. After you are done, please click on "play" in the "Assistant" pane to the right.</div></div>');
 										node.click();
 									});
 								} else {
@@ -1276,7 +1276,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						$('html, body').animate({
 							scrollTop: ($(node).offset().top - 200)
 						}, 2000, function() {
-							$(node.parentNode).addClass('tooltip-dsa').append('<div class="tooltip-dsa-right"><div class="tooltip-dsa-text-content">Please select the date in the calendar. After you are done, please click on "play" in the "Assistant" pane to the right.</div></div>');
+							$(node.parentNode).addClass('uda-tooltip').append('<div class="uda-tooltip-right"><div class="uda-tooltip-text-content">Please select the date in the calendar. After you are done, please click on "play" in the "Assistant" pane to the right.</div></div>');
 							node.click();
 						});
 						if(navigationcookiedata && navigationcookiedata.autoplay) {
@@ -1313,7 +1313,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						$('html, body').animate({
 							scrollTop: ($(node).offset().top - 200)
 						}, 2000, function(){
-							$(node.parentNode.parentNode).addClass('tooltip-dsa').append('<div class="tooltip-dsa-right"><div class="tooltip-dsa-text-content">Please select the value and then click on play</div></div>');
+							$(node.parentNode.parentNode).addClass('uda-tooltip').append('<div class="uda-tooltip-right"><div class="uda-tooltip-text-content">Please select the value and then click on play</div></div>');
 							node.click();
 						});
 					}
@@ -1335,7 +1335,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						$('html, body').animate({
 							scrollTop: ($(node).offset().top - 200)
 						}, 2000, function(){
-							$(node.parentNode.parentNode).addClass('tooltip-dsa').append('<div class="tooltip-dsa-right"><div class="tooltip-dsa-text-content">Please select the value and then click on play</div></div>');
+							$(node.parentNode.parentNode).addClass('uda-tooltip').append('<div class="uda-tooltip-right"><div class="uda-tooltip-text-content">Please select the value and then click on play</div></div>');
 							node.click();
 						});
 					} else {
@@ -1360,7 +1360,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					$('html, body').animate({
 						scrollTop: ($(node).offset().top - 200)
 					}, 2000, function(){
-						$(node).addClass('tooltip-dsa').append('<div class="tooltip-dsa-right"><div class="tooltip-dsa-text-content">Please input into text editor and click on play</div></div>');
+						$(node).addClass('uda-tooltip').append('<div class="uda-tooltip-right"><div class="uda-tooltip-text-content">Please input into text editor and click on play</div></div>');
 						node.click();
 					});
 					break;
