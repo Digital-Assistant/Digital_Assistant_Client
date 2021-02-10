@@ -7,7 +7,7 @@
     width: 75px;
     height: 80px;
     background-color: #fff;
-    position: absolute;
+    position: fixed;
     top: 40%;
     right: 0;
     padding: 1px;
@@ -36,7 +36,6 @@
 .uda-page-right-bar {
     max-width: 23%;
     width: 100%;
-    height: 100%;
     position: fixed;
     right: 0;
     top: 0;
@@ -44,6 +43,9 @@
     background-color: #ffffff;
     box-shadow: 0 -5px 5px 5px #e0e0e0;
     z-index: 9999;
+     height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .uda-ribbon-arrow {
@@ -146,6 +148,9 @@
     min-height: 320px;
     overflow-y: auto;
     max-height: 78%;
+    flex: 1;
+    overflow: auto;
+    margin-bottom: 80px;
 }
 
 .uda-card:hover {
@@ -348,6 +353,10 @@
     /*list-style: none url('../images/icons/bullet.png');*/
     list-style: none;
     margin: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-left: 0px;
 }
 
 .uda-recording {
@@ -363,13 +372,14 @@
 }
 
 .uda-suggestion-list li::before {
-    content: '\00a0 \00a0 \00a0 \00a0 ';
-    padding-right: 15px;
+    content: '\00a0 \00a0 \00a0 \00a0';
+    padding-right: 10px;
+     vertical-align: middle;
 }
 
 .uda-suggestion-list li.completed::before {
     content: url('../images/icons/bullet.png');
-    padding-right: 10px;
+    vertical-align: middle;
 }
 
 .uda-details-footer {
@@ -438,6 +448,8 @@
     border: none;
     border-radius: 5px;
     padding: 10px 20px;
+    width: 100%;
+    margin: 10px 0px;
 }
 
 .uda-form-input:focus {
@@ -537,8 +549,8 @@
     margin-left:20px;
     transform:translate(0, -50%);
     padding:0;
-    color:#EEEEEE;
-    background-color:#444444;
+    color:#fff;
+    background-color:#ff5722;
     font-weight:normal;
     font-size:13px;
     border-radius:8px;
@@ -548,7 +560,16 @@
     box-shadow:0 1px 8px rgba(0,0,0,0.5);
     visibility:hidden; opacity:0; transition:opacity 0.8s;
 }
-
+.uda-tooltip .uda-tooltip-right::before{
+    content: "";
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent #ff5722 transparent transparent;
+}
 .uda-tooltip .uda-tooltip-right {
     visibility:visible; opacity:1;
 }
