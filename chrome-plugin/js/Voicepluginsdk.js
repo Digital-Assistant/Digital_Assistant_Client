@@ -425,7 +425,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 								+'</div>'
 							+'</div>'
 						+'</div>'
-						+'<hr>'
+						+'<hr style="border:1px solid #969696; width:100%;">'
 						+'<div class="uda-container uda-clear uda-cards-scroller" id="uda-content-container">'
 						+'</div>'
 						+'<div>'
@@ -1850,7 +1850,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'	</ul>'
 						+'	<div class="uda-recording" style="text-align: center;">'
 						+'		<input type="text" id="uda-recorded-name" name="uda-save-recorded" class="uda-form-input" placeholder="Enter Label">'
-						+'		<p></p>'
 						+'		<button class="uda-record-btn" onclick="UDAPluginSDK.cancelrecordingsequence();">Cancel and Exit</button>'
 						+'		<button class="uda-tutorial-btn" onclick="UDAPluginSDK.submitrecordedlabel();">Submit</button>'
 						+'	</div>'
@@ -1875,7 +1874,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(showPersonalButton){
 				// clickedname=((data.clickednodename.length>(this.maxstringlength-24))?data.clickednodename.substr(0,(this.maxstringlength-24))+'...':data.clickednodename);
 				var editBtn = 	'			<span>'
-								+'				<button class="uda-tutorial-btn" style="padding:2px;" type="button" id="uda-edit-clickedname"><img src="'+this.extensionpath+'images/icons/edit.png"></button>'
+								+'				<button class="uda-tutorial-btn" style="padding:0px;" type="button" id="uda-edit-clickedname"><img src="'+this.extensionpath+'images/icons/edit.png"></button>'
 								+'			</span>'
 								+'			<input type="text" id="uda-edited-name" name="uda-edited-name" class="uda-form-input" placeholder="Enter Name" value="'+originalName+'" style="display: none;">';
 				if(nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal){
@@ -1884,7 +1883,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				} else {
 					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" /> <label style="font-size:14px;">Is personal</label>';
 				}
-				personalHtml += '			<span style="position: relative; top: 4px;"><img src="'+this.extensionpath+'images/icons/info.png"></span>';
+				personalHtml += '			<span style="position: relative; top: 0px;"><img src="'+this.extensionpath+'images/icons/info.png"></span>';
 				// var personalHtml = '&nbsp; &nbsp;<input type="checkbox" nist-voice="true" id="isPersonal" /> is personal';
 				/*var personalElement = jQuery(personalHtml);
 				personalElement.click(function (){
@@ -1895,7 +1894,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 								+clickedname
 								+editBtn
 								+'<br />'
-								+'</i><br />'
+								+'</i>'
 								+personalHtml
 								+'<br />'
 							+'</li>';
