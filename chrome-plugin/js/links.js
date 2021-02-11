@@ -19,7 +19,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
             return UDAUserAuthData.email;
         }
     };
-    let dsaClickObjects = [];
+    let UDAClickObjects = [];
     let UDASessionID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     const voicedebug = false; //this variable exists in background.js file also
     const DSA_POST_INTERVAL = 1000; //in milliseconds, each minute
@@ -292,15 +292,15 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
                 return;
             }
 
-            for (var i = 0; i < dsaClickObjects.length; i++) {
-                if (dsaClickObjects[i].element.isSameNode(clickObject.element)) {
+            for (var i = 0; i < UDAClickObjects.length; i++) {
+                if (UDAClickObjects[i].element.isSameNode(clickObject.element)) {
                     //todo, discuss , how better to call actions, if multiple actions should be stored, or selector better.
                     return;
                 }
             }
 
-            clickObject.id = dsaClickObjects.length;
-            dsaClickObjects.push(clickObject);
+            clickObject.id = UDAClickObjects.length;
+            UDAClickObjects.push(clickObject);
         }
 
         // processing node from mutation and then send to clickbojects addition
@@ -363,8 +363,8 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
 
         // removal of clickbojects via mutation observer
         function dsaProcessRemovedNode(node) {
-            for (var j = 0; j < dsaClickObjects.length; j++) {
-                if (node.isEqualNode(dsaClickObjects[j].element)) {
+            for (var j = 0; j < UDAClickObjects.length; j++) {
+                if (node.isEqualNode(UDAClickObjects[j].element)) {
                     let addtoremovenodes = true;
                     removedclickobjectcounter:
                         for (var k = 0; k < removedclickobjects.length; k++) {
@@ -374,9 +374,9 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
                             }
                         }
                     if (addtoremovenodes) {
-                        removedclickobjects.push(dsaClickObjects[j]);
+                        removedclickobjects.push(UDAClickObjects[j]);
                     }
-                    dsaClickObjects.splice(j, 1);
+                    UDAClickObjects.splice(j, 1);
                     break;
                 }
             }
@@ -392,7 +392,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
             mutations.forEach(function (mutation) {
                 if (mutation.removedNodes.length) {
                     if (logLevel > 1) {
-                        console.log(dsaClickObjects);
+                        console.log(UDAClickObjects);
                     }
                     [].some.call(mutation.removedNodes, dsaProcessRemovedNode);
                     if (logLevel > 1) {

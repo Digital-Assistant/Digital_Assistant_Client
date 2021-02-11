@@ -106,7 +106,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			'naturalWidth', 'naturalHeight', 'complete'
 		],
 		innerTextWeight: 5,
-		logLevel: 3,
+		logLevel: 0,
 		playNextAction: true,
 		forceReindex: false,
 		searchText: null,
@@ -626,13 +626,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		// indexing all nodes after all the clicknodes are available
 		indexclicknodes: function(){
-			this.processcount=dsaClickObjects.length;
+			this.processcount=UDAClickObjects.length;
 			this.previousurl=this.currenturl=window.location.href;
 			this.processingnodes=true;
 			// indexing nodes has been called for adding click detection
 			this.indexdom(document.body);
 			this.processedclickobjectscount=this.processcount;
-			this.totalcount=dsaClickObjects.length;
+			this.totalcount=UDAClickObjects.length;
 			this.processingnodes=false;
 			if(this.processcount<this.totalcount){
 				//	todo refine the processing nodes.
@@ -646,7 +646,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(this.processingnodes){
 				return;
 			}
-			this.processcount=dsaClickObjects.length;
+			this.processcount=UDAClickObjects.length;
 			if(lastindextime!==0 && lastindextime>lastmutationtime){
 				return;
 			}
@@ -658,7 +658,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.indexdom(document.body);
 				this.processedclickobjectscount = this.processcount;
 				this.processingnodes = false;
-				this.totalcount = dsaClickObjects.length;
+				this.totalcount = UDAClickObjects.length;
 			}
 			if(this.processcount<this.totalcount){
 				//todo new nodes added need to reprocess
@@ -823,6 +823,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 				return node;
 			}
 
+			if(node.nodeName.toLowerCase() === 'mat-checkbox'){
+				return node;
+			}
+
 
 			// Multiple clicks are recorded for select2-selection class. select2-selection--multiple
 			// This will create a problem during playback. We should record only one click to avoid this problem
@@ -840,13 +844,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 				}
 			}
 
-			for (var i = 0; i < dsaClickObjects.length; i++) {
-				if(dsaClickObjects[i].element===window){
+			for (var i = 0; i < UDAClickObjects.length; i++) {
+				if(UDAClickObjects[i].element===window){
 					continue;
 				}
-				if (node.isSameNode(dsaClickObjects[i].element)) {
+				if (node.isSameNode(UDAClickObjects[i].element)) {
 					clickobjectexists = true;
-					clickobject = dsaClickObjects[i];
+					clickobject = UDAClickObjects[i];
 				}
 			}
 
@@ -1143,6 +1147,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 							$(node.parentNode.parentNode.parentNode.parentNode.parentNode).addClass('uda-tooltip').append('<div class="uda-tooltip-right"><div class="uda-tooltip-text-content">Please select the value and then click on play</div></div>');
 							node.focus();
 						});
+					} else if(node.hasAttribute('role') && (node.getAttribute('role')==='combobox')) {
+						this.introjs.addStep({
+							element: node.parentNode.parentNode.parentNode.parentNode,
+							intro: "Please input in the field and then continue.",
+							position: 'right',
+						}).start();
 					} else if(node.hasAttribute('type') && (node.getAttribute('type')==='checkbox' || node.getAttribute('type')==='radio') && node.classList && (node.classList.contains('mat-checkbox-input') || node.classList.contains('mat-radio-input'))) {
 						this.introjs.addStep({
 							element: node.parentNode.parentNode,
