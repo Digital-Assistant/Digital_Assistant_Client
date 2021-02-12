@@ -1893,7 +1893,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				} else {
 					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" /> <label style="font-size:14px;">Is personal</label>';
 				}
-				personalHtml += '			<span style="position: relative; top: 0px;"><img src="'+this.extensionpath+'images/icons/info.png"></span>';
+				personalHtml += '			<span style="position: relative; top: 0px;"><img src="'+this.extensionpath+'images/icons/info.png" title="help"></span>';
 				// var personalHtml = '&nbsp; &nbsp;<input type="checkbox" nist-voice="true" id="isPersonal" /> is personal';
 				/*var personalElement = jQuery(personalHtml);
 				personalElement.click(function (){

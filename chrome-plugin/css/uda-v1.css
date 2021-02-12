@@ -49,7 +49,7 @@
 }
 
 .uda-ribbon-arrow {
-    width: 40px;
+    width: 35px;
     height: 35px;
     background-color: #303f9f;
     border-radius: 0 37% 37% 0;
@@ -66,12 +66,13 @@
 }
 
 .uda-icon-txt {
-    margin-top: 25px;
+    margin-top: 15px;
     text-align: center;
 }
 
 .uda-icon-txt img {
     cursor: pointer;
+    width: 45px;
 }
 
 .uda-help-bg-tooltip {
@@ -84,7 +85,7 @@
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     margin-left: 20px;
-    top: -11px;
+    top: 8px;
 }
 
 .uda-help-bg-tooltip:after {
@@ -361,7 +362,7 @@
 
 .uda-recording {
     position: relative;
-    line-height: 22px;
+    line-height: 25px;
     text-align: left;
     list-style: none url('../images/icons/bullet.png');
     margin: 0;
@@ -374,7 +375,7 @@
 .uda-suggestion-list li::before {
     content: '\00a0 \00a0 \00a0 \00a0';
     padding-right: 10px;
-     vertical-align: middle;
+    vertical-align: middle;
 }
 
 .uda-suggestion-list li.completed::before {
