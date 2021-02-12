@@ -1,20 +1,10 @@
-.nist-original-content{
-	max-width: 80%;
-	float: left;
+.uda-original-content .navbar-fixed-top{
+	max-width: 77%;
 }
-.nist-original-content .navbar-fixed-top{
-	max-width: 80%;
-}
-.nist-original-content .vc_topbar{
-	max-width: 80%;
+.uda-original-content .vc_topbar{
+	max-width: 77%;
 }
 .uib-datepicker-popup.dropdown-menu {
     position: absolute;
     z-index: 9999999 !important;
-}
-.voice-redmine-rght{
-	position:fixed;
-	top:0px;
-	right: 0px;
-	bottom: 0px;
 }

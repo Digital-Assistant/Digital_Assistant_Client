@@ -330,16 +330,16 @@ h4.voice-card-noborder {
 
 
 /* tooltip css classes */
-.tooltip-dsa {
+.uda-tooltip {
 	display:inline-block;
 	position:relative;
 	border-bottom:1px dotted #666;
 	text-align:left;
 }
 
-.tooltip-dsa h3 {margin:12px 0;}
+.uda-tooltip h3 {margin:12px 0;}
 
-.tooltip-dsa .tooltip-dsa-right {
+.uda-tooltip .uda-tooltip-right {
 	min-width:200px;
 	max-width:400px;
 	top:50%;
@@ -359,21 +359,21 @@ h4.voice-card-noborder {
 	visibility:hidden; opacity:0; transition:opacity 0.8s;
 }
 
-.tooltip-dsa .tooltip-dsa-right {
+.uda-tooltip .uda-tooltip-right {
 	visibility:visible; opacity:1;
 }
 
-.tooltip-dsa .tooltip-dsa-right img {
+.uda-tooltip .uda-tooltip-right img {
 	width:400px;
 	border-radius:8px 8px 0 0;
 }
-.tooltip-dsa .tooltip-dsa-text-content {
+.uda-tooltip .uda-tooltip-text-content {
 	padding:10px 20px;
 	white-space: initial;
 	line-height: normal !important;
 }
 
-.tooltip-dsa .tooltip-dsa-right i {
+.uda-tooltip .uda-tooltip-right i {
 	position:absolute;
 	top:50%;
 	right:100%;
@@ -382,7 +382,7 @@ h4.voice-card-noborder {
 	height:24px;
 	overflow:hidden;
 }
-.tooltip-dsa .tooltip-dsa-right i::after {
+.uda-tooltip .uda-tooltip-right i::after {
 	content:'';
 	position:absolute;
 	width:12px;
