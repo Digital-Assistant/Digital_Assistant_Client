@@ -123,6 +123,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		personalNodeIgnoreAttributes: [
 			'innerText', 'innerHTML', 'outerText', 'outerHTML', 'nodeValue', 'src', 'naturalWidth', 'naturalHeight', 'currentSrc'
 		],
+		clickeOn: '',
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -328,32 +329,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 			});
 		},
 		checkuserkeyexists:function(){
-			/*var sessiondata=this.getstoragedata(this.cookiename);
-			if(sessiondata){
-				var parsedsessiondata=JSON.parse(sessiondata);
-				this.sessiondata=parsedsessiondata;
-				this.sessionID=parsedsessiondata.sessionkey;
-				this.recorddocumentclick();
-			}else{
-				var sessionevent = new CustomEvent("RequestUDASessionData", {detail: {data: "getusersessiondata"}, bubbles: false, cancelable: false});
-				document.dispatchEvent(sessionevent);
-			}*/
 			var sessionevent = new CustomEvent("RequestUDASessionData", {detail: {data: "getusersessiondata"}, bubbles: false, cancelable: false});
 			document.dispatchEvent(sessionevent);
 		},
 		createsession:function(data){
-			/*var sessiondata=this.getstoragedata(this.cookiename);
-			if(sessiondata){
-				this.sessiondata=data;
-				this.sessionID=data.sessionkey;
-				this.createstoragedata(this.cookiename,JSON.stringify(data));
-			}else{
-				UDASessionID=data.sessionkey;
-				this.sessiondata=data;
-				this.sessionID=data.sessionkey;
-				this.createstoragedata(this.cookiename,JSON.stringify(data));
-			}*/
-			
 			UDASessionID=data.sessionkey;
 			this.sessiondata=data;
 			this.sessionID=data.sessionkey;
@@ -400,10 +379,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.showhtml();
 			}
 		},
-		addRightPanel: function() {
-			var template = this.rightPanelHtml();
-			return template;
-		},
 		rightPanelHtml: function(){
 			var html = 	'<uda-panel>'
 						+'<div class="uda-page-right-bar">'
@@ -431,12 +406,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'<div>'
 							+'<div class="uda-footer-bar">'
 								+'<div class="uda-container">'
-									+'<div class="uda-dropdown">'
+									+'<div class="uda-dropdown" id="uda-advanced-btn">'
 										+'<button class="uda-advanced-btn">'
 											+'<img src="'+this.extensionpath+'images/icons/advanced-icon.png"><span>Advanced</span>'
 										+'</button>'
 										+'<div class="uda-advanced-btn-content">'
-											+'<a id="uda-advance-section"><img src="'+this.extensionpath+'images/icons/new-record.png" width="23px" height="23px"><span> New Record</span></a>'
+											+'<a id="uda-advance-section"><img src="'+this.extensionpath+'images/icons/new-record.png" width="23px" height="23px"><span>&nbsp; New Sequence </span></a>'
 											// +'<a><img src="'+this.extensionpath+'images/icons/new-record.png" width="23px" height="23px"><span> New Record</span></a>'
 										+'</div>'
 									+'</div>'
@@ -457,32 +432,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			return html;
 		},
 		addvoicesearchmodal:function(addnisticon=true){
-			/*
-			var recbtn ='	   <button nist-voice="true" id="uda-advance-section" class="voice-record-img"><span nist-voice="true">Advanced</span></button>';
-
-			if(!addnisticon){
-				recbtn ='	   <button nist-voice="true" id="nistvoicerecstpbtn" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-stop.png"> <span nist-voice="true">Stop</span></button>';
-			}
-			var html =  '<div class="voice-redmine-rght">'+
-						'   <div class="">'+
-						'	    <div class="voice-hng-left"><h3>How Can I Help You Today?</h3></div>'+
-						'	    <div class="voice-hng-right"><img id="closenistmodal" style="vertical-align:middle;" src="'+this.extensionpath+'assets/voice-close.png"></div>'+
-						'       <div class="nist-clear"></div>'+
-						'   </div>'+
-						'	<div class="voice-red-hr-line"></div>'+
-						'	<div class="voice-srch-bg">'+
-						'		<span class="voice-srch"><img src="'+this.extensionpath+'assets/voice-search.png"></span><input type="search" class="voice-srch-fld" nist-voice="true" id="uda-search-input" placeholder="Search..." />' +
-						'       <span id="uda-voice-icon-start" class="voice-voice-srch" nist-voice="true"><img nist-voice="true" src="'+this.extensionpath+'assets/voice-voice.png" /></span>'+
-						'       <span style="display:none;" class="voice-voice-srch" id="uda-voice-icon-stop" nist-voice="true"><img src="'+this.extensionpath+'assets/stop.png" nist-voice="true" /></span>' +
-						'	</div>'+
-						'   <div>'+
-								recbtn +
-						'   </div>'+
-						'   <div class="nist-clear"></div>'+
-						'   <div id="uda-content-container"></div>'+
-						'	<br/><br/><br/>'+
-						'</div>';*/
-			jQuery("#voicemodalhtml").html(this.addRightPanel());
+			jQuery("#voicemodalhtml").html(this.rightPanelHtml());
 			jQuery("#closenistmodal").click(function(){
 				UDAPluginSDK.closemodal();
 			});
@@ -513,13 +463,15 @@ if (typeof UDAPluginSDK === 'undefined') {
 				jQuery("#uda-voice-icon-stop").hide();
 			}
 			if(addnisticon) {
+				jQuery('#uda-advanced-btn').show();
 				jQuery("#uda-advance-section").click(function () {
 					UDAPluginSDK.showadvancedhtml();
 				});
 			} else {
-				jQuery("#nistvoicerecstpbtn").click(function () {
+				/*jQuery("#nistvoicerecstpbtn").click(function () {
 					UDAPluginSDK.gettimestamp("stop");
-				});
+				});*/
+				jQuery('#uda-advanced-btn').hide();
 			}
 		},
 		//opening the UDA screen
@@ -1751,6 +1703,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 
 			jQuery("#uda-content-container").html("");
+
+			if(this.clickeOn && this.clickeOn === 'record-btn'){
+				UDAPluginSDK.addrecordresultshtml([]);
+				this.clickeOn = '';
+				return ;
+			}
+
 			var xhr = new XMLHttpRequest();
 			xhr.open("GET", this.apihost+"/clickevents/fetchrecorddata?start="+starttime+"&end="+endtime+"&sessionid="+UDAPluginSDK.sessionID+"&domain="+recordingcookiedata.domain, true);
 			xhr.onload = function(event){
@@ -1773,6 +1732,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 			recordingcookiedata.domain = window.location.host;
 			this.createstoragedata(this.recordingcookiename,JSON.stringify(recordingcookiedata));
+
+			this.clickeOn = 'record-btn';
+
 			this.showhtml();
 
 			//add analtytics
@@ -1809,6 +1771,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 			var recordingcookie = this.getstoragedata(this.recordingcookiename);
 			if(recordingcookie){
 				var recordingcookiedata=JSON.parse(recordingcookie);
+				if(!recordingcookiedata.recording){
+					return false;
+				}
 				recordingcookiedata.endtime=Date.now();
 				recordingcookiedata.recording=false;
 			} else {
@@ -1829,17 +1794,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 		addrecordresultshtml:function(data){
 			if(data.length>0) {
 				this.recordedsequenceids=data;
-				/*var html =  '   <div class="voice-suggesion-card">'+
-							'		<div class="voice-card-left">'+
-							'			<h4>Recorded Sequence</h4>'+
-							'			<ul id="uda-recorded-results" class="voice-sugggesion-bullet">'+
-							'			</ul>'+
-							'			<div>'+
-							'				<input id="uda-recorded-name" type="text" name="uda-recorded-name" class="voice-save-recrded-inpt" placeholder="Enter label" nist-voice="true">'+
-							'				<button class="voice-cancel-btn" onclick="UDAPluginSDK.cancelrecordingsequence();">Cancel and exit</button> <button onclick="UDAPluginSDK.submitrecordedlabel();" class="voice-submit-btn">Submit</button>'+
-							'			</div>'+
-							'		</div>'+
-							'	</div>';*/
 				jQuery("#uda-content-container").html(this.renderRecordedSequenceHtml());
 				for(var i=0;i<data.length;i++){
 					// modification for personal button addition
@@ -1849,8 +1803,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 						this.renderrecordresultrow(data[i],i,false);
 					}
 				}
-				this.openmodal(false);
+			} else {
+				jQuery("#uda-content-container").html(this.renderEmptyRecordedSequenceHtml());
 			}
+
+			this.openmodal(false);
 		},
 		renderRecordedSequenceHtml: function(){
 			var html =	'<div class="uda-card-details">'
@@ -1862,6 +1819,20 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'		<input type="text" id="uda-recorded-name" name="uda-save-recorded" class="uda-form-input" placeholder="Enter Label">'
 						+'		<button class="uda-record-btn" onclick="UDAPluginSDK.cancelrecordingsequence();">Cancel and Exit</button>'
 						+'		<button class="uda-tutorial-btn" onclick="UDAPluginSDK.submitrecordedlabel();">Submit</button>'
+						+'	</div>'
+						+'</div>';
+			return html;
+		},
+		renderEmptyRecordedSequenceHtml: function(){
+			var html =	'<div class="uda-card-details">'
+						+'	<h5>Recorded Sequence</h5>'
+						+'	<hr>'
+						+'	<h5>Please navigate in the page to record.</h5>'
+						+'	<br />'
+						+'	<div class="uda-recording" style="text-align: center;">'
+						// +'		<input type="text" id="uda-recorded-name" name="uda-save-recorded" class="uda-form-input" placeholder="Enter Label">'
+						+'		<button class="uda-record-btn" onclick="UDAPluginSDK.cancelrecordingsequence();">Cancel and Exit</button>'
+						// +'		<button class="uda-tutorial-btn" onclick="UDAPluginSDK.submitrecordedlabel();">Submit</button>'
 						+'	</div>'
 						+'</div>';
 			return html;
@@ -1894,12 +1865,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" /> <label style="font-size:14px;">Is personal</label>';
 				}
 				personalHtml += '			<span style="position: relative; top: 0px;"><img src="'+this.extensionpath+'images/icons/info.png" title="help"></span>';
-				// var personalHtml = '&nbsp; &nbsp;<input type="checkbox" nist-voice="true" id="isPersonal" /> is personal';
-				/*var personalElement = jQuery(personalHtml);
-				personalElement.click(function (){
-					UDAPluginSDK.personalNode(data);
-				});*/
-				// var editBtn = "&nbsp; &nbsp;<button nist-voice='true' id='edit-list'>Edit</button>";
 				var html =	'<li><i>'
 								+clickedname
 								+editBtn
@@ -2034,7 +1999,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			} else {
 				var searchtext = jQuery("#uda-search-input").val();
 			}
-			this.cancelrecordingsequence(false);
+
+			this.cancelrecordingsequence(true);
 
 
 			if (this.searchInProgress === true) {
@@ -2170,22 +2136,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 					}
 				}
 			}
-
-			/*var html =  '<div class="voice-suggesion-card">'+
-						'	<div class="voice-card-left">'+
-						'		<div class="voice-back-btn"><img nist-voice="true" id="uda-backto-search" src="'+this.extensionpath+'assets/voice-back.png"></div>'+
-						'       <div class="voice-feedback-btns">' +
-						'		    <img nist-voice="true" id="uda-upvote" class="voice-like-violet" src="'+this.extensionpath+'assets/voice-like.png">'+
-						'		    <img nist-voice="true" id="uda-downvote" class="voice-dislike-violet" src="'+this.extensionpath+'assets/voice-dislike.png">'+
-						'		    <img nist-voice="true" id="uda-delete-sequence" class="voice-delete-violet" src="'+this.extensionpath+'assets/voice-delete.png">'+
-						'       </div>'+
-						'		<h4>'+data.name.toString()+'</h4>'+
-						'		<ul class="voice-sugggesion-bullet" id="uda-sequence-steps">'+
-						'		</ul>'+
-						'	</div>'+
-						'   <div class="nist-clear"></div>'+
-						'</div>'+
-						playiconhtml;*/
 
 			var element=jQuery(this.renderSelectedSequenceHtml(data, isPlaying));
 			jQuery("#uda-content-container").html(element);
@@ -2726,14 +2676,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 		showadvancedhtml:function(){
 			jQuery("#uda-advance-section").hide();
 			jQuery("#uda-content-container").html('');
-			/*var html=   '<div class="voice-modalback-btn"><img nist-voice="true" id="nistvoiceback" src="'+this.extensionpath+'assets/voice-back.png"></div><br />'+
-						'<div class="nist-clear"></div>'+
-						'   <div class="voice-suggesion-card">' +
-						'		<div class="voice-card-left">' +
-						'			<h4 class="voice-card-noborder">Create your own action <button nist-voice="true" id="uda-enable-record" class="voice-modal-btn"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-record.png"> <span nist-voice="true">Rec</span></button></h4>' +
-						'       </div>'+
-						'   </div>';*/
-						// '<div class="name-heading"><h2 nist-voice="true">Create your own action <button nist-voice="true" id="uda-enable-record" class="voice-record-img"><img nist-voice="true" style="vertical-align:middle" src="'+this.extensionpath+'assets/voice-record.png"> <span nist-voice="true">Rec</span></button></h2><br /></div>';
 			jQuery("#uda-content-container").append(this.getAdvancedHtml());
 			jQuery("#uda-enable-record").click(function () {
 				UDAPluginSDK.gettimestamp("start");
@@ -2753,10 +2695,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 		// advanced html
 		getAdvancedHtml: function (){
 			var html =	'<div class="uda-card-details">'
-							+'<div><button class="uda-tutorial-btn" type="button">Tutorial</button></div>'
-							+'<hr>'
+							// +'<div><button class="uda-tutorial-btn" type="button">Tutorial</button></div>'
+							// +'<hr>'
 							+'<h5>Create your own action</h5>'
-							+'<div><button class="uda-record-btn" id="uda-enable-record"><img src="'+this.extensionpath+'images/icons/new-record.png" width="23px" height="23px"> Rec</button></div>'
+							+'<div><button class="uda-record-btn" id="uda-enable-record"><img src="'+this.extensionpath+'images/icons/new-record.png" width="23px" height="23px">&nbsp; Rec</button></div>'
 						+'</div>';
 			return html;
 		},
