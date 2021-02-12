@@ -542,9 +542,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		//render the required html for showing up the proper html
 		showhtml:function(){
-			if(!this.playNextAction) {
-				return;
-			}
 			this.rerenderhtml=false;
 			var addnisticon=true;
 			var checkrecording = this.getstoragedata(this.recordingcookiename);
@@ -567,6 +564,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 						this.openmodal();
 						if(navigationcookiedata.autoplay){
 							this.autoplay=true;
+							if(!this.playNextAction) {
+								return;
+							}
 						}
 						this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
 					}
