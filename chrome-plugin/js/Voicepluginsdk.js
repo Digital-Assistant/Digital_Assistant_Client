@@ -106,13 +106,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 			'naturalWidth', 'naturalHeight', 'complete'
 		],
 		innerTextWeight: 5,
-		logLevel: 0,
+		logLevel: 3,
 		playNextAction: true,
 		forceReindex: false,
 		searchText: null,
 		searchInProgress: false,
 		ignoreNodes: ['ng-dropdown-panel','ckeditor','fusioncharts','ngb-datepicker','ngx-daterangepicker-material','uda-panel'],
-		cancelRecordingDuringRecordingNodes: ['ngb-datepicker'],
+		cancelRecordingDuringRecordingNodes: ['ngb-datepicker','ngx-daterangepicker-material'],
 		tooltipDisplayedNodes: [],
 		//replayvariables
 		autoplayCompleted: false,
@@ -784,7 +784,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			// This will create a problem during playback. We should record only one click to avoid this problem
 			if(node.classList && (node.classList.contains("select2-search__field") || node.classList.contains('cdk-overlay-backdrop') || node.classList.contains('cdk-overlay-pane'))) {
 				console.log(node.classList);
-				return node;
+				// return node;
 			}
 
 			if(this.htmlindex.length>0){
