@@ -2410,10 +2410,20 @@ if (typeof UDAPluginSDK === 'undefined') {
 						console.log('----------------------------------------------------------');
 					}
 					alert("Unable to find the action");
+					if(navcookiedata && navcookiedata.autoplay) {
+						this.autoplay = false;
+						this.autoplayPaused = true;
+						this.toggleautoplay(navcookiedata);
+					}
 				}
 
 			} else {
 				alert("Unable to find the action");
+				if(navcookiedata && navcookiedata.autoplay) {
+					this.autoplay = false;
+					this.autoplayPaused = true;
+					this.toggleautoplay(navcookiedata);
+				}
 			}
 		},
 		//comparing nodes of indexed and the sequence step selected
