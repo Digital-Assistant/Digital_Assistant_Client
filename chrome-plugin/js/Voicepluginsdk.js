@@ -221,7 +221,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			document.getElementsByTagName("head")[0].appendChild(script);
 		},
 		otherscripts: function(){
-			this.totalotherScripts=0;
+			this.totalotherScripts=1;
 			// this.loadCssScript(this.extensionpath+"css/extension.css");
 			this.loadCssScript(this.extensionpath+"css/uda-v1.css");
 			this.loadOtherScript(this.extensionpath+"js/domJSON.js");
