@@ -563,16 +563,18 @@
 }
 .uda-tooltip .uda-tooltip-right::before{
     content: "";
-  position: absolute;
-  top: 50%;
-  right: 100%;
-  margin-top: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent #ff5722 transparent transparent;
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent #ff5722 transparent transparent;
 }
 .uda-tooltip .uda-tooltip-right {
-    visibility:visible; opacity:1;
+    visibility:visible;
+    opacity:1;
+    text-align: center;
 }
 
 .uda-tooltip .uda-tooltip-right img {
@@ -604,6 +606,10 @@
     transform:translate(50%,-50%) rotate(-45deg);
     background-color:#444444;
     box-shadow:0 1px 8px rgba(0,0,0,0.5);
+}
+
+.uda-tooltip .uda-tooltip-right .uda-tutorial-btn:hover {
+    background-color: #303f9f;
 }
 
 /* angular related css code for squeezing*/
