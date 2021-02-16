@@ -106,7 +106,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			'naturalWidth', 'naturalHeight', 'complete'
 		],
 		innerTextWeight: 5,
-		logLevel: 3,
+		logLevel: 0,
 		playNextAction: true,
 		forceReindex: false,
 		searchText: null,
@@ -221,7 +221,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			document.getElementsByTagName("head")[0].appendChild(script);
 		},
 		otherscripts: function(){
-			this.totalotherScripts=1;
+			this.totalotherScripts=0;
 			// this.loadCssScript(this.extensionpath+"css/extension.css");
 			this.loadCssScript(this.extensionpath+"css/uda-v1.css");
 			this.loadOtherScript(this.extensionpath+"js/domJSON.js");
@@ -239,11 +239,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 					this.loadCssScript(this.extensionpath + "css/app.vantagecircle.com.css");
 				}
 			}
-			if(typeof introJs === 'undefined'){
+			/*if(typeof introJs === 'undefined'){
 				this.totalotherScripts++;
 				this.loadOtherScript(this.extensionpath+"js/intro.min.js");
 				this.loadCssScript(this.extensionpath+"css/introjs.min.css");
-			}
+			}*/
 		},
 		allReady: function() {
 			// execute the parsing method after everything is ready.
@@ -276,7 +276,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			// check user session exists and create if not available
 			this.checkuserkeyexists();
 
-			this.configureintrojs();
+			// this.configureintrojs();
 
 			// adding speech recognition functionality based on the library availability
 			if(UDASpeechRecognitionAvailable){
@@ -1352,11 +1352,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 				console.log(this.invokingnode);
 			}
 
-			if(this.invokingnode && this.invokingnode.isEqualNode(invokingnode)){
+			/*if(this.invokingnode && this.invokingnode.isEqualNode(invokingnode)){
 				return;
 			} else {
 				this.invokingnode = invokingnode;
-			}
+			}*/
+			this.invokingnode = invokingnode;
 
 			this.playNextAction = false;
 			if(navigationcookiedata && navigationcookiedata.autoplay) {
@@ -1389,6 +1390,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		//Continue functionality invoke
 		resumePlay: function(){
+			let tooltipnodes = $('.uda-tooltip');
+			if (tooltipnodes.length > 0) {
+				$('.uda-tooltip').each(function() {
+					$(this).removeClass('uda-tooltip');
+					$(this).find('.uda-tooltip-right').remove();
+				});
+			}
 			this.playNextAction = true;
 			// this.showhtml();
 			var navigationcookie=this.getstoragedata(this.navigationcookiename);
@@ -2252,8 +2260,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 				// UDAPluginSDK.toggleautoplay(navcookiedata);
 				UDAPluginSDK.autoplay = false;
 				UDAPluginSDK.searchInProgress=false;
-				UDAPluginSDK.configureintrojs();
-				UDAPluginSDK.introjs.refresh();
+				// UDAPluginSDK.configureintrojs();
+				// UDAPluginSDK.introjs.refresh();
 				UDAPluginSDK.backtosearchresults(navcookiedata);
 			});
 		},
@@ -2690,8 +2698,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(navcookiedata.autoplay){
 				navcookiedata.autoplay=false;
 				this.autoplay=false;
-				this.configureintrojs();
-				this.introjs.refresh();
+				// this.configureintrojs();
+				// this.introjs.refresh();
 				//add analtytics
 				this.recordclick('stop',navcookiedata.data.name.toString(),navcookiedata.data.id);
 			} else {
