@@ -239,11 +239,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 					this.loadCssScript(this.extensionpath + "css/app.vantagecircle.com.css");
 				}
 			}
-			/*if(typeof introJs === 'undefined'){
-				this.totalotherScripts++;
-				this.loadOtherScript(this.extensionpath+"js/intro.min.js");
-				this.loadCssScript(this.extensionpath+"css/introjs.min.css");
-			}*/
 		},
 		allReady: function() {
 			// execute the parsing method after everything is ready.
@@ -275,8 +270,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			// check user session exists and create if not available
 			this.checkuserkeyexists();
-
-			// this.configureintrojs();
 
 			// adding speech recognition functionality based on the library availability
 			if(UDASpeechRecognitionAvailable){
@@ -668,15 +661,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 					// Checking for ignore nodes during indexing
 					if (this.inarray(node.nodeName.toLowerCase(), this.ignoreNodes) !== -1) {
 						if(node.nodeName.toLowerCase() === 'ckeditor' && node.childNodes.length>2 && this.recording){
-							// console.log({editoriframe:node.childNodes[2].childNodes[1].childNodes[1].childNodes[1]});
-							/*jQuery(node.childNodes[2].childNodes[1].childNodes[1].childNodes[1]).bind("mousedown, mouseup, click",function(){
-								jQuery(this).contents().on("mousedown, mouseup, click", function(){
-
-								});
-								alert("Click detected inside iframe.");
-								console.log('record user click');
-								// UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
-							});*/
 							let addToolTip = true;
 							for(let checknode of this.tooltipDisplayedNodes){
 								if(node.isSameNode(checknode)) {
@@ -922,12 +906,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 				}
 			}
 
-			/*if(node.nodeName.toLowerCase() === "button" && node.textContent && node.textContent !== '') {
-				console.log(node.textContent);
-				inputlabels.push({"text":node.textContent,"match":false});
-				console.log(inputlabels);
-			}*/
-
 			if(getchildlabels && node.childNodes.length>0){
 				var childnodes = node.childNodes;
 				childnodes.forEach(function (childnode, key) {
@@ -1085,76 +1063,24 @@ if (typeof UDAPluginSDK === 'undefined') {
 					// this.playNextAction = false;
 					// functionality for detecting multi select box and highlighting the recorded node
 					if (node.classList && (node.classList.contains('select2-search__field') || node.classList.contains('mat-autocomplete-trigger'))){
-						// var navigationcookie=this.getstoragedata(this.navigationcookiename);
-						/*if(navigationcookie){
-							// var navigationcookiedata = JSON.parse(navigationcookie);
-							if(navigationcookiedata && navigationcookiedata.autoplay) {
-								this.autoplay = false;
-								this.autoplayPaused = true;
-								this.toggleautoplay(navigationcookiedata);
-							} else {
-								this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
-							}
-						}*/
-						/*this.introjs.addStep({
-							element: node,
-							intro: "Please select the value and then click on play",
-							position: 'right',
-						}).start();*/
-						/*$('html, body').animate({
-							scrollTop: ($(node).offset().top - 200)
-						}, 2000, function(){
-							$(node.parentNode.parentNode.parentNode.parentNode.parentNode).addClass('uda-tooltip').append('<div class="uda-tooltip-right"><div class="uda-tooltip-text-content">Please select the value and then click on play</div></div>');
-							node.focus();
-						});*/
 						this.addToolTip(node, node.parentNode.parentNode.parentNode.parentNode.parentNode, navigationcookiedata, false, true);
 					} else if(node.hasAttribute('role') && (node.getAttribute('role')==='combobox')) {
-						/*this.introjs.addStep({
-							element: node.parentNode.parentNode.parentNode.parentNode,
-							intro: "Please input in the field and then continue.",
-							position: 'right',
-						}).start();*/
 						this.addToolTip(node, node.parentNode.parentNode.parentNode.parentNode, navigationcookiedata, false, false);
 					} else if(node.hasAttribute('type') && (node.getAttribute('type')==='checkbox' || node.getAttribute('type')==='radio') && node.classList && (node.classList.contains('mat-checkbox-input') || node.classList.contains('mat-radio-input'))) {
-						/*this.introjs.addStep({
-							element: node.parentNode.parentNode,
-							intro: "Please input in the field and then continue.",
-							position: 'right',
-						}).start();*/
 						this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false);
 					} else if(node.hasAttribute('type')){
 						switch (node.getAttribute('type').toLowerCase()) {
 							case 'checkbox':
 								if(node.parentNode && node.parentNode.classList && node.parentNode.classList.contains('vc_checkbox')) {
-									/*this.introjs.addStep({
-										element: node.parentNode,
-										intro: "Please input in the field and then continue.",
-										position: 'right',
-									}).start();*/
 									this.addToolTip(node, node.parentNode, navigationcookiedata, false, false);
 								} else {
-									/*this.introjs.addStep({
-										element: node,
-										intro: "Please input in the field and then continue.",
-										position: 'right',
-									}).start();*/
 									this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false);
 								}
 								break;
 							case 'radio':
 								if(node.parentNode && node.parentNode.classList && node.parentNode.classList.contains('vc_label')) {
-									/*this.introjs.addStep({
-										element: node.parentNode,
-										intro: "Please input in the field and then continue.",
-										position: 'right',
-									}).start();*/
 									this.addToolTip(node, node.parentNode, navigationcookiedata, false, false);
 								} else {
-									/*this.introjs.addStep({
-										element: node,
-										intro: "Please input in the field and then continue.",
-										position: 'right',
-									}).start();*/
 									this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false);
 								}
 								break;
@@ -1165,102 +1091,37 @@ if (typeof UDAPluginSDK === 'undefined') {
                             	break;
 							case 'text':
 								if(node.attributes && node.attributes.length>0 && node.hasAttribute('uib-datepicker-popup')) {
-									/*if(navigationcookie){
-										if(navigationcookiedata && navigationcookiedata.autoplay) {
-											this.autoplay = false;
-											this.autoplayPaused = true;
-											this.toggleautoplay(navigationcookiedata);
-										} else {
-											this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
-										}
-									}
-									$('html, body').animate({
-										scrollTop: ($(node).offset().top - 200)
-									}, 2000, function(){
-										$(node.parentNode.parentNode).addClass('uda-tooltip').append('<div class="uda-tooltip-right"><div class="uda-tooltip-text-content">Please select the date in the calendar. After you are done, please click on "play" in the "Assistant" pane to the right.</div></div>');
-										node.click();
-									});*/
 									this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, true, false);
 								} else {
-									/*this.introjs.addStep({
-										element: node,
-										intro: "Please input in the field and then continue.",
-										position: 'right',
-									}).start();*/
 									this.addToolTip(node, node.parentNode, navigationcookiedata, false, true);
 								}
 								break;
 							default:
-								/*this.introjs.addStep({
-									element: node,
-									intro: "Please input in the field and then continue.",
-									position: 'right',
-								}).start();*/
 								this.addToolTip(node, node.parentNode, navigationcookiedata, false, false);
 								break;
 						}
 					} else {
-						/*this.introjs.addStep({
-							element: node,
-							intro: "Please input in the field and then continue.",
-							position: 'right',
-						}).start();*/
 						this.addToolTip(node, node.parentNode, navigationcookiedata, false, false);
 					}
 					break;
 				case "textarea":
 					this.playNextAction = false;
-					/*this.introjs.addStep({
-						element: node,
-						intro: "Please select the value and then continue.",
-						position: 'right'
-					}).start();*/
 					this.addToolTip(node, node.parentNode, navigationcookiedata, false, false);
 					break;
 				case "select":
-					// this.playNextAction = false;
-					/*this.introjs.addStep({
-						element: node,
-						intro: "Please select the value and then continue.",
-						position: 'right',
-					}).start();*/
 					this.addToolTip(node, node.parentNode, navigationcookiedata, false, false);
 					break;
 				case "option":
-					// node.parentNode.focus();
 					this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false);
 					break;
 				case "checkbox":
-					// node.click();
-					// this.invokenextitem(node,timetoinvoke);
 					this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false);
 					break;
 				// Additional processing for calendar selection
 				case "button":
 					if(node.hasAttribute('aria-label') && node.getAttribute('aria-label').toLowerCase() === 'open calendar') {
-						// node.click();
-						/*this.introjs.addStep({
-							element: node,
-							intro: "Please select the value and then continue.",
-							position: 'right',
-						}).start();*/
-						/*if(navigationcookiedata && navigationcookiedata.autoplay) {
-							this.autoplay = false;
-							this.autoplayPaused = true;
-							this.toggleautoplay(navigationcookiedata);
-						} else {
-							this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
-						}
-						$('html, body').animate({
-							scrollTop: ($(node).offset().top - 200)
-						}, 2000, function() {
-							$(node.parentNode).addClass('uda-tooltip').append('<div class="uda-tooltip-right"><div class="uda-tooltip-text-content">Please select the date in the calendar. After you are done, please click on "play" in the "Assistant" pane to the right.</div></div>');
-							node.click();
-						});*/
 						this.addToolTip(node, node.parentNode, navigationcookiedata, true, false);
 					} else if(node.classList && node.classList.contains('btn-pill')) {
-						// fix for navigation issue
-						// this.forceReindex = true;
 						node.click();
 						this.invokenextitem(node,timetoinvoke);
 					} else {
@@ -1270,47 +1131,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 					break;
 				case 'span':
 					if (node.classList && node.classList.contains('select2-selection')) {
-						/*this.playNextAction = false;
-						// var navigationcookie=this.getstoragedata(this.navigationcookiename);
-						if(navigationcookie){
-							// var navigationcookiedata = JSON.parse(navigationcookie);
-							if(navigationcookiedata && navigationcookiedata.autoplay) {
-								this.autoplay = false;
-								this.autoplayPaused = true;
-								this.toggleautoplay(navigationcookiedata);
-							} else {
-								this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
-							}
-						}
-						$('html, body').animate({
-							scrollTop: ($(node).offset().top - 200)
-						}, 2000, function(){
-							$(node.parentNode.parentNode).addClass('uda-tooltip').append('<div class="uda-tooltip-right"><div class="uda-tooltip-text-content">Please select the value and then click on play</div></div>');
-							node.click();
-						});*/
 						this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, true, false);
 					}
 					break;
 				case 'div':
 					if(node.classList && (node.classList.contains('mat-form-field-flex') || node.classList.contains('mat-select-trigger'))) {
-						/*this.playNextAction = false;
-						// var navigationcookie=this.getstoragedata(this.navigationcookiename);
-						if(navigationcookie){
-							// var navigationcookiedata = JSON.parse(navigationcookie);
-							if(navigationcookiedata && navigationcookiedata.autoplay) {
-								this.autoplay = false;
-								this.autoplayPaused = true;
-								this.toggleautoplay(navigationcookiedata);
-							} else {
-								this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
-							}
-						}
-						$('html, body').animate({
-							scrollTop: ($(node).offset().top - 200)
-						}, 2000, function(){
-							$(node.parentNode.parentNode).addClass('uda-tooltip').append('<div class="uda-tooltip-right"><div class="uda-tooltip-text-content">Please select the value and then click on play</div></div>');
-							node.click();
-						});*/
 						this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, true, false);
 					} else {
 						node.click();
@@ -1319,24 +1144,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 					break;
 				//	fix for text editor during playback
 				case 'ckeditor':
-					/*this.playNextAction = false;
-					// var navigationcookie=this.getstoragedata(this.navigationcookiename);
-					if(navigationcookie){
-						// var navigationcookiedata = JSON.parse(navigationcookie);
-						if(navigationcookiedata && navigationcookiedata.autoplay) {
-							this.autoplay = false;
-							this.autoplayPaused = true;
-							this.toggleautoplay(navigationcookiedata);
-						} else {
-							this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
-						}
-					}
-					$('html, body').animate({
-						scrollTop: ($(node).offset().top - 200)
-					}, 2000, function(){
-						$(node).addClass('uda-tooltip').append('<div class="uda-tooltip-right"><div class="uda-tooltip-text-content">Please input into text editor and click on play</div></div>');
-						node.click();
-					});*/
 					this.addToolTip(node, node, navigationcookiedata, true, false);
 					break;
 				default:
