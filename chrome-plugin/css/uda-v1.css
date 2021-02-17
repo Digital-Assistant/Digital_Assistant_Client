@@ -163,6 +163,11 @@
 .uda-card h5 {
     font-size: 14px;
     margin: 5px 0px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
 .uda-card h5:hover {
@@ -176,7 +181,7 @@
     text-overflow: ellipsis;
     display: -webkit-box;
     line-height: 16px;
-    /* max-height: 32px; */
+    max-height: 62px;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
 }
