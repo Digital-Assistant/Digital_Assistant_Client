@@ -177,11 +177,11 @@
 .uda-card i {
     opacity: 80%;
     font-size: 12px;
-    line-height: 16px;
-    max-height: 62px;
     overflow: hidden;
     text-overflow: ellipsis;
-    display: -webkit-box;  
+    display: -webkit-box;
+    line-height: 16px;
+    max-height: 62px;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
 }
