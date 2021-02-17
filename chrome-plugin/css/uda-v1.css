@@ -172,6 +172,13 @@
 .uda-card i {
     opacity: 80%;
     font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    line-height: 16px;
+    /* max-height: 32px; */
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 }
 
 .uda-advanced-btn {
@@ -258,6 +265,7 @@
 
 .uda-footer-right img {
     cursor: pointer;
+    margin-bottom: 5px;
 }
 
 .uda-footer-bar {
@@ -370,17 +378,22 @@
 
 .uda-suggestion-list li, .uda-recording li {
     font-size: 14px;
+    cursor: pointer;
 }
+
 
 .uda-suggestion-list li::before {
     content: '\00a0 \00a0 \00a0 \00a0';
     padding-right: 10px;
     vertical-align: middle;
+ 
 }
 
 .uda-suggestion-list li.completed::before {
-    content: url('../images/icons/bullet.png');
+   /* content: url('../images/icons/bullet.png');*/
     vertical-align: middle;
+    background-image: url(../images/icons/bullet.png);
+    background-repeat: space;
 }
 
 .uda-details-footer {
