@@ -422,7 +422,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 								+'<div class="uda-container" style="border-top:1px solid #969696; margin-top: 30px;">'
 									+'<div class="uda-footer-left">Copyrights Reserved 2021.</div>'
 									+'<div class="uda-footer-right" style="padding-top:5px; text-align:right;">'
-										+'<a href="#">Know More</a>'
+										+'<a href="#">Know More </a>'
 										+'<img src="'+this.extensionpath+'images/icons/nist-logo.png" width="15px" height="15px;">'
 									+'</div>'
 								+'</div>'
@@ -1372,7 +1372,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'	<div class="uda-tooltip-text-content">'
 						+message
 						+'	</div>'
-						+'	<button class="uda-tutorial-btn" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>'
+						+'	<button class="uda-tutorial-btn" style="margin-bottom:10px;" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>'
 						+'</div>';
 
 			$('html, body').animate({
