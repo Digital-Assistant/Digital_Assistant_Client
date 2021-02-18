@@ -163,6 +163,11 @@
 .uda-card h5 {
     font-size: 14px;
     margin: 5px 0px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
 .uda-card h5:hover {
@@ -172,6 +177,13 @@
 .uda-card i {
     opacity: 80%;
     font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    line-height: 16px;
+    max-height: 62px;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 }
 
 .uda-advanced-btn {
@@ -258,6 +270,7 @@
 
 .uda-footer-right img {
     cursor: pointer;
+    margin-bottom: 5px;
 }
 
 .uda-footer-bar {
@@ -370,17 +383,22 @@
 
 .uda-suggestion-list li, .uda-recording li {
     font-size: 14px;
+    cursor: pointer;
 }
+
 
 .uda-suggestion-list li::before {
     content: '\00a0 \00a0 \00a0 \00a0';
     padding-right: 10px;
     vertical-align: middle;
+ 
 }
 
 .uda-suggestion-list li.completed::before {
-    content: url('../images/icons/bullet.png');
+   /* content: url('../images/icons/bullet.png');*/
     vertical-align: middle;
+    background-image: url(../images/icons/bullet.png);
+    background-repeat: space;
 }
 
 .uda-details-footer {
@@ -563,16 +581,18 @@
 }
 .uda-tooltip .uda-tooltip-right::before{
     content: "";
-  position: absolute;
-  top: 50%;
-  right: 100%;
-  margin-top: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent #ff5722 transparent transparent;
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent #ff5722 transparent transparent;
 }
 .uda-tooltip .uda-tooltip-right {
-    visibility:visible; opacity:1;
+    visibility:visible;
+    opacity:1;
+    text-align: center;
 }
 
 .uda-tooltip .uda-tooltip-right img {
@@ -604,6 +624,10 @@
     transform:translate(50%,-50%) rotate(-45deg);
     background-color:#444444;
     box-shadow:0 1px 8px rgba(0,0,0,0.5);
+}
+
+.uda-tooltip .uda-tooltip-right .uda-tutorial-btn:hover {
+    background-color: #303f9f;
 }
 
 /* angular related css code for squeezing*/
