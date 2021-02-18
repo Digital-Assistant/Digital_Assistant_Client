@@ -106,13 +106,16 @@ if (typeof UDAPluginSDK === 'undefined') {
 			'naturalWidth', 'naturalHeight', 'complete'
 		],
 		innerTextWeight: 5,
-		logLevel: 0,
+		logLevel: 3,
 		playNextAction: true,
 		forceReindex: false,
 		searchText: null,
 		searchInProgress: false,
-		ignoreNodes: ['ng-dropdown-panel','ckeditor','fusioncharts','ngb-datepicker','ngx-daterangepicker-material','uda-panel'],
-		cancelRecordingDuringRecordingNodes: ['ngb-datepicker'],
+		ignoreChildNodes: ['ng-dropdown-panel','ckeditor','fusioncharts','ngb-datepicker','ngx-daterangepicker-material','uda-panel','mat-datepicker-content','ng-select'],
+		// cancelRecordingDuringRecordingNodes: ['ngb-datepicker'],
+		cancelRecordingDuringRecordingNodes: [],
+		addClickToSpecialNodes: ['ng-select', 'ngb-datepicker'],
+		customNameForSpecialNodes: {'ngb-datepicker': 'Date selector','mat-datepicker-content': 'Date selector', 'ngx-daterangepicker-material': 'Date Range Selector'},
 		tooltipDisplayedNodes: [],
 		//replayvariables
 		autoplayCompleted: false,
@@ -659,7 +662,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					node.haschildclick=false;
 
 					// Checking for ignore nodes during indexing
-					if (this.inarray(node.nodeName.toLowerCase(), this.ignoreNodes) !== -1) {
+					if (this.inarray(node.nodeName.toLowerCase(), this.ignoreChildNodes) !== -1) {
 						if(node.nodeName.toLowerCase() === 'ckeditor' && node.childNodes.length>2 && this.recording){
 							let addToolTip = true;
 							for(let checknode of this.tooltipDisplayedNodes){
@@ -673,12 +676,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 							}
 						} else if(this.cancelRecordingDuringRecordingNodes.indexOf(node.nodeName.toLowerCase()) !== -1) {
 							this.addClickToNode(node);
+						} else if(!node.hasclick && this.inarray(node.nodeName.toLowerCase(), this.addClickToSpecialNodes) !== -1){
+							console.log('Child nodes ignored for node and added click to: '+node.nodeName);
+							this.addClickToNode(node);
 						} else {
-							/*$(node).click(function (){
-								alert('currently we do not support this action to be recorded');
-							});*/
+							console.log('Child nodes ignored for node: '+node.nodeName);
 						}
-					} else if(node.classList && ((node.classList.contains('select2-container--open') && !node.classList.contains('select2-container--focus')) || node.classList.contains('cdk-overlay-pane'))){
+					} else if(node.classList && ((node.classList.contains('select2-container--open') && !node.classList.contains('select2-container--focus')))){
 					//	do nothing as we are not going to deal with special classes
 						if(this.logLevel>0){
 							console.log('unwanted indexing prevention');
@@ -799,7 +803,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 
 			if(this.logLevel>2) {
-				if(this.inarray(node.nodeName.toLowerCase(), this.ignoreNodes) !== -1) {
+				if(this.inarray(node.nodeName.toLowerCase(), this.ignoreChildNodes) !== -1) {
 					console.log({indexingnode: node});
 				}
 			}
@@ -1146,6 +1150,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 				case 'ckeditor':
 					this.addToolTip(node, node, navigationcookiedata, true, false);
 					break;
+				case 'ng-select':
+					this.addToolTip(node, node, navigationcookiedata, false, false);
+					break;
 				default:
 					node.click();
 					this.invokenextitem(node,timetoinvoke);
@@ -1291,13 +1298,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 
 			// stopping recording as date range picker is clicked as we do not support it.
-			if(this.recording && node.hasAttribute('ngxdaterangepickermd')) {
+			/*if(this.recording && node.hasAttribute('ngxdaterangepickermd')) {
 				alert('Sorry currently we do not support daterange selector. Please re-record the sequence without selecting daterange selector');
 				this.recording=false;
 				this.cancelrecordingsequence();
 				this.showadvancedhtml();
 				return ;
-			}
+			}*/
 
 			if(this.recording && this.cancelRecordingDuringRecordingNodes.indexOf(node.nodeName.toLowerCase()) !== -1) {
 				alert('Sorry currently we do not support this '+node.nodeName+' selector. Please re-record the sequence without selecting '+node.nodeName+' selector');
