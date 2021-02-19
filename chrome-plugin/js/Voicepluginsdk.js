@@ -38,13 +38,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 		alert(JSON.parse(data.detail.data));
 	});
 
-	let UDADebugSetEvent = new CustomEvent("UDADebugSetEvent", {detail: {data: {action:'Debugvalueset',value:voicedebug}}, bubbles: false, cancelable: false});
+	let UDADebugSetEvent = new CustomEvent("UDADebugSetEvent", {detail: {data: {action:'Debugvalueset',value:UDADebug}}, bubbles: false, cancelable: false});
 	document.dispatchEvent(UDADebugSetEvent);
 
 	// initializing the sdk variable need to change to a new variable in future.
 	var UDAPluginSDK = {
 		sdkUrl: "/",
-		apihost: DSA_API_URL,
+		apihost: UDA_API_URL,
 		totalScripts: 0,
 		scriptsCompleted:0,
 		totalotherScripts:0,
@@ -106,7 +106,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			'naturalWidth', 'naturalHeight', 'complete'
 		],
 		innerTextWeight: 5,
-		logLevel: 0,
+		logLevel: UDALogLevel,
 		playNextAction: true,
 		forceReindex: false,
 		searchText: null,
@@ -340,7 +340,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.closemodal();
 		},
 		modifybodyhtml:function(){
-			var html='<div id="uda-btn" nist-voice="true"></div><div id="nist-steps-content" style="display: none;"><div id="voicemodalhtml" nist-voice="true"></div></div>';
+			var html='<div id="uda-btn" nist-voice="true"></div><div id="uda-html-container" style="display: none;"><div id="uda-html-content" nist-voice="true"></div></div>';
 
 			jQuery(document.body).prepend(html);
 
@@ -354,10 +354,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 				UDAPluginSDK.addbuttonhtml();
 			}
 			setInterval(function () {
-				if(lastindextime!==0 && lastindextime<lastmutationtime) {
+				if(UDALastIndexTime!==0 && UDALastIndexTime<UDALastMutationTime) {
 					UDAPluginSDK.indexnewclicknodes();
 				}
-			},DSA_POST_INTERVAL);
+			},UDA_POST_INTERVAL);
 		},
 		addbuttonhtml:function(){
 			jQuery("#uda-btn").unbind("click").html("");
@@ -378,7 +378,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			var html = 	'<uda-panel>'
 						+'<div class="uda-page-right-bar">'
 						+'<div>'
-							+'<div class="uda-ribbon-arrow" id="closenistmodal"><img src="'+this.extensionpath+'images/icons/right-arrow.png"></div>'
+							+'<div class="uda-ribbon-arrow" id="uda-close-panel"><img src="'+this.extensionpath+'images/icons/right-arrow.png"></div>'
 							+'<div class="uda-icon-txt">'
 								+'<img src="'+this.extensionpath+'images/icons/nist-logo.png"><span class="uda-help-bg-tooltip">Need Help?</span>'
 							+'</div>'
@@ -427,8 +427,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			return html;
 		},
 		addvoicesearchmodal:function(addnisticon=true){
-			jQuery("#voicemodalhtml").html(this.rightPanelHtml());
-			jQuery("#closenistmodal").click(function(){
+			jQuery("#uda-html-content").html(this.rightPanelHtml());
+			jQuery("#uda-close-panel").click(function(){
 				UDAPluginSDK.closemodal();
 			});
 			jQuery("#voicesearch").click(function(){
@@ -473,8 +473,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 		openmodal:function(focus=false){
 			if(this.sessiondata.authenticated) {
 				jQuery("#uda-btn").hide();
-				jQuery('#nist-steps-content').show();
-				jQuery("#nistModal").css("display", "block");
+				jQuery('#uda-html-container').show();
+				// jQuery("#nistModal").css("display", "block");
 				var searchinput=jQuery("#uda-search-input");
 				searchinput.val("");
 				if (focus) {
@@ -488,7 +488,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 								UDAPluginSDK.containersections.push(childnodeindex);
 								childnode.classList.remove("container");
 							}
-							if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'nist-steps-content') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
+							if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
 								if (childnode.classList && !childnode.classList.contains("uda-original-content")) {
 									childnode.classList.add("uda-original-content");
 								}
@@ -504,10 +504,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 		//closing the UDA screen
 		closemodal:function(){
 			jQuery("#uda-advance-section").show();
-			jQuery('#nist-steps-content').hide();
-			jQuery("#nistModal").css("display","none");
-			jQuery("#uda-content-container").html("");
-			jQuery("#nistrecordresults").html("");
+			jQuery('#uda-html-container').hide();
+			// jQuery("#nistModal").css("display","none");
+			// jQuery("#uda-content-container").html("");
+			// jQuery("#nistrecordresults").html("");
 			this.recordedsequenceids=[];
 			jQuery("#uda-btn").show();
 			var navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
@@ -517,7 +517,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				let bodychildren = document.body.childNodes;
 				if (bodychildren.length > 0) {
 					bodychildren.forEach(function (childnode, childnodeindex) {
-						if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'nist-steps-content') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
+						if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
 							if (childnode.classList && childnode.classList.contains("uda-original-content")) {
 								childnode.classList.remove("uda-original-content");
 							}
@@ -564,7 +564,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 							}
 						}
 						this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
+					} else {
+						console.log('here');
+						this.searchinelastic('');
 					}
+				} else {
+					console.log('here');
+					this.searchinelastic('');
 				}
 			} else {
 				this.addvoicesearchmodal(addnisticon);
@@ -586,7 +592,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.indexnewclicknodes();
 				return;
 			}
-			lastindextime=Date.now();
+			UDALastIndexTime=Date.now();
 		},
 		// indexing new clicknodes after new html got loaded
 		indexnewclicknodes: async function(){
@@ -594,10 +600,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 				return;
 			}
 			this.processcount=UDAClickObjects.length;
-			if(lastindextime!==0 && lastindextime>lastmutationtime){
+			if(lastindextime!==0 && lastindextime>UDALastMutationTime){
 				return;
 			}
-			lastindextime=Date.now();
+			UDALastIndexTime=Date.now();
 			this.processingnodes=true;
 			if(await this.removefromhtmlindex()) {
 				this.indexnewnodes = true;
@@ -624,13 +630,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 				let htmlindexlength=this.htmlindex.length;
 				for(var htmli=0;htmli<htmlindexlength;htmli++) {
 					let checknode=this.htmlindex[htmli];
-					let removedclickobjectslength=removedclickobjects.length;
+					let removedclickobjectslength=UDARemovedClickObjects.length;
 					let foundremovedindexednode=-1;
 					for (var k = 0; k < removedclickobjectslength; k++) {
-						if(removedclickobjects[k].element === window){
+						if(UDARemovedClickObjects[k].element === window){
 							continue;
 						}
-						let removedclickobject=removedclickobjects[k].element;
+						let removedclickobject=UDARemovedClickObjects[k].element;
 
 						if (checknode['element-data'].isSameNode(removedclickobject)) {
 							foundremovedindexednode=k;
@@ -640,7 +646,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					if(foundremovedindexednode===-1){
 						newhtmlindex.push(checknode);
 					} else {
-						removedclickobjects.splice(foundremovedindexednode,1);
+						UDARemovedClickObjects.splice(foundremovedindexednode,1);
 					}
 				}
 				this.htmlindex=newhtmlindex;
@@ -1420,7 +1426,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					setTimeout(function () {
 						this.forceReindex = true;
 						UDAPluginSDK.indexnewclicknodes();
-					}, DSA_POST_INTERVAL);
+					}, UDA_POST_INTERVAL);
 					// UDAPluginSDK.indexnewclicknodes();
 				}
 			}
@@ -1429,7 +1435,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(this.recording) {
 				setTimeout(function () {
 					UDAPluginSDK.showhtml();
-				}, DSA_POST_INTERVAL);
+				}, UDA_POST_INTERVAL);
 			}
 		},
 		confirmparentclick:function(node, fromdocument, selectchange, event, postdata) {
