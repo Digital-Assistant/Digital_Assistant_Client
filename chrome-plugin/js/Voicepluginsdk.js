@@ -600,7 +600,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				return;
 			}
 			this.processcount=UDAClickObjects.length;
-			if(lastindextime!==0 && lastindextime>UDALastMutationTime){
+			if(UDALastIndexTime!==0 && UDALastIndexTime>UDALastMutationTime){
 				return;
 			}
 			UDALastIndexTime=Date.now();
@@ -2073,6 +2073,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 				// UDAPluginSDK.toggleautoplay(navcookiedata);
 				UDAPluginSDK.autoplay = false;
 				UDAPluginSDK.searchInProgress=false;
+				UDAPluginSDK.autoplayPaused=false;
+				UDAPluginSDK.playNextAction=true;
 				// UDAPluginSDK.configureintrojs();
 				// UDAPluginSDK.introjs.refresh();
 				UDAPluginSDK.backtosearchresults(navcookiedata);
