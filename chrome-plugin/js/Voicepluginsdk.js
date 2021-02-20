@@ -565,7 +565,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 						}
 						this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
 					} else {
-						console.log('here');
 						this.searchinelastic('');
 					}
 				} else {
@@ -1917,9 +1916,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 					UDAPluginSDK.searchInProgress=false;
 					UDAPluginSDK.renderSearchResults(JSON.parse(xhr.response));
 				} else {
-					UDAPluginSDK.searchInProgress=false;
+					UDAPluginSDK.renderServerError();
 				}
 			};
+			xhr.addEventListener("error", UDAPluginSDK.renderServerError());
 			xhr.send();
 		},
 		//rendering search results screen
@@ -1940,6 +1940,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		// rendering empty results html
 		renderEmptySearchResults: function(){
+			this.searchInProgress=false;
 			jQuery("#uda-content-container").html(this.getEmptyResultsHtml());
 		},
 		getEmptyResultsHtml: function() {
@@ -1947,6 +1948,16 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'	<svg class="uda-no-src" xmlns="http://www.w3.org/2000/svg" id="Capa_1" enable-background="new 0 0 512 512" height="512" viewBox="0 0 512 512" width="512"><g><path d="m317 90c-57.891 0-105 47.109-105 105s47.109 105 105 105 105-47.109 105-105-47.109-105-105-105zm51.211 135-21.211 21.211-30-30-30 30-21.211-21.211 30-30-30-30 21.211-21.211 30 30 30-30 21.211 21.211-30 30z"/><path d="m317 0c-107.52 0-195 87.48-195 195 0 48.371 17.809 92.591 47.08 126.709l-23.086 23.086-21.211-21.211-111.631 111.629c-17.534 17.534-17.534 46.069-.015 63.633l.015.015c17.549 17.52 46.124 17.523 63.633-.015l111.631-111.629-21.211-21.211 23.086-23.086c34.118 29.271 78.338 47.08 126.709 47.08 107.52 0 195-87.48 195-195s-87.48-195-195-195zm0 330c-74.443 0-135-60.557-135-135s60.557-135 135-135 135 60.557 135 135-60.557 135-135 135z"/></g></svg>'
 						+'	<p>No results found</p>'
 						+'</div>';
+			return html;
+		},
+		renderServerError: function(message='Something went wrong please try again later.'){
+			jQuery("#uda-content-container").html(this.getServerErrorHtml(message));
+		},
+		getServerErrorHtml: function(message) {
+			let html =	'<div class="uda-no-results">'
+				+'	<svg class="uda-no-src" xmlns="http://www.w3.org/2000/svg" id="Capa_1" enable-background="new 0 0 512 512" height="512" viewBox="0 0 512 512" width="512"><g><path d="m317 90c-57.891 0-105 47.109-105 105s47.109 105 105 105 105-47.109 105-105-47.109-105-105-105zm51.211 135-21.211 21.211-30-30-30 30-21.211-21.211 30-30-30-30 21.211-21.211 30 30 30-30 21.211 21.211-30 30z"/><path d="m317 0c-107.52 0-195 87.48-195 195 0 48.371 17.809 92.591 47.08 126.709l-23.086 23.086-21.211-21.211-111.631 111.629c-17.534 17.534-17.534 46.069-.015 63.633l.015.015c17.549 17.52 46.124 17.523 63.633-.015l111.631-111.629-21.211-21.211 23.086-23.086c34.118 29.271 78.338 47.08 126.709 47.08 107.52 0 195-87.48 195-195s-87.48-195-195-195zm0 330c-74.443 0-135-60.557-135-135s60.557-135 135-135 135 60.557 135 135-60.557 135-135 135z"/></g></svg>'
+				+'	<p>'+message+'</p>'
+				+'</div>';
 			return html;
 		},
 		//rendering each row html of the search result
