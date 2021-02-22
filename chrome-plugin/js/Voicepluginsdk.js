@@ -1169,6 +1169,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			} else {
 				this.invokingnode = invokingnode;
 			}*/
+
 			this.invokingnode = invokingnode;
 
 			this.playNextAction = false;
@@ -1919,7 +1920,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 					UDAPluginSDK.renderServerError();
 				}
 			};
-			xhr.addEventListener("error", UDAPluginSDK.renderServerError());
+			// xhr.addEventListener("error", UDAPluginSDK.renderServerError());
+			xhr.onerror = function(){
+				UDAPluginSDK.renderServerError();
+			};
 			xhr.send();
 		},
 		//rendering search results screen
@@ -1951,6 +1955,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			return html;
 		},
 		renderServerError: function(message='Something went wrong please try again later.'){
+			this.searchInProgress=false;
 			jQuery("#uda-content-container").html(this.getServerErrorHtml(message));
 		},
 		getServerErrorHtml: function(message) {
