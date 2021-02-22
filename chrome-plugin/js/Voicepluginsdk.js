@@ -243,6 +243,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.totalotherScripts++;
 				this.loadOtherScript(this.extensionpath+"js/intro.min.js");
 				this.loadCssScript(this.extensionpath+"css/introjs.min.css");
+				this.loadCssScript(this.extensionpath+"css/introjs-nistapp.css");
 			}
 		},
 		allReady: function() {
