@@ -239,6 +239,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 					this.loadCssScript(this.extensionpath + "css/app.vantagecircle.com.css");
 				}
 			}
+			if(typeof introJs === 'undefined'){
+				this.totalotherScripts++;
+				this.loadOtherScript(this.extensionpath+"js/intro.min.js");
+				this.loadCssScript(this.extensionpath+"css/introjs.min.css");
+			}
 		},
 		allReady: function() {
 			// execute the parsing method after everything is ready.
@@ -270,6 +275,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			// check user session exists and create if not available
 			this.checkuserkeyexists();
+
+			this.configureintrojs();
 
 			// adding speech recognition functionality based on the library availability
 			if(UDASpeechRecognitionAvailable){
@@ -533,6 +540,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		resetIntrojs: function () {
 			this.configureintrojs();
 			this.playNextAction = true;
+			this.autoplayPaused = false;
 			this.showhtml();
 		},
 		//render the required html for showing up the proper html
@@ -1070,23 +1078,23 @@ if (typeof UDAPluginSDK === 'undefined') {
 					if (node.classList && (node.classList.contains('select2-search__field') || node.classList.contains('mat-autocomplete-trigger'))){
 						this.addToolTip(node, node.parentNode.parentNode.parentNode.parentNode.parentNode, navigationcookiedata, false, true);
 					} else if(node.hasAttribute('role') && (node.getAttribute('role')==='combobox')) {
-						this.addToolTip(node, node.parentNode.parentNode.parentNode.parentNode, navigationcookiedata, false, false);
+						this.addToolTip(node, node.parentNode.parentNode.parentNode.parentNode, navigationcookiedata, false, false, true);
 					} else if(node.hasAttribute('type') && (node.getAttribute('type')==='checkbox' || node.getAttribute('type')==='radio') && node.classList && (node.classList.contains('mat-checkbox-input') || node.classList.contains('mat-radio-input'))) {
-						this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false);
+						this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false, true);
 					} else if(node.hasAttribute('type')){
 						switch (node.getAttribute('type').toLowerCase()) {
 							case 'checkbox':
 								if(node.parentNode && node.parentNode.classList && node.parentNode.classList.contains('vc_checkbox')) {
-									this.addToolTip(node, node.parentNode, navigationcookiedata, false, false);
+									this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
 								} else {
-									this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false);
+									this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false, true);
 								}
 								break;
 							case 'radio':
 								if(node.parentNode && node.parentNode.classList && node.parentNode.classList.contains('vc_label')) {
-									this.addToolTip(node, node.parentNode, navigationcookiedata, false, false);
+									this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
 								} else {
-									this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false);
+									this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false, true);
 								}
 								break;
 							case 'submit':
@@ -1098,29 +1106,31 @@ if (typeof UDAPluginSDK === 'undefined') {
 								if(node.attributes && node.attributes.length>0 && node.hasAttribute('uib-datepicker-popup')) {
 									this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, true, false);
 								} else {
-									this.addToolTip(node, node.parentNode, navigationcookiedata, false, true);
+									this.addToolTip(node, node.parentNode, navigationcookiedata, false, true, true);
 								}
 								break;
 							default:
-								this.addToolTip(node, node.parentNode, navigationcookiedata, false, false);
+								this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
 								break;
 						}
 					} else {
-						this.addToolTip(node, node.parentNode, navigationcookiedata, false, false);
+						this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
 					}
 					break;
 				case "textarea":
 					this.playNextAction = false;
-					this.addToolTip(node, node.parentNode, navigationcookiedata, false, false);
+					this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
 					break;
 				case "select":
-					this.addToolTip(node, node.parentNode, navigationcookiedata, false, false);
+					// this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
+					this.addToolTip(node, node, navigationcookiedata, false, false, true);
 					break;
 				case "option":
-					this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false);
+					this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
 					break;
 				case "checkbox":
-					this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false);
+					// this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false);
+					this.addToolTip(node, node, navigationcookiedata, false, false, true);
 					break;
 				// Additional processing for calendar selection
 				case "button":
@@ -1158,7 +1168,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 		},
 		//add tooltip display
-		addToolTip:function(invokingnode, tooltipnode, navigationcookiedata, enableClick=false, enableFocus=false, message= 'Please input the value and then click on') {
+		addToolTip:function(invokingnode, tooltipnode, navigationcookiedata, enableClick=false, enableFocus=false, enableIntroJs=false, message= 'Please input the value and then click on') {
 
 			if(this.logLevel>2){
 				console.log(this.invokingnode);
@@ -1173,6 +1183,22 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.invokingnode = invokingnode;
 
 			this.playNextAction = false;
+
+			if(enableIntroJs) {
+				this.introjs.addStep({
+					element: tooltipnode,
+					intro: message,
+					position: 'right',
+				}).start();
+				if(enableFocus){
+					invokingnode.focus();
+				}
+				if(enableClick){
+					invokingnode.click();
+				}
+				return;
+			}
+
 			if(navigationcookiedata && navigationcookiedata.autoplay) {
 				this.autoplay = false;
 				this.autoplayPaused = true;
@@ -2091,8 +2117,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 				UDAPluginSDK.searchInProgress=false;
 				UDAPluginSDK.autoplayPaused=false;
 				UDAPluginSDK.playNextAction=true;
-				// UDAPluginSDK.configureintrojs();
-				// UDAPluginSDK.introjs.refresh();
+				UDAPluginSDK.configureintrojs();
+				UDAPluginSDK.introjs.refresh();
 				UDAPluginSDK.backtosearchresults(navcookiedata);
 			});
 		},
@@ -2529,8 +2555,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(navcookiedata.autoplay){
 				navcookiedata.autoplay=false;
 				this.autoplay=false;
-				// this.configureintrojs();
-				// this.introjs.refresh();
+				this.configureintrojs();
+				this.introjs.refresh();
 				//add analtytics
 				this.recordclick('stop',navcookiedata.data.name.toString(),navcookiedata.data.id);
 			} else {
