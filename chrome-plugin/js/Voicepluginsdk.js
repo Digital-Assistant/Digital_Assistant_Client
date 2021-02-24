@@ -111,7 +111,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 		forceReindex: false,
 		searchText: null,
 		searchInProgress: false,
-		ignoreChildNodes: ['ng-dropdown-panel','ckeditor','fusioncharts','ngb-datepicker','ngx-daterangepicker-material','uda-panel','mat-datepicker-content','ng-select'],
+		ignoreNodesFromIndexing: ['ng-dropdown-panel','ckeditor','fusioncharts','ngb-datepicker','ngx-daterangepicker-material','uda-panel','mat-datepicker-content','ng-select'],
+		ignoreNodesContainingClassNames:['cke_dialog_container','cke_notifications_area'],
 		// cancelRecordingDuringRecordingNodes: ['ngb-datepicker'],
 		cancelRecordingDuringRecordingNodes: [],
 		addClickToSpecialNodes: ['ng-select', 'ngb-datepicker'],
@@ -677,7 +678,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					node.haschildclick=false;
 
 					// Checking for ignore nodes during indexing
-					if (this.inarray(node.nodeName.toLowerCase(), this.ignoreChildNodes) !== -1) {
+					if (this.inarray(node.nodeName.toLowerCase(), this.ignoreNodesFromIndexing) !== -1) {
 						if(node.nodeName.toLowerCase() === 'ckeditor' && node.childNodes.length>2 && this.recording){
 							let addToolTip = true;
 							for(let checknode of this.tooltipDisplayedNodes){
@@ -706,6 +707,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 						// fix for not indexing datepicker popup and nominate popup
 						if(this.logLevel>0){
 							console.log('date picker in javascript');
+						}
+					} else if(this.checkCssClassNames(node)){
+						if(this.logLevel>0){
+							console.log({cssIgnoredNode:node});
 						}
 					} else if(node.hasChildNodes()){
 						var childnodes =  node.childNodes;
@@ -764,6 +769,18 @@ if (typeof UDAPluginSDK === 'undefined') {
 				return node;
 			}
 		},
+		//check css classnames for ignoring
+		checkCssClassNames:function(node){
+			let cssClassExist=false;
+			if(this.ignoreNodesContainingClassNames.length>0){
+				for(const classname of this.ignoreNodesContainingClassNames) {
+					if(node.classList.contains(classname)){
+						cssClassExist=true;
+					}
+				}
+			}
+			return cssClassExist;
+		},
 		// Check for each node and then match it with the available clicknodes which are identified by links.js
 		indexnode: function(node, parentnode, hasparentnodeclick=false, fromdocumentclick=false, parentclicknode=""){
 			var elementdata = {"element-type": "", "element-labels" : [], "element-action" : "", "element-path" : "","element-url":"", "element-data":[],"menu-items":[]};
@@ -818,7 +835,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 
 			if(this.logLevel>2) {
-				if(this.inarray(node.nodeName.toLowerCase(), this.ignoreChildNodes) !== -1) {
+				if(this.inarray(node.nodeName.toLowerCase(), this.ignoreNodesFromIndexing) !== -1) {
 					console.log({indexingnode: node});
 				}
 			}

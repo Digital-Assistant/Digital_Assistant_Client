@@ -30,7 +30,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
     let UDARemovedClickObjects = [];
     let UDALastMutationTime = 0;
     let UDALastIndexTime = 0;
-    let UDALogLevel = 0;
+    let UDALogLevel = 3;
 
     /*****
      *
