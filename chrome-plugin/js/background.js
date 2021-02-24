@@ -1,8 +1,8 @@
 'use strict';
 
 var updatedata=false;
-var voicedebug=false; //this variable exists in links.js file also
-var apihost=(voicedebug)?"http://localhost:11080/voiceapi":"https://voicetest.nistapp.com/voiceapi"; //this variable exists in links.js file also
+var UDADebug=false; //this variable exists in links.js file also
+var apihost=(UDADebug)?"http://localhost:11080/voiceapi":"https://voicetest.nistapp.com/voiceapi"; //this variable exists in links.js file also
 var cookiename="nist-voice-usersessionid";
 var activetabs=[];
 var sessionkey="";
@@ -56,7 +56,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 	} else if(request.action === "authtenicate") {
 		loginwithgoogle();
 	} else if(request.action === "Debugvalueset"){
-		voicedebug=request.data;
+		UDADebug=request.data;
 	}
 });
 

@@ -21,16 +21,16 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
     };
     let UDAClickObjects = [];
     let UDASessionID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    const voicedebug = false; //this variable exists in background.js file also
-    const DSA_POST_INTERVAL = 1000; //in milliseconds, each minute
-    const DSA_API_URL = (voicedebug) ? "http://localhost:11080/voiceapi" : "https://voicetest.nistapp.com/voiceapi"; //this variable exists in background.js file also
+    const UDADebug = false; //this variable exists in background.js file also
+    const UDA_POST_INTERVAL = 1000; //in milliseconds, each minute
+    const UDA_API_URL = (UDADebug) ? "http://localhost:11080/voiceapi" : "https://voicetest.nistapp.com/voiceapi"; //this variable exists in background.js file also
     const EXTENSION_VERSION = true;
-    let ignorepatterns = [{"patterntype": "nist-voice", "patternvalue": "any"}];
-    let sitepatterns = [];
-    let removedclickobjects = [];
-    let lastmutationtime = 0;
-    let lastindextime = 0;
-    let logLevel = 0;
+    let UDAIgnorePatterns = [{"patterntype": "nist-voice", "patternvalue": "any"}];
+    let UDASitePatterns = [];
+    let UDARemovedClickObjects = [];
+    let UDALastMutationTime = 0;
+    let UDALastIndexTime = 0;
+    let UDALogLevel = 0;
 
     /*****
      *
@@ -333,7 +333,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
                         } else if (node.classList && (node.classList.contains('expand-button') || node.classList.contains('btn-pill'))) {
                             dsaAddNewElement(node);
                         } else {
-                            if (logLevel > 0) {
+                            if (UDALogLevel > 0) {
                                 console.log({node: node});
                             }
                         }
@@ -367,14 +367,14 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
                 if (node.isEqualNode(UDAClickObjects[j].element)) {
                     let addtoremovenodes = true;
                     removedclickobjectcounter:
-                        for (var k = 0; k < removedclickobjects.length; k++) {
-                            if (node.isEqualNode(removedclickobjects[k].element)) {
+                        for (var k = 0; k < UDARemovedClickObjects.length; k++) {
+                            if (node.isEqualNode(UDARemovedClickObjects[k].element)) {
                                 addtoremovenodes = false;
                                 break;
                             }
                         }
                     if (addtoremovenodes) {
-                        removedclickobjects.push(UDAClickObjects[j]);
+                        UDARemovedClickObjects.push(UDAClickObjects[j]);
                     }
                     UDAClickObjects.splice(j, 1);
                     break;
@@ -391,12 +391,12 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
         var dsa_observer = new MutationObserver(function (mutations) {
             mutations.forEach(function (mutation) {
                 if (mutation.removedNodes.length) {
-                    if (logLevel > 1) {
+                    if (UDALogLevel > 1) {
                         console.log(UDAClickObjects);
                     }
                     [].some.call(mutation.removedNodes, dsaProcessRemovedNode);
-                    if (logLevel > 1) {
-                        console.log(removedclickobjects);
+                    if (UDALogLevel > 1) {
+                        console.log(UDARemovedClickObjects);
                     }
                 }
                 if (!mutation.addedNodes.length) {
@@ -404,7 +404,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
                 }
                 [].some.call(mutation.addedNodes, dsaProcessNode);
             });
-            lastmutationtime = Date.now();
+            UDALastMutationTime = Date.now();
         });
 
         // starting the mutation observer

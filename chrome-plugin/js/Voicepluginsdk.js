@@ -38,13 +38,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 		alert(JSON.parse(data.detail.data));
 	});
 
-	let UDADebugSetEvent = new CustomEvent("UDADebugSetEvent", {detail: {data: {action:'Debugvalueset',value:voicedebug}}, bubbles: false, cancelable: false});
+	let UDADebugSetEvent = new CustomEvent("UDADebugSetEvent", {detail: {data: {action:'Debugvalueset',value:UDADebug}}, bubbles: false, cancelable: false});
 	document.dispatchEvent(UDADebugSetEvent);
 
 	// initializing the sdk variable need to change to a new variable in future.
 	var UDAPluginSDK = {
 		sdkUrl: "/",
-		apihost: DSA_API_URL,
+		apihost: UDA_API_URL,
 		totalScripts: 0,
 		scriptsCompleted:0,
 		totalotherScripts:0,
@@ -106,7 +106,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			'naturalWidth', 'naturalHeight', 'complete'
 		],
 		innerTextWeight: 5,
-		logLevel: 3,
+		logLevel: UDALogLevel,
 		playNextAction: true,
 		forceReindex: false,
 		searchText: null,
@@ -128,6 +128,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		],
 		clickeOn: '',
 		invokingnode: null,
+		currentPage:'search',
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -242,6 +243,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 					this.loadCssScript(this.extensionpath + "css/app.vantagecircle.com.css");
 				}
 			}
+			if(typeof introJs === 'undefined'){
+				this.totalotherScripts++;
+				this.loadOtherScript(this.extensionpath+"js/intro.min.js");
+				this.loadCssScript(this.extensionpath+"css/introjs.min.css");
+				this.loadCssScript(this.extensionpath+"css/introjs-nistapp.css");
+			}
 		},
 		allReady: function() {
 			// execute the parsing method after everything is ready.
@@ -273,6 +280,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			// check user session exists and create if not available
 			this.checkuserkeyexists();
+
+			this.configureintrojs();
 
 			// adding speech recognition functionality based on the library availability
 			if(UDASpeechRecognitionAvailable){
@@ -343,7 +352,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.closemodal();
 		},
 		modifybodyhtml:function(){
-			var html='<div id="uda-btn" nist-voice="true"></div><div id="nist-steps-content" style="display: none;"><div id="voicemodalhtml" nist-voice="true"></div></div>';
+			var html='<div id="uda-btn" nist-voice="true"></div><div id="uda-html-container" style="display: none;"><div id="uda-html-content" nist-voice="true"></div></div>';
 
 			jQuery(document.body).prepend(html);
 
@@ -357,10 +366,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 				UDAPluginSDK.addbuttonhtml();
 			}
 			setInterval(function () {
-				if(lastindextime!==0 && lastindextime<lastmutationtime) {
+				if(UDALastIndexTime!==0 && UDALastIndexTime<UDALastMutationTime) {
 					UDAPluginSDK.indexnewclicknodes();
 				}
-			},DSA_POST_INTERVAL);
+			},UDA_POST_INTERVAL);
 		},
 		addbuttonhtml:function(){
 			jQuery("#uda-btn").unbind("click").html("");
@@ -381,7 +390,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			var html = 	'<uda-panel>'
 						+'<div class="uda-page-right-bar">'
 						+'<div>'
-							+'<div class="uda-ribbon-arrow" id="closenistmodal"><img src="'+this.extensionpath+'images/icons/right-arrow.png"></div>'
+							+'<div class="uda-ribbon-arrow" id="uda-close-panel"><img src="'+this.extensionpath+'images/icons/right-arrow.png"></div>'
 							+'<div class="uda-icon-txt">'
 								+'<img src="'+this.extensionpath+'images/icons/nist-logo.png"><span class="uda-help-bg-tooltip">Need Help?</span>'
 							+'</div>'
@@ -430,8 +439,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			return html;
 		},
 		addvoicesearchmodal:function(addnisticon=true){
-			jQuery("#voicemodalhtml").html(this.rightPanelHtml());
-			jQuery("#closenistmodal").click(function(){
+			jQuery("#uda-html-content").html(this.rightPanelHtml());
+			jQuery("#uda-close-panel").click(function(){
 				UDAPluginSDK.closemodal();
 			});
 			jQuery("#voicesearch").click(function(){
@@ -476,8 +485,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 		openmodal:function(focus=false){
 			if(this.sessiondata.authenticated) {
 				jQuery("#uda-btn").hide();
-				jQuery('#nist-steps-content').show();
-				jQuery("#nistModal").css("display", "block");
+				jQuery('#uda-html-container').show();
+				// jQuery("#nistModal").css("display", "block");
 				var searchinput=jQuery("#uda-search-input");
 				searchinput.val("");
 				if (focus) {
@@ -491,7 +500,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 								UDAPluginSDK.containersections.push(childnodeindex);
 								childnode.classList.remove("container");
 							}
-							if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'nist-steps-content') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
+							if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
 								if (childnode.classList && !childnode.classList.contains("uda-original-content")) {
 									childnode.classList.add("uda-original-content");
 								}
@@ -507,10 +516,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 		//closing the UDA screen
 		closemodal:function(){
 			jQuery("#uda-advance-section").show();
-			jQuery('#nist-steps-content').hide();
-			jQuery("#nistModal").css("display","none");
-			jQuery("#uda-content-container").html("");
-			jQuery("#nistrecordresults").html("");
+			jQuery('#uda-html-container').hide();
+			// jQuery("#nistModal").css("display","none");
+			// jQuery("#uda-content-container").html("");
+			// jQuery("#nistrecordresults").html("");
 			this.recordedsequenceids=[];
 			jQuery("#uda-btn").show();
 			var navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
@@ -520,7 +529,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				let bodychildren = document.body.childNodes;
 				if (bodychildren.length > 0) {
 					bodychildren.forEach(function (childnode, childnodeindex) {
-						if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'nist-steps-content') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
+						if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
 							if (childnode.classList && childnode.classList.contains("uda-original-content")) {
 								childnode.classList.remove("uda-original-content");
 							}
@@ -536,6 +545,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		resetIntrojs: function () {
 			this.configureintrojs();
 			this.playNextAction = true;
+			this.autoplayPaused = false;
 			this.showhtml();
 		},
 		//render the required html for showing up the proper html
@@ -567,7 +577,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 							}
 						}
 						this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
+					} else {
+						this.searchinelastic('');
 					}
+				} else {
+					console.log('here');
+					this.searchinelastic('');
 				}
 			} else {
 				this.addvoicesearchmodal(addnisticon);
@@ -589,7 +604,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.indexnewclicknodes();
 				return;
 			}
-			lastindextime=Date.now();
+			UDALastIndexTime=Date.now();
 		},
 		// indexing new clicknodes after new html got loaded
 		indexnewclicknodes: async function(){
@@ -597,10 +612,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 				return;
 			}
 			this.processcount=UDAClickObjects.length;
-			if(lastindextime!==0 && lastindextime>lastmutationtime){
+			if(UDALastIndexTime!==0 && UDALastIndexTime>UDALastMutationTime){
 				return;
 			}
-			lastindextime=Date.now();
+			UDALastIndexTime=Date.now();
 			this.processingnodes=true;
 			if(await this.removefromhtmlindex()) {
 				this.indexnewnodes = true;
@@ -627,13 +642,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 				let htmlindexlength=this.htmlindex.length;
 				for(var htmli=0;htmli<htmlindexlength;htmli++) {
 					let checknode=this.htmlindex[htmli];
-					let removedclickobjectslength=removedclickobjects.length;
+					let removedclickobjectslength=UDARemovedClickObjects.length;
 					let foundremovedindexednode=-1;
 					for (var k = 0; k < removedclickobjectslength; k++) {
-						if(removedclickobjects[k].element === window){
+						if(UDARemovedClickObjects[k].element === window){
 							continue;
 						}
-						let removedclickobject=removedclickobjects[k].element;
+						let removedclickobject=UDARemovedClickObjects[k].element;
 
 						if (checknode['element-data'].isSameNode(removedclickobject)) {
 							foundremovedindexednode=k;
@@ -643,7 +658,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					if(foundremovedindexednode===-1){
 						newhtmlindex.push(checknode);
 					} else {
-						removedclickobjects.splice(foundremovedindexednode,1);
+						UDARemovedClickObjects.splice(foundremovedindexednode,1);
 					}
 				}
 				this.htmlindex=newhtmlindex;
@@ -1069,23 +1084,23 @@ if (typeof UDAPluginSDK === 'undefined') {
 					if (node.classList && (node.classList.contains('select2-search__field') || node.classList.contains('mat-autocomplete-trigger'))){
 						this.addToolTip(node, node.parentNode.parentNode.parentNode.parentNode.parentNode, navigationcookiedata, false, true);
 					} else if(node.hasAttribute('role') && (node.getAttribute('role')==='combobox')) {
-						this.addToolTip(node, node.parentNode.parentNode.parentNode.parentNode, navigationcookiedata, false, false);
+						this.addToolTip(node, node.parentNode.parentNode.parentNode.parentNode, navigationcookiedata, false, false, true);
 					} else if(node.hasAttribute('type') && (node.getAttribute('type')==='checkbox' || node.getAttribute('type')==='radio') && node.classList && (node.classList.contains('mat-checkbox-input') || node.classList.contains('mat-radio-input'))) {
-						this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false);
+						this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false, true);
 					} else if(node.hasAttribute('type')){
 						switch (node.getAttribute('type').toLowerCase()) {
 							case 'checkbox':
 								if(node.parentNode && node.parentNode.classList && node.parentNode.classList.contains('vc_checkbox')) {
-									this.addToolTip(node, node.parentNode, navigationcookiedata, false, false);
+									this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
 								} else {
-									this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false);
+									this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false, true);
 								}
 								break;
 							case 'radio':
 								if(node.parentNode && node.parentNode.classList && node.parentNode.classList.contains('vc_label')) {
-									this.addToolTip(node, node.parentNode, navigationcookiedata, false, false);
+									this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
 								} else {
-									this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false);
+									this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false, true);
 								}
 								break;
 							case 'submit':
@@ -1097,29 +1112,31 @@ if (typeof UDAPluginSDK === 'undefined') {
 								if(node.attributes && node.attributes.length>0 && node.hasAttribute('uib-datepicker-popup')) {
 									this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, true, false);
 								} else {
-									this.addToolTip(node, node.parentNode, navigationcookiedata, false, true);
+									this.addToolTip(node, node.parentNode, navigationcookiedata, false, true, true);
 								}
 								break;
 							default:
-								this.addToolTip(node, node.parentNode, navigationcookiedata, false, false);
+								this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
 								break;
 						}
 					} else {
-						this.addToolTip(node, node.parentNode, navigationcookiedata, false, false);
+						this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
 					}
 					break;
 				case "textarea":
 					this.playNextAction = false;
-					this.addToolTip(node, node.parentNode, navigationcookiedata, false, false);
+					this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
 					break;
 				case "select":
-					this.addToolTip(node, node.parentNode, navigationcookiedata, false, false);
+					// this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
+					this.addToolTip(node, node, navigationcookiedata, false, false, true);
 					break;
 				case "option":
-					this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false);
+					this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
 					break;
 				case "checkbox":
-					this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false);
+					// this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false);
+					this.addToolTip(node, node, navigationcookiedata, false, false, true);
 					break;
 				// Additional processing for calendar selection
 				case "button":
@@ -1160,7 +1177,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 		},
 		//add tooltip display
-		addToolTip:function(invokingnode, tooltipnode, navigationcookiedata, enableClick=false, enableFocus=false, message= 'Please input the value and then click on') {
+		addToolTip:function(invokingnode, tooltipnode, navigationcookiedata, enableClick=false, enableFocus=false, enableIntroJs=false, message= 'Please input the value and then click on') {
 
 			if(this.logLevel>2){
 				console.log(this.invokingnode);
@@ -1171,9 +1188,26 @@ if (typeof UDAPluginSDK === 'undefined') {
 			} else {
 				this.invokingnode = invokingnode;
 			}*/
+
 			this.invokingnode = invokingnode;
 
 			this.playNextAction = false;
+
+			if(enableIntroJs) {
+				this.introjs.addStep({
+					element: tooltipnode,
+					intro: message,
+					position: 'right',
+				}).start();
+				if(enableFocus){
+					invokingnode.focus();
+				}
+				if(enableClick){
+					invokingnode.click();
+				}
+				return;
+			}
+
 			if(navigationcookiedata && navigationcookiedata.autoplay) {
 				this.autoplay = false;
 				this.autoplayPaused = true;
@@ -1427,7 +1461,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					setTimeout(function () {
 						this.forceReindex = true;
 						UDAPluginSDK.indexnewclicknodes();
-					}, DSA_POST_INTERVAL);
+					}, UDA_POST_INTERVAL);
 					// UDAPluginSDK.indexnewclicknodes();
 				}
 			}
@@ -1436,7 +1470,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(this.recording) {
 				setTimeout(function () {
 					UDAPluginSDK.showhtml();
-				}, DSA_POST_INTERVAL);
+				}, UDA_POST_INTERVAL);
 			}
 		},
 		confirmparentclick:function(node, fromdocument, selectchange, event, postdata) {
@@ -1656,6 +1690,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		//cancel the recording sequence
 		cancelrecordingsequence:function(render=true){
+			// jQuery('#uda-advanced-btn').hide();
 			var recordingcookie = this.getstoragedata(this.recordingcookiename);
 			if(recordingcookie){
 				var recordingcookiedata=JSON.parse(recordingcookie);
@@ -1673,7 +1708,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			//add analtytics
 			this.recordclick('recordingcancel',recordingcookiedata.domain);
-
+			this.currentPage='cancelrecording';
 			if(render) {
 				this.showhtml();
 			}
@@ -1882,6 +1917,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		// search from elastic functionality
 		searchinelastic:function(searchterm=''){
+
+			if(this.currentPage==='cancelrecording'){
+				jQuery('#uda-advanced-btn').hide();
+			}
+
+			this.currentPage='advanced';
+
 			if(searchterm) {
 				var searchtext = searchterm;
 			} else {
@@ -1889,6 +1931,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 
 			this.cancelrecordingsequence(true);
+
+			this.renderMessage('Loading Please Wait...');
 
 
 			if (this.searchInProgress === true) {
@@ -1918,13 +1962,18 @@ if (typeof UDAPluginSDK === 'undefined') {
 					UDAPluginSDK.searchInProgress=false;
 					UDAPluginSDK.renderSearchResults(JSON.parse(xhr.response));
 				} else {
-					UDAPluginSDK.searchInProgress=false;
+					UDAPluginSDK.renderMessage();
 				}
+			};
+			// xhr.addEventListener("error", UDAPluginSDK.renderMessage());
+			xhr.onerror = function(){
+				UDAPluginSDK.renderMessage();
 			};
 			xhr.send();
 		},
 		//rendering search results screen
 		renderSearchResults:function(data){
+			jQuery('#uda-advanced-btn').show();
 			var matchnodes = data;
 			if(matchnodes.length>0){
 				jQuery("#uda-content-container").html('');
@@ -1941,6 +1990,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		// rendering empty results html
 		renderEmptySearchResults: function(){
+			this.searchInProgress=false;
 			jQuery("#uda-content-container").html(this.getEmptyResultsHtml());
 		},
 		getEmptyResultsHtml: function() {
@@ -1948,6 +1998,17 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'	<svg class="uda-no-src" xmlns="http://www.w3.org/2000/svg" id="Capa_1" enable-background="new 0 0 512 512" height="512" viewBox="0 0 512 512" width="512"><g><path d="m317 90c-57.891 0-105 47.109-105 105s47.109 105 105 105 105-47.109 105-105-47.109-105-105-105zm51.211 135-21.211 21.211-30-30-30 30-21.211-21.211 30-30-30-30 21.211-21.211 30 30 30-30 21.211 21.211-30 30z"/><path d="m317 0c-107.52 0-195 87.48-195 195 0 48.371 17.809 92.591 47.08 126.709l-23.086 23.086-21.211-21.211-111.631 111.629c-17.534 17.534-17.534 46.069-.015 63.633l.015.015c17.549 17.52 46.124 17.523 63.633-.015l111.631-111.629-21.211-21.211 23.086-23.086c34.118 29.271 78.338 47.08 126.709 47.08 107.52 0 195-87.48 195-195s-87.48-195-195-195zm0 330c-74.443 0-135-60.557-135-135s60.557-135 135-135 135 60.557 135 135-60.557 135-135 135z"/></g></svg>'
 						+'	<p>No results found</p>'
 						+'</div>';
+			return html;
+		},
+		renderMessage: function(message='Something went wrong please try again later.'){
+			this.searchInProgress=false;
+			jQuery("#uda-content-container").html(this.getMessageHtml(message));
+		},
+		getMessageHtml: function(message) {
+			let html =	'<div class="uda-no-results">'
+				+'	<svg class="uda-no-src" xmlns="http://www.w3.org/2000/svg" id="Capa_1" enable-background="new 0 0 512 512" height="512" viewBox="0 0 512 512" width="512"><g><path d="m317 90c-57.891 0-105 47.109-105 105s47.109 105 105 105 105-47.109 105-105-47.109-105-105-105zm51.211 135-21.211 21.211-30-30-30 30-21.211-21.211 30-30-30-30 21.211-21.211 30 30 30-30 21.211 21.211-30 30z"/><path d="m317 0c-107.52 0-195 87.48-195 195 0 48.371 17.809 92.591 47.08 126.709l-23.086 23.086-21.211-21.211-111.631 111.629c-17.534 17.534-17.534 46.069-.015 63.633l.015.015c17.549 17.52 46.124 17.523 63.633-.015l111.631-111.629-21.211-21.211 23.086-23.086c34.118 29.271 78.338 47.08 126.709 47.08 107.52 0 195-87.48 195-195s-87.48-195-195-195zm0 330c-74.443 0-135-60.557-135-135s60.557-135 135-135 135 60.557 135 135-60.557 135-135 135z"/></g></svg>'
+				+'	<p>'+message+'</p>'
+				+'</div>';
 			return html;
 		},
 		//rendering each row html of the search result
@@ -2074,8 +2135,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 				// UDAPluginSDK.toggleautoplay(navcookiedata);
 				UDAPluginSDK.autoplay = false;
 				UDAPluginSDK.searchInProgress=false;
-				// UDAPluginSDK.configureintrojs();
-				// UDAPluginSDK.introjs.refresh();
+				UDAPluginSDK.autoplayPaused=false;
+				UDAPluginSDK.playNextAction=true;
+				UDAPluginSDK.configureintrojs();
+				UDAPluginSDK.introjs.refresh();
 				UDAPluginSDK.backtosearchresults(navcookiedata);
 			});
 		},
@@ -2512,8 +2575,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(navcookiedata.autoplay){
 				navcookiedata.autoplay=false;
 				this.autoplay=false;
-				// this.configureintrojs();
-				// this.introjs.refresh();
+				this.configureintrojs();
+				this.introjs.refresh();
 				//add analtytics
 				this.recordclick('stop',navcookiedata.data.name.toString(),navcookiedata.data.id);
 			} else {
@@ -2562,6 +2625,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.send(JSON.stringify(senddata));
 		},
 		showadvancedhtml:function(){
+			this.currentPage='advanced';
 			jQuery("#uda-advance-section").hide();
 			jQuery("#uda-content-container").html('');
 			jQuery("#uda-content-container").append(this.getAdvancedHtml());
