@@ -376,7 +376,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 			jQuery("#uda-btn").unbind("click").html("");
 			// var buttonhtml='<img src="'+this.extensionpath+'assets/uda-logo.png" width="50px" height="50px" nist-voice="true">';
 			var buttonhtml	=	'<div class="uda-nistapp-logo">'
-								+'	<div class="uda-icon" style="text-align: center;"><img src="'+this.extensionpath+'images/icons/nist-logo.png"><p style="padding:0; margin:0px;">Assist</p><span><img src="'+this.extensionpath+'images/icons/backarrow-orange.png"></span></div>'
+								+'	<div class="uda-icon" style="text-align: center;">'
+								+'		<img src="'+this.extensionpath+'images/icons/nist-logo.png">'
+								// +'		<p style="padding:0; margin:0px;">Assist</p>'
+								+'		<p style="padding:0; margin:0px;color: #303f9f; font-weight: bold; font-size: 11px;">UDAN(Beta)</p>'
+								+'		<span>'
+								+'			<img src="'+this.extensionpath+'images/icons/backarrow-orange.png">'
+								+'		</span>'
+								+'	</div>'
 								+'</div>';
 			var modal =jQuery("#uda-btn");
 			modal.append(buttonhtml);
@@ -394,6 +401,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 							+'<div class="uda-ribbon-arrow" id="uda-close-panel"><img src="'+this.extensionpath+'images/icons/right-arrow.png"></div>'
 							+'<div class="uda-icon-txt">'
 								+'<img src="'+this.extensionpath+'images/icons/nist-logo.png"><span class="uda-help-bg-tooltip">Need Help?</span>'
+							+'</div>'
+							+'<div class="uda-icon-txt">'
+							+'	<span class="" style="color: #303f9f; font-weight: bold;">UDAN(Beta)</span>'
 							+'</div>'
 							+'<div class="uda-container" style="text-align: center; margin-top: 10px;">'
 								+'<div class="uda-search-div">'
@@ -1916,7 +1926,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 			sequencelistdata.name=sequencename;
 			sequencelistdata.userclicknodelist=sequenceids.toString();
-			this.cancelrecordingsequence(true);
+			this.cancelrecordingsequence(false);
+			this.currentPage='SequenceSubmitted';
+			this.showhtml();
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", this.apihost + "/clickevents/recordsequencedata", true);
 			xhr.setRequestHeader('Content-Type', 'application/json');
@@ -1937,6 +1949,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			if(this.currentPage==='cancelrecording'){
 				jQuery('#uda-advanced-btn').hide();
+			} else if(this.currentPage==='SequenceSubmitted'){
+				return ;
 			}
 
 			this.currentPage='advanced';
@@ -2569,7 +2583,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					UDAPluginSDK.closemodal();
+					// UDAPluginSDK.closemodal();
+					UDAPluginSDK.searchinelastic();
 				}
 			};
 			xhr.send(senddata);
