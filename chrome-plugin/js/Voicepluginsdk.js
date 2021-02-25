@@ -2042,8 +2042,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 		renderSelectedSequenceHtml: function (data, isPlaying){
 			var html =	'<div class="uda-card-details" style="border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;">'
 						+'    <div class="uda-card-btns">'
-						+'        <button class="uda-play-btn" '+((isPlaying)?'disabled="disabled"':'id="nist-autoplay"')+'><img src="'+this.extensionpath+'images/icons/play-icon.png"></button>'
-						+'        <button class="uda-stop-btn" '+((!isPlaying)?'disabled="disabled"':'id="nist-autoplay"')+'><img src="'+this.extensionpath+'images/icons/stop-icon.png"></button>'
+						+'        <button'+((isPlaying)?'disabled="disabled"':'id="nist-autoplay"')+'><img src="'+this.extensionpath+'images/icons/playgif.gif"></button>'
+						+'        <button'+((!isPlaying)?'disabled="disabled"':'id="nist-autoplay"')+'><img src="'+this.extensionpath+'images/icons/pausegif.gif" style="display:none;"></button>'
 						+'    </div>'
 						+'    <div class="uda-card-right-dbl-arrow" id="uda-backto-search"><img src="'+this.extensionpath+'images/icons/right-duble-arrow.png"></div>'
 						+'    <h5>'+data.name.toString()+'</h5>'

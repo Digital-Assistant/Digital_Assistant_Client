@@ -76,9 +76,9 @@
 }
 
 .uda-help-bg-tooltip {
-    background-color: #ff5722;
+    background-color: #f2f4fe;
     padding: 5px 22px;
-    color: #fff;
+    color: #303f9f;
     font-weight: 500;
     border-radius: 5px;
     position: relative;
@@ -99,7 +99,36 @@
     border-right: 16px solid red;
     border-bottom: 5px solid transparent;
 }
-
+.uda-help-bg-tooltip .uda-help-bg-tooltip-top:after{
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: red transparent transparent transparent;
+}
+.uda-help-bg-tooltip .uda-help-bg-tooltip-bottom:after{
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent red transparent;
+}
+.uda-help-bg-tooltip .uda-help-bg-tooltip-right:after{
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent red;
+}
 .uda-search-btn {
     /*padding: 8px 10px;*/
     background-color: #dce0f7;
@@ -400,7 +429,12 @@
     background-image: url(../images/icons/bullet.png);
     background-repeat: space;
 }
-
+.uda-suggestion-list li.loading::before {
+   /* content: url('../images/icons/bullet.png');*/
+    vertical-align: middle;
+    background-image: url(../images/icons/uda-loading.gif);
+    background-repeat: space;
+}
 .uda-details-footer {
     background-color: #e5eafe;
     height: 40px;
