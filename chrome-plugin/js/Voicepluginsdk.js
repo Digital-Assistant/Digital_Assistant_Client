@@ -2105,7 +2105,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(shownodelist && navcookiedata.data.userclicknodesSet.length===navcookiedata.navigateddata.length){
 				navcookiedata.navcompleted=true;
 			}
-			var isPlaying =  false
+			var isPlaying =  false;
+
+			this.currentPage='SelectedSequence';
 
 			if(shownodelist) {
 				if (navcookiedata.navcompleted) {
