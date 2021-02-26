@@ -1104,6 +1104,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 				navigationcookiedata = JSON.parse(navigationcookie);
 			}
 
+			if(this.inarray(node.nodeName.toLowerCase(), this.ignoreNodesFromIndexing) !== -1) {
+				this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, false);
+				return;
+			}
+
 			switch (node.nodeName.toLowerCase()) {
 				case "input":
 					// this.playNextAction = false;
@@ -1409,6 +1414,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 				return ;
 			}
 
+			if(this.inarray(node.nodeName.toLowerCase(), this.ignoreNodesFromIndexing) !== -1 && this.customNameForSpecialNodes.hasOwnProperty(node.nodeName.toLowerCase())){
+				domjson.meta.displayText = this.customNameForSpecialNodes[node.nodeName.toLowerCase()];
+			}
+
 			if(node.nodeName.toLowerCase()==="input" && node.getAttribute("type")==="radio"){
 				var postdata = {
 					domain: window.location.host,
@@ -1445,7 +1454,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					objectdata: JSON.stringify(domjson)
 				};
 			}
-			postdata.clickednodename = this.getclickedinputlabels(node,fromdocument,selectchange);
+			postdata.clickednodename = this.getclickedinputlabels(node, fromdocument, selectchange);
 
 			// for known scenarios prompt user for input
 			if(confirmdialog && this.recording && !this.confirmednode && !this.autoplay){
