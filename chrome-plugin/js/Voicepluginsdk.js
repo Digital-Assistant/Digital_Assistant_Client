@@ -234,7 +234,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(this.inarray(window.location.host,this.addcustomcssdomains) !== -1){
 				this.loadCssScript(this.extensionpath+"css/"+window.location.host+".css");
 			}
-			if(window.location.host === 'localhost:4200' && window.location.path.includes('portal')){
+			if(window.location.host === 'localhost:4200' && window.location.path && window.location.path.includes('portal')){
 				this.loadCssScript(this.extensionpath+"css/dashboard.vantagecircle.com.css");
 			}
 			if(window.location.host.includes('vantagecircle')){
