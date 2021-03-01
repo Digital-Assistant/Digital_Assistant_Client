@@ -116,6 +116,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		// cancelRecordingDuringRecordingNodes: ['ngb-datepicker'],
 		cancelRecordingDuringRecordingNodes: [],
 		addClickToSpecialNodes: ['ng-select', 'ngb-datepicker'],
+		ignoreClicksOnSpecialNodes: ['ngx-daterangepicker-material'],
 		customNameForSpecialNodes: {'ngb-datepicker': 'Date selector','mat-datepicker-content': 'Date selector', 'ngx-daterangepicker-material': 'Date Range Selector'},
 		tooltipDisplayedNodes: [],
 		//replayvariables
@@ -700,13 +701,17 @@ if (typeof UDAPluginSDK === 'undefined') {
 								this.tooltipDisplayedNodes.push(node);
 								$(node).addClass('uda-tooltip').append('<div class="uda-tooltip-right"><div class="uda-tooltip-text-content">We have detected a rich text editor. To record this in your sequence, Please click on the editor menu. We are unable to record clicks on the text area.</div></div>');
 							}
+						} else if(!node.hasclick && this.inarray(node.nodeName.toLowerCase(), this.addClickToSpecialNodes) !== -1 && this.inarray(node.nodeName.toLowerCase(), this.ignoreClicksOnSpecialNodes) === -1){
+							if(this.logLevel>0) {
+								console.log('Child nodes ignored for node and added click to: ' + node.nodeName);
+							}
+							this.addClickToNode(node);
 						} else if(this.cancelRecordingDuringRecordingNodes.indexOf(node.nodeName.toLowerCase()) !== -1) {
-							this.addClickToNode(node);
-						} else if(!node.hasclick && this.inarray(node.nodeName.toLowerCase(), this.addClickToSpecialNodes) !== -1){
-							console.log('Child nodes ignored for node and added click to: '+node.nodeName);
-							this.addClickToNode(node);
+							// this.addClickToNode(node);
 						} else {
-							console.log('Child nodes ignored for node: '+node.nodeName);
+							if(this.logLevel>0) {
+								console.log('Child nodes ignored for node: ' + node.nodeName);
+							}
 						}
 					} else if(node.classList && ((node.classList.contains('select2-container--open') && !node.classList.contains('select2-container--focus')))){
 					//	do nothing as we are not going to deal with special classes
@@ -815,6 +820,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 				return node;
 			}
 
+			if(this.inarray(node.nodeName.toLowerCase(), this.ignoreClicksOnSpecialNodes) !== -1){
+				return node;
+			}
 
 			// Multiple clicks are recorded for select2-selection class. select2-selection--multiple
 			// This will create a problem during playback. We should record only one click to avoid this problem
@@ -1372,7 +1380,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 				return ;
 			}*/
 
-			if(this.recording && this.cancelRecordingDuringRecordingNodes.indexOf(node.nodeName.toLowerCase()) !== -1) {
+			if(this.recording && this.inarray(node.nodeName.toLowerCase(), this.ignoreClicksOnSpecialNodes) !== -1){
+				return ;
+			} else if(this.recording && this.cancelRecordingDuringRecordingNodes.indexOf(node.nodeName.toLowerCase()) !== -1) {
 				alert('Sorry currently we do not support this '+node.nodeName+' selector. Please re-record the sequence without selecting '+node.nodeName+' selector');
 				this.recording=false;
 				this.cancelrecordingsequence();
