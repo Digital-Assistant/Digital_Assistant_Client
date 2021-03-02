@@ -1149,7 +1149,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 								this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
                             	break;
 							case 'text':
-								if(node.attributes && node.attributes.length>0 && node.hasAttribute('uib-datepicker-popup')) {
+								if(node.attributes && node.attributes.length>0 && (node.hasAttribute('ngxdaterangepickermd'))) {
+									this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, false);
+								} else if(node.attributes && node.attributes.length>0 && (node.hasAttribute('uib-datepicker-popup'))) {
 									this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, true, false);
 								} else {
 									this.addToolTip(node, node.parentNode, navigationcookiedata, false, true, true);
