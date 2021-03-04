@@ -833,6 +833,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 				return node;
 			}
 
+			if(node.hasAttribute('disabled')){
+				return node;
+			}
+
+			if(node.hasAttribute('readOnly')){
+				return node;
+			}
+
 			if(this.htmlindex.length>0){
 				for(var htmli=0;htmli<this.htmlindex.length;htmli++){
 					if(node.isSameNode(this.htmlindex[htmli]['element-data'])){
