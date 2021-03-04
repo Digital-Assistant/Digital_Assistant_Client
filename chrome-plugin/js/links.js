@@ -1,6 +1,6 @@
 var UDALinkScriptloaded = UDALinkScriptloaded || false;
 // if(!UDALinkScriptloaded) {
-    let UDAUserAuthData = {id: null, email: null};
+    let UDAUserAuthData = {id: null, email: null, restrict_add_delete: false, role: 'default'};
     var udaauthdata = {
         set id(val){
             UDAUserAuthData.id = val;
@@ -17,6 +17,22 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
         },
         get email() {
             return UDAUserAuthData.email;
+        },
+        set userRole(val) {
+            UDAUserAuthData.role = val;
+            var sessionevent = new CustomEvent("UDAClearSessionData", {detail: {data: "clearsession"}, bubbles: false, cancelable: false});
+            document.dispatchEvent(sessionevent);
+        },
+        get userRole() {
+            return UDAUserAuthData.role;
+        },
+        set restrict_add_delete(val) {
+            UDAUserAuthData.restrict_add_delete = val;
+            var sessionevent = new CustomEvent("UDADisableButton", {detail: {data: "UDADisableButton"}, bubbles: false, cancelable: false});
+            document.dispatchEvent(sessionevent);
+        },
+        get restrict_add_delete() {
+            return UDAUserAuthData.restrict_add_delete;
         }
     };
     let UDAClickObjects = [];

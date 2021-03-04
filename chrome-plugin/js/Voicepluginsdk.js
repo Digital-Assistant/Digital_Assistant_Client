@@ -29,6 +29,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 		UDAPluginSDK.clearSession();
 	});
 
+	/**
+	 * Disabling record button when the attribute is set to true.
+	 */
+	document.addEventListener("UDADisableButton", function(data) {
+		UDAPluginSDK.disableRecordButton();
+	});
+
 	document.addEventListener("UDAAuthenticatedUserSessionData", function(data) {
 		UDAPluginSDK.createsession(JSON.parse(data.detail.data));
 		UDAPluginSDK.openmodal(true);
@@ -482,10 +489,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 				jQuery("#uda-voice-icon-stop").hide();
 			}
 			if(addnisticon) {
-				jQuery('#uda-advanced-btn').show();
-				jQuery("#uda-advance-section").click(function () {
-					UDAPluginSDK.showadvancedhtml();
-				});
+				if(!UDAUserAuthData.restrict_add_delete) {
+					jQuery('#uda-advanced-btn').show();
+					jQuery("#uda-advance-section").click(function () {
+						UDAPluginSDK.showadvancedhtml();
+					});
+				}
 			} else {
 				/*jQuery("#nistvoicerecstpbtn").click(function () {
 					UDAPluginSDK.gettimestamp("stop");
@@ -600,6 +609,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.addvoicesearchmodal(addnisticon);
 				this.showrecordedresults();
 			}
+			this.disableRecordButton();
 		},
 		// indexing all nodes after all the clicknodes are available
 		indexclicknodes: function(){
@@ -2033,7 +2043,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		//rendering search results screen
 		renderSearchResults:function(data){
-			jQuery('#uda-advanced-btn').show();
+			if(!UDAUserAuthData.restrict_add_delete) {
+				jQuery('#uda-advanced-btn').show();
+			}
 			var matchnodes = data;
 			if(matchnodes.length>0){
 				jQuery("#uda-content-container").html('');
@@ -2741,6 +2753,16 @@ if (typeof UDAPluginSDK === 'undefined') {
 		backtomodal:function(){
 			jQuery("#uda-advance-section").show();
 			jQuery("#uda-content-container").html('');
+		},
+		/**
+		 * disabling functionality to show the button or not.
+		 */
+		disableRecordButton: function(){
+			if(UDAUserAuthData.restrict_add_delete) {
+				jQuery("#uda-advanced-btn").hide();
+			} else {
+				jQuery("#uda-advanced-btn").show();
+			}
 		}
 	};
 	UDAPluginSDK.init();
