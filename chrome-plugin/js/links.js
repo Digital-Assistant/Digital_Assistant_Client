@@ -35,6 +35,20 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
             return UDAUserAuthData.restrict_add_delete;
         }
     };
+    let UDACustomCss = {
+        src:'',
+        loaded: false,
+        set url(val) {
+            this.src = val;
+            var cssevent = new CustomEvent("UDALoadCustomCSS", {detail: {data: "UDALoadCustomCSS"}, bubbles: false, cancelable: false});
+            document.dispatchEvent(cssevent);
+            this.loaded = true;
+        },
+        get url(){
+            return this.src;
+        }
+    };
+
     let UDAClickObjects = [];
     let UDASessionID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     const UDADebug = false; //this variable exists in background.js file also

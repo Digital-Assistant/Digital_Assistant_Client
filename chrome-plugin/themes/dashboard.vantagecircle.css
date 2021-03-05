@@ -1,0 +1,200 @@
+:root {
+    --uda-primary-color: #45a4ec;
+    --uda-secondary-color: #5B3B97;
+    --uda-card-bgcolor: #f2f4fe;
+    --uda-text-color: #000;
+    --uda-footer-srchbtn-bgcolor: #ECE9F1;
+    --uda-text-color-bg-white: #fffff;
+    --uda-text-color-white: #fffff;
+}
+/* toggle button */
+.uda-ribbon-arrow {
+    background-color: var(--uda-primary-color);
+}
+/* tooltip for nistapp logo */
+.uda-help-bg-tooltip {
+    background-color: var(--uda-card-bgcolor);
+    color: var(--uda-primary-color);
+}
+
+.uda-help-bg-tooltip:after {
+    border-right: 16px solid var(--uda-secondary-color);
+}
+.uda-help-bg-tooltip .uda-help-bg-tooltip-top:after{
+    border-color: var(--uda-secondary-color) transparent transparent transparent;
+}
+.uda-help-bg-tooltip .uda-help-bg-tooltip-bottom:after{
+    border-color: transparent transparent var(--uda-secondary-color) transparent;
+}
+.uda-help-bg-tooltip .uda-help-bg-tooltip-right:after{
+    border-color: transparent transparent transparent var(--uda-secondary-color);
+}
+/* search icon with button */
+.uda-search-btn {
+    background-color: var(--uda-footer-srchbtn-bgcolor);
+}
+/* input after search icon*/
+.uda-input-cntrl {
+    background-color: var(--uda-card-bgcolor);
+}
+/* card for search results*/
+.uda-card {
+    background-color: var(--uda-card-bgcolor);
+}
+
+.uda-card:hover {
+    background-color: var(--uda-footer-srchbtn-bgcolor);
+}
+
+.uda-card h5:hover {
+    color: var(--uda-primary-color);
+}
+/* footer advanced dropdown button*/
+.uda-advanced-btn {
+    background-color: var(--uda-text-color-bg-white);
+    border: 1px solid var(--uda-primary-color);
+    color: var(--uda-primary-color);
+}
+
+.uda-advanced-btn-content {
+    color: var(--uda-text-color-white);
+}
+
+.uda-advanced-btn-content a {
+    border-top: 1px solid var(--uda-text-color-bg-white);
+    background-color: var(--uda-secondary-color);
+}
+
+.uda-advanced-btn-content a:hover {
+    background-color: var(--uda-primary-color);
+}
+
+
+.uda-advanced-btn:hover {
+    background-color: var(--uda-footer-srchbtn-bgcolor);
+}
+
+
+.uda-footer-right a {
+    color: var(--uda-primary-color);
+}
+
+.uda-footer-bar {
+    background-color: var(--uda-text-color-bg-white);
+}
+
+/* card details page cards*/
+.uda-card-details {
+    background-color: var(--uda-card-bgcolor);
+}
+
+/* play button in card details page*/
+.uda-play-btn {
+    background-color: var(--uda-secondary-color);
+}
+
+.uda-play-btn:hover {
+    background-color: var(--uda-primary-color);
+}
+
+.uda-play-btn:active {
+    background-color: var(--uda-primary-color);
+}
+
+.uda-play-btn:disabled {
+    background-color: var(--uda-primary-color);
+}
+/* stop button in card details page*/
+.uda-stop-btn {
+    background-color: var(--uda-secondary-color);
+}
+
+.uda-stop-btn:hover {
+    background-color: var(--uda-primary-color);
+}
+
+.uda-stop-btn:active {
+    background-color: var(--uda-primary-color);
+}
+
+.uda-stop-btn:disabled {
+    background-color: var(--uda-primary-color);
+}
+/* right arrow card details page*/
+.uda-card-right-dbl-arrow {
+    background-color: var(--uda-primary-color);
+}
+/* before record the sequece shown card with text*/
+.uda-recording {
+    list-style: none url('../images/icons/bullet.png');
+}
+
+/* getting space in recorded list*/
+.uda-suggestion-list li::before {
+    content: '\00a0 \00a0 \00a0 \00a0';
+}
+/* After completed the step green icon display*/
+.uda-suggestion-list li.completed::before {
+    background-image: url('../images/icons/bullet.png');
+}
+/* when before goind to the list loading icon display */
+.uda-suggestion-list li.loading::before {
+    background-image: url('../images/icons/uda-loading.gif');
+}
+/* card details footer included trash like and dislikeimages */
+.uda-details-footer {
+    background-color: var(--uda-footer-srchbtn-bgcolor);
+}
+
+.uda-trash-img:hover, .uda-like-img:hover, .uda-dislike-img:hover {
+    background-color: var(--uda-footer-srchbtn-bgcolor);
+}
+/* when we click on the new record option shown tutorial and record button*/
+.uda-tutorial-btn {
+    background-color: var(--uda-primary-color);
+    color: var(--uda-text-color-white);
+}
+
+.uda-tutorial-btn:hover {
+    background-color: var(--uda-secondary-color);
+}
+
+.uda-record-btn {
+    background-color: var(--uda-secondary-color);
+}
+
+.uda-record-btn:hover {
+    background-color: var(--uda-primary-color);
+}
+/* saving record with name in input field */
+.uda-form-input {
+    background-color: var(--uda-footer-srchbtn-bgcolor);
+}
+.uda-no-results {
+    background-color: var(--uda-card-bgcolor);
+}
+
+.uda-no-results p {
+    color: var(--uda-secondary-color);
+}
+
+.uda-no-src {
+    fill: var(--uda-primary-color);
+}
+
+/* tooltip for vantage circle UI */
+.uda-tooltip .uda-tooltip-right {
+    color:var(--uda-text-color-bg-white);
+    background-color:var(--uda-secondary-color);
+}
+.uda-tooltip .uda-tooltip-right::before{
+    border-color: transparent var(--uda-secondary-color) transparent transparent;
+}
+
+/*.uda-tooltip .uda-tooltip-right i::after {
+    background-color:#444444;
+}*/
+
+.uda-tooltip .uda-tooltip-right .uda-tutorial-btn:hover {
+    background-color: var(--uda-primary-color);
+}

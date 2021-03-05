@@ -45,6 +45,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 		alert(JSON.parse(data.detail.data));
 	});
 
+	/**
+	 * Load custom theme to plugin
+	 */
+	document.addEventListener("UDALoadCustomCSS", function(data) {
+		UDAPluginSDK.loadCssScript(UDACustomCss.src);
+	});
+
 	let UDADebugSetEvent = new CustomEvent("UDADebugSetEvent", {detail: {data: {action:'Debugvalueset',value:UDADebug}}, bubbles: false, cancelable: false});
 	document.dispatchEvent(UDADebugSetEvent);
 

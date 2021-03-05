@@ -1,0 +1,157 @@
+.uda-ribbon-arrow {
+    background-color: #45a4ec !important;
+}
+
+.uda-help-bg-tooltip {
+    background-color: rgb(91,59,151) !important;
+    color: #fff !important;
+}
+
+.uda-help-bg-tooltip:after {
+    border-right: 16px solid rgb(91,59,151) !important;
+}
+.uda-help-bg-tooltip .uda-help-bg-tooltip-top:after{
+  border-color: rgb(91,59,151) transparent transparent transparent !important;
+}
+.uda-help-bg-tooltip .uda-help-bg-tooltip-bottom:after{
+  border-color: transparent transparent rgb(91,59,151) transparent !important;
+}
+.uda-help-bg-tooltip .uda-help-bg-tooltip-right:after{
+  border-color: transparent transparent transparent rgb(91,59,151) !important;
+}
+.uda-search-btn {
+    background-color: rgba(236,233,241,.59) !important;
+    border: 1px solid rgba(91,59,151,.3) !important;
+}
+
+.uda-input-cntrl {
+    background-color: rgba(236,233,241,.59) !important;
+    border: 1px solid rgba(91,59,151,.3) !important;
+}
+.uda-card {
+    background-color: #f4f7ff !important;
+}
+.uda-card:hover {
+    background-color: rgba(236,233,241,.59) !important;
+}
+.uda-card h5:hover {
+    color: #2c2d4f !important;
+}
+
+.uda-advanced-btn {
+    background-color: transparent !important;
+    border: 1px solid #2c2d4f !important;
+    color: #212529 !important;
+}
+
+.uda-advanced-btn-content a {
+    border-top: 1px solid #fff;
+    background-color: rgb(91,59,151);
+}
+
+.uda-advanced-btn-content a:hover {
+    background-color: #2c2d4f !important;
+}
+
+.uda-advanced-btn:hover {
+    background-color: #5B3B97 !important;
+}
+.uda-footer-right a {
+    font-size: 10px;
+    color: #303f9f !important;
+    text-decoration: none;
+}
+
+.uda-card-details {
+    background-color: #f4f7ff !important;
+}
+.uda-play-btn {
+    background-color: #45a4ec !important;
+}
+
+.uda-play-btn:hover {
+    background-color: #5B3B97 !important;
+}
+
+.uda-play-btn:active {
+    background-color: #5B3B97 !important;
+}
+
+.uda-play-btn:disabled {
+    background-color: #5B3B97 !important;
+}
+
+.uda-stop-btn {
+    background-color: #5B3B97 !important;
+}
+
+.uda-stop-btn:hover {
+    background-color: #45a4ec !important;
+}
+
+.uda-stop-btn:active {
+    background-color: #45a4ec !important;
+}
+
+.uda-stop-btn:disabled {
+    background-color: #45a4ec !important;
+}
+
+.uda-card-right-dbl-arrow {
+    background-color: #45a4ec;
+}
+
+.uda-details-footer {
+    background-color: rgba(236,233,241,.59) !important;
+}
+
+.uda-trash-img:hover, .uda-like-img:hover, .uda-dislike-img:hover {
+    background-color: #f4f7ff !important;
+}
+.uda-tutorial-btn {
+    background-color: #45a4ec !important;
+}
+
+.uda-tutorial-btn:hover {
+    background-color: #5B3B97 !important;
+}
+
+.uda-record-btn {
+    background-color: #45a4ec !important;
+}
+
+.uda-record-btn:hover {
+    background-color: #5B3B97 !important;
+}
+
+.uda-form-input {
+    border: 1px solid #cbd6e2!important;
+    background-color: #fff !important;
+}
+.uda-no-results {
+    background-color: #f4f7ff !important;
+}
+
+.uda-no-results p {
+    color: #2c2d4f !important;
+}
+
+.uda-no-src {
+    fill: #45a4ec;
+}
+
+
+.uda-tooltip .uda-tooltip-right {
+    background-color:rgb(91,59,151) !important;
+}
+.uda-tooltip .uda-tooltip-right::before{
+    border-color: transparent rgb(91,59,151) transparent transparent;
+}
+.uda-tooltip .uda-tooltip-right i::after {
+    background-color:#444444;
+    box-shadow:0 1px 8px rgba(0,0,0,0.5);
+}
+
+.uda-tooltip .uda-tooltip-right .uda-tutorial-btn:hover {
+    background-color: #5B3B97;
+}
