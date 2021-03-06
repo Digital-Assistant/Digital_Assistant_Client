@@ -1,10 +1,17 @@
 :root {
+    /* Blue color which is used for back button, like, dislike, search icon, delete and loading icons and for hover */
     --uda-primary-color: #303f9f;
+    /* Orange color which is used in play, stop & tooltips */
     --uda-secondary-color: #ff5722;
+    /* Background color for search results, detail sequence and search input background*/
     --uda-card-bgcolor: #f2f4fe;
+    /* Text color for detail sequence, search results */
     --uda-text-color: #000;
+    /* Background color for footer section*/
     --uda-footer-srchbtn-bgcolor: #dce0f7;
+    /* Text background color as white */
     --uda-text-color-bg-white: #fffff;
+    /* White Text color */
     --uda-text-color-white: #fffff;
 }
 
@@ -15,8 +22,8 @@
 
 /* tooltip for nistapp logo */
 .uda-help-bg-tooltip {
-    background-color: var(--uda-card-bgcolor);
-    color: var(--uda-primary-color);
+    background-color: var(--uda-secondary-color);
+    color: var(--uda-text-color-white);
 }
 
 .uda-help-bg-tooltip:after {
