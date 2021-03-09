@@ -1997,6 +1997,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 				jQuery('#uda-advanced-btn').hide();
 			} else if(this.currentPage==='SequenceSubmitted'){
 				return ;
+			} else {
+				jQuery('#uda-advanced-btn').show();
+				jQuery("#uda-advance-section").show();
 			}
 
 			this.currentPage='advanced';
