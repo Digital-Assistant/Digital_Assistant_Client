@@ -2183,7 +2183,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				jQuery("#uda-sequence-steps").append(this.rendersteps(data.userclicknodesSet[i], visited, navcookiedata));
 			}
 
-			if(this.sessionID===data.usersessionid || this.sessiondata.authdata.id===data.usersessionid){
+			if(this.sessionID.toString()===data.usersessionid.toString() || this.sessiondata.authdata.id.toString()===data.usersessionid.toString()){
 				jQuery("#uda-delete-sequence").click(function () {
 					UDAPluginSDK.deleteSequence(data);
 				});
