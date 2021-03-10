@@ -367,6 +367,7 @@
     float: right;
     margin-top: -15px;
     font-size: 20px;
+    cursor: pointer;
 }
 .uda-card-btns {
     display: block;
