@@ -161,14 +161,13 @@
   background-position: center;
   background-repeat: no-repeat;
 }
-.uda-stop-btn{
+.uda-stop-btn-bg{
     background-color: var(--footer-srchbtn-bgcolor);
     border-radius: 0px 5px 5px 0px;
     border: none;
     width: 15%;
     cursor: pointer;
-    display: none;
-    background-image: url("data:image/svg+xml,%3Csvg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 426.7 426.7' style='enable-background:new 0 0 426.7 426.7;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23FFFFFF;%7D%0A%3C/style%3E%3Cg%3E%3Cg%3E%3Cg%3E%3Cpath class='st0' d='M213.3,106.7c-58.9,0-106.7,47.8-106.7,106.7S154.5,320,213.3,320S320,272.2,320,213.3 S272.2,106.7,213.3,106.7z'/%3E%3Cpath class='st0' d='M213.3,0C95.5,0,0,95.5,0,213.3s95.5,213.3,213.3,213.3s213.3-95.5,213.3-213.3S331.2,0,213.3,0z M213.3,384 C119,384,42.7,307.6,42.7,213.3S119,42.7,213.3,42.7S384,119,384,213.3S307.6,384,213.3,384z'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 426.7 426.7' style='enable-background:new 0 0 426.7 426.7;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23ff5722;%7D%0A%3C/style%3E%3Cg%3E%3Cg%3E%3Cg%3E%3Cpath class='st0' d='M213.3,106.7c-58.9,0-106.7,47.8-106.7,106.7S154.5,320,213.3,320S320,272.2,320,213.3 S272.2,106.7,213.3,106.7z'/%3E%3Cpath class='st0' d='M213.3,0C95.5,0,0,95.5,0,213.3s95.5,213.3,213.3,213.3s213.3-95.5,213.3-213.3S331.2,0,213.3,0z M213.3,384 C119,384,42.7,307.6,42.7,213.3S119,42.7,213.3,42.7S384,119,384,213.3S307.6,384,213.3,384z'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     background-size: 20px 20px;
     background-position: center;
     background-repeat: no-repeat; 
@@ -499,10 +498,9 @@
 }
 
 .uda-trash-img, .uda-like-img, .uda-dislike-img {
-    width: 35px;
+    width: 40px;
     display: inline-block;
-    height: 35px;
-    padding: 7px;
+    height: 40px;
     border-right: 1px solid var(--footer-srchbtn-bgcolor);
     cursor: pointer;
 }
@@ -675,8 +673,8 @@
     margin-left:20px;
     transform:translate(0, -50%);
     padding:0;
-    color: var(--text-color-bg-white);
-    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    background-color: var(--card-bgcolor);
     font-weight:normal;
     font-size:13px;
     border-radius:8px;
@@ -694,7 +692,7 @@
     margin-top: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: transparent var(--secondary-color) transparent transparent;
+    border-color: transparent var(--card-bgcolor) transparent transparent;
 }
 .uda-tooltip .uda-tooltip-right {
     visibility:visible;
@@ -732,4 +730,13 @@
 /* angular related css code for squeezing*/
 .uda-original-content .kt-header,.uda-original-content .kt-header--fixed,.uda-original-content .kt-container--fluid{
     max-width: 77%;
+}
+
+/*Intro Js tooltips*/
+.introjs-tooltip {
+  background-color: var(--card-bgcolor) !important;
+  color: var(--primary-color) !important;
+}
+.introjs-arrow.left, .introjs-arrow.left-bottom {
+  border-color: transparent var(--card-bgcolor) transparent transparent !important;
 }

@@ -206,3 +206,12 @@
 .uda-tooltip .uda-tooltip-right .uda-tutorial-btn:hover {
     background-color: var(--primary-color);
 }
+
+/*Intro Js tooltips*/
+.introjs-tooltip {
+  background-color: var(--card-bgcolor) !important;
+  color: var(--primary-color) !important;
+}
+.introjs-arrow.left, .introjs-arrow.left-bottom {
+  border-color: transparent var(--card-bgcolor) transparent transparent !important;
+}
