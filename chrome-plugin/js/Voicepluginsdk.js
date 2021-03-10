@@ -427,7 +427,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 									+'<button class="uda-mic-btn" style="border-radius: 0px 5px 5px 0px;" id="uda-voice-icon-start">'
 									/*+'	<img src="'+this.extensionpath+'images/icons/mic-icon.png">'*/
 									+'</button>'
-									+'<button class="uda-stop-btn" style="border-radius: 0px 5px 5px 0px; display:none;" id="uda-voice-icon-stop">'
+									+'<button class="uda-stop-btn-bg" style="border-radius: 0px 5px 5px 0px; display:none;" id="uda-voice-icon-stop">'
 									/*+'	<img src="'+this.extensionpath+'images/icons/color-stop-btn.png">'*/
 									+'</button>'
 								+'</div>'
