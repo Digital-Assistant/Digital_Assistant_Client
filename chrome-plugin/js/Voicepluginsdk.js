@@ -2192,7 +2192,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 				jQuery("#uda-sequence-steps").append(this.rendersteps(data.userclicknodesSet[i], visited, navcookiedata));
 			}
 
-			if(this.sessionID.toString()===data.usersessionid.toString() || this.sessiondata.authdata.id.toString()===data.usersessionid.toString()){
+			console.log(this.sessiondata);
+			console.log(this.sessionID);
+			console.log(data.usersessionid);
+
+			if(this.sessionID && data.usersessionid && (this.sessionID.toString()===data.usersessionid.toString() || (this.sessiondata.authdata.hasOwnProperty('id') && this.sessiondata.authdata.id.toString()===data.usersessionid.toString()))){
 				jQuery("#uda-delete-sequence").click(function () {
 					UDAPluginSDK.deleteSequence(data);
 				});
