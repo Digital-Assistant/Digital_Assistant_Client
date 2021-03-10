@@ -1999,6 +1999,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 				jQuery('#uda-advanced-btn').hide();
 			} else if(this.currentPage==='SequenceSubmitted'){
 				return ;
+			} else if(!UDAUserAuthData.restrict_add_delete) {
+				jQuery('#uda-advanced-btn').show();
+				jQuery("#uda-advance-section").show();
 			}
 
 			this.currentPage='advanced';
@@ -2052,9 +2055,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		//rendering search results screen
 		renderSearchResults:function(data){
+
 			if(!UDAUserAuthData.restrict_add_delete) {
 				jQuery('#uda-advanced-btn').show();
+				jQuery("#uda-advance-section").show();
 			}
+
 			var matchnodes = data;
 			if(matchnodes.length>0){
 				jQuery("#uda-content-container").html('');
@@ -2186,7 +2192,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				jQuery("#uda-sequence-steps").append(this.rendersteps(data.userclicknodesSet[i], visited, navcookiedata));
 			}
 
-			if(this.sessionID===data.usersessionid || this.sessiondata.authdata.id===data.usersessionid){
+			if(this.sessionID.toString()===data.usersessionid.toString() || this.sessiondata.authdata.id.toString()===data.usersessionid.toString()){
 				jQuery("#uda-delete-sequence").click(function () {
 					UDAPluginSDK.deleteSequence(data);
 				});
