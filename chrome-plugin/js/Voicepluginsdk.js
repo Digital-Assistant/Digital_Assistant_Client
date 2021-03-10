@@ -1997,7 +1997,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				jQuery('#uda-advanced-btn').hide();
 			} else if(this.currentPage==='SequenceSubmitted'){
 				return ;
-			} else {
+			} else if(!UDAUserAuthData.restrict_add_delete) {
 				jQuery('#uda-advanced-btn').show();
 				jQuery("#uda-advance-section").show();
 			}
@@ -2053,9 +2053,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		//rendering search results screen
 		renderSearchResults:function(data){
+
 			if(!UDAUserAuthData.restrict_add_delete) {
 				jQuery('#uda-advanced-btn').show();
+				jQuery("#uda-advance-section").show();
 			}
+
 			var matchnodes = data;
 			if(matchnodes.length>0){
 				jQuery("#uda-content-container").html('');
