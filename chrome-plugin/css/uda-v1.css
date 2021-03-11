@@ -364,10 +364,17 @@
     box-shadow: 2px 1px 6px 1px var(--boxshodow-color);
 }
 .close-icon{
+    width: 25px;
+    height: 25px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    cursor: pointer;
     float: right;
     margin-top: -15px;
-    font-size: 20px;
+    font-size: 19px;
+    font-weight: 500;
     cursor: pointer;
+    color: var(--text-color-bg-white);
 }
 .uda-card-btns {
     display: block;
@@ -682,7 +689,7 @@
     position:absolute;
     z-index:99999999;
     box-sizing:border-box;
-    box-shadow:0 1px 8px var(--boxshodow-color);
+    box-shadow:0 1px 16px var(--boxshodow-color);
     visibility:hidden; opacity:0; transition:opacity 0.8s;
 }
 .uda-tooltip .uda-tooltip-right::before{
@@ -690,10 +697,10 @@
     position: absolute;
     top: 50%;
     right: 100%;
-    margin-top: -5px;
-    border-width: 5px;
+    margin-top: -12px;
+    border-width: 12px;
     border-style: solid;
-    border-color: transparent var(--card-bgcolor) transparent transparent;
+    border-color: transparent var(--footer-srchbtn-bgcolor) transparent transparent;
 }
 .uda-tooltip .uda-tooltip-right {
     visibility:visible;
@@ -739,5 +746,5 @@
   color: var(--primary-color) !important;
 }
 .introjs-arrow.left, .introjs-arrow.left-bottom {
-  border-color: transparent var(--card-bgcolor) transparent transparent !important;
+  border-color: transparent var(--footer-srchbtn-bgcolor) transparent transparent !important;
 }
