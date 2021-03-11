@@ -422,13 +422,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 							+'</div>'
 							+'<div class="uda-container" style="text-align: center; margin-top: 10px;">'
 								+'<div class="uda-search-div">'
-									+'<button class="uda-search-btn"><img src="'+this.extensionpath+'images/icons/search-icon.png"></button>'
+									+'<button class="uda-search-btn"></button>'
 									+'<input type="text" name="uda-search-input" class="uda-input-cntrl" placeholder="search..." id="uda-search-input" />'
-									+'<button class="uda-search-btn" style="border-radius: 0px 5px 5px 0px;" id="uda-voice-icon-start">'
-									+'	<img src="'+this.extensionpath+'images/icons/mic-icon.png">'
+									+'<button class="uda-mic-btn" style="border-radius: 0px 5px 5px 0px;" id="uda-voice-icon-start">'
+									/*+'	<img src="'+this.extensionpath+'images/icons/mic-icon.png">'*/
 									+'</button>'
-									+'<button class="uda-search-btn" style="border-radius: 0px 5px 5px 0px; display:none;" id="uda-voice-icon-stop">'
-									+'	<img src="'+this.extensionpath+'images/icons/color-stop-btn.png">'
+									+'<button class="uda-stop-btn-bg" style="border-radius: 0px 5px 5px 0px; display:none;" id="uda-voice-icon-stop">'
+									/*+'	<img src="'+this.extensionpath+'images/icons/color-stop-btn.png">'*/
 									+'</button>'
 								+'</div>'
 							+'</div>'
@@ -441,10 +441,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 								+'<div class="uda-container">'
 									+'<div class="uda-dropdown" id="uda-advanced-btn">'
 										+'<button class="uda-advanced-btn">'
-											+'<img src="'+this.extensionpath+'images/icons/advanced-icon.png"><span>Advanced</span>'
+											/*+'<img src="'+this.extensionpath+'images/icons/advanced-icon.png">*/
+										+'<span>Advanced</span>'
 										+'</button>'
 										+'<div class="uda-advanced-btn-content">'
-											+'<a id="uda-advance-section"><img src="'+this.extensionpath+'images/icons/new-record.png" width="23px" height="23px"><span>&nbsp; New Sequence </span></a>'
+											+'<a id="uda-advance-section">New Sequence </a>'
 											// +'<a><img src="'+this.extensionpath+'images/icons/new-record.png" width="23px" height="23px"><span> New Record</span></a>'
 										+'</div>'
 									+'</div>'
@@ -1988,7 +1989,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'	</ul>'
 						+'	<div class="uda-recording" style="text-align: center;">'
 						+'		<input type="text" id="uda-recorded-name" name="uda-save-recorded" class="uda-form-input" placeholder="Enter Label">'
-						+'		<button class="uda-record-btn" onclick="UDAPluginSDK.cancelrecordingsequence();">Cancel and Exit</button>'
+						+'		<button class="uda-record-btn" onclick="UDAPluginSDK.cancelrecordingsequence();"><span>Cancel and Exit</span></button>'
 						+'		<button class="uda-tutorial-btn" onclick="UDAPluginSDK.submitrecordedlabel();">Submit</button>'
 						+'	</div>'
 						+'</div>';
@@ -1996,13 +1997,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		renderEmptyRecordedSequenceHtml: function(){
 			var html =	'<div class="uda-card-details">'
+						// +'<span class="uda-close-icon">×</span>'
 						+'	<h5>Recorded Sequence</h5>'
 						+'	<hr>'
 						+'	<h5>Please navigate in the page to record.</h5>'
 						+'	<br />'
 						+'	<div class="uda-recording" style="text-align: center;">'
 						// +'		<input type="text" id="uda-recorded-name" name="uda-save-recorded" class="uda-form-input" placeholder="Enter Label">'
-						+'		<button class="uda-record-btn" onclick="UDAPluginSDK.cancelrecordingsequence();">Cancel and Exit</button>'
+						+'		<button class="uda-record-btn" onclick="UDAPluginSDK.cancelrecordingsequence();"><span>Cancel and Exit</span></button>'
 						// +'		<button class="uda-tutorial-btn" onclick="UDAPluginSDK.submitrecordedlabel();">Submit</button>'
 						+'	</div>'
 						+'</div>';
@@ -2319,12 +2321,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'    </ul>'
 						+'</div>'
 						+'<div class="uda-details-footer">'
-						+'    <div class="uda-details-footer-left">'
-						+'        <img src="'+this.extensionpath+'images/icons/trash.png" class="uda-trash-img" id="uda-delete-sequence">'
+						+'    <div class="uda-details-footer-left uda-trash-img" id="uda-delete-sequence">'
 						+'    </div>'
 						+'    <div class="uda-details-footer-right">'
-						+'        <img src="'+this.extensionpath+'images/icons/like.png" class="uda-like-img" id="uda-upvote" style="border-left: 1px solid #dce0f7;">'
-						+'        <img src="'+this.extensionpath+'images/icons/dislike.png" class="uda-dislike-img" id="uda-downvote" style="border-right:none;">'
+						+'    	<div class="like-img-bg uda-like-img" style="border-left: 1px solid #dce0f7;" id="uda-upvote">'
+						+'   	 </div>'
+						+'    	<div class="dislike-img-bg uda-dislike-img" id="uda-downvote">'
+						+'   	 </div>'
 						+'    </div>'
 						+'</div>';
 			return html;
@@ -2912,8 +2915,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 			var html =	'<div class="uda-card-details">'
 							// +'<div><button class="uda-tutorial-btn" type="button">Tutorial</button></div>'
 							// +'<hr>'
+							+'<span class="uda-close-icon" onclick="UDAPluginSDK.searchinelastic();">×</span>'
 							+'<h5>Create your own action</h5>'
-							+'<div><button class="uda-record-btn" id="uda-enable-record"><img src="'+this.extensionpath+'images/icons/new-record.png" width="23px" height="23px">&nbsp; Rec</button></div>'
+							+'<div><button class="uda-record-btn" id="uda-enable-record"><span>Rec</span></button></div>'
 						+'</div>';
 			return html;
 		},

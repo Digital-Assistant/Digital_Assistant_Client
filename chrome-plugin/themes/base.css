@@ -6,55 +6,67 @@
     /* Background color for search results, detail sequence and search input background*/
     --uda-card-bgcolor: #f2f4fe;
     /* Text color for detail sequence, search results */
-    --uda-text-color: #000;
+    --uda-text-color: #ffffff;
     /* Background color for footer section*/
     --uda-footer-srchbtn-bgcolor: #dce0f7;
     /* Text background color as white */
-    --uda-text-color-bg-white: #fffff;
+    --uda-text-color-bg-white: #ffffff;
     /* White Text color */
-    --uda-text-color-white: #fffff;
+    --uda-text-color-white: #ffffff;
+    /* shadow color used in tooltip box shadow */
+    --uda-boxshodow-color: #e0e0e0;
 }
 
-/* toggle button */
+.uda-nistapp-logo {
+    background-color: var(--uda-text-color-bg-white);
+    -webkit-box-shadow: 0 1px 4px var(--uda-boxshodow-color), 0 0 40px var(--uda-boxshodow-color) inset;
+    -moz-box-shadow: 0 1px 4px var(--uda-boxshodow-color), 0 0 40px var(--uda-boxshodow-color) inset;
+    box-shadow: 0 1px 4px var(--uda-boxshodow-color), 0 0 40px var(--uda-boxshodow-color) inset;
+}
+
+.uda-page-right-bar {
+    background-color: var(--uda-text-color-bg-white);
+    box-shadow: 0 -5px 5px 5px var(--uda-boxshodow-color);
+}
+
 .uda-ribbon-arrow {
     background-color: var(--uda-primary-color);
+    box-shadow: 0px 1px 7px 2px var(--uda-boxshodow-color);
 }
 
-/* tooltip for nistapp logo */
 .uda-help-bg-tooltip {
     background-color: var(--uda-secondary-color);
-    color: var(--uda-text-color-white);
+    color: var(--uda-text-color-bg-white);
 }
 
 .uda-help-bg-tooltip:after {
     border-right: 16px solid var(--uda-secondary-color);
 }
-
-.uda-help-bg-tooltip .uda-help-bg-tooltip-top:after {
+.uda-help-bg-tooltip .uda-help-bg-tooltip-top:after{
     border-color: var(--uda-secondary-color) transparent transparent transparent;
 }
-
-.uda-help-bg-tooltip .uda-help-bg-tooltip-bottom:after {
+.uda-help-bg-tooltip .uda-help-bg-tooltip-bottom:after{
     border-color: transparent transparent var(--uda-secondary-color) transparent;
 }
-
-.uda-help-bg-tooltip .uda-help-bg-tooltip-right:after {
+.uda-help-bg-tooltip .uda-help-bg-tooltip-right:after{
     border-color: transparent transparent transparent var(--uda-secondary-color);
 }
-
-/* search icon with button */
 .uda-search-btn {
     background-color: var(--uda-footer-srchbtn-bgcolor);
 }
-
-/* input after search icon*/
+.uda-mic-btn{
+    background-color: var(--uda-footer-srchbtn-bgcolor);
+}
+.uda-stop-btn-bg{
+    background-color: var(--uda-footer-srchbtn-bgcolor);
+}
 .uda-input-cntrl {
     background-color: var(--uda-card-bgcolor);
 }
 
-/* card for search results*/
 .uda-card {
     background-color: var(--uda-card-bgcolor);
+    box-shadow: 2px 1px 6px 1px var(--uda-boxshodow-color);
 }
 
 .uda-card:hover {
@@ -65,7 +77,6 @@
     color: var(--uda-primary-color);
 }
 
-/* footer advanced dropdown button*/
 .uda-advanced-btn {
     background-color: var(--uda-text-color-bg-white);
     border: 1px solid var(--uda-primary-color);
@@ -73,7 +84,7 @@
 }
 
 .uda-advanced-btn-content {
-    color: var(--uda-text-color-white);
+    color: var(--uda-text-color-bg-white);
 }
 
 .uda-advanced-btn-content a {
@@ -85,26 +96,28 @@
     background-color: var(--uda-primary-color);
 }
 
-
 .uda-advanced-btn:hover {
     background-color: var(--uda-footer-srchbtn-bgcolor);
 }
 
-
 .uda-footer-right a {
-    color: var(--uda-primary-color);
+    color: var(--uda-primary-color) !important;
 }
 
 .uda-footer-bar {
     background-color: var(--uda-text-color-bg-white);
 }
 
-/* card details page cards*/
+
 .uda-card-details {
     background-color: var(--uda-card-bgcolor);
+    box-shadow: 2px 1px 6px 1px var(--uda-boxshodow-color);
+}
+.uda-close-icon{
+    background-color: var(--uda-primary-color);
+    color: var(--uda-text-color-bg-white);
 }
 
-/* play button in card details page*/
 .uda-play-btn {
     background-color: var(--uda-secondary-color);
 }
@@ -121,7 +134,6 @@
     background-color: var(--uda-primary-color);
 }
 
-/* stop button in card details page*/
 .uda-stop-btn {
     background-color: var(--uda-secondary-color);
 }
@@ -138,41 +150,18 @@
     background-color: var(--uda-primary-color);
 }
 
-/* right arrow card details page*/
 .uda-card-right-dbl-arrow {
     background-color: var(--uda-primary-color);
 }
 
-/* before record the sequece shown card with text*/
-.uda-recording {
-    list-style: none url('../images/icons/bullet.png');
-}
-
-/* getting space in recorded list*/
-.uda-suggestion-list li::before {
-    content: '\00a0 \00a0 \00a0 \00a0';
-}
-
-/* After completed the step green icon display*/
-.uda-suggestion-list li.completed::before {
-    background-image: url('../images/icons/bullet.png');
-}
-
-/* when before goind to the list loading icon display */
-.uda-suggestion-list li.loading::before {
-    background-image: url('../images/icons/uda-loading.gif');
-}
-
-/* card details footer included trash like and dislikeimages */
-.uda-details-footer {
-    background-color: var(--uda-footer-srchbtn-bgcolor);
+.uda-trash-img, .uda-like-img, .uda-dislike-img {
+    border-right: 1px solid var(--uda-footer-srchbtn-bgcolor);
 }
 
 .uda-trash-img:hover, .uda-like-img:hover, .uda-dislike-img:hover {
     background-color: var(--uda-footer-srchbtn-bgcolor);
 }
 
-/* when we click on the new record option shown tutorial and record button*/
 .uda-tutorial-btn {
     background-color: var(--uda-primary-color);
     color: var(--uda-text-color-white);
@@ -184,19 +173,19 @@
 
 .uda-record-btn {
     background-color: var(--uda-secondary-color);
+    color: var(--uda-text-color-bg-white);
 }
 
 .uda-record-btn:hover {
     background-color: var(--uda-primary-color);
 }
 
-/* saving record with name in input field */
 .uda-form-input {
     background-color: var(--uda-footer-srchbtn-bgcolor);
 }
 
 .uda-no-results {
-    background-color: var(--uda-card-bgcolor);
+    box-shadow: 2px 1px 6px 1px var(--uda-boxshodow-color);
 }
 
 .uda-no-results p {
@@ -207,14 +196,15 @@
     fill: var(--uda-primary-color);
 }
 
-/* tooltip for vantage circle UI */
 .uda-tooltip .uda-tooltip-right {
-    color: var(--uda-text-color-bg-white);
-    background-color: var(--uda-secondary-color);
+    color: var(--uda-primary-color);
+    background-color: var(--uda-card-bgcolor);
+    box-shadow:0 1px 16px var(--uda-boxshodow-color);
+    /*color: var(--uda-text-color-bg-white);*/
+    /*background-color: var(--uda-secondary-color);*/
 }
-
-.uda-tooltip .uda-tooltip-right::before {
-    border-color: transparent var(--uda-secondary-color) transparent transparent;
+.uda-tooltip .uda-tooltip-right::before{
+    border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent;
 }
 
 /*.uda-tooltip .uda-tooltip-right i::after {
@@ -223,4 +213,14 @@
 
 .uda-tooltip .uda-tooltip-right .uda-tutorial-btn:hover {
     background-color: var(--uda-primary-color);
+}
+
+/*Intro Js tooltips*/
+.introjs-tooltip {
+    background-color: var(--uda-card-bgcolor) !important;
+    color: var(--uda-primary-color) !important;
+}
+
+.introjs-arrow.left, .introjs-arrow.left-bottom {
+    border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent !important;
 }
