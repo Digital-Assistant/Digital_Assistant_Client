@@ -1283,12 +1283,27 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id, true, navigationcookiedata);
 			}
 
-			var html = 	'<div class="uda-tooltip-right">'
-						+'	<div class="uda-tooltip-text-content">'
-						+message
-						+'	</div>'
-						+'	<button class="uda-tutorial-btn" style="margin-bottom:10px;" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>'
+			/**
+			 * calculating node position from here
+			 */
+			let toolTipLayerSection	=	'	<div class="uda-tooltip-text-content">'
+										+message
+										+'	</div>'
+										+'	<button class="uda-tutorial-btn" style="margin-bottom:10px;" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>';
+
+			let toolTipElement = jQuery(toolTipLayerSection);
+
+			let toolTipPosistionClass = this.determineAutoPosition(tooltipnode, toolTipElement, 'right');
+
+			console.log(toolTipPosistionClass);
+			return;
+
+			var toolTipHtml = 	'<div>'
+						+toolTipElement
 						+'</div>';
+			let toolTipHtmlElement = jQuery(toolTipHtml);
+
+			$(toolTipHtmlElement).addClass(toolTipPosistionClass);
 
 			$('html, body').animate({
 				scrollTop: ($(invokingnode).offset().top - 200)
@@ -1302,6 +1317,166 @@ if (typeof UDAPluginSDK === 'undefined') {
 					invokingnode.click();
 				}
 			});
+		},
+		/**
+		 * tooltip placement calculation
+		 */
+		getWindowSize: function() {
+			if (window.innerWidth !== undefined) {
+				return { width: window.innerWidth, height: window.innerHeight };
+			} else {
+				const D = document.documentElement;
+				return { width: D.clientWidth, height: D.clientHeight };
+			}
+		},
+		getOffset: function(element) {
+			const body = document.body;
+			const docEl = document.documentElement;
+			const scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+			const scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+			const x = element.getBoundingClientRect();
+			return {
+				top: x.top + scrollTop,
+				width: x.width,
+				height: x.height,
+				left: x.left + scrollLeft,
+			};
+		},
+		determineAutoPosition: function (targetElement, tooltipLayer, desiredTooltipPosition) {
+			const possiblePositions = ["bottom", "top", "right", "left"].slice();
+
+			const windowSize = this.getWindowSize();
+			const tooltipHeight = this.getOffset(tooltipLayer).height + 10;
+			const tooltipWidth = this.getOffset(tooltipLayer).width + 20;
+			const targetElementRect = targetElement.getBoundingClientRect();
+
+			// If we check all the possible areas, and there are no valid places for the tooltip, the element
+			// must take up most of the screen real estate. Show the tooltip floating in the middle of the screen.
+			let calculatedPosition = "floating";
+
+			/*
+             * auto determine position
+             */
+
+			// Check for space below
+			if (targetElementRect.bottom + tooltipHeight > windowSize.height) {
+				this.removeEntry(possiblePositions, "bottom");
+			}
+
+			// Check for space above
+			if (targetElementRect.top - tooltipHeight < 0) {
+				this.removeEntry(possiblePositions, "top");
+			}
+
+			// Check for space to the right
+			if (targetElementRect.right + tooltipWidth > windowSize.width) {
+				this.removeEntry(possiblePositions, "right");
+			}
+
+			// Check for space to the left
+			if (targetElementRect.left - tooltipWidth < 0) {
+				this.removeEntry(possiblePositions, "left");
+			}
+
+			// @var {String}  ex: 'right-aligned'
+			const desiredAlignment = ((pos) => {
+				const hyphenIndex = pos.indexOf("-");
+				if (hyphenIndex !== -1) {
+					// has alignment
+					return pos.substr(hyphenIndex);
+				}
+				return "";
+			})(desiredTooltipPosition || "");
+
+			// strip alignment from position
+			if (desiredTooltipPosition) {
+				// ex: "bottom-right-aligned"
+				// should return 'bottom'
+				desiredTooltipPosition = desiredTooltipPosition.split("-")[0];
+			}
+
+			if (possiblePositions.length) {
+				if (possiblePositions.includes(desiredTooltipPosition)) {
+					// If the requested position is in the list, choose that
+					calculatedPosition = desiredTooltipPosition;
+				} else {
+					// Pick the first valid position, in order
+					calculatedPosition = possiblePositions[0];
+				}
+			}
+
+			// only top and bottom positions have optional alignments
+			if (["top", "bottom"].includes(calculatedPosition)) {
+				calculatedPosition += this.determineAutoAlignment(
+					targetElementRect.left,
+					tooltipWidth,
+					windowSize,
+					desiredAlignment
+				);
+			}
+
+			return 'uda-tooltip-'+calculatedPosition;
+		},
+		/**
+		 * determing text alignment
+		 */
+		determineAutoAlignment: function(
+			offsetLeft,
+			tooltipWidth,
+			{ width },
+			desiredAlignment
+		) {
+			const halfTooltipWidth = tooltipWidth / 2;
+			const winWidth = Math.min(width, window.screen.width);
+			const possibleAlignments = [
+				"-left-aligned",
+				"-middle-aligned",
+				"-right-aligned",
+			];
+			let calculatedAlignment = "";
+
+			// valid left must be at least a tooltipWidth
+			// away from right side
+			if (winWidth - offsetLeft < tooltipWidth) {
+				this.removeEntry(possibleAlignments, "-left-aligned");
+			}
+
+			// valid middle must be at least half
+			// width away from both sides
+			if (
+				offsetLeft < halfTooltipWidth ||
+				winWidth - offsetLeft < halfTooltipWidth
+			) {
+				this.removeEntry(possibleAlignments, "-middle-aligned");
+			}
+
+			// valid right must be at least a tooltipWidth
+			// width away from left side
+			if (offsetLeft < tooltipWidth) {
+				this.removeEntry(possibleAlignments, "-right-aligned");
+			}
+
+			if (possibleAlignments.length) {
+				if (possibleAlignments.includes(desiredAlignment)) {
+					// the desired alignment is valid
+					calculatedAlignment = desiredAlignment;
+				} else {
+					// pick the first valid position, in order
+					calculatedAlignment = possibleAlignments[0];
+				}
+			} else {
+				// if screen width is too small
+				// for ANY alignment, middle is
+				// probably the best for visibility
+				calculatedAlignment = "-middle-aligned";
+			}
+
+			return calculatedAlignment;
+		},
+		removeEntry: function(stringArray, stringToRemove) {
+			if (stringArray.includes(stringToRemove)) {
+				stringArray.splice(stringArray.indexOf(stringToRemove), 1);
+			}
 		},
 		//Continue functionality invoke
 		resumePlay: function(){
