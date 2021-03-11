@@ -1822,7 +1822,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		renderEmptyRecordedSequenceHtml: function(){
 			var html =	'<div class="uda-card-details">'
-						+'<span class="close-icon">×</span>'
+						// +'<span class="close-icon">×</span>'
 						+'	<h5>Recorded Sequence</h5>'
 						+'	<hr>'
 						+'	<h5>Please navigate in the page to record.</h5>'
@@ -2146,12 +2146,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'    </ul>'
 						+'</div>'
 						+'<div class="uda-details-footer">'
-						+'    <div class="uda-details-footer-left uda-trash-img">'
+						+'    <div class="uda-details-footer-left uda-trash-img" id="uda-delete-sequence">'
 						+'    </div>'
 						+'    <div class="uda-details-footer-right">'
-						+'    	<div class="like-img-bg uda-like-img" style="border-left: 1px solid #dce0f7;">'
+						+'    	<div class="like-img-bg uda-like-img" style="border-left: 1px solid #dce0f7;" id="uda-upvote">'
 						+'   	 </div>'
-						+'    	<div class="dislike-img-bg uda-dislike-img">'
+						+'    	<div class="dislike-img-bg uda-dislike-img" id="uda-downvote">'
 						+'   	 </div>'
 						+'    </div>'
 						+'</div>';
@@ -2740,7 +2740,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			var html =	'<div class="uda-card-details">'
 							// +'<div><button class="uda-tutorial-btn" type="button">Tutorial</button></div>'
 							// +'<hr>'
-							+'<span class="close-icon">×</span>'
+							+'<span class="close-icon" onclick="UDAPluginSDK.searchinelastic();">×</span>'
 							+'<h5>Create your own action</h5>'
 							+'<div><button class="uda-record-btn" id="uda-enable-record"><span>Rec</span></button></div>'
 						+'</div>';
