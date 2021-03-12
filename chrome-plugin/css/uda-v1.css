@@ -108,36 +108,7 @@
     border-right: 16px solid var(--uda-secondary-color);
     border-bottom: 5px solid transparent;
 }
-.uda-help-bg-tooltip .uda-help-bg-tooltip-top:after{
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: var(--uda-secondary-color) transparent transparent transparent;
-}
-.uda-help-bg-tooltip .uda-help-bg-tooltip-bottom:after{
-  content: "";
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent transparent var(--uda-secondary-color) transparent;
-}
-.uda-help-bg-tooltip .uda-help-bg-tooltip-right:after{
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 100%;
-  margin-top: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent transparent transparent var(--uda-secondary-color);
-}
+
 .uda-search-btn {
     /*padding: 8px 10px;*/
     background-color: var(--uda-footer-srchbtn-bgcolor);
@@ -363,6 +334,7 @@
     text-align: center;
     box-shadow: 2px 1px 6px 1px var(--uda-boxshodow-color);
 }
+
 .uda-close-icon{
     width: 25px;
     height: 25px;
@@ -667,32 +639,25 @@
 .uda-tooltip {
     display:inline-block;
     position:relative;
-    border-bottom:1px dotted #666;
-    text-align:left;
+    text-align:center;
 }
 
-.uda-tooltip h3 {margin:12px 0;}
-
-.uda-tooltip .uda-tooltip-right {
+.uda-tooltip-text-content{
+    visibility: visible;
+    position: absolute;
     min-width:200px;
     max-width:400px;
-    top:50%;
-    left:100%;
-    margin-left:20px;
-    transform:translate(0, -50%);
-    padding:0;
-    color: var(--uda-primary-color);
     background-color: var(--uda-card-bgcolor);
-    font-weight:normal;
-    font-size:13px;
-    border-radius:8px;
-    position:absolute;
+    color: var(--uda-primary-color);
+    text-align: center;
+    padding: 10px;
+    border-radius:8px; 
     z-index:99999999;
-    box-sizing:border-box;
+    transition: opacity .6s;
     box-shadow:0 1px 16px var(--uda-boxshodow-color);
-    visibility:hidden; opacity:0; transition:opacity 0.8s;
 }
-.uda-tooltip .uda-tooltip-right::before{
+
+.uda-tooltip-right::after{
     content: "";
     position: absolute;
     top: 50%;
@@ -702,23 +667,68 @@
     border-style: solid;
     border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent;
 }
-.uda-tooltip .uda-tooltip-right {
-    visibility:visible;
-    opacity:1;
-    text-align: center;
+.uda-tooltip-right {
+    top: 50%;
+    left: 100%;
+    margin-left: 20px;
+    transform: translate(0px, -50%);
 }
-
-.uda-tooltip .uda-tooltip-right img {
+.uda-tooltip-top {
+    bottom: 100%;
+    left: 50%;
+    margin-bottom: 15px;
+    margin-left: -50%;
+}
+.uda-tooltip-top::after{
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: rotate(-90deg);
+    border-width: 12px;
+    border-style: solid;
+    border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent;
+}
+.uda-tooltip-bottom {
+    top: 100%;
+    left: 50%;
+    margin-top: 15px;
+    margin-left: -50%;
+}
+.uda-tooltip-bottom::after{
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: rotate(90deg);
+    margin-top: -12px;
+    border-width: 12px;
+    border-style: solid;
+    border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent;
+}
+.uda-tooltip-left {
+    top: 50%;
+    right: 100%;
+    margin-right: 20px;
+    transform: translate(0px, -50%);
+}
+.uda-tooltip-left::after{
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: rotate(180deg);
+    margin-top: -12px;
+    border-width: 12px;
+    border-style: solid;
+    border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent;
+}
+.uda-tooltip h3 {margin:12px 0;}
+.uda-tooltip img {
     width:400px;
     border-radius:8px 8px 0 0;
 }
-.uda-tooltip .uda-tooltip-text-content {
-    padding:10px 20px;
-    white-space: initial;
-    line-height: normal !important;
-}
-
-.uda-tooltip .uda-tooltip-right i {
+.uda-tooltip i {
     position:absolute;
     top:50%;
     right:100%;
@@ -727,11 +737,10 @@
     height:24px;
     overflow:hidden;
 }
-.uda-tooltip .uda-tooltip-right i::after {
+.uda-tooltip i::after {
     background-color:#444444;
 }
-
-.uda-tooltip .uda-tooltip-right .uda-tutorial-btn:hover {
+.uda-tooltip .uda-tutorial-btn:hover {
     background-color: var(--uda-primary-color);
 }
 
@@ -739,6 +748,8 @@
 .uda-original-content .kt-header,.uda-original-content .kt-header--fixed,.uda-original-content .kt-container--fluid{
     max-width: 77%;
 }
+
+
 
 /*Intro Js tooltips*/
 .introjs-tooltip {

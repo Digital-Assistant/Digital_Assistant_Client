@@ -1284,12 +1284,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id, true, navigationcookiedata);
 			}
 
-			var html = 	'<div class="uda-tooltip-right">'
-						+'	<div class="uda-tooltip-text-content">'
-						+message
-						+'	</div>'
-						+'	<button class="uda-tutorial-btn" style="margin-bottom:10px;" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>'
-						+'</div>';
+			var html = 	'<div class="">'
+							+'<div class="uda-tooltip-text-content uda-tooltip-right">'
+							+message
+							+ '<br/>'
+							+'	<button class="uda-tutorial-btn" style="margin-top:10px;" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>'
+							+'	</div>'
+						 +'</div>';
 
 			$('html, body').animate({
 				scrollTop: ($(invokingnode).offset().top - 200)

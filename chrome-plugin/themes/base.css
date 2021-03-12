@@ -196,22 +196,31 @@
     fill: var(--uda-primary-color);
 }
 
-.uda-tooltip .uda-tooltip-right {
+.uda-tooltip .uda-tooltip-text-content {
     color: var(--uda-primary-color);
     background-color: var(--uda-card-bgcolor);
     box-shadow:0 1px 16px var(--uda-boxshodow-color);
     /*color: var(--uda-text-color-bg-white);*/
     /*background-color: var(--uda-secondary-color);*/
 }
-.uda-tooltip .uda-tooltip-right::before{
+.uda-tooltip-right::after{
     border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent;
+}
+.uda-tooltip-top::after{
+    border-color: transparent var(--footer-srchbtn-bgcolor) transparent transparent;
+}
+.uda-tooltip-bottom::after{
+    border-color: transparent var(--footer-srchbtn-bgcolor) transparent transparent;
+}
+.uda-tooltip-left::after{
+    border-color: transparent var(--footer-srchbtn-bgcolor) transparent transparent;
 }
 
 /*.uda-tooltip .uda-tooltip-right i::after {
     background-color:#444444;
 }*/
 
-.uda-tooltip .uda-tooltip-right .uda-tutorial-btn:hover {
+.uda-tooltip .uda-tutorial-btn:hover {
     background-color: var(--uda-primary-color);
 }
 
