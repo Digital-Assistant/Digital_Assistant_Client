@@ -1292,7 +1292,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 										+'	</div>'
 										+'	<button class="uda-tutorial-btn" style="margin-bottom:10px;" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>';
 
-			let toolTipElement = jQuery(toolTipLayerSection);
+			// let toolTipElement = jQuery(toolTipLayerSection);
+			let toolTipElement = document.createElement('div');
+			toolTipElement.innerHTML = toolTipLayerSection.trim();
+			toolTipElement.classList.add('uda-tooltip-container');
+
 
 			let toolTipPosistionClass = this.determineAutoPosition(tooltipnode, toolTipElement, 'right');
 
@@ -1302,9 +1306,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			var toolTipHtml = 	'<div>'
 						+toolTipElement
 						+'</div>';
-			let toolTipHtmlElement = jQuery(toolTipHtml);
-
-			$(toolTipHtmlElement).addClass(toolTipPosistionClass);
+			// let toolTipHtmlElement = jQuery(toolTipHtml);
+			// $(toolTipHtmlElement).addClass(toolTipPosistionClass);
 
 			$('html, body').animate({
 				scrollTop: ($(invokingnode).offset().top - 200)
@@ -1336,6 +1339,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			const scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
 			const scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
 			const x = element.getBoundingClientRect();
+			console.log(x);
+			console.log(element);
 			return {
 				top: x.top + scrollTop,
 				width: x.width,
@@ -1347,8 +1352,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 			const possiblePositions = ["bottom", "top", "right", "left"].slice();
 
 			const windowSize = this.getWindowSize();
-			const tooltipHeight = this.getOffset(tooltipLayer).height + 10;
-			const tooltipWidth = this.getOffset(tooltipLayer).width + 20;
+			const tooltipPos = this.getOffset(tooltipLayer);
+			const tooltipHeight = tooltipPos.height + 10;
+			const tooltipWidth = tooltipPos.width + 20;
 			const targetElementRect = targetElement.getBoundingClientRect();
 
 			// If we check all the possible areas, and there are no valid places for the tooltip, the element
@@ -1370,7 +1376,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 
 			// Check for space to the right
-			if (targetElementRect.right + tooltipWidth > windowSize.width) {
+			if (targetElementRect.right + tooltipWidth > (windowSize.width*0.8)) {
 				this.removeEntry(possiblePositions, "right");
 			}
 

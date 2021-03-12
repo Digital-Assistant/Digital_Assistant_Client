@@ -673,13 +673,9 @@
 
 .uda-tooltip h3 {margin:12px 0;}
 
-.uda-tooltip .uda-tooltip-right {
+.uda-tooltip-container {
     min-width:200px;
     max-width:400px;
-    top:50%;
-    left:100%;
-    margin-left:20px;
-    transform:translate(0, -50%);
     padding:0;
     color: var(--uda-primary-color);
     background-color: var(--uda-card-bgcolor);
@@ -690,7 +686,18 @@
     z-index:99999999;
     box-sizing:border-box;
     box-shadow:0 1px 16px var(--uda-boxshodow-color);
-    visibility:hidden; opacity:0; transition:opacity 0.8s;
+    /*visibility:hidden;*/
+    opacity:0;
+    transition:opacity 0.8s;
+}
+
+.uda-tooltip .uda-tooltip-right {
+    min-width:200px;
+    max-width:400px;
+    top:50%;
+    left:100%;
+    margin-left:20px;
+    transform:translate(0, -50%);
 }
 .uda-tooltip .uda-tooltip-right::before{
     content: "";
@@ -712,7 +719,8 @@
     width:400px;
     border-radius:8px 8px 0 0;
 }
-.uda-tooltip .uda-tooltip-text-content {
+
+.uda-tooltip-text-content {
     padding:10px 20px;
     white-space: initial;
     line-height: normal !important;
