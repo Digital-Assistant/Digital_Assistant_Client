@@ -1,11 +1,11 @@
 :root {
-  --primary-color: #303f9f;
-  --secondary-color: #ff5722;
-  --card-bgcolor: #f2f4fe;
-  --text-color: #000;
-  --footer-srchbtn-bgcolor: #dce0f7;
-  --text-color-bg-white: #fff;
-  --boxshodow-color: #e0e0e0;
+  --uda-primary-color: #303f9f;
+  --uda-secondary-color: #ff5722;
+  --uda-card-bgcolor: #f2f4fe;
+  --uda-text-color: #000;
+  --uda-footer-srchbtn-bgcolor: #dce0f7;
+  --uda-text-color-bg-white: #fff;
+  --uda-boxshodow-color: #e0e0e0;
 }
 .uda-original-content{
     max-width: 77%;
@@ -15,14 +15,14 @@
     cursor: pointer;
     width: 75px;
     height: 80px;
-    background-color: var(--text-color-bg-white);
+    background-color: var(--uda-text-color-bg-white);
     position: fixed;
     top: 40%;
     right: 0;
     padding: 1px;
-    -webkit-box-shadow: 0 1px 4px var(--boxshodow-color), 0 0 40px var(--boxshodow-color) inset;
-    -moz-box-shadow: 0 1px 4px var(--boxshodow-color), 0 0 40px var(--boxshodow-color) inset;
-    box-shadow: 0 1px 4px var(--boxshodow-color), 0 0 40px var(--boxshodow-color) inset;
+    -webkit-box-shadow: 0 1px 4px var(--uda-boxshodow-color), 0 0 40px var(--uda-boxshodow-color) inset;
+    -moz-box-shadow: 0 1px 4px var(--uda-boxshodow-color), 0 0 40px var(--uda-boxshodow-color) inset;
+    box-shadow: 0 1px 4px var(--uda-boxshodow-color), 0 0 40px var(--uda-boxshodow-color) inset;
     z-index: 9999;
 }
 
@@ -49,8 +49,8 @@
     right: 0;
     top: 0;
     bottom: 0;
-    background-color: var(--text-color-bg-white);
-    box-shadow: 0 -5px 5px 5px var(--boxshodow-color);
+    background-color: var(--uda-text-color-bg-white);
+    box-shadow: 0 -5px 5px 5px var(--uda-boxshodow-color);
     z-index: 9999;
      height: 100%;
     display: flex;
@@ -60,12 +60,12 @@
 .uda-ribbon-arrow {
     width: 35px;
     height: 35px;
-    background-color: var(--primary-color);
+    background-color: var(--uda-primary-color);
     border-radius: 0 37% 37% 0;
     position: absolute;
     top: 1%;
     left: -2%;
-    box-shadow: 0px 1px 7px 2px var(--boxshodow-color);
+    box-shadow: 0px 1px 7px 2px var(--uda-boxshodow-color);
     text-align: center;
     cursor: pointer;
 }
@@ -85,9 +85,9 @@
 }
 
 .uda-help-bg-tooltip {
-    background-color: var(--secondary-color);
+    background-color: var(--uda-secondary-color);
     padding: 5px 22px;
-    color: var(--text-color-bg-white);
+    color: var(--uda-text-color-bg-white);
     font-weight: 500;
     border-radius: 5px;
     position: relative;
@@ -105,12 +105,13 @@
     width: 0;
     height: 0;
     border-top: 5px solid transparent;
-    border-right: 16px solid var(--secondary-color);
+    border-right: 16px solid var(--uda-secondary-color);
     border-bottom: 5px solid transparent;
 }
+
 .uda-search-btn {
     /*padding: 8px 10px;*/
-    background-color: var(--footer-srchbtn-bgcolor);
+    background-color: var(--uda-footer-srchbtn-bgcolor);
     border-radius: 5px 0px 0px 5px;
     border: none;
     width: 15%;
@@ -121,7 +122,7 @@
     background-repeat: no-repeat;
 }
 .uda-mic-btn{
-  background-color: var(--footer-srchbtn-bgcolor);
+  background-color: var(--uda-footer-srchbtn-bgcolor);
   border-radius: 0px 5px 5px 0px;
   border: none;
   width: 15%;
@@ -132,7 +133,7 @@
   background-repeat: no-repeat;
 }
 .uda-stop-btn-bg{
-    background-color: var(--footer-srchbtn-bgcolor);
+    background-color: var(--uda-footer-srchbtn-bgcolor);
     border-radius: 0px 5px 5px 0px;
     border: none;
     width: 15%;
@@ -168,7 +169,7 @@
 
 .uda-card {
     padding: 20px;
-    background-color: var(--card-bgcolor);
+    background-color: var(--uda-card-bgcolor);
     border-radius: 5px;
     background-image: url("data:image/svg+xml,%3Csvg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 512 512' style='enable-background:new 0 0 512 512;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23303F9F;%7D%0A%3C/style%3E%3Cg%3E%3Cg%3E%3Cpath class='st0' d='M497.1,241.8C497.1,241.8,497.1,241.8,497.1,241.8l-104.5-104c-7.8-7.8-20.5-7.8-28.3,0.1 c-7.8,7.8-7.8,20.5,0.1,28.3l70.2,69.8H31c-11,0-20,9-20,20c0,11,9,20,20,20h403.6l-70.2,69.8c-7.8,7.8-7.9,20.5-0.1,28.3 c7.8,7.8,20.5,7.9,28.3,0.1l104.5-104c0,0,0,0,0,0C505,262.3,504.9,249.6,497.1,241.8z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     background-size: 24px 20px;
@@ -176,7 +177,7 @@
     background-position: bottom 5px right 5px;
     margin-bottom: 15px;
     margin-right: 5px;
-    box-shadow: 2px 1px 6px 1px var(--boxshodow-color);
+    box-shadow: 2px 1px 6px 1px var(--uda-boxshodow-color);
 }
 
 .uda-cards-scroller {
@@ -189,7 +190,7 @@
 }
 
 .uda-card:hover {
-    background-color: var(--footer-srchbtn-bgcolor);
+    background-color: var(--uda-footer-srchbtn-bgcolor);
     background-image: url("data:image/svg+xml,%3Csvg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 512 512' style='enable-background:new 0 0 512 512;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23ff5722;%7D%0A%3C/style%3E%3Cg%3E%3Cg%3E%3Cpath class='st0' d='M497.1,241.8C497.1,241.8,497.1,241.8,497.1,241.8l-104.5-104c-7.8-7.8-20.5-7.8-28.3,0.1 c-7.8,7.8-7.8,20.5,0.1,28.3l70.2,69.8H31c-11,0-20,9-20,20c0,11,9,20,20,20h403.6l-70.2,69.8c-7.8,7.8-7.9,20.5-0.1,28.3 c7.8,7.8,20.5,7.9,28.3,0.1l104.5-104c0,0,0,0,0,0C505,262.3,504.9,249.6,497.1,241.8z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     background-size: 24px 20px;
     cursor: pointer;
@@ -206,7 +207,7 @@
 }
 
 .uda-card h5:hover {
-    color: var(--primary-color);
+    color: var(--uda-primary-color);
 }
 
 .uda-card i {
@@ -222,10 +223,10 @@
 }
 
 .uda-advanced-btn {
-    background-color: var(--text-color-bg-white);
-    border: 1px solid var(--primary-color);
+    background-color: var(--uda-text-color-bg-white);
+    border: 1px solid var(--uda-primary-color);
     border-radius: 5px;
-    color: var(--primary-color);
+    color: var(--uda-primary-color);
     display: inline-flex;
     align-items: center;
     margin-top: 10px;
@@ -246,7 +247,7 @@
     display: none;
     position: absolute;
     padding: 5px;
-    color: var(--text-color-bg-white); 
+    color: var(--uda-text-color-bg-white);
     z-index: 1;
     min-width: 160px;
     bottom: 38px;
@@ -257,8 +258,8 @@
     display: flex;
     /*justify-content: center;
     padding: 5px;*/
-    border-top: 1px solid var(--text-color-bg-white);
-    background-color: var(--secondary-color);
+    border-top: 1px solid var(--uda-text-color-bg-white);
+    background-color: var(--uda-secondary-color);
     font-size: 14px;
     align-items: center;
     background-repeat: no-repeat;
@@ -270,7 +271,7 @@
 }
 
 .uda-advanced-btn-content a:hover {
-    background-color: var(--primary-color);
+    background-color: var(--uda-primary-color);
     cursor: pointer;
 }
 
@@ -279,7 +280,7 @@
 }
 
 .uda-advanced-btn:hover {
-    background-color: var(--footer-srchbtn-bgcolor);
+    background-color: var(--uda-footer-srchbtn-bgcolor);
     cursor: pointer;
 }
 
@@ -302,7 +303,7 @@
 
 .uda-footer-right a {
     font-size: 10px;
-    color: var(--primary-color) !important;
+    color: var(--uda-primary-color) !important;
     text-decoration: none;
 }
 
@@ -316,7 +317,7 @@
 }
 
 .uda-footer-bar {
-    background-color: var(--text-color-bg-white);
+    background-color: var(--uda-text-color-bg-white);
     position: fixed;
     bottom: 0;
     max-width: 23%;
@@ -331,12 +332,13 @@
     border-radius: 5px;
     margin-top: 20px;
     text-align: center;
-    box-shadow: 2px 1px 6px 1px var(--boxshodow-color);
+    box-shadow: 2px 1px 6px 1px var(--uda-boxshodow-color);
 }
-.close-icon{
+
+.uda-close-icon{
     width: 25px;
     height: 25px;
-    background-color: var(--primary-color);
+    background-color: var(--uda-primary-color);
     border-radius: 50%;
     cursor: pointer;
     float: right;
@@ -344,7 +346,7 @@
     font-size: 19px;
     font-weight: 500;
     cursor: pointer;
-    color: var(--text-color-bg-white);
+    color: var(--uda-text-color-bg-white);
 }
 .uda-card-btns {
     display: block;
@@ -352,7 +354,7 @@
 }
 
 .uda-play-btn {
-    background-color: var(--secondary-color);
+    background-color: var(--uda-secondary-color);
     outline: none;
     border-radius: 5px;
     border: none;
@@ -361,20 +363,20 @@
 }
 
 .uda-play-btn:hover {
-    background-color: var(--primary-color);
+    background-color: var(--uda-primary-color);
 }
 
 .uda-play-btn:active {
-    background-color: var(--primary-color);
+    background-color: var(--uda-primary-color);
 }
 
 .uda-play-btn:disabled {
-    background-color: var(--primary-color);
+    background-color: var(--uda-primary-color);
     opacity: 60%;
 }
 
 .uda-stop-btn {
-    background-color: var(--secondary-color);
+    background-color: var(--uda-secondary-color);
     outline: none;
     border-radius: 5px;
     border: none;
@@ -383,22 +385,22 @@
 }
 
 .uda-stop-btn:hover {
-    background-color: var(--primary-color);
+    background-color: var(--uda-primary-color);
 }
 
 .uda-stop-btn:active {
-    background-color: var(--primary-color);
+    background-color: var(--uda-primary-color);
 }
 
 .uda-stop-btn:disabled {
-    background-color: var(--primary-color);
+    background-color: var(--uda-primary-color);
     opacity: 60%;
 }
 
 .uda-card-right-dbl-arrow {
     width: 25px;
     height: 25px;
-    background-color: var(--primary-color);
+    background-color: var(--uda-primary-color);
     border-radius: 50%;
     cursor: pointer;
     margin-left: -10px;
@@ -479,12 +481,12 @@
     width: 40px;
     display: inline-block;
     height: 40px;
-    border-right: 1px solid var(--footer-srchbtn-bgcolor);
+    border-right: 1px solid var(--uda-footer-srchbtn-bgcolor);
     cursor: pointer;
 }
 
 .uda-trash-img:hover, .uda-like-img:hover, .uda-dislike-img:hover {
-    background-color: var(--footer-srchbtn-bgcolor);
+    background-color: var(--uda-footer-srchbtn-bgcolor);
 }
 
 .uda-details-footer-right {
@@ -506,10 +508,10 @@
 }
 
 .uda-tutorial-btn {
-    background-color: var(--primary-color);
+    background-color: var(--uda-primary-color);
     border: none;
     outline: none;
-    color: var(--text-color-bg-white);
+    color: var(--uda-text-color-bg-white);
     border-radius: 5px;
     padding: 5px 12px;
     font-size: 14px;
@@ -517,12 +519,12 @@
 }
 
 .uda-tutorial-btn:hover {
-    background-color: var(--secondary-color);
+    background-color: var(--uda-secondary-color);
 }
 
 .uda-record-btn {
     display: inline-flex;
-    background-color: var(--secondary-color);
+    background-color: var(--uda-secondary-color);
     background-image: url("data:image/svg+xml,%3Csvg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 426.7 426.7' style='enable-background:new 0 0 426.7 426.7;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23FFFFFF;%7D%0A%3C/style%3E%3Cg%3E%3Cg%3E%3Cg%3E%3Cpath class='st0' d='M213.3,106.7c-58.9,0-106.7,47.8-106.7,106.7S154.5,320,213.3,320S320,272.2,320,213.3 S272.2,106.7,213.3,106.7z'/%3E%3Cpath class='st0' d='M213.3,0C95.5,0,0,95.5,0,213.3s95.5,213.3,213.3,213.3s213.3-95.5,213.3-213.3S331.2,0,213.3,0z M213.3,384 C119,384,42.7,307.6,42.7,213.3S119,42.7,213.3,42.7S384,119,384,213.3S307.6,384,213.3,384z'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-size: 20px 20px;
@@ -530,7 +532,7 @@
     background-position-x: 5px;
     border: none;
     outline: none;
-    color: var(--text-color-bg-white);
+    color: var(--uda-text-color-bg-white);
     border-radius: 5px;
     padding: 5px 12px;
     align-items: center;
@@ -542,11 +544,11 @@
 }
 
 .uda-record-btn:hover {
-    background-color: var(--primary-color);
+    background-color: var(--uda-primary-color);
 }
 
 .uda-form-input {
-    background-color: var(--footer-srchbtn-bgcolor);
+    background-color: var(--uda-footer-srchbtn-bgcolor);
     border: none;
     border-radius: 5px;
     padding: 10px 20px;
@@ -563,18 +565,18 @@
     margin: 30px 0px;
     padding: 20px;
     background-color: #f2f4fe;
-    box-shadow: 2px 1px 6px 1px var(--boxshodow-color);
+    box-shadow: 2px 1px 6px 1px var(--uda-boxshodow-color);
 }
 
 .uda-no-results p {
     font-weight: 500;
     font-size: 18px;
-    color: var(--secondary-color);
+    color: var(--uda-secondary-color);
     margin: 5px;
 }
 
 .uda-no-src {
-    fill: var(--primary-color);
+    fill: var(--uda-primary-color);
     width: 45px;
     height: 45px;
     transform: scaleX(-1);
@@ -640,22 +642,19 @@
     text-align:center;
 }
 
-.uda-tooltip .uda-tooltip-text-content{
-    visibility: hidden;
+.uda-tooltip-text-content{
+    visibility: visible;
     position: absolute;
     min-width:200px;
     max-width:400px;
-    background-color: var(--card-bgcolor);
-    color: var(--primary-color);
+    background-color: var(--uda-card-bgcolor);
+    color: var(--uda-primary-color);
     text-align: center;
-    padding: 20px 0;
+    padding: 10px;
     border-radius:8px; 
     z-index:99999999;
-    opacity: 0;
     transition: opacity .6s;
-    box-shadow:0 1px 16px var(--boxshodow-color);
-    margin-top: -70px;
-    margin-left: 150px;
+    box-shadow:0 1px 16px var(--uda-boxshodow-color);
 }
 
 .uda-tooltip-right::after{
@@ -666,60 +665,63 @@
     margin-top: -12px;
     border-width: 12px;
     border-style: solid;
-    border-color: transparent var(--footer-srchbtn-bgcolor) transparent transparent;
-}
-.uda-tooltip:hover .uda-tooltip-text-content{
-    visibility: visible;
-    opacity: 1;
+    border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent;
 }
 .uda-tooltip-right {
-    top: -5px;
-    left: 125%;
+    top: 50%;
+    left: 100%;
+    margin-left: 20px;
+    transform: translate(0px, -50%);
 }
 .uda-tooltip-top {
-    bottom: 125%;
+    bottom: 100%;
     left: 50%;
-    margin-left: -60px;
+    margin-bottom: 15px;
+    margin-left: -50%;
 }
 .uda-tooltip-top::after{
     content: "";
     position: absolute;
     top: 100%;
     left: 50%;
-    margin-top: -12px;
+    transform: rotate(-90deg);
     border-width: 12px;
     border-style: solid;
-    border-color: transparent var(--footer-srchbtn-bgcolor) transparent transparent;
+    border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent;
 }
 .uda-tooltip-bottom {
-    top: 135%;
+    top: 100%;
     left: 50%;
-    margin-left: -60px;
+    margin-top: 15px;
+    margin-left: -50%;
 }
 .uda-tooltip-bottom::after{
     content: "";
     position: absolute;
     bottom: 100%;
     left: 50%;
+    transform: rotate(90deg);
     margin-top: -12px;
     border-width: 12px;
     border-style: solid;
-    border-color: transparent var(--footer-srchbtn-bgcolor) transparent transparent;
+    border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent;
 }
 .uda-tooltip-left {
-    top: -5px;
-    bottom: auto;
-    right: 128%;
+    top: 50%;
+    right: 100%;
+    margin-right: 20px;
+    transform: translate(0px, -50%);
 }
 .uda-tooltip-left::after{
     content: "";
     position: absolute;
     top: 50%;
     left: 100%;
+    transform: rotate(180deg);
     margin-top: -12px;
     border-width: 12px;
     border-style: solid;
-    border-color: transparent var(--footer-srchbtn-bgcolor) transparent transparent;
+    border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent;
 }
 .uda-tooltip h3 {margin:12px 0;}
 .uda-tooltip img {
@@ -739,7 +741,7 @@
     background-color:#444444;
 }
 .uda-tooltip .uda-tutorial-btn:hover {
-    background-color: var(--primary-color);
+    background-color: var(--uda-primary-color);
 }
 
 /* angular related css code for squeezing*/
@@ -751,9 +753,9 @@
 
 /*Intro Js tooltips*/
 .introjs-tooltip {
-  background-color: var(--card-bgcolor) !important;
-  color: var(--primary-color) !important;
+  background-color: var(--uda-card-bgcolor) !important;
+  color: var(--uda-primary-color) !important;
 }
 .introjs-arrow.left, .introjs-arrow.left-bottom {
-  border-color: transparent var(--footer-srchbtn-bgcolor) transparent transparent !important;
+  border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent !important;
 }

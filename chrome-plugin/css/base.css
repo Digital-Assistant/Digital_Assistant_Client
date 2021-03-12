@@ -28,15 +28,6 @@
 .uda-help-bg-tooltip:after {
     border-right: 16px solid var(--secondary-color);
 }
-.uda-help-bg-tooltip .uda-help-bg-tooltip-top:after{
-  border-color: var(--secondary-color) transparent transparent transparent;
-}
-.uda-help-bg-tooltip .uda-help-bg-tooltip-bottom:after{
-  border-color: transparent transparent var(--secondary-color) transparent;
-}
-.uda-help-bg-tooltip .uda-help-bg-tooltip-right:after{
-  border-color: transparent transparent transparent var(--secondary-color);
-}
 /* search icon with button */
 .uda-search-btn {
     background-color: var(--footer-srchbtn-bgcolor);
@@ -81,7 +72,6 @@
 .uda-advanced-btn:hover {
     background-color: var(--footer-srchbtn-bgcolor);
 }
-
 
 .uda-footer-right a {
     color: var(--primary-color);

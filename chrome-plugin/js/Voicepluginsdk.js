@@ -1284,12 +1284,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id, true, navigationcookiedata);
 			}
 
-			var html = 	'<div class="uda-tooltip-right">'
-						+'	<div class="uda-tooltip-text-content">'
-						+message
-						+'	</div>'
-						+'	<button class="uda-tutorial-btn" style="margin-bottom:10px;" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>'
-						+'</div>';
+			var html = 	'<div class="">'
+							+'<div class="uda-tooltip-text-content uda-tooltip-right">'
+							+message
+							+ '<br/>'
+							+'	<button class="uda-tutorial-btn" style="margin-top:10px;" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>'
+							+'	</div>'
+						 +'</div>';
 
 			$('html, body').animate({
 				scrollTop: ($(invokingnode).offset().top - 200)
@@ -1822,7 +1823,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		renderEmptyRecordedSequenceHtml: function(){
 			var html =	'<div class="uda-card-details">'
-						// +'<span class="close-icon">×</span>'
+						// +'<span class="uda-close-icon">×</span>'
 						+'	<h5>Recorded Sequence</h5>'
 						+'	<hr>'
 						+'	<h5>Please navigate in the page to record.</h5>'
@@ -2740,7 +2741,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			var html =	'<div class="uda-card-details">'
 							// +'<div><button class="uda-tutorial-btn" type="button">Tutorial</button></div>'
 							// +'<hr>'
-							+'<span class="close-icon" onclick="UDAPluginSDK.searchinelastic();">×</span>'
+							+'<span class="uda-close-icon" onclick="UDAPluginSDK.searchinelastic();">×</span>'
 							+'<h5>Create your own action</h5>'
 							+'<div><button class="uda-record-btn" id="uda-enable-record"><span>Rec</span></button></div>'
 						+'</div>';
