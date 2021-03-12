@@ -654,6 +654,8 @@
     opacity: 0;
     transition: opacity .6s;
     box-shadow:0 1px 16px var(--boxshodow-color);
+    margin-top: -70px;
+    margin-left: 150px;
 }
 
 .uda-tooltip-right::after{
