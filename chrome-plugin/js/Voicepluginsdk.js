@@ -1284,21 +1284,32 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id, true, navigationcookiedata);
 			}
 
+			/*var html = 	'<div class="">'
+				+'<div class="uda-tooltip-text-content uda-tooltip-right">'
+				+message
+				+ '<br/>'
+				+'	<button class="uda-tutorial-btn" style="margin-top:10px;" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>'
+				+'	</div>'
+				+'</div>';*/
+
 			/**
 			 * calculating node position from here
 			 */
-			let toolTipLayerSection	=	'	<div class="uda-tooltip-text-content">'
-										+message
-										+'	</div>'
-										+'	<button class="uda-tutorial-btn" style="margin-bottom:10px;" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>';
+			let toolTipLayerSection	=	message
+										+'<br/>'
+										+'<button class="uda-tutorial-btn" style="margin-top:10px;" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>';
 
 			// let toolTipElement = jQuery(toolTipLayerSection);
 			let toolTipElement = document.createElement('div');
 			toolTipElement.innerHTML = toolTipLayerSection.trim();
-			toolTipElement.classList.add('uda-tooltip-container');
+			toolTipElement.classList.add('uda-tooltip-text-content');
 
+			tooltipnode.classList.add('uda-tooltip');
+			tooltipnode.appendChild(toolTipElement);
 
 			let toolTipPosistionClass = this.determineAutoPosition(tooltipnode, toolTipElement, 'right');
+
+			toolTipElement.classList.add(toolTipPosistionClass);
 
 			console.log(toolTipPosistionClass);
 			return;
@@ -1312,8 +1323,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			$('html, body').animate({
 				scrollTop: ($(invokingnode).offset().top - 200)
 			}, 2000, function(){
-				$(tooltipnode).addClass('uda-tooltip')
-				$(tooltipnode).append(html);
+				// $(tooltipnode).addClass('uda-tooltip')
+				// $(tooltipnode).append(html);
 				if(enableFocus){
 					invokingnode.focus();
 				}
@@ -1327,10 +1338,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 		 */
 		getWindowSize: function() {
 			if (window.innerWidth !== undefined) {
-				return { width: window.innerWidth, height: window.innerHeight };
+				return { width: (window.innerWidth*0.75), height: window.innerHeight };
 			} else {
 				const D = document.documentElement;
-				return { width: D.clientWidth, height: D.clientHeight };
+				return { width: D.clientWidth*0.75, height: D.clientHeight };
 			}
 		},
 		getOffset: function(element) {
@@ -1339,17 +1350,20 @@ if (typeof UDAPluginSDK === 'undefined') {
 			const scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
 			const scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
 			const x = element.getBoundingClientRect();
-			console.log(x);
-			console.log(element);
+			console.log(scrollTop);
+			console.log(scrollLeft);
 			return {
 				top: x.top + scrollTop,
 				width: x.width,
 				height: x.height,
 				left: x.left + scrollLeft,
+				actualPos: x,
+				scrollTop: scrollTop,
+				scrollLeft: scrollLeft
 			};
 		},
 		determineAutoPosition: function (targetElement, tooltipLayer, desiredTooltipPosition) {
-			const possiblePositions = ["bottom", "top", "right", "left"].slice();
+			const possiblePositions = ["right", "top", "left", "bottom"].slice();
 
 			const windowSize = this.getWindowSize();
 			const tooltipPos = this.getOffset(tooltipLayer);
@@ -1359,7 +1373,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			// If we check all the possible areas, and there are no valid places for the tooltip, the element
 			// must take up most of the screen real estate. Show the tooltip floating in the middle of the screen.
-			let calculatedPosition = "floating";
+			let calculatedPosition = "right";
+
+			console.log(windowSize);
+			console.log(tooltipPos);
+			console.log(targetElementRect);
+
 
 			/*
              * auto determine position
@@ -1376,7 +1395,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 
 			// Check for space to the right
-			if (targetElementRect.right + tooltipWidth > (windowSize.width*0.8)) {
+			if (targetElementRect.right + tooltipWidth > windowSize.width) {
 				this.removeEntry(possiblePositions, "right");
 			}
 
@@ -1384,16 +1403,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if (targetElementRect.left - tooltipWidth < 0) {
 				this.removeEntry(possiblePositions, "left");
 			}
-
-			// @var {String}  ex: 'right-aligned'
-			const desiredAlignment = ((pos) => {
-				const hyphenIndex = pos.indexOf("-");
-				if (hyphenIndex !== -1) {
-					// has alignment
-					return pos.substr(hyphenIndex);
-				}
-				return "";
-			})(desiredTooltipPosition || "");
 
 			// strip alignment from position
 			if (desiredTooltipPosition) {
@@ -1413,14 +1422,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 
 			// only top and bottom positions have optional alignments
-			if (["top", "bottom"].includes(calculatedPosition)) {
+			/*if (["top", "bottom"].includes(calculatedPosition)) {
 				calculatedPosition += this.determineAutoAlignment(
 					targetElementRect.left,
 					tooltipWidth,
 					windowSize,
 					desiredAlignment
 				);
-			}
+			}*/
 
 			return 'uda-tooltip-'+calculatedPosition;
 		},
