@@ -1289,7 +1289,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			var html = 	'<div class="uda-tooltip-right">'
 						+'	<div class="uda-tooltip-text-content">'
-						+message
+						+'<div style="float:right">✖</div>'
+						+'<div style="margin-top: 20px">'+message+'</div>'
 						+'	</div>'
 						+'	<button class="uda-tutorial-btn" style="margin-bottom:10px;" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>'
 						+'</div>';
