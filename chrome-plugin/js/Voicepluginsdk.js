@@ -422,14 +422,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 							+'</div>'
 							+'<div class="uda-container" style="text-align: center; margin-top: 10px;">'
 								+'<div class="uda-search-div">'
-									+'<button class="uda-search-btn"></button>'
-									+'<input type="text" name="uda-search-input" class="uda-input-cntrl" placeholder="search..." id="uda-search-input" />'
-									+'<button class="uda-mic-btn" style="border-radius: 0px 5px 5px 0px;" id="uda-voice-icon-start">'
+									+'<button class="uda-mic-btn" style="border-radius: 5px 0px 0px 5px;" id="uda-voice-icon-start">'
 									/*+'	<img src="'+this.extensionpath+'images/icons/mic-icon.png">'*/
 									+'</button>'
-									+'<button class="uda-stop-btn-bg" style="border-radius: 0px 5px 5px 0px; display:none;" id="uda-voice-icon-stop">'
+									+'<button class="uda-stop-btn-bg" style="border-radius: 5px 0px 0px 5px; display:none;" id="uda-voice-icon-stop">'
 									/*+'	<img src="'+this.extensionpath+'images/icons/color-stop-btn.png">'*/
 									+'</button>'
+									+'<input type="text" name="uda-search-input" class="uda-input-cntrl" placeholder="search..." id="uda-search-input" />'
+									+'<button class="uda-search-btn" id="uda-search-btn" style="border-radius: 0px 5px 5px 0px;"></button>'
 								+'</div>'
 							+'</div>'
 						+'</div>'
@@ -479,6 +479,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 					UDAPluginSDK.searchinelastic();
 					return false;
 				}
+			});
+			jQuery("#uda-search-btn").click(function(){
+				UDAPluginSDK.searchinelastic();
 			});
 			if(UDASpeechRecognitionAvailable){
 				jQuery("#uda-voice-icon-start").click(function () {
