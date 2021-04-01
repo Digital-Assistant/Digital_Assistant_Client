@@ -1868,7 +1868,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				personalHtml += '			<span style="position: relative; top: 0px;"><img src="'+this.extensionpath+'images/icons/info.png" title="help"></span>';
 				var html =	'<li><i>'
 								+clickedname
-								+editBtn
+								// +editBtn
 								+'<br />'
 								+'</i>'
 								+personalHtml
@@ -2152,10 +2152,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'    <div class="uda-details-footer-left uda-trash-img" id="uda-delete-sequence">'
 						+'    </div>'
 						+'    <div class="uda-details-footer-right">'
-						+'    	<div class="like-img-bg uda-like-img" style="border-left: 1px solid #dce0f7;" id="uda-upvote">'
-						+'   	 </div>'
-						+'    	<div class="dislike-img-bg uda-dislike-img" id="uda-downvote">'
-						+'   	 </div>'
+						// +'    	<div class="like-img-bg uda-like-img" style="border-left: 1px solid #dce0f7;" id="uda-upvote">'
+						// +'   	</div>'
+						// +'    	<div class="dislike-img-bg uda-dislike-img" id="uda-downvote">'
+						// +'   	</div>'
 						+'    </div>'
 						+'</div>';
 			return html;
