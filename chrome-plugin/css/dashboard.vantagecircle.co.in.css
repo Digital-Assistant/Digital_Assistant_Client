@@ -8,3 +8,11 @@
 .duration-picker .pick input{
 	border:1px solid #e2e5ec !important;
 }
+
+kt-base.ng-star-inserted.uda-original-content {
+	max-width: 77% !important;
+}
+
+kt-base.uda-original-content {
+	max-width: 99% !important;
+}
