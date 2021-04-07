@@ -7,13 +7,13 @@
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "content_scripts": [
 	{
-	  "matches": ["*://localhost/*", "*://*.nistapp.com/*", "*://*.rknowsys.com/*","*://*.atlassian.net/*", "*://*.vantagecircle.com/*", "*://*.vantagecircle.co.in/*","*://*.vantagecircle.in/*"],
+	  "matches": ["*://localhost/*", "*://*.nistapp.com/*", "*://*.rknowsys.com/*","*://*.atlassian.net/*", "*://*.vantagecircle.com/*", "*://*.vantagecircle.co.in/*","*://*.vantagecircle.in/*","*://*.sportsplus-qaf.app/*"],
 	  "js": ["js/injectscriptmodifier.js"],
 	  "all_frames": false,
 	  "run_at":"document_start"
 	},
 	{
-	  "matches": ["*://localhost/*", "*://*.nistapp.com/*", "*://*.rknowsys.com/*","*://*.atlassian.net/*","*://*.vantagecircle.com/*", "*://*.vantagecircle.co.in/*","*://*.vantagecircle.in/*"],
+	  "matches": ["*://localhost/*", "*://*.nistapp.com/*", "*://*.rknowsys.com/*","*://*.atlassian.net/*","*://*.vantagecircle.com/*", "*://*.vantagecircle.co.in/*","*://*.vantagecircle.in/*","*://*.sportsplus-qaf.app/*"],
 	  "js": ["js/injectsdk.js"],
 	  "run_at":"document_end"
 	}
