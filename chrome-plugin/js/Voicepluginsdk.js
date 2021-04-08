@@ -1264,7 +1264,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			this.playNextAction = false;
 
-			if(enableIntroJs) {
+			/*if(enableIntroJs) {
 				this.introjs.addStep({
 					element: tooltipnode,
 					intro: message,
@@ -1277,7 +1277,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					invokingnode.click();
 				}
 				return;
-			}
+			}*/
 
 			if(navigationcookiedata && navigationcookiedata.autoplay) {
 				this.autoplay = false;
@@ -1315,7 +1315,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			toolTipElement.classList.add(toolTipPosistionClass);
 
 			console.log(toolTipPosistionClass);
-			return;
+			// return;
 
 			var toolTipHtml = 	'<div>'
 						+toolTipElement
@@ -1340,12 +1340,25 @@ if (typeof UDAPluginSDK === 'undefined') {
 		 * tooltip placement calculation
 		 */
 		getWindowSize: function() {
+			let page = {height: 0, width: 0};
+			let screen = {height: 0, width: 0};
+			let body = document.body,
+				html = document.documentElement;
+
+			page.height = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
+			page.width = Math.max(body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth);
 			if (window.innerWidth !== undefined) {
-				return { width: (window.innerWidth*0.75), height: window.innerHeight };
+				screen.width = window.innerWidth;
+				screen.height = window.innerHeight;
+				// return { width: (window.innerWidth*0.75), height: window.innerHeight };
 			} else {
 				const D = document.documentElement;
-				return { width: D.clientWidth*0.75, height: D.clientHeight };
+				screen.width = D.clientWidth;
+				screen.height = D.clientHeight;
+				// return { width: D.clientWidth*0.75, height: D.clientHeight };
 			}
+			let windowProperties = {page: page, screen: screen};
+			return windowProperties;
 		},
 		getOffset: function(element) {
 			const body = document.body;
@@ -1353,9 +1366,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			const scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
 			const scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
 			const x = element.getBoundingClientRect();
-			console.log(scrollTop);
-			console.log(scrollLeft);
-			return {
+			let result = {
 				top: x.top + scrollTop,
 				width: x.width,
 				height: x.height,
@@ -1364,6 +1375,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				scrollTop: scrollTop,
 				scrollLeft: scrollLeft
 			};
+			return result;
 		},
 		determineAutoPosition: function (targetElement, tooltipLayer, desiredTooltipPosition) {
 			const possiblePositions = ["right", "top", "left", "bottom"].slice();
@@ -1388,7 +1400,7 @@ if (typeof UDAPluginSDK === 'undefined') {
              */
 
 			// Check for space below
-			if (targetElementRect.bottom + tooltipHeight > windowSize.height) {
+			if (targetElementRect.bottom + tooltipHeight > windowSize.page.height) {
 				this.removeEntry(possiblePositions, "bottom");
 			}
 
@@ -1398,7 +1410,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 
 			// Check for space to the right
-			if (targetElementRect.right + tooltipWidth > windowSize.width) {
+			if (targetElementRect.right + tooltipWidth > windowSize.page.width) {
 				this.removeEntry(possiblePositions, "right");
 			}
 
