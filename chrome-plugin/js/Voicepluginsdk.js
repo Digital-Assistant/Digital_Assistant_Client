@@ -1310,7 +1310,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			tooltipnode.classList.add('uda-tooltip');
 			tooltipnode.appendChild(toolTipElement);
 
-			let toolTipPosistionClass = this.determineAutoPosition(tooltipnode, toolTipElement, 'right');
+			let toolTipPosistionClass = this.getNodePosition(tooltipnode, toolTipElement, 'right');
 
 			toolTipElement.classList.add(toolTipPosistionClass);
 
@@ -1345,6 +1345,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 			let body = document.body,
 				html = document.documentElement;
 
+			const docEl = document.documentElement;
+			const scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+			const scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+
 			page.height = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
 			page.width = Math.max(body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth);
 			if (window.innerWidth !== undefined) {
@@ -1357,66 +1361,53 @@ if (typeof UDAPluginSDK === 'undefined') {
 				screen.height = D.clientHeight;
 				// return { width: D.clientWidth*0.75, height: D.clientHeight };
 			}
-			let windowProperties = {page: page, screen: screen};
+			let windowProperties = {page: page, screen: screen, scrollTop: scrollTop, scrollLeft: scrollLeft};
 			return windowProperties;
 		},
-		getOffset: function(element) {
-			const body = document.body;
-			const docEl = document.documentElement;
-			const scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
-			const scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+		//get tooltip position on the page
+		getTooltipPosition: function(element, windowSize) {
 			const x = element.getBoundingClientRect();
 			let result = {
-				top: x.top + scrollTop,
+				top: x.top + windowSize.scrollTop,
 				width: x.width,
 				height: x.height,
-				left: x.left + scrollLeft,
-				actualPos: x,
-				scrollTop: scrollTop,
-				scrollLeft: scrollLeft
+				left: x.left + windowSize.scrollLeft,
+				actualPos: x
 			};
 			return result;
 		},
-		determineAutoPosition: function (targetElement, tooltipLayer, desiredTooltipPosition) {
-			const possiblePositions = ["right", "top", "left", "bottom"].slice();
+		getNodePosition: function (targetElement, tooltipElement, desiredTooltipPosition) {
+			const availablePositions = ["right", "top", "left", "bottom"].slice();
 
 			const windowSize = this.getWindowSize();
-			const tooltipPos = this.getOffset(tooltipLayer);
-			const tooltipHeight = tooltipPos.height + 10;
-			const tooltipWidth = tooltipPos.width + 20;
+			const tooltipPos = this.getTooltipPosition(tooltipElement, windowSize);
 			const targetElementRect = targetElement.getBoundingClientRect();
 
-			// If we check all the possible areas, and there are no valid places for the tooltip, the element
-			// must take up most of the screen real estate. Show the tooltip floating in the middle of the screen.
-			let calculatedPosition = "right";
+			let finalCssClass = "right";
 
 			console.log(windowSize);
 			console.log(tooltipPos);
 			console.log(targetElementRect);
 
 
-			/*
-             * auto determine position
-             */
-
 			// Check for space below
-			if (targetElementRect.bottom + tooltipHeight > windowSize.page.height) {
-				this.removeEntry(possiblePositions, "bottom");
+			if (targetElementRect.bottom + tooltipPos.height > windowSize.page.height) {
+				this.removeFromArray(availablePositions, "bottom");
 			}
 
 			// Check for space above
-			if (targetElementRect.top - tooltipHeight < 0) {
-				this.removeEntry(possiblePositions, "top");
+			if (targetElementRect.top - tooltipPos.height < 0) {
+				this.removeFromArray(availablePositions, "top");
 			}
 
 			// Check for space to the right
-			if (targetElementRect.right + tooltipWidth > windowSize.page.width) {
-				this.removeEntry(possiblePositions, "right");
+			if (targetElementRect.right + tooltipPos.width > windowSize.page.width) {
+				this.removeFromArray(availablePositions, "right");
 			}
 
 			// Check for space to the left
-			if (targetElementRect.left - tooltipWidth < 0) {
-				this.removeEntry(possiblePositions, "left");
+			if (targetElementRect.left - tooltipPos.width < 0) {
+				this.removeFromArray(availablePositions, "left");
 			}
 
 			// strip alignment from position
@@ -1426,85 +1417,19 @@ if (typeof UDAPluginSDK === 'undefined') {
 				desiredTooltipPosition = desiredTooltipPosition.split("-")[0];
 			}
 
-			if (possiblePositions.length) {
-				if (possiblePositions.includes(desiredTooltipPosition)) {
+			if (availablePositions.length) {
+				if (availablePositions.includes(desiredTooltipPosition)) {
 					// If the requested position is in the list, choose that
-					calculatedPosition = desiredTooltipPosition;
+					finalCssClass = desiredTooltipPosition;
 				} else {
 					// Pick the first valid position, in order
-					calculatedPosition = possiblePositions[0];
+					finalCssClass = availablePositions[0];
 				}
 			}
 
-			// only top and bottom positions have optional alignments
-			/*if (["top", "bottom"].includes(calculatedPosition)) {
-				calculatedPosition += this.determineAutoAlignment(
-					targetElementRect.left,
-					tooltipWidth,
-					windowSize,
-					desiredAlignment
-				);
-			}*/
-
-			return 'uda-tooltip-'+calculatedPosition;
+			return 'uda-tooltip-'+finalCssClass;
 		},
-		/**
-		 * determing text alignment
-		 */
-		determineAutoAlignment: function(
-			offsetLeft,
-			tooltipWidth,
-			{ width },
-			desiredAlignment
-		) {
-			const halfTooltipWidth = tooltipWidth / 2;
-			const winWidth = Math.min(width, window.screen.width);
-			const possibleAlignments = [
-				"-left-aligned",
-				"-middle-aligned",
-				"-right-aligned",
-			];
-			let calculatedAlignment = "";
-
-			// valid left must be at least a tooltipWidth
-			// away from right side
-			if (winWidth - offsetLeft < tooltipWidth) {
-				this.removeEntry(possibleAlignments, "-left-aligned");
-			}
-
-			// valid middle must be at least half
-			// width away from both sides
-			if (
-				offsetLeft < halfTooltipWidth ||
-				winWidth - offsetLeft < halfTooltipWidth
-			) {
-				this.removeEntry(possibleAlignments, "-middle-aligned");
-			}
-
-			// valid right must be at least a tooltipWidth
-			// width away from left side
-			if (offsetLeft < tooltipWidth) {
-				this.removeEntry(possibleAlignments, "-right-aligned");
-			}
-
-			if (possibleAlignments.length) {
-				if (possibleAlignments.includes(desiredAlignment)) {
-					// the desired alignment is valid
-					calculatedAlignment = desiredAlignment;
-				} else {
-					// pick the first valid position, in order
-					calculatedAlignment = possibleAlignments[0];
-				}
-			} else {
-				// if screen width is too small
-				// for ANY alignment, middle is
-				// probably the best for visibility
-				calculatedAlignment = "-middle-aligned";
-			}
-
-			return calculatedAlignment;
-		},
-		removeEntry: function(stringArray, stringToRemove) {
+		removeFromArray: function(stringArray, stringToRemove) {
 			if (stringArray.includes(stringToRemove)) {
 				stringArray.splice(stringArray.indexOf(stringToRemove), 1);
 			}
