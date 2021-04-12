@@ -287,7 +287,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
      */
 
     let UDABrowserName = UDABrowserCheck.detectBrowserNameAndVersion(navigator);
-    let UDAAllowedBrowsers = ['chrome'];
+    let UDAAllowedBrowsers = ['chrome','edge'];
     let isUDAAllowed = UDAAllowedBrowsers.indexOf(UDABrowserName.name.toLowerCase());
 
     if (isUDAAllowed < 0) {
