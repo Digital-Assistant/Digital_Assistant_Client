@@ -524,7 +524,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				if (focus) {
 					searchinput.focus();
 				}
-				if(this.inarray(window.location.host,this.addcustomcssdomains) !== -1) {
+				// if(this.inarray(window.location.host,this.addcustomcssdomains) !== -1) {
 					let bodychildren = document.body.childNodes;
 					if (bodychildren.length > 0) {
 						bodychildren.forEach(function (childnode, childnodeindex) {
@@ -539,7 +539,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 							}
 						});
 					}
-				}
+				// }
 			} else {
 				var sessionevent = new CustomEvent("RequestUDASessionData", {detail: {data: "authtenicate"}, bubbles: false, cancelable: false});
 				document.dispatchEvent(sessionevent);
@@ -557,7 +557,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			var navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 			this.cancelrecordingsequence(false);
-			if(this.inarray(window.location.host,this.addcustomcssdomains) !== -1) {
+			// if(this.inarray(window.location.host,this.addcustomcssdomains) !== -1) {
 				let bodychildren = document.body.childNodes;
 				if (bodychildren.length > 0) {
 					bodychildren.forEach(function (childnode, childnodeindex) {
@@ -571,7 +571,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						}
 					});
 				}
-			}
+			// }
 		},
 		//Resetting introjs and continue to next playable action
 		resetIntrojs: function () {
