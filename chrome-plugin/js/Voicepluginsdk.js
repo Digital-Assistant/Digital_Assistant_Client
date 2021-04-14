@@ -1134,9 +1134,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 				});
 			}
 
-			$('.uda-tooltip').each(function() {
-				$(this).find('.uda-tooltip-text-content').remove().then();
-				$(this).removeClass('uda-tooltip');
+			$('.uda-tooltip-text-content').each(function() {
+				$(this).remove();
 			});
 
 			this.simulateHover(node);
