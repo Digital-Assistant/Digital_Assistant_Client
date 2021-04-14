@@ -1125,13 +1125,19 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 
 			// remove added tooltips before invoking
-			let tooltipnodes = $('.uda-tooltip');
+			// let tooltipnodes = $('.uda-tooltip');
+			let tooltipnodes = document.getElementsByClassName('uda-tooltip');
 			if (tooltipnodes.length > 0) {
 				$('.uda-tooltip').each(function() {
+					$(this).find('.uda-tooltip-text-content').remove();
 					$(this).removeClass('uda-tooltip');
-					$(this).find('.uda-tooltip-right').remove();
 				});
 			}
+
+			$('.uda-tooltip').each(function() {
+				$(this).find('.uda-tooltip-text-content').remove().then();
+				$(this).removeClass('uda-tooltip');
+			});
 
 			this.simulateHover(node);
 
@@ -1310,7 +1316,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			tooltipnode.classList.add('uda-tooltip');
 			tooltipnode.appendChild(toolTipElement);
 
-			let toolTipPosistionClass = this.getNodePosition(tooltipnode, toolTipElement, 'right');
+			let toolTipPosistionClass = this.getNodePosition(tooltipnode, toolTipElement);
 
 			toolTipElement.classList.add(toolTipPosistionClass);
 
@@ -1324,7 +1330,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			// $(toolTipHtmlElement).addClass(toolTipPosistionClass);
 
 			$('html, body').animate({
-				scrollTop: ($(invokingnode).offset().top - 200)
+				scrollTop: ($(invokingnode).offset().top - 250)
 			}, 2000, function(){
 				// $(tooltipnode).addClass('uda-tooltip')
 				// $(tooltipnode).append(html);
@@ -1339,7 +1345,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		/**
 		 * tooltip placement calculation
 		 */
-		getWindowSize: function() {
+		getScreenSize: function() {
 			let page = {height: 0, width: 0};
 			let screen = {height: 0, width: 0};
 			let body = document.body,
@@ -1352,13 +1358,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 			page.height = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
 			page.width = Math.max(body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth);
 			if (window.innerWidth !== undefined) {
-				screen.width = window.innerWidth;
+				screen.width = window.innerWidth * 0.75;
 				screen.height = window.innerHeight;
 				// return { width: (window.innerWidth*0.75), height: window.innerHeight };
 			} else {
 				const D = document.documentElement;
 				screen.width = D.clientWidth;
-				screen.height = D.clientHeight;
+				screen.height = D.clientHeight * 0.75;
 				// return { width: D.clientWidth*0.75, height: D.clientHeight };
 			}
 			let windowProperties = {page: page, screen: screen, scrollTop: scrollTop, scrollLeft: scrollLeft};
@@ -1376,23 +1382,23 @@ if (typeof UDAPluginSDK === 'undefined') {
 			};
 			return result;
 		},
-		getNodePosition: function (targetElement, tooltipElement, desiredTooltipPosition) {
+		getNodePosition: function (targetElement, tooltipElement) {
 			const availablePositions = ["right", "top", "left", "bottom"].slice();
 
-			const windowSize = this.getWindowSize();
-			const tooltipPos = this.getTooltipPosition(tooltipElement, windowSize);
+			const screenSize = this.getScreenSize();
+			const tooltipPos = this.getTooltipPosition(tooltipElement, screenSize);
 			const targetElementRect = targetElement.getBoundingClientRect();
 
 			let finalCssClass = "right";
 
-			console.log(windowSize);
+			console.log(screenSize);
 			console.log(tooltipPos);
 			console.log(targetElementRect);
 
 
-			// Check for space below
-			if (targetElementRect.bottom + tooltipPos.height > windowSize.page.height) {
-				this.removeFromArray(availablePositions, "bottom");
+			// Check for space to the right
+			if (targetElementRect.right + tooltipPos.width > screenSize.screen.width) {
+				this.removeFromArray(availablePositions, "right");
 			}
 
 			// Check for space above
@@ -1400,38 +1406,25 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.removeFromArray(availablePositions, "top");
 			}
 
-			// Check for space to the right
-			if (targetElementRect.right + tooltipPos.width > windowSize.page.width) {
-				this.removeFromArray(availablePositions, "right");
-			}
-
 			// Check for space to the left
 			if (targetElementRect.left - tooltipPos.width < 0) {
 				this.removeFromArray(availablePositions, "left");
 			}
 
-			// strip alignment from position
-			if (desiredTooltipPosition) {
-				// ex: "bottom-right-aligned"
-				// should return 'bottom'
-				desiredTooltipPosition = desiredTooltipPosition.split("-")[0];
+			// Check for space below
+			if (targetElementRect.bottom + tooltipPos.height > screenSize.page.height) {
+				this.removeFromArray(availablePositions, "bottom");
 			}
 
 			if (availablePositions.length) {
-				if (availablePositions.includes(desiredTooltipPosition)) {
-					// If the requested position is in the list, choose that
-					finalCssClass = desiredTooltipPosition;
-				} else {
-					// Pick the first valid position, in order
-					finalCssClass = availablePositions[0];
-				}
+				finalCssClass = availablePositions[0];
 			}
 
 			return 'uda-tooltip-'+finalCssClass;
 		},
-		removeFromArray: function(stringArray, stringToRemove) {
-			if (stringArray.includes(stringToRemove)) {
-				stringArray.splice(stringArray.indexOf(stringToRemove), 1);
+		removeFromArray: function(array, value) {
+			if (array.includes(value)) {
+				array.splice(array.indexOf(value), 1);
 			}
 		},
 		//Continue functionality invoke
