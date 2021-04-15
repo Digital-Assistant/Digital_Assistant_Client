@@ -1390,10 +1390,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			let finalCssClass = "right";
 
-			console.log(screenSize);
-			console.log(tooltipPos);
-			console.log(targetElementRect);
-
+			if(this.logLevel>1) {
+				console.log(screenSize);
+				console.log(tooltipPos);
+				console.log(targetElementRect);
+			}
 
 			// Check for space to the right
 			if (targetElementRect.right + tooltipPos.width > screenSize.screen.width) {
@@ -1415,7 +1416,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.removeFromArray(availablePositions, "bottom");
 			}
 
-			if (availablePositions.length) {
+			if (availablePositions.length > 0) {
 				finalCssClass = availablePositions[0];
 			}
 
