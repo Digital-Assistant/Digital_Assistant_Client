@@ -60,7 +60,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
     let UDARemovedClickObjects = [];
     let UDALastMutationTime = 0;
     let UDALastIndexTime = 0;
-    let UDALogLevel = 0;
+    let UDALogLevel = 5;
 
     /*****
      *
@@ -419,21 +419,23 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
 
         //mutation observer initialization and adding the logic to process the clickobjects
         var dsa_observer = new MutationObserver(function (mutations) {
+            if (UDALogLevel > 1) {
+                console.log('------------ detected clicked objects-------------');
+                console.log(UDAClickObjects);
+            }
             mutations.forEach(function (mutation) {
                 if (mutation.removedNodes.length) {
-                    if (UDALogLevel > 1) {
-                        console.log(UDAClickObjects);
-                    }
                     [].some.call(mutation.removedNodes, dsaProcessRemovedNode);
-                    if (UDALogLevel > 1) {
-                        console.log(UDARemovedClickObjects);
-                    }
                 }
                 if (!mutation.addedNodes.length) {
                     return;
                 }
                 [].some.call(mutation.addedNodes, dsaProcessNode);
             });
+            if (UDALogLevel > 1) {
+                console.log('------------ removed clicked objects-------------');
+                console.log(UDARemovedClickObjects);
+            }
             UDALastMutationTime = Date.now();
         });
 
