@@ -518,6 +518,17 @@
     cursor: pointer;
 }
 
+.uda-tutorial-exit-btn {
+    background-color: var(--uda-secondary-color);
+    border: none;
+    outline: none;
+    color: var(--uda-text-color-bg-white);
+    border-radius: 5px;
+    padding: 5px 12px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
 .uda-tutorial-btn:hover {
     background-color: var(--uda-secondary-color);
 }

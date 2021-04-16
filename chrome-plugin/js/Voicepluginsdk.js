@@ -1305,7 +1305,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			 */
 			let toolTipLayerSection	=	message
 										+'<br/>'
-										+'<button class="uda-tutorial-btn" style="margin-top:10px;" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>';
+										+'<button class="uda-tutorial-btn" style="margin-top:10px;" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>'
+										+'<button class="uda-tutorial-exit-btn" style="margin-top:10px;" type="button" uda-added="true" id="uda-autoplay-exit">Exit</button>';
 
 			// let toolTipElement = jQuery(toolTipLayerSection);
 			let toolTipElement = document.createElement('div');
@@ -1318,6 +1319,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 			let toolTipPosistionClass = this.getNodePosition(tooltipnode, toolTipElement);
 
 			toolTipElement.classList.add(toolTipPosistionClass);
+
+			jQuery("#uda-autoplay-exit").click(function () {
+				UDAPluginSDK.backToSearchResultsPage(navigationcookiedata);
+			});
 
 			console.log(toolTipPosistionClass);
 			// return;
@@ -2346,13 +2351,27 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 			jQuery("#uda-backto-search").click(function () {
 				// UDAPluginSDK.toggleautoplay(navcookiedata);
-				UDAPluginSDK.autoplay = false;
-				UDAPluginSDK.searchInProgress=false;
-				UDAPluginSDK.autoplayPaused=false;
-				UDAPluginSDK.playNextAction=true;
-				UDAPluginSDK.configureintrojs();
-				UDAPluginSDK.introjs.refresh();
-				UDAPluginSDK.backtosearchresults(navcookiedata);
+				UDAPluginSDK.backToSearchResultsPage(navcookiedata);
+			});
+		},
+		backToSearchResultsPage: function(navcookiedata){
+			UDAPluginSDK.autoplay = false;
+			UDAPluginSDK.searchInProgress=false;
+			UDAPluginSDK.autoplayPaused=false;
+			UDAPluginSDK.playNextAction=true;
+			UDAPluginSDK.configureintrojs();
+			UDAPluginSDK.introjs.refresh();
+			UDAPluginSDK.backtosearchresults(navcookiedata);
+			let tooltipnodes = document.getElementsByClassName('uda-tooltip');
+			if (tooltipnodes.length > 0) {
+				$('.uda-tooltip').each(function() {
+					$(this).find('.uda-tooltip-text-content').remove();
+					$(this).removeClass('uda-tooltip');
+				});
+			}
+
+			$('.uda-tooltip-text-content').each(function() {
+				$(this).remove();
 			});
 		},
 		//showing the sequence steps html
