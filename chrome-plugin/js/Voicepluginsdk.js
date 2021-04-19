@@ -1224,6 +1224,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 				case 'span':
 					if (node.classList && node.classList.contains('select2-selection')) {
 						this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, true, false);
+					} else {
+						node.click();
+						this.invokenextitem(node,timetoinvoke);
 					}
 					break;
 				case 'div':

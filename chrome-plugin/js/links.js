@@ -60,7 +60,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
     let UDARemovedClickObjects = [];
     let UDALastMutationTime = 0;
     let UDALastIndexTime = 0;
-    let UDALogLevel = 5;
+    let UDALogLevel = 0;
 
     /*****
      *
@@ -298,14 +298,14 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
         EventTarget.prototype.addEventListener = function (addEventListener) {
             return function () {
                 if (arguments[0] === "click") {
-                    dsaAddNewElement(this);
+                    UDAAddNewElement(this);
                 }
                 addEventListener.call(this, arguments[0], arguments[1], arguments[2]);
             }
         }(EventTarget.prototype.addEventListener);
 
         // adding the clickobjects that were identified.
-        function dsaAddNewElement(node) {
+        function UDAAddNewElement(node) {
             let clickObject = {element: node}
 
             //checking whether the element is window or not
@@ -334,11 +334,11 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
         }
 
         // processing node from mutation and then send to clickbojects addition
-        function dsaProcessNode(node) {
+        function UDAProcessNode(node) {
             var processchildren = true;
 
-            if (node.onclick != undefined) {
-                dsaAddNewElement(node);
+            if (node.hasOwnProperty('onclick') && node.onclick !== '') {
+                UDAAddNewElement(node);
             }
 
             // switched to switch case condition from if condition
@@ -346,22 +346,22 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
                 switch (node.tagName.toLowerCase()) {
                     case 'a':
                         if (node.href !== undefined) {
-                            dsaAddNewElement(node);
+                            UDAAddNewElement(node);
                         }
                         break;
                     case 'input':
                     case 'textarea':
                     case 'option':
                     case 'select':
-                        dsaAddNewElement(node);
+                        UDAAddNewElement(node);
                         break;
                     case 'button':
                         if (node.hasAttribute('ng-click') || node.hasAttribute('onclick')) {
-                            dsaAddNewElement(node);
+                            UDAAddNewElement(node);
                         } else if (node.hasAttribute('type') && node.getAttribute('type') === 'submit') {
-                            dsaAddNewElement(node);
+                            UDAAddNewElement(node);
                         } else if (node.classList && (node.classList.contains('expand-button') || node.classList.contains('btn-pill'))) {
-                            dsaAddNewElement(node);
+                            UDAAddNewElement(node);
                         } else {
                             if (UDALogLevel > 0) {
                                 console.log({node: node});
@@ -370,29 +370,29 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
                         break;
                     case 'span':
                         if (node.classList && node.classList.contains('select2-selection')) {
-                            dsaAddNewElement(node);
+                            UDAAddNewElement(node);
                         }
                         break;
                     // fix for editor issue
                     case 'ckeditor':
-                        dsaAddNewElement(node);
+                        UDAAddNewElement(node);
                         break;
                 }
             }
 
             if (node.classList && node.classList.contains("dropdown-toggle")) {
-                dsaAddNewElement(node);
+                UDAAddNewElement(node);
             }
 
             if (node.children && processchildren) {
                 for (var i = 0; i < node.children.length; i++) {
-                    dsaProcessNode(node.children[i]);
+                    UDAProcessNode(node.children[i]);
                 }
             }
         }
 
         // removal of clickbojects via mutation observer
-        function dsaProcessRemovedNode(node) {
+        function UDAProcessRemovedNode(node) {
             for (var j = 0; j < UDAClickObjects.length; j++) {
                 if (node.isEqualNode(UDAClickObjects[j].element)) {
                     let addtoremovenodes = true;
@@ -412,7 +412,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
             }
             if (node.children) {
                 for (var i = 0; i < node.children.length; i++) {
-                    dsaProcessRemovedNode(node.children[i]);
+                    UDAProcessRemovedNode(node.children[i]);
                 }
             }
         }
@@ -425,12 +425,12 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
             }
             mutations.forEach(function (mutation) {
                 if (mutation.removedNodes.length) {
-                    [].some.call(mutation.removedNodes, dsaProcessRemovedNode);
+                    [].some.call(mutation.removedNodes, UDAProcessRemovedNode);
                 }
                 if (!mutation.addedNodes.length) {
                     return;
                 }
-                [].some.call(mutation.addedNodes, dsaProcessNode);
+                [].some.call(mutation.addedNodes, UDAProcessNode);
             });
             if (UDALogLevel > 1) {
                 console.log('------------ removed clicked objects-------------');
