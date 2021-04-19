@@ -337,7 +337,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
         function UDAProcessNode(node) {
             var processchildren = true;
 
-            if (typeof node.onclick !== 'undefined') {
+            if (node.onclick !== undefined) {
                 UDAAddNewElement(node);
             }
 
@@ -345,7 +345,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
             if (node.tagName) {
                 switch (node.tagName.toLowerCase()) {
                     case 'a':
-                        if (typeof node.href !== 'undefined') {
+                        if (node.href !== undefined) {
                             UDAAddNewElement(node);
                         }
                         break;
