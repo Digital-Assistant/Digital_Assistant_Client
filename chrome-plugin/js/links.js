@@ -337,7 +337,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
         function UDAProcessNode(node) {
             var processchildren = true;
 
-            if (node.onclick !== undefined) {
+            if (node.onclick != undefined) {
                 UDAAddNewElement(node);
             }
 
