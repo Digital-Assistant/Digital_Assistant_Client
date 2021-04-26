@@ -1145,7 +1145,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 
 			if(this.inarray(node.nodeName.toLowerCase(), this.ignoreNodesFromIndexing) !== -1) {
-				this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, false);
+				this.addToolTip(node, node.parentNode, selectednode, navigationcookiedata, false, false, false);
 				return;
 			}
 
@@ -1154,25 +1154,25 @@ if (typeof UDAPluginSDK === 'undefined') {
 					// this.playNextAction = false;
 					// functionality for detecting multi select box and highlighting the recorded node
 					if (node.classList && (node.classList.contains('select2-search__field') || node.classList.contains('mat-autocomplete-trigger'))){
-						this.addToolTip(node, node.parentNode.parentNode.parentNode.parentNode.parentNode, navigationcookiedata, false, true);
+						this.addToolTip(node, node.parentNode.parentNode.parentNode.parentNode.parentNode, selectednode, navigationcookiedata, false, true);
 					} else if(node.hasAttribute('role') && (node.getAttribute('role')==='combobox')) {
-						this.addToolTip(node, node.parentNode.parentNode.parentNode.parentNode, navigationcookiedata, false, false, true);
+						this.addToolTip(node, node.parentNode.parentNode.parentNode.parentNode, selectednode, navigationcookiedata, false, false, true);
 					} else if(node.hasAttribute('type') && (node.getAttribute('type')==='checkbox' || node.getAttribute('type')==='radio') && node.classList && (node.classList.contains('mat-checkbox-input') || node.classList.contains('mat-radio-input'))) {
-						this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false, true);
+						this.addToolTip(node, node.parentNode.parentNode, selectednode, navigationcookiedata, false, false, true);
 					} else if(node.hasAttribute('type')){
 						switch (node.getAttribute('type').toLowerCase()) {
 							case 'checkbox':
 								if(node.parentNode && node.parentNode.classList && node.parentNode.classList.contains('vc_checkbox')) {
-									this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
+									this.addToolTip(node, node.parentNode, selectednode, navigationcookiedata, false, false, true);
 								} else {
-									this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false, true);
+									this.addToolTip(node, node.parentNode.parentNode, selectednode, navigationcookiedata, false, false, true);
 								}
 								break;
 							case 'radio':
 								if(node.parentNode && node.parentNode.classList && node.parentNode.classList.contains('vc_label')) {
-									this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
+									this.addToolTip(node, node.parentNode, selectednode, navigationcookiedata, false, false, true);
 								} else {
-									this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false, true);
+									this.addToolTip(node, node.parentNode.parentNode, selectednode, navigationcookiedata, false, false, true);
 								}
 								break;
 							case 'submit':
@@ -1182,40 +1182,40 @@ if (typeof UDAPluginSDK === 'undefined') {
                             	break;
 							case 'text':
 								if(node.attributes && node.attributes.length>0 && (node.hasAttribute('ngxdaterangepickermd'))) {
-									this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, false);
+									this.addToolTip(node, node.parentNode, selectednode, navigationcookiedata, false, false, false);
 								} else if(node.attributes && node.attributes.length>0 && (node.hasAttribute('uib-datepicker-popup'))) {
-									this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, true, false);
+									this.addToolTip(node, node.parentNode.parentNode, selectednode, navigationcookiedata, true, false);
 								} else {
-									this.addToolTip(node, node.parentNode, navigationcookiedata, false, true, true);
+									this.addToolTip(node, node.parentNode, selectednode, navigationcookiedata, false, true, true);
 								}
 								break;
 							default:
-								this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
+								this.addToolTip(node, node.parentNode, selectednode, navigationcookiedata, false, false, true);
 								break;
 						}
 					} else {
-						this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
+						this.addToolTip(node, node.parentNode, selectednode, navigationcookiedata, false, false, true);
 					}
 					break;
 				case "textarea":
 					this.playNextAction = false;
-					this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
+					this.addToolTip(node, node.parentNode, selectednode, navigationcookiedata, false, false, true);
 					break;
 				case "select":
 					// this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
-					this.addToolTip(node, node, navigationcookiedata, false, false, true);
+					this.addToolTip(node, node, selectednode, navigationcookiedata, false, false, true);
 					break;
 				case "option":
-					this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
+					this.addToolTip(node, node.parentNode, selectednode, navigationcookiedata, false, false, true);
 					break;
 				case "checkbox":
 					// this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false);
-					this.addToolTip(node, node, navigationcookiedata, false, false, true);
+					this.addToolTip(node, node, selectednode, navigationcookiedata, false, false, true);
 					break;
 				// Additional processing for calendar selection
 				case "button":
 					if(node.hasAttribute('aria-label') && node.getAttribute('aria-label').toLowerCase() === 'open calendar') {
-						this.addToolTip(node, node.parentNode, navigationcookiedata, true, false);
+						this.addToolTip(node, node.parentNode, selectednode, navigationcookiedata, true, false);
 					} else if(node.classList && node.classList.contains('btn-pill')) {
 						node.click();
 						this.invokenextitem(node,timetoinvoke);
@@ -1226,7 +1226,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					break;
 				case 'span':
 					if (node.classList && node.classList.contains('select2-selection')) {
-						this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, true, false);
+						this.addToolTip(node, node.parentNode.parentNode, selectednode, navigationcookiedata, true, false);
 					} else {
 						node.click();
 						this.invokenextitem(node,timetoinvoke);
@@ -1234,7 +1234,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					break;
 				case 'div':
 					if(node.classList && (node.classList.contains('mat-form-field-flex') || node.classList.contains('mat-select-trigger'))) {
-						this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, true, false);
+						this.addToolTip(node, node.parentNode.parentNode, selectednode, navigationcookiedata, true, false);
 					} else {
 						node.click();
 						this.invokenextitem(node,timetoinvoke);
@@ -1242,10 +1242,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 					break;
 				//	fix for text editor during playback
 				case 'ckeditor':
-					this.addToolTip(node, node, navigationcookiedata, true, false);
+					this.addToolTip(node, node, selectednode, navigationcookiedata, true, false);
 					break;
 				case 'ng-select':
-					this.addToolTip(node, node, navigationcookiedata, false, false);
+					this.addToolTip(node, node, selectednode, navigationcookiedata, false, false);
 					break;
 				default:
 					node.click();
@@ -1254,10 +1254,17 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 		},
 		//add tooltip display
-		addToolTip:function(invokingnode, tooltipnode, navigationcookiedata, enableClick=false, enableFocus=false, enableIntroJs=false, message= 'Please input the value and then click on') {
+		addToolTip:function(invokingnode, tooltipnode, recordeddata=null, navigationcookiedata, enableClick=false, enableFocus=false, enableIntroJs=false, message= 'Please input the value and then click on') {
 
 			if(this.logLevel>2){
 				console.log(this.invokingnode);
+			}
+
+			if(recordeddata !== null) {
+				let recordednodedata = JSON.parse(recordeddata.objectdata);
+				if(recordednodedata.hasOwnProperty('meta') && recordednodedata.meta.hasOwnProperty('tooltipInfo') && recordednodedata.meta.tooltipInfo != ''){
+					message = recordednodedata.meta.tooltipInfo;
+				}
 			}
 
 			/*if(this.invokingnode && this.invokingnode.isEqualNode(invokingnode)){
@@ -1858,6 +1865,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 				originalName = data.clickednodename;
 			}
 			// let clickedname=data.clickednodename;
+			//adding personal tooltips
+			let tooltipBtn = '';
+			if(showPersonalButton) {
+				tooltipBtn = this.showTooltipEditSection(nodeData);
+			}
 			// personal button appearance
 			if(showPersonalButton){
 				// clickedname=((data.clickednodename.length>(this.maxstringlength-24))?data.clickednodename.substr(0,(this.maxstringlength-24))+'...':data.clickednodename);
@@ -1878,6 +1890,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 								+'<br />'
 								+'</i>'
 								+personalHtml
+								+'<br />'
+								+tooltipBtn
 								+'<br />'
 							+'</li>';
 				var element = jQuery(html);
@@ -1905,6 +1919,26 @@ if (typeof UDAPluginSDK === 'undefined') {
 						}
 					}
 				});
+				if(tooltipBtn) {
+					jQuery("#uda-edit-tooltip").click(function (){
+						// UDAPluginSDK.showTooltipInput(data);
+						jQuery("#uda-edited-tooltip").show();
+					});
+					jQuery('#uda-edited-tooltip').blur(function() {
+						let editedName = $("#uda-edited-tooltip").val();
+						if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
+							UDAPluginSDK.editAndSaveTooltip(data, editedName);
+						}
+					});
+					jQuery("#uda-edited-tooltip").keydown(function (e) {
+						if (e.keyCode === 13) {
+							let editedName = $("#uda-edited-tooltip").val();
+							if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
+								UDAPluginSDK.editAndSaveTooltip(data, editedName);
+							}
+						}
+					});
+				}
 			} else {
 				clickedname += (nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal)?'&nbsp; &nbsp;(personal)':'';
 				var html = '<li><i>' +
@@ -1913,6 +1947,71 @@ if (typeof UDAPluginSDK === 'undefined') {
 				var element = jQuery(html);
 				jQuery("#uda-recorded-results").append(element);
 			}
+		},
+		//customizing tooltip text function
+		showTooltipEditSection: function(nodeData){
+			let node=nodeData.node;
+			let toolTipText = '';
+			if (nodeData.meta.hasOwnProperty('tooltipInfo') && nodeData.meta.tooltipInfo) {
+				toolTipText = nodeData.meta.tooltipInfo;
+			}
+			let tooltipBtnHtml 	='			<span>'
+								+ '				<button class="uda-tutorial-btn" style="padding:0px;" type="button" id="uda-edit-tooltip">'+((toolTipText)?'Edit Tooltip':'Add Tooltip')+'</button>'
+								+ '			</span>';
+			let tooltipsection = (toolTipText) +'&nbsp;&nbsp;'+ tooltipBtnHtml + '<input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip" class="uda-form-input" placeholder="Enter text" value="' + toolTipText + '" style="display: none;">';
+			switch (node.nodeName.toLowerCase()) {
+				case "input":
+				case "textarea":
+				case "select":
+				case "option":
+				case "checkbox":
+					return tooltipsection;
+					break;
+				case "button":
+					if(node.hasAttribute('aria-label') && node.getAttribute('aria-label').toLowerCase() === 'open calendar') {
+						return tooltipsection;
+					}
+					break;
+				case 'span':
+					if (node.className && node.className.indexOf('select2-selection') !== -1) {
+						return tooltipsection;
+					}
+					break;
+				case 'div':
+				if(node.className && (node.className.indexOf('mat-form-field-flex') !== -1 || node.className.indexOf('mat-select-trigger') !== -1)) {
+						return tooltipsection;
+					}
+					break;
+				case 'ckeditor':
+					return tooltipsection;
+					break;
+				case 'ng-select':
+					return tooltipsection;
+					break;
+				default:
+					return '';
+					break;
+			}
+		},
+		editAndSaveTooltip: function(data, value) {
+			let nodeData = JSON.parse(data.objectdata);
+			if(nodeData.meta && nodeData.meta.hasOwnProperty("displayText")){
+				nodeData.meta.tooltipInfo = value;
+			} else if(nodeData.meta && Object.keys(nodeData.meta).length >= 1) {
+				nodeData.meta.tooltipInfo = value;
+			} else {
+				nodeData.meta = {};
+				nodeData.meta.tooltipInfo = value;
+			}
+			data.objectdata = JSON.stringify(nodeData);
+			var outputdata = JSON.stringify(data);
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", this.apihost+"/user/updateclickednode");
+			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+			xhr.onload = function(event){
+				UDAPluginSDK.showhtml();
+			};
+			xhr.send(outputdata);
 		},
 		//personal modification button clicked
 		personalNode:function(data){
