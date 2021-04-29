@@ -1829,12 +1829,26 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'	<ul class="uda-recording" id="uda-recorded-results">'
 						+'	</ul>'
 						+'	<div class="uda-recording" style="text-align: center;">'
-						+'		<input type="text" id="uda-recorded-name" name="uda-save-recorded" class="uda-form-input" placeholder="Enter Label">'
+						+'	<table id="uda-sequence-names"><tr>'
+						+'		<td><input type="text" id="uda-recorded-name" name="uda-save-recorded[]" class="uda-form-input" placeholder="Enter Label"></td>'
+						+'		<td><button class="uda-tutorial-btn" onclick="UDAPluginSDK.addSequenceNameRow();">Add</button></td>'
+						+'	</tr></table>'
 						+'		<button class="uda-record-btn" onclick="UDAPluginSDK.cancelrecordingsequence();"><span>Cancel and Exit</span></button>'
 						+'		<button class="uda-tutorial-btn" onclick="UDAPluginSDK.submitrecordedlabel();">Submit</button>'
 						+'	</div>'
 						+'</div>';
 			return html;
+		},
+		//Add new sequence name row
+		addSequenceNameRow: function(){
+			let html='<tr>'
+					+'	<td><input type="text" name="uda-save-recorded[]" class="uda-form-input" placeholder="Enter Label"></td>'
+					+'	<td><button class="uda-tutorial-btn uda-remove-row">Remove</button></td>'
+					+'</tr>'
+			jQuery('#uda-sequence-names').append(html);
+			jQuery("#uda-sequence-names").on('click','.uda-remove-row',function(){
+				jQuery(this).parent().parent().remove();
+			});
 		},
 		renderEmptyRecordedSequenceHtml: function(){
 			var html =	'<div class="uda-card-details">'
@@ -2056,7 +2070,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		// submit functionality of the recorded sequence.
 		submitrecordedlabel:function(submittype="recording"){
-			var sequencename=jQuery("#uda-recorded-name").val();
+			// var sequencename=jQuery("#uda-recorded-name").val();
+			let sequencenames = [];
+			var sequencenamearray=jQuery("input[name='uda-save-recorded[]']").map(function (){
+				sequencenames.push(this.value);
+			});
+			console.log(sequencenames);
+			let sequencename = JSON.stringify(sequencenames);
 			var sequencelistdata={name:"",domain:window.location.host,usersessionid:this.sessiondata.authdata.id.toString(),userclicknodelist:[].toString(),userclicknodesSet:this.recordedsequenceids,isValid:1,isIgnored:0};
 			if(submittype==='recording') {
 				if (sequencename === '') {
@@ -2223,8 +2243,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 				}
 				path += data.userclicknodesSet[i].clickednodename;
 			}
+			let sequencename = '';
+			try{
+				sequencename = JSON.parse(data.name)[0];
+			} catch (e) {
+				sequencename = data.name.toString();
+			}
 			var html =	'<div class="uda-card">'
-						+'	<h5>'+data.name.toString()+'</h5>'
+						+'	<h5>'+sequencename+'</h5>'
 						+'	<i>'+path+'</i>'
 						+'</div>';
 			return html;
@@ -2242,13 +2268,26 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		// renderSelectedSequenceHtml: fu
 		renderSelectedSequenceHtml: function (data, isPlaying){
+			let sequencename = '';
+			let sequencenames = '';
+			try{
+				let sequencenamesArray = JSON.parse(data.name)
+				sequencename = sequencenamesArray[0];
+				if(sequencenamesArray.length > 1) {
+					sequencenamesArray.splice(0, 1);
+					sequencenames = sequencenamesArray.join('<br /> or <br />');
+				}
+			} catch (e) {
+				sequencename = data.name.toString();
+			}
 			var html =	'<div class="uda-card-details" style="border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;">'
 						+'    <div class="uda-card-btns">'
 						+'        <button class="uda-play-btn" '+((isPlaying)?'disabled="disabled"':'id="nist-autoplay"')+'><img src="'+this.extensionpath+'images/icons/play-icon.png"></button>'
 						+'        <button class="uda-stop-btn" '+((!isPlaying)?'disabled="disabled"':'id="nist-autoplay"')+'><img src="'+this.extensionpath+'images/icons/stop-icon.png"></button>'
 						+'    </div>'
 						+'    <div class="uda-card-right-dbl-arrow" id="uda-backto-search"><img src="'+this.extensionpath+'images/icons/right-duble-arrow.png"></div>'
-						+'    <h5>'+data.name.toString()+'</h5>'
+						+'    <h5>'+sequencename+'</h5>'
+						+((sequencenames)?'	<h6> or <br /> '+sequencenames+'</h6>':'')
 						+'    <hr>'
 						+'    <ul class="uda-suggestion-list" id="uda-sequence-steps">'
 						+'    </ul>'
