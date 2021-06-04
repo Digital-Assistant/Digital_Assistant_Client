@@ -348,7 +348,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 			//      This still produces some discrepancy where it hangs up the web page.
 			//      This needs to be improved at some point.
 			window.addEventListener('load', (event) => {
-				UDAPluginSDK.modifybodyhtml();
+				// delaying rendering of uda panel by 2seconds in order to wait for the page dom to complete
+				setTimeout(function (){
+					UDAPluginSDK.modifybodyhtml();
+				},2000);
 			});
 		},
 		checkuserkeyexists:function(){
@@ -1229,6 +1232,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 				case 'span':
 					if (node.classList && node.classList.contains('select2-selection')) {
 						this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, true, false);
+					} else {
+						node.click();
+						this.invokenextitem(node,timetoinvoke);
 					}
 					break;
 				case 'div':
