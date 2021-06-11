@@ -49,11 +49,11 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 				console.log('failed to read stored session data');
 			} else {
 				// console.log(storedsessiondata[cookiename]);
-				if(storedsessiondata[cookiename].hasOwnProperty("sessionkey")){
-					sessiondata=storedsessiondata[cookiename];
-					sendsessiondata();
-				} else if(storedsessiondata.hasOwnProperty("sessionkey")){
+				if(storedsessiondata.hasOwnProperty("sessionkey")){
 					sessiondata=storedsessiondata;
+					sendsessiondata();
+				} else if(storedsessiondata.hasOwnProperty(cookiename) && storedsessiondata[cookiename].hasOwnProperty("sessionkey")){
+					sessiondata=storedsessiondata[cookiename];
 					sendsessiondata();
 				} else {
 					getsessionkey();
