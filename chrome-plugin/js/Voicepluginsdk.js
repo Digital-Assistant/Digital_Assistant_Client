@@ -117,7 +117,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			'baseURI','isConnected','ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
 			'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
 			'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y', 'selectionStart', 'selectionEnd', 'required', 'validationMessage', 'selectionDirection',
-			'naturalWidth', 'naturalHeight', 'complete'
+			'naturalWidth', 'naturalHeight', 'complete', '_indexOf'
 		],
 		innerTextWeight: 5,
 		logLevel: UDALogLevel,
