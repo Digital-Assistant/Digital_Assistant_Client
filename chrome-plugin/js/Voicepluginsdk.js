@@ -126,7 +126,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		searchText: null,
 		searchInProgress: false,
 		ignoreNodesFromIndexing: ['ng-dropdown-panel','ckeditor','fusioncharts','ngb-datepicker','ngx-daterangepicker-material','uda-panel','mat-datepicker-content','ng-select'],
-		ignoreNodesContainingClassNames:['cke_dialog_container','cke_notifications_area'],
+		ignoreNodesContainingClassNames:['cke_dialog_container','cke_notifications_area','gldp-default'],
 		// cancelRecordingDuringRecordingNodes: ['ngb-datepicker'],
 		cancelRecordingDuringRecordingNodes: [],
 		addClickToSpecialNodes: ['ng-select', 'ngb-datepicker'],
@@ -751,6 +751,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						if(this.logLevel>0){
 							console.log({cssIgnoredNode:node});
 						}
+						// this.addClickToNode(node);
 					} else if(node.hasChildNodes()){
 						var childnodes =  node.childNodes;
 						var hasparentclick = false;
@@ -862,7 +863,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 
 			if(node.hasAttribute('readOnly')){
-				return node;
+				// return node;
 			}
 
 			if(this.htmlindex.length>0){
