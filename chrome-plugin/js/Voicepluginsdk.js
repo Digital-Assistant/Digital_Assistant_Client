@@ -1334,9 +1334,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		//invoke the click of next item
 		invokenextitem:function(node,timetoinvoke){
-			var link=false;
+			let link=false;
 			timetoinvoke=timetoinvoke+4000;
-			if(node.hasOwnProperty("href")){
+			if(typeof node.href !== 'undefined' && node.href !== ''){
 				link=true;
 			}
 			if(!link) {
