@@ -1178,7 +1178,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 								break;
 							case 'submit':
 								node.click();
-								this.invokenextitem(node,timetoinvoke);
+								this.invokenextitem(node, timetoinvoke, navigationcookiedata);
 								this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
                             	break;
 							case 'text':
@@ -1219,10 +1219,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 						this.addToolTip(node, node.parentNode, navigationcookiedata, true, false);
 					} else if(node.classList && node.classList.contains('btn-pill')) {
 						node.click();
-						this.invokenextitem(node,timetoinvoke);
+						this.invokenextitem(node, timetoinvoke, navigationcookiedata);
 					} else {
 						node.click();
-						this.invokenextitem(node,timetoinvoke);
+						this.invokenextitem(node, timetoinvoke, navigationcookiedata);
 					}
 					break;
 				case 'span':
@@ -1230,7 +1230,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, true, false);
 					} else {
 						node.click();
-						this.invokenextitem(node,timetoinvoke);
+						this.invokenextitem(node, timetoinvoke, navigationcookiedata);
 					}
 					break;
 				case 'div':
@@ -1238,7 +1238,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, true, false);
 					} else {
 						node.click();
-						this.invokenextitem(node,timetoinvoke);
+						this.invokenextitem(node, timetoinvoke, navigationcookiedata);
 					}
 					break;
 				//	fix for text editor during playback
@@ -1250,7 +1250,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					break;
 				default:
 					node.click();
-					this.invokenextitem(node,timetoinvoke);
+					this.invokenextitem(node, timetoinvoke, navigationcookiedata);
 					break;
 			}
 		},
@@ -1333,14 +1333,18 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.toggleautoplay(navigationcookiedata);
 		},
 		//invoke the click of next item
-		invokenextitem:function(node,timetoinvoke){
+		invokenextitem:function(node, timeToInvoke, navigationCookieData){
 			let link=false;
-			timetoinvoke=timetoinvoke+4000;
+			timeToInvoke=timeToInvoke+4000;
 			if(typeof node.href !== 'undefined' && node.href !== ''){
-				link=true;
+				if(typeof node.target !== 'undefined' && node.target==='_blank'){
+					this.toggleautoplay(navigationCookieData);
+				} else {
+					link = true;
+				}
 			}
 			if(!link) {
-				setTimeout(function(){UDAPluginSDK.showhtml();}, timetoinvoke);
+				setTimeout(function(){UDAPluginSDK.showhtml();}, timeToInvoke);
 			}
 		},
 		//simulate hover functionality
