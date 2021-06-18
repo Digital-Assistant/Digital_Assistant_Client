@@ -1209,7 +1209,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 					break;
 				case "select":
 					// this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
-					this.addToolTip(node, node, navigationcookiedata, false, false, true);
+					// this.addToolTip(node, node, navigationcookiedata, false, false, true);
+					this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
 					break;
 				case "option":
 					this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
