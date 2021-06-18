@@ -49,6 +49,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 				console.log('failed to read stored session data');
 			} else {
 				// console.log(storedsessiondata[cookiename]);
+				// looks like chrome storage might have changed so changing the reading the data has been changed. For to work with old version have added the new code to else if statement
 				if(storedsessiondata.hasOwnProperty("sessionkey")){
 					sessiondata=storedsessiondata;
 					sendsessiondata();

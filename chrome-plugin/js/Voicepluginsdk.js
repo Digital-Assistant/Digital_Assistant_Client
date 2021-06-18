@@ -117,7 +117,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			'baseURI','isConnected','ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
 			'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
 			'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y', 'selectionStart', 'selectionEnd', 'required', 'validationMessage', 'selectionDirection',
-			'naturalWidth', 'naturalHeight', 'complete'
+			'naturalWidth', 'naturalHeight', 'complete', '_indexOf'
 		],
 		innerTextWeight: 5,
 		logLevel: UDALogLevel,
@@ -126,7 +126,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		searchText: null,
 		searchInProgress: false,
 		ignoreNodesFromIndexing: ['ng-dropdown-panel','ckeditor','fusioncharts','ngb-datepicker','ngx-daterangepicker-material','uda-panel','mat-datepicker-content','ng-select'],
-		ignoreNodesContainingClassNames:['cke_dialog_container','cke_notifications_area'],
+		ignoreNodesContainingClassNames:['cke_dialog_container','cke_notifications_area','gldp-default'],
 		// cancelRecordingDuringRecordingNodes: ['ngb-datepicker'],
 		cancelRecordingDuringRecordingNodes: [],
 		addClickToSpecialNodes: ['ng-select', 'ngb-datepicker'],
@@ -751,6 +751,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						if(this.logLevel>0){
 							console.log({cssIgnoredNode:node});
 						}
+						// this.addClickToNode(node);
 					} else if(node.hasChildNodes()){
 						var childnodes =  node.childNodes;
 						var hasparentclick = false;
@@ -862,7 +863,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 
 			if(node.hasAttribute('readOnly')){
-				return node;
+				// return node;
 			}
 
 			if(this.htmlindex.length>0){
@@ -1182,7 +1183,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 								break;
 							case 'submit':
 								node.click();
-								this.invokenextitem(node,timetoinvoke);
+								this.invokenextitem(node, timetoinvoke, navigationcookiedata);
 								this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
                             	break;
 							case 'text':
@@ -1223,10 +1224,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 						this.addToolTip(node, node.parentNode, navigationcookiedata, true, false);
 					} else if(node.classList && node.classList.contains('btn-pill')) {
 						node.click();
-						this.invokenextitem(node,timetoinvoke);
+						this.invokenextitem(node, timetoinvoke, navigationcookiedata);
 					} else {
 						node.click();
-						this.invokenextitem(node,timetoinvoke);
+						this.invokenextitem(node, timetoinvoke, navigationcookiedata);
 					}
 					break;
 				case 'span':
@@ -1234,7 +1235,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, true, false);
 					} else {
 						node.click();
-						this.invokenextitem(node,timetoinvoke);
+						this.invokenextitem(node, timetoinvoke, navigationcookiedata);
 					}
 					break;
 				case 'div':
@@ -1242,7 +1243,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, true, false);
 					} else {
 						node.click();
-						this.invokenextitem(node,timetoinvoke);
+						this.invokenextitem(node, timetoinvoke, navigationcookiedata);
 					}
 					break;
 				//	fix for text editor during playback
@@ -1254,7 +1255,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					break;
 				default:
 					node.click();
-					this.invokenextitem(node,timetoinvoke);
+					this.invokenextitem(node, timetoinvoke, navigationcookiedata);
 					break;
 			}
 		},
@@ -1457,14 +1458,18 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.toggleautoplay(navigationcookiedata);
 		},
 		//invoke the click of next item
-		invokenextitem:function(node,timetoinvoke){
-			var link=false;
-			timetoinvoke=timetoinvoke+4000;
-			if(node.hasOwnProperty("href")){
-				link=true;
+		invokenextitem:function(node, timeToInvoke, navigationCookieData){
+			let link=false;
+			timeToInvoke=timeToInvoke+4000;
+			if(typeof node.href !== 'undefined' && node.href !== ''){
+				if(typeof node.target !== 'undefined' && node.target==='_blank'){
+					this.toggleautoplay(navigationCookieData);
+				} else {
+					link = true;
+				}
 			}
 			if(!link) {
-				setTimeout(function(){UDAPluginSDK.showhtml();}, timetoinvoke);
+				setTimeout(function(){UDAPluginSDK.showhtml();}, timeToInvoke);
 			}
 		},
 		//simulate hover functionality
