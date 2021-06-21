@@ -1313,7 +1313,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			 */
 			let toolTipLayerSection	=	message
 										+'<br/>'
-										+'<button class="uda-tutorial-btn" style="margin-top:10px;" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>'
+										+'<button class="uda-tutorial-btn" style="margin-top:10px; margin-right: 5px;" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>'
 										+'<button class="uda-tutorial-exit-btn" style="margin-top:10px;" type="button" uda-added="true" id="uda-autoplay-exit">Exit</button>';
 
 			// let toolTipElement = jQuery(toolTipLayerSection);
