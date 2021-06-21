@@ -13,11 +13,11 @@
 }
 .uda-nistapp-logo {
     cursor: pointer;
-    width: 75px;
+    min-width: 75px;
     height: 80px;
     background-color: var(--uda-text-color-bg-white);
     position: fixed;
-    top: 40%;
+    top: 40% !important;
     right: 0;
     padding: 1px;
     -webkit-box-shadow: 0 1px 4px var(--uda-boxshodow-color), 0 0 40px var(--uda-boxshodow-color) inset;
@@ -650,7 +650,7 @@
 .uda-tooltip {
     display:inline-block;
     position:relative;
-    text-align:center;
+    /*text-align:center;*/
 }
 
 .uda-tooltip-text-content{
@@ -687,7 +687,7 @@
 .uda-tooltip-top {
     bottom: 100%;
     left: 50%;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     margin-left: -50%;
 }
 .uda-tooltip-top::after{
@@ -695,9 +695,10 @@
     position: absolute;
     top: 100%;
     left: 50%;
-    transform: rotate(-90deg);
+    transform: rotate(-90deg) !important;
     border-width: 12px;
     border-style: solid;
+    transform: translate(0, -50%);
     border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent;
 }
 .uda-tooltip-bottom {
@@ -769,4 +770,10 @@
 }
 .introjs-arrow.left, .introjs-arrow.left-bottom {
   border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent !important;
+}
+
+
+/*Nexa code */
+.white-bg{
+    text-align: left !important;
 }
