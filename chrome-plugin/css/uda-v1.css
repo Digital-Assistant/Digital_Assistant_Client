@@ -258,6 +258,7 @@
     display: flex;
     /*justify-content: center;
     padding: 5px;*/
+    color: #fff;
     border-top: 1px solid var(--uda-text-color-bg-white);
     background-color: var(--uda-secondary-color);
     font-size: 14px;
@@ -299,6 +300,7 @@
 .uda-footer-right {
     width: 50%;
     float: right;
+    margin-top: 5px;
 }
 
 .uda-footer-right a {
@@ -313,7 +315,7 @@
 
 .uda-footer-right img {
     cursor: pointer;
-    margin-bottom: 5px;
+    /*margin-bottom: 5px;*/
 }
 
 .uda-footer-bar {
@@ -336,8 +338,8 @@
 }
 
 .uda-close-icon{
-    width: 25px;
-    height: 25px;
+    width: 18px;
+    height: 18px;
     background-color: var(--uda-primary-color);
     border-radius: 50%;
     cursor: pointer;
@@ -435,6 +437,7 @@
     text-align: left;
     list-style: none url('../images/icons/bullet.png');
     margin: 0;
+    list-style-position: inside;
 }
 
 .uda-suggestion-list li, .uda-recording li {
@@ -563,7 +566,7 @@
     border: none;
     border-radius: 5px;
     padding: 10px 20px;
-    width: 100%;
+    width: 80%;
     margin: 10px 0px;
 }
 
