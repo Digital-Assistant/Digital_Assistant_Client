@@ -75,13 +75,14 @@
 }
 
 .uda-icon-txt {
-    margin-top: 10px;
+    margin-top: 15px;
     text-align: center;
 }
 
 .uda-icon-txt img {
     cursor: pointer;
     width: 45px;
+    vertical-align: middle;
 }
 
 .uda-help-bg-tooltip {
@@ -94,7 +95,7 @@
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     margin-left: 20px;
-    top: -12px;
+    top: 8px;
 }
 
 .uda-help-bg-tooltip:after {
