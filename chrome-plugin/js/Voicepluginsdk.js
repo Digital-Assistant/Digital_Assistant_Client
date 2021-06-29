@@ -752,6 +752,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 						if(this.logLevel>0){
 							console.log('date picker in javascript');
 						}
+					} else if(node.nodeName.toLowerCase() === "span" && (node.classList.contains("radio") && node.classList.contains("replacement"))){
+						this.addClickToNode(node);
 					} else if(this.checkCssClassNames(node)){
 						if(this.logLevel>0){
 							console.log({cssIgnoredNode:node});
@@ -1233,6 +1235,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 				case 'span':
 					if (node.classList && node.classList.contains('select2-selection')) {
 						this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, true, false);
+					} else if(node.classList.contains("radio") && node.classList.contains("replacement")){
+						this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false, true);
 					} else {
 						node.click();
 						this.invokenextitem(node,timetoinvoke);
@@ -1344,6 +1348,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(typeof node.href !== 'undefined' && node.href !== ''){
 				link=true;
 				this.navigatedToNextPage.check = true;
+				this.navigatedToNextPage.url = node.href;
 			}
 			if(!link) {
 				setTimeout(function(){UDAPluginSDK.showhtml();}, timetoinvoke);
@@ -1529,6 +1534,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					UDAPluginSDK.confirmednode = false;
+					// rerender html if recording is enabled.
+					if(UDAPluginSDK.recording) {
+						setTimeout(function () {
+							UDAPluginSDK.showhtml();
+						}, UDA_POST_INTERVAL);
+					}
 				}
 			};
 			xhr.send(outputdata);
@@ -1555,13 +1566,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 					// UDAPluginSDK.indexnewclicknodes();
 				}
 			}
-
-			// rerender html if recording is enabled.
-			if(this.recording) {
-				setTimeout(function () {
-					UDAPluginSDK.showhtml();
-				}, UDA_POST_INTERVAL);
-			}
 		},
 		confirmparentclick:function(node, fromdocument, selectchange, event, postdata) {
 			var prevclicktext = this.getclickedinputlabels(this.lastclickednode, fromdocument, selectchange);
@@ -1583,7 +1587,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			var childtextexists = false;
 			for(const childnode of node.childNodes) {
 				if (childnode.nodeType === Node.ELEMENT_NODE) {
-					if (childnode.isSameNode(this.lastclickednode)) {
+					if (this.lastclickednode && childnode.isSameNode(this.lastclickednode)) {
 						childtextexists = true;
 						break;
 					}

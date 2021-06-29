@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Universal Digital Assistant (Alpha)",
-  "version": "0.1.6.181",
+  "version": "0.1.6.183",
   "description": "Building an Extension for custom user navigation which helps in assisting users to navigate to right place.",
   "permissions": ["activeTab", "background", "declarativeContent", "storage", "webNavigation", "tabs", "identity","identity.email"],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
