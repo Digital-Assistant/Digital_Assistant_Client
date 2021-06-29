@@ -145,7 +145,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		clickeOn: '',
 		invokingnode: null,
 		currentPage:'search',
-		navigatedToNextPage: false,
+		navigatedToNextPage: {check: false, url: ''},
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -667,9 +667,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 				console.log('Need to do the processing');
 
 			}
-			if(this.navigatedToNextPage){
+			if(this.navigatedToNextPage.check && this.navigatedToNextPage.url === window.location.href){
 				setTimeout(function(){UDAPluginSDK.showhtml();}, 5000);
-				this.navigatedToNextPage = false;
+				this.navigatedToNextPage.check = false;
 			}
 		},
 		removefromhtmlindex:async function(){
@@ -1343,7 +1343,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			timetoinvoke=timetoinvoke+4000;
 			if(typeof node.href !== 'undefined' && node.href !== ''){
 				link=true;
-				UDAPluginSDK.navigatedToNextPage = true;
+				this.navigatedToNextPage.check = true;
 			}
 			if(!link) {
 				setTimeout(function(){UDAPluginSDK.showhtml();}, timetoinvoke);
