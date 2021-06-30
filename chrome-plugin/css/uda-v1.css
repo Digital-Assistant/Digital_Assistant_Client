@@ -371,6 +371,7 @@
     border: none;
     padding: 5px;
     cursor: pointer;
+    height: 30px;
 }
 
 .uda-play-btn:hover {
@@ -393,6 +394,7 @@
     border: none;
     padding: 5px;
     cursor: pointer;
+    height: 30px;
 }
 
 .uda-stop-btn:hover {
