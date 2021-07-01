@@ -1,11 +1,12 @@
 :root {
-  --uda-primary-color: #303f9f;
-  --uda-secondary-color: #ff5722;
-  --uda-card-bgcolor: #f2f4fe;
-  --uda-text-color: #000;
-  --uda-footer-srchbtn-bgcolor: #dce0f7;
-  --uda-text-color-bg-white: #fff;
-  --uda-boxshodow-color: #e0e0e0;
+    --uda-primary-color: #303f9f;
+    --uda-secondary-color: #ff5722;
+    --uda-card-bgcolor: #f2f4fe;
+    --uda-text-color: #000;
+    --uda-footer-srchbtn-bgcolor: #dce0f7;
+    --uda-text-color-bg-white: #fff;
+    --uda-boxshodow-color: #e0e0e0;
+    --uda-tooltip-bg: #e5eafe;
 }
 .uda-icon > img {
     width: auto !important;
@@ -662,93 +663,63 @@
 
 /* tooltip css classes */
 .uda-tooltip {
-    display:inline-block;
-    position:relative;
-    /*text-align:center;*/
-}
-
-.uda-tooltip-text-content{
-    visibility: visible;
     position: absolute;
     min-width:200px;
     max-width:400px;
-    background-color: var(--uda-card-bgcolor);
+    text-align:center;
     color: var(--uda-primary-color);
     text-align: center;
     padding: 10px;
-    border-radius:8px; 
-    z-index:99999999;
+    border-radius:8px;
+    border-color: #333;
     transition: opacity .6s;
+    background-color: var(--uda-tooltip-bg);
     box-shadow:0 1px 16px var(--uda-boxshodow-color);
+    z-index: 9999999;
+}
+.uda-tooltip[data-show] {
+    display: block;
+}
+.uda-tooltip-text-content{
+    margin: 10px !important;
 }
 
-.uda-tooltip-right::after{
-    content: "";
+.uda-arrow,
+.uda-arrow::before {
     position: absolute;
-    top: 50%;
-    right: 100%;
-    margin-top: -12px;
-    border-width: 12px;
-    border-style: solid;
-    border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent;
+    width: 20px;
+    height: 20px;
+    /*   background: inherit; */
+    background-color: var(--uda-tooltip-bg);
+    box-shadow: 16px var(--uda-boxshodow-color);
 }
-.uda-tooltip-right {
-    top: 50%;
-    left: 100%;
-    margin-left: 20px;
-    transform: translate(0px, -50%);
+
+.uda-arrow {
+    visibility: hidden;
 }
-.uda-tooltip-top {
-    bottom: 100%;
-    left: 50%;
-    margin-bottom: 5px;
-    margin-left: -50%;
+
+.uda-arrow::before {
+    visibility: visible;
+    content: '';
+    transform: rotate(45deg);
 }
-.uda-tooltip-top::after{
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: rotate(-90deg) !important;
-    border-width: 12px;
-    border-style: solid;
-    transform: translate(0, -50%);
-    border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent;
+
+.uda-tooltip[data-popper-placement^='top'] > .uda-arrow {
+    bottom: -10px;
 }
-.uda-tooltip-bottom {
-    top: 100%;
-    left: 50%;
-    margin-top: 15px;
-    margin-left: -50%;
+
+.uda-tooltip[data-popper-placement^='bottom'] > .uda-arrow {
+    top: -10px;
 }
-.uda-tooltip-bottom::after{
-    content: "";
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: rotate(90deg);
-    margin-top: -12px;
-    border-width: 12px;
-    border-style: solid;
-    border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent;
+
+.uda-tooltip[data-popper-placement^='left'] > .uda-arrow {
+    right: 0px;
 }
-.uda-tooltip-left {
-    top: 50%;
-    right: 100%;
-    margin-right: 20px;
-    transform: translate(0px, -50%);
+
+.uda-tooltip[data-popper-placement^='right'] > .uda-arrow {
+    left: -20px;
 }
-.uda-tooltip-left::after{
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 100%;
-    transform: rotate(180deg);
-    margin-top: -12px;
-    border-width: 12px;
-    border-style: solid;
-    border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent;
-}
+
 .uda-tooltip h3 {margin:12px 0;}
 .uda-tooltip img {
     width:400px;
@@ -774,18 +745,6 @@
 .uda-original-content .kt-header,.uda-original-content .kt-header--fixed,.uda-original-content .kt-container--fluid{
     max-width: 77%;
 }
-
-
-
-/*Intro Js tooltips*/
-.introjs-tooltip {
-  background-color: var(--uda-card-bgcolor) !important;
-  color: var(--uda-primary-color) !important;
-}
-.introjs-arrow.left, .introjs-arrow.left-bottom {
-  border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent !important;
-}
-
 
 /*Nexa code */
 .white-bg{

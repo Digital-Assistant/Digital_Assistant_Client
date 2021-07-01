@@ -15,6 +15,8 @@
     --uda-text-color-white: #ffffff;
     /* shadow color used in tooltip box shadow */
     --uda-boxshodow-color: #e0e0e0;
+    /* tooltip background color */
+    --uda-tooltip-bg: #e5eafe;
 }
 
 .uda-nistapp-logo {
@@ -196,40 +198,17 @@
     fill: var(--uda-primary-color);
 }
 
-.uda-tooltip .uda-tooltip-text-content {
+.uda-tooltip {
     color: var(--uda-primary-color);
-    background-color: var(--uda-card-bgcolor);
+    background-color: var(--uda-tooltip-bg);
     box-shadow:0 1px 16px var(--uda-boxshodow-color);
-    /*color: var(--uda-text-color-bg-white);*/
-    /*background-color: var(--uda-secondary-color);*/
-}
-.uda-tooltip-right::after{
-    border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent;
-}
-.uda-tooltip-top::after{
-    border-color: transparent var(--footer-srchbtn-bgcolor) transparent transparent;
-}
-.uda-tooltip-bottom::after{
-    border-color: transparent var(--footer-srchbtn-bgcolor) transparent transparent;
-}
-.uda-tooltip-left::after{
-    border-color: transparent var(--footer-srchbtn-bgcolor) transparent transparent;
 }
 
-/*.uda-tooltip .uda-tooltip-right i::after {
-    background-color:#444444;
-}*/
+.uda-arrow, .uda-arrow::before {
+    background-color: var(--uda-tooltip-bg);
+    box-shadow: 16px var(--uda-boxshodow-color);
+}
 
 .uda-tooltip .uda-tutorial-btn:hover {
     background-color: var(--uda-primary-color);
-}
-
-/*Intro Js tooltips*/
-.introjs-tooltip {
-    background-color: var(--uda-card-bgcolor) !important;
-    color: var(--uda-primary-color) !important;
-}
-
-.introjs-arrow.left, .introjs-arrow.left-bottom {
-    border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent !important;
 }

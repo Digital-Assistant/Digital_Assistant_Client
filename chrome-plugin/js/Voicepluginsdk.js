@@ -103,10 +103,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 		recording:false,
 		addcustomcssdomains:["app.vantagecircle.co.in","app.vantagecircle.com","dashboard.vantagecircle.com","dashboard.vantagecircle.co.in"],
 		containersections:[],
-		introjs:[],
-		introjstotalsteps:0,
-		introjscurrentstepnumber:0,
-		introjsaddedstepnodes:[],
 		lastclickednode:'',
 		lastclickedtime:'',
 		maxstringlength:40,
@@ -133,7 +129,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		ignoreClicksOnSpecialNodes: ['ngx-daterangepicker-material'],
 		customNameForSpecialNodes: {'ngb-datepicker': 'Date selector','mat-datepicker-content': 'Date selector', 'ngx-daterangepicker-material': 'Date Range Selector'},
 		tooltipDisplayedNodes: [],
-		//replayvariables
+		// replay variables
 		autoplayCompleted: false,
 		autoplayPaused: false,
 		// manual click variables
@@ -146,6 +142,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		invokingnode: null,
 		currentPage:'search',
 		navigatedToNextPage: {check: false, url: ''},
+		popperInstance: null,
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -243,7 +240,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		otherscripts: function(){
 			this.totalotherScripts=1;
-			// this.loadCssScript(this.extensionpath+"css/extension.css");
 			this.loadCssScript(this.extensionpath+"css/uda-v1.css");
 			this.loadOtherScript(this.extensionpath+"js/domJSON.js");
 			// todo make css loading dynamic based on css file availability
@@ -260,45 +256,26 @@ if (typeof UDAPluginSDK === 'undefined') {
 					this.loadCssScript(this.extensionpath + "css/app.vantagecircle.com.css");
 				}
 			}
-			if(typeof introJs === 'undefined'){
+			/*
+			* Popper script injection to the page.
+			* Forcing the popper extension to be version 2 even if popper of version 1 exists
+			* */
+			if(typeof Popper === 'undefined'){
 				this.totalotherScripts++;
-				this.loadOtherScript(this.extensionpath+"js/intro.min.js");
-				this.loadCssScript(this.extensionpath+"css/introjs.min.css");
-				this.loadCssScript(this.extensionpath+"css/introjs-nistapp.css");
+				this.loadOtherScript("https://unpkg.com/@popperjs/core@2");
+			} else {
+				this.totalotherScripts++;
+				this.loadOtherScript("https://unpkg.com/@popperjs/core@2");
 			}
 		},
 		allReady: function() {
 			// execute the parsing method after everything is ready.
 			this.onReady();
 		},
-		configureintrojs: function(label = 'Continue') {
-			// Intro js configuration has been added
-			this.introjs=introJs().setOptions({
-				showStepNumbers:false,
-				showBullets:false,
-				showProgress:false,
-				exitOnOverlayClick:false,
-				exitOnEsc:false,
-				keyboardNavigation:false,
-				doneLabel: label,
-				skipLabel: 'Exit',
-				tooltipPosition: 'right'
-			})
-				.onexit(function (){
-					UDAPluginSDK.resetIntrojs();
-				});
-			if (this.introjsaddedstepnodes.length>0) {
-				this.introjstotalsteps = 0;
-				this.introjscurrentstepnumber = 0;
-				this.introjsaddedstepnodes = [];
-			}
-		},
 		onReady: function () {
 
 			// check user session exists and create if not available
 			this.checkuserkeyexists();
-
-			this.configureintrojs();
 
 			// adding speech recognition functionality based on the library availability
 			if(UDASpeechRecognitionAvailable){
@@ -393,11 +370,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		addbuttonhtml:function(){
 			jQuery("#uda-btn").unbind("click").html("");
-			// var buttonhtml='<img src="'+this.extensionpath+'assets/uda-logo.png" width="50px" height="50px" nist-voice="true">';
 			var buttonhtml	=	'<div class="uda-nistapp-logo">'
 								+'	<div class="uda-icon" style="text-align: center;">'
 								+'		<img src="'+this.extensionpath+'images/icons/nist-logo.png">'
-								// +'		<p style="padding:0; margin:0px;">Assist</p>'
 								+'		<p style="padding:0; margin:0px;color: #303f9f; font-weight: bold; font-size: 11px;">UDAN(Beta)</p>'
 								+'		<span>'
 								+'			<img src="'+this.extensionpath+'images/icons/backarrow-orange.png">'
@@ -427,10 +402,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 							+'<div class="uda-container" style="text-align: center; margin-top: 10px;">'
 								+'<div class="uda-search-div">'
 									+'<button class="uda-mic-btn" style="border-radius: 5px 0px 0px 5px;" id="uda-voice-icon-start">'
-									/*+'	<img src="'+this.extensionpath+'images/icons/mic-icon.png">'*/
 									+'</button>'
 									+'<button class="uda-stop-btn-bg" style="border-radius: 5px 0px 0px 5px; display:none;" id="uda-voice-icon-stop">'
-									/*+'	<img src="'+this.extensionpath+'images/icons/color-stop-btn.png">'*/
 									+'</button>'
 									+'<input type="text" name="uda-search-input" class="uda-input-cntrl" placeholder="search..." id="uda-search-input" />'
 									+'<button class="uda-search-btn" id="uda-search-btn" style="border-radius: 0px 5px 5px 0px;"></button>'
@@ -445,7 +418,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 								+'<div class="uda-container">'
 									+'<div class="uda-dropdown" id="uda-advanced-btn">'
 										+'<button class="uda-advanced-btn">'
-											/*+'<img src="'+this.extensionpath+'images/icons/advanced-icon.png">*/
 										+'<span>Advanced</span>'
 										+'</button>'
 										+'<div class="uda-advanced-btn-content">'
@@ -511,9 +483,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 					});
 				}
 			} else {
-				/*jQuery("#nistvoicerecstpbtn").click(function () {
-					UDAPluginSDK.gettimestamp("stop");
-				});*/
 				jQuery('#uda-advanced-btn').hide();
 			}
 		},
@@ -522,28 +491,25 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(this.sessiondata.authenticated) {
 				jQuery("#uda-btn").hide();
 				jQuery('#uda-html-container').show();
-				// jQuery("#nistModal").css("display", "block");
 				var searchinput=jQuery("#uda-search-input");
 				searchinput.val("");
 				if (focus) {
 					searchinput.focus();
 				}
-				// if(this.inarray(window.location.host,this.addcustomcssdomains) !== -1) {
-					let bodychildren = document.body.childNodes;
-					if (bodychildren.length > 0) {
-						bodychildren.forEach(function (childnode, childnodeindex) {
-							if (childnode.classList && childnode.classList.contains("container")) {
-								UDAPluginSDK.containersections.push(childnodeindex);
-								childnode.classList.remove("container");
+				let bodychildren = document.body.childNodes;
+				if (bodychildren.length > 0) {
+					bodychildren.forEach(function (childnode, childnodeindex) {
+						if (childnode.classList && childnode.classList.contains("container")) {
+							UDAPluginSDK.containersections.push(childnodeindex);
+							childnode.classList.remove("container");
+						}
+						if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
+							if (childnode.classList && !childnode.classList.contains("uda-original-content")) {
+								childnode.classList.add("uda-original-content");
 							}
-							if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
-								if (childnode.classList && !childnode.classList.contains("uda-original-content")) {
-									childnode.classList.add("uda-original-content");
-								}
-							}
-						});
-					}
-				// }
+						}
+					});
+				}
 			} else {
 				var sessionevent = new CustomEvent("RequestUDASessionData", {detail: {data: "authtenicate"}, bubbles: false, cancelable: false});
 				document.dispatchEvent(sessionevent);
@@ -553,36 +519,24 @@ if (typeof UDAPluginSDK === 'undefined') {
 		closemodal:function(){
 			jQuery("#uda-advance-section").show();
 			jQuery('#uda-html-container').hide();
-			// jQuery("#nistModal").css("display","none");
-			// jQuery("#uda-content-container").html("");
-			// jQuery("#nistrecordresults").html("");
 			this.recordedsequenceids=[];
 			jQuery("#uda-btn").show();
 			var navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 			this.cancelrecordingsequence(false);
-			// if(this.inarray(window.location.host,this.addcustomcssdomains) !== -1) {
-				let bodychildren = document.body.childNodes;
-				if (bodychildren.length > 0) {
-					bodychildren.forEach(function (childnode, childnodeindex) {
-						if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
-							if (childnode.classList && childnode.classList.contains("uda-original-content")) {
-								childnode.classList.remove("uda-original-content");
-							}
+			let bodychildren = document.body.childNodes;
+			if (bodychildren.length > 0) {
+				bodychildren.forEach(function (childnode, childnodeindex) {
+					if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
+						if (childnode.classList && childnode.classList.contains("uda-original-content")) {
+							childnode.classList.remove("uda-original-content");
 						}
-						if (UDAPluginSDK.containersections.length > 0 && UDAPluginSDK.inarray(childnodeindex, UDAPluginSDK.containersections) !== -1) {
-							childnode.classList.add("container");
-						}
-					});
-				}
-			// }
-		},
-		//Resetting introjs and continue to next playable action
-		resetIntrojs: function () {
-			this.configureintrojs();
-			this.playNextAction = true;
-			this.autoplayPaused = false;
-			this.showhtml();
+					}
+					if (UDAPluginSDK.containersections.length > 0 && UDAPluginSDK.inarray(childnodeindex, UDAPluginSDK.containersections) !== -1) {
+						childnode.classList.add("container");
+					}
+				});
+			}
 		},
 		//render the required html for showing up the proper html
 		showhtml:function(){
@@ -728,7 +682,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 							}
 							if(addToolTip) {
 								this.tooltipDisplayedNodes.push(node);
-								$(node).addClass('uda-tooltip').append('<div class="uda-tooltip-right"><div class="uda-tooltip-text-content">We have detected a rich text editor. To record this in your sequence, Please click on the editor menu. We are unable to record clicks on the text area.</div></div>');
+								this.addToolTip(node, node, false, false, false, false, 'We have detected a rich text editor. To record this in your sequence, Please click on the editor menu. We are unable to record clicks on the text area.', false);
 							}
 						} else if(!node.hasclick && this.inarray(node.nodeName.toLowerCase(), this.addClickToSpecialNodes) !== -1 && this.inarray(node.nodeName.toLowerCase(), this.ignoreClicksOnSpecialNodes) === -1){
 							if(this.logLevel>0) {
@@ -1164,7 +1118,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			switch (node.nodeName.toLowerCase()) {
 				case "input":
-					// this.playNextAction = false;
 					// functionality for detecting multi select box and highlighting the recorded node
 					if (node.classList && (node.classList.contains('select2-search__field') || node.classList.contains('mat-autocomplete-trigger'))){
 						this.addToolTip(node, node.parentNode.parentNode.parentNode.parentNode.parentNode, navigationcookiedata, false, true);
@@ -1215,15 +1168,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 					this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
 					break;
 				case "select":
-					// this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
-					// this.addToolTip(node, node, navigationcookiedata, false, false, true);
-					this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
+					this.addToolTip(node, node, navigationcookiedata, false, false, true);
 					break;
 				case "option":
 					this.addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
 					break;
 				case "checkbox":
-					// this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false);
 					this.addToolTip(node, node, navigationcookiedata, false, false, true);
 					break;
 				// Additional processing for calendar selection
@@ -1270,91 +1220,68 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 		},
 		//add tooltip display
-		addToolTip:function(invokingnode, tooltipnode, navigationcookiedata, enableClick=false, enableFocus=false, enableIntroJs=false, message= 'Please input the value and then click on') {
+		addToolTip:function(invokingnode, tooltipnode, navigationcookiedata, enableClick=false, enableFocus=false, enableIntroJs=false, message= 'Please input the value and then click on', showButtons=true) {
 
 			if(this.logLevel>2){
 				console.log(this.invokingnode);
 			}
 
-			/*if(this.invokingnode && this.invokingnode.isEqualNode(invokingnode)){
-				return;
-			} else {
-				this.invokingnode = invokingnode;
-			}*/
-
 			this.invokingnode = invokingnode;
 
 			this.playNextAction = false;
 
-			/*if(enableIntroJs) {
-				this.introjs.addStep({
-					element: tooltipnode,
-					intro: message,
-					position: 'right',
-				}).start();
-				if(enableFocus){
-					invokingnode.focus();
+			if(navigationcookiedata) {
+				if (navigationcookiedata && navigationcookiedata.autoplay) {
+					this.autoplay = false;
+					this.autoplayPaused = true;
+					this.toggleautoplay(navigationcookiedata);
+				} else {
+					this.showselectedrow(navigationcookiedata.data, navigationcookiedata.data.id, true, navigationcookiedata);
 				}
-				if(enableClick){
-					invokingnode.click();
-				}
-				return;
-			}*/
-
-			if(navigationcookiedata && navigationcookiedata.autoplay) {
-				this.autoplay = false;
-				this.autoplayPaused = true;
-				this.toggleautoplay(navigationcookiedata);
-			} else {
-				this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id, true, navigationcookiedata);
 			}
 
-			/*var html = 	'<div class="">'
-				+'<div class="uda-tooltip-text-content uda-tooltip-right">'
-				+message
-				+ '<br/>'
-				+'	<button class="uda-tutorial-btn" style="margin-top:10px;" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>'
-				+'	</div>'
-				+'</div>';*/
+			let toolTipContentSection	=	message
+										+'<br/>';
+			if(showButtons) {
+				toolTipContentSection +=	'<button class="uda-tutorial-btn" style="margin-top:10px; margin-right: 5px;" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>'
+											+ '<button class="uda-tutorial-exit-btn" style="margin-top:10px;" type="button" uda-added="true" id="uda-autoplay-exit">Exit</button>';
+			}
+
+			let toolTipContentElement = document.createElement('div');
+			toolTipContentElement.innerHTML = toolTipContentSection.trim();
+			toolTipContentElement.classList.add('uda-tooltip-text-content');
+
+			let tooltipDivElement = document.createElement('div');
+			tooltipDivElement.classList.add('uda-tooltip');
+			tooltipDivElement.innerHTML = '<div id="uda-arrow" class="uda-arrow" data-popper-arrow></div>';
+			tooltipDivElement.prepend(toolTipContentElement);
+
+			document.body.appendChild(tooltipDivElement);
 
 			/**
 			 * calculating node position from here
 			 */
-			let toolTipLayerSection	=	message
-										+'<br/>'
-										+'<button class="uda-tutorial-btn" style="margin-top:10px; margin-right: 5px;" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>'
-										+'<button class="uda-tutorial-exit-btn" style="margin-top:10px;" type="button" uda-added="true" id="uda-autoplay-exit">Exit</button>';
+			let toolTipPosistionClass = this.getNodePosition(tooltipnode, tooltipDivElement);
 
-			// let toolTipElement = jQuery(toolTipLayerSection);
-			let toolTipElement = document.createElement('div');
-			toolTipElement.innerHTML = toolTipLayerSection.trim();
-			toolTipElement.classList.add('uda-tooltip-text-content');
-
-			tooltipnode.classList.add('uda-tooltip');
-			tooltipnode.appendChild(toolTipElement);
-
-			let toolTipPosistionClass = this.getNodePosition(tooltipnode, toolTipElement);
-
-			toolTipElement.classList.add(toolTipPosistionClass);
+			this.popperInstance = Popper.createPopper(tooltipnode, tooltipDivElement,{
+				placement: toolTipPosistionClass,
+				modifiers: [
+					{
+						name: 'offset',
+						options: {
+							offset: [0, 20],
+						},
+					},
+				],
+			});
 
 			jQuery("#uda-autoplay-exit").click(function () {
 				UDAPluginSDK.backToSearchResultsPage(navigationcookiedata);
 			});
 
-			console.log(toolTipPosistionClass);
-			// return;
-
-			var toolTipHtml = 	'<div>'
-						+toolTipElement
-						+'</div>';
-			// let toolTipHtmlElement = jQuery(toolTipHtml);
-			// $(toolTipHtmlElement).addClass(toolTipPosistionClass);
-
 			$('html, body').animate({
 				scrollTop: ($(invokingnode).offset().top - 250)
 			}, 2000, function(){
-				// $(tooltipnode).addClass('uda-tooltip')
-				// $(tooltipnode).append(html);
 				if(enableFocus){
 					invokingnode.focus();
 				}
@@ -1442,7 +1369,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				finalCssClass = availablePositions[0];
 			}
 
-			return 'uda-tooltip-'+finalCssClass;
+			return finalCssClass;
 		},
 		removeFromArray: function(array, value) {
 			if (array.includes(value)) {
@@ -1453,13 +1380,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 		resumePlay: function(){
 			let tooltipnodes = $('.uda-tooltip');
 			if (tooltipnodes.length > 0) {
-				$('.uda-tooltip').each(function() {
-					$(this).removeClass('uda-tooltip');
-					$(this).find('.uda-tooltip-right').remove();
-				});
+				$('.uda-tooltip').remove();
+				this.popperInstance.destroy();
 			}
 			this.playNextAction = true;
-			// this.showhtml();
 			var navigationcookie=this.getstoragedata(this.navigationcookiename);
 			var navigationcookiedata = null;
 			if(navigationcookie) {
@@ -1544,20 +1468,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			if(this.logLevel>0) {
 				console.log('-------------------------------------------------------------');
-				// console.log(this.lastclickedtime);
 				console.log({clickednode: node});
-				// console.log({indexedpos: node.uda_custom.domJson.node.nodePosition});
 				console.log('-------------------------------------------------------------');
 			}
-
-			// stopping recording as date range picker is clicked as we do not support it.
-			/*if(this.recording && node.hasAttribute('ngxdaterangepickermd')) {
-				alert('Sorry currently we do not support daterange selector. Please re-record the sequence without selecting daterange selector');
-				this.recording=false;
-				this.cancelrecordingsequence();
-				this.showadvancedhtml();
-				return ;
-			}*/
 
 			if(this.recording && this.inarray(node.nodeName.toLowerCase(), this.ignoreClicksOnSpecialNodes) !== -1){
 				return ;
@@ -1678,8 +1591,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(this.recording) {
 				if(this.logLevel>0) {
 					console.log('-------------------------------------------------------------');
-					// console.log(this.lastclickedtime);
-					// console.log({clickednode: node});
 					console.log({indexedpos: node.uda_custom.domJson.node.nodePosition});
 					console.log({domjson: domjson.node.nodePosition});
 					console.log('-------------------------------------------------------------');
@@ -1693,7 +1604,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 						this.forceReindex = true;
 						UDAPluginSDK.indexnewclicknodes();
 					}, UDA_POST_INTERVAL);
-					// UDAPluginSDK.indexnewclicknodes();
 				}
 			}
 		},
@@ -2028,8 +1938,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 				});
 				var beforeEditText = originalName;
 				jQuery("#uda-edit-clickedname").click(function (){
-					// $(".voice-card-left ul li:last").css("border", "1px solid");
-					// $(".voice-card-left ul li:last").attr("contenteditable","true");
 					jQuery("#uda-edited-name").show();
 				});
 				jQuery('#uda-edited-name').blur(function() {
@@ -2132,7 +2040,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.setRequestHeader('Content-Type', 'application/json');
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					// UDAPluginSDK.backtomodal();
 					UDAPluginSDK.showSelectedSequence(JSON.parse(xhr.response))
 				}
 			};
@@ -2363,7 +2270,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			// need to improve the autoplay functionality.
 			if(typeof performactionnode=="object" && this.autoplay) {
-				// console.trace();
 				if(this.playNextAction) {
 					this.performclickaction(performactionnode, navcookiedata);
 				}
@@ -2372,7 +2278,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.toggleautoplay(navcookiedata);
 			}
 			jQuery("#uda-backto-search").click(function () {
-				// UDAPluginSDK.toggleautoplay(navcookiedata);
 				UDAPluginSDK.backToSearchResultsPage(navcookiedata);
 			});
 		},
@@ -2381,20 +2286,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 			UDAPluginSDK.searchInProgress=false;
 			UDAPluginSDK.autoplayPaused=false;
 			UDAPluginSDK.playNextAction=true;
-			UDAPluginSDK.configureintrojs();
-			UDAPluginSDK.introjs.refresh();
 			UDAPluginSDK.backtosearchresults(navcookiedata);
 			let tooltipnodes = document.getElementsByClassName('uda-tooltip');
 			if (tooltipnodes.length > 0) {
-				$('.uda-tooltip').each(function() {
-					$(this).find('.uda-tooltip-text-content').remove();
-					$(this).removeClass('uda-tooltip');
-				});
+				$('.uda-tooltip').remove();
+				this.popperInstance.destroy();
 			}
-
-			$('.uda-tooltip-text-content').each(function() {
-				$(this).remove();
-			});
 		},
 		//showing the sequence steps html
 		rendersteps:function(data,visited=false, navcookiedata={}){
@@ -2410,7 +2307,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal){
 				clickedname=((data.clickednodename.length>(this.maxstringlength-26))?data.clickednodename.substr(0,(this.maxstringlength-26))+'... (personal)':data.clickednodename);
 			}
-			// var clickedtext = '<pre>'+clickedname+'</pre>';
 			var clickedtext = clickedname;
 			if(visited>-1) {
 				var template = jQuery("<li class='completed'><i>" + clickedtext + "</i></li>");
@@ -2540,7 +2436,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 						console.log({recordedNode: originalNode.node});
 						console.log(finalMatchNodes);
 						console.log('----------------------------------------------------------');
-						// return ;
 					}
 					finalMatchNode = this.processDistanceOfNodes(finalMatchNodes, originalNode.node);
 				}
@@ -2553,7 +2448,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 						console.log(domJSON.toJSON(finalMatchNode['element-data']));
 						console.log({finalMatchNode: finalMatchNode});
 						console.log('----------------------------------------------------------');
-						// return ;
 					}
 					if(this.updatenavcookiedata(navcookiedata,selectednode.id)) {
 						this.matchaction(finalMatchNode, false, selectednode);
@@ -2806,7 +2700,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					// UDAPluginSDK.closemodal();
 					UDAPluginSDK.searchinelastic();
 				}
 			};
@@ -2830,8 +2723,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(navcookiedata.autoplay){
 				navcookiedata.autoplay=false;
 				this.autoplay=false;
-				this.configureintrojs();
-				this.introjs.refresh();
 				//add analtytics
 				this.recordclick('stop',navcookiedata.data.name.toString(),navcookiedata.data.id);
 			} else {
