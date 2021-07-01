@@ -7,14 +7,18 @@
   --uda-text-color-bg-white: #fff;
   --uda-boxshodow-color: #e0e0e0;
 }
+.uda-icon > img {
+    width: auto !important;
+}
 .uda-original-content{
     max-width: 77%;
+    min-width: 77%;
     float: left;
 }
 .uda-nistapp-logo {
     cursor: pointer;
     min-width: 75px;
-    height: 80px;
+    height: 80px !important;
     background-color: var(--uda-text-color-bg-white);
     position: fixed;
     top: 40% !important;
@@ -106,8 +110,7 @@
     width: 0;
     height: 0;
     border-top: 5px solid transparent;
-    border-right: 16px solid var(--uda-secondary-color);
-    border-bottom: 5px solid transparent;
+    border-right: 16px solid var(--uda-secondary-color); border-bottom: 5px solid transparent;
 }
 
 .uda-search-btn {
@@ -121,6 +124,7 @@
     background-size: 20px 20px;
     background-position: center;
     background-repeat: no-repeat;
+    height: 35px;
 }
 .uda-mic-btn{
   background-color: var(--uda-footer-srchbtn-bgcolor);
@@ -132,6 +136,7 @@
   background-size: 20px 20px;
   background-position: center;
   background-repeat: no-repeat;
+  height: 35px;
 }
 .uda-stop-btn-bg{
     background-color: var(--uda-footer-srchbtn-bgcolor);
@@ -142,7 +147,8 @@
     background-image: url("data:image/svg+xml,%3Csvg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 426.7 426.7' style='enable-background:new 0 0 426.7 426.7;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23ff5722;%7D%0A%3C/style%3E%3Cg%3E%3Cg%3E%3Cg%3E%3Cpath class='st0' d='M213.3,106.7c-58.9,0-106.7,47.8-106.7,106.7S154.5,320,213.3,320S320,272.2,320,213.3 S272.2,106.7,213.3,106.7z'/%3E%3Cpath class='st0' d='M213.3,0C95.5,0,0,95.5,0,213.3s95.5,213.3,213.3,213.3s213.3-95.5,213.3-213.3S331.2,0,213.3,0z M213.3,384 C119,384,42.7,307.6,42.7,213.3S119,42.7,213.3,42.7S384,119,384,213.3S307.6,384,213.3,384z'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     background-size: 20px 20px;
     background-position: center;
-    background-repeat: no-repeat; 
+    background-repeat: no-repeat;
+    height: 35px;
 }
 .uda-search-btn:focus {
     outline: none;
@@ -154,7 +160,9 @@
 
 .uda-input-cntrl {
     background-color: #eceffd;
-    /*padding: 8px 10px;*/
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    padding-left: 5px !important;
     border: none;
     width: 70%;
     height: 35px;
@@ -251,7 +259,7 @@
     color: var(--uda-text-color-bg-white);
     z-index: 1;
     min-width: 160px;
-    bottom: 38px;
+    bottom: 25px;
     right: 0;
 }
 
@@ -363,6 +371,7 @@
     border: none;
     padding: 5px;
     cursor: pointer;
+    height: 30px;
 }
 
 .uda-play-btn:hover {
@@ -385,6 +394,7 @@
     border: none;
     padding: 5px;
     cursor: pointer;
+    height: 30px;
 }
 
 .uda-stop-btn:hover {
