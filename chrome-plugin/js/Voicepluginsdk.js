@@ -1067,6 +1067,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 					break;
 				case "input":
 					if(!node.hasAttribute("type")){
+						jQuery(node).click(function (event) {
+							UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
+						});
 						return;
 					}
 					var inputtype=node.getAttribute("type").toLowerCase();
