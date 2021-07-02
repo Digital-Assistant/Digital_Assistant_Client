@@ -358,6 +358,7 @@
     font-weight: 500;
     cursor: pointer;
     color: var(--uda-text-color-bg-white);
+    display:block;
 }
 .uda-card-btns {
     display: block;
