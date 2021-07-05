@@ -1,23 +1,36 @@
 :root {
-  --uda-primary-color: #303f9f;
-  --uda-secondary-color: #ff5722;
-  --uda-card-bgcolor: #f2f4fe;
-  --uda-text-color: #000;
-  --uda-footer-srchbtn-bgcolor: #dce0f7;
-  --uda-text-color-bg-white: #fff;
-  --uda-boxshodow-color: #e0e0e0;
+    --uda-primary-color: #303f9f;
+    --uda-secondary-color: #ff5722;
+    --uda-card-bgcolor: #f2f4fe;
+    --uda-text-color: #000;
+    --uda-footer-srchbtn-bgcolor: #dce0f7;
+    --uda-text-color-bg-white: #fff;
+    --uda-boxshodow-color: #e0e0e0;
+    --uda-tooltip-bg: #e5eafe;
+}
+/*hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #969696;
+    margin: 1em 0;
+    padding: 0;
+}*/
+.uda-icon > img {
+    width: auto !important;
 }
 .uda-original-content{
     max-width: 77%;
+    min-width: 77%;
     float: left;
 }
 .uda-nistapp-logo {
     cursor: pointer;
-    width: 75px;
-    height: 80px;
+    min-width: 75px;
+    height: 80px !important;
     background-color: var(--uda-text-color-bg-white);
     position: fixed;
-    top: 40%;
+    top: 40% !important;
     right: 0;
     padding: 1px;
     -webkit-box-shadow: 0 1px 4px var(--uda-boxshodow-color), 0 0 40px var(--uda-boxshodow-color) inset;
@@ -82,6 +95,7 @@
 .uda-icon-txt img {
     cursor: pointer;
     width: 45px;
+    vertical-align: middle;
 }
 
 .uda-help-bg-tooltip {
@@ -95,6 +109,7 @@
     -webkit-border-radius: 5px;
     margin-left: 20px;
     top: 8px;
+    font-size: 13px;
 }
 
 .uda-help-bg-tooltip:after {
@@ -105,39 +120,9 @@
     width: 0;
     height: 0;
     border-top: 5px solid transparent;
-    border-right: 16px solid var(--uda-secondary-color);
-    border-bottom: 5px solid transparent;
+    border-right: 16px solid var(--uda-secondary-color); border-bottom: 5px solid transparent;
 }
-.uda-help-bg-tooltip .uda-help-bg-tooltip-top:after{
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: var(--uda-secondary-color) transparent transparent transparent;
-}
-.uda-help-bg-tooltip .uda-help-bg-tooltip-bottom:after{
-  content: "";
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent transparent var(--uda-secondary-color) transparent;
-}
-.uda-help-bg-tooltip .uda-help-bg-tooltip-right:after{
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 100%;
-  margin-top: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent transparent transparent var(--uda-secondary-color);
-}
+
 .uda-search-btn {
     /*padding: 8px 10px;*/
     background-color: var(--uda-footer-srchbtn-bgcolor);
@@ -149,6 +134,7 @@
     background-size: 20px 20px;
     background-position: center;
     background-repeat: no-repeat;
+    height: 35px;
 }
 .uda-mic-btn{
   background-color: var(--uda-footer-srchbtn-bgcolor);
@@ -160,6 +146,7 @@
   background-size: 20px 20px;
   background-position: center;
   background-repeat: no-repeat;
+  height: 35px;
 }
 .uda-stop-btn-bg{
     background-color: var(--uda-footer-srchbtn-bgcolor);
@@ -170,7 +157,8 @@
     background-image: url("data:image/svg+xml,%3Csvg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 426.7 426.7' style='enable-background:new 0 0 426.7 426.7;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23ff5722;%7D%0A%3C/style%3E%3Cg%3E%3Cg%3E%3Cg%3E%3Cpath class='st0' d='M213.3,106.7c-58.9,0-106.7,47.8-106.7,106.7S154.5,320,213.3,320S320,272.2,320,213.3 S272.2,106.7,213.3,106.7z'/%3E%3Cpath class='st0' d='M213.3,0C95.5,0,0,95.5,0,213.3s95.5,213.3,213.3,213.3s213.3-95.5,213.3-213.3S331.2,0,213.3,0z M213.3,384 C119,384,42.7,307.6,42.7,213.3S119,42.7,213.3,42.7S384,119,384,213.3S307.6,384,213.3,384z'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     background-size: 20px 20px;
     background-position: center;
-    background-repeat: no-repeat; 
+    background-repeat: no-repeat;
+    height: 35px;
 }
 .uda-search-btn:focus {
     outline: none;
@@ -182,7 +170,9 @@
 
 .uda-input-cntrl {
     background-color: #eceffd;
-    /*padding: 8px 10px;*/
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    padding-left: 5px !important;
     border: none;
     width: 70%;
     height: 35px;
@@ -279,7 +269,7 @@
     color: var(--uda-text-color-bg-white);
     z-index: 1;
     min-width: 160px;
-    bottom: 38px;
+    bottom: 25px;
     right: 0;
 }
 
@@ -287,6 +277,7 @@
     display: flex;
     /*justify-content: center;
     padding: 5px;*/
+    color: #fff;
     border-top: 1px solid var(--uda-text-color-bg-white);
     background-color: var(--uda-secondary-color);
     font-size: 14px;
@@ -328,6 +319,7 @@
 .uda-footer-right {
     width: 50%;
     float: right;
+    margin-top: 5px;
 }
 
 .uda-footer-right a {
@@ -342,7 +334,7 @@
 
 .uda-footer-right img {
     cursor: pointer;
-    margin-bottom: 5px;
+    /*margin-bottom: 5px;*/
 }
 
 .uda-footer-bar {
@@ -363,18 +355,20 @@
     text-align: center;
     box-shadow: 2px 1px 6px 1px var(--uda-boxshodow-color);
 }
+
 .uda-close-icon{
-    width: 25px;
-    height: 25px;
+    width: 18px;
+    height: 18px;
     background-color: var(--uda-primary-color);
     border-radius: 50%;
     cursor: pointer;
     float: right;
     margin-top: -15px;
-    font-size: 19px;
+    font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     color: var(--uda-text-color-bg-white);
+    display:block;
 }
 .uda-card-btns {
     display: block;
@@ -388,6 +382,7 @@
     border: none;
     padding: 5px;
     cursor: pointer;
+    height: 30px;
 }
 
 .uda-play-btn:hover {
@@ -410,6 +405,7 @@
     border: none;
     padding: 5px;
     cursor: pointer;
+    height: 30px;
 }
 
 .uda-stop-btn:hover {
@@ -440,8 +436,9 @@
 }
 
 .uda-card-details h5 {
-    font-size: 14px;
+    font-size: 15px !important;
     margin: 5px 0px;
+    padding: 0;
 }
 
 .uda-suggestion-list {
@@ -463,6 +460,7 @@
     text-align: left;
     list-style: none url('../images/icons/bullet.png');
     margin: 0;
+    /*list-style-position: inside;*/
 }
 
 .uda-suggestion-list li, .uda-recording li {
@@ -546,6 +544,17 @@
     cursor: pointer;
 }
 
+.uda-tutorial-exit-btn {
+    background-color: var(--uda-secondary-color);
+    border: none;
+    outline: none;
+    color: var(--uda-text-color-bg-white);
+    border-radius: 5px;
+    padding: 5px 12px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
 .uda-tutorial-btn:hover {
     background-color: var(--uda-secondary-color);
 }
@@ -580,8 +589,11 @@
     border: none;
     border-radius: 5px;
     padding: 10px 20px;
-    width: 100%;
+    width: 80% !important;
     margin: 10px 0px;
+    height: 18px !important;
+    box-sizing: unset !important;
+
 }
 
 .uda-form-input:focus {
@@ -665,60 +677,69 @@
 
 /* tooltip css classes */
 .uda-tooltip {
-    display:inline-block;
-    position:relative;
-    border-bottom:1px dotted #666;
-    text-align:left;
+    position: absolute;
+    min-width:200px;
+    max-width:400px;
+    text-align:center;
+    color: var(--uda-primary-color);
+    text-align: center;
+    padding: 10px;
+    border-radius:8px;
+    border-color: #333;
+    transition: opacity .6s;
+    background-color: var(--uda-tooltip-bg);
+    box-shadow:0 1px 16px var(--uda-boxshodow-color);
+    z-index: 9999999;
+}
+.uda-tooltip[data-show] {
+    display: block;
+}
+.uda-tooltip-text-content{
+    margin: 10px !important;
+}
+
+.uda-arrow,
+.uda-arrow::before {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    /*   background: inherit; */
+    background-color: var(--uda-tooltip-bg);
+    box-shadow: 16px var(--uda-boxshodow-color);
+}
+
+.uda-arrow {
+    visibility: hidden;
+}
+
+.uda-arrow::before {
+    visibility: visible;
+    content: '';
+    transform: rotate(45deg);
+}
+
+.uda-tooltip[data-popper-placement^='top'] > .uda-arrow {
+    bottom: -10px;
+}
+
+.uda-tooltip[data-popper-placement^='bottom'] > .uda-arrow {
+    top: -10px;
+}
+
+.uda-tooltip[data-popper-placement^='left'] > .uda-arrow {
+    right: 0px;
+}
+
+.uda-tooltip[data-popper-placement^='right'] > .uda-arrow {
+    left: -20px;
 }
 
 .uda-tooltip h3 {margin:12px 0;}
-
-.uda-tooltip .uda-tooltip-right {
-    min-width:200px;
-    max-width:400px;
-    top:50%;
-    left:100%;
-    margin-left:20px;
-    transform:translate(0, -50%);
-    padding:0;
-    color: var(--uda-primary-color);
-    background-color: var(--uda-card-bgcolor);
-    font-weight:normal;
-    font-size:13px;
-    border-radius:8px;
-    position:absolute;
-    z-index:99999999;
-    box-sizing:border-box;
-    box-shadow:0 1px 16px var(--uda-boxshodow-color);
-    visibility:hidden; opacity:0; transition:opacity 0.8s;
-}
-.uda-tooltip .uda-tooltip-right::before{
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: 100%;
-    margin-top: -12px;
-    border-width: 12px;
-    border-style: solid;
-    border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent;
-}
-.uda-tooltip .uda-tooltip-right {
-    visibility:visible;
-    opacity:1;
-    text-align: center;
-}
-
-.uda-tooltip .uda-tooltip-right img {
+.uda-tooltip img {
     width:400px;
     border-radius:8px 8px 0 0;
 }
-.uda-tooltip .uda-tooltip-text-content {
-    padding:10px 20px;
-    white-space: initial;
-    line-height: normal !important;
-}
-
-.uda-tooltip .uda-tooltip-right i {
+.uda-tooltip i {
     position:absolute;
     top:50%;
     right:100%;
@@ -727,11 +748,10 @@
     height:24px;
     overflow:hidden;
 }
-.uda-tooltip .uda-tooltip-right i::after {
+.uda-tooltip i::after {
     background-color:#444444;
 }
-
-.uda-tooltip .uda-tooltip-right .uda-tutorial-btn:hover {
+.uda-tooltip .uda-tutorial-btn:hover {
     background-color: var(--uda-primary-color);
 }
 
@@ -740,11 +760,3 @@
     max-width: 77%;
 }
 
-/*Intro Js tooltips*/
-.introjs-tooltip {
-  background-color: var(--uda-card-bgcolor) !important;
-  color: var(--uda-primary-color) !important;
-}
-.introjs-arrow.left, .introjs-arrow.left-bottom {
-  border-color: transparent var(--uda-footer-srchbtn-bgcolor) transparent transparent !important;
-}
