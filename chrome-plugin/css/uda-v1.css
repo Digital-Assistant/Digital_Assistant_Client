@@ -8,16 +8,13 @@
     --uda-boxshodow-color: #e0e0e0;
     --uda-tooltip-bg: #e5eafe;
 }
-body{
-    font-size:12px;
-}
-hr {
+/*hr {
     display: block;
     height: 1px;
     border: 0;
     border-top: 1px solid #969696;
     margin: 1em 0;
-    padding: 0;
+    padding: 0;*/
 }
 .uda-icon > img {
     width: auto !important;
