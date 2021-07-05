@@ -241,6 +241,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		otherscripts: function(){
 			this.totalotherScripts=1;
 			this.loadCssScript(this.extensionpath+"css/uda-v1.css");
+		
 			this.loadOtherScript(this.extensionpath+"js/domJSON.js");
 			// todo make css loading dynamic based on css file availability
 			if(this.inarray(window.location.host,this.addcustomcssdomains) !== -1){
