@@ -257,6 +257,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					this.loadCssScript(this.extensionpath + "css/app.vantagecircle.com.css");
 				}
 			}
+			this.loadCssScript(this.extensionpath+"css/"+window.location.host+".css");
 			/*
 			* Popper script injection to the page.
 			* Forcing the popper extension to be version 2 even if popper of version 1 exists
