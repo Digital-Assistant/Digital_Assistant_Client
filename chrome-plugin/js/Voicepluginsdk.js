@@ -264,10 +264,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 			* */
 			if(typeof Popper === 'undefined'){
 				this.totalotherScripts++;
-				this.loadOtherScript("https://unpkg.com/@popperjs/core@2");
+				this.loadOtherScript("https://unpkg.com/@popperjs/core@2.9.2/dist/umd/popper.min.js");
 			} else {
 				this.totalotherScripts++;
-				this.loadOtherScript("https://unpkg.com/@popperjs/core@2");
+				this.loadOtherScript("https://unpkg.com/@popperjs/core@2.9.2/dist/umd/popper.min.js");
 			}
 		},
 		allReady: function() {
