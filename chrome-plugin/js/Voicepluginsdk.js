@@ -1521,6 +1521,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 				return ;
 			}
 
+			domjson.node.nodePosition.recordedscreensize = this.getScreenSize();
+
 			if(this.inarray(node.nodeName.toLowerCase(), this.ignoreNodesFromIndexing) !== -1 && this.customNameForSpecialNodes.hasOwnProperty(node.nodeName.toLowerCase())){
 				domjson.meta.displayText = this.customNameForSpecialNodes[node.nodeName.toLowerCase()];
 			}
@@ -1844,6 +1846,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.createstoragedata(this.recordingcookiename,JSON.stringify(recordingcookiedata));
 			var navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
+
+			let tooltipnodes = document.getElementsByClassName('uda-tooltip');
+			if (tooltipnodes.length > 0) {
+				$('.uda-tooltip').remove();
+				this.popperInstance.destroy();
+			}
 
 			//add analtytics
 			this.recordclick('recordingcancel',recordingcookiedata.domain);
