@@ -1404,12 +1404,17 @@ if (typeof UDAPluginSDK === 'undefined') {
 				if(typeof node.target !== 'undefined' && node.target==='_blank'){
 					this.toggleautoplay(navigationCookieData);
 				} else {
-					link = true;
-					this.navigatedToNextPage.check = true;
-					this.navigatedToNextPage.url = node.href;
+					let hostname = window.location.protocol + "//" + window.location.host+window.location.pathname;
+					let href = node.href.substr(hostname.length);
+					if(href!=='' && href !== "#") {
+						link = true;
+						this.navigatedToNextPage.check = true;
+						this.navigatedToNextPage.url = node.href;
+					}
 				}
 			}
 			if(!link) {
+				console.log(node);
 				setTimeout(function(){UDAPluginSDK.showhtml();}, timeToInvoke);
 			}
 		},
