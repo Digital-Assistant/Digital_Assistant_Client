@@ -1069,6 +1069,15 @@ if (typeof UDAPluginSDK === 'undefined') {
 						UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
 					});
 					break;
+				case 'tr':
+					jQuery(node).on('click.UDARecordclick', function (event) {
+						event.preventDefault();
+						event.stopPropagation();
+						console.log(node);
+						UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
+						return false;
+					});
+					break;
 				default:
 					jQuery(node).click(function (event) {
 						UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);

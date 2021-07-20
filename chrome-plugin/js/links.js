@@ -371,11 +371,18 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
                     case 'span':
                         if (node.classList && node.classList.contains('select2-selection')) {
                             UDAAddNewElement(node);
+                        } else if (node.hasAttribute('ng-click') || node.hasAttribute('onclick')){
+                            UDAAddNewElement(node);
                         }
                         break;
                     // fix for editor issue
                     case 'ckeditor':
                         UDAAddNewElement(node);
+                        break;
+                    case 'div':
+                        if(node.hasAttribute('ng-click') || node.hasAttribute('onclick')){
+                            UDAAddNewElement(node);
+                        }
                         break;
                 }
             }
