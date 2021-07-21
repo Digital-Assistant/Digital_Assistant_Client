@@ -113,7 +113,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			'baseURI','isConnected','ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
 			'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
 			'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y', 'selectionStart', 'selectionEnd', 'required', 'validationMessage', 'selectionDirection',
-			'naturalWidth', 'naturalHeight', 'complete', '_indexOf', 'value', 'defaultValue'
+			'naturalWidth', 'naturalHeight', 'complete', '_indexOf', 'value', 'defaultValue', 'min', 'max'
 		],
 		innerTextWeight: 5,
 		logLevel: UDALogLevel,
@@ -1070,12 +1070,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 					});
 					break;
 				case 'tr':
-					jQuery(node).on('click.UDARecordclick', function (event) {
-						event.preventDefault();
-						event.stopPropagation();
-						console.log(node);
+					jQuery(node).click(function (event) {
 						UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
-						return false;
 					});
 					break;
 				default:
@@ -1462,6 +1458,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 				// todo from document click functionality;
 			}
 
+			if(!this.recording){
+				return ;
+			}
+
 			if(this.autoplay){
 				this.forceReindex = true;
 				UDAPluginSDK.indexnewclicknodes();
@@ -1506,6 +1506,16 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.cancelrecordingsequence();
 				this.showadvancedhtml();
 				return ;
+			} else if(node.hasAttribute('ng-click') && node.getAttribute('ng-click')){
+				let ngclick=node.getAttribute('ng-click');
+				if(ngclick.indexOf('clickNotoficationBell') !== -1){
+					alert('Sorry currently we do not support this notifications. Please re-record the sequence without selecting Notifications');
+					this.lastclickednode = node.parentNode;
+					this.recording=false;
+					this.cancelrecordingsequence(false);
+					this.showadvancedhtml();
+					return ;
+				}
 			}
 
 			var processclick=true;
