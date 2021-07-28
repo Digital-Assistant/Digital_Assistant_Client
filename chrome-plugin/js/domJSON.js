@@ -242,6 +242,35 @@
         }
         return opts.computedStyle instanceof Array ? boolFilter(css, opts.computedStyle) : css;
     };
+    // screen size properties
+    domJSON.getScreenSize = function() {
+        let page = {height: 0, width: 0};
+        let screen = {};
+        let body = document.body,
+            html = document.documentElement;
+
+        const docEl = document.documentElement;
+        const scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+        const scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+
+        page.height = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
+        page.width = Math.max(body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth);
+        screen = window.screen;
+        let windowProperties = {page: page, screen: screen, scrollInfo: {scrollTop: scrollTop, scrollLeft: scrollLeft}};
+        return windowProperties;
+    };
+    //get node position on the page
+    domJSON.getNodeCoordinates = function(element, windowSize) {
+        const x = element.getBoundingClientRect();
+        let result = {
+            top: x.top + windowSize.scrollInfo.scrollTop,
+            width: x.width,
+            height: x.height,
+            left: x.left + windowSize.scrollInfo.scrollLeft,
+            actualPos: x
+        };
+        return result;
+    };
     var toJSON = function(node, opts, depth) {
         var style, kids, kidCount, thisChild, children, copy = copyJSON(node, opts);
         if (node.nodeType === 1) {
@@ -272,7 +301,11 @@
             copy.childNodes = children;
         }
         if (opts.getNodePosition === true && depth === 0) {
-            copy.nodePosition = node.getBoundingClientRect();
+            // copy.nodePosition = node.getBoundingClientRect();
+            const screenSize = domJSON.getScreenSize();
+            const nodePosition = node.getBoundingClientRect();
+            const pagePosition = domJSON.getNodeCoordinates(node, screenSize);
+            copy.nodeInfo = {nodePosition: nodePosition, screenSize: screenSize, nodePagePosition: pagePosition};
         }
         return copy;
     };
