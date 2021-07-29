@@ -113,7 +113,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			'baseURI','isConnected','ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
 			'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
 			'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y', 'selectionStart', 'selectionEnd', 'required', 'validationMessage', 'selectionDirection',
-			'naturalWidth', 'naturalHeight', 'complete', '_indexOf', 'value', 'defaultValue', 'min', 'max'
+			'naturalWidth', 'naturalHeight', 'complete', '_indexOf', 'value', 'defaultValue', 'min', 'max', 'nodeInfo'
 		],
 		innerTextWeight: 5,
 		logLevel: UDALogLevel,
@@ -788,13 +788,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 		indexnode: function(node, parentnode, hasparentnodeclick=false, fromdocumentclick=false, parentclicknode=""){
 			var elementdata = {"element-type": "", "element-labels" : [], "element-action" : "", "element-path" : "","element-url":"", "element-data":[],"menu-items":[]};
 
-			if(parentnode.classList && parentnode.classList.contains("tab-content")){
-				node.displaytype = "tab-content";
-				node.tabid = node.id;
-			}
-
 			var clickobjectexists=false;
-			var clickobject={};
+			var udaClickObject={};
 
 			if(node.hasAttribute("nist-voice") && node.getAttribute("nist-voice")){
 				return node;
@@ -810,6 +805,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			if(this.inarray(node.nodeName.toLowerCase(), this.ignoreClicksOnSpecialNodes) !== -1){
 				return node;
+			}
+
+			if(parentnode.classList && parentnode.classList.contains("tab-content")){
+				node.displaytype = "tab-content";
+				node.tabid = node.id;
 			}
 
 			// Multiple clicks are recorded for select2-selection class. select2-selection--multiple
@@ -844,7 +844,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				}
 				if (node.isSameNode(UDAClickObjects[i].element)) {
 					clickobjectexists = true;
-					clickobject = UDAClickObjects[i];
+					udaClickObject = UDAClickObjects[i];
 				}
 			}
 
@@ -860,7 +860,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			if(fromdocumentclick){
 				clickobjectexists = true;
-				clickobject = node;
+				udaClickObject = node;
 			}
 
 			if(clickobjectexists){
@@ -918,7 +918,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				node.uda_custom = uda_custom;
 
 				elementdata["element-data"] = node;
-				elementdata["clickobject"] = clickobject;
+				elementdata["clickobject"] = udaClickObject;
 
 				this.htmlindex.push(elementdata);
 			}
@@ -1271,7 +1271,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			/**
 			 * calculating node position from here
 			 */
-			let toolTipPosistionClass = this.getNodePosition(tooltipnode, tooltipDivElement);
+			let toolTipPosistionClass = this.getTooltipPositionClass(tooltipnode, tooltipDivElement);
 
 			this.popperInstance = Popper.createPopper(tooltipnode, tooltipDivElement,{
 				placement: toolTipPosistionClass,
@@ -1325,26 +1325,26 @@ if (typeof UDAPluginSDK === 'undefined') {
 				screen.height = D.clientHeight * 0.75;
 				// return { width: D.clientWidth*0.75, height: D.clientHeight };
 			}
-			let windowProperties = {page: page, screen: screen, scrollTop: scrollTop, scrollLeft: scrollLeft};
+			let windowProperties = {page: page, screen: screen, scrollInfo: {scrollTop: scrollTop, scrollLeft: scrollLeft}};
 			return windowProperties;
 		},
-		//get tooltip position on the page
-		getTooltipPosition: function(element, windowSize) {
+		//get node position on the page
+		getNodeCoordinates: function(element, windowSize) {
 			const x = element.getBoundingClientRect();
 			let result = {
-				top: x.top + windowSize.scrollTop,
+				top: x.top + windowSize.scrollInfo.scrollTop,
 				width: x.width,
 				height: x.height,
-				left: x.left + windowSize.scrollLeft,
+				left: x.left + windowSize.scrollInfo.scrollLeft,
 				actualPos: x
 			};
 			return result;
 		},
-		getNodePosition: function (targetElement, tooltipElement) {
+		getTooltipPositionClass: function (targetElement, tooltipElement) {
 			const availablePositions = ["right", "top", "left", "bottom"].slice();
 
 			const screenSize = this.getScreenSize();
-			const tooltipPos = this.getTooltipPosition(tooltipElement, screenSize);
+			const tooltipPos = this.getNodeCoordinates(tooltipElement, screenSize);
 			const targetElementRect = targetElement.getBoundingClientRect();
 
 			let finalCssClass = "right";
@@ -1537,15 +1537,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 				var domjson = node.uda_custom.domJson;
 				domjson.meta = {};
 				//fix for position issue #89
-				if(domjson.node.nodePosition.x === 0 && domjson.node.nodePosition.y === 0) {
+				console.log(domjson.node.nodeInfo);
+				if(domjson.node.nodeInfo.nodePosition.x === 0 && domjson.node.nodeInfo.nodePosition.y === 0) {
 					var domjson1 = domJSON.toJSON(node);
-					domjson.node.nodePosition = domjson1.node.nodePosition;
+					domjson.node.nodeInfo.nodePosition = domjson1.node.nodeInfo.nodePosition;
 				}
 			} else {
 				return ;
 			}
-
-			domjson.node.nodePosition.recordedscreensize = this.getScreenSize();
 
 			if(this.inarray(node.nodeName.toLowerCase(), this.ignoreNodesFromIndexing) !== -1 && this.customNameForSpecialNodes.hasOwnProperty(node.nodeName.toLowerCase())){
 				domjson.meta.displayText = this.customNameForSpecialNodes[node.nodeName.toLowerCase()];
@@ -1622,8 +1621,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(this.recording) {
 				if(this.logLevel>0) {
 					console.log('-------------------------------------------------------------');
-					console.log({indexedpos: node.uda_custom.domJson.node.nodePosition});
-					console.log({domjson: domjson.node.nodePosition});
+					console.log({indexedpos: node.uda_custom.domJson.node.nodeInfo.nodePosition});
+					console.log({domjson: domjson.node.nodeInfo.nodePosition});
 					console.log('-------------------------------------------------------------');
 				}
 				if (node.hasAttribute('mattreenodetoggle')) {
@@ -2379,13 +2378,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 						// compare recorded node with personal node tag or not
 						let match = this.comparenodes(compareNode.node,originalNode.node, isPersonalNode);
 
-						if ((this.logLevel > 1) && (match.matched+5) >= match.count) {
+						if (this.logLevel>0 && (match.matched+15) >= match.count) {
 							console.log('----------------------------------------------------------');
 							console.log(match);
 							console.log(Math.abs((match.matched) - match.count));
 							console.log(match.innerChildNodes * this.innerTextWeight);
 							console.log('Matched ' + match.matched + ' out of ' + match.count);
         					console.log({node: compareNode.node, htmlNode: searchNode["element-data"]});
+							console.log({recordedNode: JSON.parse(selectednode.objectdata)});
 							console.log('----------------------------------------------------------');
 						}
 
@@ -2407,6 +2407,17 @@ if (typeof UDAPluginSDK === 'undefined') {
 										matchNodeExists=true;
 									}
 								}
+							}
+
+							if (this.logLevel>0) {
+								console.log('----------------------------------------------------------');
+								console.log(match);
+								console.log(Math.abs((match.matched) - match.count));
+								console.log(match.innerChildNodes * this.innerTextWeight);
+								console.log('Matched ' + match.matched + ' out of ' + match.count);
+								console.log({node: compareNode.node, htmlNode: searchNode["element-data"]});
+								console.log({recordedNode: JSON.parse(selectednode.objectdata)});
+								console.log('----------------------------------------------------------');
 							}
 
 							if(matchNodeExists===false) {
@@ -2559,6 +2570,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 				} else if(key === 'innerText' && originalnode.hasOwnProperty(key) && comparenode.hasOwnProperty(key) && (comparenode[key].trim() === originalnode[key].trim())) {
 					// matching inner text should be weighted more. We will add an arbitrarily large number - innerTextWeight.
 					// since this will match for every child node, we need to accommodate this logic whenever 'comparenodes' is called
+					console.log(comparenode[key].trim());
+					console.log(originalnode[key].trim());
 					match.innerTextFlag = true;
 					match.matched = match.matched + this.innerTextWeight;
 					// match.matched++;
@@ -2656,19 +2669,20 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		// getting distance between recorded node and matching nodes of same labels
 		processDistanceOfNodes: function(matchingnodes, selectedNode) {
-			if (selectedNode.hasOwnProperty('nodePosition') && matchingnodes.length>1) {
+			if (selectedNode.hasOwnProperty('nodeInfo') && matchingnodes.length>1) {
 				let leastDistanceNode = null;
 				let leastDistance = -1;
+				console.log('------------ processing distance ------------------');
 				matchingnodes.forEach((node) => {
 					if (node.originalNode['element-data'].hasAttribute('aria-label')
 						&& node.originalNode['element-data'].getAttribute('aria-label').toLowerCase() === 'open calendar') {
 						// let dist = this.getDistance(selectedNode.nodePosition, node.originalNode['element-data'].uda_custom.domJson.node.nodePosition);
 						let domJsonData = domJSON.toJSON(node.originalNode['element-data']);
-						let dist = this.getDistance(selectedNode.nodePosition, domJsonData.node.nodePosition);
+						let dist = this.getDistance(selectedNode.nodeInfo, domJsonData.node.nodeInfo);
 						if (this.logLevel > 1) {
-							console.log(selectedNode.nodePosition);
-							console.log(node.originalNode['element-data'].uda_custom.domJson.node.nodePosition);
-							console.log(domJsonData.node.nodePosition);
+							console.log(selectedNode.nodeInfo);
+							console.log(node.originalNode['element-data'].uda_custom.domJson.node.nodeInfo);
+							console.log(domJsonData.node.nodeInfo);
 							console.log(dist);
 						}
 						// default adding first element as least distance and then comparing with last distance calculated
@@ -2679,8 +2693,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 							leastDistance = dist;
 							leastDistanceNode = node.originalNode;
 						}
-					} else if (node.domJson.hasOwnProperty('nodePosition')) {
-						let dist = this.getDistance(selectedNode.nodePosition, node.domJson.nodePosition);
+					} else if (node.domJson.hasOwnProperty('nodeInfo')) {
+						console.log('------------------------------');
+						console.log(selectedNode.nodeInfo);
+						console.log(node.domJson.nodeInfo);
+						console.log('------------------------------');
+						let dist = this.getDistance(selectedNode.nodeInfo, node.domJson.nodeInfo);
 						// default adding first element as least distance and then comparing with last distance calculated
 						if(leastDistance === -1) {
 							leastDistance = dist;
@@ -2696,11 +2714,29 @@ if (typeof UDAPluginSDK === 'undefined') {
 				return false;
 			}
 		},
-		// calculate distance between selected node and matching node
+		/**
+		 * calculate distance between selected node and matching node
+		 * @param1: recorded node
+		 * @param2: comparing node
+ 		 */
 		getDistance: function (node1, node2) {
-			const x = node1.x - node2.x;
-			const y = node1.y - node2.y;
-			const dist = Math.abs(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
+			let dist;
+			if(node1.hasOwnProperty('screen') && node2.hasOwnProperty('screen')) {
+				if (node1.screen.width >= node2.screen.width) {
+					const x = node1.nodePagePosition.left - (node2.nodePagePosition.left * (node2.screen.width / node1.screen.width))
+					const y = node1.nodePagePosition.top - (node2.nodePagePosition.top * (node2.screen.height / node1.screen.height))
+				} else {
+					// const x = node1.nodePosition.x - node2.nodePosition.x;
+					// const y = node1.nodePosition.y - node2.nodePosition.y;
+					const x = node1.nodePagePosition.left - node2.nodePagePosition.left;
+					const y = node1.nodePagePosition.top - node2.nodePagePosition.top;
+					dist = Math.abs(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
+				}
+			} else {
+				const x = node1.nodePosition.x - node2.nodePosition.x;
+				const y = node1.nodePosition.y - node2.nodePosition.y;
+				dist = Math.abs(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
+			}
 			return dist;
 		},
 		//adding data to the storage
