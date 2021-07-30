@@ -2506,7 +2506,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						console.log('Unable to find final matchnode with distance calculation');
 						console.log('----------------------------------------------------------');
 					}
-					alert("Unable to find the action");
+					alert("Unable to find the action (this could be due to infinite scroll in the page)");
 					if(navcookiedata && navcookiedata.autoplay) {
 						this.autoplay = false;
 						this.autoplayPaused = true;
@@ -2515,7 +2515,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				}
 
 			} else {
-				alert("Unable to find the action");
+				alert("Unable to find the action (this could be due to infinite scroll in the page)");
 				if(navcookiedata && navcookiedata.autoplay) {
 					this.autoplay = false;
 					this.autoplayPaused = true;
