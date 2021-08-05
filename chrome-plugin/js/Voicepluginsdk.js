@@ -525,7 +525,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			jQuery("#uda-btn").show();
 			var navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
-			this.cancelrecordingsequence(false);
+			// this.cancelrecordingsequence(false);
 			let bodychildren = document.body.childNodes;
 			if (bodychildren.length > 0) {
 				bodychildren.forEach(function (childnode, childnodeindex) {
