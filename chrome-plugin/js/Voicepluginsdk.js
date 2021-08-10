@@ -103,10 +103,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 		recording:false,
 		addcustomcssdomains:["app.vantagecircle.co.in","app.vantagecircle.com","dashboard.vantagecircle.com","dashboard.vantagecircle.co.in"],
 		containersections:[],
-		introjs:[],
-		introjstotalsteps:0,
-		introjscurrentstepnumber:0,
-		introjsaddedstepnodes:[],
 		lastclickednode:'',
 		lastclickedtime:'',
 		maxstringlength:40,
@@ -117,7 +113,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			'baseURI','isConnected','ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
 			'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
 			'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y', 'selectionStart', 'selectionEnd', 'required', 'validationMessage', 'selectionDirection',
-			'naturalWidth', 'naturalHeight', 'complete'
+			'naturalWidth', 'naturalHeight', 'complete', '_indexOf', 'value', 'defaultValue', 'min', 'max', 'nodeInfo'
 		],
 		innerTextWeight: 5,
 		logLevel: UDALogLevel,
@@ -126,14 +122,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 		searchText: null,
 		searchInProgress: false,
 		ignoreNodesFromIndexing: ['ng-dropdown-panel','ckeditor','fusioncharts','ngb-datepicker','ngx-daterangepicker-material','uda-panel','mat-datepicker-content','ng-select'],
-		ignoreNodesContainingClassNames:['cke_dialog_container','cke_notifications_area'],
+		ignoreNodesContainingClassNames:['cke_dialog_container','cke_notifications_area','gldp-default'],
 		// cancelRecordingDuringRecordingNodes: ['ngb-datepicker'],
 		cancelRecordingDuringRecordingNodes: [],
 		addClickToSpecialNodes: ['ng-select', 'ngb-datepicker'],
 		ignoreClicksOnSpecialNodes: ['ngx-daterangepicker-material'],
 		customNameForSpecialNodes: {'ngb-datepicker': 'Date selector','mat-datepicker-content': 'Date selector', 'ngx-daterangepicker-material': 'Date Range Selector'},
 		tooltipDisplayedNodes: [],
-		//replayvariables
+		// replay variables
 		autoplayCompleted: false,
 		autoplayPaused: false,
 		// manual click variables
@@ -145,6 +141,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 		clickeOn: '',
 		invokingnode: null,
 		currentPage:'search',
+		navigatedToNextPage: {check: false, url: ''},
+		popperInstance: null,
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -242,8 +240,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		otherscripts: function(){
 			this.totalotherScripts=1;
-			// this.loadCssScript(this.extensionpath+"css/extension.css");
 			this.loadCssScript(this.extensionpath+"css/uda-v1.css");
+
 			this.loadOtherScript(this.extensionpath+"js/domJSON.js");
 			// todo make css loading dynamic based on css file availability
 			if(this.inarray(window.location.host,this.addcustomcssdomains) !== -1){
@@ -259,45 +257,27 @@ if (typeof UDAPluginSDK === 'undefined') {
 					this.loadCssScript(this.extensionpath + "css/app.vantagecircle.com.css");
 				}
 			}
-			if(typeof introJs === 'undefined'){
+			this.loadCssScript(this.extensionpath+"css/"+window.location.host+".css");
+			/*
+			* Popper script injection to the page.
+			* Forcing the popper extension to be version 2 even if popper of version 1 exists
+			* */
+			if(typeof Popper === 'undefined'){
 				this.totalotherScripts++;
-				this.loadOtherScript(this.extensionpath+"js/intro.min.js");
-				this.loadCssScript(this.extensionpath+"css/introjs.min.css");
-				this.loadCssScript(this.extensionpath+"css/introjs-nistapp.css");
+				this.loadOtherScript("https://unpkg.com/@popperjs/core@2.9.2/dist/umd/popper.min.js");
+			} else {
+				this.totalotherScripts++;
+				this.loadOtherScript("https://unpkg.com/@popperjs/core@2.9.2/dist/umd/popper.min.js");
 			}
 		},
 		allReady: function() {
 			// execute the parsing method after everything is ready.
 			this.onReady();
 		},
-		configureintrojs: function(label = 'Continue') {
-			// Intro js configuration has been added
-			this.introjs=introJs().setOptions({
-				showStepNumbers:false,
-				showBullets:false,
-				showProgress:false,
-				exitOnOverlayClick:false,
-				exitOnEsc:false,
-				keyboardNavigation:false,
-				doneLabel: label,
-				skipLabel: 'Exit',
-				tooltipPosition: 'right'
-			})
-				.onexit(function (){
-					UDAPluginSDK.resetIntrojs();
-				});
-			if (this.introjsaddedstepnodes.length>0) {
-				this.introjstotalsteps = 0;
-				this.introjscurrentstepnumber = 0;
-				this.introjsaddedstepnodes = [];
-			}
-		},
 		onReady: function () {
 
 			// check user session exists and create if not available
 			this.checkuserkeyexists();
-
-			this.configureintrojs();
 
 			// adding speech recognition functionality based on the library availability
 			if(UDASpeechRecognitionAvailable){
@@ -392,11 +372,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		addbuttonhtml:function(){
 			jQuery("#uda-btn").unbind("click").html("");
-			// var buttonhtml='<img src="'+this.extensionpath+'assets/uda-logo.png" width="50px" height="50px" nist-voice="true">';
 			var buttonhtml	=	'<div class="uda-nistapp-logo">'
 								+'	<div class="uda-icon" style="text-align: center;">'
 								+'		<img src="'+this.extensionpath+'images/icons/nist-logo.png">'
-								// +'		<p style="padding:0; margin:0px;">Assist</p>'
 								+'		<p style="padding:0; margin:0px;color: #303f9f; font-weight: bold; font-size: 11px;">UDAN(Beta)</p>'
 								+'		<span>'
 								+'			<img src="'+this.extensionpath+'images/icons/backarrow-orange.png">'
@@ -426,10 +404,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 							+'<div class="uda-container" style="text-align: center; margin-top: 10px;">'
 								+'<div class="uda-search-div">'
 									+'<button class="uda-mic-btn" style="border-radius: 5px 0px 0px 5px;" id="uda-voice-icon-start">'
-									/*+'	<img src="'+this.extensionpath+'images/icons/mic-icon.png">'*/
 									+'</button>'
 									+'<button class="uda-stop-btn-bg" style="border-radius: 5px 0px 0px 5px; display:none;" id="uda-voice-icon-stop">'
-									/*+'	<img src="'+this.extensionpath+'images/icons/color-stop-btn.png">'*/
 									+'</button>'
 									+'<input type="text" name="uda-search-input" class="uda-input-cntrl" placeholder="search..." id="uda-search-input" />'
 									+'<button class="uda-search-btn" id="uda-search-btn" style="border-radius: 0px 5px 5px 0px;"></button>'
@@ -444,7 +420,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 								+'<div class="uda-container">'
 									+'<div class="uda-dropdown" id="uda-advanced-btn">'
 										+'<button class="uda-advanced-btn">'
-											/*+'<img src="'+this.extensionpath+'images/icons/advanced-icon.png">*/
 										+'<span>Advanced</span>'
 										+'</button>'
 										+'<div class="uda-advanced-btn-content">'
@@ -510,9 +485,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 					});
 				}
 			} else {
-				/*jQuery("#nistvoicerecstpbtn").click(function () {
-					UDAPluginSDK.gettimestamp("stop");
-				});*/
 				jQuery('#uda-advanced-btn').hide();
 			}
 		},
@@ -521,28 +493,25 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(this.sessiondata.authenticated) {
 				jQuery("#uda-btn").hide();
 				jQuery('#uda-html-container').show();
-				// jQuery("#nistModal").css("display", "block");
 				var searchinput=jQuery("#uda-search-input");
 				searchinput.val("");
 				if (focus) {
 					searchinput.focus();
 				}
-				// if(this.inarray(window.location.host,this.addcustomcssdomains) !== -1) {
-					let bodychildren = document.body.childNodes;
-					if (bodychildren.length > 0) {
-						bodychildren.forEach(function (childnode, childnodeindex) {
-							if (childnode.classList && childnode.classList.contains("container")) {
-								UDAPluginSDK.containersections.push(childnodeindex);
-								childnode.classList.remove("container");
+				let bodychildren = document.body.childNodes;
+				if (bodychildren.length > 0) {
+					bodychildren.forEach(function (childnode, childnodeindex) {
+						if (childnode.classList && childnode.classList.contains("container")) {
+							UDAPluginSDK.containersections.push(childnodeindex);
+							childnode.classList.remove("container");
+						}
+						if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
+							if (childnode.classList && !childnode.classList.contains("uda-original-content")) {
+								childnode.classList.add("uda-original-content");
 							}
-							if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
-								if (childnode.classList && !childnode.classList.contains("uda-original-content")) {
-									childnode.classList.add("uda-original-content");
-								}
-							}
-						});
-					}
-				// }
+						}
+					});
+				}
 			} else {
 				var sessionevent = new CustomEvent("RequestUDASessionData", {detail: {data: "authtenicate"}, bubbles: false, cancelable: false});
 				document.dispatchEvent(sessionevent);
@@ -552,36 +521,24 @@ if (typeof UDAPluginSDK === 'undefined') {
 		closemodal:function(){
 			jQuery("#uda-advance-section").show();
 			jQuery('#uda-html-container').hide();
-			// jQuery("#nistModal").css("display","none");
-			// jQuery("#uda-content-container").html("");
-			// jQuery("#nistrecordresults").html("");
 			this.recordedsequenceids=[];
 			jQuery("#uda-btn").show();
 			var navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
-			this.cancelrecordingsequence(false);
-			// if(this.inarray(window.location.host,this.addcustomcssdomains) !== -1) {
-				let bodychildren = document.body.childNodes;
-				if (bodychildren.length > 0) {
-					bodychildren.forEach(function (childnode, childnodeindex) {
-						if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
-							if (childnode.classList && childnode.classList.contains("uda-original-content")) {
-								childnode.classList.remove("uda-original-content");
-							}
+			// this.cancelrecordingsequence(false);
+			let bodychildren = document.body.childNodes;
+			if (bodychildren.length > 0) {
+				bodychildren.forEach(function (childnode, childnodeindex) {
+					if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
+						if (childnode.classList && childnode.classList.contains("uda-original-content")) {
+							childnode.classList.remove("uda-original-content");
 						}
-						if (UDAPluginSDK.containersections.length > 0 && UDAPluginSDK.inarray(childnodeindex, UDAPluginSDK.containersections) !== -1) {
-							childnode.classList.add("container");
-						}
-					});
-				}
-			// }
-		},
-		//Resetting introjs and continue to next playable action
-		resetIntrojs: function () {
-			this.configureintrojs();
-			this.playNextAction = true;
-			this.autoplayPaused = false;
-			this.showhtml();
+					}
+					if (UDAPluginSDK.containersections.length > 0 && UDAPluginSDK.inarray(childnodeindex, UDAPluginSDK.containersections) !== -1) {
+						childnode.classList.add("container");
+					}
+				});
+			}
 		},
 		//render the required html for showing up the proper html
 		showhtml:function(){
@@ -666,6 +623,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 				console.log('Need to do the processing');
 
 			}
+			if(this.navigatedToNextPage.check && this.navigatedToNextPage.url === window.location.href){
+				setTimeout(function(){UDAPluginSDK.showhtml();}, 5000);
+				this.navigatedToNextPage.check = false;
+			}
 		},
 		removefromhtmlindex:async function(){
 			if (this.forceReindex) {
@@ -723,7 +684,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 							}
 							if(addToolTip) {
 								this.tooltipDisplayedNodes.push(node);
-								$(node).addClass('uda-tooltip').append('<div class="uda-tooltip-right"><div class="uda-tooltip-text-content">We have detected a rich text editor. To record this in your sequence, Please click on the editor menu. We are unable to record clicks on the text area.</div></div>');
+								this.addToolTip(node, node, false, false, false, false, 'We have detected a rich text editor. To record this in your sequence, Please click on the editor menu. We are unable to record clicks on the text area.', false);
 							}
 						} else if(!node.hasclick && this.inarray(node.nodeName.toLowerCase(), this.addClickToSpecialNodes) !== -1 && this.inarray(node.nodeName.toLowerCase(), this.ignoreClicksOnSpecialNodes) === -1){
 							if(this.logLevel>0) {
@@ -747,10 +708,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 						if(this.logLevel>0){
 							console.log('date picker in javascript');
 						}
+					} else if(node.nodeName.toLowerCase() === "span" && (node.classList.contains("radio") && node.classList.contains("replacement"))){
+						this.addClickToNode(node);
 					} else if(this.checkCssClassNames(node)){
 						if(this.logLevel>0){
 							console.log({cssIgnoredNode:node});
 						}
+						// this.addClickToNode(node);
 					} else if(node.hasChildNodes()){
 						var childnodes =  node.childNodes;
 						var hasparentclick = false;
@@ -824,13 +788,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 		indexnode: function(node, parentnode, hasparentnodeclick=false, fromdocumentclick=false, parentclicknode=""){
 			var elementdata = {"element-type": "", "element-labels" : [], "element-action" : "", "element-path" : "","element-url":"", "element-data":[],"menu-items":[]};
 
-			if(parentnode.classList && parentnode.classList.contains("tab-content")){
-				node.displaytype = "tab-content";
-				node.tabid = node.id;
-			}
-
 			var clickobjectexists=false;
-			var clickobject={};
+			var udaClickObject={};
 
 			if(node.hasAttribute("nist-voice") && node.getAttribute("nist-voice")){
 				return node;
@@ -848,6 +807,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 				return node;
 			}
 
+			if(parentnode.classList && parentnode.classList.contains("tab-content")){
+				node.displaytype = "tab-content";
+				node.tabid = node.id;
+			}
+
 			// Multiple clicks are recorded for select2-selection class. select2-selection--multiple
 			// This will create a problem during playback. We should record only one click to avoid this problem
 			if(node.classList && (node.classList.contains("select2-search__field") || node.classList.contains('cdk-overlay-backdrop') || node.classList.contains('cdk-overlay-pane'))) {
@@ -862,7 +826,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 
 			if(node.hasAttribute('readOnly')){
-				return node;
+				// return node;
 			}
 
 			if(this.htmlindex.length>0){
@@ -880,7 +844,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				}
 				if (node.isSameNode(UDAClickObjects[i].element)) {
 					clickobjectexists = true;
-					clickobject = UDAClickObjects[i];
+					udaClickObject = UDAClickObjects[i];
 				}
 			}
 
@@ -896,7 +860,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			if(fromdocumentclick){
 				clickobjectexists = true;
-				clickobject = node;
+				udaClickObject = node;
 			}
 
 			if(clickobjectexists){
@@ -954,7 +918,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				node.uda_custom = uda_custom;
 
 				elementdata["element-data"] = node;
-				elementdata["clickobject"] = clickobject;
+				elementdata["clickobject"] = udaClickObject;
 
 				this.htmlindex.push(elementdata);
 			}
@@ -1059,6 +1023,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 					break;
 				case "input":
 					if(!node.hasAttribute("type")){
+						jQuery(node).click(function (event) {
+							UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
+						});
 						return;
 					}
 					var inputtype=node.getAttribute("type").toLowerCase();
@@ -1102,6 +1069,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 						UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
 					});
 					break;
+				case 'tr':
+					jQuery(node).click(function (event) {
+						UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
+					});
+					break;
 				default:
 					jQuery(node).click(function (event) {
 						UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
@@ -1128,13 +1100,18 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 
 			// remove added tooltips before invoking
-			let tooltipnodes = $('.uda-tooltip');
+			// let tooltipnodes = $('.uda-tooltip');
+			let tooltipnodes = document.getElementsByClassName('uda-tooltip');
 			if (tooltipnodes.length > 0) {
 				$('.uda-tooltip').each(function() {
+					$(this).find('.uda-tooltip-text-content').remove();
 					$(this).removeClass('uda-tooltip');
-					$(this).find('.uda-tooltip-right').remove();
 				});
 			}
+
+			$('.uda-tooltip-text-content').each(function() {
+				$(this).remove();
+			});
 
 			this.simulateHover(node);
 
@@ -1151,7 +1128,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			switch (node.nodeName.toLowerCase()) {
 				case "input":
-					// this.playNextAction = false;
 					// functionality for detecting multi select box and highlighting the recorded node
 					if (node.classList && (node.classList.contains('select2-search__field') || node.classList.contains('mat-autocomplete-trigger'))){
 						this.addToolTip(node, node.parentNode.parentNode.parentNode.parentNode.parentNode, selectednode, navigationcookiedata, false, true);
@@ -1177,7 +1153,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 								break;
 							case 'submit':
 								node.click();
-								this.invokenextitem(node,timetoinvoke);
+								this.invokenextitem(node, timetoinvoke, navigationcookiedata);
 								this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
                             	break;
 							case 'text':
@@ -1207,9 +1183,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 					break;
 				case "option":
 					this.addToolTip(node, node.parentNode, selectednode, navigationcookiedata, false, false, true);
-					break;
+					UDAAlertMessageDatabreak;
 				case "checkbox":
-					// this.addToolTip(node, node.parentNode.parentNode, navigationcookiedata, false, false);
 					this.addToolTip(node, node, selectednode, navigationcookiedata, false, false, true);
 					break;
 				// Additional processing for calendar selection
@@ -1218,18 +1193,20 @@ if (typeof UDAPluginSDK === 'undefined') {
 						this.addToolTip(node, node.parentNode, selectednode, navigationcookiedata, true, false);
 					} else if(node.classList && node.classList.contains('btn-pill')) {
 						node.click();
-						this.invokenextitem(node,timetoinvoke);
+						this.invokenextitem(node, timetoinvoke, navigationcookiedata);
 					} else {
 						node.click();
-						this.invokenextitem(node,timetoinvoke);
+						this.invokenextitem(node, timetoinvoke, navigationcookiedata);
 					}
 					break;
 				case 'span':
 					if (node.classList && node.classList.contains('select2-selection')) {
 						this.addToolTip(node, node.parentNode.parentNode, selectednode, navigationcookiedata, true, false);
+					} else if(node.classList.contains("radio") && node.classList.contains("replacement")){
+						this.addToolTip(node, node.parentNode.parentNode, selectednode, navigationcookiedata, false, false, true);
 					} else {
 						node.click();
-						this.invokenextitem(node,timetoinvoke);
+						this.invokenextitem(node, timetoinvoke, navigationcookiedata);
 					}
 					break;
 				case 'div':
@@ -1237,7 +1214,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						this.addToolTip(node, node.parentNode.parentNode, selectednode, navigationcookiedata, true, false);
 					} else {
 						node.click();
-						this.invokenextitem(node,timetoinvoke);
+						this.invokenextitem(node, timetoinvoke, navigationcookiedata);
 					}
 					break;
 				//	fix for text editor during playback
@@ -1249,7 +1226,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					break;
 				default:
 					node.click();
-					this.invokenextitem(node,timetoinvoke);
+					this.invokenextitem(node, timetoinvoke, navigationcookiedata);
 					break;
 			}
 		},
@@ -1277,41 +1254,58 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			this.playNextAction = false;
 
-			if(enableIntroJs) {
-				this.introjs.addStep({
-					element: tooltipnode,
-					intro: message,
-					position: 'right',
-				}).start();
-				if(enableFocus){
-					invokingnode.focus();
+			if(navigationcookiedata) {
+				if (navigationcookiedata && navigationcookiedata.autoplay) {
+					this.autoplay = false;
+					this.autoplayPaused = true;
+					this.toggleautoplay(navigationcookiedata);
+				} else {
+					this.showselectedrow(navigationcookiedata.data, navigationcookiedata.data.id, true, navigationcookiedata);
 				}
-				if(enableClick){
-					invokingnode.click();
-				}
-				return;
 			}
 
-			if(navigationcookiedata && navigationcookiedata.autoplay) {
-				this.autoplay = false;
-				this.autoplayPaused = true;
-				this.toggleautoplay(navigationcookiedata);
-			} else {
-				this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id, true, navigationcookiedata);
+			let toolTipContentSection	=	message
+										+'<br/>';
+			if(showButtons) {
+				toolTipContentSection +=	'<button class="uda-tutorial-btn" style="margin-top:10px; margin-right: 5px;" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>'
+											+ '<button class="uda-tutorial-exit-btn" style="margin-top:10px;" type="button" uda-added="true" id="uda-autoplay-exit">Exit</button>';
 			}
 
-			var html = 	'<div class="uda-tooltip-right">'
-						+'	<div class="uda-tooltip-text-content">'
-						+message
-						+'	</div>'
-						+'	<button class="uda-tutorial-btn" style="margin-bottom:10px;" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>'
-						+'</div>';
+			let toolTipContentElement = document.createElement('div');
+			toolTipContentElement.innerHTML = toolTipContentSection.trim();
+			toolTipContentElement.classList.add('uda-tooltip-text-content');
+
+			let tooltipDivElement = document.createElement('div');
+			tooltipDivElement.classList.add('uda-tooltip');
+			tooltipDivElement.innerHTML = '<div id="uda-arrow" class="uda-arrow" data-popper-arrow></div>';
+			tooltipDivElement.prepend(toolTipContentElement);
+
+			document.body.appendChild(tooltipDivElement);
+
+			/**
+			 * calculating node position from here
+			 */
+			let toolTipPosistionClass = this.getTooltipPositionClass(tooltipnode, tooltipDivElement);
+
+			this.popperInstance = Popper.createPopper(tooltipnode, tooltipDivElement,{
+				placement: toolTipPosistionClass,
+				modifiers: [
+					{
+						name: 'offset',
+						options: {
+							offset: [0, 20],
+						},
+					},
+				],
+			});
+
+			jQuery("#uda-autoplay-exit").click(function () {
+				UDAPluginSDK.backToSearchResultsPage(navigationcookiedata);
+			});
 
 			$('html, body').animate({
-				scrollTop: ($(invokingnode).offset().top - 200)
+				scrollTop: ($(invokingnode).offset().top - 250)
 			}, 2000, function(){
-				$(tooltipnode).addClass('uda-tooltip')
-				$(tooltipnode).append(html);
 				if(enableFocus){
 					invokingnode.focus();
 				}
@@ -1320,17 +1314,100 @@ if (typeof UDAPluginSDK === 'undefined') {
 				}
 			});
 		},
+		/**
+		 * tooltip placement calculation
+		 */
+		getScreenSize: function() {
+			let page = {height: 0, width: 0};
+			let screen = {height: 0, width: 0};
+			let body = document.body,
+				html = document.documentElement;
+
+			const docEl = document.documentElement;
+			const scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+			const scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+
+			page.height = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
+			page.width = Math.max(body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth);
+			if (window.innerWidth !== undefined) {
+				screen.width = window.innerWidth * 0.75;
+				screen.height = window.innerHeight;
+				// return { width: (window.innerWidth*0.75), height: window.innerHeight };
+			} else {
+				const D = document.documentElement;
+				screen.width = D.clientWidth;
+				screen.height = D.clientHeight * 0.75;
+				// return { width: D.clientWidth*0.75, height: D.clientHeight };
+			}
+			let windowProperties = {page: page, screen: screen, scrollInfo: {scrollTop: scrollTop, scrollLeft: scrollLeft}};
+			return windowProperties;
+		},
+		//get node position on the page
+		getNodeCoordinates: function(element, windowSize) {
+			const x = element.getBoundingClientRect();
+			let result = {
+				top: x.top + windowSize.scrollInfo.scrollTop,
+				width: x.width,
+				height: x.height,
+				left: x.left + windowSize.scrollInfo.scrollLeft,
+				actualPos: x
+			};
+			return result;
+		},
+		getTooltipPositionClass: function (targetElement, tooltipElement) {
+			const availablePositions = ["right", "top", "left", "bottom"].slice();
+
+			const screenSize = this.getScreenSize();
+			const tooltipPos = this.getNodeCoordinates(tooltipElement, screenSize);
+			const targetElementRect = targetElement.getBoundingClientRect();
+
+			let finalCssClass = "right";
+
+			if(this.logLevel>1) {
+				console.log(screenSize);
+				console.log(tooltipPos);
+				console.log(targetElementRect);
+			}
+
+			// Check for space to the right
+			if (targetElementRect.right + tooltipPos.width > screenSize.screen.width) {
+				this.removeFromArray(availablePositions, "right");
+			}
+
+			// Check for space above
+			if (targetElementRect.top - tooltipPos.height < 0) {
+				this.removeFromArray(availablePositions, "top");
+			}
+
+			// Check for space to the left
+			if (targetElementRect.left - tooltipPos.width < 0) {
+				this.removeFromArray(availablePositions, "left");
+			}
+
+			// Check for space below
+			if (targetElementRect.bottom + tooltipPos.height > screenSize.page.height) {
+				this.removeFromArray(availablePositions, "bottom");
+			}
+
+			if (availablePositions.length > 0) {
+				finalCssClass = availablePositions[0];
+			}
+
+			return finalCssClass;
+		},
+		removeFromArray: function(array, value) {
+			if (array.includes(value)) {
+				array.splice(array.indexOf(value), 1);
+			}
+		},
 		//Continue functionality invoke
 		resumePlay: function(){
 			let tooltipnodes = $('.uda-tooltip');
 			if (tooltipnodes.length > 0) {
-				$('.uda-tooltip').each(function() {
-					$(this).removeClass('uda-tooltip');
-					$(this).find('.uda-tooltip-right').remove();
-				});
+				$('.uda-tooltip').remove();
+				this.popperInstance.destroy();
 			}
 			this.playNextAction = true;
-			// this.showhtml();
 			var navigationcookie=this.getstoragedata(this.navigationcookiename);
 			var navigationcookiedata = null;
 			if(navigationcookie) {
@@ -1339,14 +1416,25 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.toggleautoplay(navigationcookiedata);
 		},
 		//invoke the click of next item
-		invokenextitem:function(node,timetoinvoke){
-			var link=false;
-			timetoinvoke=timetoinvoke+4000;
-			if(node.hasOwnProperty("href")){
-				link=true;
+		invokenextitem:function(node, timeToInvoke, navigationCookieData){
+			let link=false;
+			timeToInvoke=timeToInvoke+4000;
+			if(typeof node.href !== 'undefined' && node.href !== ''){
+				if(typeof node.target !== 'undefined' && node.target==='_blank'){
+					this.toggleautoplay(navigationCookieData);
+				} else {
+					let hostname = window.location.protocol + "//" + window.location.host+window.location.pathname;
+					let href = node.href.substr(hostname.length);
+					if(href!=='' && href !== "#") {
+						link = true;
+						this.navigatedToNextPage.check = true;
+						this.navigatedToNextPage.url = node.href;
+					}
+				}
 			}
 			if(!link) {
-				setTimeout(function(){UDAPluginSDK.showhtml();}, timetoinvoke);
+				console.log(node);
+				setTimeout(function(){UDAPluginSDK.showhtml();}, timeToInvoke);
 			}
 		},
 		//simulate hover functionality
@@ -1384,6 +1472,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 				// todo from document click functionality;
 			}
 
+			if(!this.recording){
+				return ;
+			}
+
 			if(this.autoplay){
 				this.forceReindex = true;
 				UDAPluginSDK.indexnewclicknodes();
@@ -1409,20 +1501,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			if(this.logLevel>0) {
 				console.log('-------------------------------------------------------------');
-				// console.log(this.lastclickedtime);
 				console.log({clickednode: node});
-				// console.log({indexedpos: node.uda_custom.domJson.node.nodePosition});
 				console.log('-------------------------------------------------------------');
 			}
-
-			// stopping recording as date range picker is clicked as we do not support it.
-			/*if(this.recording && node.hasAttribute('ngxdaterangepickermd')) {
-				alert('Sorry currently we do not support daterange selector. Please re-record the sequence without selecting daterange selector');
-				this.recording=false;
-				this.cancelrecordingsequence();
-				this.showadvancedhtml();
-				return ;
-			}*/
 
 			if(this.recording && this.inarray(node.nodeName.toLowerCase(), this.ignoreClicksOnSpecialNodes) !== -1){
 				return ;
@@ -1439,6 +1520,16 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.cancelrecordingsequence();
 				this.showadvancedhtml();
 				return ;
+			} else if(node.hasAttribute('ng-click') && node.getAttribute('ng-click')){
+				let ngclick=node.getAttribute('ng-click');
+				if(ngclick.indexOf('clickNotoficationBell') !== -1){
+					alert('Sorry currently we do not support this notifications. Please re-record the sequence without selecting Notifications');
+					this.lastclickednode = node.parentNode;
+					this.recording=false;
+					this.cancelrecordingsequence(false);
+					this.showadvancedhtml();
+					return ;
+				}
 			}
 
 			var processclick=true;
@@ -1460,9 +1551,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 				var domjson = node.uda_custom.domJson;
 				domjson.meta = {};
 				//fix for position issue #89
-				if(domjson.node.nodePosition.x === 0 && domjson.node.nodePosition.y === 0) {
+				console.log(domjson.node.nodeInfo);
+				if(domjson.node.nodeInfo.nodePosition.x === 0 && domjson.node.nodeInfo.nodePosition.y === 0) {
 					var domjson1 = domJSON.toJSON(node);
-					domjson.node.nodePosition = domjson1.node.nodePosition;
+					domjson.node.nodeInfo.nodePosition = domjson1.node.nodeInfo.nodePosition;
 				}
 			} else {
 				return ;
@@ -1529,6 +1621,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					UDAPluginSDK.confirmednode = false;
+					// rerender html if recording is enabled.
+					if(UDAPluginSDK.recording) {
+						setTimeout(function () {
+							UDAPluginSDK.showhtml();
+						}, UDA_POST_INTERVAL);
+					}
 				}
 			};
 			xhr.send(outputdata);
@@ -1537,10 +1635,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(this.recording) {
 				if(this.logLevel>0) {
 					console.log('-------------------------------------------------------------');
-					// console.log(this.lastclickedtime);
-					// console.log({clickednode: node});
-					console.log({indexedpos: node.uda_custom.domJson.node.nodePosition});
-					console.log({domjson: domjson.node.nodePosition});
+					console.log({indexedpos: node.uda_custom.domJson.node.nodeInfo.nodePosition});
+					console.log({domjson: domjson.node.nodeInfo.nodePosition});
 					console.log('-------------------------------------------------------------');
 				}
 				if (node.hasAttribute('mattreenodetoggle')) {
@@ -1552,15 +1648,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						this.forceReindex = true;
 						UDAPluginSDK.indexnewclicknodes();
 					}, UDA_POST_INTERVAL);
-					// UDAPluginSDK.indexnewclicknodes();
 				}
-			}
-
-			// rerender html if recording is enabled.
-			if(this.recording) {
-				setTimeout(function () {
-					UDAPluginSDK.showhtml();
-				}, UDA_POST_INTERVAL);
 			}
 		},
 		confirmparentclick:function(node, fromdocument, selectchange, event, postdata) {
@@ -1583,7 +1671,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			var childtextexists = false;
 			for(const childnode of node.childNodes) {
 				if (childnode.nodeType === Node.ELEMENT_NODE) {
-					if (childnode.isSameNode(this.lastclickednode)) {
+					if (this.lastclickednode && childnode.isSameNode(this.lastclickednode)) {
 						childtextexists = true;
 						break;
 					}
@@ -1796,6 +1884,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 			var navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 
+			let tooltipnodes = document.getElementsByClassName('uda-tooltip');
+			if (tooltipnodes.length > 0) {
+				$('.uda-tooltip').remove();
+				this.popperInstance.destroy();
+			}
+
 			//add analtytics
 			this.recordclick('recordingcancel',recordingcookiedata.domain);
 			this.currentPage='cancelrecording';
@@ -1915,8 +2009,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 				});
 				var beforeEditText = originalName;
 				jQuery("#uda-edit-clickedname").click(function (){
-					// $(".voice-card-left ul li:last").css("border", "1px solid");
-					// $(".voice-card-left ul li:last").attr("contenteditable","true");
 					jQuery("#uda-edited-name").show();
 				});
 				jQuery('#uda-edited-name').blur(function() {
@@ -2110,7 +2202,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.setRequestHeader('Content-Type', 'application/json');
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					// UDAPluginSDK.backtomodal();
 					UDAPluginSDK.showSelectedSequence(JSON.parse(xhr.response))
 				}
 			};
@@ -2360,7 +2451,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			// need to improve the autoplay functionality.
 			if(typeof performactionnode=="object" && this.autoplay) {
-				// console.trace();
 				if(this.playNextAction) {
 					this.performclickaction(performactionnode, navcookiedata);
 				}
@@ -2369,15 +2459,20 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.toggleautoplay(navcookiedata);
 			}
 			jQuery("#uda-backto-search").click(function () {
-				// UDAPluginSDK.toggleautoplay(navcookiedata);
-				UDAPluginSDK.autoplay = false;
-				UDAPluginSDK.searchInProgress=false;
-				UDAPluginSDK.autoplayPaused=false;
-				UDAPluginSDK.playNextAction=true;
-				UDAPluginSDK.configureintrojs();
-				UDAPluginSDK.introjs.refresh();
-				UDAPluginSDK.backtosearchresults(navcookiedata);
+				UDAPluginSDK.backToSearchResultsPage(navcookiedata);
 			});
+		},
+		backToSearchResultsPage: function(navcookiedata){
+			UDAPluginSDK.autoplay = false;
+			UDAPluginSDK.searchInProgress=false;
+			UDAPluginSDK.autoplayPaused=false;
+			UDAPluginSDK.playNextAction=true;
+			UDAPluginSDK.backtosearchresults(navcookiedata);
+			let tooltipnodes = document.getElementsByClassName('uda-tooltip');
+			if (tooltipnodes.length > 0) {
+				$('.uda-tooltip').remove();
+				this.popperInstance.destroy();
+			}
 		},
 		//showing the sequence steps html
 		rendersteps:function(data,visited=false, navcookiedata={}){
@@ -2393,7 +2488,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal){
 				clickedname=((data.clickednodename.length>(this.maxstringlength-26))?data.clickednodename.substr(0,(this.maxstringlength-26))+'... (personal)':data.clickednodename);
 			}
-			// var clickedtext = '<pre>'+clickedname+'</pre>';
 			var clickedtext = clickedname;
 			if(visited>-1) {
 				var template = jQuery("<li class='completed'><i>" + clickedtext + "</i></li>");
@@ -2429,13 +2523,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 						// compare recorded node with personal node tag or not
 						let match = this.comparenodes(compareNode.node,originalNode.node, isPersonalNode);
 
-						if ((this.logLevel > 1) && (match.matched+5) >= match.count) {
+						if (this.logLevel>0 && (match.matched+15) >= match.count) {
 							console.log('----------------------------------------------------------');
 							console.log(match);
 							console.log(Math.abs((match.matched) - match.count));
 							console.log(match.innerChildNodes * this.innerTextWeight);
 							console.log('Matched ' + match.matched + ' out of ' + match.count);
         					console.log({node: compareNode.node, htmlNode: searchNode["element-data"]});
+							console.log({recordedNode: JSON.parse(selectednode.objectdata)});
 							console.log('----------------------------------------------------------');
 						}
 
@@ -2457,6 +2552,17 @@ if (typeof UDAPluginSDK === 'undefined') {
 										matchNodeExists=true;
 									}
 								}
+							}
+
+							if (this.logLevel>0) {
+								console.log('----------------------------------------------------------');
+								console.log(match);
+								console.log(Math.abs((match.matched) - match.count));
+								console.log(match.innerChildNodes * this.innerTextWeight);
+								console.log('Matched ' + match.matched + ' out of ' + match.count);
+								console.log({node: compareNode.node, htmlNode: searchNode["element-data"]});
+								console.log({recordedNode: JSON.parse(selectednode.objectdata)});
+								console.log('----------------------------------------------------------');
 							}
 
 							if(matchNodeExists===false) {
@@ -2523,7 +2629,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 						console.log({recordedNode: originalNode.node});
 						console.log(finalMatchNodes);
 						console.log('----------------------------------------------------------');
-						// return ;
 					}
 					finalMatchNode = this.processDistanceOfNodes(finalMatchNodes, originalNode.node);
 				}
@@ -2536,7 +2641,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 						console.log(domJSON.toJSON(finalMatchNode['element-data']));
 						console.log({finalMatchNode: finalMatchNode});
 						console.log('----------------------------------------------------------');
-						// return ;
 					}
 					if(this.updatenavcookiedata(navcookiedata,selectednode.id)) {
 						this.matchaction(finalMatchNode, false, selectednode);
@@ -2611,6 +2715,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 				} else if(key === 'innerText' && originalnode.hasOwnProperty(key) && comparenode.hasOwnProperty(key) && (comparenode[key].trim() === originalnode[key].trim())) {
 					// matching inner text should be weighted more. We will add an arbitrarily large number - innerTextWeight.
 					// since this will match for every child node, we need to accommodate this logic whenever 'comparenodes' is called
+					console.log(comparenode[key].trim());
+					console.log(originalnode[key].trim());
 					match.innerTextFlag = true;
 					match.matched = match.matched + this.innerTextWeight;
 					// match.matched++;
@@ -2708,19 +2814,20 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		// getting distance between recorded node and matching nodes of same labels
 		processDistanceOfNodes: function(matchingnodes, selectedNode) {
-			if (selectedNode.hasOwnProperty('nodePosition') && matchingnodes.length>1) {
+			if (selectedNode.hasOwnProperty('nodeInfo') && matchingnodes.length>1) {
 				let leastDistanceNode = null;
 				let leastDistance = -1;
+				console.log('------------ processing distance ------------------');
 				matchingnodes.forEach((node) => {
 					if (node.originalNode['element-data'].hasAttribute('aria-label')
 						&& node.originalNode['element-data'].getAttribute('aria-label').toLowerCase() === 'open calendar') {
 						// let dist = this.getDistance(selectedNode.nodePosition, node.originalNode['element-data'].uda_custom.domJson.node.nodePosition);
 						let domJsonData = domJSON.toJSON(node.originalNode['element-data']);
-						let dist = this.getDistance(selectedNode.nodePosition, domJsonData.node.nodePosition);
+						let dist = this.getDistance(selectedNode.nodeInfo, domJsonData.node.nodeInfo);
 						if (this.logLevel > 1) {
-							console.log(selectedNode.nodePosition);
-							console.log(node.originalNode['element-data'].uda_custom.domJson.node.nodePosition);
-							console.log(domJsonData.node.nodePosition);
+							console.log(selectedNode.nodeInfo);
+							console.log(node.originalNode['element-data'].uda_custom.domJson.node.nodeInfo);
+							console.log(domJsonData.node.nodeInfo);
 							console.log(dist);
 						}
 						// default adding first element as least distance and then comparing with last distance calculated
@@ -2731,8 +2838,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 							leastDistance = dist;
 							leastDistanceNode = node.originalNode;
 						}
-					} else if (node.domJson.hasOwnProperty('nodePosition')) {
-						let dist = this.getDistance(selectedNode.nodePosition, node.domJson.nodePosition);
+					} else if (node.domJson.hasOwnProperty('nodeInfo')) {
+						console.log('------------------------------');
+						console.log(selectedNode.nodeInfo);
+						console.log(node.domJson.nodeInfo);
+						console.log('------------------------------');
+						let dist = this.getDistance(selectedNode.nodeInfo, node.domJson.nodeInfo);
 						// default adding first element as least distance and then comparing with last distance calculated
 						if(leastDistance === -1) {
 							leastDistance = dist;
@@ -2748,11 +2859,29 @@ if (typeof UDAPluginSDK === 'undefined') {
 				return false;
 			}
 		},
-		// calculate distance between selected node and matching node
+		/**
+		 * calculate distance between selected node and matching node
+		 * @param1: recorded node
+		 * @param2: comparing node
+ 		 */
 		getDistance: function (node1, node2) {
-			const x = node1.x - node2.x;
-			const y = node1.y - node2.y;
-			const dist = Math.abs(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
+			let dist;
+			if(node1.hasOwnProperty('screen') && node2.hasOwnProperty('screen')) {
+				if (node1.screen.width >= node2.screen.width) {
+					const x = node1.nodePagePosition.left - (node2.nodePagePosition.left * (node2.screen.width / node1.screen.width))
+					const y = node1.nodePagePosition.top - (node2.nodePagePosition.top * (node2.screen.height / node1.screen.height))
+				} else {
+					// const x = node1.nodePosition.x - node2.nodePosition.x;
+					// const y = node1.nodePosition.y - node2.nodePosition.y;
+					const x = node1.nodePagePosition.left - node2.nodePagePosition.left;
+					const y = node1.nodePagePosition.top - node2.nodePagePosition.top;
+					dist = Math.abs(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
+				}
+			} else {
+				const x = node1.nodePosition.x - node2.nodePosition.x;
+				const y = node1.nodePosition.y - node2.nodePosition.y;
+				dist = Math.abs(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
+			}
 			return dist;
 		},
 		//adding data to the storage
@@ -2789,7 +2918,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					// UDAPluginSDK.closemodal();
 					UDAPluginSDK.searchinelastic();
 				}
 			};
@@ -2813,8 +2941,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(navcookiedata.autoplay){
 				navcookiedata.autoplay=false;
 				this.autoplay=false;
-				this.configureintrojs();
-				this.introjs.refresh();
 				//add analtytics
 				this.recordclick('stop',navcookiedata.data.name.toString(),navcookiedata.data.id);
 			} else {

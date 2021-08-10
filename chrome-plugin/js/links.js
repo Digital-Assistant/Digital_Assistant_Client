@@ -53,7 +53,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
     let UDASessionID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     const UDADebug = false; //this variable exists in background.js file also
     const UDA_POST_INTERVAL = 1000; //in milliseconds, each minute
-    const UDA_API_URL = (UDADebug) ? "http://localhost:11080/voiceapi" : "https://udantest.nistapp.ai/voiceapi"; //this variable exists in background.js file also
+    const UDA_API_URL = (UDADebug) ? "http://localhost:11080/voiceapi" : "https://udan.nistapp.ai/voiceapi"; //this variable exists in background.js file also
     const EXTENSION_VERSION = true;
     let UDAIgnorePatterns = [{"patterntype": "nist-voice", "patternvalue": "any"}];
     let UDASitePatterns = [];
@@ -371,11 +371,18 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
                     case 'span':
                         if (node.classList && node.classList.contains('select2-selection')) {
                             UDAAddNewElement(node);
+                        } else if (node.hasAttribute('ng-click') || node.hasAttribute('onclick')){
+                            UDAAddNewElement(node);
                         }
                         break;
                     // fix for editor issue
                     case 'ckeditor':
                         UDAAddNewElement(node);
+                        break;
+                    case 'div':
+                        if(node.hasAttribute('ng-click') || node.hasAttribute('onclick')){
+                            UDAAddNewElement(node);
+                        }
                         break;
                 }
             }
