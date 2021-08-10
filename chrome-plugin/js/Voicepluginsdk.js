@@ -684,7 +684,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 							}
 							if(addToolTip) {
 								this.tooltipDisplayedNodes.push(node);
-								this.addToolTip(node, node, false, false, false, false, 'We have detected a rich text editor. To record this in your sequence, Please click on the editor menu. We are unable to record clicks on the text area.', false);
+								this.addToolTip(node, node, false, false, false, false, 'We have detected a rich text editor. To record this in your sequence, Please click on the editor menu. We are unable to record clicks on the text area.', false, false);
 							}
 						} else if(!node.hasclick && this.inarray(node.nodeName.toLowerCase(), this.addClickToSpecialNodes) !== -1 && this.inarray(node.nodeName.toLowerCase(), this.ignoreClicksOnSpecialNodes) === -1){
 							if(this.logLevel>0) {
@@ -1231,7 +1231,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 		},
 		//add tooltip display
-		addToolTip:function(invokingnode, tooltipnode, recordeddata=null, navigationcookiedata, enableClick=false, enableFocus=false, enableIntroJs=false, message= 'Please input the value and then click on') {
+		addToolTip:function(invokingnode, tooltipnode, recordeddata=null, navigationcookiedata, enableClick=false, enableFocus=false, enableIntroJs=false, message= 'Please input the value and then click on', showButtons=true) {
 
 			if(this.logLevel>2){
 				console.log(this.invokingnode);
