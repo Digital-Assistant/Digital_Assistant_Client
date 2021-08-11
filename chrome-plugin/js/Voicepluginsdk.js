@@ -282,6 +282,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			// adding speech recognition functionality based on the library availability
 			if(UDASpeechRecognitionAvailable){
 				this.recognition = new UDAVoiceRecognition();
+				// setting up the language
+				// this.recognition.lang = 'hi-IN';
 				this.speechrecognitionavailable = true;
 				
 				this.recognition.onstart = function() {
