@@ -434,7 +434,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 								+'<div class="uda-container" style="border-top:1px solid #969696; margin-top: 30px;">'
 									+'<div class="uda-footer-left">Copyrights Reserved 2021.</div>'
 									+'<div class="uda-footer-right" style="padding-top:5px; text-align:right;">'
-										+'<a href="#">Know More </a>'
+										+'<a href="https://udan.nistapp.ai">Know More </a>'
 										+'<img src="'+this.extensionpath+'images/icons/nist-logo.png" width="15px" height="15px;">'
 									+'</div>'
 								+'</div>'
