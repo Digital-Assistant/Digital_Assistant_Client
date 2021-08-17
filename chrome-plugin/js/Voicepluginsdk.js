@@ -2059,6 +2059,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			// detect for profanity
 			sequencename = this.checkProfanity(sequencename);
+			sequencename = sequencename.trim();
 			jQuery("#uda-recorded-name").val(sequencename);
 
 			var sequencelistdata={name:"",domain:window.location.host,usersessionid:this.sessiondata.authdata.id.toString(),userclicknodelist:[].toString(),userclicknodesSet:this.recordedsequenceids,isValid:1,isIgnored:0};
