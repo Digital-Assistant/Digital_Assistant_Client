@@ -143,6 +143,16 @@ if (typeof UDAPluginSDK === 'undefined') {
 		currentPage:'search',
 		navigatedToNextPage: {check: false, url: ''},
 		popperInstance: null,
+		//Azure content moderator attributes
+		profanity: {
+			provider: 'azure',
+			config: {
+				key1: '46e922b18b7f4dba889f94e0c564ede5',
+				key2: 'e124725f447740198c11ca07c0cbcd8c',
+				endPoint: 'https://nistapp-content-moderator.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessText/Screen',
+				region: 'eastus'
+			}
+		},
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -282,6 +292,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			// adding speech recognition functionality based on the library availability
 			if(UDASpeechRecognitionAvailable){
 				this.recognition = new UDAVoiceRecognition();
+				// setting up the language
+				// this.recognition.lang = 'hi-IN';
 				this.speechrecognitionavailable = true;
 				
 				this.recognition.onstart = function() {
@@ -1910,6 +1922,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'	</ul>'
 						+'	<div class="uda-recording" style="text-align: center;">'
 						+'		<input type="text" id="uda-recorded-name" name="uda-save-recorded" class="uda-form-input" placeholder="Enter Label">'
+						+'		<br /><span style="font-size: 10px;">(Note: The content moderator may auto-remove profane words)</span>'
 						+'		<button class="uda-record-btn" onclick="UDAPluginSDK.cancelrecordingsequence();"><span>Cancel and Exit</span></button>'
 						+'		<button class="uda-tutorial-btn" onclick="UDAPluginSDK.submitrecordedlabel();">Submit</button>'
 						+'	</div>'
@@ -2043,6 +2056,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 		// submit functionality of the recorded sequence.
 		submitrecordedlabel:function(submittype="recording"){
 			var sequencename=jQuery("#uda-recorded-name").val();
+
+			// detect for profanity
+			sequencename = this.checkProfanity(sequencename);
+			jQuery("#uda-recorded-name").val(sequencename);
+
 			var sequencelistdata={name:"",domain:window.location.host,usersessionid:this.sessiondata.authdata.id.toString(),userclicknodelist:[].toString(),userclicknodesSet:this.recordedsequenceids,isValid:1,isIgnored:0};
 			if(submittype==='recording') {
 				if (sequencename === '') {
@@ -2062,6 +2080,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				sequencelistdata.isValid=0;
 				sequencelistdata.isIgnored=1;
 			}
+
 			var sequenceids = [];
 			for(var i=0;i<this.recordedsequenceids.length;i++){
 				sequenceids.push(this.recordedsequenceids[i].id);
@@ -2080,6 +2099,35 @@ if (typeof UDAPluginSDK === 'undefined') {
 				}
 			};
 			xhr.send(JSON.stringify(sequencelistdata));
+		},
+		/**
+		 * Profanity detection
+		 * @constructor
+		 * @param {string} label - Label of the recorded sequence
+		 */
+		checkProfanity: function(label){
+			switch (this.profanity.provider.toLowerCase()){
+				case 'azure':
+					var xhr = new XMLHttpRequest();
+					xhr.open("POST", this.profanity.config.endPoint, false);
+					xhr.setRequestHeader('Content-Type', 'text/plain');
+					xhr.setRequestHeader('Ocp-Apim-Subscription-Key', this.profanity.config.key1);
+					xhr.onload = function(event){
+						if(xhr.status === 200){
+							let response = JSON.parse(xhr.response);
+							console.log(response);
+							if (response.Terms && response.Terms.length>0) {
+								console.log(response.Terms);
+								response.Terms.forEach(function (term, termindex) {
+									label = label.replaceAll(term.Term, '');
+								});
+							}
+						}
+					};
+					xhr.send(label);
+					break;
+			}
+			return label;
 		},
 		// adding the last clicked record to the storage
 		addclickedrecordcookie:function(clickednodename){
