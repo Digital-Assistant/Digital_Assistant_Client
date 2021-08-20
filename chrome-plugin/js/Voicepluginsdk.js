@@ -153,6 +153,80 @@ if (typeof UDAPluginSDK === 'undefined') {
 				region: 'eastus'
 			}
 		},
+        multilingual: {
+		    searchInLang: 'en-US',
+            selectedLang: 'en-US',
+            displayText: '',
+            translatedText: '',
+            translate: {
+		        provider: 'google',
+                apikey: 'AIzaSyD3XUOZEMz9Y_e5YpDWZEsQT_7zJPF0H4k',
+                translateTo: 'en',
+                apiurl: 'https://translation.googleapis.com/language/translate/v2'
+		    }
+        },
+		// BCP list of languages
+		bcplang :
+			[['Afrikaans',       ['af-ZA']],
+				['አማርኛ',           ['am-ET']],
+				['Azərbaycanca',    ['az-AZ']],
+				['বাংলা',            ['bn-BD', 'বাংলাদেশ'], ['bn-IN', 'ভারত']],
+				['Bahasa Indonesia',['id-ID']],
+				['Bahasa Melayu',   ['ms-MY']],
+				['Català',          ['ca-ES']],
+				['Čeština',         ['cs-CZ']],
+				['Dansk',           ['da-DK']],
+				['Deutsch',         ['de-DE']],
+				['English',         ['en-AU', 'Australia'], ['en-CA', 'Canada'], ['en-IN', 'India'], ['en-KE', 'Kenya'], ['en-TZ', 'Tanzania'], ['en-GH', 'Ghana'], ['en-NZ', 'New Zealand'], ['en-NG', 'Nigeria'], ['en-ZA', 'South Africa'], ['en-PH', 'Philippines'], ['en-GB', 'United Kingdom'], ['en-US', 'United States']],
+				['Español',         ['es-AR', 'Argentina'], ['es-BO', 'Bolivia'], ['es-CL', 'Chile'], ['es-CO', 'Colombia'], ['es-CR', 'Costa Rica'], ['es-EC', 'Ecuador'], ['es-SV', 'El Salvador'], ['es-ES', 'España'], ['es-US', 'Estados Unidos'], ['es-GT', 'Guatemala'], ['es-HN', 'Honduras'], ['es-MX', 'México'], ['es-NI', 'Nicaragua'], ['es-PA', 'Panamá'], ['es-PY', 'Paraguay'], ['es-PE', 'Perú'], ['es-PR', 'Puerto Rico'], ['es-DO', 'República Dominicana'], ['es-UY', 'Uruguay'], ['es-VE', 'Venezuela']],
+				['Euskara',         ['eu-ES']],
+				['Filipino',        ['fil-PH']],
+				['Français',        ['fr-FR']],
+				['Basa Jawa',       ['jv-ID']],
+				['Galego',          ['gl-ES']],
+				['ગુજરાતી',           ['gu-IN']],
+				['Hrvatski',        ['hr-HR']],
+				['IsiZulu',         ['zu-ZA']],
+				['Íslenska',        ['is-IS']],
+				['Italiano',        ['it-IT', 'Italia'], ['it-CH', 'Svizzera']],
+				['ಕನ್ನಡ',             ['kn-IN']],
+				['ភាសាខ្មែរ',          ['km-KH']],
+				['Latviešu',        ['lv-LV']],
+				['Lietuvių',        ['lt-LT']],
+				['മലയാളം',          ['ml-IN']],
+				['मराठी',             ['mr-IN']],
+				['Magyar',          ['hu-HU']],
+				['ລາວ',              ['lo-LA']],
+				['Nederlands',      ['nl-NL']],
+				['नेपाली भाषा',        ['ne-NP']],
+				['Norsk bokmål',    ['nb-NO']],
+				['Polski',          ['pl-PL']],
+				['Português',       ['pt-BR', 'Brasil'], ['pt-PT', 'Portugal']],
+				['Română',          ['ro-RO']],
+				['සිංහල',          ['si-LK']],
+				['Slovenščina',     ['sl-SI']],
+				['Basa Sunda',      ['su-ID']],
+				['Slovenčina',      ['sk-SK']],
+				['Suomi',           ['fi-FI']],
+				['Svenska',         ['sv-SE']],
+				['Kiswahili',       ['sw-TZ', 'Tanzania'], ['sw-KE', 'Kenya']],
+				['ქართული',       ['ka-GE']],
+				['Հայերեն',          ['hy-AM']],
+				['தமிழ்',            ['ta-IN', 'இந்தியா'], ['ta-SG', 'சிங்கப்பூர்'], ['ta-LK', 'இலங்கை'], ['ta-MY', 'மலேசியா']],
+				['తెలుగు',           ['te-IN']],
+				['Tiếng Việt',      ['vi-VN']],
+				['Türkçe',          ['tr-TR']],
+				['اُردُو',            ['ur-PK', 'پاکستان'], ['ur-IN', 'بھارت']],
+				['Ελληνικά',         ['el-GR']],
+				['български',         ['bg-BG']],
+				['Pусский',          ['ru-RU']],
+				['Српски',           ['sr-RS']],
+				['Українська',        ['uk-UA']],
+				['한국어',            ['ko-KR']],
+				['中文',             ['cmn-Hans-CN', '普通话 (中国大陆)'], ['cmn-Hans-HK', '普通话 (香港)'], ['cmn-Hant-TW', '中文 (台灣)'], ['yue-Hant-HK', '粵語 (香港)']],
+				['日本語',           ['ja-JP']],
+				['हिन्दी',             ['hi-IN']],
+				['ภาษาไทย',         ['th-TH']]],
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -251,7 +325,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		otherscripts: function(){
 			this.totalotherScripts=1;
 			this.loadCssScript(this.extensionpath+"css/uda-v1.css");
-		
+
 			this.loadOtherScript(this.extensionpath+"js/domJSON.js");
 			// todo make css loading dynamic based on css file availability
 			if(this.inarray(window.location.host,this.addcustomcssdomains) !== -1){
@@ -293,9 +367,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(UDASpeechRecognitionAvailable){
 				this.recognition = new UDAVoiceRecognition();
 				// setting up the language
-				// this.recognition.lang = 'hi-IN';
+				this.recognition.lang = this.multilingual.selectedLang;
 				this.speechrecognitionavailable = true;
-				
+
 				this.recognition.onstart = function() {
 					textfromspeech = "";
 				};
@@ -346,6 +420,18 @@ if (typeof UDAPluginSDK === 'undefined') {
 				},2000);
 			});
 		},
+        /**
+         * setting selected language to the webkitspeech
+         */
+        changeLanguage: function() {
+            let langCode='en-US'
+            langCode = $('#uda-lang-select').val();
+            this.multilingual.selectedLang = langCode;
+            console.log(langCode);
+            if(UDASpeechRecognitionAvailable){
+              this.recognition.lang = langCode;
+            }
+        },
 		checkuserkeyexists:function(){
 			var sessionevent = new CustomEvent("RequestUDASessionData", {detail: {data: "getusersessiondata"}, bubbles: false, cancelable: false});
 			document.dispatchEvent(sessionevent);
@@ -354,7 +440,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			UDASessionID=data.sessionkey;
 			this.sessiondata=data;
 			this.sessionID=data.sessionkey;
-			
+
 			this.recorddocumentclick();
 		},
 		clearSession: function(){
@@ -422,6 +508,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 									+'<input type="text" name="uda-search-input" class="uda-input-cntrl" placeholder="search..." id="uda-search-input" />'
 									+'<button class="uda-search-btn" id="uda-search-btn" style="border-radius: 0px 5px 5px 0px;"></button>'
 								+'</div>'
+                            +'<select name="uda-lang-select" id="uda-lang-select" onchange="UDAPluginSDK.changeLanguage();"></select>'
 							+'</div>'
 						+'</div>'
 						+'<hr style="border:1px solid #969696; width:100%;">'
@@ -457,6 +544,26 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		addvoicesearchmodal:function(addnisticon=true){
 			jQuery("#uda-html-content").html(this.rightPanelHtml());
+			//rendering language list
+            this.bcplang.forEach(langcode => {
+                if (langcode.length>2) {
+                    langcode.forEach((sublang, sublangindex) => {
+                        if (sublangindex !== 0) {
+                            if (this.multilingual.selectedLang === sublang[0]) {
+                                $('#uda-lang-select').append('<option value="' + sublang[0] + '" selected>' + langcode[0] + ' - ' + sublang[1] + '</option>');
+                            } else {
+                                $('#uda-lang-select').append('<option value="' + sublang[0] + '">' + langcode[0] + ' - ' + sublang[1] + '</option>');
+                            }
+                        }
+                    });
+                } else {
+                    if (this.multilingual.selectedLang === langcode[1]){
+                        $('#uda-lang-select').append('<option value="'+langcode[1]+'" selected>'+langcode[0]+'</option>');
+                    } else {
+                        $('#uda-lang-select').append('<option value="' + langcode[1] + '">'+langcode[0]+'</option>');
+                    }
+                }
+            });
 			jQuery("#uda-close-panel").click(function(){
 				UDAPluginSDK.closemodal();
 			});
@@ -1614,7 +1721,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.lastclickedtime=Date.now();
 			var outputdata = JSON.stringify(postdata);
 			var xhr = new XMLHttpRequest();
-			xhr.open("POST", this.apihost+"/user/clickednode");
+			xhr.open("POST", this.apihost+"/user/clickednode", false);
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
 				if(xhr.status === 200){
@@ -2153,6 +2260,30 @@ if (typeof UDAPluginSDK === 'undefined') {
 			} else {
 				var searchtext = jQuery("#uda-search-input").val();
 			}
+            // translating from other language to english
+			if(this.multilingual.selectedLang !== this.multilingual.searchInLang) {
+                let posturl = '';
+                switch (this.multilingual.translate.provider){
+                    case 'google':
+                        posturl = this.multilingual.translate.apiurl+'?key='+encodeURIComponent(this.multilingual.translate.apikey)+'&target=en&q='+encodeURIComponent(searchtext);
+                        break;
+                }
+                var translatexhr = new XMLHttpRequest();
+                translatexhr.open("POST", posturl, false);
+                translatexhr.onload = function(event){
+                    if(translatexhr.status === 200){
+                        let translateddata = JSON.parse(translatexhr.response);
+                        if(translateddata.data.translations.length>0) {
+                            searchtext = translateddata.data.translations[0].translatedText;
+                        }
+                    } else {
+                        console.log(JSON.parse(translatexhr.response));
+                    }
+                };
+                translatexhr.onerror = function(){
+                };
+                translatexhr.send();
+            }
 
 			this.cancelrecordingsequence(true);
 
@@ -2180,7 +2311,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.recordclick('search',searchtext);
 
 			var xhr = new XMLHttpRequest();
-			xhr.open("GET", this.apihost + "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host), true);
+			xhr.open("GET", this.apihost + "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host), false);
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					UDAPluginSDK.searchInProgress=false;
@@ -2818,7 +2949,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			// var senddata=JSON.stringify({usersessionid:this.UDASessionID,id:data.id});
 			var senddata=JSON.stringify({usersessionid:this.sessiondata.authdata.id,id:data.id});
 			var xhr = new XMLHttpRequest();
-			xhr.open("POST", this.apihost + "/clickevents/sequence/delete", true);
+			xhr.open("POST", this.apihost + "/clickevents/sequence/delete", false);
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
 				if(xhr.status === 200){
