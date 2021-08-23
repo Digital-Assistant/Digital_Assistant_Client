@@ -427,7 +427,6 @@ if (typeof UDAPluginSDK === 'undefined') {
             let langCode='en-US'
             langCode = $('#uda-lang-select').val();
             this.multilingual.selectedLang = langCode;
-            console.log(langCode);
             if(UDASpeechRecognitionAvailable){
               this.recognition.lang = langCode;
             }
@@ -545,20 +544,20 @@ if (typeof UDAPluginSDK === 'undefined') {
 		addvoicesearchmodal:function(addnisticon=true){
 			jQuery("#uda-html-content").html(this.rightPanelHtml());
 			//rendering language list
-            this.bcplang.forEach(langcode => {
+			this.bcplang.forEach(langcode => {
                 if (langcode.length>2) {
                     langcode.forEach((sublang, sublangindex) => {
                         if (sublangindex !== 0) {
-                            if (this.multilingual.selectedLang === sublang[0]) {
-                                $('#uda-lang-select').append('<option value="' + sublang[0] + '" selected>' + langcode[0] + ' - ' + sublang[1] + '</option>');
+                            if (this.multilingual.selectedLang.toLowerCase() === sublang[0].toLowerCase()) {
+                            	$('#uda-lang-select').append('<option value="' + sublang[0] + '" selected>' + langcode[0] + ' - ' + sublang[1] + '</option>');
                             } else {
                                 $('#uda-lang-select').append('<option value="' + sublang[0] + '">' + langcode[0] + ' - ' + sublang[1] + '</option>');
                             }
                         }
                     });
                 } else {
-                    if (this.multilingual.selectedLang === langcode[1]){
-                        $('#uda-lang-select').append('<option value="'+langcode[1]+'" selected>'+langcode[0]+'</option>');
+                    if (this.multilingual.selectedLang.toLowerCase() == langcode[1].toString().toLowerCase()){
+						$('#uda-lang-select').append('<option value="'+langcode[1]+'" selected>'+langcode[0]+'</option>');
                     } else {
                         $('#uda-lang-select').append('<option value="' + langcode[1] + '">'+langcode[0]+'</option>');
                     }
