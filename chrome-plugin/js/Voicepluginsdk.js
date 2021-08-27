@@ -1825,9 +1825,30 @@ if (typeof UDAPluginSDK === 'undefined') {
 		renderRecordedSequenceHtml: function(){
 			var html =	'<div class="uda-card-details">'
 						+'	<h5>Recorded Sequence</h5>'
-						+'	<hr>'
+						+'	<hr style="border:1px solid #969696; width:100%;">'
 						+'	<ul class="uda-recording" id="uda-recorded-results">'
 						+'	</ul>'
+
+						+'	<hr style="border:1px solid #969696; width:100%;">'
+
+						+'	<div>'
+						+'		<input type="text" id="uda-recorded-name" name="uda-save-recorded" class="uda-form-input" placeholder="Enter Label" style="width:82%;">'
+						+'<span>'
+						+'	<button class="delete-btn"><img src="'+ this.extensionpath+'images/icons/delete.png"></button>'
+						+'</span>'
+						+'	<div style="margin-bottom:10px;">'
+						+'		<button class="add-btn">+</button>'
+						+'</div>'
+						+'	<br>'
+						+'	<br>'
+						+'	<div style="display: inline-block; margin-top: 10px;">'
+						+'		<button class="uda-record-btn" onclick="UDAPluginSDK.cancelrecordingsequence();" style="margin-right: 15px;"><span>Cancel and Exit</span></button>'
+						+'		<button class="uda-tutorial-btn" onclick="UDAPluginSDK.submitrecordedlabel();">Submit</button>'
+						+'</div>'
+						
+						+'	</div>'
+						+'</div>';
+
 						+'	<div class="uda-recording" style="text-align: center;">'
 						+'	<table id="uda-sequence-names"><tr>'
 						+'		<td><input type="text" id="uda-recorded-name" name="uda-save-recorded[]" class="uda-form-input" placeholder="Enter Label"></td>'
@@ -1898,15 +1919,21 @@ if (typeof UDAPluginSDK === 'undefined') {
 					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" /> <label style="font-size:14px;">Is personal</label>';
 				}
 				personalHtml += '			<span style="position: relative; top: 0px;"><img src="'+this.extensionpath+'images/icons/info.png" title="help"></span>';
-				var html =	'<li><i>'
+				var html =	'<li class="uda-recorded-label-editable"><i>'
 								+clickedname
 								// +editBtn
 								+'<br />'
 								+'</i>'
 								+personalHtml
 								+'<br />'
-								+tooltipBtn
-								+'<br />'
+								+'	<div class="uda-recording" style="text-align: center;">'
+								+'		<input type="text" id="" name="" class="uda-form-input" placeholder="Custom Tooltip (Optional)" style="width:68% !important;">'
+								+'<span>'
+								+'	<button class="delete-btn" style="color:#fff;">Save</button>'
+								+'</span>'
+								+'	</div>'
+								//+tooltipBtn
+								//+'<br />'
 							+'</li>';
 				var element = jQuery(html);
 				jQuery("#uda-recorded-results").append(element);
