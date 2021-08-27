@@ -154,6 +154,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 		},
         multilingual: {
+			enabled: false,
 		    searchInLang: 'en-US',
             selectedLang: 'en-US',
             displayText: '',
@@ -507,7 +508,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 									+'<input type="text" name="uda-search-input" class="uda-input-cntrl" placeholder="search..." id="uda-search-input" />'
 									+'<button class="uda-search-btn" id="uda-search-btn" style="border-radius: 0px 5px 5px 0px;"></button>'
 								+'</div>'
-                            +'<select name="uda-lang-select" id="uda-lang-select" onchange="UDAPluginSDK.changeLanguage();"></select>'
+                            +((this.multilingual.enabled)?'<select name="uda-lang-select" id="uda-lang-select" onchange="UDAPluginSDK.changeLanguage();"></select>':'')
 							+'</div>'
 						+'</div>'
 						+'<hr style="border:1px solid #969696; width:100%;">'
@@ -544,25 +545,27 @@ if (typeof UDAPluginSDK === 'undefined') {
 		addvoicesearchmodal:function(addnisticon=true){
 			jQuery("#uda-html-content").html(this.rightPanelHtml());
 			//rendering language list
-			this.bcplang.forEach(langcode => {
-                if (langcode.length>2) {
-                    langcode.forEach((sublang, sublangindex) => {
-                        if (sublangindex !== 0) {
-                            if (this.multilingual.selectedLang.toLowerCase() === sublang[0].toLowerCase()) {
-                            	$('#uda-lang-select').append('<option value="' + sublang[0] + '" selected>' + langcode[0] + ' - ' + sublang[1] + '</option>');
-                            } else {
-                                $('#uda-lang-select').append('<option value="' + sublang[0] + '">' + langcode[0] + ' - ' + sublang[1] + '</option>');
-                            }
-                        }
-                    });
-                } else {
-                    if (this.multilingual.selectedLang.toLowerCase() == langcode[1].toString().toLowerCase()){
-						$('#uda-lang-select').append('<option value="'+langcode[1]+'" selected>'+langcode[0]+'</option>');
-                    } else {
-                        $('#uda-lang-select').append('<option value="' + langcode[1] + '">'+langcode[0]+'</option>');
-                    }
-                }
-            });
+			if(this.multilingual.enabled) {
+				this.bcplang.forEach(langcode => {
+					if (langcode.length > 2) {
+						langcode.forEach((sublang, sublangindex) => {
+							if (sublangindex !== 0) {
+								if (this.multilingual.selectedLang.toLowerCase() === sublang[0].toLowerCase()) {
+									$('#uda-lang-select').append('<option value="' + sublang[0] + '" selected>' + langcode[0] + ' - ' + sublang[1] + '</option>');
+								} else {
+									$('#uda-lang-select').append('<option value="' + sublang[0] + '">' + langcode[0] + ' - ' + sublang[1] + '</option>');
+								}
+							}
+						});
+					} else {
+						if (this.multilingual.selectedLang.toLowerCase() == langcode[1].toString().toLowerCase()) {
+							$('#uda-lang-select').append('<option value="' + langcode[1] + '" selected>' + langcode[0] + '</option>');
+						} else {
+							$('#uda-lang-select').append('<option value="' + langcode[1] + '">' + langcode[0] + '</option>');
+						}
+					}
+				});
+			}
 			jQuery("#uda-close-panel").click(function(){
 				UDAPluginSDK.closemodal();
 			});
