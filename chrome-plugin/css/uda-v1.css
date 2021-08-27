@@ -781,3 +781,6 @@
     border: 2px dotted #969696 !important;
     padding: 5px !important;
 }
+.uda-form-input-reduced{
+    width:82% !important;
+}

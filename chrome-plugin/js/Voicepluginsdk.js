@@ -1832,7 +1832,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'	<hr style="border:1px solid #969696; width:100%;">'
 
 						+'	<div>'
-						+'		<input type="text" id="uda-recorded-name" name="uda-save-recorded" class="uda-form-input" placeholder="Enter Label" style="width:82%;">'
+						+'		<input type="text" id="uda-recorded-name" name="uda-save-recorded" class="uda-form-input" placeholder="Enter Label">'
+						+'		<input type="text" id="uda-recorded-name" name="uda-save-recorded" class="uda-form-input uda-form-input-reduced" placeholder="Enter Label">'
 						+'<span>'
 						+'	<button class="delete-btn"><img src="'+ this.extensionpath+'images/icons/delete.png"></button>'
 						+'</span>'
