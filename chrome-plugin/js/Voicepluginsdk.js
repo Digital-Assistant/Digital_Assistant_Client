@@ -1926,25 +1926,22 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'	<hr style="border:1px solid #969696; width:100%;">'
 
 						+'	<div>'
-						+'		<input type="text" id="uda-recorded-name" name="uda-save-recorded" class="uda-form-input" placeholder="Enter Label">'
-						+'		<input type="text" id="uda-recorded-name" name="uda-save-recorded" class="uda-form-input uda-form-input-reduced" placeholder="Enter Label">'
-						+'<span>'
-						+'	<button class="delete-btn"><img src="'+ this.extensionpath+'images/icons/delete.png"></button>'
-						+'</span>'
-						+'	<div style="margin-bottom:10px;">'
-						+'		<button class="add-btn">+</button>'
-						+'</div>'
-						+'	<br>'
-						+'	<br>'
-						+'	<div style="display: inline-block; margin-top: 10px;">'
-						+'		<button class="uda-record-btn" onclick="UDAPluginSDK.cancelrecordingsequence();" style="margin-right: 15px;"><span>Cancel and Exit</span></button>'
-						+'		<button class="uda-tutorial-btn" onclick="UDAPluginSDK.submitrecordedlabel();">Submit</button>'
-						+'</div>'
+						+'		<input type="text" id="uda-recorded-name" name="uda-save-recorded[]" class="uda-form-input" placeholder="Enter Label">'
+						+'		<div id="uda-sequence-names"></div>'
+						+'		<div style="margin-bottom:10px;">'
+						+'			<button class="add-btn" onclick="UDAPluginSDK.addSequenceNameRow();">+</button>'
+						+'		</div>'
+						+'		<br>'
+						+'		<br>'
+						+'		<div style="display: inline-block; margin-top: 10px;">'
+						+'			<button class="uda-record-btn" onclick="UDAPluginSDK.cancelrecordingsequence();" style="margin-right: 15px;"><span>Cancel and Exit</span></button>'
+						+'			<button class="uda-tutorial-btn" onclick="UDAPluginSDK.submitrecordedlabel();">Submit</button>'
+						+'		</div>'
 						
 						+'	</div>'
 						+'</div>';
 
-						+'	<div class="uda-recording" style="text-align: center;">'
+						/*+'	<div class="uda-recording" style="text-align: center;">'
 						+'	<table id="uda-sequence-names"><tr>'
 						+'		<td><input type="text" id="uda-recorded-name" name="uda-save-recorded[]" class="uda-form-input" placeholder="Enter Label"></td>'
 						+'		<td><button class="uda-tutorial-btn" onclick="UDAPluginSDK.addSequenceNameRow();">Add</button></td>'
@@ -1952,15 +1949,22 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'		<button class="uda-record-btn" onclick="UDAPluginSDK.cancelrecordingsequence();"><span>Cancel and Exit</span></button>'
 						+'		<button class="uda-tutorial-btn" onclick="UDAPluginSDK.submitrecordedlabel();">Submit</button>'
 						+'	</div>'
-						+'</div>';
+						+'</div>';*/
 			return html;
 		},
 		//Add new sequence name row
 		addSequenceNameRow: function(){
-			let html='<tr>'
+			/*let html='<tr>'
 					+'	<td><input type="text" name="uda-save-recorded[]" class="uda-form-input" placeholder="Enter Label"></td>'
 					+'	<td><button class="uda-tutorial-btn uda-remove-row">Remove</button></td>'
-					+'</tr>'
+					+'</tr>';*/
+			let html	='<div>'
+						+'		<input type="text" id="uda-recorded-name" name="uda-save-recorded[]" class="uda-form-input uda-form-input-reduced" placeholder="Enter Label">'
+						+'		<span>'
+						+'			<button class="delete-btn uda-remove-row"><img src="'+ this.extensionpath+'images/icons/delete.png"></button>'
+						+'		</span>'
+						+'</div>';
+
 			jQuery('#uda-sequence-names').append(html);
 			jQuery("#uda-sequence-names").on('click','.uda-remove-row',function(){
 				jQuery(this).parent().parent().remove();
@@ -2021,13 +2025,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 								+'</i>'
 								+personalHtml
 								+'<br />'
-								+'	<div class="uda-recording" style="text-align: center;">'
-								+'		<input type="text" id="" name="" class="uda-form-input" placeholder="Custom Tooltip (Optional)" style="width:68% !important;">'
-								+'<span>'
-								+'	<button class="delete-btn" style="color:#fff;">Save</button>'
-								+'</span>'
-								+'	</div>'
-								//+tooltipBtn
+								+tooltipBtn
 								//+'<br />'
 							+'</li>';
 				var element = jQuery(html);
@@ -2058,18 +2056,24 @@ if (typeof UDAPluginSDK === 'undefined') {
 						// UDAPluginSDK.showTooltipInput(data);
 						jQuery("#uda-edited-tooltip").show();
 					});
-					jQuery('#uda-edited-tooltip').blur(function() {
+					/*jQuery('#uda-edited-tooltip').blur(function() {
 						let editedName = $("#uda-edited-tooltip").val();
 						if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
 							UDAPluginSDK.editAndSaveTooltip(data, editedName);
 						}
-					});
+					});*/
 					jQuery("#uda-edited-tooltip").keydown(function (e) {
 						if (e.keyCode === 13) {
 							let editedName = $("#uda-edited-tooltip").val();
 							if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
 								UDAPluginSDK.editAndSaveTooltip(data, editedName);
 							}
+						}
+					});
+					jQuery("#uda-tooltip-save").click(function (){
+						let editedName = $("#uda-edited-tooltip").val();
+						if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
+							UDAPluginSDK.editAndSaveTooltip(data, editedName);
 						}
 					});
 				}
@@ -2089,10 +2093,17 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if (nodeData.meta.hasOwnProperty('tooltipInfo') && nodeData.meta.tooltipInfo) {
 				toolTipText = nodeData.meta.tooltipInfo;
 			}
-			let tooltipBtnHtml 	='			<span>'
+			/*let tooltipBtnHtml 	='			<span>'
 								+ '				<button class="uda-tutorial-btn" style="padding:0px;" type="button" id="uda-edit-tooltip">'+((toolTipText)?'Edit Tooltip':'Add Tooltip')+'</button>'
 								+ '			</span>';
-			let tooltipsection = (toolTipText) +'&nbsp;&nbsp;'+ tooltipBtnHtml + '<input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip" class="uda-form-input" placeholder="Enter text" value="' + toolTipText + '" style="display: none;">';
+			let tooltipsection = (toolTipText) +'&nbsp;&nbsp;'+ tooltipBtnHtml + '<input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip" class="uda-form-input" placeholder="Enter text" value="' + toolTipText + '" style="display: none;">';*/
+			let tooltipBtnHtml 	= '	<div class="uda-recording" style="text-align: center;">'
+								+'		<input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip" class="uda-form-input" placeholder="Custom Tooltip (Optional)" style="width:68% !important;" value="'+toolTipText+'">'
+								+'		<span>'
+								+'			<button class="delete-btn" style="color:#fff;" id="uda-tooltip-save">Save</button>'
+								+'		</span>'
+								+'	</div>';
+			let tooltipsection = tooltipBtnHtml;
 			switch (node.nodeName.toLowerCase()) {
 				case "input":
 				case "textarea":
@@ -2392,10 +2403,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 			try{
 				let sequencenamesArray = JSON.parse(data.name)
 				sequencename = sequencenamesArray[0];
-				if(sequencenamesArray.length > 1) {
+				/*if(sequencenamesArray.length > 1) {
 					sequencenamesArray.splice(0, 1);
 					sequencenames = sequencenamesArray.join('<br /> or <br />');
-				}
+				}*/
 			} catch (e) {
 				sequencename = data.name.toString();
 			}
