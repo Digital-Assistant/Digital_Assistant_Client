@@ -1933,9 +1933,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'		</div>'
 						+'		<br>'
 						+'		<br>'
-						+'		<div style="display: inline-block; margin-top: 10px;">'
+						+'		<div style="display: inline-block; margin-top: 10px; width:100%;">'
 						+'			<button class="uda-record-btn" onclick="UDAPluginSDK.cancelrecordingsequence();" style="margin-right: 15px;"><span>Cancel and Exit</span></button>'
-						+'			<button class="uda-tutorial-btn" onclick="UDAPluginSDK.submitrecordedlabel();">Submit</button>'
+						+'			<button class="uda-tutorial-btn" onclick="UDAPluginSDK.submitrecordedlabel();" style="float: right;">Submit</button>'
 						+'		</div>'
 
 						+'	</div>'
