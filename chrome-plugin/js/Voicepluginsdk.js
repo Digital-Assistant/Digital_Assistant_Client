@@ -1925,7 +1925,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 						+'	<hr style="border:1px solid #969696; width:100%;">'
 
-						+'	<div>'
+						+'	<div style="text-align:left;">'
 						+'		<input type="text" id="uda-recorded-name" name="uda-save-recorded[]" class="uda-form-input" placeholder="Enter Label">'
 						+'		<div id="uda-sequence-names"></div>'
 						+'		<div style="margin-bottom:10px;">'
