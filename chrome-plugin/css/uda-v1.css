@@ -776,7 +776,7 @@
     height: 40px;
 }
 .delete-btn{
-    width: 10%;
+    width: 15%;
     background-color:#303f9f;
     border: none;
     border-radius: 3px;
@@ -792,5 +792,5 @@
     padding: 5px !important;
 }
 .uda-form-input-reduced{
-    width:89% !important;
+    width:83% !important;
 }
