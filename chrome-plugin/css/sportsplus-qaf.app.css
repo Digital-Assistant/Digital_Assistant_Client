@@ -1,0 +1,13 @@
+.uda-recording {
+    position: relative;
+    line-height: 25px;
+    text-align: left;
+    list-style: none url('../images/icons/bullet.png');
+    margin: 0;
+    list-style-position: inside;
+}
+
+/*Nexa code */
+.white-bg{
+    text-align: left !important;
+}
