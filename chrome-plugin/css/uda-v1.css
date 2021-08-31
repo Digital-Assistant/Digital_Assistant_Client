@@ -293,6 +293,8 @@
 .uda-advanced-btn-content a:hover {
     background-color: var(--uda-primary-color);
     cursor: pointer;
+    color: #fff;
+    text-decoration: none;
 }
 
 .uda-dropdown:hover .uda-advanced-btn-content {
@@ -542,6 +544,7 @@
     padding: 5px 12px;
     font-size: 14px;
     cursor: pointer;
+    height: 30px;
 }
 
 .uda-tutorial-exit-btn {
@@ -575,6 +578,7 @@
     align-items: center;
     font-size: 14px;
     cursor: pointer;
+    height: 30px;
 }
 .uda-record-btn span{
   padding-left: 15px;
@@ -589,11 +593,11 @@
     border: none;
     border-radius: 5px;
     padding: 10px 20px;
-    width: 80% !important;
+    width: 100% !important;
     margin: 10px 0px;
-    height: 18px !important;
-    box-sizing: unset !important;
-
+    /*height: 18px !important;
+    box-sizing: unset !important;*/
+    height: 40px;
 }
 
 .uda-form-input:focus {
@@ -760,3 +764,33 @@
     max-width: 77%;
 }
 
+
+.add-btn{
+    background-color: #303f9f;
+    border: none;
+    color: #fff;
+    border-radius: 3px;
+    padding: 0px 10px;
+    float: left;
+    font-size: 24px;
+    height: 40px;
+}
+.delete-btn{
+    width: 15%;
+    background-color:#303f9f;
+    border: none;
+    border-radius: 3px;
+    padding: 6px 5px;
+    height: 38px;
+}
+/*.uda-recorded:last-child{
+    border: 2px dotted #969696 !important;
+    padding: 5px !important;
+}*/
+.uda-recorded-label-editable{
+    border: 2px dotted #969696 !important;
+    padding: 5px !important;
+}
+.uda-form-input-reduced{
+    width:83% !important;
+}
