@@ -771,9 +771,9 @@
     color: #fff;
     border-radius: 3px;
     padding: 0px 10px;
-    float: left;
-    font-size: 24px;
-    height: 40px;
+    float: right;
+    font-size: 14px;
+    height: 30px;
 }
 .delete-btn{
     width: 15%;

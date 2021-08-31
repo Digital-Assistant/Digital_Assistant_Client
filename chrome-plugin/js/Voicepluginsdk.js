@@ -1929,7 +1929,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'		<input type="text" id="uda-recorded-name" name="uda-save-recorded[]" class="uda-form-input" placeholder="Enter Label">'
 						+'		<div id="uda-sequence-names"></div>'
 						+'		<div style="margin-bottom:10px;">'
-						+'			<button class="add-btn" onclick="UDAPluginSDK.addSequenceNameRow();">+</button>'
+						+'			<button class="add-btn" onclick="UDAPluginSDK.addSequenceNameRow();">+ Add Label</button>'
 						+'		</div>'
 						+'		<br>'
 						+'		<br>'
@@ -2013,11 +2013,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 								+'			<input type="text" id="uda-edited-name" name="uda-edited-name" class="uda-form-input" placeholder="Enter Name" value="'+originalName+'" style="display: none;">';
 				if(nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal){
 					// var personalHtml = '&nbsp; &nbsp; (personal)';
-					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" checked /> <label style="font-size:14px;">Is personal</label>';
+					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" checked /> <label style="font-size:14px;">Personal Information</label>';
 				} else {
-					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" /> <label style="font-size:14px;">Is personal</label>';
+					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" /> <label style="font-size:14px;">Personal Information</label>';
 				}
-				personalHtml += '			<span style="position: relative; top: 0px;"><img src="'+this.extensionpath+'images/icons/info.png" title="help"></span>';
+				personalHtml += '			<span style="position: relative; top: 0px;"><img src="'+this.extensionpath+'images/icons/info.png" title="select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."></span>';
 				var html =	'<li class="uda-recorded-label-editable"><i>'
 								+clickedname
 								// +editBtn
@@ -2690,7 +2690,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						console.log('Unable to find final matchnode with distance calculation');
 						console.log('----------------------------------------------------------');
 					}
-					alert("Unable to find the action");
+					alert("Nistapp UDA ran into a problem and will exit");
 					if(navcookiedata && navcookiedata.autoplay) {
 						this.autoplay = false;
 						this.autoplayPaused = true;
@@ -2699,7 +2699,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				}
 
 			} else {
-				alert("Unable to find the action");
+				alert("Nistapp UDA ran into a problem and will exit");
 				if(navcookiedata && navcookiedata.autoplay) {
 					this.autoplay = false;
 					this.autoplayPaused = true;
