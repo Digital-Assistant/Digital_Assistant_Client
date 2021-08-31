@@ -166,6 +166,13 @@ if (typeof UDAPluginSDK === 'undefined') {
                 apiurl: 'https://translation.googleapis.com/language/translate/v2'
 		    }
         },
+		set enableMultilingual(val){
+			this.multilingual.enabled = val;
+			this.showhtml();
+		},
+		get enableMultilingual() {
+			return UDAPluginSDK.multilingual.enabled;
+		},
 		// BCP list of languages
 		bcplang :
 			[['Afrikaans',       ['af-ZA']],
