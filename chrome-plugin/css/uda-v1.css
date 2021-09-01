@@ -771,7 +771,7 @@ Progress animation
     position: relative;
     margin: 0 auto;
     height: 50px;
-    width: 30%;
+    /*width: 30%;*/
     border-radius: 50px;
     text-align: center;
     display: block;
@@ -781,7 +781,7 @@ Progress animation
     display: block;
     position: relative;
     height: 40px;
-    width: 50%;
+    width: 30%;
 
     border-radius: 10px;
     background-image: linear-gradient(to bottom, #fe5722, #ef4b19 50%);
@@ -789,22 +789,14 @@ Progress animation
             inset 0 2px 9px  rgba(255,255,255,0.3),
             inset 0 -2px 6px rgba(0,0,0,0.4);
     overflow: hidden;
+    margin: 0 auto;
 }
 
 .uda-loading-bar span:after {
     content: "";
     position: absolute;
     top: 0px; left: 0; bottom: 0; right: 0;
-    background-image: linear-gradient(
-            -45deg,
-            rgba(255, 255, 255, .2) 25%,
-            transparent 25%,
-            transparent 50%,
-            rgba(255, 255, 255, .2) 50%,
-            rgba(255, 255, 255, .2) 75%,
-            transparent 75%,
-            transparent
-    );
+    
     z-index: 1;
     background-size: 50px 50px;
     border-top-right-radius: 8px;
@@ -816,6 +808,16 @@ Progress animation
 
 .uda-loading-bar.animate > span:after {
     animation: load 1s infinite;
+    background-image: linear-gradient(
+            -45deg,
+            rgba(255, 255, 255, .2) 25%,
+            transparent 25%,
+            transparent 50%,
+            rgba(255, 255, 255, .2) 50%,
+            rgba(255, 255, 255, .2) 75%,
+            transparent 75%,
+            transparent
+    );
 }
 
 @keyframes load {
