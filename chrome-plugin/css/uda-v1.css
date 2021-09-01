@@ -793,6 +793,7 @@ Progress animation
 }
 
 .uda-loading-bar span:after {
+    cursor: pointer;
     content: "";
     position: absolute;
     top: 0px; left: 0; bottom: 0; right: 0;
