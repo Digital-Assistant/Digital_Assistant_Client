@@ -2592,7 +2592,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			} else {
 				playpausebutton = '			<div class="uda-loading-bar" id="nist-autoplay">'
 								+'   			 <span>'
-								+'      			<img src="'+this.extensionpath+'images/icons/play-icon.png">'
+								+'      			<img src="'+this.extensionpath+'images/icons/play.png">'
 								+'    			</span>'
 								+'  		</div>';
 			}
