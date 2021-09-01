@@ -764,6 +764,74 @@
     max-width: 77%;
 }
 
+/**
+Progress animation
+ */
+.uda-loading-bar {
+    position: relative;
+    margin: 0 auto;
+    height: 50px;
+    /*width: 30%;*/
+    border-radius: 50px;
+    text-align: center;
+    display: block;
+}
+
+.uda-loading-bar span {
+    display: block;
+    position: relative;
+    height: 40px;
+    width: 30%;
+
+    border-radius: 10px;
+    background-image: linear-gradient(to bottom, #fe5722, #ef4b19 50%);
+    box-shadow:
+            inset 0 2px 9px  rgba(255,255,255,0.3),
+            inset 0 -2px 6px rgba(0,0,0,0.4);
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.uda-loading-bar span:after {
+    cursor: pointer;
+    content: "";
+    position: absolute;
+    top: 0px; left: 0; bottom: 0; right: 0;
+    
+    z-index: 1;
+    background-size: 50px 50px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    overflow: hidden;
+}
+
+.uda-loading-bar.animate > span:after {
+    animation: load 1s infinite;
+    background-image: linear-gradient(
+            -45deg,
+            rgba(255, 255, 255, .2) 25%,
+            transparent 25%,
+            transparent 50%,
+            rgba(255, 255, 255, .2) 50%,
+            rgba(255, 255, 255, .2) 75%,
+            transparent 75%,
+            transparent
+    );
+}
+
+@keyframes load {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 50px 50px;
+    }
+}
+.uda-loading-bar span img{
+    padding-top: 7px;
+}
 
 .add-btn{
     background-color: #303f9f;

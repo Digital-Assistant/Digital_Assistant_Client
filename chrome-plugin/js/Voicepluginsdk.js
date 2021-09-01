@@ -2330,7 +2330,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 		// submit functionality of the recorded sequence.
 		submitrecordedlabel:function(submittype="recording"){
 			// var sequencename=jQuery("#uda-recorded-name").val();
-			let sequencenames = [];
 			var sequencenamearray=jQuery("input[name='uda-save-recorded[]']").map(function (){
 				// detect for profanity
 				let sequencename = this.value;
@@ -2338,7 +2337,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 				sequencename = sequencename.trim();
 				sequencenames.push(sequencename);
 			});
-			console.log(sequencenames);
 			let sequencename = JSON.stringify(sequencenames);
 			var sequencelistdata={name:"",domain:window.location.host,usersessionid:this.sessiondata.authdata.id.toString(),userclicknodelist:[].toString(),userclicknodesSet:this.recordedsequenceids,isValid:1,isIgnored:0};
 			if(submittype==='recording') {
@@ -2584,6 +2582,20 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		// renderSelectedSequenceHtml: fu
 		renderSelectedSequenceHtml: function (data, isPlaying){
+			let playpausebutton = '';
+			if(isPlaying) {
+				playpausebutton = '			<div class="uda-loading-bar animate" id="nist-autoplay">'
+								+'   			 <span>'
+								+'      			<img src="'+this.extensionpath+'images/icons/pause.png">'
+								+'    			</span>'
+								+'  		</div>';
+			} else {
+				playpausebutton = '			<div class="uda-loading-bar" id="nist-autoplay">'
+								+'   			 <span>'
+								+'      			<img src="'+this.extensionpath+'images/icons/play.png">'
+								+'    			</span>'
+								+'  		</div>';
+			}
 			let sequencename = '';
 			let sequencenames = '';
 			try{
@@ -2598,8 +2610,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 			var html =	'<div class="uda-card-details" style="border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;">'
 						+'    <div class="uda-card-btns">'
-						+'        <button class="uda-play-btn" '+((isPlaying)?'disabled="disabled"':'id="nist-autoplay"')+'><img src="'+this.extensionpath+'images/icons/play-icon.png"></button>'
-						+'        <button class="uda-stop-btn" '+((!isPlaying)?'disabled="disabled"':'id="nist-autoplay"')+'><img src="'+this.extensionpath+'images/icons/stop-icon.png"></button>'
+						// +'        <button class="uda-play-btn" '+((isPlaying)?'disabled="disabled"':'id="nist-autoplay"')+'><img src="'+this.extensionpath+'images/icons/play-icon.png"></button>'
+						// +'        <button class="uda-stop-btn" '+((!isPlaying)?'disabled="disabled"':'id="nist-autoplay"')+'><img src="'+this.extensionpath+'images/icons/stop-icon.png"></button>'
+						+	playpausebutton
 						+'    </div>'
 						+'    <div class="uda-card-right-dbl-arrow" id="uda-backto-search"><img src="'+this.extensionpath+'images/icons/right-duble-arrow.png"></div>'
 						+'    <h5>'+sequencename+'</h5>'
