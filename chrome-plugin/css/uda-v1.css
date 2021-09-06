@@ -862,3 +862,11 @@ Progress animation
 .uda-form-input-reduced{
     width:83% !important;
 }
+#uda-lang-select{
+    width: 70%;
+    background-color: var(--uda-footer-srchbtn-bgcolor);
+    margin-top: 10px;
+    border: none;
+    padding: 8px;
+    border-radius: 3px;
+}
