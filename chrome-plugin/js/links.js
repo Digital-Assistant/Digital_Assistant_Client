@@ -1,8 +1,20 @@
 var UDALinkScriptloaded = UDALinkScriptloaded || false;
 // if(!UDALinkScriptloaded) {
+    async function UDAdigestMessage(textmessage, algorithm) {
+        console.log("--------------------------------"+algorithm+"--------------------------------------------------------");
+        console.log(Date.now());
+        const encoder = new TextEncoder();
+        const data = encoder.encode(textmessage);
+        const hash = await crypto.subtle.digest(algorithm, data);
+        console.log(hash);
+        console.log(Date.now());
+        console.log("--------------------------------"+algorithm+"--------------------------------------------------------");
+        return hash;
+    }
     let UDAUserAuthData = {id: null, email: null, restrict_add_delete: false, role: 'default'};
     var udaauthdata = {
         set id(val){
+            let encrypted = UDAdigestMessage(val, "SHA-256").then((output)=>{UDAdigestMessage(val, "SHA-512");});
             UDAUserAuthData.id = val;
             var sessionevent = new CustomEvent("UDAClearSessionData", {detail: {data: "clearsession"}, bubbles: false, cancelable: false});
             document.dispatchEvent(sessionevent);
