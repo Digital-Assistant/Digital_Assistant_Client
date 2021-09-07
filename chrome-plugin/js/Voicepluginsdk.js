@@ -1679,7 +1679,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 				var domjson = node.uda_custom.domJson;
 				domjson.meta = {};
 				//fix for position issue #89
-				console.log(domjson.node.nodeInfo);
 				if(domjson.node.nodeInfo.nodePosition.x === 0 && domjson.node.nodeInfo.nodePosition.y === 0) {
 					var domjson1 = domJSON.toJSON(node);
 					domjson.node.nodeInfo.nodePosition = domjson1.node.nodeInfo.nodePosition;
@@ -2243,16 +2242,22 @@ if (typeof UDAPluginSDK === 'undefined') {
 				case "button":
 					if(node.hasAttribute('aria-label') && node.getAttribute('aria-label').toLowerCase() === 'open calendar') {
 						return tooltipsection;
+					} else {
+						return '';
 					}
 					break;
 				case 'span':
 					if (node.className && node.className.indexOf('select2-selection') !== -1) {
 						return tooltipsection;
+					} else {
+						return '';
 					}
 					break;
 				case 'div':
-				if(node.className && (node.className.indexOf('mat-form-field-flex') !== -1 || node.className.indexOf('mat-select-trigger') !== -1)) {
+					if(node.className && (node.className.indexOf('mat-form-field-flex') !== -1 || node.className.indexOf('mat-select-trigger') !== -1)) {
 						return tooltipsection;
+					} else {
+						return '';
 					}
 					break;
 				case 'ckeditor':
@@ -2262,7 +2267,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					return tooltipsection;
 					break;
 				default:
-					return '';
+					return "";
 					break;
 			}
 		},
