@@ -154,7 +154,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 		},
         multilingual: {
-			enabled: true,
+			enabled: false,
 		    searchInLang: 'en-US',
             selectedLang: 'en-US',
             displayText: '',
