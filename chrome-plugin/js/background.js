@@ -9,14 +9,41 @@ var sessionkey="";
 var sessiondata={sessionkey:"",authenticated:false,authenticationsource:"",authdata:{}};
 var apikey = 'AIzaSyBeCZ1su0BYG5uGTHqqdg1bczlsubDuDrU';
 
+/**
+ *
+ * @param textmessage
+ * @param algorithm
+ * @returns {Promise<ArrayBuffer>}
+ * @constructor
+ *
+ * This is used for encrypting text messages as specified in the docs
+ * https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest
+ *
+ */
+async function UDAdigestMessage(textmessage, algorithm) {
+	const encoder = new TextEncoder();
+	const data = encoder.encode(textmessage);
+	const hash = await crypto.subtle.digest(algorithm, data);
+	const hashArray = Array.from(new Uint8Array(hash));                     // convert buffer to byte array
+	const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
+	return hashHex;
+}
+
 //login with chrome identity functionality
 function loginwithgoogle(){
 	sessiondata.authenticationsource="google";
 	chrome.identity.getProfileUserInfo(function (data) {
-		if(data.id!=='' && data.emailid!=="") {
+		console.log(data);
+		if(data.id!=='' && data.email!=="") {
 			sessiondata.authenticated = true;
 			sessiondata.authdata = data;
-			bindauthenticatedaccount();
+			UDAdigestMessage(sessiondata.authdata.id, "SHA-512").then(encryptedid=>{
+				sessiondata.authdata.id = encryptedid;
+				UDAdigestMessage(sessiondata.authdata.email, "SHA-512").then(encryptedemail=>{
+					sessiondata.authdata.email = encryptedemail;
+					bindauthenticatedaccount();
+				});
+			});
 		} else {
 			sendsessiondata("UDAAlertMessageData","UDA: UserID not set. Digital assistant will not work.")
 		}

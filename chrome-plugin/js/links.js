@@ -1,31 +1,42 @@
 var UDALinkScriptloaded = UDALinkScriptloaded || false;
 // if(!UDALinkScriptloaded) {
+    /**
+     *
+     * @param textmessage
+     * @param algorithm
+     * @returns {Promise<ArrayBuffer>}
+     * @constructor
+     *
+     * This is used for encrypting text messages as specified in the docs
+     * https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest
+     *
+     */
     async function UDAdigestMessage(textmessage, algorithm) {
-        console.log("--------------------------------"+algorithm+"--------------------------------------------------------");
-        console.log(Date.now());
         const encoder = new TextEncoder();
         const data = encoder.encode(textmessage);
         const hash = await crypto.subtle.digest(algorithm, data);
-        console.log(hash);
-        console.log(Date.now());
-        console.log("--------------------------------"+algorithm+"--------------------------------------------------------");
-        return hash;
+        const hashArray = Array.from(new Uint8Array(hash));                     // convert buffer to byte array
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
+        return hashHex;
     }
     let UDAUserAuthData = {id: null, email: null, restrict_add_delete: false, role: 'default'};
     var udaauthdata = {
         set id(val){
-            let encrypted = UDAdigestMessage(val, "SHA-256").then((output)=>{UDAdigestMessage(val, "SHA-512");});
-            UDAUserAuthData.id = val;
-            var sessionevent = new CustomEvent("UDAClearSessionData", {detail: {data: "clearsession"}, bubbles: false, cancelable: false});
-            document.dispatchEvent(sessionevent);
+            UDAdigestMessage(val, "SHA-512").then(encrypted=>{
+                UDAUserAuthData.id = encrypted;
+                var sessionevent = new CustomEvent("UDAClearSessionData", {detail: {data: "clearsession"}, bubbles: false, cancelable: false});
+                document.dispatchEvent(sessionevent);
+            });
         },
         get id() {
             return UDAUserAuthData.id;
         },
         set email(val) {
-            UDAUserAuthData.email = val;
-            var sessionevent = new CustomEvent("UDAClearSessionData", {detail: {data: "clearsession"}, bubbles: false, cancelable: false});
-            document.dispatchEvent(sessionevent);
+            UDAdigestMessage(val, "SHA-512").then(encrypted=>{
+                UDAUserAuthData.email = encrypted;
+                var sessionevent = new CustomEvent("UDAClearSessionData", {detail: {data: "clearsession"}, bubbles: false, cancelable: false});
+                document.dispatchEvent(sessionevent);
+            });
         },
         get email() {
             return UDAUserAuthData.email;
