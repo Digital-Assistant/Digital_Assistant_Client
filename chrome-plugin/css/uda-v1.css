@@ -293,6 +293,8 @@
 .uda-advanced-btn-content a:hover {
     background-color: var(--uda-primary-color);
     cursor: pointer;
+    color: #fff;
+    text-decoration: none;
 }
 
 .uda-dropdown:hover .uda-advanced-btn-content {
@@ -542,6 +544,7 @@
     padding: 5px 12px;
     font-size: 14px;
     cursor: pointer;
+    height: 30px;
 }
 
 .uda-tutorial-exit-btn {
@@ -575,6 +578,7 @@
     align-items: center;
     font-size: 14px;
     cursor: pointer;
+    height: 30px;
 }
 .uda-record-btn span{
   padding-left: 15px;
@@ -589,11 +593,11 @@
     border: none;
     border-radius: 5px;
     padding: 10px 20px;
-    width: 80% !important;
+    width: 100% !important;
     margin: 10px 0px;
-    height: 18px !important;
-    box-sizing: unset !important;
-
+    /*height: 18px !important;
+    box-sizing: unset !important;*/
+    height: 40px;
 }
 
 .uda-form-input:focus {
@@ -760,3 +764,109 @@
     max-width: 77%;
 }
 
+/**
+Progress animation
+ */
+.uda-loading-bar {
+    position: relative;
+    margin: 0 auto;
+    height: 50px;
+    /*width: 30%;*/
+    border-radius: 50px;
+    text-align: center;
+    display: block;
+}
+
+.uda-loading-bar span {
+    display: block;
+    position: relative;
+    height: 40px;
+    width: 30%;
+
+    border-radius: 10px;
+    background-image: linear-gradient(to bottom, #fe5722, #ef4b19 50%);
+    box-shadow:
+            inset 0 2px 9px  rgba(255,255,255,0.3),
+            inset 0 -2px 6px rgba(0,0,0,0.4);
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.uda-loading-bar span:after {
+    cursor: pointer;
+    content: "";
+    position: absolute;
+    top: 0px; left: 0; bottom: 0; right: 0;
+    
+    z-index: 1;
+    background-size: 50px 50px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    overflow: hidden;
+}
+
+.uda-loading-bar.animate > span:after {
+    animation: load 1s infinite;
+    background-image: linear-gradient(
+            -45deg,
+            rgba(255, 255, 255, .2) 25%,
+            transparent 25%,
+            transparent 50%,
+            rgba(255, 255, 255, .2) 50%,
+            rgba(255, 255, 255, .2) 75%,
+            transparent 75%,
+            transparent
+    );
+}
+
+@keyframes load {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 50px 50px;
+    }
+}
+.uda-loading-bar span img{
+    padding-top: 7px;
+}
+
+.add-btn{
+    background-color: #303f9f;
+    border: none;
+    color: #fff;
+    border-radius: 3px;
+    padding: 0px 10px;
+    float: right;
+    font-size: 14px;
+    height: 30px;
+}
+.delete-btn{
+    width: 15%;
+    background-color:#303f9f;
+    border: none;
+    border-radius: 3px;
+    padding: 6px 5px;
+    height: 38px;
+}
+/*.uda-recorded:last-child{
+    border: 2px dotted #969696 !important;
+    padding: 5px !important;
+}*/
+.uda-recorded-label-editable{
+    border: 2px dotted #969696 !important;
+    padding: 5px !important;
+}
+.uda-form-input-reduced{
+    width:83% !important;
+}
+#uda-lang-select{
+    width: 70%;
+    background-color: var(--uda-footer-srchbtn-bgcolor);
+    margin-top: 10px;
+    border: none;
+    padding: 8px;
+    border-radius: 3px;
+}
