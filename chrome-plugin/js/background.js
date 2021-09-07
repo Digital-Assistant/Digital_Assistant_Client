@@ -2,7 +2,7 @@
 
 var updatedata=false;
 var UDADebug=false; //this variable exists in links.js file also
-var apihost=(UDADebug)?"http://localhost:11080/voiceapi":"https://udantest.nistapp.ai/voiceapi"; //this variable exists in links.js file also
+var apihost=(UDADebug)?"http://localhost:11080/voiceapi":"https://udan.nistapp.ai/voiceapi"; //this variable exists in links.js file also
 var cookiename="uda-sessiondata";
 var activetabs=[];
 var sessionkey="";
