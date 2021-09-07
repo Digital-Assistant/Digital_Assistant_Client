@@ -154,7 +154,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 		},
         multilingual: {
-			enabled: false,
+			enabled: true,
 		    searchInLang: 'en-US',
             selectedLang: 'en-US',
             displayText: '',
@@ -2330,10 +2330,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 		// submit functionality of the recorded sequence.
 		submitrecordedlabel:function(submittype="recording"){
 			// var sequencename=jQuery("#uda-recorded-name").val();
+			let sequencenames = [];
 			var sequencenamearray=jQuery("input[name='uda-save-recorded[]']").map(function (){
 				// detect for profanity
 				let sequencename = this.value;
-				sequencename = this.checkProfanity(sequencename);
+				sequencename = UDAPluginSDK.checkProfanity(sequencename);
 				sequencename = sequencename.trim();
 				sequencenames.push(sequencename);
 			});
