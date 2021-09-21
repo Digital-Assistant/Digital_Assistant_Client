@@ -1,19 +1,19 @@
 {
   "manifest_version": 2,
   "name": "Universal Digital Assistant (Alpha)",
-  "version": "0.1.8",
+  "version": "0.1.8.239",
   "description": "Building an Extension for custom user navigation which helps in assisting users to navigate to right place.",
-  "permissions": ["activeTab", "background", "declarativeContent", "storage", "webNavigation", "tabs", "identity","identity.email"],
+  "permissions": ["activeTab", "background", "storage", "tabs", "identity","identity.email"],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "content_scripts": [
 	{
-	  "matches": ["*://localhost/*", "*://*.nistapp.com/*", "*://*.rknowsys.com/*", "*://*.atlassian.net/*", "*://*.vantagecircle.com/*", "*://*.vantagecircle.co.in/*", "*://*.vantagecircle.in/*", "*://*.dynamics.com/*", "*://*.sportsplus-qaf.app/*", "*://*.zigtal.com/*", "*://*.discoversaudi.sa/*"],
+	  "matches": ["*://localhost/*", "*://*.nistapp.com/*", "*://*.rknowsys.com/*", "*://*.atlassian.net/*", "*://*.vantagecircle.com/*", "*://*.vantagecircle.co.in/*", "*://*.vantagecircle.in/*", "*://*.dynamics.com/*", "*://*.sportsplus-qaf.app/*", "*://*.zigtal.com/*", "*://*.discoversaudi.sa/*", "<all_urls>"],
 	  "js": ["js/injectscriptmodifier.js"],
 	  "all_frames": false,
 	  "run_at":"document_start"
 	},
 	{
-      "matches": ["*://localhost/*", "*://*.nistapp.com/*", "*://*.rknowsys.com/*", "*://*.atlassian.net/*", "*://*.vantagecircle.com/*", "*://*.vantagecircle.co.in/*", "*://*.vantagecircle.in/*", "*://*.dynamics.com/*", "*://*.sportsplus-qaf.app/*", "*://*.zigtal.com/*", "*://*.discoversaudi.sa/*"],
+      "matches": ["*://localhost/*", "*://*.nistapp.com/*", "*://*.rknowsys.com/*", "*://*.atlassian.net/*", "*://*.vantagecircle.com/*", "*://*.vantagecircle.co.in/*", "*://*.vantagecircle.in/*", "*://*.dynamics.com/*", "*://*.sportsplus-qaf.app/*", "*://*.zigtal.com/*", "*://*.discoversaudi.sa/*", "<all_urls>"],
 	  "js": ["js/injectsdk.js"],
 	  "run_at":"document_end"
 	}

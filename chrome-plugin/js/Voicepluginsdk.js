@@ -145,23 +145,24 @@ if (typeof UDAPluginSDK === 'undefined') {
 		popperInstance: null,
 		//Azure content moderator attributes
 		profanity: {
+			enabled: true,
 			provider: 'azure',
 			config: {
-				key1: '46e922b18b7f4dba889f94e0c564ede5',
-				key2: 'e124725f447740198c11ca07c0cbcd8c',
+				key1: '',
+				key2: '',
 				endPoint: 'https://nistapp-content-moderator.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessText/Screen',
 				region: 'eastus'
 			}
 		},
         multilingual: {
-			enabled: false,
+			enabled: true,
 		    searchInLang: 'en-US',
             selectedLang: 'en-US',
             displayText: '',
             translatedText: '',
             translate: {
 		        provider: 'google',
-                apikey: 'AIzaSyD3XUOZEMz9Y_e5YpDWZEsQT_7zJPF0H4k',
+                apikey: '',
                 translateTo: 'en',
                 apiurl: 'https://translation.googleapis.com/language/translate/v2'
 		    }
@@ -356,10 +357,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 			* */
 			if(typeof Popper === 'undefined'){
 				this.totalotherScripts++;
-				this.loadOtherScript("https://unpkg.com/@popperjs/core@2.9.2/dist/umd/popper.min.js");
+				this.loadOtherScript(this.extensionpath+"js/popper.min.js");
 			} else {
 				this.totalotherScripts++;
-				this.loadOtherScript("https://unpkg.com/@popperjs/core@2.9.2/dist/umd/popper.min.js");
+				this.loadOtherScript(this.extensionpath+"js/popper.min.js");
 			}
 		},
 		allReady: function() {
@@ -404,6 +405,20 @@ if (typeof UDAPluginSDK === 'undefined') {
 						jQuery("#uda-voice-icon-start").show();
 					}
 				};
+			}
+
+			//check for multilngual key
+			if(this.multilingual.translate.apikey !== '') {
+				this.multilingual.enabled = true;
+			} else {
+				this.multilingual.enabled = false;
+			}
+
+			//check for profanity key
+			if(this.profanity.config.key1 || this.profanity.config.key2) {
+				this.profanity.enabled = true;
+			} else {
+				this.profanity.enabled = false;
 			}
 
 			this.ready = true;
@@ -2339,7 +2354,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 			var sequencenamearray=jQuery("input[name='uda-save-recorded[]']").map(function (){
 				// detect for profanity
 				let sequencename = this.value;
-				sequencename = UDAPluginSDK.checkProfanity(sequencename);
+				if(UDAPluginSDK.profanity.enabled) {
+					sequencename = UDAPluginSDK.checkProfanity(sequencename);
+				}
 				sequencename = sequencename.trim();
 				sequencenames.push(sequencename);
 			});
@@ -2389,6 +2406,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 		 * @param {string} label - Label of the recorded sequence
 		 */
 		checkProfanity: function(label){
+			if(!this.profanity.enabled){
+				return label;
+			}
 			switch (this.profanity.provider.toLowerCase()){
 				case 'azure':
 					var xhr = new XMLHttpRequest();
@@ -2398,9 +2418,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					xhr.onload = function(event){
 						if(xhr.status === 200){
 							let response = JSON.parse(xhr.response);
-							console.log(response);
 							if (response.Terms && response.Terms.length>0) {
-								console.log(response.Terms);
 								response.Terms.forEach(function (term, termindex) {
 									label = label.replaceAll(term.Term, '');
 								});
@@ -3148,7 +3166,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		//delete sequence list functionality for the owner
 		deleteSequence:function(data){
-			var confirmdialog=confirm("Are you sure want to delete "+data.name);
+			let sequencename = '';
+			try{
+				let sequencenamesArray = JSON.parse(data.name)
+				sequencename = sequencenamesArray[0];
+			} catch (e) {
+				sequencename = data.name.toString();
+			}
+			var confirmdialog=confirm("Are you sure want to delete "+sequencename);
 			if(confirmdialog === true){
 				UDAPluginSDK.confirmdelete(data);
 			}
