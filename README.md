@@ -55,7 +55,7 @@ We solicit and welcome comments, help, documentation in improving the client.
 
 1. Add the below Script in head as first script tag
     ```
-    <script src="https://kcramakrishna.github.io/Digital_Assistant_Client/chrome-plugin/js/links.js"></script>
+    <script src="https://digital-assistant.github.io/Digital_Assistant_Client/chrome-plugin/js/links.js"></script>
     ```
 2. Add the below script to the bottom of the page to load the SDK
     ```
@@ -65,7 +65,7 @@ We solicit and welcome comments, help, documentation in improving the client.
             udaauthdata.id='123456789';
             // user emailid or name can be passed.
             udaauthdata.email='dummy@dummy.com';
-            var uda = document.createElement('script'); uda.type = 'text/javascript'; uda.src = 'https://kcramakrishna.github.io/Digital_Assistant_Client/lib/include.js';
+            var uda = document.createElement('script'); uda.type = 'text/javascript'; uda.src = 'https://digital-assistant.github.io/Digital_Assistant_Client/lib/include.js';
             document.body.appendChild(uda);
         })();
     </script>
@@ -80,7 +80,7 @@ We solicit and welcome comments, help, documentation in improving the client.
 
    ### Base Theme URL
     ```
-    https://kcramakrishna.github.io/Digital_Assistant_Client/chrome-plugin/themes/base.css 
+    https://digital-assistant.github.io/Digital_Assistant_Client/chrome-plugin/themes/base.css 
     ```
 
    ### Variable
@@ -90,6 +90,6 @@ We solicit and welcome comments, help, documentation in improving the client.
    
    Example:
     ```
-    UDACustomCss.url = "https://kcramakrishna.github.io/Digital_Assistant_Client/chrome-plugin/themes/base.css";
+    UDACustomCss.url = "https://digital-assistant.github.io/Digital_Assistant_Client/chrome-plugin/themes/base.css";
     ```
 
