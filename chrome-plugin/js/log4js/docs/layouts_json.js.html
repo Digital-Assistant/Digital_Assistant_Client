@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: layouts/json.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: layouts/json.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* global Log4js */
+
+/**
+ * JSONLayout write the logs in JSON format.
+ * JSON library is required to use this Layout. See also {@link http://www.json.org}
+ * @constructor
+ * @extends Log4js.Layout
+ * @author Stephan Strittmatter
+ */
+Log4js.JSONLayout = function() {
+	this.df = new Log4js.DateFormatter();
+};
+Log4js.JSONLayout.prototype = Log4js.extend(new Log4js.Layout(), /** @lends Log4js.JSONLayout# */ {
+	/** 
+	 * Implement this method to create your own layout format.
+	 * @param {Log4js.LoggingEvent} loggingEvent loggingEvent to format
+	 * @return formatted String
+	 * @type String
+	 */
+	format: function(loggingEvent) {
+		
+				var useragent = "unknown";
+		try {
+			useragent = navigator.userAgent;
+		} catch(e){
+			useragent = "unknown";
+		}
+		
+		var referer = "unknown";
+		try {
+			referer = location.href;
+		} catch(e){
+			referer = "unknown";
+		}
+		
+		var jsonString = "{\n \"LoggingEvent\": {\n";
+		
+		jsonString += "\t\"logger\": \"" +  loggingEvent.categoryName + "\",\n";
+		jsonString += "\t\"level\": \"" +  loggingEvent.level.toString() + "\",\n";
+		jsonString += this.formatMessage(loggingEvent.message);
+		jsonString += "\t\"referer\": \"" + referer + "\",\n"; 
+		jsonString += "\t\"useragent\": \"" + useragent + "\",\n"; 
+		jsonString += "\t\"timestamp\": \"" +  this.df.formatUTCDate(loggingEvent.startTime, "yyyy-MM-ddThh:mm:ssZ") + "\",\n";
+		jsonString += "\t\"exception\": \"" +  loggingEvent.exception + "\"\n"; 
+		jsonString += "}}";      
+        
+        return jsonString;
+	},
+
+  /**
+   * Writes message object or string into given string stream.
+   */
+  formatMessage: function(message) {
+    var stream = "";
+    if((typeof message) == "string") {
+      stream += "\t\"message\": \"" + message + "\",\n";
+    } else if((typeof message) == "object") {
+      if("message" in message) {
+        stream += "\t\"message\": \"" + message.message + "\",\n";
+      }
+      for(var property in message) {
+        if(property == "message") continue;
+        var val = message[property];
+        if(val instanceof Date)
+          stream += "\t\"" + property + "_dt\": \"" + this.df.formatUTCDate(val, "yyyy-MM-ddThh:mm:ssZ") + "\",\n";
+        else {
+          switch(typeof val) {
+          case "string":
+            stream += "\t\"" + property + "_s\": \"" + val + "\",\n";
+            break;
+          case "number":
+            stream += "\t\"" + property + "_l\": " + val + ",\n";
+            break;
+          default:
+            stream += "\t\"" + property + "_s\": \"" + val.toString() + "\",\n";
+            break;
+          }
+        }
+      }
+    } else {
+      stream += "\t\"message\": \"" + message.toString() + "\",\n";
+    }
+    return stream;
+  },
+	/** 
+	 * Returns the content type output by this layout. 
+	 * @return The base class returns "text/xml".
+	 * @type String
+	 */
+	getContentType: function() {
+		return "text/json";
+	},
+	/** 
+	 * @return Returns the header for the layout format. The base class returns null.
+	 * @type String
+	 */
+	getHeader: function() {
+		return "{\"Log4js\": [\n";
+	},
+	/** 
+	 * @return Returns the footer for the layout format. The base class returns null.
+	 * @type String
+	 */
+	getFooter: function() {
+		return "\n]}";
+	},
+	
+	getSeparator: function() {
+		return ",\n";
+	}
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Log4js.AjaxAppender.html">AjaxAppender</a></li><li><a href="Log4js.Appender.html">Appender</a></li><li><a href="Log4js.BasicLayout.html">BasicLayout</a></li><li><a href="Log4js.BrowserConsoleAppender.html">BrowserConsoleAppender</a></li><li><a href="Log4js.ConsoleAppender.html">ConsoleAppender</a></li><li><a href="Log4js.DateFormatter.html">DateFormatter</a></li><li><a href="Log4js.HtmlLayout.html">HtmlLayout</a></li><li><a href="Log4js.JSAlertAppender.html">JSAlertAppender</a></li><li><a href="Log4js.JSONLayout.html">JSONLayout</a></li><li><a href="Log4js.Layout.html">Layout</a></li><li><a href="Log4js.Logger.html">Logger</a></li><li><a href="Log4js.LoggingEvent.html">LoggingEvent</a></li><li><a href="Log4js.MetatagAppender.html">MetatagAppender</a></li><li><a href="Log4js.MozillaJSConsoleAppender.html">MozillaJSConsoleAppender</a></li><li><a href="Log4js.OperaJSConsoleAppender.html">OperaJSConsoleAppender</a></li><li><a href="Log4js.PatternLayout.html">PatternLayout</a></li><li><a href="Log4js.SafariJSConsoleAppender.html">SafariJSConsoleAppender</a></li><li><a href="Log4js.SimpleLayout.html">SimpleLayout</a></li><li><a href="Log4js.WindowsEventAppender.html">WindowsEventAppender</a></li><li><a href="Log4js.XMLLayout.html">XMLLayout</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Oct 18 2018 14:55:10 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

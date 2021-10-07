@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: appenders/ajax.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: appenders/ajax.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* global Log4js, log4jsLogger */
+
+/**
+ * AJAX Appender sending {@link Log4js.LoggingEvent}s asynchron via 
+ * &lt;code>XMLHttpRequest&lt;/code> to server.&lt;br />
+ * The {@link Log4js.LoggingEvent} is POSTed as response content and is 
+ * formatted by the accociated layout. Default layout is {@link Log4js.XMLLayout}. 
+ * The &lt;code>threshold&lt;/code> defines when the logs 
+ * should be send to the server. By default every event is sent on its
+ * own (threshold=1). If it is set to 10, then the events are send in groups of
+ * 10 events.
+ *
+ * @extends Log4js.Appender 
+ * @constructor
+ * @param {Log4js.Logger} logger log4js instance this appender is attached to
+ * @param {String} loggingUrl url where appender will post log messages to
+ * @author Stephan Strittmatter
+ */
+Log4js.AjaxAppender = function (loggingUrl) {
+
+    /**
+     * is still esnding data to server
+     * @type boolean
+     * @private
+     */
+    this.isInProgress = false;
+
+    /**
+     * @type String
+     * @private
+     */
+    this.loggingUrl = loggingUrl || "logging.log4js";
+
+    /**
+     * @type Integer
+     * @private
+     */
+    this.threshold = 1;
+
+    /**
+     * timeout when request is aborted.
+     * @private
+     */
+    this.timeout = 2000;
+
+    /**
+     * List of LoggingEvents which should be send after threshold is reached.
+     * @type Log4js.FifoBuffer
+     * @private
+     */
+    this.loggingEventMap = new Log4js.FifoBuffer();
+
+    /**
+     * @type Log4js.Layout
+     * @private
+     */
+    this.layout = new Log4js.XMLLayout();
+    /**
+     * @type XMLHttpRequest
+     * @private
+     */
+    this.httpRequest = null;
+};
+
+Log4js.AjaxAppender.prototype = Log4js.extend(new Log4js.Appender(), /** @lends Log4js.AjaxAppender# */ {
+    /**
+     * sends the logs to the server
+     * @param loggingEvent event to be logged
+     * @see Log4js.Appender#doAppend
+     */
+    doAppend: function (loggingEvent) {
+        log4jsLogger &amp;&amp; log4jsLogger.trace("> AjaxAppender.append");
+
+        if (this.loggingEventMap.length() &lt;= this.threshold || this.isInProgress === true) {
+            this.loggingEventMap.push(loggingEvent);
+        }
+
+        if (this.loggingEventMap.length() >= this.threshold &amp;&amp; this.isInProgress === false) {
+            //if threshold is reached send the events and reset current threshold
+            this.send();
+        }
+
+        log4jsLogger &amp;&amp; log4jsLogger.trace("&lt; AjaxAppender.append");
+    },
+    /** @see Appender#doClear */
+    doClear: function () {
+        log4jsLogger &amp;&amp; log4jsLogger.trace("> AjaxAppender.doClear");
+        if (this.loggingEventMap.length() > 0) {
+            this.send();
+        }
+        log4jsLogger &amp;&amp; log4jsLogger.trace("&lt; AjaxAppender.doClear");
+    },
+    /**
+     * Set the threshold when logs have to be send. Default threshold is 1.
+     * @praram {int} threshold new threshold
+     */
+    setThreshold: function (threshold) {
+        log4jsLogger &amp;&amp; log4jsLogger.trace("> AjaxAppender.setThreshold: " + threshold);
+        this.threshold = threshold;
+        log4jsLogger &amp;&amp; log4jsLogger.trace("&lt; AjaxAppender.setThreshold");
+    },
+    /**
+     * Set the timeout in milli seconds until sending request is aborted.
+     * Default is 2000 ms.
+     * @param {int} milliseconds the new timeout
+     */
+    setTimeout: function (milliseconds) {
+        this.timeout = milliseconds;
+    },
+    /**
+     * send the request.
+     */
+    send: function () {
+        if (this.loggingEventMap.length() > 0) {
+
+            log4jsLogger &amp;&amp; log4jsLogger.trace("> AjaxAppender.send");
+
+
+            this.isInProgress = true;
+            var a = [];
+
+            for (var i = 0; i &lt; this.loggingEventMap.length() &amp;&amp; i &lt; this.threshold; i++) {
+                a.push(this.layout.format(this.loggingEventMap.pull()));
+            }
+
+            var content = this.layout.getHeader();
+            content += a.join(this.layout.getSeparator());
+            content += this.layout.getFooter();
+
+            var appender = this;
+            if (this.httpRequest === null) {
+                this.httpRequest = this.getXmlHttpRequest();
+            }
+            this.httpRequest.onreadystatechange = function () {
+                appender.onReadyStateChanged.call(appender);
+            };
+
+            this.httpRequest.open("POST", this.loggingUrl, true);
+            // set the request headers.
+            //this.httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            this.httpRequest.setRequestHeader("Content-type", this.layout.getContentType());
+            //REFERER will be the top-level
+            // URI which may differ from the location of the error if
+            // it occurs in an included .js file
+            this.httpRequest.setRequestHeader("REFERER", location.href);
+            this.httpRequest.setRequestHeader("Content-length", content.length);
+            this.httpRequest.setRequestHeader("Connection", "close");
+            this.httpRequest.send(content);
+
+            appender = this;
+
+            try {
+                window.setTimeout(function () {
+                    log4jsLogger &amp;&amp; log4jsLogger.trace("> AjaxAppender.timeout");
+                    appender.httpRequest.onreadystatechange = function () {
+                        return;
+                    };
+                    appender.httpRequest.abort();
+                    //this.httpRequest = null;
+                    appender.isInProgress = false;
+
+                    if (appender.loggingEventMap.length() > 0) {
+                        appender.send();
+                    }
+                    log4jsLogger &amp;&amp; log4jsLogger.trace("&lt; AjaxAppender.timeout");
+                }, this.timeout);
+            } catch (e) {
+                log4jsLogger &amp;&amp; log4jsLogger.fatal(e);
+            }
+            log4jsLogger &amp;&amp; log4jsLogger.trace("> AjaxAppender.send");
+        }
+    },
+    /**
+     * @private
+     */
+    onReadyStateChanged: function () {
+        log4jsLogger &amp;&amp; log4jsLogger.trace("> AjaxAppender.onReadyStateChanged");
+        var req = this.httpRequest;
+        if (this.httpRequest.readyState !== 4) {
+            log4jsLogger &amp;&amp; log4jsLogger.trace("&lt; AjaxAppender.onReadyStateChanged: readyState " + req.readyState + " != 4");
+            return;
+        }
+
+        var success = ((typeof req.status === "undefined") || req.status === 0 || (req.status >= 200 &amp;&amp; req.status &lt; 300));
+
+        if (success) {
+            log4jsLogger &amp;&amp; log4jsLogger.trace("  AjaxAppender.onReadyStateChanged: success");
+
+            //ready sending data
+            this.isInProgress = false;
+
+        } else {
+            var msg = "  AjaxAppender.onReadyStateChanged: XMLHttpRequest request to URL " + this.loggingUrl + " returned status code " + this.httpRequest.status;
+            log4jsLogger &amp;&amp; log4jsLogger.error(msg);
+        }
+
+        log4jsLogger &amp;&amp; log4jsLogger.trace("&lt; AjaxAppender.onReadyStateChanged: readyState == 4");
+    },
+    /**
+     * Get the XMLHttpRequest object independent of browser.
+     * @private
+     */
+    getXmlHttpRequest: function () {
+        log4jsLogger &amp;&amp; log4jsLogger.trace("> AjaxAppender.getXmlHttpRequest");
+
+        var httpRequest = false;
+
+        try {
+            if (window.XMLHttpRequest) { // Mozilla, Safari, IE7...
+                httpRequest = new XMLHttpRequest();
+                if (httpRequest.overrideMimeType) {
+                    httpRequest.overrideMimeType(this.layout.getContentType());
+                }
+            } else if (window.ActiveXObject) { // IE
+                try {
+                    httpRequest = new ActiveXObject("Msxml2.XMLHTTP");
+                } catch (e) {
+                    httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+        } catch (e) {
+            httpRequest = false;
+        }
+
+        if (!httpRequest) {
+            log4jsLogger &amp;&amp; log4jsLogger.fatal("Unfortunately, your browser does not support AjaxAppender for log4js!");
+        }
+
+        log4jsLogger &amp;&amp; log4jsLogger.trace("&lt; AjaxAppender.getXmlHttpRequest");
+        return httpRequest;
+    },
+    /** 
+     * toString
+     */
+    toString: function () {
+        return "Log4js.AjaxAppender[loggingUrl=" + this.loggingUrl + ", threshold=" + this.threshold + "]";
+    }
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Log4js.AjaxAppender.html">AjaxAppender</a></li><li><a href="Log4js.Appender.html">Appender</a></li><li><a href="Log4js.BasicLayout.html">BasicLayout</a></li><li><a href="Log4js.BrowserConsoleAppender.html">BrowserConsoleAppender</a></li><li><a href="Log4js.ConsoleAppender.html">ConsoleAppender</a></li><li><a href="Log4js.DateFormatter.html">DateFormatter</a></li><li><a href="Log4js.HtmlLayout.html">HtmlLayout</a></li><li><a href="Log4js.JSAlertAppender.html">JSAlertAppender</a></li><li><a href="Log4js.JSONLayout.html">JSONLayout</a></li><li><a href="Log4js.Layout.html">Layout</a></li><li><a href="Log4js.Logger.html">Logger</a></li><li><a href="Log4js.LoggingEvent.html">LoggingEvent</a></li><li><a href="Log4js.MetatagAppender.html">MetatagAppender</a></li><li><a href="Log4js.MozillaJSConsoleAppender.html">MozillaJSConsoleAppender</a></li><li><a href="Log4js.OperaJSConsoleAppender.html">OperaJSConsoleAppender</a></li><li><a href="Log4js.PatternLayout.html">PatternLayout</a></li><li><a href="Log4js.SafariJSConsoleAppender.html">SafariJSConsoleAppender</a></li><li><a href="Log4js.SimpleLayout.html">SimpleLayout</a></li><li><a href="Log4js.WindowsEventAppender.html">WindowsEventAppender</a></li><li><a href="Log4js.XMLLayout.html">XMLLayout</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Oct 18 2018 14:55:10 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

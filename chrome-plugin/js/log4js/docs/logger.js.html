@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: logger.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: logger.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* global Log4js */
+
+/**
+ * Logger to log messages to the defined appender.&lt;/p>
+ * Default appender is Appender, which is ignoring all messages. Please
+ * use setAppender() to set a specific appender (e.g. WindowAppender).
+ * use {@see Log4js#getLogger(String)} to get an instance.
+ * @constructor
+ * @param name name of category to log to
+ * @author Stephan Strittmatter
+ */
+Log4js.Logger = function(name) {
+	this.loggingEvents = [];
+	this.appenders = [];
+	/** category of logger */
+	this.category = name || "";
+	/** level to be logged */
+	this.level = Log4js.Level.FATAL;
+	
+	this.dateformat = Log4js.DateFormatter.DEFAULT_DATE_FORMAT;
+	this.dateformatter = new Log4js.DateFormatter();
+	
+	this.onlog = new Log4js.CustomEvent();
+	this.onclear = new Log4js.CustomEvent();
+	
+	/** appender to write in */
+	this.appenders.push(new Log4js.Appender(this));
+	
+	// if multiple log objects are instantiated this will only log to the log 
+	// object that is declared last can't seem to get the attachEvent method to 
+	// work correctly
+	try {
+		window.onerror = this.windowError.bind(this);
+	} catch (e) {
+		//log4jsLogger.fatal(e);
+	}
+};
+
+Log4js.Logger.prototype = {
+
+	/**
+	 * add additional appender. DefaultAppender always is there.
+	 * @param appender additional wanted appender
+	 */
+	addAppender: function(appender) {
+		if (appender instanceof Log4js.Appender) {
+			appender.setLogger(this);
+			this.appenders.push(appender);			
+		} else {
+			throw "Not instance of an Appender: " + appender;
+		}
+	},
+
+	/**
+	 * set Array of appenders. Previous Appenders are cleared and removed.
+	 * @param {Array} appenders Array of Appenders
+	 */
+	setAppenders: function(appenders) {
+		//clear first all existing appenders
+		for(var i = 0; i &lt; this.appenders.length; i++) {
+			this.appenders[i].doClear();
+		}
+		
+		this.appenders = appenders;
+		
+		for(var j = 0; j &lt; this.appenders.length; j++) {
+			this.appenders[j].setLogger(this);
+		}
+	},
+	
+	/**
+	 * Set the Loglevel default is LogLEvel.TRACE
+	 * @param level wanted logging level
+	 */
+	setLevel: function(level) {
+		this.level = level;
+	},
+	
+	/** 
+	 * main log method logging to all available appenders 
+	 * @private
+	 */
+	log: function(logLevel, message, exception) {
+		var loggingEvent = new Log4js.LoggingEvent(this.category, logLevel, 
+			message, exception, this);
+		this.loggingEvents.push(loggingEvent);
+		this.onlog.dispatch(loggingEvent);
+	},
+	
+	/** clear logging */
+	clear : function () {
+		try{
+			this.loggingEvents = [];
+			this.onclear.dispatch();
+		} catch(e){}
+	},
+	/** checks if Level Trace is enabled */
+	isTraceEnabled: function() {
+		if (this.level.valueOf() &lt;= Log4js.Level.TRACE.valueOf()) {
+			return true;
+		}
+		return false;
+	},
+	/** 
+	 * Trace messages 
+	 * @param message {Object} message to be logged
+	 */
+	trace: function(message) {
+		if (this.isTraceEnabled()) {
+			this.log(Log4js.Level.TRACE, message, null);
+		}
+	},
+	/** checks if Level Debug is enabled */
+	isDebugEnabled: function() {
+		if (this.level.valueOf() &lt;= Log4js.Level.DEBUG.valueOf()) {
+			return true;
+		}
+		return false;
+	},
+	/**
+	 * Debug messages 
+	 * @param {Object} message  message to be logged
+	 * @param {Throwable} throwable 
+	 */
+	debug: function(message, throwable) {
+		if (this.isDebugEnabled()) {
+			this.log(Log4js.Level.DEBUG, message, throwable);
+		}
+	},	
+	/** checks if Level Info is enabled */
+	isInfoEnabled: function() {
+		if (this.level.valueOf() &lt;= Log4js.Level.INFO.valueOf()) {
+			return true;
+		}
+		return false;
+	},
+	/** 
+	 * logging info messages 
+	 * @param {Object} message  message to be logged
+	 * @param {Throwable} throwable  
+	 */
+	info: function(message, throwable) {
+		if (this.isInfoEnabled()) {
+			this.log(Log4js.Level.INFO, message, throwable);
+		}
+	},
+	/** checks if Level Warn is enabled */
+	isWarnEnabled: function() {
+		if (this.level.valueOf() &lt;= Log4js.Level.WARN.valueOf()) {
+			return true;
+		}
+		return false;
+	},
+
+	/** logging warn messages */
+	warn: function(message, throwable) {
+		if (this.isWarnEnabled()) {
+			this.log(Log4js.Level.WARN, message, throwable);
+		}
+	},
+	/** checks if Level Error is enabled */
+	isErrorEnabled: function() {
+		if (this.level.valueOf() &lt;= Log4js.Level.ERROR.valueOf()) {
+			return true;
+		}
+		return false;
+	},
+	/** logging error messages */
+	error: function(message, throwable) {
+		if (this.isErrorEnabled()) {
+			this.log(Log4js.Level.ERROR, message, throwable);
+		}
+	},
+	/** checks if Level Fatal is enabled */
+	isFatalEnabled: function() {
+		if (this.level.valueOf() &lt;= Log4js.Level.FATAL.valueOf()) {
+			return true;
+		}
+		return false;
+	},
+	/** logging fatal messages */
+	fatal: function(message, throwable) {
+		if (this.isFatalEnabled()) {
+			this.log(Log4js.Level.FATAL, message, throwable);
+		}
+	},	
+	/** 
+	 * Capture main window errors and log as fatal.
+	 * @private
+	 */
+	windowError: function(msg, url, line){
+		var message = "Error in (" + (url || window.location) + ") on line "+ line +" with message (" + msg + ")";
+		this.log(Log4js.Level.FATAL, message, null);	
+	},
+	
+	/**
+	 * Set the date format of logger. Following switches are supported:
+	 * &lt;ul>
+	 * &lt;li>yyyy - The year&lt;/li>
+	 * &lt;li>MM - the month&lt;/li>
+	 * &lt;li>dd - the day of month&lt;li>
+	 * &lt;li>hh - the hour&lt;li>
+	 * &lt;li>mm - minutes&lt;/li>
+	 * &lt;li>O - timezone offset&lt;/li>
+	 * &lt;/ul>
+	 * @param {String} format format String for the date
+	 * @see {@getTimestamp}
+	 */
+	setDateFormat: function(format) {
+	 	this.dateformat = format;
+	},
+	 
+	/**
+	 * Generates a timestamp using the format set in {Log4js.DateFormatter.formatDate}.
+	 * @param {Date} date the date to format
+	 * @see {@setDateFormat}
+	 * @return A formatted timestamp with the current date and time.
+	 */
+	getFormattedTimestamp: function(date) {
+	  return this.dateformatter.formatDate(date, this.dateformat);
+	}
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Log4js.AjaxAppender.html">AjaxAppender</a></li><li><a href="Log4js.Appender.html">Appender</a></li><li><a href="Log4js.BasicLayout.html">BasicLayout</a></li><li><a href="Log4js.BrowserConsoleAppender.html">BrowserConsoleAppender</a></li><li><a href="Log4js.ConsoleAppender.html">ConsoleAppender</a></li><li><a href="Log4js.DateFormatter.html">DateFormatter</a></li><li><a href="Log4js.HtmlLayout.html">HtmlLayout</a></li><li><a href="Log4js.JSAlertAppender.html">JSAlertAppender</a></li><li><a href="Log4js.JSONLayout.html">JSONLayout</a></li><li><a href="Log4js.Layout.html">Layout</a></li><li><a href="Log4js.Logger.html">Logger</a></li><li><a href="Log4js.LoggingEvent.html">LoggingEvent</a></li><li><a href="Log4js.MetatagAppender.html">MetatagAppender</a></li><li><a href="Log4js.MozillaJSConsoleAppender.html">MozillaJSConsoleAppender</a></li><li><a href="Log4js.OperaJSConsoleAppender.html">OperaJSConsoleAppender</a></li><li><a href="Log4js.PatternLayout.html">PatternLayout</a></li><li><a href="Log4js.SafariJSConsoleAppender.html">SafariJSConsoleAppender</a></li><li><a href="Log4js.SimpleLayout.html">SimpleLayout</a></li><li><a href="Log4js.WindowsEventAppender.html">WindowsEventAppender</a></li><li><a href="Log4js.XMLLayout.html">XMLLayout</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Oct 18 2018 14:55:10 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
