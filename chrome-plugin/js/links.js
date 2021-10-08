@@ -76,8 +76,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
     let UDASessionID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     const UDADebug = false; //this variable exists in background.js file also
     const UDA_POST_INTERVAL = 1000; //in milliseconds, each minute
-    const UDA_DOMAIN = "https://udantest.nistapp.ai";
-    const UDA_API_URL = (UDADebug) ? "http://localhost:11080/voiceapi" : UDA_DOMAIN+"/voiceapi"; //this variable exists in background.js file also
+    const UDA_API_URL = (UDADebug) ? "http://localhost:11080/voiceapi" : "https://udan.nistapp.ai/voiceapi"; //this variable exists in background.js file also
     const EXTENSION_VERSION = true;
     let UDAIgnorePatterns = [{"patterntype": "nist-voice", "patternvalue": "any"}];
     let UDASitePatterns = [];
@@ -85,35 +84,6 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
     let UDALastMutationTime = 0;
     let UDALastIndexTime = 0;
     let UDALogLevel = 0;
-
-    /****
-     * Initializing logger script
-     */
-    /*let UDAConsoleLogger = new Log4js.getLogger("consolelogger");
-    UDAConsoleLogger.setLevel(Log4js.Level.INFO);
-    let UDAConsoleAppender = new Log4js.ConsoleAppender(true);
-    UDAConsoleLogger.addAppender(UDAConsoleAppender);*/
-    // UDAConsoleLogger.addAppender(new Log4js.ConsoleAppender(true));
-
-    let UDALog4jsLogger = new Log4js.getLogger("errorlogger");
-    UDALog4jsLogger.setLevel(Log4js.Level.ERROR); // do not change this loglevel for performance reasons
-    let UDAAjaxAppender = new Log4js.AjaxAppender(UDA_DOMAIN+'/logging/error');
-    UDAAjaxAppender.setLayout(new Log4js.JSONLayout());
-    UDALog4jsLogger.addAppender(UDAAjaxAppender);
-
-    let UDAConsoleLogger = {
-        info: function(mes, level = 1) {
-            // console.log(mes);
-        }
-    };
-
-    let UDAErrorLogger = {
-        error: function (message, exception){
-            message = 'UserID: '+ UDAUserAuthData.id+' Error: '+message;
-            UDALog4jsLogger.error(message, exception);
-        }
-    };
-
 
     /*****
      *
@@ -344,7 +314,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
     let isUDAAllowed = UDAAllowedBrowsers.indexOf(UDABrowserName.name.toLowerCase());
 
     if (isUDAAllowed < 0) {
-        UDAConsoleLogger.info('UDA links script not loaded');
+        console.log('UDA links script not loaded');
     } else {
 
         // adding the click object that is registered via javascript
@@ -359,36 +329,31 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
 
         // adding the clickobjects that were identified.
         function UDAAddNewElement(node) {
-            try {
-                let clickObject = {element: node}
+            let clickObject = {element: node}
 
-                //checking whether the element is window or not
-                if (clickObject.element === window) {
-                    return;
-                }
-
-                let tag = clickObject.element.tagName;
-                if (tag && (tag.toLowerCase() === "body" || tag.toLowerCase() === "document" || tag.toLowerCase() === "window" || tag.toLowerCase() === "html")) {
-                    return;
-                }
-
-                if (clickObject.element.hasAttribute && clickObject.element.hasAttribute('nist-voice')) {
-                    return;
-                }
-
-                for (var i = 0; i < UDAClickObjects.length; i++) {
-                    if (UDAClickObjects[i].element.isSameNode(clickObject.element)) {
-                        //todo, discuss , how better to call actions, if multiple actions should be stored, or selector better.
-                        return;
-                    }
-                }
-
-                clickObject.id = UDAClickObjects.length;
-                UDAClickObjects.push(clickObject);
-            } catch (e) {
-                let htmlelement = node.element.innerHTML;
-                UDAErrorLogger.error('Unable to process clickable object - '+htmlelement, e);
+            //checking whether the element is window or not
+            if (clickObject.element === window) {
+                return;
             }
+
+            let tag = clickObject.element.tagName;
+            if (tag && (tag.toLowerCase() === "body" || tag.toLowerCase() === "document" || tag.toLowerCase() === "window" || tag.toLowerCase() === "html")) {
+                return;
+            }
+
+            if (clickObject.element.hasAttribute && clickObject.element.hasAttribute('nist-voice')) {
+                return;
+            }
+
+            for (var i = 0; i < UDAClickObjects.length; i++) {
+                if (UDAClickObjects[i].element.isSameNode(clickObject.element)) {
+                    //todo, discuss , how better to call actions, if multiple actions should be stored, or selector better.
+                    return;
+                }
+            }
+
+            clickObject.id = UDAClickObjects.length;
+            UDAClickObjects.push(clickObject);
         }
 
         // processing node from mutation and then send to clickbojects addition
@@ -421,7 +386,9 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
                         } else if (node.classList && (node.classList.contains('expand-button') || node.classList.contains('btn-pill'))) {
                             UDAAddNewElement(node);
                         } else {
-                            UDAConsoleLogger.info({node: node});
+                            if (UDALogLevel > 0) {
+                                console.log({node: node});
+                            }
                         }
                         break;
                     case 'span':
@@ -482,8 +449,10 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
 
         //mutation observer initialization and adding the logic to process the clickobjects
         var dsa_observer = new MutationObserver(function (mutations) {
-            // UDAConsoleLogger.info('------------ detected clicked objects-------------');
-            // UDAConsoleLogger.info(UDAClickObjects);
+            if (UDALogLevel > 1) {
+                console.log('------------ detected clicked objects-------------');
+                console.log(UDAClickObjects);
+            }
             mutations.forEach(function (mutation) {
                 if (mutation.removedNodes.length) {
                     [].some.call(mutation.removedNodes, UDAProcessRemovedNode);
@@ -493,8 +462,10 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
                 }
                 [].some.call(mutation.addedNodes, UDAProcessNode);
             });
-            // UDAConsoleLogger.info('------------ removed clicked objects-------------');
-            // UDAConsoleLogger.info(UDAClickObjects);
+            if (UDALogLevel > 1) {
+                console.log('------------ removed clicked objects-------------');
+                console.log(UDARemovedClickObjects);
+            }
             UDALastMutationTime = Date.now();
         });
 
