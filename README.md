@@ -2,6 +2,9 @@
 
 Client for Universal Digital Assistant
 
+Video: https://youtu.be/Iz2WgKY0fhc
+(You will need the server too: https://github.com/Digital-Assistant/digital-assistant-server)
+
 Preamble: The explosion of web/browser (and digital) applications has come with the problem of users having to learn how
 to use each of them. This step of user learning how to navigate and use and application is a roadblock in improving
 productivity. In addition, the user’s knowledge of an application/device is a constraint on his/her productivity. You do
@@ -52,7 +55,7 @@ We solicit and welcome comments, help, documentation in improving the client.
 
 1. Add the below Script in head as first script tag
     ```
-    <script src="https://kcramakrishna.github.io/Digital_Assistant_Client/chrome-plugin/js/links.js"></script>
+    <script src="https://digital-assistant.github.io/Digital_Assistant_Client/chrome-plugin/js/links.js"></script>
     ```
 2. Add the below script to the bottom of the page to load the SDK
     ```
@@ -62,7 +65,7 @@ We solicit and welcome comments, help, documentation in improving the client.
             udaauthdata.id='123456789';
             // user emailid or name can be passed.
             udaauthdata.email='dummy@dummy.com';
-            var uda = document.createElement('script'); uda.type = 'text/javascript'; uda.src = 'https://kcramakrishna.github.io/Digital_Assistant_Client/lib/include.js';
+            var uda = document.createElement('script'); uda.type = 'text/javascript'; uda.src = 'https://digital-assistant.github.io/Digital_Assistant_Client/lib/include.js';
             document.body.appendChild(uda);
         })();
     </script>
@@ -77,7 +80,7 @@ We solicit and welcome comments, help, documentation in improving the client.
 
    ### Base Theme URL
     ```
-    https://kcramakrishna.github.io/Digital_Assistant_Client/chrome-plugin/themes/base.css 
+    https://digital-assistant.github.io/Digital_Assistant_Client/chrome-plugin/themes/base.css 
     ```
 
    ### Variable
@@ -87,6 +90,6 @@ We solicit and welcome comments, help, documentation in improving the client.
    
    Example:
     ```
-    UDACustomCss.url = "https://kcramakrishna.github.io/Digital_Assistant_Client/chrome-plugin/themes/base.css";
+    UDACustomCss.url = "https://digital-assistant.github.io/Digital_Assistant_Client/chrome-plugin/themes/base.css";
     ```
 
