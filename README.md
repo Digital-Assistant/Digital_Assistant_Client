@@ -5,6 +5,9 @@ Client for Universal Digital Assistant
 Video: https://youtu.be/Iz2WgKY0fhc
 (You will need the server too: https://github.com/Digital-Assistant/digital-assistant-server)
 
+Telegram: https://t.me/UniDigitalAssistant
+Discord: https://discord.gg/92NqDEUbxV
+
 Preamble: The explosion of web/browser (and digital) applications has come with the problem of users having to learn how
 to use each of them. This step of user learning how to navigate and use and application is a roadblock in improving
 productivity. In addition, the user’s knowledge of an application/device is a constraint on his/her productivity. You do
