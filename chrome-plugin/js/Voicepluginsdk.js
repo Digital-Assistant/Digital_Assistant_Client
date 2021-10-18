@@ -1751,7 +1751,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.lastclickedtime=Date.now();
 				var outputdata = JSON.stringify(postdata);
 				var xhr = new XMLHttpRequest();
-				xhr.open("POST", this.apihost+"/user/clickednode", false);
+				xhr.open("POST", this.apihost+"/user/clickednode", true);
 				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 				xhr.onload = function(event){
 					if(xhr.status === 200){
@@ -2500,7 +2500,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.recordclick('search',searchtext);
 
 			var xhr = new XMLHttpRequest();
-			xhr.open("GET", this.apihost + "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host), false);
+			xhr.open("GET", this.apihost + "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host), true);
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					UDAPluginSDK.searchInProgress=false;
@@ -3151,7 +3151,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			// var senddata=JSON.stringify({usersessionid:this.UDASessionID,id:data.id});
 			var senddata=JSON.stringify({usersessionid:this.sessiondata.authdata.id,id:data.id});
 			var xhr = new XMLHttpRequest();
-			xhr.open("POST", this.apihost + "/clickevents/sequence/delete", false);
+			xhr.open("POST", this.apihost + "/clickevents/sequence/delete", true);
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
 				if(xhr.status === 200){
