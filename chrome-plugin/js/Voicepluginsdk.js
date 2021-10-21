@@ -2510,7 +2510,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 				}
 			};
 			// xhr.addEventListener("error", UDAPluginSDK.renderMessage());
+			xhr.addEventListener('error', function(){
+				console.log(xhr);
+			});
+			xhr.addEventListener('abort', function(){
+				console.log(xhr);
+			});
 			xhr.onerror = function(){
+				console.log(xhr.status);
 				UDAPluginSDK.renderMessage();
 			};
 			xhr.send();
