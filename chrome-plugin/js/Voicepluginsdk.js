@@ -813,8 +813,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 					if(!ret && parentnode!=="") {
 						try{
-							throw 'Test check';
-							return ;
 							node = this.indexnode(node, parentnode, hasparentnodeclick, false, parentclicknode);
 						} catch (e) {
 							UDAErrorLogger.error('Unable to index node '+node.nodeName+' got exception '+e);
