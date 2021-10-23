@@ -99,13 +99,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
     UDALog4jsLogger.setLevel(Log4js.Level.OFF); // do not change this loglevel for performance reasons
     let UDAAjaxAppender = new Log4js.AjaxAppender(UDA_DOMAIN+'/logging/error');
     UDAAjaxAppender.setLayout(new Log4js.JSONLayout());
-    // UDALog4jsLogger.addAppender(UDAAjaxAppender);
-
-    document.addEventListener("securitypolicyviolation", (e) => {
-        console.log(e.blockedURI);
-        console.log(e.violatedDirective);
-        console.log(e.originalPolicy);
-    });
+    UDALog4jsLogger.addAppender(UDAAjaxAppender);
 
     let UDAConsoleLogger = {
         info: function(mes, level = 1) {
@@ -116,7 +110,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
     let UDAErrorLogger = {
         error: function (message, exception){
             message = 'UserID: '+ UDAUserAuthData.id+' Error: '+message;
-            // UDALog4jsLogger.error(message, exception);
+            UDALog4jsLogger.error(message, exception);
         }
     };
 

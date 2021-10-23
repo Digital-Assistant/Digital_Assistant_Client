@@ -85,7 +85,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		previousurl:"",
 		currenturl:"",
 		sessionID:"",
-		sessiondata:{sessionkey:"",authenticated:false,authenticationsource:"",authdata:{}},
+		sessiondata:{sessionkey:"",authenticated:false,authenticationsource:"",authdata:{}, csp: {enabled: false, allowedUDAN: false}},
 		cookiename:"nist-voice-usersessionid",
 		recordingcookiename:"nistsequence",
 		recordedsequenceids:[],
@@ -459,8 +459,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			document.dispatchEvent(sessionevent);
 		},
 		createsession:function(data){
-        	console.log(data);
-			UDASessionID=data.sessionkey;
+        	UDASessionID=data.sessionkey;
 			this.sessiondata=data;
 			this.sessionID=data.sessionkey;
 			UDAUserAuthData.id = data.authdata.id;
@@ -635,6 +634,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		//opening the UDA screen
 		openmodal:function(focus=false){
+        	if(this.sessiondata.csp.enabled && !this.sessiondata.csp.allowedUDAN){
+        		alert('UDAN is not allowed');
+        		return;
+			}
 			if(this.sessiondata.authenticated) {
 				jQuery("#uda-btn").hide();
 				jQuery('#uda-html-container').show();
@@ -2508,12 +2511,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				}
 			};
 			// xhr.addEventListener("error", UDAPluginSDK.renderMessage());
-			xhr.addEventListener('error', function(){
-				console.log(xhr);
-			});
-			xhr.addEventListener('abort', function(){
-				console.log(xhr);
-			});
+
 			xhr.onerror = function(){
 				console.log(xhr.status);
 				UDAPluginSDK.renderMessage();

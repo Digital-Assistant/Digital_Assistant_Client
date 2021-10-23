@@ -6,7 +6,7 @@ var apihost=(UDADebug)?"http://localhost:11080/voiceapi":"https://udan.nistapp.a
 var cookiename="uda-sessiondata";
 var activetabs=[];
 var sessionkey="";
-var sessiondata={sessionkey:"",authenticated:false,authenticationsource:"",authdata:{}};
+var sessiondata={sessionkey:"",authenticated:false,authenticationsource:"",authdata:{}, csp: {enabled: false, allowedUDAN: false}};
 var apikey = 'AIzaSyBeCZ1su0BYG5uGTHqqdg1bczlsubDuDrU';
 
 /**
@@ -152,3 +152,59 @@ function bindaccount(userauthdata){
 	};
 	xhr.send(JSON.stringify(usersessiondata));
 }
+
+function ProcessCSPValues(value=''){
+	if(value){
+		let allowedSrcs = value.split(";");
+		if(allowedSrcs.length>0){
+			for(var i=0;i<allowedSrcs.length;i++) {
+				let allowedSrc = allowedSrcs[i];
+				let allowedDomains = allowedSrc.split(' ');
+				if(allowedDomains.length>1 && allowedDomains[0].toLowerCase() === 'default-src'){
+					sessiondata.csp.enabled=true;
+					for(let index=0; index < allowedDomains.length; index++) {
+						let allowedDomain = allowedDomains[index];
+						if(allowedDomain === 'default-src'){
+							continue;
+						}
+						switch (allowedDomain.toLowerCase()){
+							case '*':
+							case 'http:':
+							case 'https:':
+								sessiondata.csp.allowedUDAN=true;
+								break;
+						}
+					}
+				} else if(allowedDomains.length>0 && allowedDomains[0].toLowerCase() === 'default-src'){
+					sessiondata.csp.enabled = true;
+					sessiondata.csp.allowedUDAN = true;
+				}
+			}
+		}
+	} else {
+		sessiondata.csp.allowedUDAN=true;
+		sessiondata.csp.enabled=true;
+	}
+}
+
+let onHeadersReceived = function (details) {
+	console.log(sessiondata);
+	console.log('Finding headers received');
+	console.log(details.responseHeaders);
+
+	for (var i = 0; i < details.responseHeaders.length; i++) {
+		if (details.responseHeaders[i].name.toLowerCase() === 'content-security-policy') {
+			// details.responseHeaders[i].value = '';
+			console.log('Found CSP');
+			ProcessCSPValues(details.responseHeaders[i].value);
+		}
+	}
+};
+
+let onHeaderFilter = { urls: ['*://*/*'], types: ['main_frame', 'sub_frame'] };
+
+chrome.webRequest.onHeadersReceived.addListener(
+	onHeadersReceived, onHeaderFilter, ['blocking', 'responseHeaders']
+);
+
+
