@@ -169,7 +169,6 @@ function ProcessCSPValues(value=''){
 						}
 						switch (allowedDomain.toLowerCase()){
 							case '*':
-							case 'http:':
 							case 'https:':
 								sessiondata.csp.allowedUDAN=true;
 								break;

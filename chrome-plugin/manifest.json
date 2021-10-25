@@ -3,7 +3,7 @@
   "name": "Universal Digital Assistant (Alpha)",
   "version": "0.1.8.255",
   "description": "Building an Extension for custom user navigation which helps in assisting users to navigate to right place.",
-  "permissions": ["background", "storage", "identity","identity.email","webRequest","webRequestBlocking","http://*/*","https://*/*"],
+  "permissions": ["background", "storage", "identity","identity.email","webRequest","webRequestBlocking"],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "content_scripts": [
 	{
@@ -27,6 +27,11 @@
   ],
   "background": {
     "scripts": ["js/background.js"],
+/***
+    we are getting error without persistant to true
+    The 'webRequest' API cannot be used with event pages.Could not load manifest.
+    https://stackoverflow.com/questions/13326105/using-webrequest-api-with-event-page
+***/
     "persistent": true
   },
   "oauth2": {
