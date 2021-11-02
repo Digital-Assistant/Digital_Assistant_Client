@@ -370,7 +370,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 		onReady: function () {
 
 			// check user session exists and create if not available
-			this.checkuserkeyexists();
+			if(typeof isUDASdk === 'undefined') {
+				this.checkuserkeyexists();
+			}
 
 			// adding speech recognition functionality based on the library availability
 			if(UDASpeechRecognitionAvailable){
