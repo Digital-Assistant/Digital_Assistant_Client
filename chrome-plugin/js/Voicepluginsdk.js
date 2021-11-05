@@ -651,8 +651,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 					+'			<p>'+content+'</p>'
 					+'		</div>'
 					+'		<div class="udamodal-footer">'
+					+'			<button class="udacontinueBtn " id="udacontinueBtn">Continue</button>'
 					+'			<button class="udacloseBtn" id="udacloseBtn">Close</button>'
-					+'			<button class="udacontinueBtn" id="udacontinueBtn">Close</button>'
 					+'		</div>'
 					+'	</div>'
 					+'</div>';
