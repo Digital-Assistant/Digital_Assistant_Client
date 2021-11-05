@@ -922,6 +922,7 @@ Progress animation
     float: right;
     font-size: 28px;
     font-weight: 500;
+    margin-top: -10px;
 }
 
 .udaclose:hover,
@@ -932,12 +933,12 @@ Progress animation
 }
 
 .udamodal-header {
-    padding: 2px 16px;
+    padding: 10px 16px;
     background-color: #303e9f;
     color: white;
 }
 
-.udamodal-body {padding: 2px 16px;}
+.udamodal-body {padding: 10px 16px;}
 
 .udamodal-footer {
     padding: 10px 16px;
@@ -958,4 +959,19 @@ Progress animation
 }
 .udamodal-header h3{
     font-weight: 500;
+}
+.udacontinueBtn{
+    background: #303e9f;
+     border: none;
+     border-radius: 3px;
+    padding: 5px 10px;
+    color: #fff;
+    font-weight: 500;
+}
+.udacontinueBtn:hover{
+    background: #fe5720;
+}
+.udaIconDisabled{
+    cursor: not-allowed;
+    opacity: 50%;
 }
