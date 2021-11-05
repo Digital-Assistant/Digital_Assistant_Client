@@ -176,7 +176,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		// BCP list of languages
 		bcplang :
-			[['Afrikaans',       ['af-ZA']],
+			[
+				['Afrikaans',       ['af-ZA']],
 				['አማርኛ',           ['am-ET']],
 				['Azərbaycanca',    ['az-AZ']],
 				['বাংলা',            ['bn-BD', 'বাংলাদেশ'], ['bn-IN', 'ভারত']],
@@ -235,7 +236,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 				['中文',             ['cmn-Hans-CN', '普通话 (中国大陆)'], ['cmn-Hans-HK', '普通话 (香港)'], ['cmn-Hant-TW', '中文 (台灣)'], ['yue-Hant-HK', '粵語 (香港)']],
 				['日本語',           ['ja-JP']],
 				['हिन्दी',             ['hi-IN']],
-				['ภาษาไทย',         ['th-TH']]],
+				['ภาษาไทย',         ['th-TH']]
+			],
+		cspacceptance: {storagename: 'uda-csp-user-consent',data:{proceed: true}},
 		inarray:function(value,object){
 			return jQuery.inArray(value, object);
 		},
@@ -474,7 +477,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.closemodal();
 		},
 		modifybodyhtml:function(){
-			var html='<div id="uda-btn" nist-voice="true"></div><div id="uda-html-container" style="display: none;"><div id="uda-html-content" nist-voice="true"></div></div>';
+			var html='<div id="uda-btn" nist-voice="true"></div><div id="uda-html-container" style="display: none;"><div id="uda-html-content" nist-voice="true"></div></div><div id="uda-alerthtml-container" nist-voice="true"></div>';
 
 			jQuery(document.body).prepend(html);
 
@@ -634,11 +637,56 @@ if (typeof UDAPluginSDK === 'undefined') {
 				jQuery('#uda-advanced-btn').hide();
 			}
 		},
+		/**
+		 * Adding alert modal html
+		 */
+		ShowAlert: function(content='',addbtn=false){
+			let html='<div id="udaModal" class="udamodal">'
+					+'	<div class="udamodal-content">'
+					+'		<div class="udamodal-header">'
+					+'			<span class="udaclose">&times;</span>'
+					+'			<h3>UDA Alert</h3>'
+					+'		</div>'
+					+'		<div class="udamodal-body">'
+					+'			<p>'+content+'</p>'
+					+'		</div>'
+					+'		<div class="udamodal-footer">'
+					+'			<button class="udacloseBtn" id="udacloseBtn">Close</button>'
+					+'		</div>'
+					+'	</div>'
+					+'</div>';
+
+			jQuery("#uda-alerthtml-container").html(html);
+			// Get the modal
+			var modal = document.getElementById("udaModal");
+
+			// Get the <span> element that closes the modal
+			var span = document.getElementsByClassName("udaclose")[0];
+			var closeBtn = document.getElementById('udacloseBtn');
+
+			closeBtn.onclick=function(){
+				modal.style.display = "none";
+			}
+			// When the user clicks on <span> (x), close the modal
+			span.onclick = function() {
+				modal.style.display = "none";
+			}
+
+			modal.style.display = "block";
+
+		},
 		//opening the UDA screen
 		openmodal:function(focus=false){
         	if(this.sessiondata.csp.cspenabled && !this.sessiondata.csp.udanallowed){
-        		alert('UDAN is not allowed');
-        		return;
+        		let cspuseracceptance = this.getstoragedata(this.cspacceptance.storagename);
+        		if(cspuseracceptance){
+        			if(!cspuseracceptance.proceed){
+        				return;
+					}
+				} else {
+					this.ShowAlert("UDAN May not be working properly as CSP is enabled. Do you want to continue");
+					return;
+				}
 			}
 			if(this.sessiondata.authenticated) {
 				jQuery("#uda-btn").hide();
