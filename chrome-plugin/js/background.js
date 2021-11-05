@@ -4,9 +4,10 @@ var updatedata=false;
 var UDADebug=false; //this variable exists in links.js file also
 var apihost=(UDADebug)?"http://localhost:11080/voiceapi":"https://udan.nistapp.ai/voiceapi"; //this variable exists in links.js file also
 var cookiename="uda-sessiondata";
+var CSPStorageName="uda-csp-storage";
 var activetabs=[];
 var sessionkey="";
-var sessiondata={sessionkey:"",authenticated:false,authenticationsource:"",authdata:{}, csp: {enabled: false, allowedUDAN: false}};
+var sessiondata={sessionkey:"",authenticated:false,authenticationsource:"",authdata:{}, csp: {cspenabled: false, udanallowed: true, domain: ''}};
 var apikey = 'AIzaSyBeCZ1su0BYG5uGTHqqdg1bczlsubDuDrU';
 
 /**
@@ -59,7 +60,28 @@ function sendsessiondata(sendaction="UDAUserSessionData",message=''){
 	} else {
 		chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
 			if(tabs.length>0) {
-				chrome.tabs.sendMessage(tabs[0].id, {action: sendaction, data: JSON.stringify(sessiondata)});
+				var tab = tabs[0];
+				var url = new URL(tab.url)
+				var domain = url.protocol+'//'+url.hostname;
+				let cspdata = getstoragedata(CSPStorageName);
+				if(cspdata) {
+					let csprecords = cspdata;
+					let recordexists = false;
+					let csprecord={};
+					if (csprecords.length > 0) {
+						for (var i = 0; i < csprecords.length; i++) {
+							let record = csprecords[i];
+							if (record.domain === domain) {
+								recordexists = true;
+								csprecord=record;
+							}
+						}
+						if(recordexists){
+							sessiondata.csp=csprecord;
+						}
+					}
+				}
+				chrome.tabs.sendMessage(tab.id, {action: sendaction, data: JSON.stringify(sessiondata)});
 			} else {
 				console.log('failed to send session data');
 			}
@@ -153,7 +175,57 @@ function bindaccount(userauthdata){
 	xhr.send(JSON.stringify(usersessiondata));
 }
 
-function ProcessCSPValues(value=''){
+function CheckCSPStorage(cspenabled=false, udanallowed=false, domain){
+	var csprecord = {cspenabled, udanallowed, domain};
+	let cspdata = getstoragedata(CSPStorageName);
+	if(cspdata) {
+		let csprecords = cspdata;
+		if(csprecords.length>0){
+			let recordexists=false;
+			for(var i=0; i< csprecords.length; i++){
+				let record=csprecords[i];
+				if(record.domain === domain){
+					recordexists=true;
+					csprecords[i]=csprecord;
+					createstoragedata(CSPStorageName, csprecords);
+				}
+			}
+			if(!recordexists){
+				csprecords.push(csprecord);
+				createstoragedata(CSPStorageName, csprecords);
+			}
+		} else {
+			csprecords.push(csprecord);
+			createstoragedata(CSPStorageName, csprecords);
+		}
+	} else {
+		var csprecords = [];
+		csprecords.push(csprecord);
+		createstoragedata(CSPStorageName, csprecords);
+	}
+}
+
+function createstoragedata(key,value){
+	try {
+		localStorage.setItem(key, JSON.stringify(value));
+		return true;
+	} catch (e) {
+		return false;
+	}
+}
+
+function getstoragedata(key){
+	try {
+		var result=localStorage.getItem(key);
+		return JSON.parse(result);
+	} catch (e) {
+		return false;
+	}
+}
+
+function ProcessCSPValues(value='', domain){
+	let udanallowed=false;
+	let cspenabled=true;
 	if(value){
 		let allowedSrcs = value.split(";");
 		if(allowedSrcs.length>0){
@@ -161,7 +233,6 @@ function ProcessCSPValues(value=''){
 				let allowedSrc = allowedSrcs[i];
 				let allowedDomains = allowedSrc.split(' ');
 				if(allowedDomains.length>1 && allowedDomains[0].toLowerCase() === 'default-src'){
-					sessiondata.csp.enabled=true;
 					for(let index=0; index < allowedDomains.length; index++) {
 						let allowedDomain = allowedDomains[index];
 						if(allowedDomain === 'default-src'){
@@ -170,37 +241,33 @@ function ProcessCSPValues(value=''){
 						switch (allowedDomain.toLowerCase()){
 							case '*':
 							case 'https:':
-								sessiondata.csp.allowedUDAN=true;
+								udanallowed = true;
+								cspenabled=true;
 								break;
 						}
 					}
 				} else if(allowedDomains.length>0 && allowedDomains[0].toLowerCase() === 'default-src'){
-					sessiondata.csp.enabled = true;
-					sessiondata.csp.allowedUDAN = true;
+					udanallowed = true;
+					cspenabled=true;
 				}
 			}
 		}
 	} else {
-		sessiondata.csp.allowedUDAN=true;
-		sessiondata.csp.enabled=true;
+		udanallowed = true;
+		cspenabled=true;
 	}
+	CheckCSPStorage(cspenabled, udanallowed, domain);
 }
 
 let onHeadersReceived = function (details) {
-	console.log(sessiondata);
-	console.log('Finding headers received');
-	console.log(details.responseHeaders);
-
 	for (var i = 0; i < details.responseHeaders.length; i++) {
 		if (details.responseHeaders[i].name.toLowerCase() === 'content-security-policy') {
-			// details.responseHeaders[i].value = '';
-			console.log('Found CSP');
-			ProcessCSPValues(details.responseHeaders[i].value);
+			ProcessCSPValues(details.responseHeaders[i].value, details.initiator);
 		}
 	}
 };
 
-let onHeaderFilter = { urls: ['*://*/*'], types: ['main_frame', 'sub_frame'] };
+let onHeaderFilter = { urls: ['*://*/*'], types: ['main_frame'] };
 
 chrome.webRequest.onHeadersReceived.addListener(
 	onHeadersReceived, onHeaderFilter, ['blocking', 'responseHeaders']

@@ -85,7 +85,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		previousurl:"",
 		currenturl:"",
 		sessionID:"",
-		sessiondata:{sessionkey:"",authenticated:false,authenticationsource:"",authdata:{}, csp: {enabled: false, allowedUDAN: false}},
+		sessiondata:{sessionkey:"",authenticated:false,authenticationsource:"",authdata:{}, csp: {cspenabled: false, udanallowed: true, domain: ''}},
 		cookiename:"nist-voice-usersessionid",
 		recordingcookiename:"nistsequence",
 		recordedsequenceids:[],
@@ -636,7 +636,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		//opening the UDA screen
 		openmodal:function(focus=false){
-        	if(this.sessiondata.csp.enabled && !this.sessiondata.csp.allowedUDAN){
+        	if(this.sessiondata.csp.cspenabled && !this.sessiondata.csp.udanallowed){
         		alert('UDAN is not allowed');
         		return;
 			}
