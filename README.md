@@ -64,12 +64,12 @@ We solicit and welcome comments, help, documentation in improving the client.
     ```
     <script type="text/javascript">
         (function(){
+            var uda = document.createElement('script'); uda.type = 'text/javascript'; uda.src = 'https://digital-assistant.github.io/Digital_Assistant_Client/lib/include.js';
+            document.body.appendChild(uda);
             // unique reference for identifying the user these can be declared post login also.
             udaauthdata.id='123456789';
             // user emailid or name can be passed.
             udaauthdata.email='dummy@dummy.com';
-            var uda = document.createElement('script'); uda.type = 'text/javascript'; uda.src = 'https://digital-assistant.github.io/Digital_Assistant_Client/lib/include.js';
-            document.body.appendChild(uda);
         })();
     </script>
     ```
