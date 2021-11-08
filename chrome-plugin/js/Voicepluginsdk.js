@@ -497,8 +497,22 @@ if (typeof UDAPluginSDK === 'undefined') {
 			},UDA_POST_INTERVAL);
 		},
 		addbuttonhtml:function(){
+        	let udaIconDisabled = false;
+			if(this.sessiondata.csp.cspenabled && !this.sessiondata.csp.udanallowed){
+				jQuery("#uda-btn").html('');
+				let cspuseracceptance = this.getstoragedata(this.cspacceptance.storagename);
+				if(cspuseracceptance){
+					cspuseracceptance = JSON.parse(cspuseracceptance);
+					if(!cspuseracceptance.proceed){
+						udaIconDisabled='udaIconDisabled';
+					}
+				} else {
+					this.ShowAlert("UDAN May not be working properly as CSP is enabled. Do you want to continue");
+					return;
+				}
+			}
 			jQuery("#uda-btn").unbind("click").html("");
-			var buttonhtml	=	'<div class="uda-nistapp-logo">'
+			var buttonhtml	=	'<div class="uda-nistapp-logo '+udaIconDisabled+'">'
 								+'	<div class="uda-icon" style="text-align: center;">'
 								+'		<img src="'+this.extensionpath+'images/icons/nist-logo.png">'
 								+'		<p style="padding:0; margin:0px;color: #303f9f; font-weight: bold; font-size: 11px;">UDAN(Beta)</p>'
@@ -509,11 +523,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 								+'</div>';
 			var modal =jQuery("#uda-btn");
 			modal.append(buttonhtml);
-			modal.click(function () {
-				UDAPluginSDK.openmodal(true);
-			});
-			if(this.rerenderhtml) {
-				this.showhtml();
+			if(!udaIconDisabled) {
+				modal.click(function () {
+					UDAPluginSDK.openmodal(true);
+				});
+				if (this.rerenderhtml) {
+					this.showhtml();
+				}
 			}
 		},
 		rightPanelHtml: function(){
@@ -651,8 +667,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 					+'			<p>'+content+'</p>'
 					+'		</div>'
 					+'		<div class="udamodal-footer">'
-					+'			<button class="udacontinueBtn " id="udacontinueBtn">Continue</button>'
-					+'			<button class="udacloseBtn" id="udacloseBtn">Close</button>'
+					+'			<button class="udacontinueBtn " id="udacontinueBtn">Continue with errors</button>'
+					+'			<button class="udacloseBtn" id="udacloseBtn">Exit UDAN</button>'
 					+'		</div>'
 					+'	</div>'
 					+'</div>';
@@ -664,32 +680,53 @@ if (typeof UDAPluginSDK === 'undefined') {
 			// Get the <span> element that closes the modal
 			var span = document.getElementsByClassName("udaclose")[0];
 			var closeBtn = document.getElementById('udacloseBtn');
+			var continueBtn = document.getElementById('udacontinueBtn');
 
 			closeBtn.onclick=function(){
 				modal.style.display = "none";
+				UDAPluginSDK.cspDecline();
 			}
 			// When the user clicks on <span> (x), close the modal
 			span.onclick = function() {
 				modal.style.display = "none";
+				UDAPluginSDK.cspDecline();
 			}
 
 			modal.style.display = "block";
 
+			continueBtn.onclick=function (){
+				modal.style.display = "none";
+				UDAPluginSDK.cspAcceptance();
+			};
+
+		},
+		cspDecline: function(){
+			let cspuseracceptance = this.getstoragedata(this.cspacceptance.storagename);
+			if(cspuseracceptance){
+				if(!cspuseracceptance.proceed){
+					this.cspacceptance.data.proceed = false;
+				}
+			} else {
+				this.cspacceptance.data.proceed = false;
+			}
+			this.createstoragedata(this.cspacceptance.storagename, JSON.stringify(this.cspacceptance.data));
+			this.addbuttonhtml();
+		},
+		cspAcceptance: function(){
+			let cspuseracceptance = this.getstoragedata(this.cspacceptance.storagename);
+			if(cspuseracceptance){
+				if(!cspuseracceptance.proceed){
+					this.cspacceptance.data.proceed = true;
+				}
+			} else {
+				this.cspacceptance.data.proceed = true;
+			}
+			this.createstoragedata(this.cspacceptance.storagename, JSON.stringify(this.cspacceptance.data));
+			this.addbuttonhtml();
 		},
 		//opening the UDA screen
 		openmodal:function(focus=false){
-        	if(this.sessiondata.csp.cspenabled && !this.sessiondata.csp.udanallowed){
-        		let cspuseracceptance = this.getstoragedata(this.cspacceptance.storagename);
-        		if(cspuseracceptance){
-        			if(!cspuseracceptance.proceed){
-        				return;
-					}
-				} else {
-					this.ShowAlert("UDAN May not be working properly as CSP is enabled. Do you want to continue");
-					return;
-				}
-			}
-			if(this.sessiondata.authenticated) {
+        	if(this.sessiondata.authenticated) {
 				jQuery("#uda-btn").hide();
 				jQuery('#uda-html-container').show();
 				var searchinput=jQuery("#uda-search-input");
