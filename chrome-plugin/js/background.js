@@ -256,6 +256,7 @@ function ProcessCSPValues(value='', domain){
 		udanallowed = true;
 		cspenabled=true;
 	}
+	console.log(domain);
 	CheckCSPStorage(cspenabled, udanallowed, domain);
 }
 
