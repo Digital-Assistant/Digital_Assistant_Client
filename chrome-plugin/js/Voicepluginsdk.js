@@ -2338,7 +2338,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						break;
 					case "button":
 						//typeof node.hasAttribute !== 'undefined' &&
-						if(node.hasAttribute('aria-label') && node.getAttribute('aria-label').toLowerCase() === 'open calendar') {
+						if(typeof node.hasAttribute !== 'undefined' && node.hasAttribute('aria-label') && node.getAttribute('aria-label').toLowerCase() === 'open calendar') {
 							return tooltipsection;
 						} else {
 							return '';
