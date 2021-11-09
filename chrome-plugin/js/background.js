@@ -237,7 +237,7 @@ function ProcessCSPValues(value='', domain){
 						if(allowedDomain === 'default-src'){
 							continue;
 						}
-						console.log(allowedDomains.toLowerCase());
+						console.log(allowedDomain.toLowerCase());
 						switch (allowedDomain.toLowerCase()){
 							case '*':
 							case 'https:':
