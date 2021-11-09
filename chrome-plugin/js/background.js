@@ -33,8 +33,7 @@ async function UDAdigestMessage(textmessage, algorithm) {
 //login with chrome identity functionality
 function loginwithgoogle(){
 	sessiondata.authenticationsource="google";
-	chrome.identity.getProfileUserInfo(function (data) {
-		console.log(data);
+	chrome.identity.getProfileUserInfo({accountStatus: 'ANY'}, function (data) {
 		if(data.id!=='' && data.email!=="") {
 			sessiondata.authenticated = true;
 			sessiondata.authdata = data;
@@ -46,7 +45,7 @@ function loginwithgoogle(){
 				});
 			});
 		} else {
-			sendsessiondata("UDAAlertMessageData","UDA: UserID not set. Digital assistant will not work.")
+			sendsessiondata("UDAAlertMessageData","UDA: Please login into chrome browser.")
 		}
 	});
 }
@@ -238,6 +237,7 @@ function ProcessCSPValues(value='', domain){
 						if(allowedDomain === 'default-src'){
 							continue;
 						}
+						console.log(allowedDomains.toLowerCase());
 						switch (allowedDomain.toLowerCase()){
 							case '*':
 							case 'https:':
