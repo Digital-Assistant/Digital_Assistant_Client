@@ -34,6 +34,7 @@ async function UDAdigestMessage(textmessage, algorithm) {
 function loginwithgoogle(){
 	sessiondata.authenticationsource="google";
 	chrome.identity.getProfileUserInfo({accountStatus: 'ANY'}, function (data) {
+		console.log(data);
 		if(data.id!=='' && data.email!=="") {
 			sessiondata.authenticated = true;
 			sessiondata.authdata = data;
@@ -261,6 +262,7 @@ function ProcessCSPValues(value='', domain){
 }
 
 let onHeadersReceived = function (details) {
+	console.log(details.initiator);
 	for (var i = 0; i < details.responseHeaders.length; i++) {
 		if (details.responseHeaders[i].name.toLowerCase() === 'content-security-policy') {
 			ProcessCSPValues(details.responseHeaders[i].value, details.initiator);
