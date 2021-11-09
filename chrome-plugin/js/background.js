@@ -34,6 +34,7 @@ async function UDAdigestMessage(textmessage, algorithm) {
 function loginwithgoogle(){
 	sessiondata.authenticationsource="google";
 	chrome.identity.getProfileUserInfo({accountStatus: 'ANY'}, function (data) {
+		console.log(data);
 		if(data.id!=='' && data.email!=="") {
 			sessiondata.authenticated = true;
 			sessiondata.authdata = data;
