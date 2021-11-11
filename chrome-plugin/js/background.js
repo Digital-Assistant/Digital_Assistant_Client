@@ -2,7 +2,7 @@
 
 var updatedata=false;
 var UDADebug=false; //this variable exists in links.js file also
-var apihost=(UDADebug)?"http://localhost:11080/voiceapi":"https://udantest.nistapp.ai/voiceapi"; //this variable exists in links.js file also
+var apihost=(UDADebug)?"http://localhost:11080/voiceapi":"https://udan.nistapp.ai/voiceapi"; //this variable exists in links.js file also
 var cookiename="uda-sessiondata";
 var CSPStorageName="uda-csp-storage";
 var activetabs=[];
@@ -34,7 +34,6 @@ async function UDAdigestMessage(textmessage, algorithm) {
 function loginwithgoogle(){
 	sessiondata.authenticationsource="google";
 	chrome.identity.getProfileUserInfo({accountStatus: 'ANY'}, function (data) {
-		console.log(data);
 		if(data.id!=='' && data.email!=="") {
 			sessiondata.authenticated = true;
 			sessiondata.authdata = data;
@@ -238,7 +237,6 @@ function ProcessCSPValues(value='', domain){
 						if(allowedDomain === 'default-src'){
 							continue;
 						}
-						console.log(allowedDomain.toLowerCase());
 						switch (allowedDomain.toLowerCase()){
 							case '*':
 							case 'https:':
@@ -257,15 +255,16 @@ function ProcessCSPValues(value='', domain){
 		udanallowed = true;
 		cspenabled=true;
 	}
-	console.log(domain);
 	CheckCSPStorage(cspenabled, udanallowed, domain);
 }
 
 let onHeadersReceived = function (details) {
-	console.log(details);
+	let url = new URL(details.url);
+	var domain = url.protocol+'//'+url.hostname;
+	console.log(domain);
 	for (var i = 0; i < details.responseHeaders.length; i++) {
 		if (details.responseHeaders[i].name.toLowerCase() === 'content-security-policy') {
-			ProcessCSPValues(details.responseHeaders[i].value, details.initiator);
+			ProcessCSPValues(details.responseHeaders[i].value, domain);
 		}
 	}
 };
