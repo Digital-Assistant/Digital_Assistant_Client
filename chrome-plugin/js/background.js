@@ -262,7 +262,7 @@ function ProcessCSPValues(value='', domain){
 }
 
 let onHeadersReceived = function (details) {
-	console.log(details.initiator);
+	console.log(details);
 	for (var i = 0; i < details.responseHeaders.length; i++) {
 		if (details.responseHeaders[i].name.toLowerCase() === 'content-security-policy') {
 			ProcessCSPValues(details.responseHeaders[i].value, details.initiator);
