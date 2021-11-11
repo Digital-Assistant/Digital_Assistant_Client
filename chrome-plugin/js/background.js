@@ -34,7 +34,6 @@ async function UDAdigestMessage(textmessage, algorithm) {
 function loginwithgoogle(){
 	sessiondata.authenticationsource="google";
 	chrome.identity.getProfileUserInfo({accountStatus: 'ANY'}, function (data) {
-		console.log(data);
 		if(data.id!=='' && data.email!=="") {
 			sessiondata.authenticated = true;
 			sessiondata.authdata = data;
@@ -238,7 +237,6 @@ function ProcessCSPValues(value='', domain){
 						if(allowedDomain === 'default-src'){
 							continue;
 						}
-						console.log(allowedDomain.toLowerCase());
 						switch (allowedDomain.toLowerCase()){
 							case '*':
 							case 'https:':
@@ -261,10 +259,12 @@ function ProcessCSPValues(value='', domain){
 }
 
 let onHeadersReceived = function (details) {
-	console.log(details.initiator);
+	let url = new URL(details.url);
+	var domain = url.protocol+'//'+url.hostname;
+	console.log(domain);
 	for (var i = 0; i < details.responseHeaders.length; i++) {
 		if (details.responseHeaders[i].name.toLowerCase() === 'content-security-policy') {
-			ProcessCSPValues(details.responseHeaders[i].value, details.initiator);
+			ProcessCSPValues(details.responseHeaders[i].value, domain);
 		}
 	}
 };
