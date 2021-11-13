@@ -96,7 +96,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 			if(chrome.runtime.lastError){
 				console.log('failed to read stored session data');
 			} else {
-				// console.log(storedsessiondata[cookiename]);
 				// looks like chrome storage might have changed so changing the reading the data has been changed. For to work with old version have added the new code to else if statement
 				if(storedsessiondata.hasOwnProperty("sessionkey") && storedsessiondata["sessionkey"]){
 					sessiondata=storedsessiondata;
@@ -261,7 +260,6 @@ function ProcessCSPValues(value='', domain){
 let onHeadersReceived = function (details) {
 	let url = new URL(details.url);
 	var domain = url.protocol+'//'+url.hostname;
-	console.log(domain);
 	for (var i = 0; i < details.responseHeaders.length; i++) {
 		if (details.responseHeaders[i].name.toLowerCase() === 'content-security-policy') {
 			ProcessCSPValues(details.responseHeaders[i].value, domain);
