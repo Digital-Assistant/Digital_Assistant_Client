@@ -453,7 +453,7 @@ if (typeof UDAPluginSDK === 'undefined') {
          */
         changeLanguage: function() {
             let langCode='en-US'
-            langCode = $('#uda-lang-select').val();
+            langCode = jQuery('#uda-lang-select').val();
             this.multilingual.selectedLang = langCode;
             if(UDASpeechRecognitionAvailable){
               this.recognition.lang = langCode;
@@ -595,17 +595,17 @@ if (typeof UDAPluginSDK === 'undefined') {
 						langcode.forEach((sublang, sublangindex) => {
 							if (sublangindex !== 0) {
 								if (this.multilingual.selectedLang.toLowerCase() === sublang[0].toLowerCase()) {
-									$('#uda-lang-select').append('<option value="' + sublang[0] + '" selected>' + langcode[0] + ' - ' + sublang[1] + '</option>');
+									jQuery('#uda-lang-select').append('<option value="' + sublang[0] + '" selected>' + langcode[0] + ' - ' + sublang[1] + '</option>');
 								} else {
-									$('#uda-lang-select').append('<option value="' + sublang[0] + '">' + langcode[0] + ' - ' + sublang[1] + '</option>');
+									jQuery('#uda-lang-select').append('<option value="' + sublang[0] + '">' + langcode[0] + ' - ' + sublang[1] + '</option>');
 								}
 							}
 						});
 					} else {
 						if (this.multilingual.selectedLang.toLowerCase() == langcode[1].toString().toLowerCase()) {
-							$('#uda-lang-select').append('<option value="' + langcode[1] + '" selected>' + langcode[0] + '</option>');
+							jQuery('#uda-lang-select').append('<option value="' + langcode[1] + '" selected>' + langcode[0] + '</option>');
 						} else {
-							$('#uda-lang-select').append('<option value="' + langcode[1] + '">' + langcode[0] + '</option>');
+							jQuery('#uda-lang-select').append('<option value="' + langcode[1] + '">' + langcode[0] + '</option>');
 						}
 					}
 				});
@@ -1330,17 +1330,17 @@ if (typeof UDAPluginSDK === 'undefined') {
 			UDAConsoleLogger.info({invokingnode: node});
 
 			// remove added tooltips before invoking
-			// let tooltipnodes = $('.uda-tooltip');
+			// let tooltipnodes = jQuery('.uda-tooltip');
 			let tooltipnodes = document.getElementsByClassName('uda-tooltip');
 			if (tooltipnodes.length > 0) {
-				$('.uda-tooltip').each(function() {
-					$(this).find('.uda-tooltip-text-content').remove();
-					$(this).removeClass('uda-tooltip');
+				jQuery('.uda-tooltip').each(function() {
+					jQuery(this).find('.uda-tooltip-text-content').remove();
+					jQuery(this).removeClass('uda-tooltip');
 				});
 			}
 
-			$('.uda-tooltip-text-content').each(function() {
-				$(this).remove();
+			jQuery('.uda-tooltip-text-content').each(function() {
+				jQuery(this).remove();
 			});
 
 			this.simulateHover(node);
@@ -1531,8 +1531,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 				UDAPluginSDK.backToSearchResultsPage(navigationcookiedata);
 			});
 
-			$('html, body').animate({
-				scrollTop: ($(invokingnode).offset().top - 250)
+			jQuery('html, body').animate({
+				scrollTop: (jQuery(invokingnode).offset().top - 250)
 			}, 2000, function(){
 				if(enableFocus){
 					invokingnode.focus();
@@ -1630,9 +1630,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		//Continue functionality invoke
 		resumePlay: function(){
-			let tooltipnodes = $('.uda-tooltip');
+			let tooltipnodes = jQuery('.uda-tooltip');
 			if (tooltipnodes.length > 0) {
-				$('.uda-tooltip').remove();
+				jQuery('.uda-tooltip').remove();
 				this.popperInstance.destroy();
 			}
 			this.playNextAction = true;
@@ -2109,7 +2109,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			let tooltipnodes = document.getElementsByClassName('uda-tooltip');
 			if (tooltipnodes.length > 0) {
-				$('.uda-tooltip').remove();
+				jQuery('.uda-tooltip').remove();
 				this.popperInstance.destroy();
 			}
 
@@ -2261,14 +2261,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 					jQuery("#uda-edited-name").show();
 				});
 				jQuery('#uda-edited-name').blur(function() {
-					let editedName = $("#uda-edited-name").val();
+					let editedName = jQuery("#uda-edited-name").val();
 					if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
 						UDAPluginSDK.editAndSave(data, editedName);
 					}
 				});
 				jQuery("#uda-edited-name").keydown(function (e) {
 					if (e.keyCode === 13) {
-						let editedName = $("#uda-edited-name").val();
+						let editedName = jQuery("#uda-edited-name").val();
 						if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
 							UDAPluginSDK.editAndSave(data, editedName);
 						}
@@ -2280,21 +2280,21 @@ if (typeof UDAPluginSDK === 'undefined') {
 						jQuery("#uda-edited-tooltip").show();
 					});
 					/*jQuery('#uda-edited-tooltip').blur(function() {
-						let editedName = $("#uda-edited-tooltip").val();
+						let editedName = jQuery("#uda-edited-tooltip").val();
 						if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
 							UDAPluginSDK.editAndSaveTooltip(data, editedName);
 						}
 					});*/
 					jQuery("#uda-edited-tooltip").keydown(function (e) {
 						if (e.keyCode === 13) {
-							let editedName = $("#uda-edited-tooltip").val();
+							let editedName = jQuery("#uda-edited-tooltip").val();
 							if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
 								UDAPluginSDK.editAndSaveTooltip(data, editedName);
 							}
 						}
 					});
 					jQuery("#uda-tooltip-save").click(function (){
-						let editedName = $("#uda-edited-tooltip").val();
+						let editedName = jQuery("#uda-edited-tooltip").val();
 						if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
 							UDAPluginSDK.editAndSaveTooltip(data, editedName);
 						}
@@ -2819,7 +2819,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			UDAPluginSDK.backtosearchresults(navcookiedata);
 			let tooltipnodes = document.getElementsByClassName('uda-tooltip');
 			if (tooltipnodes.length > 0) {
-				$('.uda-tooltip').remove();
+				jQuery('.uda-tooltip').remove();
 				this.popperInstance.destroy();
 			}
 		},
