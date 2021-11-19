@@ -60,19 +60,19 @@ function sendsessiondata(sendaction="UDAUserSessionData",message=''){
 		chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
 			if(tabs.length>0) {
 				var tab = tabs[0];
-				var url = new URL(tab.url)
+				var url = new URL(tab.url);
 				var domain = url.protocol+'//'+url.hostname;
+				let csprecord={cspenabled: false, udanallowed: true, domain: ''};
 				let cspdata = getstoragedata(CSPStorageName);
+				let recordexists = false;
 				if(cspdata) {
 					let csprecords = cspdata;
-					let recordexists = false;
-					let csprecord={};
 					if (csprecords.length > 0) {
 						for (var i = 0; i < csprecords.length; i++) {
-							let record = csprecords[i];
-							if (record.domain === domain) {
+							if (csprecords[i].domain === domain) {
 								recordexists = true;
-								csprecord=record;
+								csprecord=csprecords[i];
+								break;
 							}
 						}
 						if(recordexists){
@@ -80,6 +80,7 @@ function sendsessiondata(sendaction="UDAUserSessionData",message=''){
 						}
 					}
 				}
+				sessiondata.csp=csprecord;
 				chrome.tabs.sendMessage(tab.id, {action: sendaction, data: JSON.stringify(sessiondata)});
 			} else {
 				console.log('failed to send session data');
