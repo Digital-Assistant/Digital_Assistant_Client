@@ -498,6 +498,15 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		addbuttonhtml:function(){
         	let udaIconDisabled = false;
+
+			const screenSize = this.getScreenSize();
+			console.log(screenSize);
+
+			if(screenSize.resolution.height < 1080){
+				this.ShowAlert("UDAN is not tested below 1920 x 1080 resolution. Do you want to still use UDAN?");
+				return;
+			}
+
 			if(this.sessiondata.csp.cspenabled && !this.sessiondata.csp.udanallowed){
 				jQuery("#uda-btn").html('');
 				let cspuseracceptance = this.getstoragedata(this.cspacceptance.storagename);
@@ -1555,6 +1564,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			const scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
 			const scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
 
+			let resolution = {height: 0, width: 0};
+
 			page.height = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
 			page.width = Math.max(body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth);
 			if (window.innerWidth !== undefined) {
@@ -1567,7 +1578,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 				screen.height = D.clientHeight * 0.75;
 				// return { width: D.clientWidth*0.75, height: D.clientHeight };
 			}
-			let windowProperties = {page: page, screen: screen, scrollInfo: {scrollTop: scrollTop, scrollLeft: scrollLeft}};
+			resolution.height = window.screen.height;
+			resolution.width = window.screen.width;
+			let windowProperties = {page: page, screen: screen, scrollInfo: {scrollTop: scrollTop, scrollLeft: scrollLeft}, resolution};
 			return windowProperties;
 		},
 		//get node position on the page
