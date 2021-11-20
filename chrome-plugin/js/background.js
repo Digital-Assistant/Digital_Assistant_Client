@@ -60,19 +60,19 @@ function sendsessiondata(sendaction="UDAUserSessionData",message=''){
 		chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
 			if(tabs.length>0) {
 				var tab = tabs[0];
-				var url = new URL(tab.url)
+				var url = new URL(tab.url);
 				var domain = url.protocol+'//'+url.hostname;
+				let csprecord={cspenabled: false, udanallowed: true, domain: ''};
 				let cspdata = getstoragedata(CSPStorageName);
+				let recordexists = false;
 				if(cspdata) {
 					let csprecords = cspdata;
-					let recordexists = false;
-					let csprecord={};
 					if (csprecords.length > 0) {
 						for (var i = 0; i < csprecords.length; i++) {
-							let record = csprecords[i];
-							if (record.domain === domain) {
+							if (csprecords[i].domain === domain) {
 								recordexists = true;
-								csprecord=record;
+								csprecord=csprecords[i];
+								break;
 							}
 						}
 						if(recordexists){
@@ -80,6 +80,7 @@ function sendsessiondata(sendaction="UDAUserSessionData",message=''){
 						}
 					}
 				}
+				sessiondata.csp=csprecord;
 				chrome.tabs.sendMessage(tab.id, {action: sendaction, data: JSON.stringify(sessiondata)});
 			} else {
 				console.log('failed to send session data');
@@ -96,7 +97,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 			if(chrome.runtime.lastError){
 				console.log('failed to read stored session data');
 			} else {
-				// console.log(storedsessiondata[cookiename]);
 				// looks like chrome storage might have changed so changing the reading the data has been changed. For to work with old version have added the new code to else if statement
 				if(storedsessiondata.hasOwnProperty("sessionkey") && storedsessiondata["sessionkey"]){
 					sessiondata=storedsessiondata;
@@ -261,7 +261,6 @@ function ProcessCSPValues(value='', domain){
 let onHeadersReceived = function (details) {
 	let url = new URL(details.url);
 	var domain = url.protocol+'//'+url.hostname;
-	console.log(domain);
 	for (var i = 0; i < details.responseHeaders.length; i++) {
 		if (details.responseHeaders[i].name.toLowerCase() === 'content-security-policy') {
 			ProcessCSPValues(details.responseHeaders[i].value, domain);
