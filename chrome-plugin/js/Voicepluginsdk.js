@@ -238,8 +238,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 				['हिन्दी',             ['hi-IN']],
 				['ภาษาไทย',         ['th-TH']]
 			],
-		cspacceptance: {storagename: 'uda-csp-user-consent',data:{proceed: true}},
-		inarray:function(value,object){
+		cspUserAcceptance: {storageName: 'uda-csp-user-consent',data:{proceed: true}},
+		screenAcceptance: {storageName: 'uda-user-screen-consent',data:{proceed: true}},
+		inArray:function(value, object){
 			return jQuery.inArray(value, object);
 		},
 
@@ -340,7 +341,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			this.loadOtherScript(this.extensionpath+"js/domJSON.js");
 			// todo make css loading dynamic based on css file availability
-			if(this.inarray(window.location.host,this.addcustomcssdomains) !== -1){
+			if(this.inArray(window.location.host,this.addcustomcssdomains) !== -1){
 				this.loadCssScript(this.extensionpath+"css/"+window.location.host+".css");
 			}
 			if(window.location.host === 'localhost:4200' && window.location.path && window.location.path.includes('portal')){
@@ -453,7 +454,7 @@ if (typeof UDAPluginSDK === 'undefined') {
          */
         changeLanguage: function() {
             let langCode='en-US'
-            langCode = $('#uda-lang-select').val();
+            langCode = jQuery('#uda-lang-select').val();
             this.multilingual.selectedLang = langCode;
             if(UDASpeechRecognitionAvailable){
               this.recognition.lang = langCode;
@@ -498,16 +499,34 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		addbuttonhtml:function(){
         	let udaIconDisabled = false;
-			if(this.sessiondata.csp.cspenabled && !this.sessiondata.csp.udanallowed){
+
+			const screenSize = this.getScreenSize();
+
+			if(screenSize.resolution.height < 1080){
+
 				jQuery("#uda-btn").html('');
-				let cspuseracceptance = this.getstoragedata(this.cspacceptance.storagename);
-				if(cspuseracceptance){
-					cspuseracceptance = JSON.parse(cspuseracceptance);
-					if(!cspuseracceptance.proceed){
+				let screenAcceptance = this.getstoragedata(this.screenAcceptance.storageName);
+				if(screenAcceptance){
+					screenAcceptance = JSON.parse(screenAcceptance);
+					if(!screenAcceptance.proceed){
 						udaIconDisabled='udaIconDisabled';
 					}
 				} else {
-					this.ShowAlert("UDAN May not be working properly as CSP is enabled. Do you want to continue");
+					this.showAlert(this.screenAcceptance, "UDAN is not tested below 1920 x 1080 resolution. Do you want to still use UDAN?");
+					return;
+				}
+			}
+
+			if(this.sessiondata.csp.cspenabled && !this.sessiondata.csp.udanallowed){
+				jQuery("#uda-btn").html('');
+				let cspUserAcceptance = this.getstoragedata(this.cspUserAcceptance.storageName);
+				if(cspUserAcceptance){
+					cspUserAcceptance = JSON.parse(cspUserAcceptance);
+					if(!cspUserAcceptance.proceed){
+						udaIconDisabled='udaIconDisabled';
+					}
+				} else {
+					this.showCspAlert("UDAN May not be working properly as CSP is enabled. Do you want to continue");
 					return;
 				}
 			}
@@ -595,17 +614,17 @@ if (typeof UDAPluginSDK === 'undefined') {
 						langcode.forEach((sublang, sublangindex) => {
 							if (sublangindex !== 0) {
 								if (this.multilingual.selectedLang.toLowerCase() === sublang[0].toLowerCase()) {
-									$('#uda-lang-select').append('<option value="' + sublang[0] + '" selected>' + langcode[0] + ' - ' + sublang[1] + '</option>');
+									jQuery('#uda-lang-select').append('<option value="' + sublang[0] + '" selected>' + langcode[0] + ' - ' + sublang[1] + '</option>');
 								} else {
-									$('#uda-lang-select').append('<option value="' + sublang[0] + '">' + langcode[0] + ' - ' + sublang[1] + '</option>');
+									jQuery('#uda-lang-select').append('<option value="' + sublang[0] + '">' + langcode[0] + ' - ' + sublang[1] + '</option>');
 								}
 							}
 						});
 					} else {
 						if (this.multilingual.selectedLang.toLowerCase() == langcode[1].toString().toLowerCase()) {
-							$('#uda-lang-select').append('<option value="' + langcode[1] + '" selected>' + langcode[0] + '</option>');
+							jQuery('#uda-lang-select').append('<option value="' + langcode[1] + '" selected>' + langcode[0] + '</option>');
 						} else {
-							$('#uda-lang-select').append('<option value="' + langcode[1] + '">' + langcode[0] + '</option>');
+							jQuery('#uda-lang-select').append('<option value="' + langcode[1] + '">' + langcode[0] + '</option>');
 						}
 					}
 				});
@@ -656,7 +675,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		/**
 		 * Adding alert modal html
 		 */
-		ShowAlert: function(content='',addbtn=false){
+		showCspAlert: function(content='',addbtn=false){
 			let html='<div id="udaModal" class="udamodal">'
 					+'	<div class="udamodal-content">'
 					+'		<div class="udamodal-header">'
@@ -701,27 +720,109 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 		},
 		cspDecline: function(){
-			let cspuseracceptance = this.getstoragedata(this.cspacceptance.storagename);
+			let cspuseracceptance = this.getstoragedata(this.cspUserAcceptance.storageName);
 			if(cspuseracceptance){
 				if(!cspuseracceptance.proceed){
-					this.cspacceptance.data.proceed = false;
+					this.cspUserAcceptance.data.proceed = false;
 				}
 			} else {
-				this.cspacceptance.data.proceed = false;
+				this.cspUserAcceptance.data.proceed = false;
 			}
-			this.createstoragedata(this.cspacceptance.storagename, JSON.stringify(this.cspacceptance.data));
+			this.createstoragedata(this.cspUserAcceptance.storageName, JSON.stringify(this.cspUserAcceptance.data));
 			this.addbuttonhtml();
 		},
 		cspAcceptance: function(){
-			let cspuseracceptance = this.getstoragedata(this.cspacceptance.storagename);
+			let cspuseracceptance = this.getstoragedata(this.cspUserAcceptance.storageName);
 			if(cspuseracceptance){
 				if(!cspuseracceptance.proceed){
-					this.cspacceptance.data.proceed = true;
+					this.cspUserAcceptance.data.proceed = true;
 				}
 			} else {
-				this.cspacceptance.data.proceed = true;
+				this.cspUserAcceptance.data.proceed = true;
 			}
-			this.createstoragedata(this.cspacceptance.storagename, JSON.stringify(this.cspacceptance.data));
+			this.createstoragedata(this.cspUserAcceptance.storageName, JSON.stringify(this.cspUserAcceptance.data));
+			this.addbuttonhtml();
+		},
+		getAlertHtml: function(content, addExitBtn=true, continueText='Continue with errors'){
+			let footerHtml = '';
+			if(addExitBtn){
+				footerHtml 	='			<button class="udacontinueBtn " id="udacontinueBtn">'+continueText+'</button>'
+							+'			<button class="udacloseBtn" id="udacloseBtn">Exit UDAN</button>';
+			} else {
+				footerHtml ='			<button class="udacloseBtn" id="udacloseBtn">Close</button>';
+			}
+			let html='<div id="udaModal" class="udamodal">'
+				+'	<div class="udamodal-content">'
+				+'		<div class="udamodal-header">'
+				+'			<span class="udaclose">&times;</span>'
+				+'			<h3>UDA Alert</h3>'
+				+'		</div>'
+				+'		<div class="udamodal-body">'
+				+'			<p>'+content+'</p>'
+				+'		</div>'
+				+'		<div class="udamodal-footer">'
+				+			footerHtml
+				+'		</div>'
+				+'	</div>'
+				+'</div>';
+			return html
+		},
+		showAlert: function(storageName, content=''){
+			let html=this.getAlertHtml(content, true, 'Continue');
+
+			jQuery("#uda-alerthtml-container").html(html);
+
+			var modal = document.getElementById("udaModal");
+			var span = document.getElementsByClassName("udaclose")[0];
+			var closeBtn = document.getElementById('udacloseBtn');
+			var continueBtn = document.getElementById('udacontinueBtn');
+
+			closeBtn.onclick=function(){
+				modal.style.display = "none";
+				if(storageName) {
+					UDAPluginSDK.alertDecline(storageName);
+				}
+			}
+
+			span.onclick = function() {
+				modal.style.display = "none";
+				if(storageName) {
+					UDAPluginSDK.alertDecline(storageName);
+				}
+			}
+
+			modal.style.display = "block";
+
+			continueBtn.onclick=function (){
+				modal.style.display = "none";
+				if(storageName) {
+					UDAPluginSDK.alertAcceptance(storageName);
+				}
+			};
+		},
+		alertDecline: function(storageName){
+			let data = this.getstoragedata(storageName.storageName);
+			if(data){
+				if(!data.proceed){
+					storageName.data.proceed = false;
+				}
+			} else {
+				storageName.data.proceed = false;
+			}
+			this.createstoragedata(storageName.storageName, JSON.stringify(storageName.data));
+			this.addbuttonhtml();
+		},
+		alertAcceptance: function(storageName){
+			let acceptance = this.getstoragedata(storageName.storageName);
+			let proceed = false;
+			if(acceptance){
+				if(!acceptance.proceed){
+					storageName.data.proceed = true;
+				}
+			} else {
+				storageName.data.proceed = true;
+			}
+			this.createstoragedata(storageName.storageName, JSON.stringify(storageName.data));
 			this.addbuttonhtml();
 		},
 		//opening the UDA screen
@@ -770,7 +871,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 							childnode.classList.remove("uda-original-content");
 						}
 					}
-					if (UDAPluginSDK.containersections.length > 0 && UDAPluginSDK.inarray(childnodeindex, UDAPluginSDK.containersections) !== -1) {
+					if (UDAPluginSDK.containersections.length > 0 && UDAPluginSDK.inArray(childnodeindex, UDAPluginSDK.containersections) !== -1) {
 						childnode.classList.add("container");
 					}
 				});
@@ -915,7 +1016,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					node.haschildclick=false;
 
 					// Checking for ignore nodes during indexing
-					if (this.inarray(node.nodeName.toLowerCase(), this.ignoreNodesFromIndexing) !== -1) {
+					if (this.inArray(node.nodeName.toLowerCase(), this.ignoreNodesFromIndexing) !== -1) {
 						if(node.nodeName.toLowerCase() === 'ckeditor' && node.childNodes.length>2 && this.recording){
 							let addToolTip = true;
 							for(let checknode of this.tooltipDisplayedNodes){
@@ -927,7 +1028,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 								this.tooltipDisplayedNodes.push(node);
 								this.addToolTip(node, node, false, false, false, false, 'We have detected a rich text editor. To record this in your sequence, Please click on the editor menu. We are unable to record clicks on the text area.', false, false);
 							}
-						} else if(!node.hasclick && this.inarray(node.nodeName.toLowerCase(), this.addClickToSpecialNodes) !== -1 && this.inarray(node.nodeName.toLowerCase(), this.ignoreClicksOnSpecialNodes) === -1){
+						} else if(!node.hasclick && this.inArray(node.nodeName.toLowerCase(), this.addClickToSpecialNodes) !== -1 && this.inArray(node.nodeName.toLowerCase(), this.ignoreClicksOnSpecialNodes) === -1){
 							UDAConsoleLogger.info('Child nodes ignored for node and added click to: ' + node.nodeName);
 							this.addClickToNode(node);
 						} else if(this.cancelRecordingDuringRecordingNodes.indexOf(node.nodeName.toLowerCase()) !== -1) {
@@ -1034,7 +1135,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				return node;
 			}
 
-			if(this.inarray(node.nodeName.toLowerCase(), this.ignoreClicksOnSpecialNodes) !== -1){
+			if(this.inArray(node.nodeName.toLowerCase(), this.ignoreClicksOnSpecialNodes) !== -1){
 				return node;
 			}
 
@@ -1077,7 +1178,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				}
 			}
 
-			if(this.inarray(node.nodeName.toLowerCase(), this.ignoreNodesFromIndexing) !== -1) {
+			if(this.inArray(node.nodeName.toLowerCase(), this.ignoreNodesFromIndexing) !== -1) {
 				UDAConsoleLogger.info({indexingnode: node});
 			}
 
@@ -1330,17 +1431,17 @@ if (typeof UDAPluginSDK === 'undefined') {
 			UDAConsoleLogger.info({invokingnode: node});
 
 			// remove added tooltips before invoking
-			// let tooltipnodes = $('.uda-tooltip');
+			// let tooltipnodes = jQuery('.uda-tooltip');
 			let tooltipnodes = document.getElementsByClassName('uda-tooltip');
 			if (tooltipnodes.length > 0) {
-				$('.uda-tooltip').each(function() {
-					$(this).find('.uda-tooltip-text-content').remove();
-					$(this).removeClass('uda-tooltip');
+				jQuery('.uda-tooltip').each(function() {
+					jQuery(this).find('.uda-tooltip-text-content').remove();
+					jQuery(this).removeClass('uda-tooltip');
 				});
 			}
 
-			$('.uda-tooltip-text-content').each(function() {
-				$(this).remove();
+			jQuery('.uda-tooltip-text-content').each(function() {
+				jQuery(this).remove();
 			});
 
 			this.simulateHover(node);
@@ -1351,7 +1452,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				navigationcookiedata = JSON.parse(navigationcookie);
 			}
 
-			if(this.inarray(node.nodeName.toLowerCase(), this.ignoreNodesFromIndexing) !== -1) {
+			if(this.inArray(node.nodeName.toLowerCase(), this.ignoreNodesFromIndexing) !== -1) {
 				this.addToolTip(node, node.parentNode, selectednode, navigationcookiedata, false, false, false);
 				return;
 			}
@@ -1531,8 +1632,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 				UDAPluginSDK.backToSearchResultsPage(navigationcookiedata);
 			});
 
-			$('html, body').animate({
-				scrollTop: ($(invokingnode).offset().top - 250)
+			jQuery('html, body').animate({
+				scrollTop: (jQuery(invokingnode).offset().top - 250)
 			}, 2000, function(){
 				if(enableFocus){
 					invokingnode.focus();
@@ -1555,6 +1656,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			const scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
 			const scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
 
+			let resolution = {height: 0, width: 0};
+
 			page.height = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
 			page.width = Math.max(body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth);
 			if (window.innerWidth !== undefined) {
@@ -1567,7 +1670,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 				screen.height = D.clientHeight * 0.75;
 				// return { width: D.clientWidth*0.75, height: D.clientHeight };
 			}
-			let windowProperties = {page: page, screen: screen, scrollInfo: {scrollTop: scrollTop, scrollLeft: scrollLeft}};
+			resolution.height = window.screen.height;
+			resolution.width = window.screen.width;
+			let windowProperties = {page: page, screen: screen, scrollInfo: {scrollTop: scrollTop, scrollLeft: scrollLeft}, resolution};
 			return windowProperties;
 		},
 		//get node position on the page
@@ -1630,9 +1735,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		//Continue functionality invoke
 		resumePlay: function(){
-			let tooltipnodes = $('.uda-tooltip');
+			let tooltipnodes = jQuery('.uda-tooltip');
 			if (tooltipnodes.length > 0) {
-				$('.uda-tooltip').remove();
+				jQuery('.uda-tooltip').remove();
 				this.popperInstance.destroy();
 			}
 			this.playNextAction = true;
@@ -1730,7 +1835,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				UDAConsoleLogger.info({clickednode: node});
 				UDAConsoleLogger.info('-----------------------------clicked node--------------------------------');
 
-				if(this.recording && this.inarray(node.nodeName.toLowerCase(), this.ignoreClicksOnSpecialNodes) !== -1){
+				if(this.recording && this.inArray(node.nodeName.toLowerCase(), this.ignoreClicksOnSpecialNodes) !== -1){
 					return ;
 				} else if(this.recording && this.cancelRecordingDuringRecordingNodes.indexOf(node.nodeName.toLowerCase()) !== -1) {
 					alert('Sorry currently we do not support this '+node.nodeName+' selector. Please re-record the sequence without selecting '+node.nodeName+' selector');
@@ -1784,7 +1889,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					return ;
 				}
 
-				if(this.inarray(node.nodeName.toLowerCase(), this.ignoreNodesFromIndexing) !== -1 && this.customNameForSpecialNodes.hasOwnProperty(node.nodeName.toLowerCase())){
+				if(this.inArray(node.nodeName.toLowerCase(), this.ignoreNodesFromIndexing) !== -1 && this.customNameForSpecialNodes.hasOwnProperty(node.nodeName.toLowerCase())){
 					domjson.meta.displayText = this.customNameForSpecialNodes[node.nodeName.toLowerCase()];
 				}
 
@@ -2109,7 +2214,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			let tooltipnodes = document.getElementsByClassName('uda-tooltip');
 			if (tooltipnodes.length > 0) {
-				$('.uda-tooltip').remove();
+				jQuery('.uda-tooltip').remove();
 				this.popperInstance.destroy();
 			}
 
@@ -2261,14 +2366,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 					jQuery("#uda-edited-name").show();
 				});
 				jQuery('#uda-edited-name').blur(function() {
-					let editedName = $("#uda-edited-name").val();
+					let editedName = jQuery("#uda-edited-name").val();
 					if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
 						UDAPluginSDK.editAndSave(data, editedName);
 					}
 				});
 				jQuery("#uda-edited-name").keydown(function (e) {
 					if (e.keyCode === 13) {
-						let editedName = $("#uda-edited-name").val();
+						let editedName = jQuery("#uda-edited-name").val();
 						if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
 							UDAPluginSDK.editAndSave(data, editedName);
 						}
@@ -2280,21 +2385,21 @@ if (typeof UDAPluginSDK === 'undefined') {
 						jQuery("#uda-edited-tooltip").show();
 					});
 					/*jQuery('#uda-edited-tooltip').blur(function() {
-						let editedName = $("#uda-edited-tooltip").val();
+						let editedName = jQuery("#uda-edited-tooltip").val();
 						if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
 							UDAPluginSDK.editAndSaveTooltip(data, editedName);
 						}
 					});*/
 					jQuery("#uda-edited-tooltip").keydown(function (e) {
 						if (e.keyCode === 13) {
-							let editedName = $("#uda-edited-tooltip").val();
+							let editedName = jQuery("#uda-edited-tooltip").val();
 							if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
 								UDAPluginSDK.editAndSaveTooltip(data, editedName);
 							}
 						}
 					});
 					jQuery("#uda-tooltip-save").click(function (){
-						let editedName = $("#uda-edited-tooltip").val();
+						let editedName = jQuery("#uda-edited-tooltip").val();
 						if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
 							UDAPluginSDK.editAndSaveTooltip(data, editedName);
 						}
@@ -2769,7 +2874,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			for(var i=0;i<data.userclicknodesSet.length;i++){
 				var visited = -1;
 				if(navcookiedata.navigateddata.length>0) {
-					visited = this.inarray(data.userclicknodesSet[i].id, navcookiedata.navigateddata);
+					visited = this.inArray(data.userclicknodesSet[i].id, navcookiedata.navigateddata);
 				}
 				if(navcookiedata.autoplay && (!navcookiedata.pause || !navcookiedata.stop)){
 					if(visited===-1 && !performactionnode){
@@ -2819,7 +2924,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			UDAPluginSDK.backtosearchresults(navcookiedata);
 			let tooltipnodes = document.getElementsByClassName('uda-tooltip');
 			if (tooltipnodes.length > 0) {
-				$('.uda-tooltip').remove();
+				jQuery('.uda-tooltip').remove();
 				this.popperInstance.destroy();
 			}
 		},
