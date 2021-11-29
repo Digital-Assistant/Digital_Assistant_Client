@@ -16,3 +16,7 @@ kt-base.ng-star-inserted.uda-original-content {
 /*kt-base.uda-original-content {
 	max-width: 99% !important;
 }*/
+.uda-original-content .layout kt-header-v2, .uda-original-content .layout .inner-layout {
+	position: relative;
+	top: 1.2rem;
+}
