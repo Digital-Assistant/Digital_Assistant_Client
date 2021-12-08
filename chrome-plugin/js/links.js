@@ -26,7 +26,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
         const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
         return hashHex;
     }
-    let UDAUserAuthData = {id: null, email: null, restrict_add_delete: false, role: 'default'};
+    let UDAUserAuthData = {id: null, email: null, restrict_add_delete: false, role: 'default', permissions: {companyId: 355, companyName: 'vantagecircle'}};
     var udaauthdata = {
         set id(val){
             UDAdigestMessage(val, "SHA-512").then(encrypted=>{
@@ -63,6 +63,12 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
         },
         get restrict_add_delete() {
             return UDAUserAuthData.restrict_add_delete;
+        },
+        set permissions(val) {
+            UDAUserAuthData.permissions = val;
+        },
+        get permissions() {
+            return UDAUserAuthData.permissions;
         }
     };
     let UDACustomCss = {
