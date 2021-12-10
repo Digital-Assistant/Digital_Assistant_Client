@@ -2629,8 +2629,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 				});
 				sequencelistdata.permissions = addedPermissions;
 
-				console.log(sequencelistdata.permissions);
-				return ;
+				console.log(sequencelistdata);
+
+				// return ;
 			}
 
 
