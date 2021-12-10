@@ -698,6 +698,7 @@
     background-color: var(--uda-tooltip-bg);
     box-shadow:0 1px 16px var(--uda-boxshodow-color);
     z-index: 9999999;
+    border: 1px solid var(--uda-primary-color);
 }
 .uda-tooltip[data-show] {
     display: block;
@@ -714,6 +715,8 @@
     /*   background: inherit; */
     background-color: var(--uda-tooltip-bg);
     box-shadow: 16px var(--uda-boxshodow-color);
+    border-right:1px solid var(--uda-primary-color);
+    border-bottom:1px solid var(--uda-primary-color);
 }
 
 .uda-arrow {
