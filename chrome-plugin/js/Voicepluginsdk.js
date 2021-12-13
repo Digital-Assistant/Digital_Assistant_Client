@@ -2594,7 +2594,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				sequencenames.push(sequencename);
 			});
 			let sequencename = JSON.stringify(sequencenames);
-			var sequencelistdata={name:"",domain:window.location.host,usersessionid:this.sessiondata.authdata.id.toString(),userclicknodelist:[].toString(),userclicknodesSet:this.recordedsequenceids,isValid:1,isIgnored:0, permissions: null};
+			var sequencelistdata={name:"",domain:window.location.host,usersessionid:this.sessiondata.authdata.id.toString(),userclicknodelist:[].toString(),userclicknodesSet:this.recordedsequenceids,isValid:1,isIgnored:0, additionalParams: null};
 			if(submittype==='recording') {
 				if (sequencename === '') {
 					alert('Please enter proper label');
@@ -2627,7 +2627,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				var addedPermissionsArray=jQuery("input:checkbox[name='uda-additional-params[]']:checked").map(function (){
 					addedPermissions[this.value]=UDAUserAuthData.permissions[this.value];
 				});
-				sequencelistdata.permissions = addedPermissions;
+				sequencelistdata.additionalParams = addedPermissions;
 
 				console.log(sequencelistdata);
 
