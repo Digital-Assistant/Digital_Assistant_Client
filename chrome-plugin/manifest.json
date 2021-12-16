@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Universal Digital Assistant (Beta)",
-  "version": "0.1.8.288",
+  "version": "0.1.8.308",
   "description": "Building an Extension for custom user navigation which helps in assisting users to navigate to right place.",
   "permissions": ["background", "storage", "identity","identity.email","webRequest","webRequestBlocking","http://*/*", "https://*/*"],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
@@ -34,9 +34,9 @@
 	"scopes":["https://www.googleapis.com/auth/contacts.readonly"]
   },
   "icons": {
-    "16": "images/uda-logo-16x16.png",
-    "32": "images/uda-logo-32x32.png",
-    "48": "images/uda-logo-48x48.png",
-    "128": "images/uda-logo1-128x128.png"
+    "16": "images/nist-logo-16x16.png",
+    "32": "images/nist-logo-32x32.png",
+    "48": "images/nist-logo-48x48.png",
+    "128": "images/nist-logo-128x128.png"
   }
 }
