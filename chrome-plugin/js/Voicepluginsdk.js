@@ -122,7 +122,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		searchText: null,
 		searchInProgress: false,
 		ignoreNodesFromIndexing: ['ng-dropdown-panel','ckeditor','fusioncharts','ngb-datepicker','ngx-daterangepicker-material','uda-panel','mat-datepicker-content','ng-select'],
-		ignoreNodesContainingClassNames:['cke_dialog_container','cke_notifications_area','gldp-default'],
+		ignoreNodesContainingClassNames:['cke_dialog_container','cke_notifications_area','gldp-default','ajs-layer','aui-list'],
 		// cancelRecordingDuringRecordingNodes: ['ngb-datepicker'],
 		cancelRecordingDuringRecordingNodes: [],
 		addClickToSpecialNodes: ['ng-select', 'ngb-datepicker'],
@@ -1056,7 +1056,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					} else if(node.nodeName.toLowerCase() === "span" && (node.classList.contains("radio") && node.classList.contains("replacement"))){
 						this.addClickToNode(node);
 					} else if(this.checkCssClassNames(node)){
-						UDAConsoleLogger.info({cssIgnoredNode:node});
+						UDAConsoleLogger.info({cssIgnoredNode:node}, 3);
 						// this.addClickToNode(node);
 					} else if(node.hasChildNodes()){
 						var childnodes =  node.childNodes;
@@ -1810,6 +1810,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		//adding user click to the processing node.
 		recorduserclick:function(node, fromdocument=false, selectchange=false, event, confirmdialog=false, hasparentclick = false){
+			console.log({node});
+			console.log(node);
 			try {
 				if(fromdocument){
 					// todo from document click functionality;
