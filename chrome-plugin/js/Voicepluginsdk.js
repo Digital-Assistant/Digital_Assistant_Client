@@ -1810,8 +1810,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		//adding user click to the processing node.
 		recorduserclick:function(node, fromdocument=false, selectchange=false, event, confirmdialog=false, hasparentclick = false){
-			console.log({node});
-			console.log(node);
 			try {
 				if(fromdocument){
 					// todo from document click functionality;
