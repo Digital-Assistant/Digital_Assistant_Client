@@ -3004,13 +3004,15 @@ if (typeof UDAPluginSDK === 'undefined') {
 						}
 
 						// we are incrementing 'matched' by 'innerTextWeight' for 'this' node and every child node and we are matching innerchildcounts that were returned from comparenodes
-						if(match.innerTextFlag && Math.abs((match.matched) - match.count) <= (match.innerChildNodes * this.innerTextWeight)){
-							searchLabelExists=true;
-						} else if (match.matched === match.count) {
-							searchLabelExists=true;
-						} else if(originalNode.node.nodeName === 'CKEDITOR' && (match.matched+1) >= match.count) {
-							// fix for editor playback
-							searchLabelExists=true;
+						if(compareNode.node.nodeName === originalNode.node.nodeName) {
+							if (match.innerTextFlag && Math.abs((match.matched) - match.count) <= (match.innerChildNodes * this.innerTextWeight)) {
+								searchLabelExists = true;
+							} else if (match.matched === match.count) {
+								searchLabelExists = true;
+							} else if (originalNode.node.nodeName === 'CKEDITOR' && (match.matched + 1) >= match.count) {
+								// fix for editor playback
+								searchLabelExists = true;
+							}
 						}
 
 						if(searchLabelExists){
@@ -3042,21 +3044,22 @@ if (typeof UDAPluginSDK === 'undefined') {
 				let finalMatchNode = null;
 				let finalMatchNodes = [];
 
-				UDAConsoleLogger.info('-----------------------------matched nodes-----------------------------');
-				UDAConsoleLogger.info(matchNodes);
-				UDAConsoleLogger.info('-----------------------------matched nodes-----------------------------');
-
 				if(matchNodes.length>1){
 					UDAConsoleLogger.info('---------------------------recorded node-------------------------------');
-					UDAConsoleLogger.info('recordednode label:'+selectednode.clickednodename);
+					UDAConsoleLogger.info('recordednode label:'+selectednode.clickednodename,2);
 					UDAConsoleLogger.info('---------------------------recorded node-------------------------------');
 				}
+
+				UDAConsoleLogger.info('-----------------------------matched nodes-----------------------------');
+				UDAConsoleLogger.info(matchNodes,2);
+				UDAConsoleLogger.info('-----------------------------matched nodes-----------------------------');
 
 				matchNodes.forEach(function (matchNode, matchnodeindex) {
 					if(matchNode.originalNode.hasOwnProperty("element-data")) {
 						const inputLabels = UDAPluginSDK.getclickedinputlabels(matchNode.originalNode["element-data"]);
 						UDAConsoleLogger.info('----------------------------input labels------------------------------');
-						UDAConsoleLogger.info(inputLabels);
+						UDAConsoleLogger.info(matchNode,2);
+						UDAConsoleLogger.info(inputLabels, 2);
 						UDAConsoleLogger.info('----------------------------input labels------------------------------');
 						if (inputLabels === selectednode.clickednodename) {
 							finalMatchNodes.push(matchNode);
