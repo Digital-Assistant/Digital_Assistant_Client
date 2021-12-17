@@ -1780,6 +1780,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(!link) {
 				UDAConsoleLogger.info(node,2);
 				setTimeout(function(){UDAPluginSDK.showhtml();}, timeToInvoke);
+			} else {
+				timeToInvoke=timeToInvoke+3000;
+				setTimeout(function(){UDAPluginSDK.showhtml();}, timeToInvoke);
 			}
 		},
 		//simulate hover functionality
