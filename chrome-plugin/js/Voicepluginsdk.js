@@ -1776,8 +1776,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 					}
 				}
 			}
+
 			if(!link) {
-				UDAConsoleLogger.info(node);
+				UDAConsoleLogger.info(node,2);
 				setTimeout(function(){UDAPluginSDK.showhtml();}, timeToInvoke);
 			}
 		},
