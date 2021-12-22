@@ -2627,6 +2627,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 				var addedPermissionsArray=jQuery("input:checkbox[name='uda-additional-params[]']:checked").map(function (){
 					addedPermissions[this.value]=UDAUserAuthData.permissions[this.value];
 				});
+				for(let permission in UDAUserAuthData.permissions){
+					if(!addedPermissions.hasOwnProperty(permission)){
+						addedPermissions[permission]=0;
+					}
+				}
 				sequencelistdata.additionalParams = addedPermissions;
 
 				console.log(sequencelistdata);
