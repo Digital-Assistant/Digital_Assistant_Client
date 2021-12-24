@@ -239,7 +239,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				['ภาษาไทย',         ['th-TH']]
 			],
 		cspUserAcceptance: {storageName: 'uda-csp-user-consent',data:{proceed: true}},
-		screenAcceptance: {storageName: 'uda-user-screen-consent',data:{proceed: true}},
+		screenAcceptance: {storageName: 'uda-user-screen-consent',data:{proceed: true}, checkEnabled: true},
 		inArray:function(value, object){
 			return jQuery.inArray(value, object);
 		},
@@ -503,7 +503,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			const screenSize = this.getScreenSize();
 
-			if(screenSize.resolution.height < 1080){
+			if(this.screenAcceptance.checkEnabled && screenSize.resolution.height < 1080){
 
 				jQuery("#uda-btn").html('');
 				let screenAcceptance = this.getstoragedata(this.screenAcceptance.storageName);
