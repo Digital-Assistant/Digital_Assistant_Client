@@ -123,11 +123,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 		searchInProgress: false,
 		ignoreNodesFromIndexing: ['ng-dropdown-panel','ckeditor','fusioncharts','ngb-datepicker','ngx-daterangepicker-material','uda-panel','mat-datepicker-content','ng-select'],
 		ignoreNodesContainingClassNames:['cke_dialog_container','cke_notifications_area','gldp-default','ajs-layer','aui-list','herknl'],
-		// cancelRecordingDuringRecordingNodes: ['ngb-datepicker'],
 		cancelRecordingDuringRecordingNodes: [],
 		addClickToSpecialNodes: ['ng-select', 'ngb-datepicker'],
 		ignoreClicksOnSpecialNodes: ['ngx-daterangepicker-material'],
 		customNameForSpecialNodes: {'ngb-datepicker': 'Date selector','mat-datepicker-content': 'Date selector', 'ngx-daterangepicker-material': 'Date Range Selector'},
+		specialInputClickClassNames: ['ghx-dropdown-trigger'],
 		tooltipDisplayedNodes: [],
 		// replay variables
 		autoplayCompleted: false,
@@ -1567,7 +1567,18 @@ if (typeof UDAPluginSDK === 'undefined') {
 					this.addToolTip(node, node, selectednode, navigationcookiedata, false, false);
 					break;
 				default:
-					node.click();
+					// check for special input nodes and add tooltip
+					let specialInputNode = false;
+					node.classList.forEach(val => {
+						if(UDAPluginSDK.inArray(val, UDAPluginSDK.specialInputClickClassNames) !== -1){
+							specialInputNode = true;
+						}
+					});
+					if(specialInputNode){
+						this.addToolTip(node, node, selectednode, navigationcookiedata, true, false);
+					} else {
+						node.click();
+					}
 					this.invokenextitem(node, timetoinvoke, navigationcookiedata);
 					break;
 			}
@@ -1814,7 +1825,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		//adding user click to the processing node.
 		recorduserclick:function(node, fromdocument=false, selectchange=false, event, confirmdialog=false, hasparentclick = false){
+
 			try {
+
+				let specialInputNode = false;
+
 				if(fromdocument){
 					// todo from document click functionality;
 				}
@@ -1841,9 +1856,18 @@ if (typeof UDAPluginSDK === 'undefined') {
 					return ;
 				}
 
-				// fix for file upload click
+				// fix for file upload click and node which is hidden
 				if(node.style && node.style.display && node.style.display === 'none'){
-					return ;
+					let specialClassExists = false;
+					node.classList.forEach((val) => {
+						if(UDAPluginSDK.inArray(val, UDAPluginSDK.specialInputClickClassNames) !== -1){
+							specialClassExists = true;
+							specialInputNode = true;
+						}
+					});
+					if(!specialClassExists) {
+						return;
+					}
 				}
 
 				UDAConsoleLogger.info('-----------------------------clicked node--------------------------------');
@@ -1877,6 +1901,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					}
 				}
 
+				// processing document click
 				var processclick=true;
 				if(fromdocument && this.htmlindex.length>0){
 					for(var i=0;i<this.htmlindex.length;i++){
@@ -1906,6 +1931,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 				if(this.inArray(node.nodeName.toLowerCase(), this.ignoreNodesFromIndexing) !== -1 && this.customNameForSpecialNodes.hasOwnProperty(node.nodeName.toLowerCase())){
 					domjson.meta.displayText = this.customNameForSpecialNodes[node.nodeName.toLowerCase()];
+				}
+
+				// check for special nodes
+				if(specialInputNode){
+					domjson.meta.isPersonal = true;
 				}
 
 				if(node.nodeName.toLowerCase()==="input" && node.getAttribute("type")==="radio"){
