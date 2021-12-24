@@ -6,7 +6,7 @@
     --uda-footer-srchbtn-bgcolor: #dce0f7;
     --uda-text-color-bg-white: #fff;
     --uda-boxshodow-color: #e0e0e0;
-    --uda-tooltip-bg: #e5eafe;
+    --uda-tooltip-bg: #f2f4fe;
 }
 /*hr {
     display: block;
@@ -698,6 +698,7 @@
     background-color: var(--uda-tooltip-bg);
     box-shadow:0 1px 16px var(--uda-boxshodow-color);
     z-index: 9999999;
+    border: 1px solid var(--uda-primary-color);
 }
 .uda-tooltip[data-show] {
     display: block;
@@ -714,6 +715,8 @@
     /*   background: inherit; */
     background-color: var(--uda-tooltip-bg);
     box-shadow: 16px var(--uda-boxshodow-color);
+    border-right:1px solid var(--uda-primary-color);
+    border-bottom:1px solid var(--uda-primary-color);
 }
 
 .uda-arrow {
@@ -728,18 +731,25 @@
 
 .uda-tooltip[data-popper-placement^='top'] > .uda-arrow {
     bottom: -10px;
+    border-top:1px solid var(--uda-primary-color);
+    border-left:1px solid var(--uda-primary-color);
 }
 
 .uda-tooltip[data-popper-placement^='bottom'] > .uda-arrow {
     top: -10px;
+    bottom: -10px;
 }
 
 .uda-tooltip[data-popper-placement^='left'] > .uda-arrow {
     right: 0px;
+    border-left:1px solid var(--uda-primary-color);
+    border-bottom:1px solid var(--uda-primary-color);
 }
 
 .uda-tooltip[data-popper-placement^='right'] > .uda-arrow {
     left: -20px;
+    border-right:1px solid var(--uda-primary-color);
+    border-top:1px solid var(--uda-primary-color);
 }
 
 .uda-tooltip h3 {margin:12px 0;}
