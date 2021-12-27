@@ -989,3 +989,7 @@ Progress animation
     cursor: not-allowed;
     opacity: 50%;
 }
+.uda-original-content .jira-dialog {
+    max-width: 100% !important;
+    min-width: 100% !important;
+}
