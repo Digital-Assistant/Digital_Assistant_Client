@@ -122,12 +122,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 		searchText: null,
 		searchInProgress: false,
 		ignoreNodesFromIndexing: ['ng-dropdown-panel','ckeditor','fusioncharts','ngb-datepicker','ngx-daterangepicker-material','uda-panel','mat-datepicker-content','ng-select'],
-		ignoreNodesContainingClassNames:['cke_dialog_container','cke_notifications_area','gldp-default'],
-		// cancelRecordingDuringRecordingNodes: ['ngb-datepicker'],
+		ignoreNodesContainingClassNames:['cke_dialog_container','cke_notifications_area','gldp-default','ajs-layer','aui-list','herknl'],
 		cancelRecordingDuringRecordingNodes: [],
 		addClickToSpecialNodes: ['ng-select', 'ngb-datepicker'],
 		ignoreClicksOnSpecialNodes: ['ngx-daterangepicker-material'],
 		customNameForSpecialNodes: {'ngb-datepicker': 'Date selector','mat-datepicker-content': 'Date selector', 'ngx-daterangepicker-material': 'Date Range Selector'},
+		specialInputClickClassNames: ['ghx-dropdown-trigger'],
 		tooltipDisplayedNodes: [],
 		// replay variables
 		autoplayCompleted: false,
@@ -499,6 +499,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		addbuttonhtml:function(){
         	let udaIconDisabled = false;
+        	let udaIconDisabledByCsp = false;
 
 			const screenSize = this.getScreenSize();
 
@@ -512,7 +513,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						udaIconDisabled='udaIconDisabled';
 					}
 				} else {
-					this.showAlert(this.screenAcceptance, "UDAN is not tested below 1920 x 1080 resolution. Do you want to still use UDAN?");
+					this.showAlert(this.screenAcceptance, "UDAN is not tested below 1920 x 1080 resolution. Do you want to still use UDAN?", true);
 					return;
 				}
 			}
@@ -524,17 +525,19 @@ if (typeof UDAPluginSDK === 'undefined') {
 					cspUserAcceptance = JSON.parse(cspUserAcceptance);
 					if(!cspUserAcceptance.proceed){
 						udaIconDisabled='udaIconDisabled';
+						udaIconDisabledByCsp=true;
 					}
 				} else {
-					this.showCspAlert("UDAN May not be working properly as CSP is enabled. Do you want to continue");
+					this.showCspAlert("This site's security policies may prevent UDAN from running well. Do you want to continue?");
 					return;
 				}
 			}
+
 			jQuery("#uda-btn").unbind("click").html("");
 			var buttonhtml	=	'<div class="uda-nistapp-logo '+udaIconDisabled+'">'
 								+'	<div class="uda-icon" style="text-align: center;">'
 								+'		<img src="'+this.extensionpath+'images/icons/nist-logo.png">'
-								+'		<p style="padding:0; margin:0px;color: #303f9f; font-weight: bold; font-size: 11px;">UDAN(Alpha)</p>'
+								+'		<p style="padding:0; margin:0px;color: #303f9f; font-weight: bold; font-size: 11px;">UDAN(Beta)</p>'
 								+'		<span>'
 								+'			<img src="'+this.extensionpath+'images/icons/backarrow-orange.png">'
 								+'		</span>'
@@ -549,6 +552,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 				if (this.rerenderhtml) {
 					this.showhtml();
 				}
+			} else {
+				if(udaIconDisabledByCsp){
+					modal.click(function () {
+						UDAPluginSDK.showAlert(UDAPluginSDK.cspUserAcceptance, 'Do you want to enable "Universal Digital Assistant by Nistapp', true, 'Enable', 'Keep suspended');
+					});
+				}
 			}
 		},
 		rightPanelHtml: function(){
@@ -560,7 +569,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 								+'<img src="'+this.extensionpath+'images/icons/nist-logo.png"><span class="uda-help-bg-tooltip">Need Help?</span>'
 							+'</div>'
 							+'<div class="uda-icon-txt">'
-							+'	<span class="" style="color: #303f9f; font-weight: bold;">UDAN(Alpha)</span>'
+							+'	<span class="" style="color: #303f9f; font-weight: bold;">UDAN(Beta)</span>'
 							+'</div>'
 							+'<div class="uda-container" style="text-align: center; margin-top: 10px;">'
 								+'<div class="uda-search-div">'
@@ -743,13 +752,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.createstoragedata(this.cspUserAcceptance.storageName, JSON.stringify(this.cspUserAcceptance.data));
 			this.addbuttonhtml();
 		},
-		getAlertHtml: function(content, addExitBtn=true, continueText='Continue with errors'){
+		getAlertHtml: function(content, addContinueBtn=true, continueText='Continue with errors', exitText='Exit UDAN'){
 			let footerHtml = '';
-			if(addExitBtn){
+			if(addContinueBtn){
 				footerHtml 	='			<button class="udacontinueBtn " id="udacontinueBtn">'+continueText+'</button>'
-							+'			<button class="udacloseBtn" id="udacloseBtn">Exit UDAN</button>';
+							+'			<button class="udacloseBtn" id="udacloseBtn">'+exitText+'</button>';
 			} else {
-				footerHtml ='			<button class="udacloseBtn" id="udacloseBtn">Close</button>';
+				footerHtml ='			<button class="udacloseBtn" id="udacloseBtn">'+exitText+'</button>';
 			}
 			let html='<div id="udaModal" class="udamodal">'
 				+'	<div class="udamodal-content">'
@@ -767,8 +776,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 				+'</div>';
 			return html
 		},
-		showAlert: function(storageName, content=''){
-			let html=this.getAlertHtml(content, true, 'Continue');
+		showAlert: function(storageName, content='', addContinueBtn=false, continueText='Continue', exitText='Close'){
+			let html=this.getAlertHtml(content, addContinueBtn, continueText, exitText);
 
 			jQuery("#uda-alerthtml-container").html(html);
 
@@ -793,12 +802,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			modal.style.display = "block";
 
-			continueBtn.onclick=function (){
-				modal.style.display = "none";
-				if(storageName) {
-					UDAPluginSDK.alertAcceptance(storageName);
-				}
-			};
+			if(addContinueBtn) {
+				continueBtn.onclick = function () {
+					modal.style.display = "none";
+					if (storageName) {
+						UDAPluginSDK.alertAcceptance(storageName);
+					}
+				};
+			}
 		},
 		alertDecline: function(storageName){
 			let data = this.getstoragedata(storageName.storageName);
@@ -1045,7 +1056,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					} else if(node.nodeName.toLowerCase() === "span" && (node.classList.contains("radio") && node.classList.contains("replacement"))){
 						this.addClickToNode(node);
 					} else if(this.checkCssClassNames(node)){
-						UDAConsoleLogger.info({cssIgnoredNode:node});
+						UDAConsoleLogger.info({cssIgnoredNode:node}, 3);
 						// this.addClickToNode(node);
 					} else if(node.hasChildNodes()){
 						var childnodes =  node.childNodes;
@@ -1556,7 +1567,18 @@ if (typeof UDAPluginSDK === 'undefined') {
 					this.addToolTip(node, node, selectednode, navigationcookiedata, false, false);
 					break;
 				default:
-					node.click();
+					// check for special input nodes and add tooltip
+					let specialInputNode = false;
+					node.classList.forEach(val => {
+						if(UDAPluginSDK.inArray(val, UDAPluginSDK.specialInputClickClassNames) !== -1){
+							specialInputNode = true;
+						}
+					});
+					if(specialInputNode){
+						this.addToolTip(node, node, selectednode, navigationcookiedata, true, false);
+					} else {
+						node.click();
+					}
 					this.invokenextitem(node, timetoinvoke, navigationcookiedata);
 					break;
 			}
@@ -1765,8 +1787,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 					}
 				}
 			}
+
 			if(!link) {
-				UDAConsoleLogger.info(node);
+				UDAConsoleLogger.info(node,2);
+				setTimeout(function(){UDAPluginSDK.showhtml();}, timeToInvoke);
+			} else {
+				timeToInvoke=timeToInvoke+3000;
 				setTimeout(function(){UDAPluginSDK.showhtml();}, timeToInvoke);
 			}
 		},
@@ -1799,7 +1825,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		//adding user click to the processing node.
 		recorduserclick:function(node, fromdocument=false, selectchange=false, event, confirmdialog=false, hasparentclick = false){
+
 			try {
+
+				let specialInputNode = false;
+
 				if(fromdocument){
 					// todo from document click functionality;
 				}
@@ -1826,9 +1856,18 @@ if (typeof UDAPluginSDK === 'undefined') {
 					return ;
 				}
 
-				// fix for file upload click
+				// fix for file upload click and node which is hidden
 				if(node.style && node.style.display && node.style.display === 'none'){
-					return ;
+					let specialClassExists = false;
+					node.classList.forEach((val) => {
+						if(UDAPluginSDK.inArray(val, UDAPluginSDK.specialInputClickClassNames) !== -1){
+							specialClassExists = true;
+							specialInputNode = true;
+						}
+					});
+					if(!specialClassExists) {
+						return;
+					}
 				}
 
 				UDAConsoleLogger.info('-----------------------------clicked node--------------------------------');
@@ -1862,6 +1901,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					}
 				}
 
+				// processing document click
 				var processclick=true;
 				if(fromdocument && this.htmlindex.length>0){
 					for(var i=0;i<this.htmlindex.length;i++){
@@ -1891,6 +1931,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 				if(this.inArray(node.nodeName.toLowerCase(), this.ignoreNodesFromIndexing) !== -1 && this.customNameForSpecialNodes.hasOwnProperty(node.nodeName.toLowerCase())){
 					domjson.meta.displayText = this.customNameForSpecialNodes[node.nodeName.toLowerCase()];
+				}
+
+				// check for special nodes
+				if(specialInputNode){
+					domjson.meta.isPersonal = true;
 				}
 
 				if(node.nodeName.toLowerCase()==="input" && node.getAttribute("type")==="radio"){
@@ -1933,7 +1978,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 				// for known scenarios prompt user for input
 				if(confirmdialog && this.recording && !this.confirmednode && !this.autoplay){
-					this.confirmparentclick(node, fromdocument, selectchange, event, postdata);
+					this.confirmParentClick(node, fromdocument, selectchange, event, postdata);
 					return true;
 				} else if(confirmdialog && !this.recording) {
 					return true;
@@ -1982,13 +2027,15 @@ if (typeof UDAPluginSDK === 'undefined') {
 				UDAErrorLogger.error('Unable to record '+node.outerHTML+' '+ e);
 			}
 		},
-		confirmparentclick:function(node, fromdocument, selectchange, event, postdata) {
-			var prevclicktext = this.getclickedinputlabels(this.lastclickednode, fromdocument, selectchange);
+		confirmParentClick:function(node, fromdocument, selectchange, event, postdata) {
+			let prevClickText = this.getclickedinputlabels(this.lastclickednode, fromdocument, selectchange);
 			if(node.hasChildNodes()) {
-				var childtextexists = this.processparentchildnodes(node, prevclicktext);
-				if(!childtextexists) {
-					var confirmdialog = confirm("Did you clicked: " + postdata.clickednodename);
-					if (confirmdialog === true) {
+				var childTextExists = this.processparentchildnodes(node, prevClickText);
+				if(!childTextExists) {
+					// truncating text to max 120char
+					let displayText = ((postdata.clickednodename.length > 120) ? (postdata.clickednodename.substr(0, 120) + '...') : (postdata.clickednodename) );
+					let confirmDialog = confirm("Did you click on: " + displayText);
+					if (confirmDialog === true) {
 						UDAPluginSDK.confirmednode = true;
 						UDAPluginSDK.recorduserclick(node, fromdocument, selectchange, event, false);
 					}
@@ -2987,13 +3034,15 @@ if (typeof UDAPluginSDK === 'undefined') {
 						}
 
 						// we are incrementing 'matched' by 'innerTextWeight' for 'this' node and every child node and we are matching innerchildcounts that were returned from comparenodes
-						if(match.innerTextFlag && Math.abs((match.matched) - match.count) <= (match.innerChildNodes * this.innerTextWeight)){
-							searchLabelExists=true;
-						} else if (match.matched === match.count) {
-							searchLabelExists=true;
-						} else if(originalNode.node.nodeName === 'CKEDITOR' && (match.matched+1) >= match.count) {
-							// fix for editor playback
-							searchLabelExists=true;
+						if(compareNode.node.nodeName === originalNode.node.nodeName) {
+							if (match.innerTextFlag && Math.abs((match.matched) - match.count) <= (match.innerChildNodes * this.innerTextWeight)) {
+								searchLabelExists = true;
+							} else if (match.matched === match.count) {
+								searchLabelExists = true;
+							} else if (originalNode.node.nodeName === 'CKEDITOR' && (match.matched + 1) >= match.count) {
+								// fix for editor playback
+								searchLabelExists = true;
+							}
 						}
 
 						if(searchLabelExists){
@@ -3025,21 +3074,22 @@ if (typeof UDAPluginSDK === 'undefined') {
 				let finalMatchNode = null;
 				let finalMatchNodes = [];
 
-				UDAConsoleLogger.info('-----------------------------matched nodes-----------------------------');
-				UDAConsoleLogger.info(matchNodes);
-				UDAConsoleLogger.info('-----------------------------matched nodes-----------------------------');
-
 				if(matchNodes.length>1){
 					UDAConsoleLogger.info('---------------------------recorded node-------------------------------');
-					UDAConsoleLogger.info('recordednode label:'+selectednode.clickednodename);
+					UDAConsoleLogger.info('recordednode label:'+selectednode.clickednodename,2);
 					UDAConsoleLogger.info('---------------------------recorded node-------------------------------');
 				}
+
+				UDAConsoleLogger.info('-----------------------------matched nodes-----------------------------');
+				UDAConsoleLogger.info(matchNodes,2);
+				UDAConsoleLogger.info('-----------------------------matched nodes-----------------------------');
 
 				matchNodes.forEach(function (matchNode, matchnodeindex) {
 					if(matchNode.originalNode.hasOwnProperty("element-data")) {
 						const inputLabels = UDAPluginSDK.getclickedinputlabels(matchNode.originalNode["element-data"]);
 						UDAConsoleLogger.info('----------------------------input labels------------------------------');
-						UDAConsoleLogger.info(inputLabels);
+						UDAConsoleLogger.info(matchNode,2);
+						UDAConsoleLogger.info(inputLabels, 2);
 						UDAConsoleLogger.info('----------------------------input labels------------------------------');
 						if (inputLabels === selectednode.clickednodename) {
 							finalMatchNodes.push(matchNode);
@@ -3457,7 +3507,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.recordedsequenceids = data;
 				var html = '   <div class="voice-suggesion-card">' +
 					'		<div class="voice-card-left">' +
-					'			<h4>Our AI detected this sequence. <br /> Do you want to name it? <br /><span style="color:#ff4800;font-weight:bold;">(Alpha version: Not reliable)</span></h4>' +
+					'			<h4>Our AI detected this sequence. <br /> Do you want to name it? <br /><span style="color:#ff4800;font-weight:bold;">(Beta version: Not reliable)</span></h4>' +
 					'			<ul id="uda-recorded-results" class="voice-sugggesion-bullet">' +
 					'			</ul>' +
 					'			<div>' +
