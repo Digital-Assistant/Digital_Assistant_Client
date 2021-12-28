@@ -989,7 +989,18 @@ Progress animation
     cursor: not-allowed;
     opacity: 50%;
 }
+/***
+Css fix for JIRA
+ */
 .uda-original-content .jira-dialog {
     max-width: 100% !important;
     min-width: 100% !important;
+}
+
+#jira .uda-original-content header{
+    max-width: 77%;
+}
+#jira .uda-original-content.jira-dialog {
+    max-width: inherit !important;
+    min-width: inherit !important;
 }
