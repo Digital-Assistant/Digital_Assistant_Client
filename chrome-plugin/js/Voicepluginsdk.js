@@ -127,7 +127,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		addClickToSpecialNodes: ['ng-select', 'ngb-datepicker'],
 		ignoreClicksOnSpecialNodes: ['ngx-daterangepicker-material'],
 		customNameForSpecialNodes: {'ngb-datepicker': 'Date selector','mat-datepicker-content': 'Date selector', 'ngx-daterangepicker-material': 'Date Range Selector'},
-		specialInputClickClassNames: ['ghx-dropdown-trigger'],
+		specialInputClickClassNames: ['ghx-dropdown-trigger','aui-list'],
 		tooltipDisplayedNodes: [],
 		// replay variables
 		autoplayCompleted: false,
