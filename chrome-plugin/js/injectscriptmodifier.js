@@ -121,7 +121,9 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
 
     let UDAConsoleLogger = {
         info: function(mes, level = 1) {
-            // console.log(mes);
+            if(UDALogLevel === level){
+                console.log(mes);
+            }
         }
     };
 
