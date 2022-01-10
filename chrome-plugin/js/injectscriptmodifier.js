@@ -92,7 +92,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
 
     let UDAClickObjects = [];
     let UDASessionID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    const UDADebug = true; //this variable exists in background.js file also
+    const UDADebug = false; //this variable exists in background.js file also
     const UDA_POST_INTERVAL = 1000; //in milliseconds, each minute
     const UDA_DOMAIN = "https://udan.nistapp.ai";
     const UDA_API_URL = (UDADebug) ? "http://localhost:11080/voiceapi" : UDA_DOMAIN+"/voiceapi"; //this variable exists in background.js file also

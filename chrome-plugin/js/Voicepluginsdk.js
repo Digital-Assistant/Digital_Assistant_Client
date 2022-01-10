@@ -2754,8 +2754,13 @@ if (typeof UDAPluginSDK === 'undefined') {
 			//add analtytics
 			this.recordclick('search',searchtext);
 
+			let url = this.apihost + "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host);
+			if(UDAUserAuthData.permissions) {
+				url += '&additionalParams='+encodeURI(JSON.stringify(UDAUserAuthData.permissions));
+			}
+
 			var xhr = new XMLHttpRequest();
-			xhr.open("GET", this.apihost + "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host), false);
+			xhr.open("GET", url, false);
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					UDAPluginSDK.searchInProgress=false;
