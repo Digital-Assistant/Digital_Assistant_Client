@@ -26,7 +26,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
         const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
         return hashHex;
     }
-    let UDAUserAuthData = {id: null, email: null, restrict_add_delete: false, role: 'default', permissions: {companyId: 355, companyName: 'vantagecircle'}};
+    let UDAUserAuthData = {id: null, email: null, restrict_add_delete: false, role: 'default', permissions: null};
     var udaauthdata = {
         set id(val){
             UDAdigestMessage(val, "SHA-512").then(encrypted=>{
