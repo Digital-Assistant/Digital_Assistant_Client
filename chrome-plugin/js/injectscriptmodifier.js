@@ -31,7 +31,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
         const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
         return hashHex;
     }
-    let UDAUserAuthData = {id: null, email: null, restrict_add_delete: false, role: 'default', permissions: null};
+    let UDAUserAuthData = {id: null, email: null, restrict_add_delete: false, role: 'default', permissions: {companyId: 355, companyName: 'vantagecircle'}};
     var udaauthdata = {
         set id(val){
             UDAdigestMessage(val, "SHA-512").then(encrypted=>{
@@ -92,7 +92,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
 
     let UDAClickObjects = [];
     let UDASessionID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    const UDADebug = false; //this variable exists in background.js file also
+    const UDADebug = true; //this variable exists in background.js file also
     const UDA_POST_INTERVAL = 1000; //in milliseconds, each minute
     const UDA_DOMAIN = "https://udan.nistapp.ai";
     const UDA_API_URL = (UDADebug) ? "http://localhost:11080/voiceapi" : UDA_DOMAIN+"/voiceapi"; //this variable exists in background.js file also
