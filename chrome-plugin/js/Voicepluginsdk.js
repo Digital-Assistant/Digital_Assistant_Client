@@ -1990,7 +1990,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.lastclickedtime=Date.now();
 				var outputdata = JSON.stringify(postdata);
 				var xhr = new XMLHttpRequest();
-				xhr.open("POST", this.apihost+"/user/clickednode", false);
+				xhr.open("POST", UDA_API_URL+"/user/clickednode", false);
 				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 				xhr.onload = function(event){
 					if(xhr.status === 200){
@@ -2186,7 +2186,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 
 			var xhr = new XMLHttpRequest();
-			xhr.open("GET", this.apihost+"/clickevents/fetchrecorddata?start="+starttime+"&end="+endtime+"&sessionid="+UDAPluginSDK.sessionID+"&domain="+recordingcookiedata.domain, true);
+			xhr.open("GET", UDA_API_URL+"/clickevents/fetchrecorddata?start="+starttime+"&end="+endtime+"&sessionid="+UDAPluginSDK.sessionID+"&domain="+recordingcookiedata.domain, true);
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					UDAPluginSDK.addrecordresultshtml(JSON.parse(xhr.response));
@@ -2233,7 +2233,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.showhtml();
 			jQuery("#uda-content-container").html("");
 			var xhr = new XMLHttpRequest();
-			xhr.open("GET", this.apihost+"/clickevents/fetchrecorddata?start="+recordingcookiedata.starttime+"&end="+recordingcookiedata.endtime+"&sessionid="+UDAPluginSDK.sessionID+"&domain="+recordingcookiedata.domain, true);
+			xhr.open("GET", UDA_API_URL+"/clickevents/fetchrecorddata?start="+recordingcookiedata.starttime+"&end="+recordingcookiedata.endtime+"&sessionid="+UDAPluginSDK.sessionID+"&domain="+recordingcookiedata.domain, true);
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					UDAPluginSDK.addrecordresultshtml(JSON.parse(xhr.response));
@@ -2538,7 +2538,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			data.objectdata = JSON.stringify(nodeData);
 			var outputdata = JSON.stringify(data);
 			var xhr = new XMLHttpRequest();
-			xhr.open("POST", this.apihost+"/user/updateclickednode");
+			xhr.open("POST", UDA_API_URL+"/user/updateclickednode");
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
 				UDAPluginSDK.showhtml();
@@ -2560,7 +2560,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			data.objectdata = JSON.stringify(nodeData);
 			var outputdata = JSON.stringify(data);
 			var xhr = new XMLHttpRequest();
-			xhr.open("POST", this.apihost+"/user/updateclickednode");
+			xhr.open("POST", UDA_API_URL+"/user/updateclickednode");
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
 				UDAPluginSDK.showhtml();
@@ -2579,7 +2579,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			data.objectdata = JSON.stringify(nodeData);
 			var outputdata = JSON.stringify(data);
 			var xhr = new XMLHttpRequest();
-			xhr.open("POST", this.apihost+"/user/updateclickednode");
+			xhr.open("POST", UDA_API_URL+"/user/updateclickednode");
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
 				UDAPluginSDK.showhtml();
@@ -2630,7 +2630,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.currentPage='SequenceSubmitted';
 			this.showhtml();
 			var xhr = new XMLHttpRequest();
-			xhr.open("POST", this.apihost + "/clickevents/recordsequencedata", true);
+			xhr.open("POST", UDA_API_URL + "/clickevents/recordsequencedata", true);
 			xhr.setRequestHeader('Content-Type', 'application/json');
 			xhr.onload = function(event){
 				if(xhr.status === 200){
@@ -2741,7 +2741,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.recordclick('search',searchtext);
 
 			var xhr = new XMLHttpRequest();
-			xhr.open("GET", this.apihost + "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host), false);
+			xhr.open("GET", UDA_API_URL + "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host), false);
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					UDAPluginSDK.searchInProgress=false;
@@ -3397,7 +3397,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			// var senddata=JSON.stringify({usersessionid:this.UDASessionID,id:data.id});
 			var senddata=JSON.stringify({usersessionid:this.sessiondata.authdata.id,id:data.id});
 			var xhr = new XMLHttpRequest();
-			xhr.open("POST", this.apihost + "/clickevents/sequence/delete", false);
+			xhr.open("POST", UDA_API_URL + "/clickevents/sequence/delete", false);
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
 				if(xhr.status === 200){
@@ -3415,7 +3415,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				senddata.downvote=1;
 			}
 			var xhr = new XMLHttpRequest();
-			xhr.open("POST", this.apihost + "/clickevents/sequence/addvote", true);
+			xhr.open("POST", UDA_API_URL + "/clickevents/sequence/addvote", true);
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.send(JSON.stringify(senddata));
 		},
@@ -3467,7 +3467,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		recordclick:function (clicktype='sequencerecord',clickedname='',recordid=0) {
 			var senddata={usersessionid:this.sessionID,clicktype:clicktype,clickedname:clickedname,recordid:recordid};
 			var xhr = new XMLHttpRequest();
-			xhr.open("PUT", this.apihost + "/clickevents/userclick", true);
+			xhr.open("PUT", UDA_API_URL + "/clickevents/userclick", true);
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.send(JSON.stringify(senddata));
 		},
@@ -3483,7 +3483,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				UDAPluginSDK.backtomodal();
 			});
 			var xhr = new XMLHttpRequest();
-			xhr.open("GET", this.apihost + "/clickevents/suggested?domain="+encodeURI(window.location.host), true);
+			xhr.open("GET", UDA_API_URL + "/clickevents/suggested?domain="+encodeURI(window.location.host), true);
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					UDAPluginSDK.showsuggestedhtml(JSON.parse(xhr.response));
