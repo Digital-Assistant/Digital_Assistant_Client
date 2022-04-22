@@ -27,7 +27,7 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
         return hashHex;
     }
     let UDAUserAuthData = {id: null, email: null, restrict_add_delete: false, role: 'default'};
-    var udaauthdata = {
+    const udaauthdata = {
         set id(val){
             UDAdigestMessage(val, "SHA-512").then(encrypted=>{
                 UDAUserAuthData.id = encrypted;
@@ -83,8 +83,23 @@ var UDALinkScriptloaded = UDALinkScriptloaded || false;
     let UDASessionID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     const UDADebug = false; //this variable exists in background.js file also
     const UDA_POST_INTERVAL = 1000; //in milliseconds, each minute
-    const UDA_DOMAIN = "https://udantest.nistapp.ai";
-    const UDA_API_URL = (UDADebug) ? "http://localhost:11080/voiceapi" : UDA_DOMAIN+"/voiceapi"; //this variable exists in background.js file also
+    let UDA_DOMAIN = "https://udantest.nistapp.ai";
+    let UDA_API_URL = (UDADebug) ? "http://localhost:11080/voiceapi" : UDA_DOMAIN+"/voiceapi"; //this variable exists in background.js file also
+    const UDA_Environment = {
+        current:'TEST',
+        set Environment(value) {
+            this.current = value.toString().toUpperCase();
+            if(this.current==='PROD'){
+                UDA_DOMAIN = "https://udan.nistapp.ai";
+            } else {
+                UDA_DOMAIN = "https://udantest.nistapp.ai";
+            }
+            UDA_API_URL = UDA_DOMAIN+"/voiceapi";
+        },
+        get Environment() {
+            return this.current;
+        }
+    };
     const EXTENSION_VERSION = true;
     let UDAIgnorePatterns = [{"patterntype": "nist-voice", "patternvalue": "any"}];
     let UDASitePatterns = [];
