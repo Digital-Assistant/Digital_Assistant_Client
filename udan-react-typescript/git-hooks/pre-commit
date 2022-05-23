@@ -32,7 +32,7 @@ fi
 
 # run tests related to staged files
 echo "Running Tests"
-./udan-react-typescript/node_modules/.bin/jest --bail --findRelatedTests $STAGED_FILES --passWithNoTests --config ./udan-react-typescript/
+./udan-react-typescript/node_modules/.bin/jest --bail --findRelatedTests $STAGED_FILES --passWithNoTests --config ./udan-react-typescript/jest.config.ts
 JEST_EXIT_CODE=$?
 
 # check jest exit code
