@@ -1,12 +1,16 @@
 #!/bin/sh
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR | sed 's| |\\ |g')
-STAGED_FILES=$($STAGED_FILES | sed 's/ / ./g')
+# echo './'$STAGED_FILES;
 
-echo $STAGED_FILES;
+STAGED_FILES='./'$(echo $STAGED_FILES | sed 's/ / .\//g')
+
+# echo $STAGED_FILES;
+
+# exit 1
 
 # run linter on staged files
 echo "Running Linter..⚒️⚒️⚒️"
-./node_modules/.bin/eslint $STAGED_FILES --quiet --fix
+./udan-react-typescript/node_modules/.bin/eslint $STAGED_FILES --quiet --fix
 LINTER_EXIT_CODE=$?
 
 echo $LINTER_EXIT_CODE;
