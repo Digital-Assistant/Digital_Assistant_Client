@@ -1,14 +1,18 @@
 #!/bin/sh
-STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR | sed 's| |\\ |g')
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR | sed 's| |\\ |g' | sed 's/ /./g')
+
+echo $STAGED_FILES;
 
 # run linter on staged files
 echo "Running Linter..⚒️⚒️⚒️"
 ./node_modules/.bin/eslint $STAGED_FILES --quiet --fix
 LINTER_EXIT_CODE=$?
 
+echo $LINTER_EXIT_CODE;
+
 # run Prettier on staged files
 echo "Running Prettier..✨✨✨"
-./node_modules/.bin/prettier $STAGED_FILES --ignore-unknown --write
+./udan-react-typescript/node_modules/.bin/prettier $STAGED_FILES --ignore-unknown --write
 
 # add files auto-fixed by the linter and prettier
 git add -f $STAGED_FILES
@@ -23,7 +27,7 @@ fi
 
 # run tests related to staged files
 echo "Running Tests"
-./node_modules/.bin/jest --bail --findRelatedTests $STAGED_FILES --passWithNoTests
+./udan-react-typescript/node_modules/.bin/jest --bail --findRelatedTests $STAGED_FILES --passWithNoTests
 JEST_EXIT_CODE=$?
 
 # check jest exit code
