@@ -11,7 +11,8 @@ const body = document.querySelector('body');
 
 const app = document.createElement('div');
 
-app.id = 'udanRoot';
+app.id = 'udanRoot'
+;
 
 // Make sure the element that you want to mount the app to has loaded. You can
 // also use `append` or insert the app using another method:
@@ -26,12 +27,12 @@ if (body) {
 */
 
 const root = ReactDOM.createRoot(
-	document.getElementById('root') as HTMLElement
+    document.getElementById('root') as HTMLElement,
 );
 root.render(
-	<React.StrictMode>
-		<App />
-	</React.StrictMode>
+    <React.StrictMode>
+      <App/>
+    </React.StrictMode>,
 );
 
 /*
