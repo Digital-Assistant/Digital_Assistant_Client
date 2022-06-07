@@ -238,6 +238,15 @@ if (typeof UDAPluginSDK === 'undefined') {
 				['हिन्दी',             ['hi-IN']],
 				['ภาษาไทย',         ['th-TH']]
 			],
+		// Flag to enable node type detection
+		enableNodeTypeChangeSelection: false,
+		set enableNodeTypeSelection(val){
+			this.enableNodeTypeChangeSelection = val;
+			this.showhtml();
+		},
+		get enableNodeTypeSelection() {
+			return UDAPluginSDK.multilingual.enabled;
+		},
 		cspUserAcceptance: {storageName: 'uda-csp-user-consent',data:{proceed: true}},
 		screenAcceptance: {storageName: 'uda-user-screen-consent',data:{proceed: true}},
 		inArray:function(value, object){
@@ -1463,6 +1472,16 @@ if (typeof UDAPluginSDK === 'undefined') {
 				navigationcookiedata = JSON.parse(navigationcookie);
 			}
 
+			// perform click action based on the input given
+
+			const recordedNodeData = JSON.parse(selectednode.objectdata);
+			if(recordedNodeData.meta && recordedNodeData.meta.selectedElement && recordedNodeData.meta.selectedElement.systemTag.trim() != 'others'){
+				let performedAction = this.mapSelectedElementAction(node, selectednode, navigationcookiedata, recordedNodeData);
+				if(performedAction){
+					return;
+				}
+			}
+
 			if(this.inArray(node.nodeName.toLowerCase(), this.ignoreNodesFromIndexing) !== -1) {
 				this.addToolTip(node, node.parentNode, selectednode, navigationcookiedata, false, false, false);
 				return;
@@ -1525,7 +1544,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					break;
 				case "option":
 					this.addToolTip(node, node.parentNode, selectednode, navigationcookiedata, false, false, true);
-					UDAAlertMessageDatabreak;
+					break;
 				case "checkbox":
 					this.addToolTip(node, node, selectednode, navigationcookiedata, false, false, true);
 					break;
@@ -1582,6 +1601,47 @@ if (typeof UDAPluginSDK === 'undefined') {
 					this.invokenextitem(node, timetoinvoke, navigationcookiedata);
 					break;
 			}
+		},
+		//perform action based on selected node type
+		mapSelectedElementAction: function(node, recordedNode, navigationCookieData, recordedNodeData){
+			// this.addToolTip(node, node.parentNode, selectednode, navigationcookiedata, false, false, false);
+			let performedAction = false;
+			switch (recordedNodeData.meta.selectedElement.systemTag){
+				case 'text':
+				case 'date':
+				case 'range':
+				case 'file':
+				case 'telephone':
+				case 'email':
+				case 'number':
+				case 'password':
+					this.addToolTip(node, node.parentNode, recordedNode, navigationCookieData, false, true, true);
+					performedAction = true;
+					break;
+				case 'singleChoice':
+					this.addToolTip(node, node.parentNode, recordedNode, navigationCookieData, false, false, true);
+					performedAction = true;
+					break;
+				case 'multipleChoice':
+					this.addToolTip(node, node.parentNode, recordedNode, navigationCookieData, false, false, true);
+					performedAction = true;
+					break;
+				case 'button':
+					node.click();
+					this.invokenextitem(node, 1000, navigationCookieData);
+					this.showselectedrow(navigationCookieData.data,navigationCookieData.data.id,true, navigationCookieData);
+					performedAction = true;
+					break;
+				case "dropDown":
+					this.addToolTip(node, node, recordedNode, navigationCookieData, false, false, true);
+					performedAction = true;
+					break;
+				case "textArea":
+					this.addToolTip(node, node.parentNode, recordedNode, navigationCookieData, false, false, true);
+					performedAction = true;
+					break;
+			}
+			return performedAction;
 		},
 		//add tooltip display
 		addToolTip:function(invokingnode, tooltipnode, recordeddata=null, navigationcookiedata, enableClick=false, enableFocus=false, enableIntroJs=false, message= 'Please input the value and then click on', showButtons=true) {
@@ -1936,6 +1996,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 				// check for special nodes
 				if(specialInputNode){
 					domjson.meta.isPersonal = true;
+				}
+
+				// adding default system detected html element type in metadata
+				if(this.enableNodeTypeChangeSelection) {
+					domjson.meta.systemDetected = this.mapClickedElementToHtmlFormElement(node);
+					if (domjson.meta.systemDetected.inputElement !== 'others') {
+						domjson.meta.selectedElement = domjson.meta.systemDetected;
+					}
 				}
 
 				if(node.nodeName.toLowerCase()==="input" && node.getAttribute("type")==="radio"){
@@ -2393,6 +2461,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" /> <label style="font-size:14px;">Personal Information</label>';
 				}
 				personalHtml += '			<span style="position: relative; top: 0px;"><img src="'+this.extensionpath+'images/icons/info.png" title="select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."></span>';
+
+				// adding clicked element type
+				let selectedElementHtml = (this.enableNodeTypeChangeSelection)?'Clicked on : <select name="UDASelectedElement" id="UDASelectedElement"></select>':'';
+
 				var html =	'<li class="uda-recorded-label-editable"><i>'
 								+clickedname
 								// +editBtn
@@ -2401,7 +2473,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 								+personalHtml
 								+'<br />'
 								+tooltipBtn
-								//+'<br />'
+								+'<br />'
+								+selectedElementHtml
 							+'</li>';
 				var element = jQuery(html);
 				jQuery("#uda-recorded-results").append(element);
@@ -2452,6 +2525,36 @@ if (typeof UDAPluginSDK === 'undefined') {
 						}
 					});
 				}
+
+				//	Add dropdown selection of user clicked node for improvements #209
+				if(this.enableNodeTypeChangeSelection) {
+					let selectedElement = {inputElement: '', inputType: '', displayName: 'Please Select'};
+					if (nodeData.meta.hasOwnProperty('selectedElement') && nodeData.meta.selectedElement) {
+						selectedElement = nodeData.meta.selectedElement;
+					}
+					var $UDASelectedElementHtml = jQuery('#UDASelectedElement');
+					if (selectedElement.inputElement === '') {
+						var $option = jQuery("<option/>", {
+							value: JSON.stringify(selectedElement),
+							text: selectedElement.displayName,
+							selected: true
+						});
+						$UDASelectedElementHtml.append($option);
+					}
+					for (let htmlFormElement of this.fetchHtmlFormElements()) {
+						var $option = jQuery("<option/>", {
+							value: JSON.stringify(htmlFormElement),
+							text: htmlFormElement.displayName,
+							selected: (htmlFormElement.systemTag === selectedElement.systemTag)
+						});
+						$UDASelectedElementHtml.append($option);
+					}
+					$UDASelectedElementHtml.on('change', function (e) {
+						var optionSelected = jQuery("option:selected", this);
+						var valueSelected = JSON.parse(this.value);
+						UDAPluginSDK.editAndSaveSelectedHtmlElement(data, valueSelected);
+					});
+				}
 			} else {
 				clickedname += (nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal)?'&nbsp; &nbsp;(personal)':'';
 				var html = '<li><i>' +
@@ -2460,6 +2563,88 @@ if (typeof UDAPluginSDK === 'undefined') {
 				var element = jQuery(html);
 				jQuery("#uda-recorded-results").append(element);
 			}
+		},
+		// available html form elements
+		fetchHtmlFormElements: function(){
+			return [
+				{inputElement: 'input', inputType: ['text','search','url'], displayName: 'Simple Text', systemTag: 'text'},
+				{inputElement: 'input', inputType: 'checkbox', displayName: 'Multiple Select', systemTag: 'multipleChoice'},
+				{inputElement: 'input', inputType: 'radio', displayName: 'Single Select', systemTag: 'singleChoice'},
+				{inputElement: 'input', inputType: 'number', displayName: 'Number Field', systemTag: 'number'},
+				{inputElement: 'input', inputType: ['date','time'], displayName: 'Date and/or Time Field', systemTag: 'date'},
+				{inputElement: 'input', inputType: 'email', displayName: 'Email Field', systemTag: 'email'},
+				{inputElement: 'input', inputType: 'password', displayName: 'Password Field', systemTag: 'password'},
+				{inputElement: 'input', inputType: 'range', displayName: 'Range Field', systemTag: 'range'},
+				{inputElement: 'input', inputType: 'tel', displayName: 'Telephone Field', systemTag: 'telephone'},
+				{inputElement: 'input', inputType: 'file', displayName: 'File Selection', systemTag: 'file'},
+				// {inputElement: 'input', inputType: 'color', displayName: 'Color Selection'},
+				// {inputElement: 'input', inputType: 'datetime-local', displayName: 'Local Date Selection'},
+				// {inputElement: 'input', inputType: 'hidden', displayName: 'Hidden Field'},
+				// {inputElement: 'input', inputType: 'image', displayName: 'Image Field'},
+				// {inputElement: 'input', inputType: 'month', displayName: 'Month Field'},
+				// {inputElement: 'input', inputType: 'reset', displayName: 'Reset Field'},
+				// {inputElement: 'input', inputType: 'search', displayName: 'Search Field'},
+				// {inputElement: 'input', inputType: 'time', displayName: 'Time Field'},
+				// {inputElement: 'input', inputType: 'url', displayName: 'URL Field'},
+				// {inputElement: 'input', inputType: 'week', displayName: 'Week Field'},
+				{inputElement: ['select','option', 'optgroup'], inputType: 'select', displayName: 'Dropdown Field', systemTag: 'dropDown'},
+				// {inputElement: 'option', inputType: 'option', displayName: 'Dropdown Option'},
+				// {inputElement: 'optgroup', inputType: 'optgroup', displayName: 'Dropdown Option Group'},
+				{inputElement: 'textarea', inputType: 'textarea', displayName: 'Large Text Area', systemTag: 'textArea'},
+				{inputElement: ['input','button'], inputType: ['button', 'submit'], displayName: 'Button', systemTag: 'button'},
+				// {inputElement: 'button', inputType: 'submit', displayName: 'Submit Field'},
+				// {inputElement: 'input', inputType: 'button', displayName: 'Button Field'},
+				// {inputElement: 'input', inputType: 'submit', displayName: 'Submit Field'},
+				// {inputElement: 'output', inputType: 'output', displayName: 'Output Field'},
+				// {inputElement: 'datalist ', inputType: 'datalist', displayName: 'Datalist Field'},
+				{inputElement: 'a ', inputType: 'href', displayName: 'Link', systemTag: 'link'},
+				{inputElement: 'others', inputType: 'others', displayName: 'Unrecognized', systemTag: 'others'},
+			];
+		},
+		// map current element to html element
+		mapClickedElementToHtmlFormElement: function(node){
+			let htmlFormElements = this.fetchHtmlFormElements();
+			let selectedFormElement = {inputElement: 'others', inputType: 'others', displayName: 'Other HTML Element'};
+			for(let htmlFormElement of htmlFormElements) {
+				if(Array.isArray(htmlFormElement.inputElement) && htmlFormElement.inputElement.indexOf(node.nodeName.toLowerCase()) != -1){
+					if(Array.isArray(htmlFormElement.inputType) && node.hasAttribute('type') && htmlFormElement.inputType.indexOf(node.getAttribute('type')) !== -1){
+						selectedFormElement = htmlFormElement;
+					} else if (!Array.isArray(htmlFormElement.inputType) && htmlFormElement.inputElement.indexOf(node.nodeName.toLowerCase()) != -1) {
+						selectedFormElement = htmlFormElement;
+					}
+				} else if(htmlFormElement.inputElement === 'input') {
+					if(Array.isArray(htmlFormElement.inputType) && node.hasAttribute('type') && htmlFormElement.inputType.indexOf(node.getAttribute('type')) !== -1){
+						selectedFormElement = htmlFormElement;
+					} else if (!Array.isArray(htmlFormElement.inputType) && htmlFormElement.inputElement === node.nodeName.toLowerCase() && node.hasAttribute('type') && node.getAttribute('type') === htmlFormElement.inputType) {
+						selectedFormElement = htmlFormElement;
+					}
+				} else if (htmlFormElement.inputElement === node.nodeName.toLowerCase()) {
+					selectedFormElement = htmlFormElement;
+				}
+			}
+			return selectedFormElement;
+		},
+		// save selected html element
+		editAndSaveSelectedHtmlElement: function(data, value) {
+			let nodeData = JSON.parse(data.objectdata);
+			if(value.inputElement===''){
+				return;
+			}
+			if(nodeData.meta && Object.keys(nodeData.meta).length >= 1) {
+				nodeData.meta.selectedElement = value;
+			} else {
+				nodeData.meta = {};
+				nodeData.meta.selectedElement = value;
+			}
+			data.objectdata = JSON.stringify(nodeData);
+			var outputdata = JSON.stringify(data);
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", UDA_API_URL+"/user/updateclickednode");
+			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+			xhr.onload = function(event){
+				UDAPluginSDK.showhtml();
+			};
+			xhr.send(outputdata);
 		},
 		//customizing tooltip text function
 		showTooltipEditSection: function(nodeData){
@@ -2741,7 +2926,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.recordclick('search',searchtext);
 
 			var xhr = new XMLHttpRequest();
-			xhr.open("GET", UDA_API_URL + "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host), false);
+			let searchUrl = "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host);
+			if(this.enableNodeTypeChangeSelection){
+				searchUrl +='&enabledNodeTypeSelection=true';
+			}
+			xhr.open("GET", UDA_API_URL + searchUrl, false);
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					UDAPluginSDK.searchInProgress=false;
