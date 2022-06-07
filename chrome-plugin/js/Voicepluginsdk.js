@@ -238,6 +238,15 @@ if (typeof UDAPluginSDK === 'undefined') {
 				['हिन्दी',             ['hi-IN']],
 				['ภาษาไทย',         ['th-TH']]
 			],
+		// Flag to enable node type detection
+		enableNodeTypeChangeSelection: false,
+		set enableNodeTypeSelection(val){
+			this.enableNodeTypeChangeSelection = val;
+			this.showhtml();
+		},
+		get enableNodeTypeSelection() {
+			return UDAPluginSDK.multilingual.enabled;
+		},
 		cspUserAcceptance: {storageName: 'uda-csp-user-consent',data:{proceed: true}},
 		screenAcceptance: {storageName: 'uda-user-screen-consent',data:{proceed: true}},
 		inArray:function(value, object){
@@ -1464,6 +1473,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 
 			// perform click action based on the input given
+
 			const recordedNodeData = JSON.parse(selectednode.objectdata);
 			if(recordedNodeData.meta && recordedNodeData.meta.selectedElement && recordedNodeData.meta.selectedElement.systemTag.trim() != 'others'){
 				let performedAction = this.mapSelectedElementAction(node, selectednode, navigationcookiedata, recordedNodeData);
@@ -1988,10 +1998,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 					domjson.meta.isPersonal = true;
 				}
 
-				// adding default html element type in metadata
-				domjson.meta.systemDetected = this.mapClickedElementToHtmlFormElement(node);
-				if(domjson.meta.systemDetected.inputElement !=='others'){
-					domjson.meta.selectedElement = domjson.meta.systemDetected;
+				// adding default system detected html element type in metadata
+				if(this.enableNodeTypeChangeSelection) {
+					domjson.meta.systemDetected = this.mapClickedElementToHtmlFormElement(node);
+					if (domjson.meta.systemDetected.inputElement !== 'others') {
+						domjson.meta.selectedElement = domjson.meta.systemDetected;
+					}
 				}
 
 				if(node.nodeName.toLowerCase()==="input" && node.getAttribute("type")==="radio"){
@@ -2451,7 +2463,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				personalHtml += '			<span style="position: relative; top: 0px;"><img src="'+this.extensionpath+'images/icons/info.png" title="select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."></span>';
 
 				// adding clicked element type
-				let selectedElementHtml = 'Clicked on : <select name="UDASelectedElement" id="UDASelectedElement"></select>';
+				let selectedElementHtml = (this.enableNodeTypeChangeSelection)?'Clicked on : <select name="UDASelectedElement" id="UDASelectedElement"></select>':'';
 
 				var html =	'<li class="uda-recorded-label-editable"><i>'
 								+clickedname
@@ -2515,32 +2527,34 @@ if (typeof UDAPluginSDK === 'undefined') {
 				}
 
 				//	Add dropdown selection of user clicked node for improvements #209
-				let selectedElement = {inputElement: '', inputType: '', displayName: 'Please Select'};
-				if(nodeData.meta.hasOwnProperty('selectedElement') && nodeData.meta.selectedElement){
-					selectedElement = nodeData.meta.selectedElement;
-				}
-				var $UDASelectedElementHtml = jQuery('#UDASelectedElement');
-				if(selectedElement.inputElement===''){
-					var $option = jQuery("<option/>", {
-						value: JSON.stringify(selectedElement),
-						text: selectedElement.displayName,
-						selected: true
+				if(this.enableNodeTypeChangeSelection) {
+					let selectedElement = {inputElement: '', inputType: '', displayName: 'Please Select'};
+					if (nodeData.meta.hasOwnProperty('selectedElement') && nodeData.meta.selectedElement) {
+						selectedElement = nodeData.meta.selectedElement;
+					}
+					var $UDASelectedElementHtml = jQuery('#UDASelectedElement');
+					if (selectedElement.inputElement === '') {
+						var $option = jQuery("<option/>", {
+							value: JSON.stringify(selectedElement),
+							text: selectedElement.displayName,
+							selected: true
+						});
+						$UDASelectedElementHtml.append($option);
+					}
+					for (let htmlFormElement of this.fetchHtmlFormElements()) {
+						var $option = jQuery("<option/>", {
+							value: JSON.stringify(htmlFormElement),
+							text: htmlFormElement.displayName,
+							selected: (htmlFormElement.systemTag === selectedElement.systemTag)
+						});
+						$UDASelectedElementHtml.append($option);
+					}
+					$UDASelectedElementHtml.on('change', function (e) {
+						var optionSelected = jQuery("option:selected", this);
+						var valueSelected = JSON.parse(this.value);
+						UDAPluginSDK.editAndSaveSelectedHtmlElement(data, valueSelected);
 					});
-					$UDASelectedElementHtml.append($option);
 				}
-				for(let htmlFormElement of this.fetchHtmlFormElements()){
-					var $option = jQuery("<option/>", {
-						value: JSON.stringify(htmlFormElement),
-						text: htmlFormElement.displayName,
-						selected: (htmlFormElement.systemTag === selectedElement.systemTag)
-					});
-					$UDASelectedElementHtml.append($option);
-				}
-				$UDASelectedElementHtml.on('change', function (e) {
-					var optionSelected = jQuery("option:selected", this);
-					var valueSelected = JSON.parse(this.value);
-					UDAPluginSDK.editAndSaveSelectedHtmlElement(data, valueSelected);
-				});
 			} else {
 				clickedname += (nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal)?'&nbsp; &nbsp;(personal)':'';
 				var html = '<li><i>' +
@@ -2912,7 +2926,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.recordclick('search',searchtext);
 
 			var xhr = new XMLHttpRequest();
-			xhr.open("GET", UDA_API_URL + "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host), false);
+			let searchUrl = "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host);
+			if(this.enableNodeTypeChangeSelection){
+				searchUrl +='&enabledNodeTypeSelection=true';
+			}
+			xhr.open("GET", UDA_API_URL + searchUrl, false);
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					UDAPluginSDK.searchInProgress=false;
