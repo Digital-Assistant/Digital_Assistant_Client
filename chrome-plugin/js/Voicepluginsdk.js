@@ -2368,7 +2368,32 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			this.openmodal(false);
 		},
+		showPermissionsSection: function(){
+			jQuery('#uda-permissions-show-btn').hide();
+			jQuery('#uda-permissions-hide-btn').show();
+			jQuery('#uda-permissions-section').show();
+		},
+		hidePermissionsSection: function(){
+			jQuery('#uda-permissions-show-btn').show();
+			jQuery('#uda-permissions-hide-btn').hide();
+			jQuery('#uda-permissions-section').hide();
+		},
 		renderRecordedSequenceHtml: function(){
+			// displaying permissions added by developer
+			let permissionsHtml = '';
+			if(UDAUserAuthData.permissions) {
+				permissionsHtml += '<div>'
+								+'		<button class="add-btn" onclick="UDAPluginSDK.showPermissionsSection();" id="uda-permissions-show-btn">Advanced</button>'
+								+'		<button class="add-btn" style="display:none;" onclick="UDAPluginSDK.hidePermissionsSection();" id="uda-permissions-hide-btn">Hide</button>'
+								+'		<div id="uda-permissions-section" style="display: none;">';
+				for (let key in UDAUserAuthData.permissions) {
+					console.log(key);
+					console.log(UDAUserAuthData.permissions[key]);
+					permissionsHtml +='<input type="checkbox" id="uda-recorded-name" name="uda-additional-params[]" value="'+key+'" checked nist-voice>'+key+' :'+UDAUserAuthData.permissions[key]+'<br />';
+				}
+				permissionsHtml += '	</div>'
+								+'	</div>';
+			}
 			var html =	'<div class="uda-card-details">'
 						+'	<h5>Recorded Sequence</h5>'
 						+'	<hr style="border:1px solid #969696; width:100%;">'
@@ -2383,6 +2408,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'		<div style="margin-bottom:10px;">'
 						+'			<button class="add-btn" onclick="UDAPluginSDK.addSequenceNameRow();">+ Add Label</button>'
 						+'		</div>'
+						+'		<br>'
+						+'		<br>'
+						+permissionsHtml
 						+'		<br>'
 						+'		<br>'
 						+'		<div style="margin-top: 10px; max-width:100%;">'
@@ -2794,7 +2822,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				sequencenames.push(sequencename);
 			});
 			let sequencename = JSON.stringify(sequencenames);
-			var sequencelistdata={name:"",domain:window.location.host,usersessionid:this.sessiondata.authdata.id.toString(),userclicknodelist:[].toString(),userclicknodesSet:this.recordedsequenceids,isValid:1,isIgnored:0};
+			var sequencelistdata={name:"",domain:window.location.host,usersessionid:this.sessiondata.authdata.id.toString(),userclicknodelist:[].toString(),userclicknodesSet:this.recordedsequenceids,isValid:1,isIgnored:0, additionalParams: null};
 			if(submittype==='recording') {
 				if (sequencename === '') {
 					alert('Please enter proper label');
@@ -2820,6 +2848,26 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 			sequencelistdata.name=sequencename;
 			sequencelistdata.userclicknodelist=sequenceids.toString();
+
+			// adding custom permission logic
+			if(UDAUserAuthData.permissions){
+				let addedPermissions = {};
+				var addedPermissionsArray=jQuery("input:checkbox[name='uda-additional-params[]']:checked").map(function (){
+					addedPermissions[this.value]=UDAUserAuthData.permissions[this.value];
+				});
+				for(let permission in UDAUserAuthData.permissions){
+					if(!addedPermissions.hasOwnProperty(permission)){
+						addedPermissions[permission]=0;
+					}
+				}
+				sequencelistdata.additionalParams = addedPermissions;
+
+				console.log(sequencelistdata);
+
+				// return ;
+			}
+
+
 			this.cancelrecordingsequence(false);
 			this.currentPage='SequenceSubmitted';
 			this.showhtml();
@@ -2933,6 +2981,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			//add analtytics
 			this.recordclick('search',searchtext);
+
+			let url = this.apihost + "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host);
+			if(UDAUserAuthData.permissions) {
+				url += '&additionalParams='+encodeURI(JSON.stringify(UDAUserAuthData.permissions));
+			}
 
 			var xhr = new XMLHttpRequest();
 			let searchUrl = "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host);
