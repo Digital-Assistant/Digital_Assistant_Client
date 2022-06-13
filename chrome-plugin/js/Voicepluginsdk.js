@@ -245,7 +245,16 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.showhtml();
 		},
 		get enableNodeTypeSelection() {
-			return UDAPluginSDK.multilingual.enabled;
+			return this.enableNodeTypeChangeSelection;
+		},
+		// Flag to enable tooltip section
+		enableTooltipAddition: false,
+		set enableTooltip(val) {
+			this.enableTooltipAddition = val;
+			this.showhtml();
+		},
+		get enableTooltip() {
+			return this.enableTooltipAddition;
 		},
 		cspUserAcceptance: {storageName: 'uda-csp-user-consent',data:{proceed: true}},
 		screenAcceptance: {storageName: 'uda-user-screen-consent',data:{proceed: true}},
@@ -2444,7 +2453,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			// let clickedname=data.clickednodename;
 			//adding personal tooltips
 			let tooltipBtn = '';
-			if(showPersonalButton) {
+			if(showPersonalButton && this.enableTooltipAddition) {
 				tooltipBtn = this.showTooltipEditSection(nodeData);
 			}
 			// personal button appearance
