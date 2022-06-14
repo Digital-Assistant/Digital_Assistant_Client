@@ -256,6 +256,15 @@ if (typeof UDAPluginSDK === 'undefined') {
 		get enableTooltip() {
 			return this.enableTooltipAddition;
 		},
+		// Flag to enable permissions
+		showPermissions: false,
+		set enablePermissions(val){
+			this.showPermissions = true;
+			this.showhtml();
+		},
+		get enablePermissions(){
+			return this.showPermissions;
+		},
 		cspUserAcceptance: {storageName: 'uda-csp-user-consent',data:{proceed: true}},
 		screenAcceptance: {storageName: 'uda-user-screen-consent',data:{proceed: true}},
 		inArray:function(value, object){
@@ -2381,7 +2390,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		renderRecordedSequenceHtml: function(){
 			// displaying permissions added by developer
 			let permissionsHtml = '';
-			if(UDAUserAuthData.permissions) {
+			if(this.showPermissions && UDAUserAuthData.permissions) {
 				permissionsHtml += '<div>'
 								+'		<button class="add-btn" onclick="UDAPluginSDK.showPermissionsSection();" id="uda-permissions-show-btn">Advanced</button>'
 								+'		<button class="add-btn" style="display:none;" onclick="UDAPluginSDK.hidePermissionsSection();" id="uda-permissions-hide-btn">Hide</button>'
@@ -2850,7 +2859,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			sequencelistdata.userclicknodelist=sequenceids.toString();
 
 			// adding custom permission logic
-			if(UDAUserAuthData.permissions){
+			if(this.enablePermissions && UDAUserAuthData.permissions){
 				let addedPermissions = {};
 				var addedPermissionsArray=jQuery("input:checkbox[name='uda-additional-params[]']:checked").map(function (){
 					addedPermissions[this.value]=UDAUserAuthData.permissions[this.value];
@@ -2861,8 +2870,6 @@ if (typeof UDAPluginSDK === 'undefined') {
 					}
 				}
 				sequencelistdata.additionalParams = addedPermissions;
-
-				console.log(sequencelistdata);
 
 				// return ;
 			}
@@ -2983,16 +2990,15 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.recordclick('search',searchtext);
 
 			let url = this.apihost + "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host);
-			if(UDAUserAuthData.permissions) {
+			if(this.showPermissions && UDAUserAuthData.permissions) {
 				url += '&additionalParams='+encodeURI(JSON.stringify(UDAUserAuthData.permissions));
 			}
 
 			var xhr = new XMLHttpRequest();
-			let searchUrl = "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host);
 			if(this.enableNodeTypeChangeSelection){
-				searchUrl +='&enabledNodeTypeSelection=true';
+				url +='&enabledNodeTypeSelection=true';
 			}
-			xhr.open("GET", UDA_API_URL + searchUrl, false);
+			xhr.open("GET", url, false);
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					UDAPluginSDK.searchInProgress=false;
