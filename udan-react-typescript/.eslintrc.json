@@ -3,6 +3,9 @@
         "browser": true,
         "es2021": true
     },
+    "quotes": [
+        2, "single"
+    ],
     "extends": [
         "plugin:react/recommended",
         "prettier",
@@ -24,6 +27,7 @@
         "react-hooks"
     ],
     "rules": {
+        "linebreak-style": 0,
         "no-use-before-define": "off",
         "@typescript-eslint/no-use-before-define": ["error"],
         "react/jsx-filename-extension": [ "warn", {"extensions": [".tsx"]} ],
