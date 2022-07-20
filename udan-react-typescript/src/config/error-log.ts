@@ -1,5 +1,6 @@
 import log4js from 'log4js';
-import { CONFIG } from './index';
+// import { CONFIG } from './index';
+import { UDAUserAuthData} from '../modules/authData'
 
 export const UDALog4jsLogger = log4js.getLogger();
 UDALog4jsLogger.level = 'debug'; //log4js.Level.OFF; // do not change this loglevel for performance reasons
@@ -7,7 +8,6 @@ UDALog4jsLogger.level = 'debug'; //log4js.Level.OFF; // do not change this logle
 // UDAAjaxAppender.setLayout(new Log4js.JSONLayout());
 // UDALog4jsLogger.addAppender(UDAAjaxAppender);
 
-export const UDAUserAuthData:any = { id: null, email: null, restrict_add_delete: false, role: 'default', permissions: null };
 
 export const UDALogLevel = 0;
 

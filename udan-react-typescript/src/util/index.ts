@@ -127,38 +127,32 @@ export function UDAProcessRemovedNode(node: any) {
                 UDAProcessRemovedNode(i);
             }
         }
-    }
+}
 
 
-    export async function UDAdigestMessage(textmessage:string, algorithm:any) {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(textmessage);
-        const hash = await crypto.subtle.digest(algorithm, data);
-        const hashArray = Array.from(new Uint8Array(hash));                     // convert buffer to byte array
-        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
-        return hashHex;
-    }
+export async function UDAdigestMessage(textmessage:string, algorithm:any) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(textmessage);
+    const hash = await crypto.subtle.digest(algorithm, data);
+    const hashArray = Array.from(new Uint8Array(hash));                     // convert buffer to byte array
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
+    return hashHex;
+}
     
-    //mutation observer initialization and adding the logic to process the clickobjects
-    export const DSA_OBSERVER = new MutationObserver(function (mutations) {
-        // UDAConsoleLogger.info('------------ detected clicked objects-------------');
-        // UDAConsoleLogger.info(UDAClickObjects);
-        mutations.forEach(function (mutation) {
-            if (mutation.removedNodes.length) {
-                [].some.call(mutation.removedNodes, UDAProcessRemovedNode);
-            }
-            if (!mutation.addedNodes.length) {
-                return;
-            }
-            [].some.call(mutation.addedNodes, UDAProcessNode);
-        });
-        // UDAConsoleLogger.info('------------ removed clicked objects-------------');
-        // UDAConsoleLogger.info(UDAClickObjects);
-        UDALastMutationTime = Date.now();
+//mutation observer initialization and adding the logic to process the clickobjects
+export const DSA_OBSERVER = new MutationObserver(function (mutations) {
+    // UDAConsoleLogger.info('------------ detected clicked objects-------------');
+    // UDAConsoleLogger.info(UDAClickObjects);
+    mutations.forEach(function (mutation) {
+        if (mutation.removedNodes.length) {
+            [].some.call(mutation.removedNodes, UDAProcessRemovedNode);
+        }
+        if (!mutation.addedNodes.length) {
+            return;
+        }
+        [].some.call(mutation.addedNodes, UDAProcessNode);
     });
-
-    // starting the mutation observer
-    // dsa_observer.observe(document, {
-    //     childList: true,
-    //     subtree: true
-    // });
+    // UDAConsoleLogger.info('------------ removed clicked objects-------------');
+    // UDAConsoleLogger.info(UDAClickObjects);
+    UDALastMutationTime = Date.now();
+});
