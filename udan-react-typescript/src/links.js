@@ -1,5 +1,5 @@
 
-
+import {} from './config/error-log'
 
 var UDALinkScriptloaded = UDALinkScriptloaded || false;
 // if(!UDALinkScriptloaded) {
