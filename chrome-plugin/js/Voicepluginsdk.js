@@ -545,7 +545,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				}
 			}
 
-			if(this.sessiondata.csp.cspenabled && !this.sessiondata.csp.udanallowed){
+			if(this.sessiondata.csp && this.sessiondata.csp.cspenabled && !this.sessiondata.csp.udanallowed){
 				jQuery("#uda-btn").html('');
 				let cspUserAcceptance = this.getstoragedata(this.cspUserAcceptance.storageName);
 				if(cspUserAcceptance){
