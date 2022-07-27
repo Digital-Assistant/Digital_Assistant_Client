@@ -17,23 +17,23 @@ function readFile(path, prefix, extension) {
         .map(filename => `${path}/${filename}`)[0];
 }
 
-const js = readFile('static/js', 'main', 'js');
-const css = readFile('static/css', 'main', 'css');
-const logo = readFile('static/media', 'logo', 'svg');
+// const js = readFile('static/js', 'main', 'js');
+// const css = readFile('static/css', 'main', 'css');
+// const logo = readFile('static/media', 'logo', 'svg');
 
 const newManifest = {
     ...manifest,
     content_scripts: [
         {
             ...manifest.content_scripts[0],
-            js: [js],
-            css: [css],
+            // js: [js],
+            // css: [css],
         }
     ],
     web_accessible_resources: [
         {
             ...manifest.web_accessible_resources[0],
-            resources: [css, logo]
+            // resources: [css, logo]
 
         }
     ]

@@ -4,6 +4,7 @@
     "noImplicitAny": true,
     "noImplicitThis": false,
     "module": "es6",
+    "sourceMap": true,
     "target": "es5",
     "jsx": "react",
     "allowJs": true,
