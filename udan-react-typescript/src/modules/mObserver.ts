@@ -1,5 +1,5 @@
 import { UDAProcessRemovedNode, UDAProcessNode } from '../util';
-
+let UDALastMutationTime = 0;
 //mutation observer initialization and adding the logic to process the clickobjects
 export const dsa_observer = new MutationObserver(function (mutations) {
     // UDAConsoleLogger.info('------------ detected clicked objects-------------');

@@ -161,6 +161,7 @@ export async function UDAdigestMessage(textmessage: string, algorithm: any) {
   return hashHex;
 }
 
+let UDALastMutationTime = 0;
 // mutation observer initialization and adding the logic to process the clickobjects
 export const DSA_OBSERVER = new MutationObserver(function(mutations) {
   // UDAConsoleLogger.info('------------ detected clicked objects-------------');
