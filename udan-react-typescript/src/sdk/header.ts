@@ -1,7 +1,7 @@
-import {UDAConsoleLogger} from './config/error-log';
-import {UDAAddNewElement, DSA_OBSERVER} from './util/index';
+import {UDAConsoleLogger} from '../config/error-log';
+import {UDAAddNewElement, DSA_OBSERVER} from '../util/index';
 // import { UDAUserAuthData } from './modules/authData'
-import {UDABrowserCheck} from './modules/browserCheck';
+import {UDABrowserCheck} from '../modules/browserCheck';
 
 const UDABrowserName = UDABrowserCheck.detectBrowserNameAndVersion(navigator);
 const UDAAllowedBrowsers = ['chrome', 'edge'];
@@ -10,7 +10,7 @@ const isUDAAllowed = UDAAllowedBrowsers.indexOf(
 );
 
 if (isUDAAllowed < 0) {
-  UDAConsoleLogger.info('UDA links script not loaded');
+  // UDAConsoleLogger.info('UDA links script not loaded');
 } else {
   // adding the click object that is registered via javascript
   EventTarget.prototype.addEventListener = (function(addEventListener) {
