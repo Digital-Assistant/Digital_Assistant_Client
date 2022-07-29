@@ -1,3 +1,4 @@
+/*
 const log4js: any = require('log4js');
 // import { CONFIG } from './index';
 import {UDAUserAuthData} from '../modules/authData';
@@ -24,3 +25,4 @@ export const UDAErrorLogger = {
     UDALog4jsLogger.error(message, exception);
   },
 };
+*/

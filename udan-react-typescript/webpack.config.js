@@ -12,8 +12,8 @@ const webpack = require('webpack')
 module.exports = {
   target:'web',
   entry: {
-    // 'bundle/index': './src/App.ts',
-    'bundle/headers': './src/header.ts',
+    'bundle/Voicepluginsdk': './src/sdk/Voicepluginsdk.js',
+    'bundle/headers': './src/sdk/header.ts',
   },
   devtool: 'inline-source-map',
   // mode: 'production',

@@ -1,7 +1,7 @@
-import {UDAConsoleLogger, UDAErrorLogger} from '../config/error-log';
+// import {UDAConsoleLogger, UDAErrorLogger} from '../config/error-log';
 
-const UDAClickObjects: Array<HTMLElement> = [];
-const UDARemovedClickObjects: Array<HTMLElement> = [];
+const UDAClickObjects: any = [];
+const UDARemovedClickObjects: any = [];
 
 // adding the clickobjects that were identified.
 export function UDAAddNewElement(node: HTMLElement) {
@@ -30,9 +30,9 @@ export function UDAAddNewElement(node: HTMLElement) {
     ) {
       return;
     }
-
+   
     for (const i of UDAClickObjects) {
-      if (i.isSameNode(clickObject.element)) {
+      if (i.element.isSameNode(clickObject.element)) {
         // todo, discuss , how better to call actions, if multiple actions should be stored, or selector better.
         return;
       }
@@ -42,10 +42,10 @@ export function UDAAddNewElement(node: HTMLElement) {
     UDAClickObjects.push(clickObject);
   } catch (e) {
     const htmlelement = node.innerHTML;
-    UDAErrorLogger.error(
-        'Unable to process clickable object - ' + htmlelement,
-        e,
-    );
+    // UDAErrorLogger.error(
+    //     'Unable to process clickable object - ' + htmlelement,
+    //     e,
+    // );
   }
 }
 
@@ -86,7 +86,7 @@ export function UDAProcessNode(node: HTMLElement) {
         ) {
           UDAAddNewElement(node);
         } else {
-          UDAConsoleLogger.info({node});
+          //UDAConsoleLogger.info({node});
         }
         break;
       case 'span':
@@ -126,11 +126,11 @@ export function UDAProcessNode(node: HTMLElement) {
 export function UDAProcessRemovedNode(node: any) {
   let _index = 0;
   for (const j of UDAClickObjects) {
-    if (node.isEqualNode(j)) {
+    if (node.isEqualNode(j.element)) {
       let addtoremovenodes = true;
       // removedclickobjectcounter:
       for (const k of UDARemovedClickObjects) {
-        if (node.isEqualNode(k)) {
+        if (node.isEqualNode(k.element)) {
           addtoremovenodes = false;
           break;
         }
