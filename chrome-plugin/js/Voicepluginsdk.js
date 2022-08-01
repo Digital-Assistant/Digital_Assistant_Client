@@ -34877,7 +34877,25 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.showhtml();
 		},
 		get enableNodeTypeSelection() {
-			return UDAPluginSDK.multilingual.enabled;
+			return this.enableNodeTypeChangeSelection;
+		},
+		// Flag to enable tooltip section
+		enableTooltipAddition: false,
+		set enableTooltip(val) {
+			this.enableTooltipAddition = val;
+			this.showhtml();
+		},
+		get enableTooltip() {
+			return this.enableTooltipAddition;
+		},
+		// Flag to enable permissions
+		showPermissions: false,
+		set enablePermissions(val){
+			this.showPermissions = true;
+			this.showhtml();
+		},
+		get enablePermissions(){
+			return this.showPermissions;
 		},
 		cspUserAcceptance: {storageName: 'uda-csp-user-consent',data:{proceed: true}},
 		screenAcceptance: { storageName: 'uda-user-screen-consent', data: { proceed: true } },
@@ -36991,7 +37009,32 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			this.openmodal(false);
 		},
+		showPermissionsSection: function(){
+			jQuery('#uda-permissions-show-btn').hide();
+			jQuery('#uda-permissions-hide-btn').show();
+			jQuery('#uda-permissions-section').show();
+		},
+		hidePermissionsSection: function(){
+			jQuery('#uda-permissions-show-btn').show();
+			jQuery('#uda-permissions-hide-btn').hide();
+			jQuery('#uda-permissions-section').hide();
+		},
 		renderRecordedSequenceHtml: function(){
+			// displaying permissions added by developer
+			let permissionsHtml = '';
+			if(this.showPermissions && UDAUserAuthData.permissions) {
+				permissionsHtml += '<div>'
+								+'		<button class="add-btn" onclick="UDAPluginSDK.showPermissionsSection();" id="uda-permissions-show-btn">Advanced</button>'
+								+'		<button class="add-btn" style="display:none;" onclick="UDAPluginSDK.hidePermissionsSection();" id="uda-permissions-hide-btn">Hide</button>'
+								+'		<div id="uda-permissions-section" style="display: none;">';
+				for (let key in UDAUserAuthData.permissions) {
+					console.log(key);
+					console.log(UDAUserAuthData.permissions[key]);
+					permissionsHtml +='<input type="checkbox" id="uda-recorded-name" name="uda-additional-params[]" value="'+key+'" checked nist-voice>'+key+' :'+UDAUserAuthData.permissions[key]+'<br />';
+				}
+				permissionsHtml += '	</div>'
+								+'	</div>';
+			}
 			var html =	'<div class="uda-card-details">'
 						+'	<h5>Recorded Sequence</h5>'
 						+'	<hr style="border:1px solid #969696; width:100%;">'
@@ -37006,6 +37049,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'		<div style="margin-bottom:10px;">'
 						+'			<button class="add-btn" onclick="UDAPluginSDK.addSequenceNameRow();">+ Add Label</button>'
 						+'		</div>'
+						+'		<br>'
+						+'		<br>'
+						+permissionsHtml
 						+'		<br>'
 						+'		<br>'
 						+'		<div style="margin-top: 10px; max-width:100%;">'
@@ -37076,7 +37122,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			// let clickedname=data.clickednodename;
 			//adding personal tooltips
 			let tooltipBtn = '';
-			if(showPersonalButton) {
+			if(showPersonalButton && this.enableTooltipAddition) {
 				tooltipBtn = this.showTooltipEditSection(nodeData);
 			}
 			// personal button appearance
@@ -37417,7 +37463,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				sequencenames.push(sequencename);
 			});
 			let sequencename = JSON.stringify(sequencenames);
-			var sequencelistdata={name:"",domain:window.location.host,usersessionid:this.sessiondata.authdata.id.toString(),userclicknodelist:[].toString(),userclicknodesSet:this.recordedsequenceids,isValid:1,isIgnored:0};
+			var sequencelistdata={name:"",domain:window.location.host,usersessionid:this.sessiondata.authdata.id.toString(),userclicknodelist:[].toString(),userclicknodesSet:this.recordedsequenceids,isValid:1,isIgnored:0, additionalParams: null};
 			if(submittype==='recording') {
 				if (sequencename === '') {
 					alert('Please enter proper label');
@@ -37443,6 +37489,24 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 			sequencelistdata.name=sequencename;
 			sequencelistdata.userclicknodelist=sequenceids.toString();
+
+			// adding custom permission logic
+			if(this.enablePermissions && UDAUserAuthData.permissions){
+				let addedPermissions = {};
+				var addedPermissionsArray=jQuery("input:checkbox[name='uda-additional-params[]']:checked").map(function (){
+					addedPermissions[this.value]=UDAUserAuthData.permissions[this.value];
+				});
+				for(let permission in UDAUserAuthData.permissions){
+					if(!addedPermissions.hasOwnProperty(permission)){
+						addedPermissions[permission]=0;
+					}
+				}
+				sequencelistdata.additionalParams = addedPermissions;
+
+				// return ;
+			}
+
+
 			this.cancelrecordingsequence(false);
 			this.currentPage='SequenceSubmitted';
 			this.showhtml();
@@ -37557,12 +37621,16 @@ if (typeof UDAPluginSDK === 'undefined') {
 			//add analtytics
 			this.recordclick('search',searchtext);
 
-			var xhr = new XMLHttpRequest();
-			let searchUrl = "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host);
-			if(this.enableNodeTypeChangeSelection){
-				searchUrl +='&enabledNodeTypeSelection=true';
+			let url = this.apihost + "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host);
+			if(this.showPermissions && UDAUserAuthData.permissions) {
+				url += '&additionalParams='+encodeURI(JSON.stringify(UDAUserAuthData.permissions));
 			}
-			xhr.open("GET", UDA_API_URL + searchUrl, false);
+
+			var xhr = new XMLHttpRequest();
+			if(this.enableNodeTypeChangeSelection){
+				url +='&enabledNodeTypeSelection=true';
+			}
+			xhr.open("GET", url, false);
 			xhr.onload = function(event){
 				if(xhr.status === 200){
 					UDAPluginSDK.searchInProgress=false;
