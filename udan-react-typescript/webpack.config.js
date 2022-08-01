@@ -40,6 +40,7 @@ module.exports = {
   plugins: [
     new webpack.ProvidePlugin({
       process: 'process/browser',
+      Buffer: ['buffer', 'Buffer']
     })
       // new HtmlWebpackPlugin({
       //     title: 'digitalassist.com'
@@ -61,8 +62,8 @@ module.exports = {
       "net": false,
       // "path": false,
       // "zlib": false,
-      "http": false,
-      "https": false,
+      "http": require.resolve("stream-http"),
+      "https": require.resolve("https-browserify"),
       // "stream": false,
       "crypto": false,
       "cluster": false,

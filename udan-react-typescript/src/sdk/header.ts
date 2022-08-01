@@ -10,7 +10,7 @@ const isUDAAllowed = UDAAllowedBrowsers.indexOf(
 );
 
 if (isUDAAllowed < 0) {
-  // UDAConsoleLogger.info('UDA links script not loaded');
+  UDAConsoleLogger.info('UDA links script not loaded',{});
 } else {
   // adding the click object that is registered via javascript
   EventTarget.prototype.addEventListener = (function(addEventListener) {

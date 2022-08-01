@@ -1,24 +1,18 @@
-import { UDAUserAuthData } from '../modules/authData';
-import { CONFIG } from '../config'
-import { UDAConsoleLogger, UDAErrorLogger } from '../config/error-log';
-
-UDAErrorLogger.error('here at showhtml function', {});
-
 /*
 Voice plugin Javascript SDK Library
 IMPORTANT NOTE: Copying this library and hosting it locally is strongly discouraged.
  */
 // creating the sdk variable
 if (typeof UDAPluginSDK === 'undefined') {
-	let UDABadBrowser=false;
+	var UDABadBrowser=false;
 	if(navigator.appName.indexOf("Internet Explorer") !== -1){
 		UDABadBrowser=(navigator.appVersion.indexOf("MSIE 1") === -1);
 	}
-	let UDASpeechRecognitionAvailable=false;
-	let UDAVoiceRecognition;
-	
-	const UDA_POST_INTERVAL = CONFIG.UDA_POST_INTERVAL;
-	let UDALastMutationTime = CONFIG.UDALastMutationTime;
+	var UDASpeechRecognitionAvailable=false;
+	var UDAVoiceRecognition;
+	const UDAUserAuthData = { id: '', email: '', restrict_add_delete: false, role: 'default', permissions: '' };
+	const UDA_POST_INTERVAL = 1000;
+	let UDALastMutationTime;
 	// initializing voice recognition library
 	if(!window.hasOwnProperty("webkitSpeechRecognition")){
 		UDASpeechRecognitionAvailable=false;
@@ -33,7 +27,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 	});
 
 	// Clearing user session in case if the id gets changed
-	document.addEventListener("UDAClearSessionData", function(data){
+	document.addEventListener("UDAClearSessionData", function(data) {
 		UDAPluginSDK.clearSession();
 	});
 
@@ -65,11 +59,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 	document.dispatchEvent(UDADebugSetEvent);
 
 	// initializing the sdk variable need to change to a new variable in future.
-	const UDA_API_URL = CONFIG.UDA_API_URL, UDALogLevel = CONFIG.UDALogLevel, isUDAAllowed = 1, UDAClickObjects = [];
-	let UDALastIndexTime = 0;
-	let UDASessionID = null;
-
-	var UDAPluginSDK={
+	const UDA_API_URL = "https://udantest.nistapp.ai/voiceapi", UDALogLevel ="", isUDAAllowed ="1", UDAClickObjects =[];
+	var UDAPluginSDK = {
 		sdkUrl: "/",
 		apihost: UDA_API_URL,
 		totalScripts: 0,
@@ -93,7 +84,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		updatecounter : 0,
 		lastupdatecounter : 0,
 		menuitems: [],
-		extensionpath:document?.currentScript?.src?.toString()?.replace("js/Voicepluginsdk.js",""),
+		extensionpath:document.currentScript.src.toString().replace("js/Voicepluginsdk.js",""),
 		indexnewnodes:false,
 		previousurl:"",
 		currenturl:"",
@@ -261,12 +252,16 @@ if (typeof UDAPluginSDK === 'undefined') {
 			return UDAPluginSDK.multilingual.enabled;
 		},
 		cspUserAcceptance: {storageName: 'uda-csp-user-consent',data:{proceed: true}},
-		screenAcceptance: { storageName: 'uda-user-screen-consent', data: { proceed: true } },
-				// constructor for the sdk class which will be initialized on loading of the variable.
+		screenAcceptance: {storageName: 'uda-user-screen-consent',data:{proceed: true}},
+		inArray:function(value, object){
+			return jQuery.inArray(value, object);
+		},
+
+		// constructor for the sdk class which will be initialized on loading of the variable.
 		init: function() {
 
 			if(!this.checkBrowser()){
-				UDAConsoleLogger.info('UDA panel not added');
+				////UDAConsoleLogger.info('UDA panel not added');
 				return;
 			}
 
@@ -280,9 +275,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.otherscripts();
 			}
 		},
-		inArray:function(value, object){
-			return jQuery.inArray(value, object);
-		},
+
 		// check browser and allow only for chrome
 		checkBrowser: function(){
 			if(isUDAAllowed < 0){
@@ -485,7 +478,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			document.dispatchEvent(sessionevent);
 		},
 		createsession:function(data){
-        	// UDASessionID=data.sessionkey;
+        	UDASessionID=data.sessionkey;
 			this.sessiondata=data;
 			this.sessionID=data.sessionkey;
 			UDAUserAuthData.id = data.authdata.id;
@@ -941,7 +934,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						this.searchinelastic('');
 					}
 				} else {
-					UDAConsoleLogger.info('here at showhtml function');
+					////UDAConsoleLogger.info('here at showhtml function');
 					this.searchinelastic('');
 				}
 			} else {
@@ -988,7 +981,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 			if(this.processcount<this.totalcount){
 				//todo new nodes added need to reprocess
-				UDAConsoleLogger.info('Need to do the processing');
+				////UDAConsoleLogger.info('Need to do the processing');
 			}
 			if(this.navigatedToNextPage.check && this.navigatedToNextPage.url === window.location.href){
 				setTimeout(function(){UDAPluginSDK.showhtml();}, 5000);
@@ -1060,23 +1053,23 @@ if (typeof UDAPluginSDK === 'undefined') {
 								this.addToolTip(node, node, false, false, false, false, 'We have detected a rich text editor. To record this in your sequence, Please click on the editor menu. We are unable to record clicks on the text area.', false, false);
 							}
 						} else if(!node.hasclick && this.inArray(node.nodeName.toLowerCase(), this.addClickToSpecialNodes) !== -1 && this.inArray(node.nodeName.toLowerCase(), this.ignoreClicksOnSpecialNodes) === -1){
-							UDAConsoleLogger.info('Child nodes ignored for node and added click to: ' + node.nodeName);
+							////UDAConsoleLogger.info('Child nodes ignored for node and added click to: ' + node.nodeName);
 							this.addClickToNode(node);
 						} else if(this.cancelRecordingDuringRecordingNodes.indexOf(node.nodeName.toLowerCase()) !== -1) {
 							// this.addClickToNode(node);
 						} else {
-							UDAConsoleLogger.info('Child nodes ignored for node: ' + node.nodeName);
+							////UDAConsoleLogger.info('Child nodes ignored for node: ' + node.nodeName);
 						}
 					} else if(node.classList && ((node.classList.contains('select2-container--open') && !node.classList.contains('select2-container--focus')))){
 					//	do nothing as we are not going to deal with special classes
-						UDAConsoleLogger.info('unwanted indexing prevention');
+						////UDAConsoleLogger.info('unwanted indexing prevention');
 					} else if(node.nodeName.toLowerCase() === "div" && (node.hasAttribute("uib-datepicker-popup-wrap") || (node.id && node.id==='recognize_modal'))){
 						// fix for not indexing datepicker popup and nominate popup
-						UDAConsoleLogger.info('date picker in javascript');
+						//UDAConsoleLogger.info('date picker in javascript');
 					} else if(node.nodeName.toLowerCase() === "span" && (node.classList.contains("radio") && node.classList.contains("replacement"))){
 						this.addClickToNode(node);
 					} else if(this.checkCssClassNames(node)){
-						UDAConsoleLogger.info({cssIgnoredNode:node}, 3);
+						//UDAConsoleLogger.info({cssIgnoredNode:node}, 3);
 						// this.addClickToNode(node);
 					} else if(node.hasChildNodes()){
 						var childnodes =  node.childNodes;
@@ -1100,9 +1093,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 											textlabel += " " + this.indexdom(childnode, ret, node, textlabel);
 										}
 									} else {
-										try {
-											node.childNodes[i] = this.indexdom(childnode, ret, node, "", hasparentclick, parentclicknode);
-										}catch(e){}
+										console.log(this.indexdom(childnode, ret, node,"", hasparentclick, parentclicknode))
+										node.childNodes[i] = this.indexdom(childnode, ret, node,"", hasparentclick, parentclicknode);
 										if(node.childNodes[i].hasOwnProperty("hasclick") && node.childNodes[i].hasclick){
 											node.haschildclick=true;
 										}
@@ -1180,7 +1172,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			// Multiple clicks are recorded for select2-selection class. select2-selection--multiple
 			// This will create a problem during playback. We should record only one click to avoid this problem
 			if(node.classList && (node.classList.contains("select2-search__field") || node.classList.contains('cdk-overlay-backdrop') || node.classList.contains('cdk-overlay-pane'))) {
-				UDAConsoleLogger.info(node.classList);
+				//UDAConsoleLogger.info(node.classList);
 				return node;
 			}
 
@@ -1212,7 +1204,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 
 			if(this.inArray(node.nodeName.toLowerCase(), this.ignoreNodesFromIndexing) !== -1) {
-				UDAConsoleLogger.info({indexingnode: node});
+				//UDAConsoleLogger.info({indexingnode: node});
 			}
 
 			if(node.hasAttribute("type") && node.getAttribute("type") === "hidden"){
@@ -1461,7 +1453,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				return;
 			}
 
-			UDAConsoleLogger.info({invokingnode: node});
+			//UDAConsoleLogger.info({invokingnode: node});
 
 			// remove added tooltips before invoking
 			// let tooltipnodes = jQuery('.uda-tooltip');
@@ -1659,7 +1651,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		//add tooltip display
 		addToolTip:function(invokingnode, tooltipnode, recordeddata=null, navigationcookiedata, enableClick=false, enableFocus=false, enableIntroJs=false, message= 'Please input the value and then click on', showButtons=true) {
 
-			UDAConsoleLogger.info(this.invokingnode);
+			//UDAConsoleLogger.info(this.invokingnode);
 
 			if(recordeddata !== null) {
 				let recordednodedata = JSON.parse(recordeddata.objectdata);
@@ -1791,11 +1783,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			let finalCssClass = "right";
 
-			UDAConsoleLogger.info('---------------- Screen info ------------------');
-			UDAConsoleLogger.info(screenSize);
-			UDAConsoleLogger.info(tooltipPos);
-			UDAConsoleLogger.info(targetElementRect);
-			UDAConsoleLogger.info('---------------- Screen info ------------------');
+			//UDAConsoleLogger.info('---------------- Screen info ------------------');
+			//UDAConsoleLogger.info(screenSize);
+			//UDAConsoleLogger.info(tooltipPos);
+			//UDAConsoleLogger.info(targetElementRect);
+			//UDAConsoleLogger.info('---------------- Screen info ------------------');
 
 			// Check for space to the right
 			if (targetElementRect.right + tooltipPos.width > screenSize.screen.width) {
@@ -1862,7 +1854,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 
 			if(!link) {
-				UDAConsoleLogger.info(node,2);
+				//UDAConsoleLogger.info(node,2);
 				setTimeout(function(){UDAPluginSDK.showhtml();}, timeToInvoke);
 			} else {
 				timeToInvoke=timeToInvoke+3000;
@@ -1879,10 +1871,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 			var canceled = !node.dispatchEvent(event);
 			if (canceled) {
 				// A handler called preventDefault.
-				UDAConsoleLogger.info('hover cancelled');
+				//UDAConsoleLogger.info('hover cancelled');
 			} else {
 				// None of the handlers called preventDefault.
-				UDAConsoleLogger.info('hover not cancelled');
+				//UDAConsoleLogger.info('hover not cancelled');
 			}
 
 		},
@@ -1943,9 +1935,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 					}
 				}
 
-				UDAConsoleLogger.info('-----------------------------clicked node--------------------------------');
-				UDAConsoleLogger.info({clickednode: node});
-				UDAConsoleLogger.info('-----------------------------clicked node--------------------------------');
+				//UDAConsoleLogger.info('-----------------------------clicked node--------------------------------');
+				//UDAConsoleLogger.info({clickednode: node});
+				//UDAConsoleLogger.info('-----------------------------clicked node--------------------------------');
 
 				if(this.recording && this.inArray(node.nodeName.toLowerCase(), this.ignoreClicksOnSpecialNodes) !== -1){
 					return ;
@@ -2088,10 +2080,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 				// reindexing whole document again for collapsable nodes
 				if(this.recording) {
-					UDAConsoleLogger.info('----------------------------collapsable node---------------------------------');
-					UDAConsoleLogger.info({indexedpos: node.uda_custom.domJson.node.nodeInfo.nodePosition});
-					UDAConsoleLogger.info({domjson: domjson.node.nodeInfo.nodePosition});
-					UDAConsoleLogger.info('----------------------------collapsable node---------------------------------');
+					//UDAConsoleLogger.info('----------------------------collapsable node---------------------------------');
+					//UDAConsoleLogger.info({indexedpos: node.uda_custom.domJson.node.nodeInfo.nodePosition});
+					//UDAConsoleLogger.info({domjson: domjson.node.nodeInfo.nodePosition});
+					//UDAConsoleLogger.info('----------------------------collapsable node---------------------------------');
 
 					if (node.hasAttribute('mattreenodetoggle')) {
 						this.forceReindex = true;
@@ -2150,7 +2142,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		//getting input label for the clicked node
 		getclickedinputlabels:function(node, fromdocument=false, selectchange=false){
-			UDAConsoleLogger.info({node: node});
+			//UDAConsoleLogger.info({node: node});
 
 			if (!node) {
 				return null;
@@ -2226,7 +2218,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						inputlabels = labels.toString();
 					}
 			}
-			UDAConsoleLogger.info(inputlabels);
+			//UDAConsoleLogger.info(inputlabels);
 			return inputlabels;
 		},
 		//record page click todo functionality
@@ -2907,7 +2899,7 @@ if (typeof UDAPluginSDK === 'undefined') {
                             searchtext = translateddata.data.translations[0].translatedText;
                         }
                     } else {
-                        UDAConsoleLogger.info(JSON.parse(translatexhr.response));
+                        //UDAConsoleLogger.info(JSON.parse(translatexhr.response));
                     }
                 };
                 translatexhr.onerror = function(){
@@ -2930,7 +2922,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				return false;
 			}
 
-			UDAConsoleLogger.info(searchtext);
+			//UDAConsoleLogger.info(searchtext);
 
 			this.searchText = searchtext;
 			this.searchInProgress = true;
@@ -3211,7 +3203,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			let originalNode = {};
 			if(selectednode.objectdata) {
 				originalNode = JSON.parse(selectednode.objectdata);
-				UDAConsoleLogger.info({recordedNode: originalNode.node});
+				//UDAConsoleLogger.info({recordedNode: originalNode.node});
 				if(selectednode && this.htmlindex.length>0){
 					// personal tag check
 					let isPersonalNode = false;
@@ -3225,14 +3217,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 						let match = this.comparenodes(compareNode.node,originalNode.node, isPersonalNode);
 
 						if ((match.matched+15) >= match.count) {
-							UDAConsoleLogger.info('-----------------------------Matching node-----------------------------');
-							UDAConsoleLogger.info(match);
-							UDAConsoleLogger.info(Math.abs((match.matched) - match.count));
-							UDAConsoleLogger.info(match.innerChildNodes * this.innerTextWeight);
-							UDAConsoleLogger.info('Matched ' + match.matched + ' out of ' + match.count);
-							UDAConsoleLogger.info({node: compareNode.node, htmlNode: searchNode["element-data"]});
-							UDAConsoleLogger.info({recordedNode: JSON.parse(selectednode.objectdata)});
-							UDAConsoleLogger.info('-----------------------------Matching node-----------------------------');
+							//UDAConsoleLogger.info('-----------------------------Matching node-----------------------------');
+							//UDAConsoleLogger.info(match);
+							//UDAConsoleLogger.info(Math.abs((match.matched) - match.count));
+							//UDAConsoleLogger.info(match.innerChildNodes * this.innerTextWeight);
+							//UDAConsoleLogger.info('Matched ' + match.matched + ' out of ' + match.count);
+							//UDAConsoleLogger.info({node: compareNode.node, htmlNode: searchNode["element-data"]});
+							//UDAConsoleLogger.info({recordedNode: JSON.parse(selectednode.objectdata)});
+							//UDAConsoleLogger.info('-----------------------------Matching node-----------------------------');
 						}
 
 						// we are incrementing 'matched' by 'innerTextWeight' for 'this' node and every child node and we are matching innerchildcounts that were returned from comparenodes
@@ -3277,22 +3269,22 @@ if (typeof UDAPluginSDK === 'undefined') {
 				let finalMatchNodes = [];
 
 				if(matchNodes.length>1){
-					UDAConsoleLogger.info('---------------------------recorded node-------------------------------');
-					UDAConsoleLogger.info('recordednode label:'+selectednode.clickednodename,2);
-					UDAConsoleLogger.info('---------------------------recorded node-------------------------------');
+					//UDAConsoleLogger.info('---------------------------recorded node-------------------------------');
+					//UDAConsoleLogger.info('recordednode label:'+selectednode.clickednodename,2);
+					//UDAConsoleLogger.info('---------------------------recorded node-------------------------------');
 				}
 
-				UDAConsoleLogger.info('-----------------------------matched nodes-----------------------------');
-				UDAConsoleLogger.info(matchNodes,2);
-				UDAConsoleLogger.info('-----------------------------matched nodes-----------------------------');
+				//UDAConsoleLogger.info('-----------------------------matched nodes-----------------------------');
+				//UDAConsoleLogger.info(matchNodes,2);
+				//UDAConsoleLogger.info('-----------------------------matched nodes-----------------------------');
 
 				matchNodes.forEach(function (matchNode, matchnodeindex) {
 					if(matchNode.originalNode.hasOwnProperty("element-data")) {
 						const inputLabels = UDAPluginSDK.getclickedinputlabels(matchNode.originalNode["element-data"]);
-						UDAConsoleLogger.info('----------------------------input labels------------------------------');
-						UDAConsoleLogger.info(matchNode,2);
-						UDAConsoleLogger.info(inputLabels, 2);
-						UDAConsoleLogger.info('----------------------------input labels------------------------------');
+						//UDAConsoleLogger.info('----------------------------input labels------------------------------');
+						//UDAConsoleLogger.info(matchNode,2);
+						//UDAConsoleLogger.info(inputLabels, 2);
+						//UDAConsoleLogger.info('----------------------------input labels------------------------------');
 						if (inputLabels === selectednode.clickednodename) {
 							finalMatchNodes.push(matchNode);
 						} else if(matchNode.originalNode["element-data"].classList && matchNode.originalNode["element-data"].classList.contains('expand-button')){
@@ -3312,24 +3304,24 @@ if (typeof UDAPluginSDK === 'undefined') {
 				} else if(finalMatchNodes.length > 1) {
 					// compare element positions as there are multiple matching nodes with same labels
 					if(finalMatchNodes.length>1) {
-						UDAConsoleLogger.info('------------------------------Multiple nodes found comparing nearnode----------------------------');
-						UDAConsoleLogger.info({recordedNode: originalNode.node});
-						UDAConsoleLogger.info(finalMatchNodes);
-						UDAConsoleLogger.info('------------------------------Multiple nodes found comparing nearnode----------------------------');
+						//UDAConsoleLogger.info('------------------------------Multiple nodes found comparing nearnode----------------------------');
+						//UDAConsoleLogger.info({recordedNode: originalNode.node});
+						//UDAConsoleLogger.info(finalMatchNodes);
+						//UDAConsoleLogger.info('------------------------------Multiple nodes found comparing nearnode----------------------------');
 					}
 					finalMatchNode = this.processDistanceOfNodes(finalMatchNodes, originalNode.node);
 				}
 
 				if(finalMatchNode && finalMatchNode.hasOwnProperty("element-data")) {
-					UDAConsoleLogger.info('---------------------------Final matched node-------------------------------');
-					UDAConsoleLogger.info({finalMatchNode: finalMatchNode});
-					UDAConsoleLogger.info('---------------------------Final matched node-------------------------------');
+					//UDAConsoleLogger.info('---------------------------Final matched node-------------------------------');
+					//UDAConsoleLogger.info({finalMatchNode: finalMatchNode});
+					//UDAConsoleLogger.info('---------------------------Final matched node-------------------------------');
 
 					if(this.updatenavcookiedata(navcookiedata,selectednode.id)) {
 						this.matchaction(finalMatchNode, false, selectednode);
 					}
 				} else {
-					UDAConsoleLogger.info('Unable to find final matchnode with distance calculation');
+					//UDAConsoleLogger.info('Unable to find final matchnode with distance calculation');
 					UDAErrorLogger.error('Unable to find final matchnode with distance calculation for '+originalNode.node.nodeName+' Recorded id is: '+selectednode.id);
 					alert("Nistapp UDA ran into a problem and will exit");
 					if(navcookiedata && navcookiedata.autoplay) {
@@ -3395,8 +3387,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 				} else if(key === 'innerText' && originalnode.hasOwnProperty(key) && comparenode.hasOwnProperty(key) && (comparenode[key].trim() === originalnode[key].trim())) {
 					// matching inner text should be weighted more. We will add an arbitrarily large number - innerTextWeight.
 					// since this will match for every child node, we need to accommodate this logic whenever 'comparenodes' is called
-					UDAConsoleLogger.info(comparenode[key].trim());
-					UDAConsoleLogger.info(originalnode[key].trim());
+					//UDAConsoleLogger.info(comparenode[key].trim());
+					//UDAConsoleLogger.info(originalnode[key].trim());
 					match.innerTextFlag = true;
 					match.matched = match.matched + this.innerTextWeight;
 					// match.matched++;
@@ -3497,17 +3489,17 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if (selectedNode.hasOwnProperty('nodeInfo') && matchingnodes.length>1) {
 				let leastDistanceNode = null;
 				let leastDistance = -1;
-				UDAConsoleLogger.info('------------ processing distance ------------------');
+				//UDAConsoleLogger.info('------------ processing distance ------------------');
 				matchingnodes.forEach((node) => {
 					if (node.originalNode['element-data'].hasAttribute('aria-label')
 						&& node.originalNode['element-data'].getAttribute('aria-label').toLowerCase() === 'open calendar') {
 						// let dist = this.getDistance(selectedNode.nodePosition, node.originalNode['element-data'].uda_custom.domJson.node.nodePosition);
 						let domJsonData = domJSON.toJSON(node.originalNode['element-data']);
 						let dist = this.getDistance(selectedNode.nodeInfo, domJsonData.node.nodeInfo);
-						UDAConsoleLogger.info(selectedNode.nodeInfo);
-						UDAConsoleLogger.info(node.originalNode['element-data'].uda_custom.domJson.node.nodeInfo);
-						UDAConsoleLogger.info(domJsonData.node.nodeInfo);
-						UDAConsoleLogger.info(dist);
+						//UDAConsoleLogger.info(selectedNode.nodeInfo);
+						//UDAConsoleLogger.info(node.originalNode['element-data'].uda_custom.domJson.node.nodeInfo);
+						//UDAConsoleLogger.info(domJsonData.node.nodeInfo);
+						//UDAConsoleLogger.info(dist);
 						// default adding first element as least distance and then comparing with last distance calculated
 						if(leastDistance === -1) {
 							leastDistance = dist;
@@ -3517,10 +3509,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 							leastDistanceNode = node.originalNode;
 						}
 					} else if (node.domJson.hasOwnProperty('nodeInfo')) {
-						UDAConsoleLogger.info('----------------Distance between nodes--------------');
-						UDAConsoleLogger.info(selectedNode.nodeInfo);
-						UDAConsoleLogger.info(node.domJson.nodeInfo);
-						UDAConsoleLogger.info('----------------Distance between nodes--------------');
+						//UDAConsoleLogger.info('----------------Distance between nodes--------------');
+						//UDAConsoleLogger.info(selectedNode.nodeInfo);
+						//UDAConsoleLogger.info(node.domJson.nodeInfo);
+						//UDAConsoleLogger.info('----------------Distance between nodes--------------');
 						let dist = this.getDistance(selectedNode.nodeInfo, node.domJson.nodeInfo);
 						// default adding first element as least distance and then comparing with last distance calculated
 						if(leastDistance === -1) {

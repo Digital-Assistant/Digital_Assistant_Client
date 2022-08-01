@@ -35,6 +35,15 @@ compiler.run((err, stats) => {
         silent: true,
     });
 
+
+    replace({
+        regex: "setImmediate",
+        replacement: "setTimeout",
+        paths: ['./output/bundle/Voicepluginsdk.js'],
+        recursive: true,
+        silent: true,
+    });
+
     fs.copyFileSync('./output/bundle/headers.js', '../chrome-plugin/js/headers.js');
     fs.copyFileSync('./output/bundle/Voicepluginsdk.js', '../chrome-plugin/js/Voicepluginsdk.js');
     const headers = fs.readFileSync('./output/bundle/headers.js', "utf8");

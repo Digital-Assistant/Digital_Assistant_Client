@@ -42,10 +42,13 @@ export function UDAAddNewElement(node: HTMLElement) {
     UDAClickObjects.push(clickObject);
   } catch (e) {
     const htmlelement = node.innerHTML;
-    // UDAErrorLogger.error(
-    //     'Unable to process clickable object - ' + htmlelement,
-    //     e,
-    // );
+    console.log(e)
+    if(htmlelement) {
+      UDAErrorLogger.error(
+        'Unable to process clickable object - ' + htmlelement,
+        e,
+      );
+    }
   }
 }
 
