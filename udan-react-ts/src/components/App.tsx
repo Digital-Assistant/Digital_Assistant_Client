@@ -46,9 +46,10 @@ function App() {
   }
 
   return (
+    <div className="udan-main-panel">
     <Draggable handle=".draggable-wrapper">
       <ResizableBox
-        width={300}
+        width={350}
         height={window.innerHeight}
         minConstraints={[100, 100]}
         maxConstraints={[340, 700]}
@@ -156,7 +157,12 @@ function App() {
 
         <div className="editable-div" id="kr-edit" contentEditable />
       </ResizableBox>
-    </Draggable>
+      </Draggable>
+{/*  
+    <div className="icon" onClick={()=>togglePanel()}>
+      <img src="./img/icons/nist-logo.png" />
+      </div> */}
+    </div>  
   );
 }
 

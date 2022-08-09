@@ -1,3 +1,16 @@
+.main .udan-main-panel{
+  display: block;
+}
+.logo .udan-main-panel{
+    display: none !important;
+ }
+ .main .icon{
+  display: none !important;
+ }
+.logo .icon {
+  display: block !important;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -61,6 +74,7 @@ body {
 
 .uda-page-right-bar {
   /* max-width: 23%; */
+  /* padding: 20px; */
   width: 100%;
   position: fixed;
   right: 0;

@@ -54,24 +54,31 @@ export function createAnIframe() {
     }
   });
 
-let iframe = document.createElement('iframe'); 
-iframe.style.height = "100%";
-// iframe.style.width = "0px";
-iframe.style.position = "fixed";
-iframe.style.top = "0px";
-iframe.style.right = "0px";
-iframe.style.border = "none";
-iframe.style.zIndex = "999999";
-iframe.src = chrome.extension.getURL("popup.html")
+const udanIFrame = document.getElementsByClassName('udan-ce-panel');
+  let iframe:any = null;
 
-document.body.appendChild(iframe);
+  // if (udanIFrame.length === 0) {
+    iframe = document.createElement('iframe'); 
+    iframe.style.height = "100%";
+    // iframe.style.width = "28px";
+    iframe.style.width = "350px";
+    iframe.style.position = "fixed";
+    iframe.style.top = "0px";
+    iframe.style.right = "0px";
+    iframe.style.border = "none";
+    iframe.style.zIndex = "999999";
+    iframe.className = "udan-ce-panel";
+    iframe.src = chrome.extension.getURL("popup.html");
+    document.body.appendChild(iframe);
+  // }
 
-function toggle(){
-    if(iframe.style.width === "0px"){
-        iframe.style.width="350px";
-    }
-    else{
-        iframe.style.width="50px";
-    }
+  function toggle() {
+    // if (!iframe) return
+    // if(iframe.style.width === "28px"){
+    //     iframe.style.width="350px";
+    // }
+    // else{
+    //     iframe.style.width="28px";
+    // }
 }
 }

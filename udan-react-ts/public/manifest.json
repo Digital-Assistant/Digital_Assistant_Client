@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "version": "0.0.1",
-  "short_name": "React TS Ext",
-  "name": "React TS Extension",
+  "short_name": "Udan React TS Ext",
+  "name": "Udan React TS Extension",
   "description": "React TS Extension",
   "browser_action": {},
   "web_accessible_resources": ["popup.html"],
@@ -16,9 +16,9 @@
     }
   ],
   "icons": {
-    "16": "img/icon-16.png",
-    "48": "img/icon-48.png",
-    "128": "img/icon-128.png"
+    "16": "img/nist-logo-16x16.png",
+    "48": "img/nist-logo-48x48.png",
+    "128": "img/nist-logo-128x128.png"
   },
   "options_page": "options.html",
   "permissions": ["activeTab","storage"],
