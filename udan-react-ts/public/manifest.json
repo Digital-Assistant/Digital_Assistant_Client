@@ -5,14 +5,16 @@
   "name": "Udan React TS Extension",
   "description": "React TS Extension",
   "browser_action": {},
-  "web_accessible_resources": ["popup.html"],
+  "web_accessible_resources": ["popup.html","logo.html","util.js"],
   "background": {
-     "scripts": ["background.bundle.js"]
+     "scripts": ["background.bundle.js", "util.js"]
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["contentScript.bundle.js"]
+      "js": ["contentScript.bundle.js"],
+      "all_frames": false,
+	    "run_at":"document_start"
     }
   ],
   "icons": {
@@ -21,6 +23,6 @@
     "128": "img/nist-logo-128x128.png"
   },
   "options_page": "options.html",
-  "permissions": ["activeTab","storage"],
+  "permissions": ["background", "util","storage", "identity","identity.email","webRequest","webRequestBlocking","http://*/*", "https://*/*"],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }

@@ -367,7 +367,7 @@ body {
   background-color: var(--uda-text-color-bg-white);
   position: fixed;
   bottom: 0;
-  max-width: 23%;
+  /* max-width: 23%; */
   width: 100%;
   right: 0;
 }
