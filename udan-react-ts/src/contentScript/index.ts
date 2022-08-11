@@ -35,19 +35,9 @@ try {
     if (msg === "toggle") {
       toggle();
     }
-
-  function toggle() {
+    function toggle() {
       if (!iframe) return;
-    if (iframe.style.width === "28px") {
-        // iframe.src = chrome.extension.getURL("logo.html"); 
-        //iframe.contentWindow.document.body.className=""
-        iframe.style.width="350px";
-      }
-    else {
-      // iframe.src = chrome.extension.getURL("popup.html"); 
-      // iframe.contentWindow.document.body.className="only-icon"
-      iframe.style.width="28px";
-    }
+      iframe.style.width = iframe.style.width === "50px"?"350px":"50px"
     }
   });
 }
@@ -76,7 +66,7 @@ try {
       if (udanIFrame.length === 0) {
         iframe = document.createElement('iframe');
         iframe.style.height = "100%";
-        iframe.style.width = "28px";
+        iframe.style.width = "50px";
         // iframe.style.width = "350px";
         iframe.style.position = "fixed";
         iframe.style.top = "0px";

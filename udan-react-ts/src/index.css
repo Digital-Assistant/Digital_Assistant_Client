@@ -10,6 +10,13 @@
 .logo .icon {
   display: block !important;
 }
+.default-logo{
+  position:fixed;
+  top: 50%;
+  height: 100%;
+  cursor: pointer;
+  margin-top: -25px;
+}
 
 body {
   margin: 0;
