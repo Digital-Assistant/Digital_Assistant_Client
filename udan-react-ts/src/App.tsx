@@ -1,79 +1,74 @@
-import React, {useEffect } from "react";
-import { ResizableBox } from "react-resizable";
-import Draggable from "react-draggable";
+///<reference types="chrome"/>
+import logo from './logo.svg'
+import './App.css'
+import React, { useState, useEffect,useCallback } from 'react';
+
+const allowedTags = ['a','button'];
+
+function getLogo() {
+  if (window?.chrome) {
+    return window?.chrome?.runtime?.getURL(logo)
+  } 
+  return "https://s4.aconvert.com/convert/p3r68-cdx67/alc9l-hnvsn.svg";
+}
+
+const useMutationObserver = (
+  ref:any,
+  callback:any,
+  options = {
+    attributes: true,
+    characterData: true,
+    childList: true,
+    subtree: true,
+  }
+) => {
+  React.useEffect(() => {
+    if (ref.current) {
+      const observer = new MutationObserver(callback);
+      observer.observe(ref.current, options);
+      return () => observer.disconnect();
+    }
+  }, [callback, options]);
+};
 
 function App() {
-
-  const [title, setTitle] = React.useState('');
-  const [headlines, setHeadlines] = React.useState<string[]>([]);
-  const [anchors, setAnchors] = React.useState<HTMLElement[]>([]);
+  const [anchors, setAnchors] = React.useState<any>([]);
   const [hide, setHide] = React.useState<boolean>(true);
-
+  
   React.useEffect(() => {
-    /**
-     * We can't use "chrome.runtime.sendMessage" for sending messages from React.
-     * For sending messages from React we need to specify which tab to send it to.
-     */
-    chrome.tabs && chrome.tabs.query({
-      active: true,
-      currentWindow: true
-    }, tabs => {
-      /**
-       * Sends a single message to the content script(s) in the specified tab,
-       * with an optional callback to run when a response is sent back.
-       *
-       * The runtime.onMessage event is fired in each content script running
-       * in the specified tab for the current extension.
-       */
-      chrome.tabs.sendMessage(
-        tabs[0].id || 0,
-        'GET_DOM',
-        (response: any) => {
-          // console.log(response)
-           setAnchors([...response?.anchors]);
-        });
+    document.body.addEventListener('mouseover', (event:any) => {
+      if (event?.target?.className?.indexOf('udan-added') === -1 &&
+        event?.target?.className?.indexOf('exclude') === -1) {
+        processElements(event.target);
+      }
     });
   });
 
+  const processElements = (element: any) => { 
+    if (element && allowedTags.includes(element?.tagName?.toLowerCase())) {
+      element.className += "udan-added";
+      anchors.push(element);
+      setAnchors([...anchors]);
+    }
+  }
+
   const togglePanel = () => { 
     setHide(!hide);
-     chrome.tabs && chrome.tabs.query({
-      active: true,
-      currentWindow: true
-    }, t => {
-      chrome.tabs.sendMessage(
-        t[0].id || 0,
-        'toggle');
-    });
   }
 
   return (
     <>
     <div className="udan-main-panel" style={{display:hide?'none':'block'}}>
-    <Draggable handle=".draggable-wrapper">
-      <ResizableBox
-        width={350}
-        height={window.innerHeight}
-        minConstraints={[100, 100]}
-        maxConstraints={[340, 700]}
-      >
-        <div className="draggable-wrapper">
-          {/* <div className="icon-wrapper">
-            <div className="icon red"></div>
-            <div className="icon yellow"></div>
-            <div className="icon green"></div>
-          </div> */}
-        </div>
         <div id="uda-html-container">
         <div id="uda-html-content" nist-voice="true">
           <div>
             <div className="uda-page-right-bar">
               <div>
                 <div className="uda-ribbon-arrow" id="uda-close-panel" onClick={()=>togglePanel()}>
-                  <img src="./img/icons/right-arrow.png" />
+                  <span className='arrow'> &gt;&gt; </span>
                 </div>
                 <div className="uda-icon-txt">
-                  <img src="./img/icons/nist-logo.png" />
+                  <img src={getLogo()} />
                   <span className="uda-help-bg-tooltip">Need Help?</span>
                 </div>
                 <div className="uda-icon-txt">
@@ -119,7 +114,7 @@ function App() {
                 <div className="uda-card">
                     {/* <h5>{title}</h5> */}
                     {/* {headlines.map((headline, index) => (<i key={index}>{headline}</i>))} */}
-                    {anchors.map((anchor:any, index:number) => (<li><a href={"#"} key={index}>{anchor}</a></li>))}
+                    {anchors.map((anchor: any, index: number) => (<li><a href={"#"} className={"exclude"}  key={index}>{anchor.innerHTML}</a></li>))}
                 </div>
               </div>
               <div>
@@ -147,7 +142,7 @@ function App() {
                       <a href="https://udan.nistapp.ai" target="_blank">
                         Know More{" "}
                       </a>
-                      <img src="./img/icons/nist-logo.png" width="15px" height="15px;"
+                      <img src={getLogo()} width="15px" height="15px;"
                       />
                     </div>
                   </div>
@@ -157,17 +152,13 @@ function App() {
           </div>
         </div>
       </div>
-
-        <div className="editable-div" id="kr-edit" contentEditable />
-      </ResizableBox>
-      </Draggable>
     </div>  
       
     <div className="default-logo" style={{display:!hide?'none':'block'}}>
-        <img src="./img/icons/nist-logo.png" onClick={() => togglePanel()} alt={"udan logo"} />
-      </div> 
+        <img src={getLogo()} onClick={() => togglePanel()} alt={"udan logo"} />
+    </div> 
     </>
-  );
+  )
 }
 
-export default App;
+export default App
