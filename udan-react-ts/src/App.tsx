@@ -114,7 +114,7 @@ function App() {
                 <div className="uda-card">
                     {/* <h5>{title}</h5> */}
                     {/* {headlines.map((headline, index) => (<i key={index}>{headline}</i>))} */}
-                    {anchors.map((anchor: any, index: number) => (<li><a href={"#"} className={"exclude"}  key={index}>{anchor.innerHTML}</a></li>))}
+                    {anchors.map((anchor: any, index: number) => (<li><a href={"#"} className={"exclude"}  key={index}>{anchor.innerText}</a></li>))}
                 </div>
               </div>
               <div>
