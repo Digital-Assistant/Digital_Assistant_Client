@@ -1,6 +1,7 @@
 ///<reference types="chrome"/>
 import logo from './logo.svg'
 import './App.css'
+import {squeezeBody} from './util'
 import React, { useState, useEffect,useCallback } from 'react';
 
 const allowedTags = ['a','button'];
@@ -36,7 +37,7 @@ function App() {
   const [hide, setHide] = React.useState<boolean>(true);
   
   React.useEffect(() => {
-    document.body.addEventListener('mouseover', (event:any) => {
+    document.body.addEventListener('mouseover', (event: any) => {
       if (event?.target?.className?.indexOf('udan-added') === -1 &&
         event?.target?.className?.indexOf('exclude') === -1) {
         processElements(event.target);
@@ -44,16 +45,17 @@ function App() {
     });
   });
 
-  const processElements = (element: any) => { 
+  const processElements = (element: any) => {
     if (element && allowedTags.includes(element?.tagName?.toLowerCase())) {
-      element.className += "udan-added";
+      element.className += " udan-added";
       anchors.push(element);
       setAnchors([...anchors]);
     }
   }
 
-  const togglePanel = () => { 
+  const togglePanel = () => {
     setHide(!hide);
+    squeezeBody(hide);
   }
 
   return (

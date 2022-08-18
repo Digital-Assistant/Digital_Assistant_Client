@@ -1,3 +1,9 @@
+body{
+  height: 100%;
+}
+body.full-width{
+  width: 100% !important;
+}
 .main .udan-main-panel {
   display: block;
 }
