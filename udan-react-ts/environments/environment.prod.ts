@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  baseURL: 'https://admin.prod.theloops.ai/v1/'
+  baseURL: 'https://udantest.nistapp.ai/voiceapi'
 };

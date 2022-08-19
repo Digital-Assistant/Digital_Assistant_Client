@@ -3,5 +3,5 @@
 
 export const environment = {
   production: false,
-  baseURL: 'v1/'
+  baseURL: 'https://udantest.nistapp.ai/voiceapi'
 };

@@ -8,5 +8,5 @@ import { environment } from "../../environments/environment";
 const base = environment.baseURL;
 
 export const ENDPOINT = {
-  SEARCH: `${base}authentication/login?tenantId=#tenantId#`,
+  SEARCH: `${base}/clickevents/sequence/search?query=#keyword#&domain=#domain#`,
 };

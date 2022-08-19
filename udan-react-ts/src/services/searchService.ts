@@ -9,11 +9,8 @@ import { REST } from ".";
  */
 
 export const fetchSearchResults = (request?: any) => {
-  const requestParams = {
-    tenantId: request?.payload?.tenantId,
-  };
   const parameters = {
-    url: REST.processArgs(ENDPOINT.SEARCH, requestParams),
+    url: REST.processArgs(ENDPOINT.SEARCH, request),
     method: 'GET'
   };
   return REST.apiCal(parameters);
