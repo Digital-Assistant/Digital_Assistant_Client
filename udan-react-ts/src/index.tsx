@@ -5,7 +5,8 @@ import App from './App'
 
 const body = document.querySelector('body')
 
-const app = document.createElement('div')
+const app = document.createElement('div');
+// const bodyAlt = document.createElement('div');
 
 app.id = 'react-root'
 
@@ -15,8 +16,16 @@ app.id = 'react-root'
 //
 // Also control when the content script is injected from the manifest.json:
 // https://developer.chrome.com/docs/extensions/mv3/content_scripts/#run_time
+
+
 if (body) {
-  body.prepend(app)
+  // bodyAlt.id = "udan-main-root";
+  // body.className+="full-width";
+  // bodyAlt.style.width = (window.innerWidth - 350) + "px";
+  //bodyAlt.innerHTML = body.innerHTML;
+ // body.innerHTML = "<div></div>"
+ // body.prepend(bodyAlt);
+  body.prepend(app);
 }
 
 const container = document.getElementById('react-root');

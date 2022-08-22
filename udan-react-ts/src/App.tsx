@@ -1,7 +1,16 @@
+/**
+ * Author: Lakshman Veti
+ * Type: App Component
+ * Objective: To render content script
+ */
+
 ///<reference types="chrome"/>
 import logo from './logo.svg'
 import './App.css'
-import React, { useState, useEffect,useCallback } from 'react';
+import {squeezeBody} from './util'
+import React, { useState, useEffect, useCallback } from 'react';
+import {fetchSearchResults} from './services/searchService'
+import { getRowObject } from './util';
 
 const allowedTags = ['a','button'];
 
@@ -34,27 +43,85 @@ const useMutationObserver = (
 function App() {
   const [anchors, setAnchors] = React.useState<any>([]);
   const [hide, setHide] = React.useState<boolean>(true);
+  const [searchKeyword, setSearchKeyword] = React.useState<string>("");
+  const [searchResults, setSearchResults] = React.useState<any>([]);
   
   React.useEffect(() => {
-    document.body.addEventListener('mouseover', (event:any) => {
+    /**
+     * attach mouseover events to hyperlinks(test)
+     */
+    document.body.addEventListener('mouseover', (event: any) => {
       if (event?.target?.className?.indexOf('udan-added') === -1 &&
         event?.target?.className?.indexOf('exclude') === -1) {
         processElements(event.target);
       }
     });
-  });
+    getSearchResults("");
+  },[]);
 
-  const processElements = (element: any) => { 
+  /**
+   * Add classnames to elements to filter clickable elements
+   * @param element 
+   */
+  const processElements = (element: any) => {
     if (element && allowedTags.includes(element?.tagName?.toLowerCase())) {
-      element.className += "udan-added";
+      element.className += " udan-added";
       anchors.push(element);
       setAnchors([...anchors]);
     }
   }
 
-  const togglePanel = () => { 
+  /**
+   * Toggle right side panel visibility
+   */
+  const togglePanel = () => {
     setHide(!hide);
+    squeezeBody(hide);
   }
+
+  /**
+   * capture keyboard event for search element
+   * @param e: event
+   */
+  const onChange = async(e:any) => { 
+    setSearchKeyword(e.target.value);
+  }
+
+  /**
+   * Trigger search action for fetching search results
+   */
+  const doSearch = async() => {
+    await getSearchResults(searchKeyword);
+  }
+
+  
+  /**
+   * HTTP search results service call
+   @param keyword:string
+   */
+  const getSearchResults = async(keyword:string) => { 
+    setSearchKeyword(keyword);
+    const _searchResults = await fetchSearchResults({ keyword, domain: encodeURI(window.location.host) })
+    setSearchResults([..._searchResults]);
+  }
+
+  /**
+   * To render search result elements
+   * @returns HTML Elements
+   */
+ const renderSearchResults = ()=>{
+   return searchResults?.map((item: any) => {
+    
+     const _row = getRowObject(item)
+    //  console.log(_row)
+      return (
+        <div className="uda-card">
+          <h5>{_row.sequenceName}</h5>
+          <i>{_row.path}</i>
+        </div>
+      );
+    })
+}
 
   return (
     <>
@@ -97,20 +164,20 @@ function App() {
                       className="uda-input-cntrl"
                       placeholder="search..."
                       id="uda-search-input"
+                      onChange={onChange}  
                     />
                     <button
-                      className="uda-search-btn"
-                      id="uda-search-btn"
-                      style={{ borderRadius: "0px 5px 5px 0px" }}
+                        className="uda-search-btn"
+                        id="uda-search-btn"
+                        style={{ borderRadius: "0px 5px 5px 0px" }}
+                        onClick={()=> doSearch()}
                     />
                   </div>
                 </div>
               </div>
               <hr style={{ border: "1px solid #969696", width: "100%" }} />
-              <div
-                className="uda-container uda-clear uda-cards-scroller"
-                id="uda-content-container"
-              >
+              <div className="uda-container uda-clear uda-cards-scroller" id="uda-content-container">
+                {renderSearchResults()}
                 <div className="uda-card">
                     {/* <h5>{title}</h5> */}
                     {/* {headlines.map((headline, index) => (<i key={index}>{headline}</i>))} */}
