@@ -877,10 +877,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 				jQuery("#uda-btn").hide();
 				jQuery('#uda-html-container').show();
 				var searchinput=jQuery("#uda-search-input");
-				if(!searchinput.length){
+				/*if(!searchinput.length){
 					this.showhtml();
-				} else if (searchinput.length && focus) {
-					searchinput.val("");
+				}*/
+				searchinput.val("");
+				if (searchinput.length && focus) {
 					searchinput.focus();
 				}
 				let bodychildren = document.body.childNodes;
