@@ -917,6 +917,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		//render the required html for showing up the proper html
 		showhtml:function(){
+			console.log('Test check');
 			this.rerenderhtml=false;
 			var addnisticon=true;
 			var checkrecording = this.getstoragedata(this.recordingcookiename);
