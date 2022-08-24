@@ -267,6 +267,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		cspUserAcceptance: {storageName: 'uda-csp-user-consent',data:{proceed: true}},
 		screenAcceptance: {storageName: 'uda-user-screen-consent',data:{proceed: true}},
+		enableEditClickedName: true,
+		set editClickedName(val) {
+			this.enableEditClickedName = val;
+			this.showhtml();
+		},
+		get editClickedName() {
+			return this.enableEditClickedName;
+		},
 		inArray:function(value, object){
 			return jQuery.inArray(value, object);
 		},
@@ -2516,7 +2524,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 				var html =	'<li class="uda-recorded-label-editable"><i>'
 								+'<span id="uda-display-clicked-text">'+ clickedname + '</span>'
-								+editBtn
+								+((this.enableEditClickedName)?editBtn:'')
 								+'<br />'
 								+'</i>'
 								+personalHtml
