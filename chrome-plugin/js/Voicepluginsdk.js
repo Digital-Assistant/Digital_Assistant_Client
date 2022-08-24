@@ -265,6 +265,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 		get enablePermissions(){
 			return this.showPermissions;
 		},
+		overlay: false,
+		set enableOverlay(val) {
+			this.overlay = val;
+			this.showhtml();
+		},
+		get enableOverlay() {
+			return this.overlay;
+		},
 		cspUserAcceptance: {storageName: 'uda-csp-user-consent',data:{proceed: true}},
 		screenAcceptance: {storageName: 'uda-user-screen-consent',data:{proceed: true}},
 		inArray:function(value, object){
@@ -874,19 +882,21 @@ if (typeof UDAPluginSDK === 'undefined') {
 				if (focus) {
 					searchinput.focus();
 				}
-				let bodychildren = document.body.childNodes;
-				if (bodychildren.length > 0) {
-					bodychildren.forEach(function (childnode, childnodeindex) {
-						if (childnode.classList && childnode.classList.contains("container")) {
-							UDAPluginSDK.containersections.push(childnodeindex);
-							childnode.classList.remove("container");
-						}
-						if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
-							if (childnode.classList && !childnode.classList.contains("uda-original-content")) {
-								childnode.classList.add("uda-original-content");
+				if(!this.overlay) {
+					let bodychildren = document.body.childNodes;
+					if (bodychildren.length > 0) {
+						bodychildren.forEach(function (childnode, childnodeindex) {
+							if (childnode.classList && childnode.classList.contains("container")) {
+								UDAPluginSDK.containersections.push(childnodeindex);
+								childnode.classList.remove("container");
 							}
-						}
-					});
+							if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
+								if (childnode.classList && !childnode.classList.contains("uda-original-content")) {
+									childnode.classList.add("uda-original-content");
+								}
+							}
+						});
+					}
 				}
 			} else {
 				var sessionevent = new CustomEvent("RequestUDASessionData", {detail: {data: "authtenicate"}, bubbles: false, cancelable: false});
@@ -902,18 +912,20 @@ if (typeof UDAPluginSDK === 'undefined') {
 			var navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 			// this.cancelrecordingsequence(false);
-			let bodychildren = document.body.childNodes;
-			if (bodychildren.length > 0) {
-				bodychildren.forEach(function (childnode, childnodeindex) {
-					if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
-						if (childnode.classList && childnode.classList.contains("uda-original-content")) {
-							childnode.classList.remove("uda-original-content");
+			if(!this.overlay) {
+				let bodychildren = document.body.childNodes;
+				if (bodychildren.length > 0) {
+					bodychildren.forEach(function (childnode, childnodeindex) {
+						if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
+							if (childnode.classList && childnode.classList.contains("uda-original-content")) {
+								childnode.classList.remove("uda-original-content");
+							}
 						}
-					}
-					if (UDAPluginSDK.containersections.length > 0 && UDAPluginSDK.inArray(childnodeindex, UDAPluginSDK.containersections) !== -1) {
-						childnode.classList.add("container");
-					}
-				});
+						if (UDAPluginSDK.containersections.length > 0 && UDAPluginSDK.inArray(childnodeindex, UDAPluginSDK.containersections) !== -1) {
+							childnode.classList.add("container");
+						}
+					});
+				}
 			}
 		},
 		//render the required html for showing up the proper html
