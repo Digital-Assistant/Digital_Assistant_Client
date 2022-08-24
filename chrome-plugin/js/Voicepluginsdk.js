@@ -869,8 +869,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 				jQuery("#uda-btn").hide();
 				jQuery('#uda-html-container').show();
 				var searchinput=jQuery("#uda-search-input");
-				searchinput.val("");
-				if (focus) {
+				if(!searchinput.length){
+					this.showhtml();
+				} else if (searchinput.length && focus) {
+					searchinput.val("");
 					searchinput.focus();
 				}
 				let bodychildren = document.body.childNodes;
@@ -917,13 +919,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		//render the required html for showing up the proper html
 		showhtml:function(){
-			console.log('Test check');
 			this.rerenderhtml=false;
 			var addnisticon=true;
 			var checkrecording = this.getstoragedata(this.recordingcookiename);
 			if(checkrecording){
 				var checkrecordingdata=JSON.parse(checkrecording);
-				if(checkrecordingdata.hasOwnProperty("recording") && checkrecordingdata.recording){
+				if(checkrecordingdata && checkrecordingdata.hasOwnProperty("recording") && checkrecordingdata.recording){
 					addnisticon=false;
 					this.recording=true;
 					this.openmodal(false);
