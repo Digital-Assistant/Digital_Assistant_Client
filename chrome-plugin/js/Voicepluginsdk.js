@@ -882,7 +882,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					searchinput.focus();
 				}
 				let bodychildren = document.body.childNodes;
-				/*if (bodychildren.length > 0) {
+				if (bodychildren.length > 0) {
 					bodychildren.forEach(function (childnode, childnodeindex) {
 						if (childnode.classList && childnode.classList.contains("container")) {
 							UDAPluginSDK.containersections.push(childnodeindex);
@@ -894,7 +894,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 							}
 						}
 					});
-				}*/
+				}
 			} else {
 				var sessionevent = new CustomEvent("RequestUDASessionData", {detail: {data: "authtenicate"}, bubbles: false, cancelable: false});
 				document.dispatchEvent(sessionevent);
@@ -910,7 +910,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 			// this.cancelrecordingsequence(false);
 			let bodychildren = document.body.childNodes;
-			/*if (bodychildren.length > 0) {
+			if (bodychildren.length > 0) {
 				bodychildren.forEach(function (childnode, childnodeindex) {
 					if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
 						if (childnode.classList && childnode.classList.contains("uda-original-content")) {
@@ -921,7 +921,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						childnode.classList.add("container");
 					}
 				});
-			}*/
+			}
 		},
 		//render the required html for showing up the proper html
 		showhtml:function(){
