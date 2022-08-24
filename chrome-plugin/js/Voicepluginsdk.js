@@ -267,6 +267,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		cspUserAcceptance: {storageName: 'uda-csp-user-consent',data:{proceed: true}},
 		screenAcceptance: {storageName: 'uda-user-screen-consent',data:{proceed: true}},
+		enableEditClickedName: true,
+		set editClickedName(val) {
+			this.enableEditClickedName = val;
+			this.showhtml();
+		},
+		get editClickedName() {
+			return this.enableEditClickedName;
+		},
 		inArray:function(value, object){
 			return jQuery.inArray(value, object);
 		},
@@ -876,7 +884,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					searchinput.focus();
 				}
 				let bodychildren = document.body.childNodes;
-				if (bodychildren.length > 0) {
+				/*if (bodychildren.length > 0) {
 					bodychildren.forEach(function (childnode, childnodeindex) {
 						if (childnode.classList && childnode.classList.contains("container")) {
 							UDAPluginSDK.containersections.push(childnodeindex);
@@ -888,7 +896,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 							}
 						}
 					});
-				}
+				}*/
 			} else {
 				var sessionevent = new CustomEvent("RequestUDASessionData", {detail: {data: "authtenicate"}, bubbles: false, cancelable: false});
 				document.dispatchEvent(sessionevent);
@@ -904,7 +912,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 			// this.cancelrecordingsequence(false);
 			let bodychildren = document.body.childNodes;
-			if (bodychildren.length > 0) {
+			/*if (bodychildren.length > 0) {
 				bodychildren.forEach(function (childnode, childnodeindex) {
 					if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
 						if (childnode.classList && childnode.classList.contains("uda-original-content")) {
@@ -915,7 +923,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						childnode.classList.add("container");
 					}
 				});
-			}
+			}*/
 		},
 		//render the required html for showing up the proper html
 		showhtml:function(){
@@ -2501,7 +2509,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 				var editBtn = 	'			<span>'
 								+'				<button class="uda-tutorial-btn" style="padding:0px;" type="button" id="uda-edit-clickedname"><img src="'+this.extensionpath+'images/icons/edit.png"></button>'
 								+'			</span>'
-								+'			<input type="text" id="uda-edited-name" name="uda-edited-name" class="uda-form-input" placeholder="Enter Name" value="'+originalName+'" style="display: none;">';
+								+'			<input type="text" id="uda-edited-name" name="uda-edited-name" class="uda-form-input" placeholder="Enter Name" value="'+originalName+'" style="display: none; width: 85%! important;">'
+								+'			<span>'
+								+'				<button class="uda-tutorial-btn" style="display: none; padding:5px !important; height: 40px;" type="button" id="uda-edit-clickedname-submit">save</button>'
+								+'			</span>';
 				if(nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal){
 					// var personalHtml = '&nbsp; &nbsp; (personal)';
 					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" checked /> <label style="font-size:14px;">Personal Information</label>';
@@ -2514,8 +2525,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 				let selectedElementHtml = (this.enableNodeTypeChangeSelection)?'Clicked on : <select name="UDASelectedElement" id="UDASelectedElement"></select>':'';
 
 				var html =	'<li class="uda-recorded-label-editable"><i>'
-								+clickedname
-								// +editBtn
+								+'<span id="uda-display-clicked-text">'+ clickedname + '</span>'
+								+((this.enableEditClickedName)?editBtn:'')
 								+'<br />'
 								+'</i>'
 								+personalHtml
@@ -2531,20 +2542,39 @@ if (typeof UDAPluginSDK === 'undefined') {
 				});
 				var beforeEditText = originalName;
 				jQuery("#uda-edit-clickedname").click(function (){
+					jQuery("#uda-display-clicked-text").hide();
+					jQuery("#uda-edit-clickedname").hide();
 					jQuery("#uda-edited-name").show();
+					jQuery("#uda-edit-clickedname-submit").show();
 				});
-				jQuery('#uda-edited-name').blur(function() {
+				/*jQuery('#uda-edited-name').blur(function() {
 					let editedName = jQuery("#uda-edited-name").val();
 					if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
 						UDAPluginSDK.editAndSave(data, editedName);
 					}
-				});
+				});*/
 				jQuery("#uda-edited-name").keydown(function (e) {
 					if (e.keyCode === 13) {
 						let editedName = jQuery("#uda-edited-name").val();
 						if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
 							UDAPluginSDK.editAndSave(data, editedName);
+						} else {
+							jQuery("#uda-display-clicked-text").show();
+							jQuery("#uda-edit-clickedname").show();
+							jQuery("#uda-edited-name").hide();
+							jQuery("#uda-edit-clickedname-submit").hide();
 						}
+					}
+				});
+				jQuery("#uda-edit-clickedname-submit").click(function (){
+					let editedName = jQuery("#uda-edited-name").val();
+					if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
+						UDAPluginSDK.editAndSave(data, editedName);
+					} else {
+						jQuery("#uda-display-clicked-text").show();
+						jQuery("#uda-edit-clickedname").show();
+						jQuery("#uda-edited-name").hide();
+						jQuery("#uda-edit-clickedname-submit").hide();
 					}
 				});
 				if(tooltipBtn) {
@@ -2760,6 +2790,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		editAndSaveTooltip: function(data, value) {
 			let nodeData = JSON.parse(data.objectdata);
+			var validateCondition=new RegExp("^[0-9A-Za-z _.-]+$");
+			if(!validateCondition.test(value)){
+				alert("Not valid input");
+				return;
+			}
 			if(nodeData.meta && nodeData.meta.hasOwnProperty("displayText")){
 				nodeData.meta.tooltipInfo = value;
 			} else if(nodeData.meta && Object.keys(nodeData.meta).length >= 1) {
@@ -2803,6 +2838,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 		//edit modification button clicked
 		editAndSave:function(data, value){
 			let nodeData = JSON.parse(data.objectdata);
+			var validateCondition=new RegExp("^[0-9A-Za-z _.-]+$");
+			if(!validateCondition.test(value)){
+				alert("Not valid input");
+				return;
+			}
 			if(nodeData.meta && nodeData.meta.hasOwnProperty("displayText")){
 				nodeData.meta.displayText = value;
 			} else {
