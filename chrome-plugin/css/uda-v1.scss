@@ -368,7 +368,25 @@ body.universal-digital-parent-ele {
           li {
             font-size: 14px;
             cursor: pointer;
+            .uda-checkbox{
+              pointer-events: inherit !important;
+               position: inherit !important;
+               opacity: 1 !important;
+               &:checked{
+                 pointer-events: inherit !important;
+                 position: inherit !important;
+                 opacity: 1 !important;
+               } 
+            }
+            .uda-checkbox-label{
+              padding-left: 5px !important;
+              &:before{
+                display: none !important;
+                
+              }
+            }
           }
+          
         }
 
         .uda-record-btn {
@@ -538,6 +556,9 @@ body.universal-digital-parent-ele {
         .uda-recorded-label-editable {
           border: 2px dotted #969696 !important;
           padding: 5px !important;
+          opacity: 1 !important;
+          
+       
         }
 
       }
