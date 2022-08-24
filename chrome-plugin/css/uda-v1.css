@@ -11,11 +11,28 @@
 }
 
 body.universal-digital-parent-ele {
+  /* angular related css code for squeezing*/
   /**
   Progress animation
   */
   /* tooltip css classes */
   /* The Modal (background) */
+}
+body.universal-digital-parent-ele .uda-original-content {
+  max-width: 77%;
+  min-width: 77%;
+  float: left;
+}
+body.universal-digital-parent-ele .uda-original-content .kt-header, body.universal-digital-parent-ele .uda-original-content .kt-header--fixed, body.universal-digital-parent-ele .uda-original-content .kt-container--fluid {
+  max-width: 77%;
+}
+body.universal-digital-parent-ele #uda-lang-select {
+  width: 70%;
+  background-color: var(--uda-footer-srchbtn-bgcolor);
+  margin-top: 10px;
+  border: none;
+  padding: 8px;
+  border-radius: 3px;
 }
 body.universal-digital-parent-ele .uda-nistapp-logo {
   cursor: pointer;
@@ -26,6 +43,8 @@ body.universal-digital-parent-ele .uda-nistapp-logo {
   top: 40% !important;
   right: 0;
   padding: 1px;
+  -webkit-box-shadow: 0 1px 4px var(--uda-boxshodow-color), 0 0 40px var(--uda-boxshodow-color) inset;
+  -moz-box-shadow: 0 1px 4px var(--uda-boxshodow-color), 0 0 40px var(--uda-boxshodow-color) inset;
   box-shadow: 0 1px 4px var(--uda-boxshodow-color), 0 0 40px var(--uda-boxshodow-color) inset;
   z-index: 9999;
 }
@@ -600,17 +619,8 @@ body.universal-digital-parent-ele .uda-loading-bar span img {
   padding-top: 7px;
 }
 body.universal-digital-parent-ele .uda-loading-bar .animate > span:after {
-  -webkit-animation: load 1s infinite;
-          animation: load 1s infinite;
+  animation: load 1s infinite;
   background-image: linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
-}
-@-webkit-keyframes load {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 50px 50px;
-  }
 }
 @keyframes load {
   0% {
@@ -912,4 +922,6 @@ body.universal-digital-parent-ele .udamodal #jira .uda-original-content .jira-di
   body.universal-digital-parent-ele .uda-cards-scroller {
     min-height: 150px !important;
   }
-}/*# sourceMappingURL=uda-v1.css.map */
+}
+
+/*# sourceMappingURL=uda-v1.css.map */
