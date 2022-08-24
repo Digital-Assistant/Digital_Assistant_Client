@@ -1,19 +1,19 @@
 {
   "manifest_version": 2,
   "name": "Universal Digital Assistant (Beta)",
-  "version": "0.1.8.318",
+  "version": "0.1.8.325",
   "description": "Building an Extension for custom user navigation which helps in assisting users to navigate to right place.",
   "permissions": ["background", "storage", "identity","identity.email","webRequest","webRequestBlocking","http://*/*", "https://*/*"],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "content_scripts": [
 	{
-	  "matches": ["*://localhost/*", "*://*.nistapp.com/*", "*://*.rknowsys.com/*", "*://*.atlassian.net/*", "*://*.vantagecircle.com/*", "*://*.vantagecircle.co.in/*", "*://*.vantagecircle.in/*", "*://*.sportsplus-qaf.app/*", "*://*.zigtal.com/*", "*://*.discoversaudi.sa/*", "*://*.nanohealthplan.com/*"],
+	  "matches": ["*://localhost/*", "*://*.nistapp.com/*", "*://*.rknowsys.com/*", "*://*.atlassian.net/*", "*://*.vantagecircle.com/*", "*://*.vantagecircle.co.in/*", "*://*.vantagecircle.in/*", "*://*.sportsplus-qaf.app/*", "*://*.zigtal.com/*", "*://*.discoversaudi.sa/*", "*://*.nanohealthplan.com/*","*://*.nanohealth.in/*"],
 	  "js": ["js/injectscriptmodifier.js"],
 	  "all_frames": false,
 	  "run_at":"document_start"
 	},
 	{
-      "matches": ["*://localhost/*", "*://*.nistapp.com/*", "*://*.rknowsys.com/*", "*://*.atlassian.net/*", "*://*.vantagecircle.com/*", "*://*.vantagecircle.co.in/*", "*://*.vantagecircle.in/*", "*://*.sportsplus-qaf.app/*", "*://*.zigtal.com/*", "*://*.discoversaudi.sa/*", "*://*.nanohealthplan.com/*"],
+      "matches": ["*://localhost/*", "*://*.nistapp.com/*", "*://*.rknowsys.com/*", "*://*.atlassian.net/*", "*://*.vantagecircle.com/*", "*://*.vantagecircle.co.in/*", "*://*.vantagecircle.in/*", "*://*.sportsplus-qaf.app/*", "*://*.zigtal.com/*", "*://*.discoversaudi.sa/*", "*://*.nanohealthplan.com/*","*://*.nanohealth.in/*"],
 	  "js": ["js/injectsdk.js"],
 	  "run_at":"document_end"
 	}
