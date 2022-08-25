@@ -513,6 +513,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.closemodal();
 		},
 		modifybodyhtml:function(){
+			$( "body" ).addClass( "universal-digital-parent-ele" );
 			var html='<div id="uda-btn" nist-voice="true"></div><div id="uda-html-container" style="display: none;"><div id="uda-html-content" nist-voice="true"></div></div><div id="uda-alerthtml-container" nist-voice="true"></div>';
 
 			jQuery(document.body).prepend(html);
@@ -2459,16 +2460,16 @@ if (typeof UDAPluginSDK === 'undefined') {
 					+'	<td><input type="text" name="uda-save-recorded[]" class="uda-form-input" placeholder="Enter Label"></td>'
 					+'	<td><button class="uda-tutorial-btn uda-remove-row">Remove</button></td>'
 					+'</tr>';*/
-			let html	='<div>'
+			let html	='<div style="display:flex;">'
 						+'		<input type="text" id="uda-recorded-name" name="uda-save-recorded[]" class="uda-form-input uda-form-input-reduced" placeholder="Enter Label">'
-						+'		<span>'
+						
 						+'			<button class="delete-btn uda-remove-row"><img src="'+ this.extensionpath+'images/icons/delete.png"></button>'
-						+'		</span>'
+						
 						+'</div>';
 
 			jQuery('#uda-sequence-names').append(html);
 			jQuery("#uda-sequence-names").on('click','.uda-remove-row',function(){
-				jQuery(this).parent().parent().remove();
+				jQuery(this).parent().remove();
 			});
 		},
 		renderEmptyRecordedSequenceHtml: function(){
@@ -2514,9 +2515,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 								+'			<input type="text" id="uda-edited-name" name="uda-edited-name" class="uda-form-input" placeholder="Enter Name" value="'+originalName+'" style="display: none;">';
 				if(nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal){
 					// var personalHtml = '&nbsp; &nbsp; (personal)';
-					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" checked /> <label style="font-size:14px;">Personal Information</label>';
+					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" checked class="uda-checkbox"/> <label style="font-size:14px;" class="uda-checkbox-label">Personal Information</label>';
 				} else {
-					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" /> <label style="font-size:14px;">Personal Information</label>';
+					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" class="uda-checkbox" /> <label style="font-size:14px;" class="uda-checkbox-label">Personal Information</label>';
 				}
 				personalHtml += '			<span style="position: relative; top: 0px;"><img src="'+this.extensionpath+'images/icons/info.png" title="select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."></span>';
 
