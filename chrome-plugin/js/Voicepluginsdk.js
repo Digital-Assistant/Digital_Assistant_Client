@@ -521,7 +521,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.closemodal();
 		},
 		modifybodyhtml:function(){
-			$( "body" ).addClass( "universal-digital-parent-ele" );
+			jQuery( "body" ).addClass( "universal-digital-parent-ele" );
 			var html='<div id="uda-btn" nist-voice="true"></div><div id="uda-html-container" style="display: none;"><div id="uda-html-content" nist-voice="true"></div></div><div id="uda-alerthtml-container" nist-voice="true"></div>';
 
 			jQuery(document.body).prepend(html);
