@@ -265,7 +265,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		get enablePermissions(){
 			return this.showPermissions;
 		},
-		overlay: true,
+		overlay: (window.location.host.indexOf('nanohealth'))?true:false,
 		set enableOverlay(val) {
 			this.overlay = val;
 			this.showhtml();
