@@ -265,6 +265,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 		get enablePermissions(){
 			return this.showPermissions;
 		},
+		overlay: (window.location.host.indexOf('nanohealth'))?true:false,
+		set enableOverlay(val) {
+			this.overlay = val;
+			this.showhtml();
+		},
+		get enableOverlay() {
+			return this.overlay;
+		},
 		cspUserAcceptance: {storageName: 'uda-csp-user-consent',data:{proceed: true}},
 		screenAcceptance: {storageName: 'uda-user-screen-consent',data:{proceed: true}},
 		enableEditClickedName: true,
@@ -513,6 +521,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.closemodal();
 		},
 		modifybodyhtml:function(){
+			$( "body" ).addClass( "universal-digital-parent-ele" );
 			var html='<div id="uda-btn" nist-voice="true"></div><div id="uda-html-container" style="display: none;"><div id="uda-html-content" nist-voice="true"></div></div><div id="uda-alerthtml-container" nist-voice="true"></div>';
 
 			jQuery(document.body).prepend(html);
@@ -884,19 +893,21 @@ if (typeof UDAPluginSDK === 'undefined') {
 				if (searchinput.length && focus) {
 					searchinput.focus();
 				}
-				let bodychildren = document.body.childNodes;
-				if (bodychildren.length > 0) {
-					bodychildren.forEach(function (childnode, childnodeindex) {
-						if (childnode.classList && childnode.classList.contains("container")) {
-							UDAPluginSDK.containersections.push(childnodeindex);
-							childnode.classList.remove("container");
-						}
-						if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
-							if (childnode.classList && !childnode.classList.contains("uda-original-content")) {
-								childnode.classList.add("uda-original-content");
+				if(!this.overlay) {
+					let bodychildren = document.body.childNodes;
+					if (bodychildren.length > 0) {
+						bodychildren.forEach(function (childnode, childnodeindex) {
+							if (childnode.classList && childnode.classList.contains("container")) {
+								UDAPluginSDK.containersections.push(childnodeindex);
+								childnode.classList.remove("container");
 							}
-						}
-					});
+							if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
+								if (childnode.classList && !childnode.classList.contains("uda-original-content")) {
+									childnode.classList.add("uda-original-content");
+								}
+							}
+						});
+					}
 				}
 			} else {
 				var sessionevent = new CustomEvent("RequestUDASessionData", {detail: {data: "authtenicate"}, bubbles: false, cancelable: false});
@@ -912,18 +923,20 @@ if (typeof UDAPluginSDK === 'undefined') {
 			var navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 			// this.cancelrecordingsequence(false);
-			let bodychildren = document.body.childNodes;
-			if (bodychildren.length > 0) {
-				bodychildren.forEach(function (childnode, childnodeindex) {
-					if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
-						if (childnode.classList && childnode.classList.contains("uda-original-content")) {
-							childnode.classList.remove("uda-original-content");
+			if(!this.overlay) {
+				let bodychildren = document.body.childNodes;
+				if (bodychildren.length > 0) {
+					bodychildren.forEach(function (childnode, childnodeindex) {
+						if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
+							if (childnode.classList && childnode.classList.contains("uda-original-content")) {
+								childnode.classList.remove("uda-original-content");
+							}
 						}
-					}
-					if (UDAPluginSDK.containersections.length > 0 && UDAPluginSDK.inArray(childnodeindex, UDAPluginSDK.containersections) !== -1) {
-						childnode.classList.add("container");
-					}
-				});
+						if (UDAPluginSDK.containersections.length > 0 && UDAPluginSDK.inArray(childnodeindex, UDAPluginSDK.containersections) !== -1) {
+							childnode.classList.add("container");
+						}
+					});
+				}
 			}
 		},
 		//render the required html for showing up the proper html
@@ -2458,16 +2471,16 @@ if (typeof UDAPluginSDK === 'undefined') {
 					+'	<td><input type="text" name="uda-save-recorded[]" class="uda-form-input" placeholder="Enter Label"></td>'
 					+'	<td><button class="uda-tutorial-btn uda-remove-row">Remove</button></td>'
 					+'</tr>';*/
-			let html	='<div>'
+			let html	='<div style="display:flex;">'
 						+'		<input type="text" id="uda-recorded-name" name="uda-save-recorded[]" class="uda-form-input uda-form-input-reduced" placeholder="Enter Label">'
-						+'		<span>'
+						
 						+'			<button class="delete-btn uda-remove-row"><img src="'+ this.extensionpath+'images/icons/delete.png"></button>'
-						+'		</span>'
+						
 						+'</div>';
 
 			jQuery('#uda-sequence-names').append(html);
 			jQuery("#uda-sequence-names").on('click','.uda-remove-row',function(){
-				jQuery(this).parent().parent().remove();
+				jQuery(this).parent().remove();
 			});
 		},
 		renderEmptyRecordedSequenceHtml: function(){
@@ -2516,9 +2529,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 								+'			</span>';
 				if(nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal){
 					// var personalHtml = '&nbsp; &nbsp; (personal)';
-					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" checked /> <label style="font-size:14px;">Personal Information</label>';
+					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" checked class="uda-checkbox"/> <label style="font-size:14px;" class="uda-checkbox-label">Personal Information</label>';
 				} else {
-					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" /> <label style="font-size:14px;">Personal Information</label>';
+					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" class="uda-checkbox" /> <label style="font-size:14px;" class="uda-checkbox-label">Personal Information</label>';
 				}
 				personalHtml += '			<span style="position: relative; top: 0px;"><img src="'+this.extensionpath+'images/icons/info.png" title="select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."></span>';
 
@@ -2530,7 +2543,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 								+((this.enableEditClickedName)?editBtn:'')
 								+'<br />'
 								+'</i>'
-								+personalHtml
+								+'<div class="" style="display: flex;align-items:center;">'+personalHtml+'</div>'
 								+'<br />'
 								+tooltipBtn
 								+'<br />'
