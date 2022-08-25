@@ -2526,9 +2526,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 								+'			</span>';
 				if(nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal){
 					// var personalHtml = '&nbsp; &nbsp; (personal)';
-					var personalHtml = '&nbsp; &nbsp;<div class="" style="display: flex;align-items:center;"><input type="checkbox" id="isPersonal" checked class="uda-checkbox"/> <label style="font-size:14px;" class="uda-checkbox-label">Personal Information</label></div>';
+					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" checked class="uda-checkbox"/> <label style="font-size:14px;" class="uda-checkbox-label">Personal Information</label>';
 				} else {
-					var personalHtml = '&nbsp; &nbsp;<div class="" style="display: flex;align-items:center;"><input type="checkbox" id="isPersonal" class="uda-checkbox" /> <label style="font-size:14px;" class="uda-checkbox-label">Personal Information</label></div>';
+					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" class="uda-checkbox" /> <label style="font-size:14px;" class="uda-checkbox-label">Personal Information</label>';
 				}
 				personalHtml += '			<span style="position: relative; top: 0px;"><img src="'+this.extensionpath+'images/icons/info.png" title="select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."></span>';
 
@@ -2540,7 +2540,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 								+((this.enableEditClickedName)?editBtn:'')
 								+'<br />'
 								+'</i>'
-								+personalHtml
+								+'<div class="" style="display: flex;align-items:center;">'+personalHtml+'</div>'
 								+'<br />'
 								+tooltipBtn
 								+'<br />'
