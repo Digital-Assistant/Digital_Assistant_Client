@@ -812,13 +812,16 @@ export const postClickData = async (node: HTMLElement) => {
 };
 
 export const postRecordSequenceData = async (request: any) => {
+  const userclicknodesSet = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
+  const ids = userclicknodesSet.map((item: any) => item.id);
   const payload = {
     ...request,
     additionalParams: null,
     domain: window.location.host,
     isIgnored: 0,
     isValid: 1,
-    userclicknodelist: getFromStore(CONFIG.RECORDING_SEQUENCE, false),
+    userclicknodelist: ids.join(","),
+    userclicknodesSet,
   };
   return recordSequence(payload);
 };

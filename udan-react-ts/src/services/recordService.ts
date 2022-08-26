@@ -25,7 +25,7 @@ export const recordClicks = (request?: any) => {
  */
 
 export const recordSequence = (request?: any) => {
-  request.sessionid = getFromStore("sessionId", true);
+  // request.sessionid = getFromStore("sessionId", true);
   const parameters = {
     url: ENDPOINT.RECORD_SEQUENCE,
     method: "POST",

@@ -1,24 +1,32 @@
 /**
  * Author: Lakshman Veti
  * Type: Component
- * Objective: To render common modal/lite window
+ * Objective: To render recorded sequences
  * Associated Route/Usage: *
  */
 
 import React, { useEffect } from "react";
 import "../App.scss";
 
-import { setToStore, getFromStore } from "../util";
+import { setToStore } from "../util";
 import { CONFIG } from "../config";
 
 export interface MProps {
+  sequenceName?: string;
   isShown?: boolean;
   hide?: () => void;
   data?: any;
   recordHandler?: Function;
 }
 
+/**
+ * To render recorded sequence elements
+ * @returns HTML Elements
+ */
+
 export const RecordedSeq = (props: MProps) => {
+  const [name, setName] = React.useState<string>("");
+
   const renderData = () => {
     if (!props.isShown) return;
     else
@@ -82,13 +90,18 @@ export const RecordedSeq = (props: MProps) => {
   };
 
   const cancelRecording = () => {
-    if (props.recordHandler) props.recordHandler();
+    if (props.recordHandler) props.recordHandler("cancel");
     setToStore([], CONFIG.RECORDING_SEQUENCE, false);
   };
 
   const submitRecording = () => {
-    if (props.recordHandler) props.recordHandler();
+    if (props.recordHandler)
+      props.recordHandler("submit", { name: JSON.stringify([name]) });
     setToStore([], CONFIG.RECORDING_SEQUENCE, false);
+  };
+
+  const onChange = async (e: any) => {
+    setName(e.target.value);
   };
 
   return props?.isShown ? (
@@ -106,6 +119,7 @@ export const RecordedSeq = (props: MProps) => {
           name="uda-save-recorded[]"
           className="uda-form-input"
           placeholder="Enter Label"
+          onChange={onChange}
         />
         <div id="uda-sequence-names" />
         <div style={{ marginBottom: "10px" }}>

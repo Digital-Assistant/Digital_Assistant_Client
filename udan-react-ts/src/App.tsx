@@ -17,10 +17,13 @@ import {
   getFromStore,
   removeFromStore,
   generateUUID,
+  postRecordSequenceData,
 } from "./util";
 import { CONFIG } from "./config";
 import { RecordedSeq } from "./components/RecordedSeq";
-// import { useInterval } from "./util/useInterval";
+import { SearchResults } from "./components/SearchResults";
+import { RecordSequence, RecordButton } from "./components/MiscComponents";
+import { Footer, Header } from "./components/layout";
 import useInterval from "react-useinterval";
 import "./App.scss";
 
@@ -96,21 +99,6 @@ function App() {
   };
 
   /**
-   * capture keyboard event for search element
-   * @param e: event
-   */
-  const onChange = async (e: any) => {
-    setSearchKeyword(e.target.value);
-  };
-
-  /**
-   * Trigger search action for fetching search results
-   */
-  const doSearch = async () => {
-    await getSearchResults(searchKeyword);
-  };
-
-  /**
    * HTTP search results service call
    @param keyword:string
    */
@@ -121,24 +109,6 @@ function App() {
       domain: encodeURI(window.location.host),
     });
     setSearchResults([..._searchResults]);
-  };
-
-  /**
-   * To render search result elements
-   * @returns HTML Elements
-   */
-  const renderSearchResults = () => {
-    if (isRecording === true || showRecord === true) return;
-    else
-      return searchResults?.map((item: any) => {
-        const _row = getRowObject(item);
-        return (
-          <div className="uda-card">
-            <h5>{_row.sequenceName}</h5>
-            <i>{_row.path}</i>
-          </div>
-        );
-      });
   };
 
   const recordSequence = () => {
@@ -153,6 +123,31 @@ function App() {
     setShowRecord(false);
   };
 
+  const recordHandler = async (type: string, data?: any) => {
+    switch (type) {
+      case "submit":
+        await postRecordSequenceData({ ...data });
+        await getSearchResults("");
+        break;
+      case "cancel":
+        break;
+    }
+    cancelRecording();
+  };
+
+  const searchHandler = (data: any) => {
+    setSearchResults([...data]);
+  };
+
+  const toggleHandler = (hideFlag: boolean, type: string) => {
+    if (type == "footer") setShowRecord(hideFlag);
+    else setHide(hideFlag);
+  };
+
+  const showRecordHandler = (flag: boolean) => {
+    setShowRecord(flag);
+  };
+
   return (
     <>
       <div
@@ -163,157 +158,46 @@ function App() {
           <div id="uda-html-content" nist-voice="true">
             <div>
               <div className="uda-page-right-bar">
-                <div>
-                  <div
-                    className="uda-ribbon-arrow"
-                    id="uda-close-panel"
-                    onClick={() => togglePanel()}
-                  >
-                    <span className="arrow"> &gt;&gt; </span>
-                  </div>
-                  <div className="uda-icon-txt">
-                    <img src={getLogo()} />
-                    <span className="uda-help-bg-tooltip">Need Help?</span>
-                  </div>
-                  <div className="uda-icon-txt">
-                    <span
-                      className=""
-                      style={{ color: "#303f9f", fontWeight: "bold" }}
-                    >
-                      UDAN(Beta)
-                    </span>
-                  </div>
-                  <div
-                    className="uda-container"
-                    style={{ textAlign: "center", marginTop: 10 }}
-                  >
-                    <div className="uda-search-div">
-                      <button
-                        className="uda-mic-btn"
-                        style={{ borderRadius: "5px 0px 0px 5px" }}
-                        id="uda-voice-icon-start"
-                      />
-                      <button
-                        className="uda-stop-btn-bg"
-                        style={{
-                          borderRadius: "5px 0px 0px 5px",
-                          display: "none",
-                        }}
-                        id="uda-voice-icon-stop"
-                      />
-                      <input
-                        type="text"
-                        name="uda-search-input"
-                        className="uda-input-cntrl"
-                        placeholder="search..."
-                        id="uda-search-input"
-                        onChange={onChange}
-                      />
-                      <button
-                        className="uda-search-btn"
-                        id="uda-search-btn"
-                        style={{ borderRadius: "0px 5px 5px 0px" }}
-                        onClick={() => doSearch()}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <hr style={{ border: "1px solid #969696", width: "100%" }} />
+                <Header
+                  searchHandler={searchHandler}
+                  toggleFlag={hide}
+                  toggleHandler={toggleHandler}
+                />
                 <div
                   className="uda-container uda-clear uda-cards-scroller"
                   id="uda-content-container"
                 >
-                  {showRecord === true &&
-                    isRecording === false &&
-                    !recSequenceData.length && (
-                      <div className="uda-card-details">
-                        <span
-                          className="uda-close-icon"
-                          onClick={() => setShowRecord(false)}
-                        >
-                          ×
-                        </span>
-                        <h5>Create your own action</h5>
-                        <div>
-                          <button
-                            className="uda-record-btn"
-                            id="uda-enable-record"
-                            onClick={() => recordSequence()}
-                          >
-                            <span>Rec</span>
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  {isRecording === true &&
-                    showRecord === false &&
-                    !recSequenceData.length && (
-                      <div className="uda-card-details">
-                        {" "}
-                        <h5>Recorded Sequence</h5> <hr />{" "}
-                        <h5>Please navigate in the page to record.</h5> <br />{" "}
-                        <div
-                          className="uda-recording"
-                          style={{ textAlign: "center" }}
-                        >
-                          {" "}
-                          <button
-                            className="uda-record-btn"
-                            onClick={() => cancelRecording()}
-                          >
-                            <span>Cancel and Exit</span>
-                          </button>{" "}
-                        </div>
-                      </div>
-                    )}
-                  {renderSearchResults()}
+                  <RecordButton
+                    recordHandler={showRecordHandler}
+                    recordSeqHandler={recordSequence}
+                    recordButtonVisibility={
+                      showRecord === true &&
+                      isRecording === false &&
+                      !recSequenceData.length
+                    }
+                  />
+
+                  <RecordSequence
+                    cancelHandler={cancelRecording}
+                    recordSequenceVisibility={
+                      isRecording === true &&
+                      showRecord === false &&
+                      !recSequenceData.length
+                    }
+                  />
+
+                  <SearchResults
+                    data={searchResults}
+                    visibility={isRecording === false && showRecord === false}
+                  />
+
                   <RecordedSeq
                     isShown={recSequenceData.length > 0}
                     data={recSequenceData}
-                    recordHandler={cancelRecording}
+                    recordHandler={recordHandler}
                   />
                 </div>
-                <div>
-                  <div className="uda-footer-bar">
-                    <div className="uda-container">
-                      <div className="uda-dropdown" id="uda-advanced-btn">
-                        <button className="uda-advanced-btn">
-                          <span>Advanced</span>
-                        </button>
-                        <div
-                          className="uda-advanced-btn-content"
-                          onClick={() => setShowRecord(true)}
-                        >
-                          <a id="uda-advance-section" data-exclude="true">
-                            New Sequence
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                    <br />
-                    <div
-                      className="uda-container"
-                      style={{ borderTop: "1px solid #969696", marginTop: 30 }}
-                    >
-                      <div className="uda-footer-left">
-                        Copyrights Reserved 2022.
-                      </div>
-                      <div
-                        className="uda-footer-right"
-                        style={{ paddingTop: 5, textAlign: "right" }}
-                      >
-                        <a
-                          href="https://udan.nistapp.ai"
-                          data-exclude="true"
-                          target="_blank"
-                        >
-                          Know More{" "}
-                        </a>
-                        <img src={getLogo()} width="15px" height="15px;" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <Footer toggleFlag={hide} toggleHandler={toggleHandler} />
               </div>
             </div>
           </div>
