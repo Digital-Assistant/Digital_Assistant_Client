@@ -22,7 +22,11 @@ import {
 import { CONFIG } from "./config";
 import { RecordedSeq } from "./components/RecordedSeq";
 import { SearchResults } from "./components/SearchResults";
-import { RecordSequence, RecordButton } from "./components/MiscComponents";
+import {
+  RecordSequence,
+  RecordButton,
+  RecordSequenceDetails,
+} from "./components/MiscComponents";
 import { Footer, Header } from "./components/layout";
 import useInterval from "react-useinterval";
 import "./App.scss";
@@ -72,6 +76,10 @@ function App() {
   const [searchKeyword, setSearchKeyword] = React.useState<string>("");
   const [searchResults, setSearchResults] = React.useState<any>([]);
   const [recSequenceData, setRecSequenceData] = React.useState<any>([]);
+  const [recordSequenceDetailsVisibility, setRecordSequenceDetailsVisibility] =
+    React.useState<boolean>(false);
+  const [selectedRecordingDetails, setSelectedRecordingDetails] =
+    React.useState<any>({});
 
   React.useEffect(() => {
     addBodyEvents(document.body);
@@ -117,10 +125,11 @@ function App() {
     setShowRecord(false);
   };
 
-  const cancelRecording = () => {
+  const cancel = () => {
     removeFromStore("sessionId");
     setIsRecording(false);
     setShowRecord(false);
+    setRecordSequenceDetailsVisibility(false);
   };
 
   const recordHandler = async (type: string, data?: any) => {
@@ -132,7 +141,7 @@ function App() {
       case "cancel":
         break;
     }
-    cancelRecording();
+    cancel();
   };
 
   const searchHandler = (data: any) => {
@@ -146,6 +155,31 @@ function App() {
 
   const showRecordHandler = (flag: boolean) => {
     setShowRecord(flag);
+  };
+
+  const toggleContainer = (type: string) => {
+    if (type == "record-button") {
+      return (
+        showRecord === true && isRecording === false && !recSequenceData.length
+      );
+    } else if (type == "record-seq") {
+      return (
+        isRecording === true && showRecord === false && !recSequenceData.length
+      );
+    } else if (type == "recorded-data") {
+      return recSequenceData.length > 0;
+    } else if (type == "search-results") {
+      return (
+        isRecording === false &&
+        showRecord === false &&
+        recordSequenceDetailsVisibility === false
+      );
+    }
+  };
+
+  const showRecordingDetails = (data: any) => {
+    setSelectedRecordingDetails({ ...data });
+    setRecordSequenceDetailsVisibility(true);
   };
 
   return (
@@ -170,31 +204,33 @@ function App() {
                   <RecordButton
                     recordHandler={showRecordHandler}
                     recordSeqHandler={recordSequence}
-                    recordButtonVisibility={
-                      showRecord === true &&
-                      isRecording === false &&
-                      !recSequenceData.length
-                    }
+                    recordButtonVisibility={toggleContainer("record-button")}
                   />
 
                   <RecordSequence
-                    cancelHandler={cancelRecording}
-                    recordSequenceVisibility={
-                      isRecording === true &&
-                      showRecord === false &&
-                      !recSequenceData.length
-                    }
+                    cancelHandler={cancel}
+                    recordSequenceVisibility={toggleContainer("record-seq")}
                   />
 
                   <SearchResults
                     data={searchResults}
-                    visibility={isRecording === false && showRecord === false}
+                    showDetails={showRecordingDetails}
+                    visibility={toggleContainer("search-results")}
                   />
 
                   <RecordedSeq
-                    isShown={recSequenceData.length > 0}
+                    isShown={toggleContainer("recorded-data")}
                     data={recSequenceData}
                     recordHandler={recordHandler}
+                  />
+
+                  <RecordSequenceDetails
+                    data={selectedRecordingDetails}
+                    recordSequenceDetailsVisibility={
+                      recordSequenceDetailsVisibility
+                    }
+                    cancelHandler={cancel}
+                    key={"rSD" + recordSequenceDetailsVisibility}
                   />
                 </div>
                 <Footer toggleFlag={hide} toggleHandler={toggleHandler} />

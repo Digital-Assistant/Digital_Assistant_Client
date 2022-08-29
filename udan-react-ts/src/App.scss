@@ -495,7 +495,12 @@ body {
                                 cursor: pointer;
                                 margin-left: -10px;
                                 margin-top: -10px;
-
+                                line-height: 30px;
+                                svg{
+                                    width: 16px;
+                                    height: 16px;
+                                    color: white;
+                                }
                                 img {
                                     padding: 6px;
                                 }
@@ -747,6 +752,7 @@ body {
                                             }
 
                                             .uda-loading-bar {
+                                                line-height: 48px;
                                                 span {
                                                     img {
                                                         padding-top: 7px;
@@ -834,7 +840,7 @@ body {
                                                 .uda-tooltip[data-popper-placement^='right'] {
                                                     & > .uda-arrow {
                                                         left: -20px;
-
+top:30px;
                                                         &::before {
                                                             border-left: 1px solid var(--uda-primary-color);
                                                             border-bottom: 1px solid var(--uda-primary-color);
@@ -886,7 +892,12 @@ body {
                                                     border-radius: 50px;
                                                     text-align: center;
                                                     display: block;
-
+                                                    line-height: 48px;
+                                                    svg{
+                                                        width: 24px;
+                                                        height: 24px;
+                                                        color: white;
+                                                    }
                                                     span {
                                                         display: block;
                                                         position: relative;

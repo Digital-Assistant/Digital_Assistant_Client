@@ -5,6 +5,7 @@ import {
   recordSequence,
   userClick,
 } from "../services/recordService";
+import { createPopperLite as createPopper } from "@popperjs/core";
 // import { UDAConsoleLogger, UDAErrorLogger } from '../config/error-log';
 
 export const UDAClickObjects: any = [];
@@ -49,6 +50,10 @@ export const removeFromStore = (key: string) => {
   localStorage.removeItem(key);
 };
 
+/**
+ * Generates random unique UUID
+ * @returns UUID
+ */
 export const generateUUID = () => {
   let d = new Date().getTime();
   let uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
@@ -94,6 +99,10 @@ export const getRowObject = (data: any) => {
   return { sequenceName, path };
 };
 
+/**
+ * Add events to body elements
+ * @param selector
+ */
 export const addBodyEvents = (selector: HTMLElement) => {
   let els = selector.querySelectorAll("*"),
     len = els.length,
@@ -106,6 +115,12 @@ export const addBodyEvents = (selector: HTMLElement) => {
   }
 };
 
+/**
+ * Returns index if an element in given array found
+ * @param elem
+ * @param array
+ * @returns index
+ */
 export const inArray = (elem: any, array: any) => {
   if (array.indexOf) {
     return array.indexOf(elem);
@@ -120,6 +135,13 @@ export const inArray = (elem: any, array: any) => {
   return -1;
 };
 
+/**
+ * Adds event to an element
+ * @param node
+ * @param eventType
+ * @param callBack function
+ * @returns void
+ */
 export const addEvent = (node: any, eventType: string, callback: Function) => {
   node.addEventListener(eventType, callback);
 };
@@ -145,18 +167,229 @@ export const checkCssClassNames = (node: any) => {
   return cssClassExist;
 };
 
-//add tooltip display
-export const addToolTip = (
-  invokingnode: any,
-  tooltipnode: any,
-  recordeddata: any,
-  navigationcookiedata: any,
-  enableClick = false,
-  enableFocus = false,
-  enableIntroJs = false,
-  message = "Please input the value and then click on",
-  showButtons = true
-) => {};
+/**
+ * Constructs selectors based on attributes(for now)
+ * @param originalElement HTML Element
+ * @returns
+ */
+export const getLookUpSelector = (originalElement: HTMLElement) => {
+  let selector = "";
+  for (let [key, value] of Object.entries(originalElement?.attributes)) {
+    if (key == "href") selector += `[${key}="#"]`;
+    else selector += `[${key}="${value}"]`;
+  }
+  return selector;
+};
+
+/**
+ * Removes tooltip element
+ * Void()
+ */
+export const removeToolTip = () => {
+  const toolTipExists = document.getElementById("uda-tooltip");
+  if (toolTipExists) {
+    document.body.removeChild(toolTipExists);
+  }
+};
+
+/**
+ * Constructs tooltip element & adds to body (if not exist)
+ * @returns HTML Element
+ */
+export const getToolTipElement = () => {
+  let toolTipContentSection =
+    '<button class="uda-tutorial-btn" style="margin-top:10px; margin-right: 5px;" type="button" uda-added="true" id="uda-autoplay-continue">Continue</button>' +
+    '<button class="uda-tutorial-exit-btn" style="margin-top:10px;" type="button" uda-added="true" id="uda-autoplay-exit">Exit</button>';
+
+  let toolTipContentElement = document.createElement("div");
+  toolTipContentElement.innerHTML = toolTipContentSection.trim();
+  toolTipContentElement.classList.add("uda-tooltip-text-content");
+
+  let tooltipDivElement = document.createElement("div");
+  tooltipDivElement.id = "uda-tooltip";
+  tooltipDivElement.classList.add("uda-tooltip");
+  tooltipDivElement.innerHTML =
+    '<div id="uda-arrow" class="uda-arrow" data-popper-arrow></div>';
+  tooltipDivElement.prepend(toolTipContentElement);
+
+  const toolTipExists = document.getElementById("uda-tooltip");
+  if (toolTipExists) {
+    document.body.removeChild(toolTipExists);
+  }
+
+  document.body.appendChild(tooltipDivElement);
+  return tooltipDivElement;
+};
+
+/**
+ * adds tooltip to target elements
+ * @param invokingNode
+ * @param index
+ */
+export const addToolTip = (invokingNode: any, index: any) => {
+  const tooltipDivElement = getToolTipElement();
+  try {
+    const originalNode = JSON.parse(invokingNode);
+
+    let originalElement = originalNode?.node;
+
+    document
+      .getElementById("uda-autoplay-continue")
+      ?.addEventListener("click", (e: Event) => {
+        const elementsFromStore = getFromStore("selectedRecordedItem", false);
+        addToolTip(
+          elementsFromStore?.userclicknodesSet[index + 1]?.objectdata,
+          index + 1
+        );
+      });
+
+    let selector = getLookUpSelector(originalElement);
+
+    console.log("'" + selector + index + "'");
+
+    originalElement = document.querySelector(selector);
+
+    if (originalElement) {
+      let toolTipPositionClass: any = getTooltipPositionClass(
+        originalElement,
+        tooltipDivElement
+      );
+      createPopper(originalElement, tooltipDivElement, {
+        placement: toolTipPositionClass,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const playNext = () => {};
+/**
+ * tooltip placement calculation
+ */
+
+/**
+ * To get screen/window size
+ * @returns object
+ */
+export const getScreenSize = () => {
+  let page = { height: 0, width: 0 };
+  let screen = { height: 0, width: 0 };
+  let body = document.body,
+    html = document.documentElement;
+
+  const docEl = document.documentElement;
+  const scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+  const scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+
+  let resolution = { height: 0, width: 0 };
+
+  page.height = Math.max(
+    body.scrollHeight,
+    body.offsetHeight,
+    html.clientHeight,
+    html.scrollHeight,
+    html.offsetHeight
+  );
+  page.width = Math.max(
+    body.scrollWidth,
+    body.offsetWidth,
+    html.clientWidth,
+    html.scrollWidth,
+    html.offsetWidth
+  );
+  if (window.innerWidth !== undefined) {
+    screen.width = window.innerWidth * 0.75;
+    screen.height = window.innerHeight;
+    // return { width: (window.innerWidth*0.75), height: window.innerHeight };
+  } else {
+    const D = document.documentElement;
+    screen.width = D.clientWidth;
+    screen.height = D.clientHeight * 0.75;
+    // return { width: D.clientWidth*0.75, height: D.clientHeight };
+  }
+  resolution.height = window.screen.height;
+  resolution.width = window.screen.width;
+  let windowProperties = {
+    page: page,
+    screen: screen,
+    scrollInfo: { scrollTop: scrollTop, scrollLeft: scrollLeft },
+    resolution,
+  };
+  return windowProperties;
+};
+
+/**
+ * //get node position on the page
+ * @returns object
+ */
+
+export const getNodeCoordinates = (element: HTMLElement, windowSize: any) => {
+  const x = element.getBoundingClientRect();
+  let result = {
+    top: x.top + windowSize.scrollInfo.scrollTop,
+    width: x.width,
+    height: x.height,
+    left: x.left + windowSize.scrollInfo.scrollLeft,
+    actualPos: x,
+  };
+  return result;
+};
+
+/**
+ * To figure out the tooltip position for target element
+ * @returns object
+ */
+export const getTooltipPositionClass = (
+  targetElement: HTMLElement,
+  tooltipElement: HTMLElement
+) => {
+  const availablePositions = ["right", "top", "left", "bottom"].slice();
+
+  const screenSize = getScreenSize();
+  const tooltipPos = getNodeCoordinates(tooltipElement, screenSize);
+  const targetElementRect = targetElement.getBoundingClientRect();
+
+  let finalCssClass = "right";
+
+  // Check for space to the right
+  if (targetElementRect.right + tooltipPos.width > screenSize.screen.width) {
+    removeFromArray(availablePositions, "right");
+  }
+
+  // Check for space above
+  if (targetElementRect.top - tooltipPos.height < 0) {
+    removeFromArray(availablePositions, "top");
+  }
+
+  // Check for space to the left
+  if (targetElementRect.left - tooltipPos.width < 0) {
+    removeFromArray(availablePositions, "left");
+  }
+
+  // Check for space below
+  if (targetElementRect.bottom + tooltipPos.height > screenSize.page.height) {
+    removeFromArray(availablePositions, "bottom");
+  }
+
+  if (availablePositions.length > 0) {
+    finalCssClass = availablePositions[0];
+  }
+
+  return finalCssClass;
+};
+
+/**
+ * Remove element from array
+ * @param array
+ * @param value
+ */
+export const removeFromArray = (array: any, value: any) => {
+  if (array.includes(value)) {
+    array.splice(array.indexOf(value), 1);
+  }
+};
+
 // getting the text for the clicknodes.
 export const getInputLabels = (
   node: any,
@@ -515,16 +748,7 @@ export const indexDom = (
           }
           if (addToolTip) {
             tooltipDisplayedNodes.push(node);
-            addToolTip(
-              node,
-              node,
-              false,
-              false,
-              false,
-              false,
-              false,
-              "We have detected a rich text editor. To record this in your sequence, Please click on the editor menu. We are unable to record clicks on the text area."
-            );
+            addToolTip(node, 0);
           }
         } else if (
           !node.hasclick &&
@@ -748,6 +972,10 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
   }
 };
 
+/**
+ * To delay Hyperlink click navitaion
+ * @param node
+ */
 export const delayLink = (node: HTMLElement) => {
   const _href = node.getAttribute("href");
   node.setAttribute("href", "#");
@@ -757,6 +985,16 @@ export const delayLink = (node: HTMLElement) => {
   }
 };
 
+/**
+ *
+ * @param node
+ * @param fromdocument
+ * @param selectchange
+ * @param event
+ * @param confirmdialog
+ * @param hasparentclick
+ * @returns
+ */
 export const recorduserclick = async (
   node: HTMLElement,
   fromdocument = false,
@@ -797,6 +1035,11 @@ export const recorduserclick = async (
   }
 };
 
+/**
+ * To post click data to REST
+ * @param node HTMLElement
+ * @returns promise
+ */
 export const postClickData = async (node: HTMLElement) => {
   const payload = {
     domain: window.location.host,
@@ -811,6 +1054,11 @@ export const postClickData = async (node: HTMLElement) => {
   return recordClicks(payload);
 };
 
+/**
+ * * To post click sequence data to REST
+ * @param request
+ * @returns promise
+ */
 export const postRecordSequenceData = async (request: any) => {
   const userclicknodesSet = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
   const ids = userclicknodesSet.map((item: any) => item.id);
@@ -826,6 +1074,11 @@ export const postRecordSequenceData = async (request: any) => {
   return recordSequence(payload);
 };
 
+/**
+ * To update click data to REST
+ * @param node HTMLElement
+ * @returns  promise
+ */
 export const putUserClickData = async (request: any) => {
   const payload = {
     ...request,
