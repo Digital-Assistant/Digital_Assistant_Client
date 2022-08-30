@@ -105,7 +105,7 @@ export const getRowObject = (data: any) => {
  */
 export const addBodyEvents = (selector: HTMLElement) => {
   let els = selector.querySelectorAll("*"),
-    len = els.length,
+    len = els?.length,
     i = 0;
   for (; i < len; i++) {
     /**exclude event attachment for selective elements  */
@@ -126,7 +126,7 @@ export const inArray = (elem: any, array: any) => {
     return array.indexOf(elem);
   }
 
-  for (let i = 0, length = array.length; i < length; i++) {
+  for (let i = 0, length = array?.length; i < length; i++) {
     if (array[i] === elem) {
       return i;
     }
@@ -157,7 +157,7 @@ export const logInfo = (info: any) => {
 //check css classnames for ignoring
 export const checkCssClassNames = (node: any) => {
   let cssClassExist = false;
-  if (ignoreNodesContainingClassNames.length > 0) {
+  if (ignoreNodesContainingClassNames?.length > 0) {
     for (const className of ignoreNodesContainingClassNames) {
       if (node.classList.contains(className)) {
         cssClassExist = true;
@@ -372,7 +372,7 @@ export const getTooltipPositionClass = (
     removeFromArray(availablePositions, "bottom");
   }
 
-  if (availablePositions.length > 0) {
+  if (availablePositions?.length > 0) {
     finalCssClass = availablePositions[0];
   }
 
@@ -409,7 +409,7 @@ export const getInputLabels = (
     (node.nodeName.toLowerCase() === "select" ||
       node.nodeName.toLowerCase() === "checkbox") &&
     iterate &&
-    inputlabels.length === 0
+    inputlabels?.length === 0
   ) {
     iterationno++;
     inputlabels = getInputLabels(
@@ -462,7 +462,7 @@ export const getInputLabels = (
     }
   }
 
-  if (getchildlabels && node.childNodes.length > 0) {
+  if (getchildlabels && node.childNodes?.length > 0) {
     let childnodes = node.childNodes;
     childnodes.forEach(function (childnode: any) {
       if (
@@ -480,14 +480,14 @@ export const getInputLabels = (
     });
   }
 
-  if (inputlabels.length === 0 && node.getAttribute("data-tooltip")) {
+  if (inputlabels?.length === 0 && node.getAttribute("data-tooltip")) {
     inputlabels.push({
       text: node.getAttribute("data-tooltip").toString(),
       match: false,
     });
   }
 
-  if (inputlabels.length === 0 && node.getAttribute("aria-label")) {
+  if (inputlabels?.length === 0 && node.getAttribute("aria-label")) {
     inputlabels.push({
       text: node.getAttribute("aria-label").toString(),
       match: false,
@@ -498,7 +498,7 @@ export const getInputLabels = (
   if (
     iterate &&
     node.nodeName.toLowerCase() !== "img" &&
-    inputlabels.length === 0 &&
+    inputlabels?.length === 0 &&
     iterationno <= iteratelimit
   ) {
     iterationno++;
@@ -513,13 +513,13 @@ export const getInputLabels = (
     );
   }
 
-  if (inputlabels.length === 0 && node.id !== "") {
+  if (inputlabels?.length === 0 && node.id !== "") {
     inputlabels.push({
       text: node.nodeName.toLowerCase() + "-" + node.id,
       match: false,
     });
   } else if (
-    inputlabels.length === 0 &&
+    inputlabels?.length === 0 &&
     node.hasAttribute("class") &&
     node.className &&
     node.className !== ""
@@ -529,7 +529,7 @@ export const getInputLabels = (
       text: node.nodeName.toLowerCase() + "-" + classname.replace(" ", "-"),
       match: false,
     });
-  } else if (inputlabels.length === 0) {
+  } else if (inputlabels?.length === 0) {
     inputlabels.push({ text: node.nodeName.toLowerCase(), match: false });
   }
 
@@ -599,8 +599,8 @@ export const indexnode = (
     // return node;
   }
 
-  if (CONFIG.htmlindex.length > 0) {
-    for (let htmli = 0; htmli < CONFIG.htmlindex.length; htmli++) {
+  if (CONFIG?.htmlindex?.length > 0) {
+    for (let htmli = 0; htmli < CONFIG?.htmlindex?.length; htmli++) {
       if (node.isSameNode(CONFIG.htmlindex[htmli]["element-data"])) {
         node.hasclick = true;
         return node;
@@ -608,7 +608,7 @@ export const indexnode = (
     }
   }
 
-  for (let i = 0; i < UDAClickObjects.length; i++) {
+  for (let i = 0; i < UDAClickObjects?.length; i++) {
     if (UDAClickObjects[i].element === window) {
       continue;
     }
@@ -642,11 +642,11 @@ export const indexnode = (
       node.displaytype = "tab-content";
     }
 
-    if (elementdata["element-labels"].length === 0) {
+    if (elementdata["element-labels"]?.length === 0) {
       elementdata["element-labels"] = getInputLabels(node, [], 1);
     }
 
-    if (elementdata["element-labels"].length === 0) {
+    if (elementdata["element-labels"]?.length === 0) {
       return node;
     }
 
@@ -655,7 +655,7 @@ export const indexnode = (
         node.displaytype === "tab-content") ||
       (node.hasOwnProperty("navtype") && node.navtype === "navtab")
     ) {
-      for (let j = 0; j < menuitems.length; j++) {
+      for (let j = 0; j < menuitems?.length; j++) {
         let menuitem = menuitems[j];
         if (menuitem.refid === node.tabid) {
           if (menuitem.menunode.hasOwnProperty("path")) {
@@ -737,7 +737,7 @@ export const indexDom = (
       ) {
         if (
           node.nodeName.toLowerCase() === "ckeditor" &&
-          node.childNodes.length > 2 &&
+          node.childNodes?.length > 2 &&
           CONFIG.recording
         ) {
           // let addToolTip = true;
@@ -806,8 +806,8 @@ export const indexDom = (
           }
         }
 
-        if (childnodes.length > 0) {
-          for (let i = 0; i < childnodes.length; i++) {
+        if (childnodes?.length > 0) {
+          for (let i = 0; i < childnodes?.length; i++) {
             let childnode = childnodes[i];
             CONFIG.nodeid++;
             if (

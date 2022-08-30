@@ -160,14 +160,14 @@ function App() {
   const toggleContainer = (type: string) => {
     if (type == "record-button") {
       return (
-        showRecord === true && isRecording === false && !recSequenceData.length
+        showRecord === true && isRecording === false && !recSequenceData?.length
       );
     } else if (type == "record-seq") {
       return (
-        isRecording === true && showRecord === false && !recSequenceData.length
+        isRecording === true && showRecord === false && !recSequenceData?.length
       );
     } else if (type == "recorded-data") {
-      return recSequenceData.length > 0;
+      return recSequenceData && recSequenceData?.length > 0;
     } else if (type == "search-results") {
       return (
         isRecording === false &&
