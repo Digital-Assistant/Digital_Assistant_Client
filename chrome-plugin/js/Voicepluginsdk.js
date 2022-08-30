@@ -283,6 +283,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 		get editClickedName() {
 			return this.enableEditClickedName;
 		},
+		enableSkipDuringPlay: true,
+		set enableSkip(val) {
+			this.enableSkipDuringPlay = val;
+			this.showhtml();
+		},
+		get enableSkip() {
+			return this.enableSkipDuringPlay;
+		},
 		inArray:function(value, object){
 			return jQuery.inArray(value, object);
 		},
@@ -621,7 +629,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 									+'</button>'
 									+'<button class="uda-stop-btn-bg" style="border-radius: 5px 0px 0px 5px; display:none;" id="uda-voice-icon-stop">'
 									+'</button>'
-									+'<input type="text" name="uda-search-input" class="uda-input-cntrl" placeholder="search..." id="uda-search-input" />'
+									+'<input type="text" name="uda-search-input" class="uda-input-cntrl" placeholder="Search..." id="uda-search-input" />'
 									+'<button class="uda-search-btn" id="uda-search-btn" style="border-radius: 0px 5px 5px 0px;"></button>'
 								+'</div>'
                             +((this.multilingual.enabled)?'<select name="uda-lang-select" id="uda-lang-select" onchange="UDAPluginSDK.changeLanguage();"></select>':'')
@@ -2529,20 +2537,36 @@ if (typeof UDAPluginSDK === 'undefined') {
 								+'			</span>';
 				if(nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal){
 					// var personalHtml = '&nbsp; &nbsp; (personal)';
-					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" checked class="uda-checkbox"/> <label style="font-size:14px;" class="uda-checkbox-label">Personal Information</label>';
+					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="UDA-is-personal" checked class="uda-checkbox"/> <label style="font-size:14px;" class="uda-checkbox-label">Personal Information</label>';
 				} else {
-					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" class="uda-checkbox" /> <label style="font-size:14px;" class="uda-checkbox-label">Personal Information</label>';
+					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="UDA-is-personal" class="uda-checkbox" /> <label style="font-size:14px;" class="uda-checkbox-label">Personal Information</label>';
 				}
-				personalHtml += '			<span style="position: relative; top: 0px;"><img src="'+this.extensionpath+'images/icons/info.png" title="select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."></span>';
+				personalHtml += '			<span style="position: relative; top: 0px;"><img src="'+this.extensionpath+'images/icons/info.png" title="Select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."></span>';
 
 				// adding clicked element type
 				let selectedElementHtml = (this.enableNodeTypeChangeSelection)?'Clicked on : <select name="UDASelectedElement" id="UDASelectedElement"></select>':'';
 
-				var html =	'<li class="uda-recorded-label-editable"><i>'
+				// adding skip functionality during play
+				let skipHtml = '';
+				let skipped=false;
+				if(this.enableSkipDuringPlay){
+					skipHtml = '<div class="" style="display: flex;align-items:center;">&nbsp; &nbsp;';
+					if(nodeData.meta.hasOwnProperty('skipDuringPlay') && nodeData.meta.skipDuringPlay){
+						skipped = true;
+						skipHtml += '<input type="checkbox" id="UDA-skip-duringPlay" checked class="uda-checkbox"/> <label style="font-size:14px;" class="uda-checkbox-label">Skip during play</label>';
+					} else {
+						skipHtml += '<input type="checkbox" id="UDA-skip-duringPlay" class="uda-checkbox" /> <label style="font-size:14px;" class="uda-checkbox-label">Skip during play</label>';
+					}
+					skipHtml += '<span style="position: relative; top: 0px;"><img src="'+this.extensionpath+'images/icons/info.png" title="Select this box if this field / text is not required to navigate while processing."></span>';
+					skipHtml +='</div>';
+				}
+
+				var html =	'<li class="uda-recorded-label-editable '+((skipped)?'uda-recording-skip-play':'')+'"><i>'
 								+'<span id="uda-display-clicked-text">'+ clickedname + '</span>'
 								+((this.enableEditClickedName)?editBtn:'')
 								+'<br />'
 								+'</i>'
+								+skipHtml
 								+'<div class="" style="display: flex;align-items:center;">'+personalHtml+'</div>'
 								+'<br />'
 								+tooltipBtn
@@ -2551,9 +2575,15 @@ if (typeof UDAPluginSDK === 'undefined') {
 							+'</li>';
 				var element = jQuery(html);
 				jQuery("#uda-recorded-results").append(element);
-				jQuery("#isPersonal").click(function (){
+				jQuery("#UDA-is-personal").click(function (){
 					UDAPluginSDK.personalNode(data);
 				});
+				// skip during play click event
+				if(this.enableSkipDuringPlay) {
+					jQuery("#UDA-skip-duringPlay").click(function () {
+						UDAPluginSDK.skipDuringPlay(data);
+					});
+				}
 				var beforeEditText = originalName;
 				jQuery("#uda-edit-clickedname").click(function (){
 					jQuery("#uda-display-clicked-text").hide();
@@ -2648,8 +2678,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 					});
 				}
 			} else {
+				let skipped=false;
+				if(this.enableSkipDuringPlay) {
+					if (nodeData.meta.hasOwnProperty('skipDuringPlay') && nodeData.meta.skipDuringPlay) {
+						skipped = true;
+					}
+				}
 				clickedname += (nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal)?'&nbsp; &nbsp;(personal)':'';
-				var html = '<li><i>' +
+				var html = '<li class="'+((skipped)?'uda-recording-skip-play':'')+'"><i>' +
 					clickedname +
 					'</i></li>';
 				var element = jQuery(html);
@@ -2838,6 +2874,28 @@ if (typeof UDAPluginSDK === 'undefined') {
 				}
 			} else {
 				nodeData.meta.isPersonal = true;
+			}
+			data.objectdata = JSON.stringify(nodeData);
+			var outputdata = JSON.stringify(data);
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", UDA_API_URL+"/user/updateclickednode");
+			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+			xhr.onload = function(event){
+				UDAPluginSDK.showhtml();
+			};
+			xhr.send(outputdata);
+		},
+		// skip during play saving
+		skipDuringPlay:function(data){
+			let nodeData = JSON.parse(data.objectdata);
+			if(nodeData.meta.hasOwnProperty("skipDuringPlay")){
+				if(nodeData.meta.skipDuringPlay) {
+					nodeData.meta.skipDuringPlay = false;
+				} else {
+					nodeData.meta.skipDuringPlay = true;
+				}
+			} else {
+				nodeData.meta.skipDuringPlay = true;
 			}
 			data.objectdata = JSON.stringify(nodeData);
 			var outputdata = JSON.stringify(data);
@@ -3231,17 +3289,48 @@ if (typeof UDAPluginSDK === 'undefined') {
 			var element=jQuery(this.renderSelectedSequenceHtml(data, isPlaying));
 			jQuery("#uda-content-container").html(element);
 			var performactionnode=false;
+			let currentNo = 0;
 			for(var i=0;i<data.userclicknodesSet.length;i++){
-				var visited = -1;
-				if(navcookiedata.navigateddata.length>0) {
-					visited = this.inArray(data.userclicknodesSet[i].id, navcookiedata.navigateddata);
-				}
-				if(navcookiedata.autoplay && (!navcookiedata.pause || !navcookiedata.stop)){
-					if(visited===-1 && !performactionnode){
-						performactionnode=data.userclicknodesSet[i];
+				let skippedNo = 0;
+				let clickedNode = data.userclicknodesSet[i];
+				let visited = -1;
+				let skipped = false;
+				let addSkipClass = false;
+
+				// skip during play functionality
+				if(this.enableSkipDuringPlay){
+					let nodeObject = JSON.parse(clickedNode.objectdata);
+					if(nodeObject && nodeObject.meta && nodeObject.meta.hasOwnProperty('skipDuringPlay') && nodeObject.meta.skipDuringPlay){
+						skipped = true;
+						skippedNo = clickedNode.id;
 					}
 				}
-				jQuery("#uda-sequence-steps").append(this.rendersteps(data.userclicknodesSet[i], visited, navcookiedata));
+
+				if(navcookiedata.navigateddata.length>0) {
+					visited = this.inArray(clickedNode.id, navcookiedata.navigateddata);
+				}
+
+				if (visited === -1 && skipped && skippedNo <= navcookiedata.navigateddata[navcookiedata.navigateddata.length-1]) {
+					console.log(clickedNode);
+					this.updatenavcookiedata(navcookiedata, clickedNode.id);
+					visited = 1;
+				}
+
+				if(navcookiedata.autoplay && (!navcookiedata.pause || !navcookiedata.stop)){
+					if(!skipped && visited===-1 && !performactionnode){
+						performactionnode=data.userclicknodesSet[i];
+						currentNo = i;
+					}
+				}
+
+				if (skipped && visited > -1) {
+					addSkipClass = true;
+				}
+
+				// if((isPlaying || this.autoplayPaused) && skipped && (skippedNo <= navcookiedata.navigateddata.length || skippedNo == (data.userclicknodesSet.length-1))) {
+
+
+				jQuery("#uda-sequence-steps").append(this.rendersteps(data.userclicknodesSet[i], visited, navcookiedata, addSkipClass));
 			}
 
 			if(this.sessionID && data.usersessionid && (this.sessionID.toString()===data.usersessionid.toString() || (this.sessiondata.authdata.hasOwnProperty('id') && this.sessiondata.authdata.id.toString()===data.usersessionid.toString()))){
@@ -3289,7 +3378,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 		},
 		//showing the sequence steps html
-		rendersteps:function(data,visited=false, navcookiedata={}){
+		rendersteps:function(data,visited=-1, navcookiedata={}, addSkipClass=false){
 			// adding elipses if textlength is greater than specified characters
 			// display personal tag for the personal nodes
 			let clickedname = '';
@@ -3304,7 +3393,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 			var clickedtext = clickedname;
 			if(visited>-1) {
-				var template = jQuery("<li class='completed'><i>" + clickedtext + "</i></li>");
+				var template = jQuery("<li class='"+((addSkipClass)?'uda-recording-skip-play':'completed')+"'><i>" + clickedtext + "</i></li>");
 			} else {
 				var template = jQuery("<li class='inactive'><i>" + clickedtext + "</i></li>");
 			}
@@ -3323,6 +3412,17 @@ if (typeof UDAPluginSDK === 'undefined') {
 			if(selectednode.objectdata) {
 				originalNode = JSON.parse(selectednode.objectdata);
 				UDAConsoleLogger.info({recordedNode: originalNode.node});
+
+				//skip during play functionality
+				if(this.enableSkipDuringPlay) {
+					if (originalNode.meta.hasOwnProperty('skipDuringPlay') && originalNode.meta.skipDuringPlay) {
+						if(this.updatenavcookiedata(navcookiedata,selectednode.id)) {
+							return true;
+						}
+					}
+				}
+
+
 				if(selectednode && this.htmlindex.length>0){
 					// personal tag check
 					let isPersonalNode = false;

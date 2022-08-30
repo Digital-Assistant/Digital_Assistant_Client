@@ -309,6 +309,14 @@ body.universal-digital-parent-ele {
             }
           }
 
+          .uda-recording-skip-play {
+            &::before {
+              vertical-align: middle;
+              background-image: url('../images/icons/disabled-tick.png') !important;
+              background-repeat: space !important;
+            }
+          }
+
           .loading {
             &::before {
               /* content: url('../images/icons/bullet.png');*/
@@ -364,29 +372,41 @@ body.universal-digital-parent-ele {
           text-align: left;
           list-style: none url('../images/icons/bullet.png');
           margin: 0;
+
+          .uda-recording-skip-play {
+            //list-style: none url('../images/icons/bullet-grey.png') !important;
+            list-style: none url('../images/icons/disabled-tick.png') !important;
+          }
+
           /*list-style-position: inside;*/
           li {
             font-size: 14px;
             cursor: pointer;
-            .uda-checkbox{
+
+            .uda-checkbox {
               pointer-events: inherit !important;
-               position: inherit !important;
-               opacity: 1 !important;
-               &:checked{
-                 pointer-events: inherit !important;
-                 position: inherit !important;
-                 opacity: 1 !important;
-               } 
+              position: inherit !important;
+              opacity: 1 !important;
+              cursor: pointer !important;
+
+              &:checked {
+                pointer-events: inherit !important;
+                position: inherit !important;
+                opacity: 1 !important;
+                cursor: pointer !important;
+              }
             }
-            .uda-checkbox-label{
+
+            .uda-checkbox-label {
               padding-left: 5px !important;
-              &:before{
+
+              &:before {
                 display: none !important;
-                
+
               }
             }
           }
-          
+
         }
 
         .uda-record-btn {
@@ -557,8 +577,8 @@ body.universal-digital-parent-ele {
           border: 2px dotted #969696 !important;
           padding: 5px !important;
           opacity: 1 !important;
-          
-       
+
+
         }
 
       }

@@ -275,6 +275,11 @@ body.universal-digital-parent-ele .uda-page-right-bar .uda-container .uda-card-d
   background-image: url(../images/icons/bullet.png);
   background-repeat: space;
 }
+body.universal-digital-parent-ele .uda-page-right-bar .uda-container .uda-card-details .uda-suggestion-list .uda-recording-skip-play::before {
+  vertical-align: middle;
+  background-image: url("../images/icons/disabled-tick.png") !important;
+  background-repeat: space !important;
+}
 body.universal-digital-parent-ele .uda-page-right-bar .uda-container .uda-card-details .uda-suggestion-list .loading::before {
   /* content: url('../images/icons/bullet.png');*/
   vertical-align: middle;
@@ -322,6 +327,9 @@ body.universal-digital-parent-ele .uda-page-right-bar .uda-container .uda-card-d
   margin: 0;
   /*list-style-position: inside;*/
 }
+body.universal-digital-parent-ele .uda-page-right-bar .uda-container .uda-card-details .uda-recording .uda-recording-skip-play {
+  list-style: none url("../images/icons/disabled-tick.png") !important;
+}
 body.universal-digital-parent-ele .uda-page-right-bar .uda-container .uda-card-details .uda-recording li {
   font-size: 14px;
   cursor: pointer;
@@ -330,11 +338,13 @@ body.universal-digital-parent-ele .uda-page-right-bar .uda-container .uda-card-d
   pointer-events: inherit !important;
   position: inherit !important;
   opacity: 1 !important;
+  cursor: pointer !important;
 }
 body.universal-digital-parent-ele .uda-page-right-bar .uda-container .uda-card-details .uda-recording li .uda-checkbox:checked {
   pointer-events: inherit !important;
   position: inherit !important;
   opacity: 1 !important;
+  cursor: pointer !important;
 }
 body.universal-digital-parent-ele .uda-page-right-bar .uda-container .uda-card-details .uda-recording li .uda-checkbox-label {
   padding-left: 5px !important;
