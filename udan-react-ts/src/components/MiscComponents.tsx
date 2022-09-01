@@ -175,6 +175,11 @@ export const RecordSequenceDetails = (props: MProps) => {
     if (props.cancelHandler) props.cancelHandler();
   };
 
+  const play = () => {
+    setToStore("on", "isPlaying", true);
+    setToolTip(selectedRecordingDetails?.userclicknodesSet[0], 0);
+  };
+
   return props?.recordSequenceDetailsVisibility ? (
     <>
       <div
@@ -186,7 +191,7 @@ export const RecordSequenceDetails = (props: MProps) => {
       >
         <div className="uda-card-btns">
           <div className="uda-loading-bar" id="nist-autoplay">
-            <span>
+            <span onClick={() => play()}>
               <FontAwesomeIcon icon={faPlayCircle} />
             </span>
           </div>

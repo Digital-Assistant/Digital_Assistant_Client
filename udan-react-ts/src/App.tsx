@@ -73,17 +73,24 @@ function App() {
       : false) || false
   );
   const [showRecord, setShowRecord] = React.useState<boolean>(false);
+  const [isPlaying, setIsPlaying] = React.useState<string>(
+    getFromStore("isPlaying", true) || "off"
+  );
   const [searchKeyword, setSearchKeyword] = React.useState<string>("");
   const [searchResults, setSearchResults] = React.useState<any>([]);
   const [recSequenceData, setRecSequenceData] = React.useState<any>([]);
   const [recordSequenceDetailsVisibility, setRecordSequenceDetailsVisibility] =
     React.useState<boolean>(false);
   const [selectedRecordingDetails, setSelectedRecordingDetails] =
-    React.useState<any>({});
+    React.useState<any>(getFromStore("selectedRecordedItem", false) || {});
 
   React.useEffect(() => {
     addBodyEvents(document.body);
     getSearchResults("");
+    if (isPlaying == "on") {
+      togglePanel();
+      setRecordSequenceDetailsVisibility(true);
+    }
   }, []);
 
   /**
@@ -103,7 +110,7 @@ function App() {
    */
   const togglePanel = () => {
     setHide(!hide);
-    squeezeBody(hide);
+    squeezeBody(!hide);
   };
 
   /**

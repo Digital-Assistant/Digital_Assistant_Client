@@ -1,7 +1,7 @@
 /**
  * Author: Lakshman Veti
  * Type: Component
- * Objective: To render common modal/lite window
+ * Objective: To render search results
  * Associated Route/Usage: *
  */
 
