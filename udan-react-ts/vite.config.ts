@@ -1,11 +1,12 @@
-import { defineConfig } from 'vite'
-import reactRefresh from '@vitejs/plugin-react-refresh'
-import svgrPlugin from 'vite-plugin-svgr'
+import { defineConfig } from "vite";
+import reactRefresh from "@vitejs/plugin-react-refresh";
+import svgrPlugin from "vite-plugin-svgr";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // minify: false,
   build: {
-    outDir: 'build',
+    outDir: "build",
   },
   plugins: [
     reactRefresh(),
@@ -16,4 +17,4 @@ export default defineConfig({
       },
     }),
   ],
-})
+});

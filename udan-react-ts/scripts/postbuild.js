@@ -18,9 +18,20 @@ function readFile(path, prefix, extension) {
     .map((filename) => `${path}/${filename}`)[0]
 }
 
-const js = readFile('assets', 'index', 'js')
+const js = readFile('assets', 'index', 'js');
 const css = readFile('assets', 'index', 'css')
 const logo = readFile('assets', 'logo', 'svg')
+
+fs.readFile(`./build/${js}`, 'utf-8', function (err, contents) {
+  if (err) {
+    console.log(err);
+    return;
+  }
+  const replaced = contents.replace(/,dmoJSON/gi, '');
+  fs.writeFile(`./build/${js}`, replaced, 'utf-8', function (e) {
+    //console.log(e);
+  });
+});
 
 const newManifest = {
   ...manifest,
