@@ -75,7 +75,6 @@ export const generateUUID = () => {
 export const squeezeBody = (hide: boolean) => {
   const _body = document.body;
   if (_body) {
-    console.log(hide);
     _body.style.width = hide ? "" : window.innerWidth - 350 + "px";
   }
 };
@@ -176,7 +175,7 @@ export const checkCssClassNames = (node: any) => {
 export const getLookUpSelector = (originalElement: HTMLElement) => {
   let selector = "";
   for (let [key, value] of Object.entries(originalElement?.attributes)) {
-    if (key == "href") selector += `[${key}="#"]`;
+    if (key == "href") continue;//selector += `[${key}="#"]`;
     else selector += `[${key}="${value}"]`;
   }
   return selector;
@@ -897,10 +896,14 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
 
     switch (nodename) {
       case "a":
-        delayLink(node);
+        // const _tmpHref = node.getAttribute("href");
+        // node.setAttribute("href", "#");
         addEvent(node, "click", function (event: any) {
+          event.preventDefault();
           recorduserclick(node, false, false, event, confirmdialog);
         });
+        // node.setAttribute("href", _tmpHref);
+        // delayLink(node);
         break;
       case "select":
         addEvent(node, "focus", function (event: any) {
@@ -979,7 +982,7 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
  */
 export const delayLink = (node: HTMLElement) => {
   const _href = node.getAttribute("href");
-  node.setAttribute("href", "#");
+  //node.setAttribute("href", "#");
   if (_href) {
     node.setAttribute("data-href", _href);
     //setTimeout(function () { window.location = _href }, 500);
@@ -1008,10 +1011,11 @@ export const recorduserclick = async (
     getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true" ? true : false;
 
   if (!isRecording) {
-    if (node.nodeName.toLowerCase() == "a" && node.getAttribute("data-href")) {
-      window.location.href = node.getAttribute("data-href") || "";
+    if (node.nodeName.toLowerCase() == "a") {
+      window.location.href = node.getAttribute("href") || "/";
+      return true;
     }
-    return;
+    // return;
   }
   const resp = await postClickData(node);
   if (resp) {
@@ -1026,13 +1030,9 @@ export const recorduserclick = async (
       setToStore([resp], CONFIG.RECORDING_SEQUENCE, false);
     }
   }
-  if (
-    resp &&
-    node.nodeName.toLowerCase() == "a" &&
-    node.getAttribute("data-href")
-  ) {
+  if (resp && node.nodeName.toLowerCase() == "a" && node.getAttribute("href")) {
     //return;
-    window.location.href = node.getAttribute("data-href") || "";
+    window.location.href = node.getAttribute("href") || "";
   }
 };
 
@@ -1088,4 +1088,21 @@ export const putUserClickData = async (request: any) => {
     recordid: 1375,
   };
   return userClick(payload);
+};
+
+/**
+ * compares current playable node from storage based on status "completed"
+ * @returns object with index and node
+ */
+export const getCurrentPlayItem = () => {
+  const elementsFromStore = getFromStore("selectedRecordedItem", false);
+  const retObj: any = { index: 0, node: null };
+  for (let i = 0; i < elementsFromStore?.userclicknodesSet?.length; i++) {
+    if (elementsFromStore?.userclicknodesSet[i].status != "completed") {
+      retObj.index = i;
+      retObj.node = elementsFromStore?.userclicknodesSet[i];
+      break;
+    }
+  }
+  return retObj;
 };

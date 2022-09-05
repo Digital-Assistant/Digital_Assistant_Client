@@ -21,6 +21,7 @@ import {
   getLookUpSelector,
   getTooltipPositionClass,
   removeToolTip,
+  getCurrentPlayItem,
 } from "../util";
 export interface MProps {
   data?: any;
@@ -30,6 +31,8 @@ export interface MProps {
   cancelHandler?: Function;
   recordHandler?: Function;
   recordSeqHandler?: Function;
+  playHandler?: Function;
+  isPlaying?: string;
 }
 
 /**
@@ -94,6 +97,48 @@ export const RecordSequenceDetails = (props: MProps) => {
   const [selectedRecordingDetails, setSelectedRecordingDetails] =
     React.useState<any>(props.data);
 
+  /**
+   * Every time isPlaying state changes, and status is "on", play continues
+   */
+  useEffect(() => {
+    if (props?.isPlaying == "on") {
+      autoPlay();
+    }
+  }, [props.isPlaying]);
+
+  /**
+   * Record player(auto play)
+   */
+  const autoPlay = () => {
+    //get current play item from storage
+    const playItem = getCurrentPlayItem();
+    console.log(playItem);
+    if (playItem && playItem.node) {
+      const originalNode = JSON.parse(playItem.node.objectdata);
+      let originalElement = originalNode?.node;
+      //if target element is ANCHOR, navigate link rather than tooltip
+      if (originalElement.nodeName.toLowerCase() === "a") {
+        const selector = getLookUpSelector(originalElement);
+        const targetElement = document.querySelector(selector);
+        if (targetElement) {
+          updateStatus(playItem.index);
+          window.location.href = targetElement?.getAttribute("href") || "/";
+        }
+      } else {
+        //show tooltip
+        setToolTip(playItem.node, playItem.index);
+      }
+    } else {
+      //if no play items are leftover, turn off player
+      if (props?.playHandler) {
+        props?.playHandler("off");
+      }
+    }
+  };
+
+  /**
+   * To add tooltip for target elements
+   */
   const addToolTip = (invokingNode: any, index: any) => {
     const tooltipDivElement = getToolTipElement();
     try {
@@ -101,6 +146,7 @@ export const RecordSequenceDetails = (props: MProps) => {
 
       let originalElement = originalNode?.node;
 
+      //attach event to continue button in tooltip
       document
         .getElementById("uda-autoplay-continue")
         ?.addEventListener("click", (e: Event) => {
@@ -111,6 +157,7 @@ export const RecordSequenceDetails = (props: MProps) => {
           );
         });
 
+      //attach event to close tooltip
       document
         .getElementById("uda-autoplay-exit")
         ?.addEventListener("click", (e: Event) => {
@@ -119,7 +166,7 @@ export const RecordSequenceDetails = (props: MProps) => {
 
       let selector = getLookUpSelector(originalElement);
 
-      console.log("'" + selector + index + "'");
+      // console.log("'" + selector + index + "'");
 
       originalElement = document.querySelector(selector);
 
@@ -137,17 +184,41 @@ export const RecordSequenceDetails = (props: MProps) => {
     }
   };
 
+  /**
+   * adds tooltip and change status (in recording details list)
+   * @param item
+   * @param index
+   */
   const setToolTip = (item: any, index: number) => {
     addToolTip(item?.objectdata, index);
     updateStatus(index);
   };
 
+  /**
+   * updates node status(to completed) by index
+   * @param index
+   */
   const updateStatus = (index: number) => {
     selectedRecordingDetails.userclicknodesSet[index].status = "completed";
     setToStore(selectedRecordingDetails, "selectedRecordedItem", false);
     setSelectedRecordingDetails({ ...selectedRecordingDetails });
   };
 
+  /**
+   * Updates all recorded nodes status to 'none'
+   */
+  const resetStatus = () => {
+    selectedRecordingDetails?.userclicknodesSet?.forEach((element: any) => {
+      element.status = "none";
+    });
+    setToStore(selectedRecordingDetails, "selectedRecordedItem", false);
+    setSelectedRecordingDetails({ ...selectedRecordingDetails });
+  };
+
+  /**
+   *
+   * @returns name/label of the recording
+   */
   const getName = () => {
     let name = "";
     if (props.data) {
@@ -158,6 +229,10 @@ export const RecordSequenceDetails = (props: MProps) => {
     return name;
   };
 
+  /**
+   * prepares recorded node list
+   * @returns HTML Collection
+   */
   const renderData = () => {
     if (!props?.data) return;
     return selectedRecordingDetails?.userclicknodesSet?.map(
@@ -171,13 +246,21 @@ export const RecordSequenceDetails = (props: MProps) => {
     );
   };
 
+  /**
+   * Navigates back to search results card
+   */
   const backNav = () => {
     if (props.cancelHandler) props.cancelHandler();
   };
 
+  /**
+   * Auto play button handler
+   */
   const play = () => {
+    resetStatus();
     setToStore("on", "isPlaying", true);
-    setToolTip(selectedRecordingDetails?.userclicknodesSet[0], 0);
+    autoPlay();
+    // setToolTip(selectedRecordingDetails?.userclicknodesSet[0], 0);
   };
 
   return props?.recordSequenceDetailsVisibility ? (

@@ -11,6 +11,10 @@ import { fetchSearchResults } from "../../services/searchService";
 import { squeezeBody } from "../../util";
 import logo from "../../logo.svg";
 
+/**
+ *
+ * @returns logo path
+ */
 function getLogo() {
   if (window?.chrome) {
     return window?.chrome?.runtime?.getURL(logo);
@@ -132,6 +136,11 @@ export const Header = (props: MProps) => {
   );
 };
 
+/**
+ *
+ * @param props
+ * @returns footer container
+ */
 export const Footer = (props: MProps) => {
   const setShowRecord = (flag: boolean) => {
     if (props.toggleHandler) props.toggleHandler(flag, "footer");

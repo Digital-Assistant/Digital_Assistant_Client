@@ -66,12 +66,12 @@ const useMutationObserver = (
 };
 
 function App() {
-  const [hide, setHide] = React.useState<boolean>(true);
   const [isRecording, setIsRecording] = React.useState<boolean>(
     (getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true"
       ? true
       : false) || false
   );
+  const [hide, setHide] = React.useState<boolean>(isRecording ? false : true);
   const [showRecord, setShowRecord] = React.useState<boolean>(false);
   const [isPlaying, setIsPlaying] = React.useState<string>(
     getFromStore("isPlaying", true) || "off"
@@ -126,19 +126,28 @@ function App() {
     setSearchResults([..._searchResults]);
   };
 
+  /**to enable record sequence card/container */
   const recordSequence = () => {
+    playHandler("off");
     setToStore(generateUUID(), "sessionId", true);
     setIsRecording(true);
     setShowRecord(false);
   };
 
+  /**common cancel button handler */
   const cancel = () => {
     removeFromStore("sessionId");
     setIsRecording(false);
     setShowRecord(false);
     setRecordSequenceDetailsVisibility(false);
+    playHandler("off");
   };
 
+  /**
+   * To handle record / cancel buttons
+   * @param type
+   * @param data
+   */
   const recordHandler = async (type: string, data?: any) => {
     switch (type) {
       case "submit":
@@ -151,31 +160,51 @@ function App() {
     cancel();
   };
 
+  /**
+   * search handler callback function
+   * @param data search handler callback function
+   */
   const searchHandler = (data: any) => {
     setSearchResults([...data]);
   };
 
+  /**
+   * common toggle callback function
+   * @param hideFlag
+   * @param type
+   */
   const toggleHandler = (hideFlag: boolean, type: string) => {
     if (type == "footer") setShowRecord(hideFlag);
     else setHide(hideFlag);
   };
 
+  /**
+   * to handle record button
+   * @param flag
+   */
   const showRecordHandler = (flag: boolean) => {
+    setIsPlaying("off");
+    setToStore("off", "isPlaying", true);
     setShowRecord(flag);
   };
 
-  const toggleContainer = (type: string) => {
-    if (type == "record-button") {
+  /**
+   * common toggle function based on card type
+   * @param type
+   * @returns
+   */
+  const toggleContainer = (card: string) => {
+    if (card == "record-button") {
       return (
         showRecord === true && isRecording === false && !recSequenceData?.length
       );
-    } else if (type == "record-seq") {
+    } else if (card == "record-seq") {
       return (
         isRecording === true && showRecord === false && !recSequenceData?.length
       );
-    } else if (type == "recorded-data") {
+    } else if (card == "recorded-data") {
       return recSequenceData && recSequenceData?.length > 0;
-    } else if (type == "search-results") {
+    } else if (card == "search-results") {
       return (
         isRecording === false &&
         showRecord === false &&
@@ -184,9 +213,22 @@ function App() {
     }
   };
 
+  /**
+   * Show recording details card
+   * @param data
+   */
   const showRecordingDetails = (data: any) => {
     setSelectedRecordingDetails({ ...data });
     setRecordSequenceDetailsVisibility(true);
+  };
+
+  /**
+   * Recording play handler callback
+   * @param status
+   */
+  const playHandler = (status: string) => {
+    setIsPlaying(status);
+    setToStore(status, "isPlaying", true);
   };
 
   return (
@@ -234,9 +276,13 @@ function App() {
                   <RecordSequenceDetails
                     data={selectedRecordingDetails}
                     recordSequenceDetailsVisibility={
-                      recordSequenceDetailsVisibility
+                      recordSequenceDetailsVisibility &&
+                      !isRecording &&
+                      !toggleContainer("record-button")
                     }
                     cancelHandler={cancel}
+                    playHandler={playHandler}
+                    isPlaying={isPlaying}
                     key={"rSD" + recordSequenceDetailsVisibility}
                   />
                 </div>
