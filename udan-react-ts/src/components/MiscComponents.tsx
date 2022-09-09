@@ -49,8 +49,12 @@ export const RecordSequence = (props: MProps) => {
       <h5>Recorded Sequence</h5> <hr />
       <h5>Please navigate in the page to record.</h5> <br />
       <div className="uda-recording" style={{ textAlign: "center" }}>
-        <button className="uda-record-btn" onClick={() => cancelRecording()}>
-          <span>Cancel and Exit</span>
+        <button
+          className="uda-record-btn"
+          data-exclude={true}
+          onClick={() => cancelRecording()}
+        >
+          Cancel and Exit
         </button>
       </div>
     </div>
@@ -112,7 +116,6 @@ export const RecordSequenceDetails = (props: MProps) => {
   const autoPlay = () => {
     //get current play item from storage
     const playItem = getCurrentPlayItem();
-    console.log(playItem);
     if (playItem && playItem.node) {
       const originalNode = JSON.parse(playItem.node.objectdata);
       let originalElement = originalNode?.node;

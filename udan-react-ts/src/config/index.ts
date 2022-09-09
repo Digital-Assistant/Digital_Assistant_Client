@@ -10,6 +10,8 @@ const base = environment.baseURL;
 export const CONFIG = {
   current: "TEST",
   UDADebug: false,
+  UDA_CONTAINER_CLASS: "udan-main-panel",
+  UDA_CLICK_IGNORE_CLASS: "uda_exclude",
   UDA_DOMAIN: "https://udantest.nistapp.ai",
   UDA_API_URL: "https://udantest.nistapp.ai/voiceapi",
   UDASessionID:

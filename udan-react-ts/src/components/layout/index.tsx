@@ -149,7 +149,25 @@ export const Footer = (props: MProps) => {
     <div>
       <div className="uda-footer-bar">
         <div className="uda-container">
-          <div className="uda-dropdown" id="uda-advanced-btn">
+          <button
+            className="uda-new-seq uda-exclude"
+            onClick={() => setShowRecord(true)}
+          >
+            <span>+</span>
+          </button>
+          {/* <div
+            className="uda-advanced-btn-content"
+            onClick={() => setShowRecord(true)}
+          >
+            <span
+              id="uda-advance-section"
+              className="uda-advanced-btn-content"
+              data-exclude="true"
+            >
+              New Sequence
+            </span>
+          </div> */}
+          {/* <div className="uda-dropdown" id="uda-advanced-btn">
             <button className="uda-advanced-btn">
               <span>Advanced</span>
             </button>
@@ -157,11 +175,15 @@ export const Footer = (props: MProps) => {
               className="uda-advanced-btn-content"
               onClick={() => setShowRecord(true)}
             >
-              <a id="uda-advance-section" data-exclude="true">
+              <span
+                id="uda-advance-section"
+                className="uda-advanced-btn-content"
+                data-exclude="true"
+              >
                 New Sequence
-              </a>
+              </span>
             </div>
-          </div>
+          </div> */}
         </div>
         <br />
         <div

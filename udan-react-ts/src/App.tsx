@@ -85,7 +85,7 @@ function App() {
     React.useState<any>(getFromStore("selectedRecordedItem", false) || {});
 
   React.useEffect(() => {
-    addBodyEvents(document.body);
+    // addBodyEvents(document.body);
     getSearchResults("");
     if (isPlaying == "on") {
       togglePanel();
@@ -294,10 +294,15 @@ function App() {
       </div>
 
       <div
-        className="default-logo"
+        className="default-logo exclude"
         style={{ display: !hide ? "none" : "block" }}
       >
-        <img src={getLogo()} onClick={() => togglePanel()} alt={"udan logo"} />
+        <img
+          className="uda_exclude"
+          src={getLogo()}
+          onClick={() => togglePanel()}
+          alt={"udan logo"}
+        />
       </div>
     </>
   );

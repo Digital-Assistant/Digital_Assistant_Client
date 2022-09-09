@@ -29,6 +29,13 @@ export const SearchResults = (props: MProps) => {
 
   const renderData = () => {
     if (!props?.visibility) return;
+    if (!props?.data?.length) {
+      return (
+        <div className="uda-no-results">
+          <p>No results found</p>
+        </div>
+      );
+    }
     return props?.data?.map((item: any) => {
       const _row = getRowObject(item);
       return (

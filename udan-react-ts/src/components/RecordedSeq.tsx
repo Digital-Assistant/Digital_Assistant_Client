@@ -32,7 +32,7 @@ export const RecordedSeq = (props: MProps) => {
     else
       return props.data?.map((item: any) => {
         return (
-          <li className="uda-recorded-label-editable">
+          <li className="uda-recorded-label-editable completed">
             <i>
               <span id="uda-display-clicked-text">{item?.clickednodename}</span>
               <span>
@@ -54,22 +54,21 @@ export const RecordedSeq = (props: MProps) => {
                 defaultValue="Issues"
                 style={{ display: "none", width: "85%! important" }}
               />
-              <span>
-                <button
-                  className="uda-tutorial-btn"
-                  style={{
-                    display: "none",
-                    padding: "5px !important",
-                    height: "40px",
-                  }}
-                  type="button"
-                  id="uda-edit-clickedname-submit"
-                >
-                  save
-                </button>
-              </span>
+              <span></span>
               <br />
             </i>
+            <button
+              className="uda-tutorial-btn"
+              style={{
+                display: "none",
+                padding: "5px !important",
+                height: "40px",
+              }}
+              type="button"
+              id="uda-edit-clickedname-submit"
+            >
+              save
+            </button>
             {/* &nbsp; &nbsp; <input type="checkbox" id="isPersonal" />
               <label style={{ fontSize: "14px" }}>Personal Information</label>
               <span style={{ position: "relative", top: "0px" }}>
@@ -123,7 +122,7 @@ export const RecordedSeq = (props: MProps) => {
         />
         <div id="uda-sequence-names" />
         <div style={{ marginBottom: "10px" }}>
-          <button className="add-btn" onClick={() => addLabel()}>
+          <button className="add-btn uda_exclude" onClick={() => addLabel()}>
             + Add Label
           </button>
         </div>
@@ -133,10 +132,10 @@ export const RecordedSeq = (props: MProps) => {
         <br />
         <div style={{ marginTop: "10px", maxWidth: "100%" }}>
           <button className="uda-record-btn" onClick={() => cancelRecording()}>
-            <span>Cancel and Exit</span>
+            <span className="uda_exclude">Cancel and Exit</span>
           </button>
           <button
-            className="uda-tutorial-btn"
+            className="uda-tutorial-btn uda_exclude"
             onClick={() => submitRecording()}
             style={{ float: "right", padding: "5px 20px" }}
           >

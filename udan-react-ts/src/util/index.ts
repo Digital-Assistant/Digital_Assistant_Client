@@ -17,8 +17,54 @@ export const ignoreClicksOnSpecialNodes: any = [];
 export const ignoreNodesContainingClassNames: any = [];
 export const cancelRecordingDuringRecordingNodes: any = [];
 export const allowedTags = ["a", "button"];
+export const excludeTags = [
+  "link",
+  "script",
+  "svg",
+  "style",
+  "path",
+  "circle",
+  "g",
+  "rect",
+  "stop",
+  "defs",
+  "linearGradient",
+];
 export const EXCLUDE_ATTRIB = "data-exclude";
 
+
+/**
+ * Browser Window Interface Definition
+ */
+declare global {
+  interface Window {
+      onDomChange: any;
+      udanSelectedNodes: any;
+    }
+}
+
+/**
+ * Set ignorable classes for Udan con
+ */
+export const init = () => {
+  const children = getAllChildren(
+    document.querySelector(`.${CONFIG.UDA_CONTAINER_CLASS}`)
+  );
+  for (let i = 0; i < children?.length; i++) {
+    // console.log(children[i]);
+    if (
+      children[i] &&
+      !excludeTags.includes(
+        children[i]?.tagName?.trim()?.toLocaleLowerCase()
+      ) &&
+      children[i].className.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) == -1
+    )
+      children[i].className += " " + CONFIG.UDA_CLICK_IGNORE_CLASS;
+  }
+};
+
+// let onDomChange = window.onDomChange; 
+        
 /**
  *
  * @param data
@@ -104,14 +150,28 @@ export const getRowObject = (data: any) => {
  * @param selector
  */
 export const addBodyEvents = (selector: HTMLElement) => {
-  let els = selector.querySelectorAll("*"),
+  //exclude content-serving elements from click objects
+  init();
+  let els:any = document.body.querySelectorAll("*"),//getAllClickableElements(),
     len = els?.length,
     i = 0;
+  
   for (; i < len; i++) {
-    /**exclude event attachment for selective elements  */
-    if (!els[i].getAttribute(EXCLUDE_ATTRIB)) {
-      addClickToNode(els[i]);
-    }
+    try {
+      /**exclude event attachment for selective elements  */
+      if (
+        els[i] &&
+        !excludeTags.includes(els[i]?.tagName?.trim()?.toLocaleLowerCase()) &&
+        els[i]?.className?.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) === -1 &&
+        els[i]?.parentNode?.className?.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) === -1 &&
+        !els[i]?.getAttribute(EXCLUDE_ATTRIB) &&
+        isClickable(els[i])
+      ) {
+        addClickToNode(els[i]);
+      }
+    } catch (e) {
+      console.log(els[i].tagName, e);
+     }
   }
 };
 
@@ -143,6 +203,7 @@ export const inArray = (elem: any, array: any) => {
  * @returns void
  */
 export const addEvent = (node: any, eventType: string, callback: Function) => {
+  // console.log("add event", node);
   node.addEventListener(eventType, callback);
 };
 
@@ -390,151 +451,151 @@ export const removeFromArray = (array: any, value: any) => {
   }
 };
 
-// getting the text for the clicknodes.
-export const getInputLabels = (
-  node: any,
-  inputlabels: any,
-  iterationno: any,
-  iterate = true,
-  getchildlabels = true,
-  fromclick = false,
-  iteratelimit = 3,
-  ignorenode: any = []
-) => {
-  if (Array.isArray(ignorenode)) {
-    ignorenode = node;
-  }
+// // getting the text for the clicknodes.
+// export const getNodeLabels = (
+//   node: any,
+//   inputlabels: any,
+//   iterationno: any,
+//   iterate = true,
+//   getchildlabels = true,
+//   fromclick = false,
+//   iteratelimit = 3,
+//   ignorenode: any = []
+// ) => {
+//   if (Array.isArray(ignorenode)) {
+//     ignorenode = node;
+//   }
 
-  if (
-    (node.nodeName.toLowerCase() === "select" ||
-      node.nodeName.toLowerCase() === "checkbox") &&
-    iterate &&
-    inputlabels?.length === 0
-  ) {
-    iterationno++;
-    inputlabels = getInputLabels(
-      node.parentNode,
-      inputlabels,
-      iterationno,
-      iterate,
-      true,
-      fromclick,
-      iteratelimit,
-      ignorenode
-    );
-    if (fromclick) {
-      //todo need to rework
-    }
-  }
+//   if (
+//     (node.nodeName.toLowerCase() === "select" ||
+//       node.nodeName.toLowerCase() === "checkbox") &&
+//     iterate &&
+//     inputlabels?.length === 0
+//   ) {
+//     iterationno++;
+//     inputlabels = getNodeLabels(
+//       node.parentNode,
+//       inputlabels,
+//       iterationno,
+//       iterate,
+//       true,
+//       fromclick,
+//       iteratelimit,
+//       ignorenode
+//     );
+//     if (fromclick) {
+//       //todo need to rework
+//     }
+//   }
 
-  if (
-    node.nodeName.toLowerCase() === "input" ||
-    node.nodeName.toLowerCase() === "textarea" ||
-    node.nodeName.toLowerCase() === "img"
-  ) {
-    if (
-      node.getAttribute("placeholder") &&
-      node.getAttribute("placeholder") !== ""
-    ) {
-      inputlabels.push({
-        text: node.getAttribute("placeholder").toString(),
-        match: false,
-      });
-    }
-    if (
-      node.getAttribute("type") &&
-      (node.getAttribute("type").toLowerCase() === "submit" ||
-        node.getAttribute("type").toLowerCase() === "file")
-    ) {
-      if (node.getAttribute("value")) {
-        inputlabels.push({
-          text: node.getAttribute("value").toString(),
-          match: false,
-        });
-        iterate = false;
-      }
-    }
-    if (node.getAttribute("alt")) {
-      inputlabels.push({
-        text: node.getAttribute("alt").toString(),
-        match: false,
-      });
-    }
-  }
+//   if (
+//     node.nodeName.toLowerCase() === "input" ||
+//     node.nodeName.toLowerCase() === "textarea" ||
+//     node.nodeName.toLowerCase() === "img"
+//   ) {
+//     if (
+//       node.getAttribute("placeholder") &&
+//       node.getAttribute("placeholder") !== ""
+//     ) {
+//       inputlabels.push({
+//         text: node.getAttribute("placeholder").toString(),
+//         match: false,
+//       });
+//     }
+//     if (
+//       node.getAttribute("type") &&
+//       (node.getAttribute("type").toLowerCase() === "submit" ||
+//         node.getAttribute("type").toLowerCase() === "file")
+//     ) {
+//       if (node.getAttribute("value")) {
+//         inputlabels.push({
+//           text: node.getAttribute("value").toString(),
+//           match: false,
+//         });
+//         iterate = false;
+//       }
+//     }
+//     if (node.getAttribute("alt")) {
+//       inputlabels.push({
+//         text: node.getAttribute("alt").toString(),
+//         match: false,
+//       });
+//     }
+//   }
 
-  if (getchildlabels && node.childNodes?.length > 0) {
-    let childnodes = node.childNodes;
-    childnodes.forEach(function (childnode: any) {
-      if (
-        childnode.nodeName.toLowerCase() !== "script" &&
-        childnode.nodeName.toLowerCase() !== "select" &&
-        childnode.nodeName.toLowerCase() !== "#comment"
-      ) {
-        let textcontent = childnode.textContent
-          .replace(/[\n\r]+|[\s]{2,}/g, " ")
-          .trim();
-        if (textcontent !== "" && ignorenode?.isSameNode(childnode) === false) {
-          inputlabels.push({ text: textcontent, match: false });
-        }
-      }
-    });
-  }
+//   if (getchildlabels && node.childNodes?.length > 0) {
+//     let childnodes = node.childNodes;
+//     childnodes.forEach(function (childnode: any) {
+//       if (
+//         childnode.nodeName.toLowerCase() !== "script" &&
+//         childnode.nodeName.toLowerCase() !== "select" &&
+//         childnode.nodeName.toLowerCase() !== "#comment"
+//       ) {
+//         let textcontent = childnode.textContent
+//           .replace(/[\n\r]+|[\s]{2,}/g, " ")
+//           .trim();
+//         if (textcontent !== "" && ignorenode?.isSameNode(childnode) === false) {
+//           inputlabels.push({ text: textcontent, match: false });
+//         }
+//       }
+//     });
+//   }
 
-  if (inputlabels?.length === 0 && node.getAttribute("data-tooltip")) {
-    inputlabels.push({
-      text: node.getAttribute("data-tooltip").toString(),
-      match: false,
-    });
-  }
+//   if (inputlabels?.length === 0 && node.getAttribute("data-tooltip")) {
+//     inputlabels.push({
+//       text: node.getAttribute("data-tooltip").toString(),
+//       match: false,
+//     });
+//   }
 
-  if (inputlabels?.length === 0 && node.getAttribute("aria-label")) {
-    inputlabels.push({
-      text: node.getAttribute("aria-label").toString(),
-      match: false,
-    });
-  }
+//   if (inputlabels?.length === 0 && node.getAttribute("aria-label")) {
+//     inputlabels.push({
+//       text: node.getAttribute("aria-label").toString(),
+//       match: false,
+//     });
+//   }
 
-  //todo fix for image tags
-  if (
-    iterate &&
-    node.nodeName.toLowerCase() !== "img" &&
-    inputlabels?.length === 0 &&
-    iterationno <= iteratelimit
-  ) {
-    iterationno++;
-    inputlabels = getInputLabels(
-      node.parentNode,
-      [],
-      iterationno,
-      iterate,
-      getchildlabels,
-      fromclick,
-      iteratelimit
-    );
-  }
+//   //todo fix for image tags
+//   if (
+//     iterate &&
+//     node.nodeName.toLowerCase() !== "img" &&
+//     inputlabels?.length === 0 &&
+//     iterationno <= iteratelimit
+//   ) {
+//     iterationno++;
+//     inputlabels = getNodeLabels(
+//       node.parentNode,
+//       [],
+//       iterationno,
+//       iterate,
+//       getchildlabels,
+//       fromclick,
+//       iteratelimit
+//     );
+//   }
 
-  if (inputlabels?.length === 0 && node.id !== "") {
-    inputlabels.push({
-      text: node.nodeName.toLowerCase() + "-" + node.id,
-      match: false,
-    });
-  } else if (
-    inputlabels?.length === 0 &&
-    node.hasAttribute("class") &&
-    node.className &&
-    node.className !== ""
-  ) {
-    let classname = node.className.toString();
-    inputlabels.push({
-      text: node.nodeName.toLowerCase() + "-" + classname.replace(" ", "-"),
-      match: false,
-    });
-  } else if (inputlabels?.length === 0) {
-    inputlabels.push({ text: node.nodeName.toLowerCase(), match: false });
-  }
+//   if (inputlabels?.length === 0 && node.id !== "") {
+//     inputlabels.push({
+//       text: node.nodeName.toLowerCase() + "-" + node.id,
+//       match: false,
+//     });
+//   } else if (
+//     inputlabels?.length === 0 &&
+//     node.hasAttribute("class") &&
+//     node.className &&
+//     node.className !== ""
+//   ) {
+//     let classname = node.className.toString();
+//     inputlabels.push({
+//       text: node.nodeName.toLowerCase() + "-" + classname.replace(" ", "-"),
+//       match: false,
+//     });
+//   } else if (inputlabels?.length === 0) {
+//     inputlabels.push({ text: node.nodeName.toLowerCase(), match: false });
+//   }
 
-  return inputlabels;
-};
+//   return inputlabels;
+// };
 // Check for each node and then match it with the available clicknodes which are identified by links.js
 export const indexnode = (
   node: any,
@@ -601,7 +662,7 @@ export const indexnode = (
 
   if (CONFIG?.htmlindex?.length > 0) {
     for (let htmli = 0; htmli < CONFIG?.htmlindex?.length; htmli++) {
-      if (node.isSameNode(CONFIG.htmlindex[htmli]["element-data"])) {
+      if (node?.isSameNode(CONFIG.htmlindex[htmli]["element-data"])) {
         node.hasclick = true;
         return node;
       }
@@ -612,7 +673,7 @@ export const indexnode = (
     if (UDAClickObjects[i].element === window) {
       continue;
     }
-    if (node.isSameNode(UDAClickObjects[i].element)) {
+    if (node?.isSameNode(UDAClickObjects[i].element)) {
       clickobjectexists = true;
       udaClickObject = UDAClickObjects[i];
     }
@@ -643,7 +704,7 @@ export const indexnode = (
     }
 
     if (elementdata["element-labels"]?.length === 0) {
-      elementdata["element-labels"] = getInputLabels(node, [], 1);
+      elementdata["element-labels"] = getNodeLabels(node, [], 1);
     }
 
     if (elementdata["element-labels"]?.length === 0) {
@@ -742,7 +803,7 @@ export const indexDom = (
         ) {
           // let addToolTip = true;
           for (let checknode of tooltipDisplayedNodes) {
-            if (node.isSameNode(checknode)) {
+            if (node?.isSameNode(checknode)) {
               // addToolTip = false;
             }
           }
@@ -960,14 +1021,20 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
         break;
       case "tr":
         addEvent(node, "click", function (event: any) {
-          recorduserclick(node, false, false, event, confirmdialog);
+          recorduserclick(event.target, false, false, event, confirmdialog);
         });
         break;
-      // default:
-      // 	addEvent(node, 'click', function(event:any){
-      // 			recorduserclick(node, false,false, event, confirmdialog);
-      // 		});
-      // 	break;
+      case "button":
+        
+        addEvent(node, "click", function (event: any) {
+          recorduserclick(event.target, false, false, event, confirmdialog);
+        });
+        break;
+      default:
+        addEvent(node, 'click', function (event: any) {
+            recorduserclick(event.target, false, false, event, confirmdialog);
+        });
+      	break;
     }
     node.addedclickrecord = true;
     return node;
@@ -1007,6 +1074,18 @@ export const recorduserclick = async (
   confirmdialog = false,
   hasparentclick = false
 ) => {
+  
+  if (
+    !node.isSameNode(event.target) || clickableElementExists(event.target) ||
+    !isClickable(event.target)
+  ) {
+    return;
+  }
+    
+  node = event.target;
+  if (!window.udanSelectedNodes) window.udanSelectedNodes = [];
+  window.udanSelectedNodes.push(node);
+  
   const isRecording =
     getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true" ? true : false;
 
@@ -1017,7 +1096,11 @@ export const recorduserclick = async (
     }
     // return;
   }
-  const resp = await postClickData(node);
+    
+  const _text = node.innerText || getclickedinputlabels(node);
+  if (!_text || _text?.length > 40) return;
+
+  const resp = await postClickData(node, _text);
   if (resp) {
     const activeRecordingData: any = getFromStore(
       CONFIG.RECORDING_SEQUENCE,
@@ -1041,12 +1124,13 @@ export const recorduserclick = async (
  * @param node HTMLElement
  * @returns promise
  */
-export const postClickData = async (node: HTMLElement) => {
+export const postClickData = async (node: HTMLElement, text:string) => {
+  // console.log(getclickedinputlabels(node));
   const payload = {
     domain: window.location.host,
     urlpath: window.location.pathname,
     // sessionid: CONFIG.sessionID,
-    clickednodename: node.innerText,
+    clickednodename: text,
     html5: 0,
     clickedpath: "",
     objectdata: JSON.stringify(domJSON.toJSON(node)),
@@ -1106,3 +1190,482 @@ export const getCurrentPlayItem = () => {
   }
   return retObj;
 };
+
+
+// getting the text for the clicknodes.
+export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, iterate = true, getchildlabels = true, fromclick = false, iteratelimit = 3, ignorenode: any = [])=>{
+
+      if (!node) return inputlabels;
+
+  try { 
+    if (Array.isArray(ignorenode)) {
+      ignorenode = node;
+    }
+
+    if (
+      (node.nodeName.toLowerCase() === "select" ||
+        node.nodeName.toLowerCase() === "checkbox") &&
+      iterate &&
+      inputlabels.length === 0
+    ) {
+      iterationno++;
+      inputlabels = getNodeLabels(
+        node?.parentNode,
+        inputlabels,
+        iterationno,
+        iterate,
+        true,
+        fromclick,
+        iteratelimit,
+        ignorenode
+      );
+      if (fromclick) {
+        //todo need to rework
+      }
+    }
+
+    if (
+      node.nodeName.toLowerCase() === "input" ||
+      node.nodeName.toLowerCase() === "textarea" ||
+      node.nodeName.toLowerCase() === "img"
+    ) {
+      if (
+        node.getAttribute("placeholder") &&
+        node.getAttribute("placeholder") !== ""
+      ) {
+        inputlabels.push({
+          text: node.getAttribute("placeholder").toString(),
+          match: false,
+        });
+      }
+      if (
+        node.getAttribute("type") &&
+        (node.getAttribute("type").toLowerCase() === "submit" ||
+          node.getAttribute("type").toLowerCase() === "file")
+      ) {
+        if (node.getAttribute("value")) {
+          inputlabels.push({
+            text: node.getAttribute("value").toString(),
+            match: false,
+          });
+          iterate = false;
+        }
+      }
+      if (node.getAttribute("alt")) {
+        inputlabels.push({
+          text: node.getAttribute("alt").toString(),
+          match: false,
+        });
+      }
+    }
+
+    if (getchildlabels && node.childNodes.length > 0) {
+      var childnodes = node.childNodes;
+      childnodes.forEach(function (childnode: any, key: any) {
+        if (
+          childnode.nodeName.toLowerCase() !== "script" &&
+          childnode.nodeName.toLowerCase() !== "select" &&
+          childnode.nodeName.toLowerCase() !== "#comment"
+        ) {
+          var textcontent = childnode.textContent
+            .replace(/[\n\r]+|[\s]{2,}/g, " ")
+            .trim();
+          console.log(ignorenode);
+          if (
+            textcontent !== "" &&
+            typeof ignorenode?.isSameNode === "function" &&
+            ignorenode?.isSameNode(childnode) === false
+          ) {
+            // if (textcontent !== "") {
+            inputlabels.push({ text: textcontent, match: false });
+          }
+        }
+      });
+    }
+
+    if (inputlabels.length === 0 && node.getAttribute("data-tooltip")) {
+      inputlabels.push({
+        text: node.getAttribute("data-tooltip").toString(),
+        match: false,
+      });
+    }
+
+    if (inputlabels.length === 0 && node.getAttribute("aria-label")) {
+      inputlabels.push({
+        text: node.getAttribute("aria-label").toString(),
+        match: false,
+      });
+    }
+
+    //todo fix for image tags
+    if (
+      iterate &&
+      node.nodeName.toLowerCase() !== "img" &&
+      inputlabels.length === 0 &&
+      iterationno <= iteratelimit
+    ) {
+      iterationno++;
+      inputlabels = getNodeLabels(
+        node.parentNode,
+        [],
+        iterationno,
+        iterate,
+        getchildlabels,
+        fromclick,
+        iteratelimit,
+        null
+      );
+    }
+
+    if (inputlabels.length === 0 && node.id !== "") {
+      inputlabels.push({
+        text: node.nodeName.toLowerCase() + "-" + node.id,
+        match: false,
+      });
+    } else if (
+      inputlabels.length === 0 &&
+      node.hasAttribute("class") &&
+      node.className &&
+      node.className !== ""
+    ) {
+      var classname = node.className.toString();
+      inputlabels.push({
+        text: node.nodeName.toLowerCase() + "-" + classname.replace(" ", "-"),
+        match: false,
+      });
+    } else if (inputlabels.length === 0) {
+      inputlabels.push({ text: node.nodeName.toLowerCase(), match: false });
+    }
+  } catch (e) { 
+    console.log(e);
+  }
+    return inputlabels;
+      
+}
+
+/**
+ * To get selected text from list options
+ * @param node 
+ * @returns 
+ */
+export const getSelectedTextFromSelectBox = (node: any) => {
+  try {
+    return node?.options?.[node?.selectedIndex].text;
+  } catch (e) { }
+}
+
+//getting input label for the clicked node
+export const getclickedinputlabels=(node:HTMLElement, fromdocument=false, selectchange=false)=>{
+			if (!node) {
+				return null;
+			}
+			var inputlabels="";
+			var nodename=node.nodeName.toLowerCase();
+			switch (nodename) {
+				case "select":
+					if(selectchange) {
+						inputlabels = getSelectedTextFromSelectBox(node);
+					} else {
+						var textlabels = getNodeLabels(node, [], 1, true, false, true);
+						if (textlabels.length > 0) {
+							var labels = [];
+							for (var j = 0; j < textlabels.length; j++) {
+								labels.push(textlabels[j].text);
+							}
+							inputlabels = labels.toString();
+						}
+					}
+					break;
+        case "input":
+          if (!node.hasAttribute("type")) {
+            var textlabels = getNodeLabels(node, [], 1, true, true, true);
+            if (textlabels.length > 0) {
+              var labels = [];
+              for (var j = 0; j < textlabels.length; j++) {
+                labels.push(textlabels[j].text);
+              }
+              inputlabels = labels.toString();
+            }
+          } else {
+            switch (node?.getAttribute("type")?.toLowerCase()) {
+              default:
+                var textlabels = getNodeLabels(node, [], 1, true, true, true);
+                if (textlabels.length > 0) {
+                  var labels = [];
+                  for (var j = 0; j < textlabels.length; j++) {
+                    labels.push(textlabels[j].text);
+                  }
+                  inputlabels = labels.toString();
+                }
+            }
+            break;
+          }
+        break;
+				case "textarea":
+					var textlabels = getNodeLabels(node, [], 1, true, true, true);
+					if (textlabels.length > 0) {
+						var labels = [];
+						for (var j = 0; j < textlabels.length; j++) {
+							labels.push(textlabels[j].text);
+						}
+						inputlabels = labels.toString();
+					}
+					break;
+				case "img":
+					var textlabels = getNodeLabels(node, [], 1, true, false, true);
+					if (textlabels.length > 0) {
+						var labels = [];
+						for (var j = 0; j < textlabels.length; j++) {
+							labels.push(textlabels[j].text);
+						}
+						inputlabels = labels.toString();
+					}
+					break;
+				default:
+					var textlabels = getNodeLabels(node, [], 1, false, true, true);
+					if (textlabels.length > 0) {
+						var labels = [];
+						for (var j = 0; j < textlabels.length; j++) {
+							labels.push(textlabels[j].text);
+						}
+						inputlabels = labels.toString();
+					}
+			}
+			return inputlabels;
+}
+
+
+/**
+ * To get all the children of a given parent
+ * @param htmlElement 
+ * @returns HTMLElements Collection
+ */
+const getAllChildren = (htmlElement:any) => {
+  if (htmlElement.children.length === 0) return [htmlElement];
+
+  let allChildElements = [];
+
+  for (let i = 0; i < htmlElement.children.length; i++) {
+    let children:any = getAllChildren(htmlElement.children[i]);
+    if (children) allChildElements.push(...children);
+  }
+  allChildElements.push(htmlElement);
+
+  return allChildElements;
+};
+
+
+
+/**
+ * To check if a given element is already captured / recorded
+ * @param comparable HTMLElement
+ * @returns boolean
+ */
+export const clickableElementExists = (compareNode:HTMLElement) => { 
+  let existFlag = false;
+  if (!window.udanSelectedNodes) window.udanSelectedNodes = [];
+  window.udanSelectedNodes.forEach((element:any) => {
+    if (element.isSameNode(compareNode)) existFlag = true;
+  });
+  return existFlag;
+}
+
+/**
+ * To findout out a given element is clickable or not!
+ * @param HTMLElement 
+ * @returns boolean
+ */
+export const isClickable = (element:HTMLElement) => { 
+    return (
+      (element.tagName.toLowerCase() === "button" ||
+      element.tagName.toLowerCase() === "a" ||
+      element.tagName.toLowerCase() === "input" ||
+      element.tagName.toLowerCase() === "select" ||
+      element.tagName.toLowerCase() === "img" ||
+      element.onclick != null ||
+      element.addEventListener != null ||
+      window.getComputedStyle(element).cursor == "pointer") &&
+      element?.className?.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) === -1 
+    );
+}
+
+/**
+ * to get all clickable elements 
+ * @returns HTMLElements collection
+ */
+export const getAllClickableElements = () => {
+  window.scrollTo(0, 0);
+  var bodyRect = document.body.getBoundingClientRect();
+
+  var items = Array.prototype.slice
+    .call(document.querySelectorAll("*"))
+    .map(function (element) {
+      var rect = element.getBoundingClientRect();
+      return {
+        element: element,
+        include:
+          element.tagName.toLowerCase() === "button" ||
+          element.tagName.toLowerCase() === "a" ||
+          element.tagName.toLowerCase() === "input" ||
+          element.tagName.toLowerCase() === "select" ||
+          element.tagName.toLowerCase() === "img" ||
+          element.onclick != null ||
+          element.addEventListener != null ||
+          window.getComputedStyle(element).cursor == "pointer",
+        rect: {
+          left: Math.max(rect.left - bodyRect.x, 0),
+          top: Math.max(rect.top - bodyRect.y, 0),
+          right: Math.min(rect.right - bodyRect.x, document.body.clientWidth),
+          bottom: Math.min(
+            rect.bottom - bodyRect.y,
+            document.body.clientHeight
+          ),
+        },
+        text: element.textContent.trim().replace(/\s{2,}/g, " "),
+      };
+    })
+    .filter(
+      (item) =>
+        item.include &&
+        (item.rect.right - item.rect.left) * (item.rect.bottom - item.rect.top) >=
+        20
+    );
+
+  // Only keep inner clickable items
+  const clickableItems =  items.filter(
+    (x) => !items.some((y) => x.element.contains(y.element) && !(x == y))
+  );
+
+  //console.log(clickableItems);
+
+  return clickableItems;
+}
+
+
+/**
+ * self calling function to detech dom changes
+ */
+(function (window) {
+  var last = +new Date();
+  var delay = 100; // default delay
+
+  // Manage event queue
+  let stack: any = [];
+
+  function callback() {
+    var now = +new Date();
+    if (now - last > delay) {
+      for (var i = 0; i < stack.length; i++) {
+        stack[i]();
+      }
+      last = now;
+    }
+  }
+
+  // Public interface
+  const onDomChange = (fn: any, newdelay: any) => {
+    if (newdelay) delay = newdelay;
+    stack.push(fn);
+  };
+
+  // Naive approach for compatibility
+  function naive() {
+    let last: any = document.getElementsByTagName("*");
+    var lastlen = last.length;
+    var timer = setTimeout(function check() {
+      // get current state of the document
+      var current = document.getElementsByTagName("*");
+      var len = current.length;
+
+      // if the length is different
+      // it's fairly obvious
+      if (len != lastlen) {
+        // just make sure the loop finishes early
+        last = [];
+      }
+
+      // go check every element in order
+      for (var i = 0; i < len; i++) {
+        if (current[i] !== last[i]) {
+          callback();
+          last = current;
+          lastlen = len;
+          break;
+        }
+      }
+
+      // over, and over, and over again
+      setTimeout(check, delay);
+    }, delay);
+  }
+
+  //
+  //  Check for mutation events support
+  //
+  var support: any = {};
+
+  var el = document.documentElement;
+  var remain = 3;
+
+  // callback for the tests
+  function decide() {
+    if (support.DOMNodeInserted) {
+      window.addEventListener(
+        "DOMContentLoaded",
+        function () {
+          if (support.DOMSubtreeModified) {
+            // for FF 3+, Chrome
+            el.addEventListener("DOMSubtreeModified", callback, false);
+          } else {
+            // for FF 2, Safari, Opera 9.6+
+            el.addEventListener("DOMNodeInserted", callback, false);
+            el.addEventListener("DOMNodeRemoved", callback, false);
+          }
+        },
+        false
+      );
+    } else {
+      // fallback
+      naive();
+    }
+  }
+
+  // checks a particular event
+  function test(event: any) {
+    el.addEventListener(
+      event,
+      function fn() {
+        support[event] = true;
+        el.removeEventListener(event, fn, false);
+        if (--remain === 0) decide();
+      },
+      false
+    );
+  }
+
+  // attach test events
+  // if (window.addEventListener) {
+  test("DOMSubtreeModified");
+  test("DOMNodeInserted");
+  test("DOMNodeRemoved");
+  // } else {
+  decide();
+  // }
+
+  // do the dummy test
+  var dummy = document.createElement("div");
+  el.appendChild(dummy);
+  el.removeChild(dummy);
+
+  // expose
+  window.onDomChange = onDomChange;
+})(window);
+
+/**
+ * To listen to dom changes
+ */
+
+window.onDomChange(function () {
+  addBodyEvents(document.body);
+  //console.log("dom updated");
+});
