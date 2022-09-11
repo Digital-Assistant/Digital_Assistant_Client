@@ -7,7 +7,16 @@
 
 import React, { useEffect } from "react";
 import "../App.scss";
+import {
+  LeftOutlined,
+  DeleteOutlined,
+  LikeOutlined,
+  PlayCircleOutlined,
+  CloseCircleOutlined,
+  VideoCameraAddOutlined,
+} from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button, Empty, List, Row, Col } from "antd";
 import {
   faArrowAltCircleLeft,
   faPlayCircle,
@@ -22,7 +31,12 @@ import {
   getTooltipPositionClass,
   removeToolTip,
   getCurrentPlayItem,
+  getAllChildren,
+  compareNodes,
+  getAbsoluteOffsets,
 } from "../util";
+// import { jaroWinkler } from "jaro-winkler-typescript";
+
 export interface MProps {
   data?: any;
   recordButtonVisibility?: boolean;
@@ -67,17 +81,22 @@ export const RecordSequence = (props: MProps) => {
  */
 
 export const RecordButton = (props: MProps) => {
-  const setShowRecord = (flag: boolean) => {
-    if (props.recordHandler) props.recordHandler(flag);
+  const cancel = (flag: boolean) => {
+    if (props.cancelHandler) props.cancelHandler();
   };
   const recordSequence = () => {
     if (props.recordSeqHandler) props.recordSeqHandler();
   };
   return props?.recordButtonVisibility ? (
     <div className="uda-card-details">
-      <span className="uda-close-icon" onClick={() => setShowRecord(false)}>
-        ×
-      </span>
+      <Row>
+        <Col span={24} className="halign-right">
+          <CloseCircleOutlined
+            className="small"
+            onClick={() => cancel(false)}
+          />
+        </Col>
+      </Row>
       <h5>Create your own action</h5>
       <div>
         <button
@@ -85,6 +104,7 @@ export const RecordButton = (props: MProps) => {
           id="uda-enable-record"
           onClick={() => recordSequence()}
         >
+          <VideoCameraAddOutlined />
           <span>Rec</span>
         </button>
       </div>
@@ -121,11 +141,29 @@ export const RecordSequenceDetails = (props: MProps) => {
       let originalElement = originalNode?.node;
       //if target element is ANCHOR, navigate link rather than tooltip
       if (originalElement.nodeName.toLowerCase() === "a") {
-        const selector = getLookUpSelector(originalElement);
-        const targetElement = document.querySelector(selector);
-        if (targetElement) {
+        // const selector = getLookUpSelector(originalElement);
+        // const targetElement = document.querySelector(selector);
+        let compareElements = getAllChildren(document.body);
+        for (let i = 0; i < compareElements?.length; i++) {
+          if (originalElement.outerHTML == compareElements[i].outerHTML) {
+            if (originalNode.offset) {
+              // console.log(originalNode);
+              const _offsets = getAbsoluteOffsets(compareElements[i]);
+              // console.log(originalNode, _offsets);
+              if (
+                _offsets.x == originalNode.offset.x ||
+                _offsets.y == originalNode.offset.y
+              ) {
+                originalElement = compareElements[i];
+              }
+            } else {
+              originalElement = compareElements[i];
+            }
+          }
+        }
+        if (originalElement) {
           updateStatus(playItem.index);
-          window.location.href = targetElement?.getAttribute("href") || "/";
+          window.location.href = originalElement?.getAttribute("href") || "/";
         }
       } else {
         //show tooltip
@@ -146,9 +184,27 @@ export const RecordSequenceDetails = (props: MProps) => {
     const tooltipDivElement = getToolTipElement();
     try {
       const originalNode = JSON.parse(invokingNode);
-
       let originalElement = originalNode?.node;
+      let compareElements = getAllChildren(document.body);
+      for (let i = 0; i < compareElements?.length; i++) {
+        if (originalElement.outerHTML == compareElements[i].outerHTML) {
+          if (originalNode.offset) {
+            // console.log(originalNode);
+            const _offsets = getAbsoluteOffsets(compareElements[i]);
+            // console.log(originalNode, _offsets);
+            if (
+              _offsets.x == originalNode.offset.x ||
+              _offsets.y == originalNode.offset.y
+            ) {
+              originalElement = compareElements[i];
+            }
+          } else {
+            originalElement = compareElements[i];
+          }
+        }
+      }
 
+      // console.log(originalNode);
       //attach event to continue button in tooltip
       document
         .getElementById("uda-autoplay-continue")
@@ -167,11 +223,11 @@ export const RecordSequenceDetails = (props: MProps) => {
           removeToolTip();
         });
 
-      let selector = getLookUpSelector(originalElement);
+      //let selector = getLookUpSelector(originalElement);
 
-      // console.log("'" + selector + index + "'");
+      //console.log("'" + selector + index + "'");
 
-      originalElement = document.querySelector(selector);
+      //originalElement = document.querySelector(selector);
 
       if (originalElement) {
         let toolTipPositionClass: any = getTooltipPositionClass(
@@ -183,7 +239,7 @@ export const RecordSequenceDetails = (props: MProps) => {
         });
       }
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   };
 
@@ -276,31 +332,50 @@ export const RecordSequenceDetails = (props: MProps) => {
         }}
       >
         <div className="uda-card-btns">
-          <div className="uda-loading-bar" id="nist-autoplay">
-            <span onClick={() => play()}>
-              <FontAwesomeIcon icon={faPlayCircle} />
-            </span>
-          </div>
-        </div>
-        <div
-          className="uda-card-right-dbl-arrow"
-          id="uda-backto-search"
-          onClick={() => backNav()}
-        >
-          <FontAwesomeIcon icon={faArrowAltCircleLeft} />
+          <Button
+            type="primary"
+            shape="circle"
+            size="small"
+            style={{ position: "absolute", top: 12, left: 0 }}
+            onClick={() => backNav()}
+          >
+            <LeftOutlined />
+          </Button>
+          <PlayCircleOutlined
+            className="large secondary"
+            onClick={() => play()}
+          />
         </div>
         <h5>{getName()}</h5> <hr />
         <ul className="uda-suggestion-list" id="uda-sequence-steps">
-          {renderData()}
+          {props?.data && (
+            <List
+              itemLayout="horizontal"
+              dataSource={selectedRecordingDetails?.userclicknodesSet}
+              renderItem={(item: any, index: number) => (
+                <List.Item
+                  className={item.status}
+                  onClick={() => setToolTip(item, index)}
+                >
+                  <List.Item.Meta title={item?.clickednodename} />
+                </List.Item>
+              )}
+            />
+          )}
         </ul>
       </div>
-      <div className="uda-details-footer">
-        <div
-          className="uda-details-footer-left uda-trash-img"
-          id="uda-delete-sequence"
-        ></div>
-        <div className="uda-details-footer-right"> </div>
-      </div>
+      <Row>
+        <Col span={12} style={{ textAlign: "center" }}>
+          <Button size="small">
+            <DeleteOutlined width={33} />
+          </Button>
+        </Col>
+        <Col span={12} style={{ textAlign: "center" }}>
+          <Button size="small">
+            <LikeOutlined width={33} />
+          </Button>
+        </Col>
+      </Row>
     </>
   ) : null;
 };

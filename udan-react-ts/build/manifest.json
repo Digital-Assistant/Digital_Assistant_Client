@@ -10,10 +10,10 @@
       ],
       "run_at": "document_end",
       "js": [
-        "assets/index.ae07fb21.js"
+        "assets/index.a109dd29.js"
       ],
       "css": [
-        "assets/index.7d3b5f81.css"
+        "assets/index.409adbec.css"
       ],
       "media": []
     }
@@ -24,7 +24,7 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "assets/index.7d3b5f81.css",
+        "assets/index.409adbec.css",
         "assets/logo.3bc36866.svg"
       ],
       "matches": [

@@ -59,7 +59,8 @@ body {
     box-shadow: 0px 1px 7px 2px var(--uda-boxshodow-color);
     text-align: center;
     cursor: pointer;
-
+    margin-left: 6px;
+    box-shadow: -4px 0 4px #ccc;
     .arrow {
         color: #fff;
         line-height: 34px;
@@ -411,7 +412,7 @@ body {
                                     justify-content: center;
                                     align-items: center;
                                     font-size: 30px;
-                                    color: #ff5722;
+                                    color: var(-uda-secondary-color);
                                     position: absolute;
                                     right: 10px;
                                     width: 40px;
@@ -457,6 +458,7 @@ body {
                             .uda-card-btns {
                                 display: block;
                                 margin-top: -35px;
+                                position: relative;
                             }
 
                             .uda-play-btn {
@@ -1161,7 +1163,11 @@ top:30px;
 
                                                         
 
-    .udan-main-panel{
+.udan-main-panel{
+    .halign-right{
+        text-align: right;
+        justify-content: flex-end;
+    }
     li {
         list-style: none;
     }
@@ -1191,4 +1197,78 @@ top:30px;
         margin-top: 8px;
         border-radius: 50%;
     }
+    .flex-card{
+        display: flex;
     }
+    .end{
+        justify-content: end;
+    }
+
+    /**
+    Ant styles override
+    **/
+    .ant-row{
+        padding: 10px;
+    }
+    .ant-tooltip {
+        z-index: 99999999;
+    }
+    .ant-spin{
+        position: absolute;
+        right: 50%;
+        top: 50%;
+        margin-right: -40px;
+        margin-top: -40px;
+    }
+    .ant-list-item-meta-description{
+        color: #666;
+        font-size: 12px;
+        font-style: italic;
+    }
+
+    .ant-list-item{
+        border-bottom: 0;
+        box-shadow: 0 1px 2px #ddd;
+        .arrow{
+            svg{
+                fill: var(--uda-secondary-color);
+            }
+        }
+    }       
+    .ant-btn-primary{
+        background-color: var(--uda-primary-color) !important;
+    }
+    .anticon{
+        &.large{
+            svg{
+                width: 64px !important;
+                height: 64px !important;
+            }
+        }
+        &.small {
+            svg {
+                width: 24px !important;
+                height: 24px !important;
+            }
+        }
+        &.extra-small {
+            svg {
+                width: 16px !important;
+                height: 16px !important;
+            }
+        }
+        &.primary {
+            svg{
+                fill: var(--uda-primary-color) !important;
+            }
+        }
+        &.secondary{
+            svg{
+                fill: var(--uda-secondary-color) !important;
+            }
+        }
+    }
+}
+
+
+

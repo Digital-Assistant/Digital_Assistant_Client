@@ -7,13 +7,15 @@
 
 import React, { useEffect } from "react";
 import "../App.scss";
-
+import { Empty, List } from "antd";
+import { DoubleRightOutlined } from "@ant-design/icons";
 import { getRowObject, setToStore } from "../util";
 
 export interface MProps {
   visibility?: boolean;
   data?: any;
   showDetails?: Function;
+  addRecordHandler?: Function;
 }
 
 /**
@@ -23,29 +25,28 @@ export interface MProps {
 
 export const SearchResults = (props: MProps) => {
   const selectItem = (item: any) => {
+    //if (props.addRecordHandler) props.addRecordHandler(true);
     setToStore(item, "selectedRecordedItem", false);
     if (props?.showDetails) props.showDetails(item);
   };
 
-  const renderData = () => {
-    if (!props?.visibility) return;
-    if (!props?.data?.length) {
-      return (
-        <div className="uda-no-results">
-          <p>No results found</p>
-        </div>
-      );
-    }
-    return props?.data?.map((item: any) => {
-      const _row = getRowObject(item);
-      return (
-        <div className="uda-card" onClick={() => selectItem(item)}>
-          <h5>{_row.sequenceName}</h5>
-          <i>{_row.path}</i>
-        </div>
-      );
-    });
-  };
-
-  return renderData();
+  return !props?.visibility ? null : !props?.data?.length ? (
+    <Empty />
+  ) : (
+    <List
+      itemLayout="horizontal"
+      dataSource={props?.data}
+      renderItem={(item) => (
+        <List.Item onClick={() => selectItem(item)}>
+          <List.Item.Meta
+            title={getRowObject(item)?.sequenceName}
+            description={getRowObject(item)?.path}
+          />
+          <div className="arrow">
+            <DoubleRightOutlined />
+          </div>
+        </List.Item>
+      )}
+    />
+  );
 };

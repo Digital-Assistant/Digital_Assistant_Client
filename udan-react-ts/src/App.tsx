@@ -7,6 +7,8 @@
 ///<reference types="chrome"/>
 import logo from "./logo.svg";
 // import "./App.css";
+import { Spin } from "antd";
+import "antd/dist/antd.css";
 import React, { useState, useEffect, useCallback } from "react";
 import { fetchSearchResults } from "./services/searchService";
 import {
@@ -72,6 +74,7 @@ function App() {
       : false) || false
   );
   const [hide, setHide] = React.useState<boolean>(isRecording ? false : true);
+  const [showLoader, setShowLoader] = React.useState<boolean>(true);
   const [showRecord, setShowRecord] = React.useState<boolean>(false);
   const [isPlaying, setIsPlaying] = React.useState<string>(
     getFromStore("isPlaying", true) || "off"
@@ -118,11 +121,13 @@ function App() {
    @param keyword:string
    */
   const getSearchResults = async (keyword: string) => {
+    setShowLoader(true);
     setSearchKeyword(keyword);
     const _searchResults = await fetchSearchResults({
       keyword,
       domain: encodeURI(window.location.host),
     });
+    setTimeout(() => setShowLoader(false), 1500);
     setSearchResults([..._searchResults]);
   };
 
@@ -141,6 +146,8 @@ function App() {
     setShowRecord(false);
     setRecordSequenceDetailsVisibility(false);
     playHandler("off");
+    //getSearchResults("");
+    if (window.udanSelectedNodes) window.udanSelectedNodes = [];
   };
 
   /**
@@ -235,7 +242,7 @@ function App() {
     <>
       <div
         className="udan-main-panel"
-        style={{ display: hide ? "none" : "block" }}
+        style={{ display: hide ? "none" : "block", position: "relative" }}
       >
         <div id="uda-html-container">
           <div id="uda-html-content" nist-voice="true">
@@ -250,8 +257,11 @@ function App() {
                   className="uda-container uda-clear uda-cards-scroller"
                   id="uda-content-container"
                 >
+                  {showLoader && <Spin tip="Loading..." />}
+
                   <RecordButton
                     recordHandler={showRecordHandler}
+                    cancelHandler={cancel}
                     recordSeqHandler={recordSequence}
                     recordButtonVisibility={toggleContainer("record-button")}
                   />
@@ -261,11 +271,15 @@ function App() {
                     recordSequenceVisibility={toggleContainer("record-seq")}
                   />
 
-                  <SearchResults
-                    data={searchResults}
-                    showDetails={showRecordingDetails}
-                    visibility={toggleContainer("search-results")}
-                  />
+                  {!showLoader && (
+                    <SearchResults
+                      data={searchResults}
+                      showDetails={showRecordingDetails}
+                      visibility={toggleContainer("search-results")}
+                      addRecordHandler={setShowRecord}
+                      key={searchResults.length + showLoader}
+                    />
+                  )}
 
                   <RecordedSeq
                     isShown={toggleContainer("recorded-data")}
@@ -286,7 +300,11 @@ function App() {
                     key={"rSD" + recordSequenceDetailsVisibility}
                   />
                 </div>
-                <Footer toggleFlag={hide} toggleHandler={toggleHandler} />
+                <Footer
+                  toggleFlag={hide}
+                  addRecordBtnStatus={showRecord}
+                  toggleHandler={toggleHandler}
+                />
               </div>
             </div>
           </div>

@@ -6,6 +6,7 @@ import {
   userClick,
 } from "../services/recordService";
 import { createPopperLite as createPopper } from "@popperjs/core";
+import { jaroWinkler } from "jaro-winkler-typescript";
 // import { UDAConsoleLogger, UDAErrorLogger } from '../config/error-log';
 
 export const UDAClickObjects: any = [];
@@ -170,7 +171,7 @@ export const addBodyEvents = (selector: HTMLElement) => {
         addClickToNode(els[i]);
       }
     } catch (e) {
-      console.log(els[i].tagName, e);
+      // console.log(els[i].tagName, e);
      }
   }
 };
@@ -306,7 +307,7 @@ export const addToolTip = (invokingNode: any, index: any) => {
 
     let selector = getLookUpSelector(originalElement);
 
-    console.log("'" + selector + index + "'");
+    // console.log("'" + selector + index + "'");
 
     originalElement = document.querySelector(selector);
 
@@ -320,7 +321,7 @@ export const addToolTip = (invokingNode: any, index: any) => {
       });
     }
   } catch (e) {
-    console.log(e);
+    // console.log(e);
   }
 };
 
@@ -386,7 +387,8 @@ export const getScreenSize = () => {
  */
 
 export const getNodeCoordinates = (element: HTMLElement, windowSize: any) => {
-  const x = element.getBoundingClientRect();
+  if (!element) return;
+  const x = element?.getBoundingClientRect();
   let result = {
     top: x.top + windowSize.scrollInfo.scrollTop,
     width: x.width,
@@ -406,30 +408,35 @@ export const getTooltipPositionClass = (
   tooltipElement: HTMLElement
 ) => {
   const availablePositions = ["right", "top", "left", "bottom"].slice();
-
   const screenSize = getScreenSize();
   const tooltipPos = getNodeCoordinates(tooltipElement, screenSize);
-  const targetElementRect = targetElement.getBoundingClientRect();
+  const targetElementRect = targetElement?.getBoundingClientRect();
 
   let finalCssClass = "right";
 
   // Check for space to the right
-  if (targetElementRect.right + tooltipPos.width > screenSize.screen.width) {
+  if (
+    tooltipPos && targetElementRect.right + tooltipPos.width >
+    screenSize.screen.width
+  ) {
     removeFromArray(availablePositions, "right");
   }
 
   // Check for space above
-  if (targetElementRect.top - tooltipPos.height < 0) {
+  if (tooltipPos && targetElementRect.top - tooltipPos.height < 0) {
     removeFromArray(availablePositions, "top");
   }
 
   // Check for space to the left
-  if (targetElementRect.left - tooltipPos.width < 0) {
+  if (tooltipPos && targetElementRect.left - tooltipPos.width < 0) {
     removeFromArray(availablePositions, "left");
   }
 
   // Check for space below
-  if (targetElementRect.bottom + tooltipPos.height > screenSize.page.height) {
+  if (
+    tooltipPos && targetElementRect.bottom + tooltipPos.height >
+    screenSize.page.height
+  ) {
     removeFromArray(availablePositions, "bottom");
   }
 
@@ -1032,7 +1039,9 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
         break;
       default:
         addEvent(node, 'click', function (event: any) {
+          if (isAllowedMiscElement(event.target)) {
             recorduserclick(event.target, false, false, event, confirmdialog);
+          }
         });
       	break;
     }
@@ -1042,6 +1051,27 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
     errorLog("Unable to add click to node " + node.outerHTML + " " + e);
   }
 };
+
+
+export const isAllowedMiscElement = (element: HTMLElement) => { 
+  let isAllowedElement:boolean = window.getComputedStyle(element).cursor == "pointer";
+  let parentEl: any = element;
+  /**traversing 3 level parents for contenteditable property */
+  for (let i = 0; i <= 3; i++) { 
+    if (element.getAttribute("contenteditable")) {
+      isAllowedElement = true;
+      break;
+    }
+    if (parentEl.parentNode) {
+      parentEl = parentEl.parentNode;
+    }
+    if (parentEl.getAttribute("contenteditable")) {
+       isAllowedElement = true;
+       break;
+    }
+  }
+  return isAllowedElement;
+}
 
 /**
  * To delay Hyperlink click navitaion
@@ -1089,16 +1119,28 @@ export const recorduserclick = async (
   const isRecording =
     getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true" ? true : false;
 
+  
+  const parentAnchorElement = parentUpTo(node, "a");
+  // console.log(isRecording, node, parentAnchorElement);
+  
   if (!isRecording) {
-    if (node.nodeName.toLowerCase() == "a") {
-      window.location.href = node.getAttribute("href") || "/";
+    if (parentAnchorElement) {
+      window.location.href = parentAnchorElement.getAttribute("href") || "/";
       return true;
+    } 
+    else {
+      return;
     }
     // return;
   }
     
   const _text = node.innerText || getclickedinputlabels(node);
-  if (!_text || _text?.length > 40) return;
+  
+  console.log("recording..." + _text);
+  
+  if (!_text || _text?.length > 100 || !_text?.trim()?.length) return;
+
+  
 
   const resp = await postClickData(node, _text);
   if (resp) {
@@ -1113,11 +1155,40 @@ export const recorduserclick = async (
       setToStore([resp], CONFIG.RECORDING_SEQUENCE, false);
     }
   }
-  if (resp && node.nodeName.toLowerCase() == "a" && node.getAttribute("href")) {
+  if (
+    parentAnchorElement && node.getAttribute("href")
+  ) {
     //return;
-    window.location.href = node.getAttribute("href") || "";
+    window.location.href = parentAnchorElement.getAttribute("href") || "";
   }
 };
+
+/**
+ * return parent element
+ * @param el target element
+ * @param tagName tag name to be matched
+ * @returns 
+ */
+export const parentUpTo=(el:any, tagName:string)=> {
+  tagName = tagName.toLowerCase();
+  
+  if (el.tagName && el.tagName.toLowerCase() == tagName) return el;
+  
+  let depth = 0;
+  
+  while (el && el.parentNode && depth<=6) {
+    el = el.parentNode;
+    if (el.tagName && el.tagName.toLowerCase() == tagName) {
+      return el;
+    }
+    depth++;
+  }
+  // Many DOM methods return null if they don't
+  // find the element they are searching for
+  // It would be OK to omit the following and just
+  // return undefined
+  return null;
+}
 
 /**
  * To post click data to REST
@@ -1126,6 +1197,10 @@ export const recorduserclick = async (
  */
 export const postClickData = async (node: HTMLElement, text:string) => {
   // console.log(getclickedinputlabels(node));
+  let objectData:any = domJSON.toJSON(node);
+  objectData.node.outerHTML = node.outerHTML;
+  objectData.offset = getAbsoluteOffsets(node);
+  console.log(objectData);
   const payload = {
     domain: window.location.host,
     urlpath: window.location.pathname,
@@ -1133,7 +1208,7 @@ export const postClickData = async (node: HTMLElement, text:string) => {
     clickednodename: text,
     html5: 0,
     clickedpath: "",
-    objectdata: JSON.stringify(domJSON.toJSON(node)),
+    objectdata: JSON.stringify(objectData),
   };
 
   return recordClicks(payload);
@@ -1145,6 +1220,7 @@ export const postClickData = async (node: HTMLElement, text:string) => {
  * @returns promise
  */
 export const postRecordSequenceData = async (request: any) => {
+  window.udanSelectedNodes = [];
   const userclicknodesSet = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
   const ids = userclicknodesSet.map((item: any) => item.id);
   const payload = {
@@ -1270,7 +1346,7 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
           var textcontent = childnode.textContent
             .replace(/[\n\r]+|[\s]{2,}/g, " ")
             .trim();
-          console.log(ignorenode);
+          
           if (
             textcontent !== "" &&
             typeof ignorenode?.isSameNode === "function" &&
@@ -1440,7 +1516,7 @@ export const getclickedinputlabels=(node:HTMLElement, fromdocument=false, select
  * @param htmlElement 
  * @returns HTMLElements Collection
  */
-const getAllChildren = (htmlElement:any) => {
+export const getAllChildren = (htmlElement:any) => {
   if (htmlElement.children.length === 0) return [htmlElement];
 
   let allChildElements = [];
@@ -1475,20 +1551,158 @@ export const clickableElementExists = (compareNode:HTMLElement) => {
  * @param HTMLElement 
  * @returns boolean
  */
-export const isClickable = (element:HTMLElement) => { 
+export const isClickable = (element: HTMLElement) => {
+  if(isAllowedMiscElement(element)) return true;
     return (
-      (element.tagName.toLowerCase() === "button" ||
-      element.tagName.toLowerCase() === "a" ||
-      element.tagName.toLowerCase() === "input" ||
-      element.tagName.toLowerCase() === "select" ||
-      element.tagName.toLowerCase() === "img" ||
-      element.onclick != null ||
-      element.addEventListener != null ||
-      window.getComputedStyle(element).cursor == "pointer") &&
-      element?.className?.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) === -1 
+      (allowedTags.includes(element.tagName.toLowerCase()) ||
+        element.onclick != null ||
+        element.addEventListener != null ||
+        window.getComputedStyle(element).cursor == "pointer") &&
+      element?.className?.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) === -1
     );
 }
 
+export const compareNodes = (
+  comparenode: any,
+  originalnode: any,
+  isPersonalNode = false,
+  match:any = {
+    count: 0,
+    matched: 0,
+    unmatched: [],
+    innerTextFlag: false,
+    innerChildNodes: 0,
+  }
+) => {
+  // sum the childnodes
+  if (comparenode.hasOwnProperty("childNodes")) {
+    match.innerChildNodes =
+      match.innerChildNodes + comparenode.childNodes.length;
+  }
+  for (let key in originalnode) {
+    if (CONFIG.ignoreattributes.indexOf(key) !== -1) {
+      continue;
+    } else if (
+      key.indexOf("_ngcontent") !== -1 ||
+      key.indexOf("jQuery") !== -1 ||
+      key.indexOf("__zone_symbol__") !== -1
+    ) {
+      continue;
+    } else {
+      match.count++;
+    }
+    if (
+      comparenode.hasOwnProperty(key) &&
+      typeof originalnode[key] === "object" &&
+      typeof comparenode[key] === "object"
+    ) {
+      match.matched++;
+      match = compareNodes(
+        comparenode[key],
+        originalnode[key],
+        isPersonalNode,
+        match
+      );
+    } else if (
+      comparenode.hasOwnProperty(key) &&
+      Array.isArray(originalnode[key]) &&
+      originalnode[key].length > 0 &&
+      Array.isArray(comparenode[key]) &&
+      comparenode[key].length > 0
+    ) {
+      match.matched++;
+      if (comparenode[key].length === originalnode[key].length) {
+        match.matched++;
+        for (var i = 0; i < originalnode[key].length; i++) {
+          match = compareNodes(
+            comparenode[key][i],
+            originalnode[key][i],
+            isPersonalNode,
+            match
+          );
+        }
+      }
+    } else if (
+      (key === "class" || key === "className") &&
+      originalnode.hasOwnProperty(key) &&
+      comparenode.hasOwnProperty(key)
+    ) {
+      // fix for calendar issue
+      comparenode[key] = comparenode[key].replace(" ng-star-inserted", "");
+      originalnode[key] = originalnode[key].replace(" ng-star-inserted", "");
+      if (comparenode[key] === originalnode[key]) {
+        match.matched++;
+      } else {
+        // jaro wrinker comparision for classname
+        let weight = jaroWinkler(originalnode[key], comparenode[key]);
+        if (weight > 0.9) {
+          match.matched++;
+        } else {
+          match.unmatched.push({
+            key: key,
+            compareNodeValues: comparenode[key],
+            recordedNodeValues: originalnode[key],
+          });
+        }
+      }
+    } else if (
+      key === "innerText" &&
+      originalnode.hasOwnProperty(key) &&
+      comparenode.hasOwnProperty(key) &&
+      comparenode[key].trim() === originalnode[key].trim()
+    ) {
+      // matching inner text should be weighted more. We will add an arbitrarily large number - innerTextWeight.
+      // since this will match for every child node, we need to accommodate this logic whenever 'compareNodes' is called
+      // UDAConsoleLogger.info(comparenode[key].trim());
+      // UDAConsoleLogger.info(originalnode[key].trim());
+      match.innerTextFlag = true;
+      match.matched = match.matched + CONFIG.innerTextWeight;
+      // match.matched++;
+    } else if (
+      comparenode.hasOwnProperty(key) &&
+      comparenode[key] === originalnode[key]
+    ) {
+      match.matched++;
+    } else if (
+      comparenode.hasOwnProperty(key) &&
+      comparenode[key] !== originalnode[key] &&
+      key === "href" &&
+      originalnode[key].indexOf(comparenode[key]) !== -1
+    ) {
+      match.matched++;
+    } else if (
+      comparenode.hasOwnProperty(key) &&
+      (key === "id" || key === "name") &&
+      comparenode[key] !== originalnode[key]
+    ) {
+      let weight = jaroWinkler(originalnode[key], comparenode[key]);
+      if (weight > 0.9) {
+        match.matched++;
+      }
+    }
+    // matching personal node key value pairs for personal tag true
+    else if (
+      isPersonalNode &&
+      CONFIG.personalNodeIgnoreAttributes.indexOf(key) !== -1
+    ) {
+      // make inner text flag to true if personal tag is true
+      if (key === "innerText") {
+        match.innerTextFlag = true;
+        match.matched = match.matched + CONFIG.innerTextWeight;
+      } else {
+        match.matched++;
+      }
+    } else {
+      match.unmatched.push({
+        key: key,
+        compareNodeValues: comparenode[key],
+        recordedNodeValues: originalnode[key],
+      });
+    }
+  }
+  return match;
+};
+    
 /**
  * to get all clickable elements 
  * @returns HTMLElements collection
@@ -1500,7 +1714,7 @@ export const getAllClickableElements = () => {
   var items = Array.prototype.slice
     .call(document.querySelectorAll("*"))
     .map(function (element) {
-      var rect = element.getBoundingClientRect();
+      var rect = element?.getBoundingClientRect();
       return {
         element: element,
         include:
@@ -1539,6 +1753,24 @@ export const getAllClickableElements = () => {
   //console.log(clickableItems);
 
   return clickableItems;
+}
+
+
+export const getAbsoluteOffsets=(element:HTMLElement)=> {
+  let cords = { x: 0, y: 0 };
+  try {
+    let currentElement: any = element;
+
+    while (currentElement !== null) {
+      cords.x += currentElement.offsetLeft;
+      cords.x -= currentElement.scrollLeft;
+      cords.y += currentElement.offsetTop;
+      cords.y -= currentElement.scrollTop;
+      currentElement = currentElement.offsetParent;
+    }
+  }catch(e){console.log(e)}
+
+  return cords;
 }
 
 
