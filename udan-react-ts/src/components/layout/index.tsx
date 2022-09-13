@@ -10,7 +10,17 @@ import "../../App.scss";
 import { fetchSearchResults } from "../../services/searchService";
 import { squeezeBody } from "../../util";
 import logo from "../../logo.svg";
+import {
+  PlusOutlined,
+  DoubleRightOutlined,
+  DoubleLeftOutlined,
+} from "@ant-design/icons";
+import { Button, Tooltip, Row, Col } from "antd";
 
+/**
+ *
+ * @returns logo path
+ */
 function getLogo() {
   if (window?.chrome) {
     return window?.chrome?.runtime?.getURL(logo);
@@ -22,6 +32,7 @@ export interface MProps {
   searchHandler?: Function;
   toggleFlag: boolean;
   toggleHandler?: Function;
+  addRecordBtnStatus?: boolean;
 }
 
 /**
@@ -81,7 +92,9 @@ export const Header = (props: MProps) => {
           id="uda-close-panel"
           onClick={() => togglePanel()}
         >
-          <span className="arrow"> &gt;&gt; </span>
+          <span className="arrow">
+            {hide ? <DoubleRightOutlined /> : <DoubleLeftOutlined />}
+          </span>
         </div>
         <div className="uda-icon-txt">
           <img src={getLogo()} />
@@ -132,15 +145,54 @@ export const Header = (props: MProps) => {
   );
 };
 
+/**
+ *
+ * @param props
+ * @returns footer container
+ */
 export const Footer = (props: MProps) => {
   const setShowRecord = (flag: boolean) => {
     if (props.toggleHandler) props.toggleHandler(flag, "footer");
   };
+
   return (
     <div>
       <div className="uda-footer-bar">
         <div className="uda-container">
-          <div className="uda-dropdown" id="uda-advanced-btn">
+          <Row>
+            <Col span={24} className="flex-card end">
+              {!props?.addRecordBtnStatus && (
+                <Tooltip title="New Sequence">
+                  <Button
+                    type="primary"
+                    shape="circle"
+                    size="middle"
+                    onClick={() => setShowRecord(true)}
+                    icon={<PlusOutlined />}
+                  />
+                </Tooltip>
+              )}
+            </Col>
+          </Row>
+          {/* <button
+            className="uda-new-seq uda-exclude"
+            onClick={() => setShowRecord(true)}
+          >
+            <span>+</span>
+          </button> */}
+          {/* <div
+            className="uda-advanced-btn-content"
+            onClick={() => setShowRecord(true)}
+          >
+            <span
+              id="uda-advance-section"
+              className="uda-advanced-btn-content"
+              data-exclude="true"
+            >
+              New Sequence
+            </span>
+          </div> */}
+          {/* <div className="uda-dropdown" id="uda-advanced-btn">
             <button className="uda-advanced-btn">
               <span>Advanced</span>
             </button>
@@ -148,13 +200,16 @@ export const Footer = (props: MProps) => {
               className="uda-advanced-btn-content"
               onClick={() => setShowRecord(true)}
             >
-              <a id="uda-advance-section" data-exclude="true">
+              <span
+                id="uda-advance-section"
+                className="uda-advanced-btn-content"
+                data-exclude="true"
+              >
                 New Sequence
-              </a>
+              </span>
             </div>
-          </div>
+          </div> */}
         </div>
-        <br />
         <div
           className="uda-container"
           style={{ borderTop: "1px solid #969696", marginTop: 30 }}
@@ -169,7 +224,7 @@ export const Footer = (props: MProps) => {
               data-exclude="true"
               target="_blank"
             >
-              Know More{" "}
+              Know More
             </a>
             <img src={getLogo()} width="15px" height="15px;" />
           </div>

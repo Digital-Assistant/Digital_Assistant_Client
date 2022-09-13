@@ -59,7 +59,8 @@ body {
     box-shadow: 0px 1px 7px 2px var(--uda-boxshodow-color);
     text-align: center;
     cursor: pointer;
-
+    margin-left: 6px;
+    box-shadow: -4px 0 4px #ccc;
     .arrow {
         color: #fff;
         line-height: 34px;
@@ -339,7 +340,7 @@ body {
                         }
 
                         .uda-advanced-btn-content {
-                            display: none;
+                            // display: none;
                             position: absolute;
                             padding: 5px;
                             color: var(--uda-text-color-bg-white);
@@ -348,7 +349,7 @@ body {
                             bottom: 25px;
                             right: 0;
 
-                            a {
+                            span {
                                 display: flex;
                                 color: #fff;
                                 border-top: 1px solid var(--uda-text-color-bg-white);
@@ -404,6 +405,24 @@ body {
                                 bottom: 0;
                                 width: 360px;
                                 right: 0;
+
+                                .uda-new-seq{
+                                    border: 0;
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    font-size: 30px;
+                                    color: var(-uda-secondary-color);
+                                    position: absolute;
+                                    right: 10px;
+                                    width: 40px;
+                                    height: 40px;
+                                    border-radius: 50%;
+                                    box-shadow: 0 0 6px #666;
+                                    padding: 20px;
+                                    cursor: pointer;
+                                    span{margin-top: -4px;}
+                                }
                             }
 
                             .uda-card-details {
@@ -439,6 +458,7 @@ body {
                             .uda-card-btns {
                                 display: block;
                                 margin-top: -35px;
+                                position: relative;
                             }
 
                             .uda-play-btn {
@@ -550,12 +570,36 @@ body {
                                 line-height: 25px;
                                 text-align: left;
                                 margin: 0;
+                                padding: 0;
                             }
 
                             .uda-suggestion-list li,
                             .uda-recording li {
+                                position: relative;
                                 font-size: 14px;
                                 cursor: pointer;
+                                &::before {
+                                        content: ' ';
+                                        margin: 0 10px;
+                                        vertical-align: middle;
+                                        display: inline-block;
+                                        width: 10px;
+                                        height: 10px;
+                                        border-radius: 50%;
+                                    }
+                                
+                                &.completed {
+                                    &::before {
+                                        // vertical-align: middle;
+                                        // background-repeat: space;
+                                        background-color: lightgreen;
+                                    }
+                                }
+                                .uda-tutorial-btn{
+                                    position: absolute;
+                                    right: 10px;
+                                    top: 4px;
+                                }
                             }
 
                             .uda-details-footer {
@@ -1119,7 +1163,11 @@ top:30px;
 
                                                         
 
-    .udan-main-panel{
+.udan-main-panel{
+    .halign-right{
+        text-align: right;
+        justify-content: flex-end;
+    }
     li {
         list-style: none;
     }
@@ -1149,4 +1197,78 @@ top:30px;
         margin-top: 8px;
         border-radius: 50%;
     }
+    .flex-card{
+        display: flex;
     }
+    .end{
+        justify-content: end;
+    }
+
+    /**
+    Ant styles override
+    **/
+    .ant-row{
+        padding: 10px;
+    }
+    .ant-tooltip {
+        z-index: 99999999;
+    }
+    .ant-spin{
+        position: absolute;
+        right: 50%;
+        top: 50%;
+        margin-right: -40px;
+        margin-top: -40px;
+    }
+    .ant-list-item-meta-description{
+        color: #666;
+        font-size: 12px;
+        font-style: italic;
+    }
+
+    .ant-list-item{
+        border-bottom: 0;
+        box-shadow: 0 1px 2px #ddd;
+        .arrow{
+            svg{
+                fill: var(--uda-secondary-color);
+            }
+        }
+    }       
+    .ant-btn-primary{
+        background-color: var(--uda-primary-color) !important;
+    }
+    .anticon{
+        &.large{
+            svg{
+                width: 64px !important;
+                height: 64px !important;
+            }
+        }
+        &.small {
+            svg {
+                width: 24px !important;
+                height: 24px !important;
+            }
+        }
+        &.extra-small {
+            svg {
+                width: 16px !important;
+                height: 16px !important;
+            }
+        }
+        &.primary {
+            svg{
+                fill: var(--uda-primary-color) !important;
+            }
+        }
+        &.secondary{
+            svg{
+                fill: var(--uda-secondary-color) !important;
+            }
+        }
+    }
+}
+
+
+
