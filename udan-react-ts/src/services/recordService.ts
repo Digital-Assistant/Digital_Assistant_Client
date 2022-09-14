@@ -9,7 +9,7 @@ import { getFromStore } from "../util";
  */
 
 export const recordClicks = (request?: any) => {
-  request.sessionid = getFromStore("sessionId", true);
+  request.usersessionid = getFromStore("udaSessionId", true);
   const parameters = {
     url: ENDPOINT.RECORD,
     method: "POST",
@@ -25,7 +25,7 @@ export const recordClicks = (request?: any) => {
  */
 
 export const recordSequence = (request?: any) => {
-  // request.sessionid = getFromStore("sessionId", true);
+  request.usersessionid = getFromStore("udaSessionId", true);
   const parameters = {
     url: ENDPOINT.RECORD_SEQUENCE,
     method: "POST",
@@ -41,12 +41,44 @@ export const recordSequence = (request?: any) => {
  */
 
 export const userClick = (request?: any) => {
-  request.usersessionid = getFromStore("sessionId", true);
+  request.usersessionid = getFromStore("udaSessionId", true);
   request.clickedname = window.location.host;
   const parameters = {
     url: ENDPOINT.USER_CLICK,
     method: "PUT",
     body: request,
+  };
+  return REST.apiCal(parameters);
+};
+
+export const deleteRecording = (request?: any) => {
+  request.usersessionid = getFromStore("udaSessionId", true);
+  const parameters = {
+    url: ENDPOINT.DELETE_SEQUENCE,
+    method: "POST",
+    body: request,
+  };
+  return REST.apiCal(parameters);
+};
+
+/**
+ * To vote/de-vote the recording
+ * @param request
+ * @returns promise
+ */
+
+export const vote = (request?: any, type?: string) => {
+  const payload = {
+    usersessionid: getFromStore("udaSessionId", true),
+    sequenceid: request.id,
+    upvote: type == "up" ? 1 : 0,
+    downvote: type == "down" ? 1 : 0,
+  };
+
+  const parameters = {
+    url: ENDPOINT.VOTE_RECORD,
+    method: "POST",
+    body: payload,
   };
   return REST.apiCal(parameters);
 };

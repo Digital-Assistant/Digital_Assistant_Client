@@ -16,7 +16,7 @@ import {
   VideoCameraAddOutlined,
 } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Empty, List, Row, Col } from "antd";
+import { Button, Empty, List, Row, Col, Popconfirm, message } from "antd";
 import {
   faArrowAltCircleLeft,
   faPlayCircle,
@@ -35,10 +35,12 @@ import {
   compareNodes,
   getAbsoluteOffsets,
 } from "../util";
+import { deleteRecording, vote } from "../services/recordService";
 // import { jaroWinkler } from "jaro-winkler-typescript";
 
 export interface MProps {
   data?: any;
+  refetchSearch?: Function;
   recordButtonVisibility?: boolean;
   recordSequenceVisibility?: boolean;
   recordSequenceDetailsVisibility?: boolean;
@@ -181,13 +183,16 @@ export const RecordSequenceDetails = (props: MProps) => {
    * To add tooltip for target elements
    */
   const addToolTip = (invokingNode: any, index: any) => {
+    let _toolTipFlag = false;
     const tooltipDivElement = getToolTipElement();
     try {
       const originalNode = JSON.parse(invokingNode);
       let originalElement = originalNode?.node;
       let compareElements = getAllChildren(document.body);
+
       for (let i = 0; i < compareElements?.length; i++) {
         if (originalElement.outerHTML == compareElements[i].outerHTML) {
+          _toolTipFlag = true;
           if (originalNode.offset) {
             // console.log(originalNode);
             const _offsets = getAbsoluteOffsets(compareElements[i]);
@@ -197,6 +202,8 @@ export const RecordSequenceDetails = (props: MProps) => {
               _offsets.y == originalNode.offset.y
             ) {
               originalElement = compareElements[i];
+            } else {
+              _toolTipFlag = false;
             }
           } else {
             originalElement = compareElements[i];
@@ -239,8 +246,10 @@ export const RecordSequenceDetails = (props: MProps) => {
         });
       }
     } catch (e) {
-      // console.log(e);
+      return _toolTipFlag;
     }
+    if (!_toolTipFlag) message.error("Error occurred, try again!");
+    return _toolTipFlag;
   };
 
   /**
@@ -249,8 +258,8 @@ export const RecordSequenceDetails = (props: MProps) => {
    * @param index
    */
   const setToolTip = (item: any, index: number) => {
-    addToolTip(item?.objectdata, index);
-    updateStatus(index);
+    const status = addToolTip(item?.objectdata, index);
+    if (status) updateStatus(index);
   };
 
   /**
@@ -322,6 +331,18 @@ export const RecordSequenceDetails = (props: MProps) => {
     // setToolTip(selectedRecordingDetails?.userclicknodesSet[0], 0);
   };
 
+  const removeRecording = async () => {
+    await deleteRecording({ id: selectedRecordingDetails.id });
+    if (props?.refetchSearch) {
+      props.refetchSearch("on");
+    }
+    backNav();
+  };
+
+  const manageVote = async () => {
+    await vote({ id: selectedRecordingDetails.id }, "up");
+  };
+
   return props?.recordSequenceDetailsVisibility ? (
     <>
       <div
@@ -366,12 +387,14 @@ export const RecordSequenceDetails = (props: MProps) => {
       </div>
       <Row>
         <Col span={12} style={{ textAlign: "center" }}>
-          <Button size="small">
-            <DeleteOutlined width={33} />
-          </Button>
+          <Popconfirm title="Are you sure?" onConfirm={removeRecording}>
+            <Button size="small">
+              <DeleteOutlined width={33} />
+            </Button>
+          </Popconfirm>
         </Col>
         <Col span={12} style={{ textAlign: "center" }}>
-          <Button size="small">
+          <Button size="small" onClick={() => manageVote()}>
             <LikeOutlined width={33} />
           </Button>
         </Col>

@@ -11,8 +11,14 @@
       "media": []
     }
   ],
+  "background": {
+   "service_worker": "./background.js"
+  },
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "identity", 
+    "identity.email",
+    "storage"
   ],
   "web_accessible_resources": [
     {

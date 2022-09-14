@@ -1,19 +1,18 @@
-
 export const REST = {
   apiCal,
   syncApiCal,
-  processArgs
+  processArgs,
 };
 
 function checkValidUser() {
-  let userData : any = localStorage.getItem('user')
-  userData = JSON.parse(userData)
-  if (userData && userData.tenantId !== sessionStorage.getItem('tenantId')) {
-        localStorage.clear();
-    window.location.href = '/'
-    return false
+  let userData: any = localStorage.getItem("user");
+  userData = JSON.parse(userData);
+  if (userData && userData.tenantId !== sessionStorage.getItem("tenantId")) {
+    localStorage.clear();
+    window.location.href = "/";
+    return false;
   } else {
-    return true
+    return true;
   }
 }
 
@@ -21,12 +20,12 @@ function checkValidUser() {
  * common REST call
  * @options : object (properties needed for REST call)
  */
-function apiCal (options: any) {
+function apiCal(options: any) {
   // const validate = checkValidUser()
   // if(!validate) return
   const requestOptions = {
     method: options.method,
-    headers: getHTTPHeaders('json'),
+    headers: getHTTPHeaders("json"),
     body: options.body ? JSON.stringify(options.body) : null,
   };
 
@@ -35,9 +34,11 @@ function apiCal (options: any) {
       //throw route to login if unauthorized response received
       if (response?.status == 401) {
         localStorage.clear();
-        window.location.href = '/'
+        // window.location.href = '/'
       }
-      return response.json();
+      return options?.responseType == "text"
+        ? response.text()
+        : response.json();
     })
     .then((json) => {
       return json;
@@ -51,20 +52,20 @@ function apiCal (options: any) {
  * common sync REST call
  * @options : object (properties needed for REST call)
  */
-async function syncApiCal (options: any) {
+async function syncApiCal(options: any) {
   // const validate = checkValidUser()
   // if(!validate) return
   const requestOptions = {
     method: options.method,
-    headers: getHTTPHeaders('json'),
+    headers: getHTTPHeaders("json"),
     body: options.body ? JSON.stringify(options.body) : null,
   };
 
-  let response : any= {}
+  let response: any = {};
   try {
     response = await fetch(options.url, requestOptions);
     return await response?.json();
-  } catch (e) { }
+  } catch (e) {}
 }
 
 /**
@@ -74,8 +75,8 @@ async function syncApiCal (options: any) {
  */
 function getHTTPHeaders(contentType: string) {
   const headers = new Headers();
-  if (contentType === 'json')
-    headers.append('Content-Type', 'application/json');
+  if (contentType === "json")
+    headers.append("Content-Type", "application/json");
   return headers;
 }
 
@@ -86,6 +87,5 @@ function getHTTPHeaders(contentType: string) {
  * @returns reconstructed url
  */
 function processArgs(url: string, val: any) {
-  return url?.replace(/#([^#]+)#/g, (_, key) => (val[key] || '') && val[key]);
+  return url?.replace(/#([^#]+)#/g, (_, key) => (val[key] || "") && val[key]);
 }
-

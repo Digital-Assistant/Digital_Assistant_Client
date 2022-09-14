@@ -11,6 +11,7 @@ import { Spin } from "antd";
 import "antd/dist/antd.css";
 import React, { useState, useEffect, useCallback } from "react";
 import { fetchSearchResults } from "./services/searchService";
+import { login, getUserSession } from "./services/authService";
 import {
   squeezeBody,
   getRowObject,
@@ -81,6 +82,7 @@ function App() {
   );
   const [searchKeyword, setSearchKeyword] = React.useState<string>("");
   const [searchResults, setSearchResults] = React.useState<any>([]);
+  const [refetchSearch, setRefetchSearch] = React.useState<string>("");
   const [recSequenceData, setRecSequenceData] = React.useState<any>([]);
   const [recordSequenceDetailsVisibility, setRecordSequenceDetailsVisibility] =
     React.useState<boolean>(false);
@@ -88,13 +90,18 @@ function App() {
     React.useState<any>(getFromStore("selectedRecordedItem", false) || {});
 
   React.useEffect(() => {
-    // addBodyEvents(document.body);
+    authHandler();
+    //addBodyEvents(document.body);
     getSearchResults("");
     if (isPlaying == "on") {
       togglePanel();
       setRecordSequenceDetailsVisibility(true);
     }
   }, []);
+
+  React.useEffect(() => {
+    if (refetchSearch == "on") getSearchResults("");
+  }, [refetchSearch]);
 
   /**
    * Sync data with storage
@@ -116,6 +123,29 @@ function App() {
     squeezeBody(!hide);
   };
 
+  const authHandler = async () => {
+    if (!window.chrome) return;
+    chrome.runtime.sendMessage({ action: "login" }, (res) => {
+      console.log(res);
+    });
+    setTimeout(() => {
+      chrome.storage.sync.get(CONFIG.USER_AUTH_DATA_KEY, (data) => {
+        if (data) {
+          if (!getFromStore(CONFIG.USER_AUTH_DATA_KEY, true)) {
+            setToStore(data.udaUserData, CONFIG.USER_AUTH_DATA_KEY, true);
+            const authData = JSON.parse(data[CONFIG.USER_AUTH_DATA_KEY]);
+            setToStore(authData?.authdata?.id, CONFIG.USER_SESSION_ID, true);
+            login(authData)?.then((resp) => {
+              getUserSession().then((session) => {
+                setToStore(session, CONFIG.USER_SESSION_KEY, true);
+              });
+            });
+          }
+        }
+      });
+    }, 5000);
+  };
+
   /**
    * HTTP search results service call
    @param keyword:string
@@ -134,14 +164,13 @@ function App() {
   /**to enable record sequence card/container */
   const recordSequence = () => {
     playHandler("off");
-    setToStore(generateUUID(), "sessionId", true);
     setIsRecording(true);
     setShowRecord(false);
   };
 
   /**common cancel button handler */
   const cancel = () => {
-    removeFromStore("sessionId");
+    // removeFromStore("udaSessionId");
     setIsRecording(false);
     setShowRecord(false);
     setRecordSequenceDetailsVisibility(false);
@@ -297,6 +326,7 @@ function App() {
                     cancelHandler={cancel}
                     playHandler={playHandler}
                     isPlaying={isPlaying}
+                    refetchSearch={setRefetchSearch}
                     key={"rSD" + recordSequenceDetailsVisibility}
                   />
                 </div>
