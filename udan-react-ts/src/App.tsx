@@ -6,9 +6,6 @@
 
 ///<reference types="chrome"/>
 import logo from "./logo.svg";
-// import "./App.css";
-import { Spin } from "antd";
-import "antd/dist/antd.css";
 import React, { useState, useEffect, useCallback } from "react";
 import { fetchSearchResults } from "./services/searchService";
 import { login, getUserSession } from "./services/authService";
@@ -23,30 +20,16 @@ import {
   postRecordSequenceData,
 } from "./util";
 import { CONFIG } from "./config";
-import { RecordedSeq } from "./components/RecordedSeq";
-import { SearchResults } from "./components/SearchResults";
-import {
-  RecordSequence,
-  RecordButton,
-  RecordSequenceDetails,
-} from "./components/MiscComponents";
-import { Footer, Header } from "./components/layout";
+import UdanMain from "./components/UdanMain";
+import { Header, Body, Footer, Toggler } from "./components/layout";
+import { Circles } from "react-loader-spinner";
 import useInterval from "react-useinterval";
 import "./App.scss";
-
-const allowedTags = ["a", "button"];
 
 declare global {
   interface Window {
     isRecording: boolean;
   }
-}
-
-function getLogo() {
-  if (window?.chrome) {
-    return window?.chrome?.runtime?.getURL(logo);
-  }
-  return "https://s4.aconvert.com/convert/p3r68-cdx67/alc9l-hnvsn.svg";
 }
 
 const useMutationObserver = (
@@ -282,54 +265,66 @@ function App() {
                   toggleFlag={hide}
                   toggleHandler={toggleHandler}
                 />
-                <div
-                  className="uda-container uda-clear uda-cards-scroller"
-                  id="uda-content-container"
-                >
-                  {showLoader && <Spin tip="Loading..." />}
+                <Body
+                  content={
+                    <>
+                      {showLoader && (
+                        <Circles
+                          height="60"
+                          width="60"
+                          color="#ff5722"
+                          ariaLabel="circles-loading"
+                          wrapperClass="loader"
+                          visible={true}
+                        />
+                      )}
 
-                  <RecordButton
-                    recordHandler={showRecordHandler}
-                    cancelHandler={cancel}
-                    recordSeqHandler={recordSequence}
-                    recordButtonVisibility={toggleContainer("record-button")}
-                  />
+                      <UdanMain.RecordButton
+                        recordHandler={showRecordHandler}
+                        cancelHandler={cancel}
+                        recordSeqHandler={recordSequence}
+                        recordButtonVisibility={toggleContainer(
+                          "record-button"
+                        )}
+                      />
 
-                  <RecordSequence
-                    cancelHandler={cancel}
-                    recordSequenceVisibility={toggleContainer("record-seq")}
-                  />
+                      <UdanMain.RecordSequence
+                        cancelHandler={cancel}
+                        recordSequenceVisibility={toggleContainer("record-seq")}
+                      />
 
-                  {!showLoader && (
-                    <SearchResults
-                      data={searchResults}
-                      showDetails={showRecordingDetails}
-                      visibility={toggleContainer("search-results")}
-                      addRecordHandler={setShowRecord}
-                      key={searchResults.length + showLoader}
-                    />
-                  )}
+                      {!showLoader && (
+                        <UdanMain.SearchResults
+                          data={searchResults}
+                          showDetails={showRecordingDetails}
+                          visibility={toggleContainer("search-results")}
+                          addRecordHandler={setShowRecord}
+                          key={searchResults.length + showLoader}
+                        />
+                      )}
 
-                  <RecordedSeq
-                    isShown={toggleContainer("recorded-data")}
-                    data={recSequenceData}
-                    recordHandler={recordHandler}
-                  />
+                      <UdanMain.RecordedData
+                        isShown={toggleContainer("recorded-data")}
+                        data={recSequenceData}
+                        recordHandler={recordHandler}
+                      />
 
-                  <RecordSequenceDetails
-                    data={selectedRecordingDetails}
-                    recordSequenceDetailsVisibility={
-                      recordSequenceDetailsVisibility &&
-                      !isRecording &&
-                      !toggleContainer("record-button")
-                    }
-                    cancelHandler={cancel}
-                    playHandler={playHandler}
-                    isPlaying={isPlaying}
-                    refetchSearch={setRefetchSearch}
-                    key={"rSD" + recordSequenceDetailsVisibility}
-                  />
-                </div>
+                      <UdanMain.RecordSequenceDetails
+                        data={selectedRecordingDetails}
+                        recordSequenceDetailsVisibility={
+                          recordSequenceDetailsVisibility &&
+                          !isRecording &&
+                          !toggleContainer("record-button")
+                        }
+                        cancelHandler={cancel}
+                        playHandler={playHandler}
+                        isPlaying={isPlaying}
+                        refetchSearch={setRefetchSearch}
+                        key={"rSD" + recordSequenceDetailsVisibility}
+                      />
+                    </>
+                  }
+                />
                 <Footer
                   toggleFlag={hide}
                   addRecordBtnStatus={showRecord}
@@ -341,17 +336,7 @@ function App() {
         </div>
       </div>
 
-      <div
-        className="default-logo exclude"
-        style={{ display: !hide ? "none" : "block" }}
-      >
-        <img
-          className="uda_exclude"
-          src={getLogo()}
-          onClick={() => togglePanel()}
-          alt={"udan logo"}
-        />
-      </div>
+      <Toggler toggleFlag={hide} toggleHandler={togglePanel} />
     </>
   );
 }
