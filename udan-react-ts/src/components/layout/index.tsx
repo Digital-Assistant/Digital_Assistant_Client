@@ -48,6 +48,13 @@ function getLogo() {
   return "https://s4.aconvert.com/convert/p3r68-cdx67/alc9l-hnvsn.svg";
 }
 
+const speech = (window as any).webkitSpeechRecognition;
+let UDAVoiceRecognition: any;
+let recognition: any;
+if (speech) {
+  UDAVoiceRecognition = speech;
+}
+
 /**
  * To render search result elements
  * @returns HTML Elements
@@ -57,6 +64,59 @@ export const Header = (props: MProps) => {
   const [searchResults, setSearchResults] = React.useState<any>([]);
   const [hide, setHide] = React.useState<boolean>(props?.toggleFlag);
   const [searchKeyword, setSearchKeyword] = React.useState<string>("");
+  const [isRecording, setIsRecording] = React.useState<boolean>(false);
+
+  /**
+   * It will initialize the recognition
+   */
+  const initRecognition = React.useCallback(() => {
+    recognition.lang = "en-US";
+
+    recognition.onstart = function () {
+      setSearchKeyword("");
+      setIsRecording(true);
+    };
+
+    recognition.onerror = function (event: any) {
+      if (event.error === "no-speech") {
+        alert("No speech was detected. Try again.");
+      }
+      setIsRecording(false);
+      stopRecord();
+      doSearch();
+    };
+
+    recognition.onresult = function (event: any) {
+      if (event.results.length > 0) {
+        const current = event.resultIndex;
+        // Get a transcript of what was said.
+        const transcript = event.results[current][0].transcript;
+        setSearchKeyword(transcript);
+        setIsRecording(false);
+        stopRecord();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    recognition = new UDAVoiceRecognition();
+    initRecognition();
+  }, [initRecognition]);
+
+  const startRecord = () => {
+    recognition.start();
+  };
+
+  const stopRecord = () => {
+    recognition.stop();
+  };
+
+  useEffect(() => {
+    if (!isRecording && searchKeyword) {
+      doSearch();
+    }
+  }, [isRecording]);
+
   /**
    * Toggle right side panel visibility
    */
@@ -124,17 +184,9 @@ export const Header = (props: MProps) => {
         >
           <div className="uda-search-div">
             <button
-              className="uda-mic-btn"
+              className={isRecording ? "uda-stop-btn-bg" : "uda-mic-btn"}
+              onClick={isRecording ? stopRecord : startRecord}
               style={{ borderRadius: "5px 0px 0px 5px" }}
-              id="uda-voice-icon-start"
-            />
-            <button
-              className="uda-stop-btn-bg"
-              style={{
-                borderRadius: "5px 0px 0px 5px",
-                display: "none",
-              }}
-              id="uda-voice-icon-stop"
             />
             <input
               type="text"
@@ -143,6 +195,7 @@ export const Header = (props: MProps) => {
               placeholder="search..."
               id="uda-search-input"
               onChange={onChange}
+              value={searchKeyword}
             />
             <button
               className="uda-search-btn"

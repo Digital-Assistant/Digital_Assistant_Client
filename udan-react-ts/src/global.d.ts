@@ -1,1 +1,1 @@
-declare module "domJson";
+declare module "domjson";
