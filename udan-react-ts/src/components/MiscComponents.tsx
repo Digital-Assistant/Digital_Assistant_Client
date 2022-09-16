@@ -8,19 +8,13 @@
 import React, { useEffect } from "react";
 import "../App.scss";
 import {
-  LeftOutlined,
-  DeleteOutlined,
-  LikeOutlined,
-  PlayCircleOutlined,
-  CloseCircleOutlined,
-  VideoCameraAddOutlined,
-} from "@ant-design/icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Empty, List, Row, Col } from "antd";
-import {
-  faArrowAltCircleLeft,
-  faPlayCircle,
-} from "@fortawesome/free-solid-svg-icons";
+  BsXCircle,
+  BsTrashFill,
+  BsFillHeartFill,
+  BsFillRecord2Fill,
+  BsPlayCircleFill,
+  BsArrowLeft,
+} from "react-icons/bs";
 import { createPopperLite as createPopper } from "@popperjs/core";
 import {
   // addToolTip,
@@ -35,10 +29,12 @@ import {
   compareNodes,
   getAbsoluteOffsets,
 } from "../util";
+import { deleteRecording, vote } from "../services/recordService";
 // import { jaroWinkler } from "jaro-winkler-typescript";
 
 export interface MProps {
   data?: any;
+  refetchSearch?: Function;
   recordButtonVisibility?: boolean;
   recordSequenceVisibility?: boolean;
   recordSequenceDetailsVisibility?: boolean;
@@ -47,6 +43,7 @@ export interface MProps {
   recordSeqHandler?: Function;
   playHandler?: Function;
   isPlaying?: string;
+  togglePanel?: Function;
 }
 
 /**
@@ -79,7 +76,6 @@ export const RecordSequence = (props: MProps) => {
  * To render record container
  * @returns HTML Element
  */
-
 export const RecordButton = (props: MProps) => {
   const cancel = (flag: boolean) => {
     if (props.cancelHandler) props.cancelHandler();
@@ -89,14 +85,9 @@ export const RecordButton = (props: MProps) => {
   };
   return props?.recordButtonVisibility ? (
     <div className="uda-card-details">
-      <Row>
-        <Col span={24} className="halign-right">
-          <CloseCircleOutlined
-            className="small"
-            onClick={() => cancel(false)}
-          />
-        </Col>
-      </Row>
+      <span style={{ float: "right" }} onClick={() => cancel(false)}>
+        <BsXCircle size={16} />
+      </span>
       <h5>Create your own action</h5>
       <div>
         <button
@@ -104,8 +95,7 @@ export const RecordButton = (props: MProps) => {
           id="uda-enable-record"
           onClick={() => recordSequence()}
         >
-          <VideoCameraAddOutlined />
-          <span>Rec</span>
+          <BsFillRecord2Fill size={16} /> <span>Rec</span>
         </button>
       </div>
     </div>
@@ -181,13 +171,16 @@ export const RecordSequenceDetails = (props: MProps) => {
    * To add tooltip for target elements
    */
   const addToolTip = (invokingNode: any, index: any) => {
+    let _toolTipFlag = false;
     const tooltipDivElement = getToolTipElement();
     try {
       const originalNode = JSON.parse(invokingNode);
       let originalElement = originalNode?.node;
       let compareElements = getAllChildren(document.body);
+
       for (let i = 0; i < compareElements?.length; i++) {
         if (originalElement.outerHTML == compareElements[i].outerHTML) {
+          _toolTipFlag = true;
           if (originalNode.offset) {
             // console.log(originalNode);
             const _offsets = getAbsoluteOffsets(compareElements[i]);
@@ -197,6 +190,8 @@ export const RecordSequenceDetails = (props: MProps) => {
               _offsets.y == originalNode.offset.y
             ) {
               originalElement = compareElements[i];
+            } else {
+              _toolTipFlag = false;
             }
           } else {
             originalElement = compareElements[i];
@@ -239,8 +234,10 @@ export const RecordSequenceDetails = (props: MProps) => {
         });
       }
     } catch (e) {
-      // console.log(e);
+      return _toolTipFlag;
     }
+    // if (!_toolTipFlag) message.error("Error occurred, try again!");
+    return _toolTipFlag;
   };
 
   /**
@@ -249,8 +246,8 @@ export const RecordSequenceDetails = (props: MProps) => {
    * @param index
    */
   const setToolTip = (item: any, index: number) => {
-    addToolTip(item?.objectdata, index);
-    updateStatus(index);
+    const status = addToolTip(item?.objectdata, index);
+    if (status) updateStatus(index);
   };
 
   /**
@@ -322,6 +319,18 @@ export const RecordSequenceDetails = (props: MProps) => {
     // setToolTip(selectedRecordingDetails?.userclicknodesSet[0], 0);
   };
 
+  const removeRecording = async () => {
+    await deleteRecording({ id: selectedRecordingDetails.id });
+    if (props?.refetchSearch) {
+      props.refetchSearch("on");
+    }
+    backNav();
+  };
+
+  const manageVote = async () => {
+    await vote({ id: selectedRecordingDetails.id }, "up");
+  };
+
   return props?.recordSequenceDetailsVisibility ? (
     <>
       <div
@@ -332,50 +341,36 @@ export const RecordSequenceDetails = (props: MProps) => {
         }}
       >
         <div className="uda-card-btns">
-          <Button
-            type="primary"
-            shape="circle"
-            size="small"
-            style={{ position: "absolute", top: 12, left: 0 }}
-            onClick={() => backNav()}
-          >
-            <LeftOutlined />
-          </Button>
-          <PlayCircleOutlined
-            className="large secondary"
-            onClick={() => play()}
-          />
+          <div className="uda-loading-bar" id="nist-autoplay">
+            <span onClick={() => play()}>
+              <BsPlayCircleFill />
+            </span>
+          </div>
+        </div>
+        <div
+          className="uda-card-right-dbl-arrow"
+          id="uda-backto-search"
+          onClick={() => backNav()}
+        >
+          <BsArrowLeft color="white" size={24} />
         </div>
         <h5>{getName()}</h5> <hr />
         <ul className="uda-suggestion-list" id="uda-sequence-steps">
-          {props?.data && (
-            <List
-              itemLayout="horizontal"
-              dataSource={selectedRecordingDetails?.userclicknodesSet}
-              renderItem={(item: any, index: number) => (
-                <List.Item
-                  className={item.status}
-                  onClick={() => setToolTip(item, index)}
-                >
-                  <List.Item.Meta title={item?.clickednodename} />
-                </List.Item>
-              )}
-            />
-          )}
+          {renderData()}
         </ul>
       </div>
-      <Row>
-        <Col span={12} style={{ textAlign: "center" }}>
-          <Button size="small">
-            <DeleteOutlined width={33} />
-          </Button>
-        </Col>
-        <Col span={12} style={{ textAlign: "center" }}>
-          <Button size="small">
-            <LikeOutlined width={33} />
-          </Button>
-        </Col>
-      </Row>
+      <div className="uda-details-footer">
+        <div className="">
+          <button onClick={removeRecording}>
+            <BsTrashFill color="#ff5722" />
+          </button>
+        </div>
+        <div className="">
+          <button onClick={() => manageVote()}>
+            <BsFillHeartFill color="#ff5722" />
+          </button>
+        </div>
+      </div>
     </>
   ) : null;
 };

@@ -8,7 +8,7 @@
 import React, { useEffect } from "react";
 import "../App.scss";
 
-import { setToStore } from "../util";
+import { setToStore, postRecordSequenceData } from "../util";
 import { CONFIG } from "../config";
 
 export interface MProps {
@@ -16,6 +16,7 @@ export interface MProps {
   isShown?: boolean;
   hide?: () => void;
   data?: any;
+  refetchSearch?: Function;
   recordHandler?: Function;
 }
 
@@ -93,9 +94,13 @@ export const RecordedSeq = (props: MProps) => {
     setToStore([], CONFIG.RECORDING_SEQUENCE, false);
   };
 
-  const submitRecording = () => {
-    if (props.recordHandler)
-      props.recordHandler("submit", { name: JSON.stringify([name]) });
+  const submitRecording = async () => {
+    const instance = await postRecordSequenceData({
+      name: JSON.stringify([name]),
+    });
+    if (instance && props?.refetchSearch) {
+      props.refetchSearch("on");
+    }
     setToStore([], CONFIG.RECORDING_SEQUENCE, false);
   };
 

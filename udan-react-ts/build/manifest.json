@@ -10,21 +10,27 @@
       ],
       "run_at": "document_end",
       "js": [
-        "assets/index.a109dd29.js"
+        "assets/index.c951ea8b.js"
       ],
       "css": [
-        "assets/index.409adbec.css"
+        "assets/index.d34e6495.css"
       ],
       "media": []
     }
   ],
+  "background": {
+    "service_worker": "./background.js"
+  },
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "identity",
+    "identity.email",
+    "storage"
   ],
   "web_accessible_resources": [
     {
       "resources": [
-        "assets/index.409adbec.css",
+        "assets/index.d34e6495.css",
         "assets/logo.3bc36866.svg"
       ],
       "matches": [

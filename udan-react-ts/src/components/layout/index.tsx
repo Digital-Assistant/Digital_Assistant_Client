@@ -10,12 +10,32 @@ import "../../App.scss";
 import { fetchSearchResults } from "../../services/searchService";
 import { squeezeBody } from "../../util";
 import logo from "../../logo.svg";
-import {
-  PlusOutlined,
-  DoubleRightOutlined,
-  DoubleLeftOutlined,
-} from "@ant-design/icons";
-import { Button, Tooltip, Row, Col } from "antd";
+import { BsChevronDoubleRight, BsPlusLg } from "react-icons/bs";
+export interface MProps {
+  searchHandler?: Function;
+  toggleFlag: boolean;
+  toggleHandler?: Function;
+  addRecordBtnStatus?: boolean;
+}
+
+export const Toggler = (props: MProps) => {
+  const toggle = () => {
+    if (props.toggleHandler) props.toggleHandler();
+  };
+  return (
+    <div
+      className="default-logo exclude"
+      style={{ display: !props?.toggleFlag ? "none" : "block" }}
+    >
+      <img
+        className="uda_exclude"
+        src={getLogo()}
+        onClick={() => toggle()}
+        alt={"udan logo"}
+      />
+    </div>
+  );
+};
 
 /**
  *
@@ -26,13 +46,6 @@ function getLogo() {
     return window?.chrome?.runtime?.getURL(logo);
   }
   return "https://s4.aconvert.com/convert/p3r68-cdx67/alc9l-hnvsn.svg";
-}
-
-export interface MProps {
-  searchHandler?: Function;
-  toggleFlag: boolean;
-  toggleHandler?: Function;
-  addRecordBtnStatus?: boolean;
 }
 
 /**
@@ -93,7 +106,7 @@ export const Header = (props: MProps) => {
           onClick={() => togglePanel()}
         >
           <span className="arrow">
-            {hide ? <DoubleRightOutlined /> : <DoubleLeftOutlined />}
+            <BsChevronDoubleRight size={16} />
           </span>
         </div>
         <div className="uda-icon-txt">
@@ -148,6 +161,26 @@ export const Header = (props: MProps) => {
 /**
  *
  * @param props
+ * @returns content for the body
+ */
+interface ParentCompProps {
+  content?: React.ReactNode;
+}
+export const Body: React.FC<ParentCompProps> = (props) => {
+  const { content } = props;
+  return (
+    <div
+      className="uda-container uda-clear uda-cards-scroller"
+      id="uda-content-container"
+    >
+      {content}
+    </div>
+  );
+};
+
+/**
+ *
+ * @param props
  * @returns footer container
  */
 export const Footer = (props: MProps) => {
@@ -159,27 +192,12 @@ export const Footer = (props: MProps) => {
     <div>
       <div className="uda-footer-bar">
         <div className="uda-container">
-          <Row>
-            <Col span={24} className="flex-card end">
-              {!props?.addRecordBtnStatus && (
-                <Tooltip title="New Sequence">
-                  <Button
-                    type="primary"
-                    shape="circle"
-                    size="middle"
-                    onClick={() => setShowRecord(true)}
-                    icon={<PlusOutlined />}
-                  />
-                </Tooltip>
-              )}
-            </Col>
-          </Row>
-          {/* <button
+          <button
             className="uda-new-seq uda-exclude"
             onClick={() => setShowRecord(true)}
           >
-            <span>+</span>
-          </button> */}
+            <BsPlusLg color="#ff5722" />
+          </button>
           {/* <div
             className="uda-advanced-btn-content"
             onClick={() => setShowRecord(true)}

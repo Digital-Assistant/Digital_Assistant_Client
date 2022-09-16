@@ -22,6 +22,9 @@ export const CONFIG = {
   UDALogLevel: 0,
   RECORDING_SWITCH_KEY: "recordingSwitch",
   RECORDING_SEQUENCE: "activeRecordingData",
+  USER_AUTH_DATA_KEY: "udaUserData",
+  USER_SESSION_KEY: "udaSessionKey",
+  USER_SESSION_ID: "udaSessionId",
   SYNC_INTERVAL: 1000,
   set Environment(value) {
     this.current = value.toString().toUpperCase();
