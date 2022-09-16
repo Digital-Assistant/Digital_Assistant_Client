@@ -1,5 +1,7 @@
+console.log('enterig into injectsdk 22');
+
 var s = document.createElement('script');
-var scriptpath = chrome.extension.getURL("js/Voicepluginsdk.js");
+var scriptpath = chrome.runtime.getURL("js/Voicepluginsdk.js");
 s.src = scriptpath;
 s.onload = function() {
 };
@@ -25,3 +27,5 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		document.dispatchEvent(sessionevent);
 	}
 });
+console.log(s);
+console.log('exiting injectsdk ');

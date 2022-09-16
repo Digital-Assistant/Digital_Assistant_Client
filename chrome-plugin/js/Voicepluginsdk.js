@@ -3,7 +3,9 @@ Voice plugin Javascript SDK Library
 IMPORTANT NOTE: Copying this library and hosting it locally is strongly discouraged.
  */
 // creating the sdk variable
+console.log('in voice plugin sdk s7 ')
 if (typeof UDAPluginSDK === 'undefined') {
+	console.log('if (typeof UDAPluginSDK === undefined) {')
 	var UDABadBrowser=false;
 	if(navigator.appName.indexOf("Internet Explorer") !== -1){
 		UDABadBrowser=(navigator.appVersion.indexOf("MSIE 1") === -1);
@@ -21,6 +23,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 	// listening for user session data from extension call
 	document.addEventListener("UDAUserSessionData", function(data) {
+		console.log('in Voicelugin, UDAUserSessionData event');
+		console.log('event data: ',data);
 		UDAPluginSDK.createsession(JSON.parse(data.detail.data));
 	});
 
@@ -37,6 +41,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 	});
 
 	document.addEventListener("UDAAuthenticatedUserSessionData", function(data) {
+		console.log('document.addEventListener("UDAAuthenticatedUserSessionData", function(data) {');
 		UDAPluginSDK.createsession(JSON.parse(data.detail.data));
 		UDAPluginSDK.openmodal(true);
 	});
@@ -51,7 +56,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 	document.addEventListener("UDALoadCustomCSS", function(data) {
 		UDAPluginSDK.loadCssScript(UDACustomCss.src);
 	});
-
+	let UDADebug = false;
 	let UDADebugSetEvent = new CustomEvent("UDADebugSetEvent", {detail: {data: {action:'Debugvalueset',value:UDADebug}}, bubbles: false, cancelable: false});
 	document.dispatchEvent(UDADebugSetEvent);
 
@@ -492,31 +497,50 @@ if (typeof UDAPluginSDK === 'undefined') {
 			document.dispatchEvent(sessionevent);
 		},
 		createsession:function(data){
+			console.log('createsession:function(data){');
+			console.log('data fro session: ',data);
         	UDASessionID=data.sessionkey;
+
 			this.sessiondata=data;
 			this.sessionID=data.sessionkey;
+			console.log('this.sessionID= ',this.sessionID);
 			UDAUserAuthData.id = data.authdata.id;
+			console.log('data.authdata.id: ',data.authdata.id);
 			UDAUserAuthData.email = data.authdata.email;
 			this.recorddocumentclick();
 		},
 		clearSession: function(){
+			console.log('clearSession: function(){');
 			this.sessionID = "";
 			this.sessiondata = {sessionkey:"",authenticated:false,authenticationsource:"",authdata:{}};
 			this.closemodal();
 		},
 		modifybodyhtml:function(){
+
+			console.log('in modify html');
+			let i=0;
 			var html='<div id="uda-btn" nist-voice="true"></div><div id="uda-html-container" style="display: none;"><div id="uda-html-content" nist-voice="true"></div></div><div id="uda-alerthtml-container" nist-voice="true"></div>';
 
 			jQuery(document.body).prepend(html);
 
 			if(typeof isUDASdk === 'undefined') {
+				console.log('if(typeof isUDASdk === undefined) {');
+				console.log('i: ',++i );
 				jQuery(window).trigger('resize').promise().done(function () {
+					console.log('jQuery(window).trigger(resize).promise().done(function () {');
+					console.log('i: ',++i );
 					UDAPluginSDK.indexclicknodes();
+					console.log('i: ',++i );
 					UDAPluginSDK.addbuttonhtml();
+					console.log('i: ',++i );
 				});
 			} else {
+				console.log('} else {');
+				console.log('i: ',++i );
 				UDAPluginSDK.indexclicknodes();
+				console.log('i: ',++i );
 				UDAPluginSDK.addbuttonhtml();
+				console.log('i: ',++i );
 			}
 			setInterval(function () {
 				if(UDALastIndexTime!==0 && UDALastIndexTime<UDALastMutationTime) {
@@ -545,7 +569,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				}
 			}
 
-			if(this.sessiondata.csp && this.sessiondata.csp.cspenabled && !this.sessiondata.csp.udanallowed){
+			if(this.sessiondata.csp.cspenabled && !this.sessiondata.csp.udanallowed){
 				jQuery("#uda-btn").html('');
 				let cspUserAcceptance = this.getstoragedata(this.cspUserAcceptance.storageName);
 				if(cspUserAcceptance){
@@ -865,7 +889,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		//opening the UDA screen
 		openmodal:function(focus=false){
+			console.log('openmodal function');
+			console.log(this.sessiondata);
         	if(this.sessiondata.authenticated) {
+				console.log('authenticated is true');
 				jQuery("#uda-btn").hide();
 				jQuery('#uda-html-container').show();
 				var searchinput=jQuery("#uda-search-input");
@@ -888,6 +915,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					});
 				}
 			} else {
+				console.log('authenticated is flase');
 				var sessionevent = new CustomEvent("RequestUDASessionData", {detail: {data: "authtenicate"}, bubbles: false, cancelable: false});
 				document.dispatchEvent(sessionevent);
 			}
@@ -1312,6 +1340,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					inputlabels.push({"text":node.getAttribute("placeholder").toString(),"match":false});
 				}
 				if(node.getAttribute("type") && (node.getAttribute("type").toLowerCase()==="submit" || node.getAttribute("type").toLowerCase()==="file")) {
+					console.log('if(node.getAttribute(type) && (node.getAttribute("type").toLowerCase()===submit || node.getAttribute(type).toLowerCase()==="file")) {')
 					if(node.getAttribute("value")){
 						inputlabels.push({"text":node.getAttribute("value").toString(),"match":false});
 						iterate=false;
@@ -1375,12 +1404,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 			return inputlabel;
 		},
 		addClickToNode:function(node, confirmdialog=false){
+			// console.log('addClickToNode:function(node, confirmdialog=false){');
         	try{
 				if(node.hasOwnProperty("addedclickrecord") && node.addedclickrecord===true){
 					return;
 				}
 
 				var nodename=node.nodeName.toLowerCase();
+				// console.log('var nodename=node.nodeName.toLowerCase();: ',nodename)
 				switch (nodename) {
 					case "select":
 						jQuery(node).on({"focus":function(event){
@@ -1415,39 +1446,47 @@ if (typeof UDAPluginSDK === 'undefined') {
 							case "reset":
 							case "search":
 							case "submit":
+								console.log('switch case: submit');
+								break;
 							case "tel":
 							case "text":
 							case "time":
 							case "url":
 							case "week":
 								jQuery(node).click(function (event) {
+									console.log('jQuery(node).click(function (event) {');
 									UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
 								});
 								break;
 							default:
 								jQuery(node).click(function (event) {
+									console.log('jQuery(node).click(function (event) {');
 									UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
 								});
 								break;
 						}
 						break;
 					case "mat-select":
+						console.log('case "mat-select":');
 						jQuery(node).click(function (event) {
 							UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
 						});
 						break;
 					case 'tr':
+						console.log('case tr');
 						jQuery(node).click(function (event) {
 							UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
 						});
 						break;
 					default:
+						// console.log('default:');
 						jQuery(node).click(function (event) {
 							UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
 						});
 						break;
 				}
 				node.addedclickrecord=true;
+				// console.log('node.addedclickrecord=true');
 				return node;
 			} catch (e) {
 				UDAErrorLogger.error('Unable to add click to node '+ node.outerHTML+' '+ e);
@@ -1531,6 +1570,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 								}
 								break;
 							case 'submit':
+								console.log('swict case submit');
 								node.click();
 								this.invokenextitem(node, timetoinvoke, navigationcookiedata);
 								this.showselectedrow(navigationcookiedata.data,navigationcookiedata.data.id,true, navigationcookiedata);
@@ -2819,6 +2859,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		},
 		// submit functionality of the recorded sequence.
 		submitrecordedlabel:function(submittype="recording"){
+			console.log('submitrecordedlabel:function(submittype="recording"){')
 			// var sequencename=jQuery("#uda-recorded-name").val();
 			let sequencenames = [];
 			var sequencenamearray=jQuery("input[name='uda-save-recorded[]']").map(function (){
@@ -2831,8 +2872,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 				sequencenames.push(sequencename);
 			});
 			let sequencename = JSON.stringify(sequencenames);
+			console.log('sessiondata: ',this.sessiondata);
+			console.log('authid: ',this.sessiondata.authdata.id);
+
 			var sequencelistdata={name:"",domain:window.location.host,usersessionid:this.sessiondata.authdata.id.toString(),userclicknodelist:[].toString(),userclicknodesSet:this.recordedsequenceids,isValid:1,isIgnored:0, additionalParams: null};
 			if(submittype==='recording') {
+				console.log('if(submittype===recording) {')
 				if (sequencename === '') {
 					alert('Please enter proper label');
 					jQuery("#uda-recorded-name").focus();
@@ -2860,6 +2905,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			// adding custom permission logic
 			if(this.enablePermissions && UDAUserAuthData.permissions){
+				console.log('if(this.enablePermissions && UDAUserAuthData.permissions){')
 				let addedPermissions = {};
 				var addedPermissionsArray=jQuery("input:checkbox[name='uda-additional-params[]']:checked").map(function (){
 					addedPermissions[this.value]=UDAUserAuthData.permissions[this.value];
@@ -2878,15 +2924,20 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.cancelrecordingsequence(false);
 			this.currentPage='SequenceSubmitted';
 			this.showhtml();
+			console.log('before xhr');
 			var xhr = new XMLHttpRequest();
+			console.log('xhr: ',xhr);
 			xhr.open("POST", UDA_API_URL + "/clickevents/recordsequencedata", true);
 			xhr.setRequestHeader('Content-Type', 'application/json');
+			console.log('xhr.setRequestHeader');
 			xhr.onload = function(event){
+				console.log('xhr.onload = function(event){')
 				if(xhr.status === 200){
 					UDAPluginSDK.showSelectedSequence(JSON.parse(xhr.response))
 				}
 			};
 			xhr.send(JSON.stringify(sequencelistdata));
+			console.log('aftefr xhr.send(JSON.stringify(sequencelistdata));');
 		},
 		/**
 		 * Profanity detection
@@ -3796,4 +3847,5 @@ if (typeof UDAPluginSDK === 'undefined') {
 		}
 	};
 	UDAPluginSDK.init();
-}
+};
+console.log('exiting voice plugin sdk');

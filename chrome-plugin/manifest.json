@@ -1,42 +1,101 @@
 {
-  "manifest_version": 2,
-  "name": "Universal Digital Assistant (Beta)",
-  "version": "0.1.8.325",
+  "manifest_version": 3,
+  "name": "UDA V3 Test S6",
+  "version": "0.1.9.1",
   "description": "Building an Extension for custom user navigation which helps in assisting users to navigate to right place.",
-  "permissions": ["background", "storage", "identity","identity.email","webRequest","webRequestBlocking","http://*/*", "https://*/*"],
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "permissions": [
+    "background",
+    "storage",
+    "identity",
+    "identity.email",
+    "scripting",
+    "webRequest"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
   "content_scripts": [
-	{
-	  "matches": ["*://localhost/*", "*://*.nistapp.com/*", "*://*.rknowsys.com/*", "*://*.atlassian.net/*", "*://*.vantagecircle.com/*", "*://*.vantagecircle.co.in/*", "*://*.vantagecircle.in/*", "*://*.sportsplus-qaf.app/*", "*://*.zigtal.com/*", "*://*.discoversaudi.sa/*", "*://*.nanohealthplan.com/*"],
-	  "js": ["js/injectscriptmodifier.js"],
-	  "all_frames": false,
-	  "run_at":"document_start"
-	},
-	{
-      "matches": ["*://localhost/*", "*://*.nistapp.com/*", "*://*.rknowsys.com/*", "*://*.atlassian.net/*", "*://*.vantagecircle.com/*", "*://*.vantagecircle.co.in/*", "*://*.vantagecircle.in/*", "*://*.sportsplus-qaf.app/*", "*://*.zigtal.com/*", "*://*.discoversaudi.sa/*", "*://*.nanohealthplan.com/*"],
-	  "js": ["js/injectsdk.js"],
-	  "run_at":"document_end"
-	}
+    {
+      "matches": [
+        "http://localhost/*",
+        "http://*.nistapp.com/*",
+        "http://*.rknowsys.com/*",
+        "http://*.atlassian.net/*",
+        "http://*.vantagecircle.com/*",
+        "http://*.vantagecircle.co.in/*",
+        "http://*.vantagecircle.in/*",
+        "http://*.sportsplus-qaf.app/*",
+        "http://*.zigtal.com/*",
+        "http://*.discoversaudi.sa/*",
+        "http://*.nanohealthplan.com/*",
+        "https://localhost/*",
+        "https://*.nistapp.com/*",
+        "https://*.rknowsys.com/*",
+        "https://*.atlassian.net/*",
+        "https://*.vantagecircle.com/*",
+        "https://*.vantagecircle.co.in/*",
+        "https://*.vantagecircle.in/*",
+        "https://*.sportsplus-qaf.app/*",
+        "https://*.zigtal.com/*",
+        "https://*.discoversaudi.sa/*",
+        "https://*.nanohealthplan.com/*"
+      ],
+      "js": [
+        "js/injectscriptmodifier.js"
+      ],
+      "all_frames": false,
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "http://localhost/*",
+        "http://*.nistapp.com/*",
+        "http://*.rknowsys.com/*",
+        "http://*.atlassian.net/*",
+        "http://*.vantagecircle.com/*",
+        "http://*.vantagecircle.co.in/*",
+        "http://*.vantagecircle.in/*",
+
+        "http://*.sportsplus-qaf.app/*",
+        "http://*.zigtal.com/*",
+        "http://*.discoversaudi.sa/*",
+        "http://*.nanohealthplan.com/*",
+        "https://localhost/*",
+        "https://*.nistapp.com/*",
+        "https://*.rknowsys.com/*",
+        "https://*.atlassian.net/*",
+        "https://*.vantagecircle.com/*",
+        "https://*.vantagecircle.co.in/*",
+        "https://*.vantagecircle.in/*",
+        "https://*.sportsplus-qaf.app/*",
+        "https://*.zigtal.com/*",
+        "https://*.discoversaudi.sa/*",
+        "https://*.nanohealthplan.com/*"
+      ],
+      "js": [
+        "js/injectsdk.js"
+      ],
+      "run_at": "document_end"
+    }
   ],
   "web_accessible_resources": [
-	"js/*",
-	"assets/*",
-	"css/*",
-    "images/*",
-    "themes/*"
+    {
+      "resources": [
+        "js/*",
+        "assets/*",
+        "css/*",
+        "images/*",
+        "themes/*"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
   ],
+
   "background": {
-    "scripts": ["js/background.js"],
-    "persistent": true
-  },
-  "oauth2": {
-	"client_id": "972566460301-70191ibf29gvdbutqoa41a4iva9ovejl.apps.googleusercontent.com",
-	"scopes":["https://www.googleapis.com/auth/contacts.readonly"]
-  },
-  "icons": {
-    "16": "images/nist-logo-16x16.png",
-    "32": "images/nist-logo-32x32.png",
-    "48": "images/nist-logo-48x48.png",
-    "128": "images/nist-logo-128x128.png"
+    "service_worker": "background.js"
   }
+
 }
