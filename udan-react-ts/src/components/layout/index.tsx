@@ -61,8 +61,8 @@ export const Header = (props: MProps) => {
    * Toggle right side panel visibility
    */
   const togglePanel = () => {
-    setHide(hide);
-    squeezeBody(hide);
+    //setHide(hide);
+    //squeezeBody(hide);
     if (props.toggleHandler) props.toggleHandler(hide, "header");
   };
 

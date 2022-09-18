@@ -19,6 +19,22 @@ export const recordClicks = (request?: any) => {
 };
 
 /**
+ * To record each action/event
+ * @param request
+ * @returns promise
+ */
+
+export const updateRecordClicks = (request?: any) => {
+  request.usersessionid = getFromStore("udaSessionId", true);
+  const parameters = {
+    url: ENDPOINT.UPDATE_RECORD,
+    method: "POST",
+    body: request,
+  };
+  return REST.apiCal(parameters);
+};
+
+/**
  * To record set of actions/events belong to one recording
  * @param request
  * @returns promise
