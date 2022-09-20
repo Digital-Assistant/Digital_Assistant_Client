@@ -310,6 +310,7 @@ function App() {
                         isShown={toggleContainer("recorded-data")}
                         data={recSequenceData}
                         recordHandler={recordHandler}
+                        refetchSearch={setRefetchSearch}
                       />
 
                       <UdanMain.RecordSequenceDetails

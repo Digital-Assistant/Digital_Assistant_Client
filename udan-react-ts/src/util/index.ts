@@ -81,7 +81,7 @@ export const init = async() => {
       // console.log(children[i]);
       if (
         children[i] &&
-        !udanSpecialNodes?.exclude?.tags.includes(
+        !udanSpecialNodes?.exclude?.tags?.includes(
           children[i]?.tagName?.trim()?.toLocaleLowerCase()
         ) &&
         children[i].className.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) == -1
@@ -189,7 +189,7 @@ export const addBodyEvents = (selector: HTMLElement) => {
       /**exclude event attachment for selective elements  */
       if (
         els[i] &&
-        !udanSpecialNodes?.exclude?.tags.includes(els[i]?.tagName?.trim()?.toLocaleLowerCase()) &&
+        // !udanSpecialNodes?.exclude?.tags.includes(els[i]?.tagName?.trim()?.toLocaleLowerCase()) &&
         // els[i]?.className?.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) === -1 &&
         // els[i]?.parentNode?.className?.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) === -1 &&
         !els[i]?.getAttribute(EXCLUDE_ATTRIB) &&
@@ -480,7 +480,7 @@ export const getTooltipPositionClass = (
  * @param value
  */
 export const removeFromArray = (array: any, value: any) => {
-  if (array.includes(value)) {
+  if (array?.includes(value)) {
     array.splice(array.indexOf(value), 1);
   }
 };
@@ -991,14 +991,10 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
 
     switch (nodename) {
       case "a":
-        // const _tmpHref = node.getAttribute("href");
-        // node.setAttribute("href", "#");
         addEvent(node, "click", function (event: any) {
           event.preventDefault();
           recorduserclick(event.target, false, false, event, confirmdialog);
         });
-        // node.setAttribute("href", _tmpHref);
-        // delayLink(node);
         break;
       case "select":
         addEvent(node, "focus", function (event: any) {
@@ -1105,7 +1101,7 @@ export const isAllowedMiscElement = (element: HTMLElement) => {
   //check if special classes to be included in recordable elements
   if (
     hasClass(element, udanSpecialNodes.include.classes) ||
-    udanSpecialNodes?.include?.tags.includes(element.tagName.toLowerCase())
+    udanSpecialNodes?.include?.tags?.includes(element.tagName.toLowerCase())
   ) {
     isAllowedElement = true;
   }
@@ -1113,7 +1109,7 @@ export const isAllowedMiscElement = (element: HTMLElement) => {
   // console.log("include", isAllowedElement, udanSpecialNodes?.include?.tags.includes(element.tagName.toLowerCase()));
   //check if special classes to be excluded from recordable elements
   if (
-    udanSpecialNodes?.exclude?.tags.includes(
+    udanSpecialNodes?.exclude?.tags?.includes(
       element?.tagName?.trim()?.toLocaleLowerCase()
     ) ||
     hasClass(element, udanSpecialNodes.exclude.classes)
@@ -1186,7 +1182,8 @@ export const recorduserclick = async (
   
   if (!isRecording) {
     if (parentAnchorElement) {
-      window.location.href = parentAnchorElement.getAttribute("href") || "/";
+      console.log(parentAnchorElement);
+      window.location.href = parentAnchorElement?.getAttribute("href") || "/";
       return true;
     } 
     else {
@@ -1220,7 +1217,7 @@ export const recorduserclick = async (
     parentAnchorElement && node.getAttribute("href")
   ) {
     //return;
-    window.location.href = parentAnchorElement.getAttribute("href") || "";
+    window.location.href = parentAnchorElement?.getAttribute("href") || "";
   }
 };
 
@@ -1398,7 +1395,7 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
 
     if (getchildlabels && node.childNodes.length > 0) {
       var childnodes = node.childNodes;
-      childnodes.forEach(function (childnode: any, key: any) {
+      childnodes?.forEach(function (childnode: any, key: any) {
         if (
           childnode.nodeName.toLowerCase() !== "script" &&
           childnode.nodeName.toLowerCase() !== "select" &&
@@ -1651,7 +1648,7 @@ export const getAllChildren = (htmlElement: any) => {
 export const clickableElementExists = (compareNode:HTMLElement) => { 
   let existFlag = false;
   if (!window.udanSelectedNodes) window.udanSelectedNodes = [];
-  window.udanSelectedNodes.forEach((element:any) => {
+  window?.udanSelectedNodes?.forEach((element:any) => {
     if (element.isSameNode(compareNode)) existFlag = true;
   });
   return existFlag;
@@ -1677,7 +1674,7 @@ export const isClickable = (element: HTMLElement) => {
 
 export const hasClass = (element: HTMLElement, classList: string[]) => {
   let existsFlag = false;
-  classList.forEach(cls => {
+  classList?.forEach(cls => {
     try {
       if (element?.className?.indexOf(cls) > -1) {
         existsFlag = true;

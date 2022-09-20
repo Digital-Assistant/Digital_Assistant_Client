@@ -7,7 +7,7 @@
 
 import React, { useCallback, useEffect } from "react";
 import "../App.scss";
-import { BsFillPencilFill } from "react-icons/bs";
+import { BsFillPencilFill, BsFillTrashFill } from "react-icons/bs";
 import _, { debounce } from "lodash";
 import { setToStore, postRecordSequenceData } from "../util";
 import { updateRecordClicks } from "../services/recordService";
@@ -29,6 +29,7 @@ export interface MProps {
 
 export const RecordedSeq = (props: MProps) => {
   const [name, setName] = React.useState<string>("");
+  const [labels, setLabels] = React.useState<any>([]);
   const [recordData, setRecordData] = React.useState<any>(props.data);
 
   React.useEffect(() => {
@@ -57,15 +58,16 @@ export const RecordedSeq = (props: MProps) => {
   };
 
   const handleDebounceFn = async (index: number, inputValue: string) => {
-    console.log("handle", props?.data);
-    const _objData: any = getObjData(props?.data?.[index]?.objectdata);
-    console.log("handle", _objData);
-    if (_objData) {
+    const _cloneRecObj = _.cloneDeep(props?.data?.[index]);
+    if (_.isEmpty(_cloneRecObj)) return;
+    const _objData: any = getObjData(_cloneRecObj?.objectdata);
+    if (!_.isEmpty(_objData)) {
       setRecordData([...props?.data]);
       _objData.meta.displayText = inputValue;
+      _cloneRecObj.objectdata = JSON.stringify(_objData);
       recordData[index].objectdata = JSON.stringify(_objData);
       storeRecording(recordData);
-      await updateRecordClicks(recordData[index]);
+      await updateRecordClicks(_cloneRecObj);
     }
   };
 
@@ -90,7 +92,12 @@ export const RecordedSeq = (props: MProps) => {
   };
 
   const addLabel = () => {
-    console.log("add label");
+    labels.push({ label: "" });
+  };
+
+  const removeLabel = (index: number) => {
+    labels.splice(index);
+    setLabels([...labels]);
   };
 
   const cancelRecording = () => {
@@ -99,17 +106,30 @@ export const RecordedSeq = (props: MProps) => {
   };
 
   const submitRecording = async () => {
+    let _labels: any = [name];
+    if (labels.length) {
+      const _extraLabels = labels.map((label: any) => label.label);
+      _labels = [..._labels, ..._extraLabels];
+    }
+
     const instance = await postRecordSequenceData({
-      name: JSON.stringify([name]),
+      name: JSON.stringify(_labels),
     });
     if (instance && props?.refetchSearch) {
       props.refetchSearch("on");
     }
+    if (props.recordHandler) props.recordHandler("cancel");
+    setToStore(false, CONFIG.RECORDING_SWITCH_KEY, true);
     setToStore([], CONFIG.RECORDING_SEQUENCE, false);
   };
 
   const onChange = async (e: any) => {
     setName(e.target.value);
+  };
+
+  const onExtraLabelChange = (index: number) => (e: any) => {
+    labels[index].label = e.target.value;
+    setLabels([...labels]);
   };
 
   const renderData = () => {
@@ -208,27 +228,59 @@ export const RecordedSeq = (props: MProps) => {
           placeholder="Enter Label"
           onChange={onChange}
         />
-        <div id="uda-sequence-names" />
-        <div style={{ marginBottom: "10px" }}>
+
+        <div id="uda-sequence-names">
+          {labels?.map((item: any, index: number) => {
+            return (
+              <div className="flex-card flex-center">
+                <input
+                  type="text"
+                  id="uda-recorded-name"
+                  name="uda-save-recorded[]"
+                  className="uda-form-input uda-form-input-reduced"
+                  placeholder="Enter Label"
+                  onChange={onExtraLabelChange(index)}
+                />
+                <button
+                  className="delete-btn uda-remove-row"
+                  style={{ color: "white", width: 40, marginLeft: 16 }}
+                  onClick={() => removeLabel(index)}
+                >
+                  <BsFillTrashFill />
+                </button>
+              </div>
+            );
+          })}
+        </div>
+
+        <div style={{ marginBottom: "10px", padding: "20px 0" }}>
           <button className="add-btn uda_exclude" onClick={() => addLabel()}>
             + Add Label
           </button>
         </div>
-        <br />
-        <br />
-        <br />
-        <br />
-        <div style={{ marginTop: "10px", maxWidth: "100%" }}>
-          <button className="uda-record-btn" onClick={() => cancelRecording()}>
-            <span className="uda_exclude">Cancel and Exit</span>
-          </button>
-          <button
-            className="uda-tutorial-btn uda_exclude"
-            onClick={() => submitRecording()}
-            style={{ float: "right", padding: "5px 20px" }}
-          >
-            Submit
-          </button>
+
+        <div
+          className="flex-card flex-center"
+          style={{ clear: "both", marginTop: 50 }}
+        >
+          <div className="flex-card flex-start" style={{ flex: 2 }}>
+            <button
+              className="uda-record-btn"
+              onClick={() => cancelRecording()}
+              style={{ flex: 1 }}
+            >
+              <span className="uda_exclude">Cancel and Exit</span>
+            </button>
+          </div>
+          <div className="flex-card flex-end" style={{ flex: 1 }}>
+            <button
+              className="uda-tutorial-btn uda_exclude"
+              onClick={() => submitRecording()}
+              // style={{ float: "right", padding: "5px 20px" }}
+            >
+              Submit
+            </button>
+          </div>
         </div>
       </div>
     </div>

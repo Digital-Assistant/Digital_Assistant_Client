@@ -137,9 +137,7 @@ export const RecordSequenceDetails = (props: MProps) => {
         for (let i = 0; i < compareElements?.length; i++) {
           if (originalElement.outerHTML == compareElements[i].outerHTML) {
             if (originalNode.offset) {
-              // console.log(originalNode);
               const _offsets = getAbsoluteOffsets(compareElements[i]);
-              // console.log(originalNode, _offsets);
               if (
                 _offsets.x == originalNode.offset.x ||
                 _offsets.y == originalNode.offset.y
@@ -151,7 +149,10 @@ export const RecordSequenceDetails = (props: MProps) => {
             }
           }
         }
-        if (originalElement) {
+        if (
+          originalElement &&
+          originalElement?.nodeName?.toLowerCase() === "a"
+        ) {
           updateStatus(playItem.index);
           window.location.href = originalElement?.getAttribute("href") || "/";
         }
@@ -176,15 +177,16 @@ export const RecordSequenceDetails = (props: MProps) => {
     try {
       const originalNode = JSON.parse(invokingNode);
       let originalElement = originalNode?.node;
-      let compareElements = getAllChildren(document.body);
+      let compareElements = document.querySelectorAll(originalElement.nodeName); //getAllChildren(document.body);
 
       for (let i = 0; i < compareElements?.length; i++) {
+        // console.log(
+        //   originalElement.outerHTML + "*****" + compareElements[i].outerHTML
+        // );
         if (originalElement.outerHTML == compareElements[i].outerHTML) {
           _toolTipFlag = true;
           if (originalNode.offset) {
-            // console.log(originalNode);
             const _offsets = getAbsoluteOffsets(compareElements[i]);
-            // console.log(originalNode, _offsets);
             if (
               _offsets.x == originalNode.offset.x ||
               _offsets.y == originalNode.offset.y
@@ -199,7 +201,6 @@ export const RecordSequenceDetails = (props: MProps) => {
         }
       }
 
-      // console.log(originalNode);
       //attach event to continue button in tooltip
       document
         .getElementById("uda-autoplay-continue")
@@ -320,6 +321,7 @@ export const RecordSequenceDetails = (props: MProps) => {
   };
 
   const removeRecording = async () => {
+    if (!window.confirm("Sure you want to delete?")) return;
     await deleteRecording({ id: selectedRecordingDetails.id });
     if (props?.refetchSearch) {
       props.refetchSearch("on");
