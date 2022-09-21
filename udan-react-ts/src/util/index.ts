@@ -1182,8 +1182,9 @@ export const recorduserclick = async (
   
   if (!isRecording) {
     if (parentAnchorElement) {
-      console.log(parentAnchorElement);
-      window.location.href = parentAnchorElement?.getAttribute("href") || "/";
+      try {
+        window.location.href = parentAnchorElement?.getAttribute("href") || "/";
+      }catch(e){}
       return true;
     } 
     else {
@@ -1217,7 +1218,9 @@ export const recorduserclick = async (
     parentAnchorElement && node.getAttribute("href")
   ) {
     //return;
-    window.location.href = parentAnchorElement?.getAttribute("href") || "";
+    try {
+      window.location.href = parentAnchorElement?.getAttribute("href") || "";
+    }catch(e){}
   }
 };
 

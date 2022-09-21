@@ -26,6 +26,7 @@ export const CONFIG = {
   USER_SESSION_KEY: "udaSessionKey",
   USER_SESSION_ID: "udaSessionId",
   SYNC_INTERVAL: 1000,
+  JARO_WEIGHT: 0.89,
   set Environment(value) {
     this.current = value.toString().toUpperCase();
     if (this.current === "PROD") {

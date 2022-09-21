@@ -59,12 +59,14 @@ function App() {
   );
   const [hide, setHide] = React.useState<boolean>(isRecording ? false : true);
   const [showLoader, setShowLoader] = React.useState<boolean>(true);
+  const [showSearch, setShowSearch] = React.useState<boolean>(true);
   const [showRecord, setShowRecord] = React.useState<boolean>(false);
   const [isPlaying, setIsPlaying] = React.useState<string>(
     getFromStore("isPlaying", true) || "off"
   );
   const [searchKeyword, setSearchKeyword] = React.useState<string>("");
   const [searchResults, setSearchResults] = React.useState<any>([]);
+  const [page, setPage] = React.useState<number>(1);
   const [refetchSearch, setRefetchSearch] = React.useState<string>("");
   const [recSequenceData, setRecSequenceData] = React.useState<any>([]);
   const [recordSequenceDetailsVisibility, setRecordSequenceDetailsVisibility] =
@@ -108,13 +110,13 @@ function App() {
 
   const authHandler = async () => {
     if (!window.chrome) return;
-    chrome.runtime.sendMessage({ action: "login" }, (res) => {
-      console.log(res);
-    });
     setTimeout(() => {
-      chrome.storage.sync.get(CONFIG.USER_AUTH_DATA_KEY, (data) => {
+      chrome.storage.local.get().then((data) => {
         if (data) {
-          if (!getFromStore(CONFIG.USER_AUTH_DATA_KEY, true)) {
+          if (
+            !getFromStore(CONFIG.USER_AUTH_DATA_KEY, true) ||
+            getFromStore(CONFIG.USER_AUTH_DATA_KEY, true) === "undefined"
+          ) {
             setToStore(data.udaUserData, CONFIG.USER_AUTH_DATA_KEY, true);
             const authData = JSON.parse(data[CONFIG.USER_AUTH_DATA_KEY]);
             setToStore(authData?.authdata?.id, CONFIG.USER_SESSION_ID, true);
@@ -133,13 +135,17 @@ function App() {
    * HTTP search results service call
    @param keyword:string
    */
-  const getSearchResults = async (keyword: string) => {
+  const getSearchResults = async (keyword: string, _page = 1) => {
+    if (!showSearch) return;
+    console.log(page);
     setShowLoader(true);
     setSearchKeyword(keyword);
     const _searchResults = await fetchSearchResults({
       keyword,
+      page,
       domain: encodeURI(window.location.host),
     });
+    setPage(_page);
     setTimeout(() => setShowLoader(false), 1500);
     setSearchResults([..._searchResults]);
   };
@@ -161,6 +167,7 @@ function App() {
     setToStore([], CONFIG.RECORDING_SEQUENCE, false);
     //getSearchResults("");
     if (window.udanSelectedNodes) window.udanSelectedNodes = [];
+    setShowSearch(true);
   };
 
   /**
@@ -177,6 +184,7 @@ function App() {
       case "cancel":
         break;
     }
+    setShowSearch(true);
     cancel();
   };
 
@@ -195,6 +203,7 @@ function App() {
    */
   const toggleHandler = (hideFlag: boolean, type: string) => {
     if (type == "footer") {
+      setShowSearch(false);
       setToStore([], CONFIG.RECORDING_SEQUENCE, false);
       setShowRecord(hideFlag);
     } else togglePanel();
@@ -240,6 +249,7 @@ function App() {
    * @param data
    */
   const showRecordingDetails = (data: any) => {
+    setShowSearch(false);
     setSelectedRecordingDetails({ ...data });
     setRecordSequenceDetailsVisibility(true);
   };
@@ -296,13 +306,15 @@ function App() {
                         recordSequenceVisibility={toggleContainer("record-seq")}
                       />
 
-                      {!showLoader && (
+                      {!showLoader && showSearch && (
                         <UdanMain.SearchResults
                           data={searchResults}
                           showDetails={showRecordingDetails}
                           visibility={toggleContainer("search-results")}
                           addRecordHandler={setShowRecord}
-                          key={searchResults.length + showLoader}
+                          // key={searchResults.length + showLoader}
+                          searchHandler={getSearchResults}
+                          page={page}
                         />
                       )}
 
@@ -323,7 +335,7 @@ function App() {
                         cancelHandler={cancel}
                         playHandler={playHandler}
                         isPlaying={isPlaying}
-                        refetchSearch={setRefetchSearch}
+                        // refetchSearch={setRefetchSearch}
                         key={"rSD" + recordSequenceDetailsVisibility}
                       />
                     </>

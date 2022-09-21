@@ -8,36 +8,56 @@
 import React, { useEffect } from "react";
 import "../App.scss";
 import { getRowObject, setToStore } from "../util";
+import InfiniteScroll from "react-infinite-scroller";
+import { fetchSearchResults } from "../services/searchService";
 
 export interface MProps {
   visibility?: boolean;
   data?: any;
   showDetails?: Function;
   addRecordHandler?: Function;
+  searchHandler?: Function;
+  page?: number;
 }
 
+let globalSearchResults: any = [];
 /**
  * To render search result elements
  * @returns HTML Elements
  */
 
 export const SearchResults = (props: MProps) => {
+  const [searchResults, setSearchResults] = React.useState<any>([]);
+
+  React.useEffect(() => {
+    globalSearchResults = [...globalSearchResults, ...props?.data];
+    setSearchResults([...globalSearchResults]);
+  }, [props?.data]);
+
   const selectItem = (item: any) => {
     //if (props.addRecordHandler) props.addRecordHandler(true);
     setToStore(item, "selectedRecordedItem", false);
     if (props?.showDetails) props.showDetails(item);
   };
 
+  const loadSearchResults = () => {
+    if (props?.searchHandler)
+      props.searchHandler(
+        "",
+        props?.page ? (props?.page === 1 ? 2 : props.page + 1) : 1
+      );
+  };
+
   const renderData = () => {
     if (!props?.visibility) return;
-    if (!props?.data?.length) {
+    if (!searchResults?.length) {
       return (
         <div className="uda-no-results">
           <p>No results found</p>
         </div>
       );
     }
-    return props?.data?.map((item: any) => {
+    return searchResults?.map((item: any) => {
       const _row = getRowObject(item);
       return (
         <div className="uda-card" onClick={() => selectItem(item)}>
@@ -48,5 +68,25 @@ export const SearchResults = (props: MProps) => {
     });
   };
 
-  return renderData();
+  // return renderData();
+  return (
+    <>
+      {!searchResults?.length && (
+        <div className="uda-no-results">
+          <p>No results found</p>
+        </div>
+      )}
+      {searchResults?.length && (
+        <InfiniteScroll
+          InfiniteScroll
+          pageStart={0}
+          loadMore={loadSearchResults}
+          hasMore={searchResults.length < 100}
+          useWindow={false}
+        >
+          {renderData()}
+        </InfiniteScroll>
+      )}
+    </>
+  );
 };

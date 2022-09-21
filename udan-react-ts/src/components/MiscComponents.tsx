@@ -30,7 +30,8 @@ import {
   getAbsoluteOffsets,
 } from "../util";
 import { deleteRecording, vote } from "../services/recordService";
-// import { jaroWinkler } from "jaro-winkler-typescript";
+import { jaroWinkler } from "jaro-winkler-typescript";
+import { CONFIG } from "../config";
 
 export interface MProps {
   data?: any;
@@ -133,9 +134,16 @@ export const RecordSequenceDetails = (props: MProps) => {
       if (originalElement.nodeName.toLowerCase() === "a") {
         // const selector = getLookUpSelector(originalElement);
         // const targetElement = document.querySelector(selector);
-        let compareElements = getAllChildren(document.body);
+        let compareElements = document.querySelectorAll(
+          originalElement.nodeName
+        );
         for (let i = 0; i < compareElements?.length; i++) {
-          if (originalElement.outerHTML == compareElements[i].outerHTML) {
+          if (
+            jaroWinkler(
+              originalElement.outerHTML,
+              compareElements[i].outerHTML
+            ) >= CONFIG.JARO_WEIGHT
+          ) {
             if (originalNode.offset) {
               const _offsets = getAbsoluteOffsets(compareElements[i]);
               if (
@@ -154,7 +162,9 @@ export const RecordSequenceDetails = (props: MProps) => {
           originalElement?.nodeName?.toLowerCase() === "a"
         ) {
           updateStatus(playItem.index);
-          window.location.href = originalElement?.getAttribute("href") || "/";
+          try {
+            window.location.href = originalElement?.getAttribute("href") || "/";
+          } catch (e) {}
         }
       } else {
         //show tooltip
@@ -180,13 +190,21 @@ export const RecordSequenceDetails = (props: MProps) => {
       let compareElements = document.querySelectorAll(originalElement.nodeName); //getAllChildren(document.body);
 
       for (let i = 0; i < compareElements?.length; i++) {
-        // console.log(
-        //   originalElement.outerHTML + "*****" + compareElements[i].outerHTML
-        // );
-        if (originalElement.outerHTML == compareElements[i].outerHTML) {
+        console.log(
+          jaroWinkler(originalElement.outerHTML, compareElements[i].outerHTML),
+          originalElement.outerHTML + "*****" + compareElements[i].outerHTML
+        );
+        // if (originalElement.outerHTML == compareElements[i].outerHTML) {
+        if (
+          jaroWinkler(
+            originalElement.outerHTML,
+            compareElements[i].outerHTML
+          ) >= CONFIG.JARO_WEIGHT
+        ) {
           _toolTipFlag = true;
           if (originalNode.offset) {
             const _offsets = getAbsoluteOffsets(compareElements[i]);
+            console.log(_offsets, originalNode.offset);
             if (
               _offsets.x == originalNode.offset.x ||
               _offsets.y == originalNode.offset.y

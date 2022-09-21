@@ -576,7 +576,41 @@ body {
                                 padding: 0;
                             }
 
-                            .uda-suggestion-list li,
+                            .uda-suggestion-list li{
+                                position: relative;
+                                font-size: 14px;
+                                cursor: pointer;
+                                i{
+                                    padding-left: 20px;
+                                }
+                                &::before {
+                                    content: ' ';
+                                    margin: 0 10px;
+                                    // align-items:center;
+                                    // display: flex;
+                                    width: 10px;
+                                    height: 10px;
+                                    border-radius: 50%;
+                                    position: absolute;
+                                    left: -10px;
+                                    top: 10px;
+                                }
+
+                                &.completed {
+                                    &::before {
+                                        // vertical-align: middle;
+                                        // background-repeat: space;
+                                        background-color: lightgreen;
+                                    }
+                                }
+
+                                .uda-tutorial-btn {
+                                    // position: absolute;
+                                    // right: 10px;
+                                    // top: 4px;
+                                }
+                            }
+
                             .uda-recording li {
                                 position: relative;
                                 font-size: 14px;
