@@ -158,6 +158,7 @@ function App() {
     setShowRecord(false);
     setRecordSequenceDetailsVisibility(false);
     playHandler("off");
+    setToStore([], CONFIG.RECORDING_SEQUENCE, false);
     //getSearchResults("");
     if (window.udanSelectedNodes) window.udanSelectedNodes = [];
   };
@@ -193,8 +194,10 @@ function App() {
    * @param type
    */
   const toggleHandler = (hideFlag: boolean, type: string) => {
-    if (type == "footer") setShowRecord(hideFlag);
-    else setHide(hideFlag);
+    if (type == "footer") {
+      setToStore([], CONFIG.RECORDING_SEQUENCE, false);
+      setShowRecord(hideFlag);
+    } else togglePanel();
   };
 
   /**
@@ -307,6 +310,7 @@ function App() {
                         isShown={toggleContainer("recorded-data")}
                         data={recSequenceData}
                         recordHandler={recordHandler}
+                        refetchSearch={setRefetchSearch}
                       />
 
                       <UdanMain.RecordSequenceDetails

@@ -584,11 +584,14 @@ body {
                                 &::before {
                                         content: ' ';
                                         margin: 0 10px;
-                                        vertical-align: middle;
-                                        display: inline-block;
+                                        // align-items:center;
+                                        // display: flex;
                                         width: 10px;
                                         height: 10px;
                                         border-radius: 50%;
+                                        position: absolute;
+                                        left: -30px;
+                                        top: 32px;
                                     }
                                 
                                 &.completed {
@@ -599,9 +602,9 @@ body {
                                     }
                                 }
                                 .uda-tutorial-btn{
-                                    position: absolute;
-                                    right: 10px;
-                                    top: 4px;
+                                    // position: absolute;
+                                    // right: 10px;
+                                    // top: 4px;
                                 }
                             }
 
@@ -727,6 +730,10 @@ body {
 
                                                 &:focus {
                                                     outline: none;
+                                                }
+                                                &.non-editable{
+                                                    background: transparent;
+                                                    border: none;
                                                 }
                                             }
 
@@ -1211,7 +1218,12 @@ top:30px;
     .flex-card{
         display: flex;
     }
-    .end{
+    .flex-center{
+        align-items: center;
+        justify-content: center;
+    }
+    .flex-start{justify-content: start;}
+    .end, .flex-end{
         justify-content: end;
     }
     .loader{

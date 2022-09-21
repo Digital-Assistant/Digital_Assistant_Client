@@ -5,6 +5,9 @@ import {
   recordSequence,
   userClick,
 } from "../services/recordService";
+import {
+  fetchSpecialNodes
+} from "../services/searchService";
 import { createPopperLite as createPopper } from "@popperjs/core";
 import { jaroWinkler } from "jaro-winkler-typescript";
 // import { UDAConsoleLogger, UDAErrorLogger } from '../config/error-log';
@@ -17,20 +20,29 @@ export const tooltipDisplayedNodes: any = [];
 export const ignoreClicksOnSpecialNodes: any = [];
 export const ignoreNodesContainingClassNames: any = [];
 export const cancelRecordingDuringRecordingNodes: any = [];
-export const allowedTags = ["a", "button"];
-export const excludeTags = [
-  "link",
-  "script",
-  "svg",
-  "style",
-  "path",
-  "circle",
-  "g",
-  "rect",
-  "stop",
-  "defs",
-  "linearGradient",
-];
+export let udanSpecialNodes: any = {
+  include: {
+    tags: ["a", "button", "input", "textarea", "select","mat-select"],
+    classes: ["ng-select", "ngb-datepicker"],
+  },
+  exclude: {
+    tags: [
+      "link",
+      "meta",
+      "script",
+      "svg",
+      "style",
+      "path",
+      "circle",
+      "g",
+      "rect",
+      "stop",
+      "defs",
+      "linearGradient",
+    ],
+    classes: ["uda_exclude","ngx-daterangepicker-material"],
+  },
+};
 export const EXCLUDE_ATTRIB = "data-exclude";
 
 
@@ -47,20 +59,35 @@ declare global {
 /**
  * Set ignorable classes for Udan con
  */
-export const init = () => {
+export const init = async() => {
+
+  //fetch special nodes for REST service
+  if (!getFromStore("specialNodes", false)) {
+    const _specialNodes = fetchSpecialNodes();
+    setToStore(_specialNodes, "specialNodes", false);
+  }
+
+  const specialNodes = getFromStore("specialNodes", false);
+  if (specialNodes) {
+    udanSpecialNodes = specialNodes;
+  }
+
+
   const children = getAllChildren(
     document.querySelector(`.${CONFIG.UDA_CONTAINER_CLASS}`)
   );
   for (let i = 0; i < children?.length; i++) {
-    // console.log(children[i]);
-    if (
-      children[i] &&
-      !excludeTags.includes(
-        children[i]?.tagName?.trim()?.toLocaleLowerCase()
-      ) &&
-      children[i].className.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) == -1
-    )
-      children[i].className += " " + CONFIG.UDA_CLICK_IGNORE_CLASS;
+    try {
+      // console.log(children[i]);
+      if (
+        children[i] &&
+        !udanSpecialNodes?.exclude?.tags?.includes(
+          children[i]?.tagName?.trim()?.toLocaleLowerCase()
+        ) &&
+        children[i].className.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) == -1
+      )
+        children[i].className += " " + CONFIG.UDA_CLICK_IGNORE_CLASS;
+    } catch (e) { }
   }
 };
 
@@ -162,9 +189,9 @@ export const addBodyEvents = (selector: HTMLElement) => {
       /**exclude event attachment for selective elements  */
       if (
         els[i] &&
-        !excludeTags.includes(els[i]?.tagName?.trim()?.toLocaleLowerCase()) &&
-        els[i]?.className?.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) === -1 &&
-        els[i]?.parentNode?.className?.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) === -1 &&
+        // !udanSpecialNodes?.exclude?.tags.includes(els[i]?.tagName?.trim()?.toLocaleLowerCase()) &&
+        // els[i]?.className?.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) === -1 &&
+        // els[i]?.parentNode?.className?.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) === -1 &&
         !els[i]?.getAttribute(EXCLUDE_ATTRIB) &&
         isClickable(els[i])
       ) {
@@ -453,7 +480,7 @@ export const getTooltipPositionClass = (
  * @param value
  */
 export const removeFromArray = (array: any, value: any) => {
-  if (array.includes(value)) {
+  if (array?.includes(value)) {
     array.splice(array.indexOf(value), 1);
   }
 };
@@ -964,24 +991,20 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
 
     switch (nodename) {
       case "a":
-        // const _tmpHref = node.getAttribute("href");
-        // node.setAttribute("href", "#");
         addEvent(node, "click", function (event: any) {
           event.preventDefault();
-          recorduserclick(node, false, false, event, confirmdialog);
+          recorduserclick(event.target, false, false, event, confirmdialog);
         });
-        // node.setAttribute("href", _tmpHref);
-        // delayLink(node);
         break;
       case "select":
         addEvent(node, "focus", function (event: any) {
-          recorduserclick(node, false, false, event, confirmdialog);
+          recorduserclick(event.target, false, false, event, confirmdialog);
         });
         break;
       case "input":
         if (!node.hasAttribute("type")) {
           addEvent(node, "click", function (event: any) {
-            recorduserclick(node, false, false, event, confirmdialog);
+            recorduserclick(event.target, false, false, event, confirmdialog);
           });
           return;
         }
@@ -1009,8 +1032,10 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
           case "text":
           case "time":
           case "url":
+          case "textarea":
           case "week":
             addEvent(node, "click", function (event: any) {
+              console.log(node);
               recorduserclick(node, false, false, event, confirmdialog);
             });
             break;
@@ -1022,28 +1047,20 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
         }
         break;
       case "mat-select":
-        addEvent(node, "click", function (event: any) {
-          recorduserclick(node, false, false, event, confirmdialog);
-        });
-        break;
+      case "textarea":
+      case "button":
       case "tr":
         addEvent(node, "click", function (event: any) {
           recorduserclick(event.target, false, false, event, confirmdialog);
         });
         break;
-      case "button":
-        
-        addEvent(node, "click", function (event: any) {
-          recorduserclick(event.target, false, false, event, confirmdialog);
-        });
-        break;
       default:
-        addEvent(node, 'click', function (event: any) {
+        addEvent(node, "click", function (event: any) {
           if (isAllowedMiscElement(event.target)) {
             recorduserclick(event.target, false, false, event, confirmdialog);
           }
         });
-      	break;
+        break;
     }
     node.addedclickrecord = true;
     return node;
@@ -1053,11 +1070,14 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
 };
 
 
-export const isAllowedMiscElement = (element: HTMLElement) => { 
-  let isAllowedElement:boolean = window.getComputedStyle(element).cursor == "pointer";
+export const isAllowedMiscElement = (element: HTMLElement) => {
+  if (!element) return false;
+
+  let isAllowedElement: boolean =
+    window.getComputedStyle(element).cursor == "pointer";
   let parentEl: any = element;
   /**traversing 3 level parents for contenteditable property */
-  for (let i = 0; i <= 3; i++) { 
+  for (let i = 0; i <= 3; i++) {
     if (element.getAttribute("contenteditable")) {
       isAllowedElement = true;
       break;
@@ -1066,12 +1086,45 @@ export const isAllowedMiscElement = (element: HTMLElement) => {
       parentEl = parentEl.parentNode;
     }
     if (parentEl.getAttribute("contenteditable")) {
-       isAllowedElement = true;
-       break;
+      isAllowedElement = true;
+      break;
     }
   }
+
+   
+  // console.log(
+  //   "before",
+  //   isAllowedElement,
+
+  // );
+
+  //check if special classes to be included in recordable elements
+  if (
+    hasClass(element, udanSpecialNodes.include.classes) ||
+    udanSpecialNodes?.include?.tags?.includes(element.tagName.toLowerCase())
+  ) {
+    isAllowedElement = true;
+  }
+
+  // console.log("include", isAllowedElement, udanSpecialNodes?.include?.tags.includes(element.tagName.toLowerCase()));
+  //check if special classes to be excluded from recordable elements
+  if (
+    udanSpecialNodes?.exclude?.tags?.includes(
+      element?.tagName?.trim()?.toLocaleLowerCase()
+    ) ||
+    hasClass(element, udanSpecialNodes.exclude.classes)
+  ) {
+    isAllowedElement = false;
+  }
+  // console.log("exclude", element.tagName,
+  //   isAllowedElement,
+  //   udanSpecialNodes?.exclude?.tags.includes(element.tagName.toLowerCase())
+  // );
+  
+  // console.log(element?.tagName, isAllowedElement);
+  // if(element.onclick != null || element.addEventListener != null ||)
   return isAllowedElement;
-}
+};
 
 /**
  * To delay Hyperlink click navitaion
@@ -1104,7 +1157,11 @@ export const recorduserclick = async (
   confirmdialog = false,
   hasparentclick = false
 ) => {
-  
+
+
+  if (!node) return false;
+
+  console.log("in recording", node.tagName, isClickable(event.target));
   if (
     !node.isSameNode(event.target) || clickableElementExists(event.target) ||
     !isClickable(event.target)
@@ -1125,7 +1182,8 @@ export const recorduserclick = async (
   
   if (!isRecording) {
     if (parentAnchorElement) {
-      window.location.href = parentAnchorElement.getAttribute("href") || "/";
+      console.log(parentAnchorElement);
+      window.location.href = parentAnchorElement?.getAttribute("href") || "/";
       return true;
     } 
     else {
@@ -1134,9 +1192,9 @@ export const recorduserclick = async (
     // return;
   }
     
-  const _text = node.innerText || getclickedinputlabels(node);
+  const _text = getclickedinputlabels(node);
   
-  console.log("recording..." + _text);
+  console.log("recording... " + node.innerText + "," + _text);
   
   if (!_text || _text?.length > 100 || !_text?.trim()?.length) return;
 
@@ -1159,7 +1217,7 @@ export const recorduserclick = async (
     parentAnchorElement && node.getAttribute("href")
   ) {
     //return;
-    window.location.href = parentAnchorElement.getAttribute("href") || "";
+    window.location.href = parentAnchorElement?.getAttribute("href") || "";
   }
 };
 
@@ -1337,7 +1395,7 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
 
     if (getchildlabels && node.childNodes.length > 0) {
       var childnodes = node.childNodes;
-      childnodes.forEach(function (childnode: any, key: any) {
+      childnodes?.forEach(function (childnode: any, key: any) {
         if (
           childnode.nodeName.toLowerCase() !== "script" &&
           childnode.nodeName.toLowerCase() !== "select" &&
@@ -1413,11 +1471,27 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
       inputlabels.push({ text: node.nodeName.toLowerCase(), match: false });
     }
   } catch (e) { 
-    console.log(e);
+    // console.log(e);
   }
     return inputlabels;
       
 }
+
+export const getDirectInnerText=(element:any)=> {
+  const x = [];
+  let child = element.firstChild;
+  while (child) {
+    if (child.nodeType == 3) {
+      x.push(child.nodeValue);
+    } else if (child.nodeType == 1) {
+      let ii:any = getDirectInnerText(child);
+      if (ii.length > 0) x.push(ii);
+    }
+    child = child.nextSibling;
+  }
+  return x.join(" ");
+}
+
 
 /**
  * To get selected text from list options
@@ -1430,13 +1504,44 @@ export const getSelectedTextFromSelectBox = (node: any) => {
   } catch (e) { }
 }
 
+export const getLabelsForInputElement = (element: any) => {
+  let labels: any = [],
+    id = element.id, name = element.name,
+    elements: any = [];
+
+  if (id) elements = document.querySelector("label[for='" + id + "']");
+  if (name && !element) elements = document.querySelector("label[for='" + name + "']");
+
+  if (elements) {
+    labels = getDirectInnerText(elements);
+    if (labels) return labels?.trim();
+  }
+
+  while ((element = element.parentNode)) {
+    if (element?.tagName?.toLowerCase() == "label") {
+      labels.push(element?.innerText());
+    }
+  }
+  return labels?.trim();
+};
+
 //getting input label for the clicked node
 export const getclickedinputlabels=(node:HTMLElement, fromdocument=false, selectchange=false)=>{
 			if (!node) {
 				return null;
 			}
-			var inputlabels="";
-			var nodename=node.nodeName.toLowerCase();
+			let inputlabels:any="";
+      let nodename = node.nodeName.toLowerCase();
+  
+      try {
+        inputlabels = getLabelsForInputElement(node);
+        console.log("labesl", inputlabels)
+        if (inputlabels) return inputlabels;
+      }catch(e){}
+      // if (node?.previousElementSibling?.tagName?.toLocaleLowerCase() == 'label') {
+        
+      //   return node?.previousSibling?.textContent;;
+      // }
 			switch (nodename) {
 				case "select":
 					if(selectchange) {
@@ -1497,7 +1602,10 @@ export const getclickedinputlabels=(node:HTMLElement, fromdocument=false, select
 						inputlabels = labels.toString();
 					}
 					break;
-				default:
+        default:
+          if (!node?.children?.length && node?.innerText?.trim()?.length>0) {
+            return node?.innerText;
+          }
 					var textlabels = getNodeLabels(node, [], 1, false, true, true);
 					if (textlabels.length > 0) {
 						var labels = [];
@@ -1516,17 +1624,17 @@ export const getclickedinputlabels=(node:HTMLElement, fromdocument=false, select
  * @param htmlElement 
  * @returns HTMLElements Collection
  */
-export const getAllChildren = (htmlElement:any) => {
-  if (htmlElement.children.length === 0) return [htmlElement];
+export const getAllChildren = (htmlElement: any) => {
+   let allChildElements = [];
+  try {
+    if (htmlElement?.children?.length === 0) return [htmlElement];
 
-  let allChildElements = [];
-
-  for (let i = 0; i < htmlElement.children.length; i++) {
-    let children:any = getAllChildren(htmlElement.children[i]);
-    if (children) allChildElements.push(...children);
-  }
-  allChildElements.push(htmlElement);
-
+    for (let i = 0; i < htmlElement?.children?.length; i++) {
+      let children: any = getAllChildren(htmlElement.children[i]);
+      if (children) allChildElements.push(...children);
+    }
+    allChildElements.push(htmlElement);
+  }catch(e){}
   return allChildElements;
 };
 
@@ -1540,7 +1648,7 @@ export const getAllChildren = (htmlElement:any) => {
 export const clickableElementExists = (compareNode:HTMLElement) => { 
   let existFlag = false;
   if (!window.udanSelectedNodes) window.udanSelectedNodes = [];
-  window.udanSelectedNodes.forEach((element:any) => {
+  window?.udanSelectedNodes?.forEach((element:any) => {
     if (element.isSameNode(compareNode)) existFlag = true;
   });
   return existFlag;
@@ -1552,14 +1660,29 @@ export const clickableElementExists = (compareNode:HTMLElement) => {
  * @returns boolean
  */
 export const isClickable = (element: HTMLElement) => {
-  if(isAllowedMiscElement(element)) return true;
+  return isAllowedMiscElement(element);
+  /*
+  try {
     return (
-      (allowedTags.includes(element.tagName.toLowerCase()) ||
-        element.onclick != null ||
+      ( element.onclick != null ||
         element.addEventListener != null ||
-        window.getComputedStyle(element).cursor == "pointer") &&
-      element?.className?.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) === -1
+        window.getComputedStyle(element).cursor == "pointer") 
     );
+  }catch(e){return false}
+  */
+}
+
+export const hasClass = (element: HTMLElement, classList: string[]) => {
+  let existsFlag = false;
+  classList?.forEach(cls => {
+    try {
+      if (element?.className?.indexOf(cls) > -1) {
+        existsFlag = true;
+        return existsFlag;
+      }
+    }catch(e){return false}
+  });
+  return existsFlag;
 }
 
 export const compareNodes = (
