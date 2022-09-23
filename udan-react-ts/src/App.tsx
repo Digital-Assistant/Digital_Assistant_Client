@@ -20,26 +20,18 @@ import {
   postRecordSequenceData,
 } from "./util";
 import { CONFIG } from "./config";
-import { RESOURCES } from "./i18n/locale";
 import i18n from "i18next";
 import { useTranslation, initReactI18next } from "react-i18next";
+import "./i18n";
 import UdanMain from "./components/UdanMain";
 import { Header, Body, Footer, Toggler } from "./components/layout";
 import { Circles } from "react-loader-spinner";
 import useInterval from "react-useinterval";
 import "./App.scss";
 
-i18n
-  .use(initReactI18next) // passes i18n down to react-i18next
-  .init({
-    // the translations
-    resources: RESOURCES,
-    lng: "en", // if you're using a language detector, do not define the lng option
-    fallbackLng: "en",
-    interpolation: {
-      escapeValue: false, // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
-    },
-  });
+// i18n
+//   .use(initReactI18next) // passes i18n down to react-i18next
+//   .init(RESOURCES);
 
 declare global {
   interface Window {
@@ -109,6 +101,12 @@ function App() {
         getSearchResults("");
       }, 500);
     }
+    /*
+    //language change test
+    setTimeout(() => {
+      changeLanguage("fr");
+    }, 5000);
+    */
   }, []);
 
   React.useEffect(() => {
@@ -133,6 +131,14 @@ function App() {
   const togglePanel = () => {
     setHide(!hide);
     squeezeBody(!hide);
+  };
+
+  /**
+   * to change the language
+   * @param locale
+   */
+  const changeLanguage = (locale: string) => {
+    i18n.changeLanguage(locale);
   };
 
   const offSearch = () => {
