@@ -50,13 +50,6 @@ export const SearchResults = (props: MProps) => {
 
   const renderData = () => {
     if (!props?.visibility) return;
-    if (!searchResults?.length) {
-      return (
-        <div className="uda-no-results">
-          <p>No results found</p>
-        </div>
-      );
-    }
     return searchResults?.map((item: any) => {
       const _row = getRowObject(item);
       return (
@@ -76,9 +69,8 @@ export const SearchResults = (props: MProps) => {
           <p>No results found</p>
         </div>
       )}
-      {searchResults?.length && (
+      {searchResults?.length > 0 && (
         <InfiniteScroll
-          InfiniteScroll
           pageStart={0}
           loadMore={loadSearchResults}
           hasMore={searchResults.length < 100}

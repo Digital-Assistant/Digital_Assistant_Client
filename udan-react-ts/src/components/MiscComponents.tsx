@@ -219,6 +219,16 @@ export const RecordSequenceDetails = (props: MProps) => {
         }
       }
 
+      if (originalElement && originalElement?.nodeName?.toLowerCase() === "a") {
+        const playItem = getCurrentPlayItem();
+        updateStatus(playItem.index);
+        setToStore("on", CONFIG.RECORDING_MANUAL_PLAY, true);
+        try {
+          window.location.href = originalElement?.getAttribute("href") || "/";
+        } catch (e) {}
+        return;
+      }
+
       //attach event to continue button in tooltip
       document
         .getElementById("uda-autoplay-continue")
@@ -333,7 +343,7 @@ export const RecordSequenceDetails = (props: MProps) => {
    */
   const play = () => {
     resetStatus();
-    setToStore("on", "isPlaying", true);
+    setToStore("on", CONFIG.RECORDING_IS_PLAYING, true);
     autoPlay();
     // setToolTip(selectedRecordingDetails?.userclicknodesSet[0], 0);
   };

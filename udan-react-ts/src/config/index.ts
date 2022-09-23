@@ -20,6 +20,8 @@ export const CONFIG = {
   UDA_POST_INTERVAL: 1000,
   UDALastMutationTime: 0,
   UDALogLevel: 0,
+  RECORDING_IS_PLAYING: "udaIsPlaying",
+  RECORDING_MANUAL_PLAY: "udaManualPlay",
   RECORDING_SWITCH_KEY: "recordingSwitch",
   RECORDING_SEQUENCE: "activeRecordingData",
   USER_AUTH_DATA_KEY: "udaUserData",

@@ -9,7 +9,7 @@ import { getFromStore } from "../util";
  */
 
 export const recordClicks = (request?: any) => {
-  request.usersessionid = getFromStore("udaSessionId", true);
+  request.sessionid = getFromStore("udaSessionKey", true);
   const parameters = {
     url: ENDPOINT.RECORD,
     method: "POST",
@@ -25,7 +25,7 @@ export const recordClicks = (request?: any) => {
  */
 
 export const updateRecordClicks = (request?: any) => {
-  request.usersessionid = getFromStore("udaSessionId", true);
+  request.sessionid = getFromStore("udaSessionKey", true);
   const parameters = {
     url: ENDPOINT.UPDATE_RECORD,
     method: "POST",

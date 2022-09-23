@@ -7,8 +7,13 @@
 
 import React, { useCallback, useEffect } from "react";
 import "../App.scss";
-import { BsFillPencilFill, BsFillTrashFill } from "react-icons/bs";
+import {
+  BsFillPencilFill,
+  BsFillTrashFill,
+  BsFillInfoCircleFill,
+} from "react-icons/bs";
 import _, { debounce } from "lodash";
+import { profanity } from "@2toad/profanity";
 import { setToStore, postRecordSequenceData } from "../util";
 import { updateRecordClicks } from "../services/recordService";
 import { CONFIG } from "../config";
@@ -30,6 +35,8 @@ export interface MProps {
 export const RecordedSeq = (props: MProps) => {
   const [name, setName] = React.useState<string>("");
   const [labels, setLabels] = React.useState<any>([]);
+  const [labelProfanity, setLabelProfanity] = React.useState<boolean>(false);
+  const [disableForm, setDisableForm] = React.useState<boolean>(false);
   const [recordData, setRecordData] = React.useState<any>(props.data);
 
   React.useEffect(() => {
@@ -58,6 +65,15 @@ export const RecordedSeq = (props: MProps) => {
   };
 
   const handleDebounceFn = async (index: number, inputValue: string) => {
+    /**check profanity for input text */
+    if (profanity.exists(inputValue)) {
+      recordData[index].profanity = true;
+      storeRecording(recordData);
+      setDisableForm(true);
+      return;
+    }
+    delete recordData[index].profanity;
+    setDisableForm(false);
     const _cloneRecObj = _.cloneDeep(props?.data?.[index]);
     if (_.isEmpty(_cloneRecObj)) return;
     const _objData: any = getObjData(_cloneRecObj?.objectdata);
@@ -96,7 +112,7 @@ export const RecordedSeq = (props: MProps) => {
   };
 
   const removeLabel = (index: number) => {
-    labels.splice(index);
+    labels.splice(index, 1);
     setLabels([...labels]);
   };
 
@@ -125,11 +141,28 @@ export const RecordedSeq = (props: MProps) => {
 
   const onChange = async (e: any) => {
     setName(e.target.value);
+    if (profanity.exists(e.target.value)) {
+      setLabelProfanity(true);
+      setDisableForm(true);
+      return;
+    } else {
+      setLabelProfanity(false);
+      setDisableForm(false);
+    }
   };
 
   const onExtraLabelChange = (index: number) => (e: any) => {
     labels[index].label = e.target.value;
     setLabels([...labels]);
+    if (profanity.exists(e.target.value)) {
+      labels[index].profanity = true;
+      setLabels([...labels]);
+      setDisableForm(true);
+      return;
+    } else {
+      delete labels[index].profanity;
+      setDisableForm(false);
+    }
   };
 
   const renderData = () => {
@@ -149,7 +182,7 @@ export const RecordedSeq = (props: MProps) => {
                   name="uda-edited-name"
                   className={`uda-form-input ${
                     !item.editable ? "non-editable" : ""
-                  }`}
+                  } ${item.profanity ? "profanity" : ""}`}
                   placeholder="Enter Name"
                   // onChange={onLabelChange(index)}
                   onChange={handleChange(index)}
@@ -192,20 +225,23 @@ export const RecordedSeq = (props: MProps) => {
             >
               save
             </button> */}
-            &nbsp; &nbsp;{" "}
-            <input
-              type="checkbox"
-              id="isPersonal"
-              // checked={getObjData(item?.objectdata)?.meta?.isPersonal}
-              onClick={handlePersonal(index)}
-            />
-            <label style={{ fontSize: "14px" }}>Personal Information</label>
-            <span style={{ position: "relative", top: "0px" }}>
-              <img
-                src="https://digital-assistant.github.io/Digital_Assistant_Client/chrome-plugin/images/icons/info.png"
-                title="select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."
-              />
-            </span>
+            {recordData?.length - 1 === index && (
+              <>
+                <input
+                  type="checkbox"
+                  id="isPersonal"
+                  checked={getObjData(item?.objectdata)?.meta?.isPersonal}
+                  onClick={handlePersonal(index)}
+                />
+                <label style={{ fontSize: "14px" }}>Personal Information</label>
+                <span
+                  style={{ position: "relative", top: "0px", padding: 10 }}
+                  title="select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."
+                >
+                  <BsFillInfoCircleFill />
+                </span>
+              </>
+            )}
           </li>
         );
       });
@@ -224,7 +260,7 @@ export const RecordedSeq = (props: MProps) => {
           type="text"
           id="uda-recorded-name"
           name="uda-save-recorded[]"
-          className="uda-form-input"
+          className={`uda-form-input ${labelProfanity ? "profanity" : ""}`}
           placeholder="Enter Label"
           onChange={onChange}
         />
@@ -232,14 +268,17 @@ export const RecordedSeq = (props: MProps) => {
         <div id="uda-sequence-names">
           {labels?.map((item: any, index: number) => {
             return (
-              <div className="flex-card flex-center">
+              <div className="flex-card flex-center" key={`label-${index}`}>
                 <input
                   type="text"
                   id="uda-recorded-name"
                   name="uda-save-recorded[]"
-                  className="uda-form-input uda-form-input-reduced"
+                  className={`uda-form-input uda-form-input-reduced ${
+                    item.profanity ? "profanity" : ""
+                  }`}
                   placeholder="Enter Label"
                   onChange={onExtraLabelChange(index)}
+                  value={item.label}
                 />
                 <button
                   className="delete-btn uda-remove-row"
@@ -274,8 +313,11 @@ export const RecordedSeq = (props: MProps) => {
           </div>
           <div className="flex-card flex-end" style={{ flex: 1 }}>
             <button
-              className="uda-tutorial-btn uda_exclude"
+              className={`uda-tutorial-btn uda_exclude ${
+                disableForm ? "disabled" : ""
+              }`}
               onClick={() => submitRecording()}
+              disabled={disableForm}
               // style={{ float: "right", padding: "5px 20px" }}
             >
               Submit

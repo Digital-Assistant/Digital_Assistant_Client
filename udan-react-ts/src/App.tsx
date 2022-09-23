@@ -20,11 +20,26 @@ import {
   postRecordSequenceData,
 } from "./util";
 import { CONFIG } from "./config";
+import { RESOURCES } from "./i18n/locale";
+import i18n from "i18next";
+import { useTranslation, initReactI18next } from "react-i18next";
 import UdanMain from "./components/UdanMain";
 import { Header, Body, Footer, Toggler } from "./components/layout";
 import { Circles } from "react-loader-spinner";
 import useInterval from "react-useinterval";
 import "./App.scss";
+
+i18n
+  .use(initReactI18next) // passes i18n down to react-i18next
+  .init({
+    // the translations
+    resources: RESOURCES,
+    lng: "en", // if you're using a language detector, do not define the lng option
+    fallbackLng: "en",
+    interpolation: {
+      escapeValue: false, // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
+    },
+  });
 
 declare global {
   interface Window {
@@ -52,6 +67,7 @@ const useMutationObserver = (
 };
 
 function App() {
+  const { t } = useTranslation();
   const [isRecording, setIsRecording] = React.useState<boolean>(
     (getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true"
       ? true
@@ -59,10 +75,13 @@ function App() {
   );
   const [hide, setHide] = React.useState<boolean>(isRecording ? false : true);
   const [showLoader, setShowLoader] = React.useState<boolean>(true);
-  const [showSearch, setShowSearch] = React.useState<boolean>(true);
+  const [showSearch, setShowSearch] = React.useState<boolean>(false);
   const [showRecord, setShowRecord] = React.useState<boolean>(false);
   const [isPlaying, setIsPlaying] = React.useState<string>(
-    getFromStore("isPlaying", true) || "off"
+    getFromStore(CONFIG.RECORDING_IS_PLAYING, true) || "off"
+  );
+  const [manualPlay, setManualPlay] = React.useState<string>(
+    getFromStore(CONFIG.RECORDING_MANUAL_PLAY, true) || "off"
   );
   const [searchKeyword, setSearchKeyword] = React.useState<string>("");
   const [searchResults, setSearchResults] = React.useState<any>([]);
@@ -77,12 +96,25 @@ function App() {
   React.useEffect(() => {
     authHandler();
     //addBodyEvents(document.body);
-    getSearchResults("");
-    if (isPlaying == "on") {
+    if (isPlaying == "on" || manualPlay == "on") {
       togglePanel();
+      offSearch();
       setRecordSequenceDetailsVisibility(true);
+    } else if (isRecording) {
+      offSearch();
+    } else {
+      setShowSearch(true);
+      setTimeout(() => {
+        console.log(showSearch);
+        getSearchResults("");
+      }, 500);
     }
   }, []);
+
+  React.useEffect(() => {
+    window.isRecording = isRecording;
+    setToStore(isRecording, CONFIG.RECORDING_SWITCH_KEY, true);
+  }, [isRecording]);
 
   React.useEffect(() => {
     if (refetchSearch == "on") getSearchResults("");
@@ -95,17 +127,17 @@ function App() {
     setRecSequenceData(getFromStore(CONFIG.RECORDING_SEQUENCE, false));
   }, CONFIG.SYNC_INTERVAL);
 
-  React.useEffect(() => {
-    window.isRecording = isRecording;
-    setToStore(isRecording, CONFIG.RECORDING_SWITCH_KEY, true);
-  }, [isRecording]);
-
   /**
    * Toggle right side panel visibility
    */
   const togglePanel = () => {
     setHide(!hide);
     squeezeBody(!hide);
+  };
+
+  const offSearch = () => {
+    setShowSearch(false);
+    setShowLoader(false);
   };
 
   const authHandler = async () => {
@@ -136,7 +168,7 @@ function App() {
    @param keyword:string
    */
   const getSearchResults = async (keyword: string, _page = 1) => {
-    if (!showSearch) return;
+    // if (!showSearch) return;
     console.log(page);
     setShowLoader(true);
     setSearchKeyword(keyword);
@@ -146,7 +178,7 @@ function App() {
       domain: encodeURI(window.location.host),
     });
     setPage(_page);
-    setTimeout(() => setShowLoader(false), 1500);
+    setTimeout(() => setShowLoader(false), 500);
     setSearchResults([..._searchResults]);
   };
 
@@ -155,6 +187,7 @@ function App() {
     playHandler("off");
     setIsRecording(true);
     setShowRecord(false);
+    setShowSearch(false);
   };
 
   /**common cancel button handler */
@@ -164,10 +197,12 @@ function App() {
     setShowRecord(false);
     setRecordSequenceDetailsVisibility(false);
     playHandler("off");
+    setManualPlay("off");
+    setToStore("off", CONFIG.RECORDING_MANUAL_PLAY, true);
     setToStore([], CONFIG.RECORDING_SEQUENCE, false);
-    //getSearchResults("");
-    if (window.udanSelectedNodes) window.udanSelectedNodes = [];
     setShowSearch(true);
+    setRefetchSearch("on");
+    if (window.udanSelectedNodes) window.udanSelectedNodes = [];
   };
 
   /**
@@ -214,8 +249,11 @@ function App() {
    * @param flag
    */
   const showRecordHandler = (flag: boolean) => {
+    setShowSearch(false);
     setIsPlaying("off");
-    setToStore("off", "isPlaying", true);
+    setManualPlay("off");
+    setToStore("off", CONFIG.RECORDING_IS_PLAYING, true);
+    setToStore("off", "udaManualPlay", true);
     setShowRecord(flag);
   };
 
@@ -260,7 +298,7 @@ function App() {
    */
   const playHandler = (status: string) => {
     setIsPlaying(status);
-    setToStore(status, "isPlaying", true);
+    setToStore(status, CONFIG.RECORDING_IS_PLAYING, true);
   };
 
   return (
@@ -277,6 +315,7 @@ function App() {
                   searchHandler={searchHandler}
                   toggleFlag={hide}
                   toggleHandler={toggleHandler}
+                  i18={t}
                 />
                 <Body
                   content={

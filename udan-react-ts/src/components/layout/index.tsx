@@ -16,6 +16,7 @@ export interface MProps {
   toggleFlag: boolean;
   toggleHandler?: Function;
   addRecordBtnStatus?: boolean;
+  i18?: any;
 }
 
 export const Toggler = (props: MProps) => {
@@ -101,7 +102,7 @@ export const Header = (props: MProps) => {
     <>
       <div>
         <div
-          className="uda-ribbon-arrow"
+          className="uda-ribbon-arrow flex-card flex-center "
           id="uda-close-panel"
           onClick={() => togglePanel()}
         >
@@ -111,11 +112,11 @@ export const Header = (props: MProps) => {
         </div>
         <div className="uda-icon-txt">
           <img src={getLogo()} />
-          <span className="uda-help-bg-tooltip">Need Help?</span>
+          <span className="uda-help-bg-tooltip">{props.i18("needHelp")}?</span>
         </div>
         <div className="uda-icon-txt">
           <span className="" style={{ color: "#303f9f", fontWeight: "bold" }}>
-            UDAN(Beta)
+            {props.i18("logoText")}
           </span>
         </div>
         <div

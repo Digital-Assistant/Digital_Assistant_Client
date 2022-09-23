@@ -63,7 +63,7 @@ body {
     box-shadow: -4px 0 4px #ccc;
     .arrow {
         color: #fff;
-        line-height: 40px;
+        // line-height: 40px;
     }
 
     img {
@@ -715,6 +715,9 @@ body {
                                             &:hover {
                                                 background-color: var(--uda-secondary-color);
                                             }
+                                            &.disabled{
+                                                opacity: .5;
+                                            }
                                         }
 
                                         .uda-tutorial-exit-btn {
@@ -766,8 +769,12 @@ body {
                                                     outline: none;
                                                 }
                                                 &.non-editable{
-                                                    background: transparent;
-                                                    border: none;
+                                                    // background: transparent;
+                                                    // border: none;
+                                                }
+                                                &.profanity{
+                                                    background: #ffd8cc;
+                                                    border: 1px solid #ff5722;
                                                 }
                                             }
 
