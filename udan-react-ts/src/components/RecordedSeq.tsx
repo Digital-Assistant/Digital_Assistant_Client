@@ -96,11 +96,19 @@ export const RecordedSeq = (props: MProps) => {
   };
 
   const handlePersonal = (index: number) => (event: any) => {
+    updatePersonalOrSkipPlay("isPersonal", index);
+  };
+
+  const handleSkipPlay = (index: number) => (event: any) => {
+    updatePersonalOrSkipPlay("skipDuringPlay", index);
+  };
+
+  const updatePersonalOrSkipPlay = (key: string, index: number) => {
     const _objData = getObjData(recordData[index]?.objectdata);
     if (_objData) {
-      if (_objData.meta.isPersonal === undefined)
-        _objData.meta.isPersonal = false;
-      _objData.meta.isPersonal = !_objData.meta.isPersonal;
+      if (_objData.meta[key] === undefined) _objData.meta[key] = false;
+      _objData.meta[key] = !_objData.meta[key];
+      console.log(_objData);
       recordData[index].objectdata = JSON.stringify(_objData);
       storeRecording(recordData);
       updateRecordClicks(recordData[index]);
@@ -225,22 +233,39 @@ export const RecordedSeq = (props: MProps) => {
             >
               save
             </button> */}
+            <div className="flex-card flex-vcenter small-text">
+              <input
+                type="checkbox"
+                id="UDA-skip-duringPlay"
+                className="uda-checkbox flex-vcenter"
+                checked={getObjData(item?.objectdata)?.meta?.skipDuringPlay}
+                onClick={handleSkipPlay(index)}
+              />
+              <label className="uda-checkbox-label">Skip during play</label>
+              <span
+                className="info-icon"
+                title="Select this box if this field / text is not required to navigate while processing."
+              >
+                <BsFillInfoCircleFill />
+              </span>
+            </div>
+
             {recordData?.length - 1 === index && (
-              <>
+              <div className="flex-card flex-vcenter small-text">
                 <input
                   type="checkbox"
                   id="isPersonal"
                   checked={getObjData(item?.objectdata)?.meta?.isPersonal}
                   onClick={handlePersonal(index)}
                 />
-                <label style={{ fontSize: "14px" }}>Personal Information</label>
+                <label>Personal Information</label>
                 <span
-                  style={{ position: "relative", top: "0px", padding: 10 }}
+                  className="info-icon"
                   title="select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."
                 >
                   <BsFillInfoCircleFill />
                 </span>
-              </>
+              </div>
             )}
           </li>
         );

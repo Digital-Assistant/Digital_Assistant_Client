@@ -1090,6 +1090,13 @@ top:30px;
                                                     .uda-recorded-label-editable {
                                                         border: 2px dotted #969696 !important;
                                                         padding: 5px !important;
+
+                                                        .info-icon{
+                                                            position: "relative";
+                                                            top: 0px;
+                                                            margin-left: 10px;
+                                                            color: #ccc;
+                                                        }
                                                     }
 
                                                     .uda-form-input-reduced {
@@ -1223,6 +1230,9 @@ top:30px;
                                                         
 
 .udan-main-panel{
+    .small-text{
+        font-size: 12px;
+    }
     .halign-right{
         text-align: right;
         justify-content: flex-end;
@@ -1262,6 +1272,9 @@ top:30px;
     .flex-center{
         align-items: center;
         justify-content: center;
+    }
+    .flex-vcenter {
+        align-items: center;
     }
     .flex-start{justify-content: start;}
     .end, .flex-end{

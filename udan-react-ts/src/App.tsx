@@ -96,13 +96,10 @@ function App() {
       offSearch();
     } else {
       setShowSearch(true);
-      setTimeout(() => {
-        console.log(showSearch);
-        getSearchResults("");
-      }, 500);
+      getSearchResults("");
     }
     /*
-    //language change test
+    //language change test      
     setTimeout(() => {
       changeLanguage("fr");
     }, 5000);
