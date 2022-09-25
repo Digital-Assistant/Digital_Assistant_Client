@@ -10,10 +10,10 @@
       ],
       "run_at": "document_end",
       "js": [
-        "assets/index.c3f69ea6.js"
+        "assets/bundle.js"
       ],
       "css": [
-        "assets/index.b355fd07.css"
+        "assets/App.min.css"
       ],
       "media": []
     }
@@ -30,8 +30,8 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "assets/index.b355fd07.css",
-        "assets/logo.3bc36866.svg"
+        "assets/App.min.css",
+        "assets/logo.svg"
       ],
       "matches": [
         "http://*/*",

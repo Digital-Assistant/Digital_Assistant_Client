@@ -5,7 +5,7 @@
  */
 
 ///<reference types="chrome"/>
-import logo from "./logo.svg";
+// import logo from "./logo.svg";
 import React, { useState, useEffect, useCallback } from "react";
 import { fetchSearchResults } from "./services/searchService";
 import { login, getUserSession } from "./services/authService";

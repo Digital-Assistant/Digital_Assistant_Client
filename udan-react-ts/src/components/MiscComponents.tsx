@@ -323,7 +323,11 @@ export const RecordSequenceDetails = (props: MProps) => {
     return selectedRecordingDetails?.userclicknodesSet?.map(
       (item: any, index: number) => {
         return (
-          <li className={item.status} onClick={() => setToolTip(item, index)}>
+          <li
+            key={`rec-details-${index}`}
+            className={item.status}
+            onClick={() => setToolTip(item, index)}
+          >
             <i>{item?.clickednodename}</i>
           </li>
         );

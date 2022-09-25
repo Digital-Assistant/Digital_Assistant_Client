@@ -50,10 +50,14 @@ export const SearchResults = (props: MProps) => {
 
   const renderData = () => {
     if (!props?.visibility) return;
-    return searchResults?.map((item: any) => {
+    return searchResults?.map((item: any, index: number) => {
       const _row = getRowObject(item);
       return (
-        <div className="uda-card" onClick={() => selectItem(item)}>
+        <div
+          className="uda-card"
+          onClick={() => selectItem(item)}
+          key={`${index}-search-result`}
+        >
           <h5>{_row.sequenceName}</h5>
           <i>{_row.path}</i>
         </div>

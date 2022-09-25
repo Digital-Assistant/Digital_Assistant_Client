@@ -63,7 +63,6 @@ body {
     box-shadow: -4px 0 4px #ccc;
     .arrow {
         color: #fff;
-        // line-height: 40px;
     }
 
     img {
@@ -341,7 +340,6 @@ body {
                         }
 
                         .uda-advanced-btn-content {
-                            // display: none;
                             position: absolute;
                             padding: 5px;
                             color: var(--uda-text-color-bg-white);
@@ -414,7 +412,6 @@ body {
                                     align-items: center;
                                     font-size: 30px;
                                     color: var(-uda-secondary-color);
-                                    // position: absolute;
                                     right: 10px;
                                     width: 50px;
                                     height: 50px;
@@ -424,7 +421,6 @@ body {
                                     cursor: pointer;
                                     position: fixed;
                                     bottom: 40px;
-                                    // span{margin-top: -4px;}
                                 }
                             }
 
@@ -553,8 +549,6 @@ body {
 
                                     &.completed {
                                         &::before {
-                                            // vertical-align: middle;
-                                            // background-repeat: space;
                                             background-color: lightgreen;
                                         }
                                     }
@@ -586,8 +580,6 @@ body {
                                 &::before {
                                     content: ' ';
                                     margin: 0 10px;
-                                    // align-items:center;
-                                    // display: flex;
                                     width: 10px;
                                     height: 10px;
                                     border-radius: 50%;
@@ -598,16 +590,11 @@ body {
 
                                 &.completed {
                                     &::before {
-                                        // vertical-align: middle;
-                                        // background-repeat: space;
                                         background-color: lightgreen;
                                     }
                                 }
 
                                 .uda-tutorial-btn {
-                                    // position: absolute;
-                                    // right: 10px;
-                                    // top: 4px;
                                 }
                             }
 
@@ -618,8 +605,6 @@ body {
                                 &::before {
                                         content: ' ';
                                         margin: 0 10px;
-                                        // align-items:center;
-                                        // display: flex;
                                         width: 10px;
                                         height: 10px;
                                         border-radius: 50%;
@@ -630,15 +615,11 @@ body {
                                 
                                 &.completed {
                                     &::before {
-                                        // vertical-align: middle;
-                                        // background-repeat: space;
                                         background-color: lightgreen;
                                     }
                                 }
                                 .uda-tutorial-btn{
-                                    // position: absolute;
-                                    // right: 10px;
-                                    // top: 4px;
+
                                 }
                             }
 
@@ -769,8 +750,6 @@ body {
                                                     outline: none;
                                                 }
                                                 &.non-editable{
-                                                    // background: transparent;
-                                                    // border: none;
                                                 }
                                                 &.profanity{
                                                     background: #ffd8cc;

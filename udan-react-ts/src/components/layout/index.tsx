@@ -8,7 +8,6 @@
 import React, { useEffect } from "react";
 import "../../App.scss";
 import { fetchSearchResults } from "../../services/searchService";
-import { squeezeBody } from "../../util";
 import logo from "../../logo.svg";
 import { BsChevronDoubleRight, BsPlusLg } from "react-icons/bs";
 export interface MProps {
@@ -44,6 +43,7 @@ export const Toggler = (props: MProps) => {
  */
 function getLogo() {
   if (window?.chrome) {
+    console.log(window?.chrome?.runtime?.getURL(logo));
     return window?.chrome?.runtime?.getURL(logo);
   }
   return "https://s4.aconvert.com/convert/p3r68-cdx67/alc9l-hnvsn.svg";

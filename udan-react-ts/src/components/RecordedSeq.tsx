@@ -178,7 +178,10 @@ export const RecordedSeq = (props: MProps) => {
     else
       return recordData?.map((item: any, index: number) => {
         return (
-          <li className="uda-recorded-label-editable completed">
+          <li
+            className="uda-recorded-label-editable completed"
+            key={`rec-seq-${index}`}
+          >
             <div
               className="flex-card flex-center"
               style={{ alignItems: "center" }}
