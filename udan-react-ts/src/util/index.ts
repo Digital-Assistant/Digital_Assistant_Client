@@ -1642,6 +1642,22 @@ export const getAllChildren = (htmlElement: any) => {
 };
 
 
+/**
+ * To recorded meta data
+ * @param obj 
+ * @returns 
+ */
+export const getObjData = (obj: string) => {
+    try {
+      const _objData = JSON.parse(obj);
+      if (_objData && _objData.meta === undefined) _objData.meta = {};
+      return _objData;
+    } catch (e) {
+      console.log(e);
+      return {};
+    }
+};
+  
 
 /**
  * To check if a given element is already captured / recorded
@@ -1675,6 +1691,12 @@ export const isClickable = (element: HTMLElement) => {
   */
 }
 
+/**
+ * To find an dom object has a given class
+ * @param element 
+ * @param classList 
+ * @returns 
+ */
 export const hasClass = (element: HTMLElement, classList: string[]) => {
   let existsFlag = false;
   classList?.forEach(cls => {
@@ -1688,6 +1710,14 @@ export const hasClass = (element: HTMLElement, classList: string[]) => {
   return existsFlag;
 }
 
+/**
+ * To compare two nodes equality
+ * @param comparenode 
+ * @param originalnode 
+ * @param isPersonalNode 
+ * @param match 
+ * @returns 
+ */
 export const compareNodes = (
   comparenode: any,
   originalnode: any,
@@ -2027,3 +2057,4 @@ window.onDomChange(function () {
   addBodyEvents(document.body);
   //console.log("dom updated");
 });
+

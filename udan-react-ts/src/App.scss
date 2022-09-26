@@ -46,6 +46,15 @@ body {
     img {
         width: 100%;
     }
+
+    .arrow{
+            position: fixed;
+        top: 50%;
+        margin-top: 6px;
+        margin-right: 14px;
+        right: 0;
+        color: #2c3da0;
+    }
 }
 
 .uda-ribbon-arrow {
@@ -430,7 +439,7 @@ body {
                                 border-radius: 5px;
                                 margin-top: 20px;
                                 text-align: center;
-                                box-shadow: 2px 1px 6px 1px var(--uda-boxshodow-color);
+                                // box-shadow: 2px 1px 6px 1px var(--uda-boxshodow-color);
 
                                 h5 {
                                     font-size: 15px !important;
@@ -712,6 +721,16 @@ body {
                                             cursor: pointer;
                                         }
 
+                                        .uda-record-round-btn {
+                                            background-color: var(--uda-secondary-color);
+                                            color:white;
+                                            width: 60px;
+                                            height: 60px;
+                                            cursor: pointer;
+                                            &.round{
+                                                border-radius: 50%;
+                                            }
+                                        }
                                         .uda-record-btn {
                                             background-color: var(--uda-secondary-color);
                                             background-image: url("data:image/svg+xml,%3Csvg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 426.7 426.7' style='enable-background:new 0 0 426.7 426.7;' xml: space=' preserve'%3E%3Cstyle type=' text/css'%3E .st0%7Bfill:%23FFFFFF");

@@ -14,7 +14,7 @@ import {
 } from "react-icons/bs";
 import _, { debounce } from "lodash";
 import { profanity } from "@2toad/profanity";
-import { setToStore, postRecordSequenceData } from "../util";
+import { setToStore, postRecordSequenceData, getObjData } from "../util";
 import { updateRecordClicks } from "../services/recordService";
 import { CONFIG } from "../config";
 
@@ -51,17 +51,6 @@ export const RecordedSeq = (props: MProps) => {
   const setEdit = (index: number) => {
     recordData[index].editable = true;
     storeRecording(recordData);
-  };
-
-  const getObjData = (obj: string) => {
-    try {
-      const _objData = JSON.parse(obj);
-      if (_objData && _objData.meta === undefined) _objData.meta = {};
-      return _objData;
-    } catch (e) {
-      console.log(e);
-      return {};
-    }
   };
 
   const handleDebounceFn = async (index: number, inputValue: string) => {
