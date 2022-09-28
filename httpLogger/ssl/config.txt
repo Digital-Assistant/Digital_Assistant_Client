@@ -1,0 +1,8 @@
+[dn]
+CN=Lakshman
+[req]
+distinguished_name = dn
+[EXT]
+subjectAltName=DNS:localhost,IP:10.0.2.2
+keyUsage=digitalSignature
+extendedKeyUsage=serverAuth

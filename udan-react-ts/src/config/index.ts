@@ -220,7 +220,7 @@ export const CONFIG = {
     enabled: true,
     provider: "azure",
     config: {
-      key1: "",
+      key1: "bc015cc4090543d58c3056e8dc98cc9b",
       key2: "",
       endPoint:
         "https://nistapp-content-moderator.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessText/Screen",

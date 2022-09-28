@@ -15,7 +15,7 @@ import {
 import _, { debounce } from "lodash";
 import { profanity } from "@2toad/profanity";
 import { setToStore, postRecordSequenceData, getObjData } from "../util";
-import { updateRecordClicks } from "../services/recordService";
+import { updateRecordClicks, profanityCheck } from "../services/recordService";
 import { CONFIG } from "../config";
 
 export interface MProps {
@@ -37,10 +37,10 @@ export const RecordedSeq = (props: MProps) => {
   const [labels, setLabels] = React.useState<any>([]);
   const [labelProfanity, setLabelProfanity] = React.useState<boolean>(false);
   const [disableForm, setDisableForm] = React.useState<boolean>(false);
-  const [recordData, setRecordData] = React.useState<any>(props.data);
+  const [recordData, setRecordData] = React.useState<any>(props.data || []);
 
   React.useEffect(() => {
-    setRecordData([...props.data]);
+    setRecordData([...(props.data || [])]);
   }, [props.data]);
 
   const storeRecording = (data: any) => {
@@ -53,9 +53,15 @@ export const RecordedSeq = (props: MProps) => {
     storeRecording(recordData);
   };
 
+  const checkProfanity = async (keyword: string) => {
+    if (!CONFIG.profanity.enabled) return false;
+    const resp = await profanityCheck(keyword);
+    return resp.error ? true : false;
+  };
+
   const handleDebounceFn = async (index: number, inputValue: string) => {
     /**check profanity for input text */
-    if (profanity.exists(inputValue)) {
+    if (await checkProfanity(inputValue)) {
       recordData[index].profanity = true;
       storeRecording(recordData);
       setDisableForm(true);
@@ -138,7 +144,7 @@ export const RecordedSeq = (props: MProps) => {
 
   const onChange = async (e: any) => {
     setName(e.target.value);
-    if (profanity.exists(e.target.value)) {
+    if (await checkProfanity(e.target.value)) {
       setLabelProfanity(true);
       setDisableForm(true);
       return;
@@ -151,7 +157,8 @@ export const RecordedSeq = (props: MProps) => {
   const onExtraLabelChange = (index: number) => (e: any) => {
     labels[index].label = e.target.value;
     setLabels([...labels]);
-    if (profanity.exists(e.target.value)) {
+    const prof = checkProfanity(e.target.value);
+    if (prof) {
       labels[index].profanity = true;
       setLabels([...labels]);
       setDisableForm(true);

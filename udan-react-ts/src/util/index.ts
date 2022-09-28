@@ -10,7 +10,8 @@ import {
 } from "../services/searchService";
 import { createPopperLite as createPopper } from "@popperjs/core";
 import { jaroWinkler } from "jaro-winkler-typescript";
-// import { UDAConsoleLogger, UDAErrorLogger } from '../config/error-log';
+import { UDAErrorLogger } from "../config/error-log";
+
 
 export const UDAClickObjects: any = [];
 export const htmlindex: any = [];
@@ -61,6 +62,7 @@ declare global {
  */
 export const init = async() => {
 
+  UDAErrorLogger.error("test", new Error("test"));
   //fetch special nodes for REST service
   if (!getFromStore("specialNodes", false)) {
     const _specialNodes = fetchSpecialNodes();
@@ -1065,7 +1067,10 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
     node.addedclickrecord = true;
     return node;
   } catch (e) {
-    errorLog("Unable to add click to node " + node.outerHTML + " " + e);
+    // errorLog("Unable to add click to node " + node.outerHTML + " " + e);
+    UDAErrorLogger.error(
+      "Unable to add click to node " + node.outerHTML + " " + e
+    );
   }
 };
 
@@ -1161,7 +1166,6 @@ export const recorduserclick = async (
 
   if (!node) return false;
 
-  console.log("in recording", node.tagName, isClickable(event.target));
   if (
     !node.isSameNode(event.target) || clickableElementExists(event.target) ||
     !isClickable(event.target)
@@ -1213,7 +1217,10 @@ export const recorduserclick = async (
     } else {
       setToStore([resp], CONFIG.RECORDING_SEQUENCE, false);
     }
+  } else { 
+      UDAErrorLogger.error("Unable save record click " + node.outerHTML );
   }
+
   if (
     parentAnchorElement && node.getAttribute("href")
   ) {

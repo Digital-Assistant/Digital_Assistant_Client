@@ -1,0 +1,1 @@
+openssl req -x509 -out localhost.crt -keyout localhost.key -newkey rsa:2048 -days 1024 -nodes -sha256 -subj "/C=US/O=Dev-Certificate/CN=Lakshman" -extensions EXT -config config.txt

@@ -9,6 +9,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { fetchSearchResults } from "./services/searchService";
 import { login, getUserSession } from "./services/authService";
+import _ from "lodash";
 import {
   squeezeBody,
   getRowObject,
@@ -145,9 +146,12 @@ function App() {
 
   const authHandler = async () => {
     if (!window.chrome) return;
+    chrome.runtime.sendMessage({ action: "login" }, function (response) {
+      console.log(response);
+    });
     setTimeout(() => {
       chrome.storage.local.get().then((data) => {
-        if (data) {
+        if (!_.isEmpty(data)) {
           if (
             !getFromStore(CONFIG.USER_AUTH_DATA_KEY, true) ||
             getFromStore(CONFIG.USER_AUTH_DATA_KEY, true) === "undefined"

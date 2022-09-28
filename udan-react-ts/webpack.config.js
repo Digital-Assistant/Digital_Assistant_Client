@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack')
 
 module.exports = {
   entry: [
@@ -47,9 +48,39 @@ module.exports = {
       }
     ],
   },
+  plugins: [
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+      Buffer: ['buffer', 'Buffer']
+    })
+      // new HtmlWebpackPlugin({
+      //     title: 'digitalassist.com'
+      // })
+  ],
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.scss'],
     modules: ['./node_modules'],
+    alias: {
+        process: "process/browser"
+    },
+    fallback: {
+      "fs": false,
+      "tls": false,
+      "net": false,
+      "http": require.resolve("stream-http"),
+      "https": require.resolve("https-browserify"),
+      "crypto": false,
+      "cluster": false,
+      "fs-extra": require.resolve("fs-extra/"),
+      "stream": require.resolve("stream-browserify"),
+      "zlib": require.resolve("browserify-zlib"),
+      "buffer": require.resolve("buffer/"),
+      "path": require.resolve("path-browserify"),
+      "os": require.resolve("os-browserify/browser"),
+      "url": require.resolve("url/"),
+      "constants": require.resolve("constants-browserify"),
+      "assert": require.resolve("assert/")
+    }
   },
   output: {
     publicPath: '',
