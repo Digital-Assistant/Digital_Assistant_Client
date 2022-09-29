@@ -115,8 +115,13 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 		});
 
     } else if (request.action === "login") {
-        return loginWithGoogle().then((data) => {
-            chrome.storage.local.set({"udaUserData": JSON.stringify(data)});
+		loginWithGoogle().then((data) => {
+			if (data) {
+				chrome.storage.local.set({ "udaUserData": JSON.stringify(data) });
+				chrome.storage.local.get().then((data) => {
+					console.log(data);
+				 });
+			}
             sendResponse(data)
         })
 	} else if(request.action === "Debugvalueset"){

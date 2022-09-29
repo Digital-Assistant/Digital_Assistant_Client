@@ -8,14 +8,18 @@
 import React, { useEffect } from "react";
 import "../../App.scss";
 import { fetchSearchResults } from "../../services/searchService";
-import { squeezeBody } from "../../util";
-import logo from "../../logo.svg";
-import { BsChevronDoubleRight, BsPlusLg } from "react-icons/bs";
+// import logo from "../../logo.svg";
+import {
+  BsChevronDoubleRight,
+  BsPlusLg,
+  BsChevronDoubleLeft,
+} from "react-icons/bs";
 export interface MProps {
   searchHandler?: Function;
   toggleFlag: boolean;
   toggleHandler?: Function;
   addRecordBtnStatus?: boolean;
+  i18?: any;
 }
 
 export const Toggler = (props: MProps) => {
@@ -26,13 +30,12 @@ export const Toggler = (props: MProps) => {
     <div
       className="default-logo exclude"
       style={{ display: !props?.toggleFlag ? "none" : "block" }}
+      onClick={() => toggle()}
     >
-      <img
-        className="uda_exclude"
-        src={getLogo()}
-        onClick={() => toggle()}
-        alt={"udan logo"}
-      />
+      <img className="uda_exclude" src={getLogo()} alt={"udan logo"} />
+      <span className="arrow">
+        <BsChevronDoubleLeft size={16} />
+      </span>
     </div>
   );
 };
@@ -42,10 +45,11 @@ export const Toggler = (props: MProps) => {
  * @returns logo path
  */
 function getLogo() {
-  if (window?.chrome) {
-    return window?.chrome?.runtime?.getURL(logo);
-  }
-  return "https://s4.aconvert.com/convert/p3r68-cdx67/alc9l-hnvsn.svg";
+  // if (window?.chrome) {
+  //   console.log(window?.chrome?.runtime?.getURL(logo));
+  //   return window?.chrome?.runtime?.getURL(logo);
+  // }
+  return "https://cdn.statically.io/gh/Digital-Assistant/Digital_Assistant_Client/react-typescript/udan-react-ts/src/logo.svg";
 }
 
 /**
@@ -101,7 +105,7 @@ export const Header = (props: MProps) => {
     <>
       <div>
         <div
-          className="uda-ribbon-arrow"
+          className="uda-ribbon-arrow flex-card flex-center "
           id="uda-close-panel"
           onClick={() => togglePanel()}
         >
@@ -111,11 +115,11 @@ export const Header = (props: MProps) => {
         </div>
         <div className="uda-icon-txt">
           <img src={getLogo()} />
-          <span className="uda-help-bg-tooltip">Need Help?</span>
+          <span className="uda-help-bg-tooltip">{props.i18("needHelp")}?</span>
         </div>
         <div className="uda-icon-txt">
           <span className="" style={{ color: "#303f9f", fontWeight: "bold" }}>
-            UDAN(Beta)
+            {props.i18("logoText")}
           </span>
         </div>
         <div

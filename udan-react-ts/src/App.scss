@@ -46,6 +46,15 @@ body {
     img {
         width: 100%;
     }
+
+    .arrow{
+            position: fixed;
+        top: 50%;
+        margin-top: 6px;
+        margin-right: 14px;
+        right: 0;
+        color: #2c3da0;
+    }
 }
 
 .uda-ribbon-arrow {
@@ -63,7 +72,6 @@ body {
     box-shadow: -4px 0 4px #ccc;
     .arrow {
         color: #fff;
-        line-height: 40px;
     }
 
     img {
@@ -341,7 +349,6 @@ body {
                         }
 
                         .uda-advanced-btn-content {
-                            // display: none;
                             position: absolute;
                             padding: 5px;
                             color: var(--uda-text-color-bg-white);
@@ -414,7 +421,6 @@ body {
                                     align-items: center;
                                     font-size: 30px;
                                     color: var(-uda-secondary-color);
-                                    // position: absolute;
                                     right: 10px;
                                     width: 50px;
                                     height: 50px;
@@ -424,7 +430,6 @@ body {
                                     cursor: pointer;
                                     position: fixed;
                                     bottom: 40px;
-                                    // span{margin-top: -4px;}
                                 }
                             }
 
@@ -434,7 +439,7 @@ body {
                                 border-radius: 5px;
                                 margin-top: 20px;
                                 text-align: center;
-                                box-shadow: 2px 1px 6px 1px var(--uda-boxshodow-color);
+                                // box-shadow: 2px 1px 6px 1px var(--uda-boxshodow-color);
 
                                 h5 {
                                     font-size: 15px !important;
@@ -553,8 +558,6 @@ body {
 
                                     &.completed {
                                         &::before {
-                                            // vertical-align: middle;
-                                            // background-repeat: space;
                                             background-color: lightgreen;
                                         }
                                     }
@@ -576,7 +579,34 @@ body {
                                 padding: 0;
                             }
 
-                            .uda-suggestion-list li,
+                            .uda-suggestion-list li{
+                                position: relative;
+                                font-size: 14px;
+                                cursor: pointer;
+                                i{
+                                    padding-left: 20px;
+                                }
+                                &::before {
+                                    content: ' ';
+                                    margin: 0 10px;
+                                    width: 10px;
+                                    height: 10px;
+                                    border-radius: 50%;
+                                    position: absolute;
+                                    left: -10px;
+                                    top: 10px;
+                                }
+
+                                &.completed {
+                                    &::before {
+                                        background-color: lightgreen;
+                                    }
+                                }
+
+                                .uda-tutorial-btn {
+                                }
+                            }
+
                             .uda-recording li {
                                 position: relative;
                                 font-size: 14px;
@@ -584,8 +614,6 @@ body {
                                 &::before {
                                         content: ' ';
                                         margin: 0 10px;
-                                        // align-items:center;
-                                        // display: flex;
                                         width: 10px;
                                         height: 10px;
                                         border-radius: 50%;
@@ -596,15 +624,11 @@ body {
                                 
                                 &.completed {
                                     &::before {
-                                        // vertical-align: middle;
-                                        // background-repeat: space;
                                         background-color: lightgreen;
                                     }
                                 }
                                 .uda-tutorial-btn{
-                                    // position: absolute;
-                                    // right: 10px;
-                                    // top: 4px;
+
                                 }
                             }
 
@@ -681,6 +705,9 @@ body {
                                             &:hover {
                                                 background-color: var(--uda-secondary-color);
                                             }
+                                            &.disabled{
+                                                opacity: .5;
+                                            }
                                         }
 
                                         .uda-tutorial-exit-btn {
@@ -694,6 +721,16 @@ body {
                                             cursor: pointer;
                                         }
 
+                                        .uda-record-round-btn {
+                                            background-color: var(--uda-secondary-color);
+                                            color:white;
+                                            width: 60px;
+                                            height: 60px;
+                                            cursor: pointer;
+                                            &.round{
+                                                border-radius: 50%;
+                                            }
+                                        }
                                         .uda-record-btn {
                                             background-color: var(--uda-secondary-color);
                                             background-image: url("data:image/svg+xml,%3Csvg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 426.7 426.7' style='enable-background:new 0 0 426.7 426.7;' xml: space=' preserve'%3E%3Cstyle type=' text/css'%3E .st0%7Bfill:%23FFFFFF");
@@ -732,8 +769,10 @@ body {
                                                     outline: none;
                                                 }
                                                 &.non-editable{
-                                                    background: transparent;
-                                                    border: none;
+                                                }
+                                                &.profanity{
+                                                    background: #ffd8cc;
+                                                    border: 1px solid #ff5722;
                                                 }
                                             }
 
@@ -1049,6 +1088,13 @@ top:30px;
                                                     .uda-recorded-label-editable {
                                                         border: 2px dotted #969696 !important;
                                                         padding: 5px !important;
+
+                                                        .info-icon{
+                                                            position: "relative";
+                                                            top: 0px;
+                                                            margin-left: 10px;
+                                                            color: #ccc;
+                                                        }
                                                     }
 
                                                     .uda-form-input-reduced {
@@ -1182,6 +1228,9 @@ top:30px;
                                                         
 
 .udan-main-panel{
+    .small-text{
+        font-size: 12px;
+    }
     .halign-right{
         text-align: right;
         justify-content: flex-end;
@@ -1221,6 +1270,9 @@ top:30px;
     .flex-center{
         align-items: center;
         justify-content: center;
+    }
+    .flex-vcenter {
+        align-items: center;
     }
     .flex-start{justify-content: start;}
     .end, .flex-end{

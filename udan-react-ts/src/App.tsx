@@ -5,10 +5,11 @@
  */
 
 ///<reference types="chrome"/>
-import logo from "./logo.svg";
+// import logo from "./logo.svg";
 import React, { useState, useEffect, useCallback } from "react";
 import { fetchSearchResults } from "./services/searchService";
 import { login, getUserSession } from "./services/authService";
+import _ from "lodash";
 import {
   squeezeBody,
   getRowObject,
@@ -20,11 +21,18 @@ import {
   postRecordSequenceData,
 } from "./util";
 import { CONFIG } from "./config";
+import i18n from "i18next";
+import { useTranslation, initReactI18next } from "react-i18next";
+import "./i18n";
 import UdanMain from "./components/UdanMain";
 import { Header, Body, Footer, Toggler } from "./components/layout";
 import { Circles } from "react-loader-spinner";
 import useInterval from "react-useinterval";
 import "./App.scss";
+
+// i18n
+//   .use(initReactI18next) // passes i18n down to react-i18next
+//   .init(RESOURCES);
 
 declare global {
   interface Window {
@@ -52,6 +60,7 @@ const useMutationObserver = (
 };
 
 function App() {
+  const { t } = useTranslation();
   const [isRecording, setIsRecording] = React.useState<boolean>(
     (getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true"
       ? true
@@ -59,12 +68,17 @@ function App() {
   );
   const [hide, setHide] = React.useState<boolean>(isRecording ? false : true);
   const [showLoader, setShowLoader] = React.useState<boolean>(true);
+  const [showSearch, setShowSearch] = React.useState<boolean>(false);
   const [showRecord, setShowRecord] = React.useState<boolean>(false);
   const [isPlaying, setIsPlaying] = React.useState<string>(
-    getFromStore("isPlaying", true) || "off"
+    getFromStore(CONFIG.RECORDING_IS_PLAYING, true) || "off"
+  );
+  const [manualPlay, setManualPlay] = React.useState<string>(
+    getFromStore(CONFIG.RECORDING_MANUAL_PLAY, true) || "off"
   );
   const [searchKeyword, setSearchKeyword] = React.useState<string>("");
   const [searchResults, setSearchResults] = React.useState<any>([]);
+  const [page, setPage] = React.useState<number>(1);
   const [refetchSearch, setRefetchSearch] = React.useState<string>("");
   const [recSequenceData, setRecSequenceData] = React.useState<any>([]);
   const [recordSequenceDetailsVisibility, setRecordSequenceDetailsVisibility] =
@@ -75,12 +89,28 @@ function App() {
   React.useEffect(() => {
     authHandler();
     //addBodyEvents(document.body);
-    getSearchResults("");
-    if (isPlaying == "on") {
+    if (isPlaying == "on" || manualPlay == "on") {
       togglePanel();
+      offSearch();
       setRecordSequenceDetailsVisibility(true);
+    } else if (isRecording) {
+      offSearch();
+    } else {
+      setShowSearch(true);
+      getSearchResults("");
     }
+    /*
+    //language change test      
+    setTimeout(() => {
+      changeLanguage("fr");
+    }, 5000);
+    */
   }, []);
+
+  React.useEffect(() => {
+    window.isRecording = isRecording;
+    setToStore(isRecording, CONFIG.RECORDING_SWITCH_KEY, true);
+  }, [isRecording]);
 
   React.useEffect(() => {
     if (refetchSearch == "on") getSearchResults("");
@@ -93,11 +123,6 @@ function App() {
     setRecSequenceData(getFromStore(CONFIG.RECORDING_SEQUENCE, false));
   }, CONFIG.SYNC_INTERVAL);
 
-  React.useEffect(() => {
-    window.isRecording = isRecording;
-    setToStore(isRecording, CONFIG.RECORDING_SWITCH_KEY, true);
-  }, [isRecording]);
-
   /**
    * Toggle right side panel visibility
    */
@@ -106,15 +131,31 @@ function App() {
     squeezeBody(!hide);
   };
 
+  /**
+   * to change the language
+   * @param locale
+   */
+  const changeLanguage = (locale: string) => {
+    i18n.changeLanguage(locale);
+  };
+
+  const offSearch = () => {
+    setShowSearch(false);
+    setShowLoader(false);
+  };
+
   const authHandler = async () => {
     if (!window.chrome) return;
-    chrome.runtime.sendMessage({ action: "login" }, (res) => {
-      console.log(res);
+    chrome.runtime.sendMessage({ action: "login" }, function (response) {
+      console.log(response);
     });
     setTimeout(() => {
-      chrome.storage.sync.get(CONFIG.USER_AUTH_DATA_KEY, (data) => {
-        if (data) {
-          if (!getFromStore(CONFIG.USER_AUTH_DATA_KEY, true)) {
+      chrome.storage.local.get().then((data) => {
+        if (!_.isEmpty(data)) {
+          if (
+            !getFromStore(CONFIG.USER_AUTH_DATA_KEY, true) ||
+            getFromStore(CONFIG.USER_AUTH_DATA_KEY, true) === "undefined"
+          ) {
             setToStore(data.udaUserData, CONFIG.USER_AUTH_DATA_KEY, true);
             const authData = JSON.parse(data[CONFIG.USER_AUTH_DATA_KEY]);
             setToStore(authData?.authdata?.id, CONFIG.USER_SESSION_ID, true);
@@ -133,14 +174,18 @@ function App() {
    * HTTP search results service call
    @param keyword:string
    */
-  const getSearchResults = async (keyword: string) => {
+  const getSearchResults = async (keyword: string, _page = 1) => {
+    // if (!showSearch) return;
+    console.log(page);
     setShowLoader(true);
     setSearchKeyword(keyword);
     const _searchResults = await fetchSearchResults({
       keyword,
+      page,
       domain: encodeURI(window.location.host),
     });
-    setTimeout(() => setShowLoader(false), 1500);
+    setPage(_page);
+    setTimeout(() => setShowLoader(false), 500);
     setSearchResults([..._searchResults]);
   };
 
@@ -149,6 +194,7 @@ function App() {
     playHandler("off");
     setIsRecording(true);
     setShowRecord(false);
+    setShowSearch(false);
   };
 
   /**common cancel button handler */
@@ -158,8 +204,11 @@ function App() {
     setShowRecord(false);
     setRecordSequenceDetailsVisibility(false);
     playHandler("off");
+    setManualPlay("off");
+    setToStore("off", CONFIG.RECORDING_MANUAL_PLAY, true);
     setToStore([], CONFIG.RECORDING_SEQUENCE, false);
-    //getSearchResults("");
+    setShowSearch(true);
+    setRefetchSearch("on");
     if (window.udanSelectedNodes) window.udanSelectedNodes = [];
   };
 
@@ -177,6 +226,7 @@ function App() {
       case "cancel":
         break;
     }
+    setShowSearch(true);
     cancel();
   };
 
@@ -195,6 +245,7 @@ function App() {
    */
   const toggleHandler = (hideFlag: boolean, type: string) => {
     if (type == "footer") {
+      setShowSearch(false);
       setToStore([], CONFIG.RECORDING_SEQUENCE, false);
       setShowRecord(hideFlag);
     } else togglePanel();
@@ -205,8 +256,11 @@ function App() {
    * @param flag
    */
   const showRecordHandler = (flag: boolean) => {
+    setShowSearch(false);
     setIsPlaying("off");
-    setToStore("off", "isPlaying", true);
+    setManualPlay("off");
+    setToStore("off", CONFIG.RECORDING_IS_PLAYING, true);
+    setToStore("off", "udaManualPlay", true);
     setShowRecord(flag);
   };
 
@@ -240,6 +294,7 @@ function App() {
    * @param data
    */
   const showRecordingDetails = (data: any) => {
+    setShowSearch(false);
     setSelectedRecordingDetails({ ...data });
     setRecordSequenceDetailsVisibility(true);
   };
@@ -250,7 +305,7 @@ function App() {
    */
   const playHandler = (status: string) => {
     setIsPlaying(status);
-    setToStore(status, "isPlaying", true);
+    setToStore(status, CONFIG.RECORDING_IS_PLAYING, true);
   };
 
   return (
@@ -267,6 +322,7 @@ function App() {
                   searchHandler={searchHandler}
                   toggleFlag={hide}
                   toggleHandler={toggleHandler}
+                  i18={t}
                 />
                 <Body
                   content={
@@ -296,13 +352,15 @@ function App() {
                         recordSequenceVisibility={toggleContainer("record-seq")}
                       />
 
-                      {!showLoader && (
+                      {!showLoader && showSearch && (
                         <UdanMain.SearchResults
                           data={searchResults}
                           showDetails={showRecordingDetails}
                           visibility={toggleContainer("search-results")}
                           addRecordHandler={setShowRecord}
-                          key={searchResults.length + showLoader}
+                          // key={searchResults.length + showLoader}
+                          searchHandler={getSearchResults}
+                          page={page}
                         />
                       )}
 
@@ -323,7 +381,7 @@ function App() {
                         cancelHandler={cancel}
                         playHandler={playHandler}
                         isPlaying={isPlaying}
-                        refetchSearch={setRefetchSearch}
+                        // refetchSearch={setRefetchSearch}
                         key={"rSD" + recordSequenceDetailsVisibility}
                       />
                     </>

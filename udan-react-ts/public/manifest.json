@@ -4,26 +4,39 @@
   "version": "0.0.1",
   "content_scripts": [
     {
-      "matches": ["http://*/*", "https://*/*"],
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
       "run_at": "document_end",
-      "js": [],
-      "css": [],
+      "js": [
+        "assets/bundle.js"
+      ],
+      "css": [
+        "assets/App.min.css"
+      ],
       "media": []
     }
   ],
   "background": {
-   "service_worker": "./background.js"
+    "service_worker": "./background.js"
   },
   "permissions": [
     "activeTab",
-    "identity", 
+    "identity",
     "identity.email",
     "storage"
   ],
   "web_accessible_resources": [
     {
-      "resources": [],
-      "matches": ["http://*/*", "https://*/*"]
+      "resources": [
+        "assets/App.min.css",
+        "assets/logo.svg"
+      ],
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ]
     }
   ]
 }

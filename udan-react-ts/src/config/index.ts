@@ -20,12 +20,15 @@ export const CONFIG = {
   UDA_POST_INTERVAL: 1000,
   UDALastMutationTime: 0,
   UDALogLevel: 0,
+  RECORDING_IS_PLAYING: "udaIsPlaying",
+  RECORDING_MANUAL_PLAY: "udaManualPlay",
   RECORDING_SWITCH_KEY: "recordingSwitch",
   RECORDING_SEQUENCE: "activeRecordingData",
   USER_AUTH_DATA_KEY: "udaUserData",
   USER_SESSION_KEY: "udaSessionKey",
   USER_SESSION_ID: "udaSessionId",
   SYNC_INTERVAL: 1000,
+  JARO_WEIGHT: 0.89,
   set Environment(value) {
     this.current = value.toString().toUpperCase();
     if (this.current === "PROD") {
@@ -217,7 +220,7 @@ export const CONFIG = {
     enabled: true,
     provider: "azure",
     config: {
-      key1: "",
+      key1: "bc015cc4090543d58c3056e8dc98cc9b",
       key2: "",
       endPoint:
         "https://nistapp-content-moderator.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessText/Screen",

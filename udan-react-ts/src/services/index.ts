@@ -25,7 +25,7 @@ function apiCal(options: any) {
   // if(!validate) return
   const requestOptions = {
     method: options.method,
-    headers: getHTTPHeaders("json"),
+    headers: options?.headers ? options?.headers : getHTTPHeaders("json"),
     body: options.body ? JSON.stringify(options.body) : null,
   };
 
@@ -77,6 +77,7 @@ function getHTTPHeaders(contentType: string) {
   const headers = new Headers();
   if (contentType === "json")
     headers.append("Content-Type", "application/json");
+
   return headers;
 }
 

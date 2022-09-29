@@ -14,6 +14,7 @@ import {
   BsFillRecord2Fill,
   BsPlayCircleFill,
   BsArrowLeft,
+  BsMic,
 } from "react-icons/bs";
 import { createPopperLite as createPopper } from "@popperjs/core";
 import {
@@ -27,10 +28,12 @@ import {
   getCurrentPlayItem,
   getAllChildren,
   compareNodes,
+  getObjData,
   getAbsoluteOffsets,
 } from "../util";
 import { deleteRecording, vote } from "../services/recordService";
-// import { jaroWinkler } from "jaro-winkler-typescript";
+import { jaroWinkler } from "jaro-winkler-typescript";
+import { CONFIG } from "../config";
 
 export interface MProps {
   data?: any;
@@ -89,13 +92,16 @@ export const RecordButton = (props: MProps) => {
         <BsXCircle size={16} />
       </span>
       <h5>Create your own action</h5>
-      <div>
+      <div className="flex-card flex-center">
         <button
-          className="uda-record-btn"
+          style={{ marginTop: 20, flexDirection: "column" }}
+          className="uda-record-round-btn flex-card flex-center round"
           id="uda-enable-record"
           onClick={() => recordSequence()}
         >
-          <BsFillRecord2Fill size={16} /> <span>Rec</span>
+          <BsMic size={24} />
+          <span style={{ fontSize: 10, marginTop: 6 }}>Record</span>
+          {/* <BsFillRecord2Fill size={16} /> <span>Rec</span> */}
         </button>
       </div>
     </div>
@@ -128,14 +134,28 @@ export const RecordSequenceDetails = (props: MProps) => {
     const playItem = getCurrentPlayItem();
     if (playItem && playItem.node) {
       const originalNode = JSON.parse(playItem.node.objectdata);
+      const _metaData = getObjData(playItem?.node?.objectdata);
+      //ignore if recorded node is personal / marked as skip
+      if (
+        _metaData &&
+        (_metaData.meta.isPersonal || _metaData.meta.skipDuringPlay)
+      )
+        return;
       let originalElement = originalNode?.node;
       //if target element is ANCHOR, navigate link rather than tooltip
       if (originalElement.nodeName.toLowerCase() === "a") {
         // const selector = getLookUpSelector(originalElement);
         // const targetElement = document.querySelector(selector);
-        let compareElements = getAllChildren(document.body);
+        let compareElements = document.querySelectorAll(
+          originalElement.nodeName
+        );
         for (let i = 0; i < compareElements?.length; i++) {
-          if (originalElement.outerHTML == compareElements[i].outerHTML) {
+          if (
+            jaroWinkler(
+              originalElement.outerHTML,
+              compareElements[i].outerHTML
+            ) >= CONFIG.JARO_WEIGHT
+          ) {
             if (originalNode.offset) {
               const _offsets = getAbsoluteOffsets(compareElements[i]);
               if (
@@ -154,7 +174,9 @@ export const RecordSequenceDetails = (props: MProps) => {
           originalElement?.nodeName?.toLowerCase() === "a"
         ) {
           updateStatus(playItem.index);
-          window.location.href = originalElement?.getAttribute("href") || "/";
+          try {
+            window.location.href = originalElement?.getAttribute("href") || "/";
+          } catch (e) {}
         }
       } else {
         //show tooltip
@@ -176,17 +198,33 @@ export const RecordSequenceDetails = (props: MProps) => {
     const tooltipDivElement = getToolTipElement();
     try {
       const originalNode = JSON.parse(invokingNode);
+      const _metaData = getObjData(invokingNode);
+      //ignore if recorded node is personal / marked as skip
+      if (
+        _metaData &&
+        (_metaData.meta.isPersonal || _metaData.meta.skipDuringPlay)
+      )
+        return;
+
       let originalElement = originalNode?.node;
       let compareElements = document.querySelectorAll(originalElement.nodeName); //getAllChildren(document.body);
 
       for (let i = 0; i < compareElements?.length; i++) {
-        // console.log(
-        //   originalElement.outerHTML + "*****" + compareElements[i].outerHTML
-        // );
-        if (originalElement.outerHTML == compareElements[i].outerHTML) {
+        console.log(
+          jaroWinkler(originalElement.outerHTML, compareElements[i].outerHTML),
+          originalElement.outerHTML + "*****" + compareElements[i].outerHTML
+        );
+        // if (originalElement.outerHTML == compareElements[i].outerHTML) {
+        if (
+          jaroWinkler(
+            originalElement.outerHTML,
+            compareElements[i].outerHTML
+          ) >= CONFIG.JARO_WEIGHT
+        ) {
           _toolTipFlag = true;
           if (originalNode.offset) {
             const _offsets = getAbsoluteOffsets(compareElements[i]);
+            console.log(_offsets, originalNode.offset);
             if (
               _offsets.x == originalNode.offset.x ||
               _offsets.y == originalNode.offset.y
@@ -199,6 +237,16 @@ export const RecordSequenceDetails = (props: MProps) => {
             originalElement = compareElements[i];
           }
         }
+      }
+
+      if (originalElement && originalElement?.nodeName?.toLowerCase() === "a") {
+        const playItem = getCurrentPlayItem();
+        updateStatus(playItem.index);
+        setToStore("on", CONFIG.RECORDING_MANUAL_PLAY, true);
+        try {
+          window.location.href = originalElement?.getAttribute("href") || "/";
+        } catch (e) {}
+        return;
       }
 
       //attach event to continue button in tooltip
@@ -295,7 +343,11 @@ export const RecordSequenceDetails = (props: MProps) => {
     return selectedRecordingDetails?.userclicknodesSet?.map(
       (item: any, index: number) => {
         return (
-          <li className={item.status} onClick={() => setToolTip(item, index)}>
+          <li
+            key={`rec-details-${index}`}
+            className={item.status}
+            onClick={() => setToolTip(item, index)}
+          >
             <i>{item?.clickednodename}</i>
           </li>
         );
@@ -315,7 +367,7 @@ export const RecordSequenceDetails = (props: MProps) => {
    */
   const play = () => {
     resetStatus();
-    setToStore("on", "isPlaying", true);
+    setToStore("on", CONFIG.RECORDING_IS_PLAYING, true);
     autoPlay();
     // setToolTip(selectedRecordingDetails?.userclicknodesSet[0], 0);
   };

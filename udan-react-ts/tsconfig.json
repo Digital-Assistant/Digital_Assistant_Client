@@ -1,4 +1,4 @@
-{
+/*{
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -18,4 +18,17 @@
     "jsx": "react-jsx"
   },
   "include": ["src"]
+}*/
+
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports":true,
+    "outDir": "./dist/",
+    "noImplicitAny": false,
+    "module": "es6",
+    "target": "es5",
+    "jsx": "react",
+    "allowJs": true,
+    "moduleResolution": "node"
+  }
 }

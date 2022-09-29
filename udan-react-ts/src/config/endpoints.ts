@@ -10,7 +10,8 @@ const base = environment.baseURL;
 export const ENDPOINT = {
   USER_LOGIN: `${base}/user/checkauthid`,
   GET_USER_SESSION: `${base}/user/getsessionkey`,
-  SEARCH: `${base}/clickevents/sequence/search?query=#keyword#&domain=#domain#`,
+  SEARCH: `${base}/clickevents/sequence/search?query=#keyword#&domain=#domain#&page=#page#`,
+  PROFANITY_CHECK: `https://nistapp-content-moderator.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessText/Screen`,
   SPECIAL_NODES: `${base}/clickevents`,
   RECORD: `${base}/user/clickednode`,
   UPDATE_RECORD: `${base}/user/updateclickednode`,
