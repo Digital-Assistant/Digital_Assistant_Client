@@ -2541,7 +2541,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				} else {
 					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="UDA-is-personal" class="uda-checkbox" /> <label style="font-size:14px;" class="uda-checkbox-label">Personal Information</label>';
 				}
-				personalHtml += '			<span style="position: relative; top: 0px;"><img src="'+this.extensionpath+'images/icons/info.png" title="Select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."></span>';
+				personalHtml += '			<span style="position: relative; top: 0px;" class="info-icon"><img src="'+this.extensionpath+'images/icons/info.png" title="Select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."></span>';
 
 				// adding clicked element type
 				let selectedElementHtml = (this.enableNodeTypeChangeSelection)?'Clicked on : <select name="UDASelectedElement" id="UDASelectedElement"></select>':'';
@@ -2557,7 +2557,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					} else {
 						skipHtml += '<input type="checkbox" id="UDA-skip-duringPlay" class="uda-checkbox" /> <label style="font-size:14px;" class="uda-checkbox-label">Skip during play</label>';
 					}
-					skipHtml += '<span style="position: relative; top: 0px;"><img src="'+this.extensionpath+'images/icons/info.png" title="Select this box if this field / text is not required to navigate while processing."></span>';
+					skipHtml += '<span style="position: relative; top: 0px;" class="info-icon"><img src="'+this.extensionpath+'images/icons/info.png" title="Select this box if this field / text is not required to navigate while processing."></span>';
 					skipHtml +='</div>';
 				}
 

@@ -43,13 +43,15 @@ body.universal-digital-parent-ele .uda-nistapp-logo {
   top: 40% !important;
   right: 0;
   padding: 1px;
-  -webkit-box-shadow: 0 1px 4px var(--uda-boxshodow-color), 0 0 40px var(--uda-boxshodow-color) inset;
-  -moz-box-shadow: 0 1px 4px var(--uda-boxshodow-color), 0 0 40px var(--uda-boxshodow-color) inset;
   box-shadow: 0 1px 4px var(--uda-boxshodow-color), 0 0 40px var(--uda-boxshodow-color) inset;
   z-index: 9999;
 }
 body.universal-digital-parent-ele .uda-icon img {
   width: auto !important;
+}
+body.universal-digital-parent-ele .uda-icon img:hover {
+  width: inherit !important;
+  height: inherit !important;
 }
 body.universal-digital-parent-ele .uda-icon span {
   position: relative;
@@ -85,15 +87,24 @@ body.universal-digital-parent-ele .uda-page-right-bar .uda-ribbon-arrow {
 }
 body.universal-digital-parent-ele .uda-page-right-bar .uda-ribbon-arrow img {
   padding: 10px;
+  width: 35px;
+  height: 35px;
+}
+body.universal-digital-parent-ele .uda-page-right-bar .uda-ribbon-arrow img:hover {
+  width: inherit !important;
+  height: inherit !important;
 }
 body.universal-digital-parent-ele .uda-page-right-bar .uda-icon-txt {
   margin-top: 15px;
   text-align: center;
 }
 body.universal-digital-parent-ele .uda-page-right-bar .uda-icon-txt img {
-  cursor: pointer;
   width: 45px;
   vertical-align: middle;
+}
+body.universal-digital-parent-ele .uda-page-right-bar .uda-icon-txt img:hover {
+  width: 45px !important;
+  height: 45px !important;
 }
 body.universal-digital-parent-ele .uda-page-right-bar .uda-icon-txt .uda-help-bg-tooltip {
   background-color: var(--uda-secondary-color);
@@ -441,6 +452,14 @@ body.universal-digital-parent-ele .uda-page-right-bar .uda-container .uda-card-d
   cursor: pointer;
   height: 30px;
 }
+body.universal-digital-parent-ele .uda-page-right-bar .uda-container .uda-card-details .uda-tutorial-btn img {
+  width: 30px !important;
+  height: 30px !important;
+}
+body.universal-digital-parent-ele .uda-page-right-bar .uda-container .uda-card-details .uda-tutorial-btn img:hover {
+  width: 30px !important;
+  height: 30px !important;
+}
 body.universal-digital-parent-ele .uda-page-right-bar .uda-container .uda-card-details .uda-tutorial-btn:hover {
   background-color: var(--uda-secondary-color);
 }
@@ -496,6 +515,7 @@ body.universal-digital-parent-ele .uda-page-right-bar .uda-container .uda-detail
   border: 2px dotted #969696 !important;
   padding: 5px !important;
   opacity: 1 !important;
+  cursor: default !important;
 }
 body.universal-digital-parent-ele .uda-page-right-bar .uda-clear {
   clear: both;
@@ -646,8 +666,17 @@ body.universal-digital-parent-ele .uda-loading-bar span img {
   padding-top: 7px;
 }
 body.universal-digital-parent-ele .uda-loading-bar .animate > span:after {
-  animation: load 1s infinite;
+  -webkit-animation: load 1s infinite;
+          animation: load 1s infinite;
   background-image: linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
+}
+@-webkit-keyframes load {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50px 50px;
+  }
 }
 @keyframes load {
   0% {
@@ -951,4 +980,10 @@ body.universal-digital-parent-ele .udamodal #jira .uda-original-content .jira-di
   }
 }
 
-/*# sourceMappingURL=uda-v1.css.map */
+.info-icon {
+  width: 16px !important;
+}
+.info-icon img:hover {
+  width: 16px !important;
+  height: 16px !important;
+}/*# sourceMappingURL=uda-v1.css.map */

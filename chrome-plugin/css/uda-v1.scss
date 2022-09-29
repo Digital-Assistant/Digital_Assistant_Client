@@ -49,6 +49,10 @@ body.universal-digital-parent-ele {
   .uda-icon {
     img {
       width: auto !important;
+      &:hover{
+        width: inherit !important;
+        height: inherit !important;
+      }
     }
 
     span {
@@ -87,6 +91,12 @@ body.universal-digital-parent-ele {
 
       img {
         padding: 10px;
+        width: 35px;
+        height: 35px;
+        &:hover{
+          width: inherit !important;
+          height: inherit !important;
+        }
       }
     }
 
@@ -95,9 +105,13 @@ body.universal-digital-parent-ele {
       text-align: center;
 
       img {
-        cursor: pointer;
+        // cursor: pointer;
         width: 45px;
         vertical-align: middle;
+        &:hover{
+          width: 45px !important;
+          height: 45px !important;
+        }
       }
 
       .uda-help-bg-tooltip {
@@ -508,9 +522,17 @@ body.universal-digital-parent-ele {
           font-size: 14px;
           cursor: pointer;
           height: 30px;
-
+          img{
+            width: 30px !important;
+              height: 30px !important;
+            &:hover{
+              width: 30px !important;
+              height: 30px !important;
+            }
+          }
           &:hover {
             background-color: var(--uda-secondary-color);
+            
           }
         }
       }
@@ -577,7 +599,7 @@ body.universal-digital-parent-ele {
           border: 2px dotted #969696 !important;
           padding: 5px !important;
           opacity: 1 !important;
-
+          cursor: default !important;
 
         }
 
@@ -1165,5 +1187,15 @@ Progress animation
     }
   }
 }  
+.info-icon{
+  width:16px !important;
+  // height: 16px !important;
+  img{
+    &:hover{
+      width:16px !important;
+      height: 16px !important;
+    }
+  }
 
+}
 
