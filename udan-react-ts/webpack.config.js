@@ -52,6 +52,9 @@ module.exports = {
     new webpack.ProvidePlugin({
       process: 'process/browser',
       Buffer: ['buffer', 'Buffer']
+    }),
+    new webpack.ProvidePlugin({
+      'utils': 'utils'
     })
       // new HtmlWebpackPlugin({
       //     title: 'digitalassist.com'
@@ -61,7 +64,8 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js', '.scss'],
     modules: ['./node_modules'],
     alias: {
-        process: "process/browser"
+      process: "process/browser",
+      utils: path.resolve(__dirname, './src/config/index') 
     },
     fallback: {
       "fs": false,
@@ -85,6 +89,8 @@ module.exports = {
   output: {
     publicPath: '',
     filename: 'bundle.js',
+    library: 'udanLibrary',
+    libraryTarget: 'var',
     path: path.resolve(__dirname, 'build/assets'),
   },
 };
