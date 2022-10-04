@@ -28,6 +28,9 @@ export const CONFIG = {
   USER_SESSION_KEY: "udaSessionKey",
   USER_SESSION_ID: "udaSessionId",
   SYNC_INTERVAL: 1000,
+  AUTO_PLAY_SLEEP_TIME: 2000,
+  ENABLE_PERMISSIONS: false,
+  PERMISSIONS: {},
   JARO_WEIGHT: 0.89,
   set Environment(value) {
     this.current = value.toString().toUpperCase();

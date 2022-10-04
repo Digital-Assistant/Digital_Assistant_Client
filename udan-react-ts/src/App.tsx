@@ -3,9 +3,9 @@
  * Type: App Component
  * Objective: To render content script
  */
-
 ///<reference types="chrome"/>
 // import logo from "./logo.svg";
+// import "./config/test";
 import React, { useState, useEffect, useCallback } from "react";
 import { fetchSearchResults } from "./services/searchService";
 import { login, getUserSession } from "./services/authService";
@@ -29,6 +29,8 @@ import { Header, Body, Footer, Toggler } from "./components/layout";
 import { Circles } from "react-loader-spinner";
 import useInterval from "react-useinterval";
 import "./App.scss";
+
+global.udaGlobalConfig = CONFIG;
 
 // i18n
 //   .use(initReactI18next) // passes i18n down to react-i18next
@@ -145,29 +147,17 @@ function App() {
   };
 
   const authHandler = async () => {
-    if (!window.chrome) return;
-    chrome.runtime.sendMessage({ action: "login" }, function (response) {
-      console.log(response);
-    });
     setTimeout(() => {
-      chrome.storage.local.get().then((data) => {
-        if (!_.isEmpty(data)) {
-          if (
-            !getFromStore(CONFIG.USER_AUTH_DATA_KEY, true) ||
-            getFromStore(CONFIG.USER_AUTH_DATA_KEY, true) === "undefined"
-          ) {
-            setToStore(data.udaUserData, CONFIG.USER_AUTH_DATA_KEY, true);
-            const authData = JSON.parse(data[CONFIG.USER_AUTH_DATA_KEY]);
-            setToStore(authData?.authdata?.id, CONFIG.USER_SESSION_ID, true);
-            login(authData)?.then((resp) => {
-              getUserSession().then((session) => {
-                setToStore(session, CONFIG.USER_SESSION_KEY, true);
-              });
-            });
-          }
-        }
+      const authData = getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
+      // console.log(authData);
+      if (!authData) return;
+      setToStore(authData?.authdata?.id, CONFIG.USER_SESSION_ID, true);
+      login(authData)?.then((resp) => {
+        getUserSession().then((session) => {
+          setToStore(session, CONFIG.USER_SESSION_KEY, true);
+        });
       });
-    }, 5000);
+    }, 7000);
   };
 
   /**
@@ -324,6 +314,7 @@ function App() {
                   toggleHandler={toggleHandler}
                   i18={t}
                 />
+                {/* {global.udaGlobalConfig.permissions && "hurreeeyyyy"} */}
                 <Body
                   content={
                     <>
@@ -369,6 +360,7 @@ function App() {
                         data={recSequenceData}
                         recordHandler={recordHandler}
                         refetchSearch={setRefetchSearch}
+                        config={global.udaGlobalConfig}
                       />
 
                       <UdanMain.RecordSequenceDetails

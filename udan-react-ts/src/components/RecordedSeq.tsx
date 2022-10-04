@@ -13,7 +13,6 @@ import {
   BsFillInfoCircleFill,
 } from "react-icons/bs";
 import _, { debounce } from "lodash";
-import { profanity } from "@2toad/profanity";
 import { setToStore, postRecordSequenceData, getObjData } from "../util";
 import { updateRecordClicks, profanityCheck } from "../services/recordService";
 import { CONFIG } from "../config";
@@ -23,6 +22,7 @@ export interface MProps {
   isShown?: boolean;
   hide?: () => void;
   data?: any;
+  config?: any;
   refetchSearch?: Function;
   recordHandler?: Function;
 }
@@ -33,11 +33,14 @@ export interface MProps {
  */
 
 export const RecordedSeq = (props: MProps) => {
+  // console.log(props?.config);
   const [name, setName] = React.useState<string>("");
   const [labels, setLabels] = React.useState<any>([]);
   const [labelProfanity, setLabelProfanity] = React.useState<boolean>(false);
   const [disableForm, setDisableForm] = React.useState<boolean>(false);
   const [recordData, setRecordData] = React.useState<any>(props.data || []);
+  const [permissionsObj, setPermissionsObj] = React.useState<any>({});
+  const [advBtnShow, setAdvBtnShow] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     setRecordData([...(props.data || [])]);
@@ -131,12 +134,18 @@ export const RecordedSeq = (props: MProps) => {
       _labels = [..._labels, ..._extraLabels];
     }
 
-    const instance = await postRecordSequenceData({
+    const _payload: any = {
       name: JSON.stringify(_labels),
-    });
+    };
+
+    //if additional params available send them part of payload
+    if (!_.isEmpty(permissionsObj)) _payload.additionalParams = permissionsObj;
+
+    const instance = await postRecordSequenceData(_payload);
     if (instance && props?.refetchSearch) {
       props.refetchSearch("on");
     }
+
     if (props.recordHandler) props.recordHandler("cancel");
     setToStore(false, CONFIG.RECORDING_SWITCH_KEY, true);
     setToStore([], CONFIG.RECORDING_SEQUENCE, false);
@@ -271,6 +280,16 @@ export const RecordedSeq = (props: MProps) => {
       });
   };
 
+  const toggleAdvanced = () => {
+    setAdvBtnShow(!advBtnShow);
+  };
+
+  const handlePermissions = (obj: any) => (event: any) => {
+    if (permissionsObj[obj.key]) delete permissionsObj[obj.key];
+    else permissionsObj[obj.key] = obj.key;
+    setPermissionsObj({ ...permissionsObj });
+  };
+
   return props?.isShown ? (
     <div className="uda-card-details">
       <h5>Recorded Sequence</h5>
@@ -321,6 +340,32 @@ export const RecordedSeq = (props: MProps) => {
             + Add Label
           </button>
         </div>
+
+        {props?.config?.ENABLE_PERMISSIONS && (
+          <div id="uda-permissions-section" style={{ padding: "30px 0px" }}>
+            <div>
+              <button
+                className="add-btn uda_exclude"
+                onClick={() => toggleAdvanced()}
+              >
+                {advBtnShow ? "Hide Permissions" : "Show Permissions"}
+              </button>
+            </div>
+
+            {advBtnShow &&
+              Object.entries(props?.config?.PERMISSIONS).map(([key, value]) => (
+                <li key={key}>
+                  <input
+                    type="checkbox"
+                    id="uda-recorded-name"
+                    checked={permissionsObj[key] !== undefined}
+                    onClick={handlePermissions({ [key]: value, key })}
+                  />
+                  {key}
+                </li>
+              ))}
+          </div>
+        )}
 
         <div
           className="flex-card flex-center"

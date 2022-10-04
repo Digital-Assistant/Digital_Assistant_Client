@@ -30,6 +30,7 @@ import {
   compareNodes,
   getObjData,
   getAbsoluteOffsets,
+  sleep,
 } from "../util";
 import { deleteRecording, vote } from "../services/recordService";
 import { jaroWinkler } from "jaro-winkler-typescript";
@@ -37,6 +38,7 @@ import { CONFIG } from "../config";
 
 export interface MProps {
   data?: any;
+  config?: any;
   refetchSearch?: Function;
   recordButtonVisibility?: boolean;
   recordSequenceVisibility?: boolean;
@@ -130,17 +132,19 @@ export const RecordSequenceDetails = (props: MProps) => {
    * Record player(auto play)
    */
   const autoPlay = () => {
+    sleep(CONFIG.AUTO_PLAY_SLEEP_TIME);
     //get current play item from storage
     const playItem = getCurrentPlayItem();
+
     if (playItem && playItem.node) {
       const originalNode = JSON.parse(playItem.node.objectdata);
       const _metaData = getObjData(playItem?.node?.objectdata);
+
       //ignore if recorded node is personal / marked as skip
-      if (
-        _metaData &&
-        (_metaData.meta.isPersonal || _metaData.meta.skipDuringPlay)
-      )
-        return;
+      if (_metaData.meta.isPersonal || _metaData.meta.skipDuringPlay) {
+        updateStatus(playItem.index);
+        autoPlay();
+      }
       let originalElement = originalNode?.node;
       //if target element is ANCHOR, navigate link rather than tooltip
       if (originalElement.nodeName.toLowerCase() === "a") {
@@ -210,10 +214,10 @@ export const RecordSequenceDetails = (props: MProps) => {
       let compareElements = document.querySelectorAll(originalElement.nodeName); //getAllChildren(document.body);
 
       for (let i = 0; i < compareElements?.length; i++) {
-        console.log(
-          jaroWinkler(originalElement.outerHTML, compareElements[i].outerHTML),
-          originalElement.outerHTML + "*****" + compareElements[i].outerHTML
-        );
+        // console.log(
+        //   jaroWinkler(originalElement.outerHTML, compareElements[i].outerHTML),
+        //   originalElement.outerHTML + "*****" + compareElements[i].outerHTML
+        // );
         // if (originalElement.outerHTML == compareElements[i].outerHTML) {
         if (
           jaroWinkler(
@@ -224,7 +228,6 @@ export const RecordSequenceDetails = (props: MProps) => {
           _toolTipFlag = true;
           if (originalNode.offset) {
             const _offsets = getAbsoluteOffsets(compareElements[i]);
-            console.log(_offsets, originalNode.offset);
             if (
               _offsets.x == originalNode.offset.x ||
               _offsets.y == originalNode.offset.y

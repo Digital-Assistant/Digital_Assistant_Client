@@ -1293,7 +1293,6 @@ export const postRecordSequenceData = async (request: any) => {
   const ids = userclicknodesSet.map((item: any) => item.id);
   const payload = {
     ...request,
-    additionalParams: null,
     domain: window.location.host,
     isIgnored: 0,
     isValid: 1,
@@ -1866,6 +1865,15 @@ export const compareNodes = (
   return match;
 };
     
+/**
+ * sleep javascript execution time
+ * @param milliseconds 
+ */
+export const sleep = (ms) => {
+  const end = Date.now() + ms;
+  while (Date.now() < end) continue;
+};
+
 /**
  * to get all clickable elements 
  * @returns HTMLElements collection
