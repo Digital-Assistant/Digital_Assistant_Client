@@ -115,8 +115,16 @@ function App() {
   }, [isRecording]);
 
   React.useEffect(() => {
-    if (refetchSearch == "on") getSearchResults("");
+    console.log(refetchSearch);
+    if (refetchSearch == "on") {
+      setSearchKeyword("");
+      getSearchResults("");
+    }
   }, [refetchSearch]);
+
+  React.useEffect(() => {
+    console.log(searchResults);
+  }, [searchResults]);
 
   /**
    * Sync data with storage
@@ -166,7 +174,7 @@ function App() {
    */
   const getSearchResults = async (keyword: string, _page = 1) => {
     // if (!showSearch) return;
-    console.log(page);
+    // console.log(page);
     setShowLoader(true);
     setSearchKeyword(keyword);
     const _searchResults = await fetchSearchResults({
@@ -224,7 +232,8 @@ function App() {
    * search handler callback function
    * @param data search handler callback function
    */
-  const searchHandler = (data: any) => {
+  const searchHandler = (data: any, keyword) => {
+    setSearchKeyword(keyword);
     setSearchResults([...data]);
   };
 
@@ -349,6 +358,7 @@ function App() {
                           showDetails={showRecordingDetails}
                           visibility={toggleContainer("search-results")}
                           addRecordHandler={setShowRecord}
+                          searchKeyword={searchKeyword}
                           // key={searchResults.length + showLoader}
                           searchHandler={getSearchResults}
                           page={page}

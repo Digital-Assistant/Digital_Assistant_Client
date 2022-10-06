@@ -173,6 +173,7 @@ export const RecordSequenceDetails = (props: MProps) => {
             }
           }
         }
+        // console.log(originalElement);
         if (
           originalElement &&
           originalElement?.nodeName?.toLowerCase() === "a"
@@ -180,7 +181,10 @@ export const RecordSequenceDetails = (props: MProps) => {
           updateStatus(playItem.index);
           try {
             window.location.href = originalElement?.getAttribute("href") || "/";
-          } catch (e) {}
+          } catch (e) {
+            window.location.href = originalElement?.href;
+            console.log(e);
+          }
         }
       } else {
         //show tooltip

@@ -14,6 +14,7 @@ import { fetchSearchResults } from "../services/searchService";
 export interface MProps {
   visibility?: boolean;
   data?: any;
+  searchKeyword?: string;
   showDetails?: Function;
   addRecordHandler?: Function;
   searchHandler?: Function;
@@ -30,8 +31,10 @@ export const SearchResults = (props: MProps) => {
   const [searchResults, setSearchResults] = React.useState<any>([]);
 
   React.useEffect(() => {
+    if (props?.searchKeyword) globalSearchResults = [];
     globalSearchResults = [...globalSearchResults, ...props?.data];
     setSearchResults([...globalSearchResults]);
+    console.log(props);
   }, [props?.data]);
 
   const selectItem = (item: any) => {
@@ -43,7 +46,7 @@ export const SearchResults = (props: MProps) => {
   const loadSearchResults = () => {
     if (props?.searchHandler)
       props.searchHandler(
-        "",
+        props?.searchKeyword,
         props?.page ? (props?.page === 1 ? 2 : props.page + 1) : 1
       );
   };
@@ -77,7 +80,7 @@ export const SearchResults = (props: MProps) => {
         <InfiniteScroll
           pageStart={0}
           loadMore={loadSearchResults}
-          hasMore={searchResults.length < 100}
+          hasMore={searchResults.length > 10 && searchResults.length < 100}
           useWindow={false}
         >
           {renderData()}

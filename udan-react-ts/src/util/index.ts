@@ -62,7 +62,7 @@ declare global {
  */
 export const init = async() => {
 
-  UDAErrorLogger.error("test", new Error("test"));
+  // UDAErrorLogger.error("test", new Error("test"));
   //fetch special nodes for REST service
   if (!getFromStore("specialNodes", false)) {
     const _specialNodes = fetchSpecialNodes();

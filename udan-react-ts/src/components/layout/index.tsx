@@ -97,7 +97,7 @@ export const Header = (props: MProps) => {
     });
     setSearchResults([..._searchResults]);
     if (props.searchHandler) {
-      props.searchHandler(_searchResults);
+      props.searchHandler(_searchResults, searchKeyword);
     }
   };
 
