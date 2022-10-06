@@ -17,6 +17,7 @@ fs.readFile(`${targetDir}/assets/bundle.js`, 'utf-8', function (err, contents) {
 });
 
 
-//copy background, manifest files to build from public folder
+//copy background,index and manifest files to build from public folder
 fs.writeFileSync(`${targetDir}/background.js`, fs.readFileSync(`${sourceDir}/background.js`));
+fs.writeFileSync(`${targetDir}/index.js`, fs.readFileSync(`${sourceDir}/index.js`));
 fs.writeFileSync(`${targetDir}/manifest.json`, fs.readFileSync(`${sourceDir}/manifest.json`));
