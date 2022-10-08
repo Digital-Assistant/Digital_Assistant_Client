@@ -32,8 +32,7 @@ export interface MProps {
  * @returns HTML Elements
  */
 
-export const RecordedSeq = (props: MProps) => {
-  // console.log(props?.config);
+export const RecordedData = (props: MProps) => {
   const [name, setName] = React.useState<string>("");
   const [labels, setLabels] = React.useState<any>([]);
   const [labelProfanity, setLabelProfanity] = React.useState<boolean>(false);
@@ -189,8 +188,7 @@ export const RecordedSeq = (props: MProps) => {
           >
             <div
               className="flex-card flex-center"
-              style={{ alignItems: "center" }}
-            >
+              style={{ alignItems: "center" }}>
               <span id="uda-display-clicked-text" style={{ flex: 2 }}>
                 <input
                   type="text"
@@ -211,69 +209,44 @@ export const RecordedSeq = (props: MProps) => {
                   }}
                 />
               </span>
-
-              {/* <span className="halign-right">
-                <button
-                  className="uda-tutorial-btn"
-                  style={{ padding: "0px", width: 24 }}
-                  type="button"
-                  id="uda-edit-clickedname"
-                >
-                  <BsFillPencilFill
-                    onClick={() => {
-                      setEdit(index);
-                    }}
-                  />
-                </button>
-              </span> */}
-              <span></span>
               <br />
             </div>
-            {/* <button
-              className="uda-tutorial-btn"
-              style={{
-                display: "none",
-                padding: "5px !important",
-                height: "40px",
-              }}
-              type="button"
-              id="uda-edit-clickedname-submit"
-            >
-              save
-            </button> */}
-            <div className="flex-card flex-vcenter small-text">
-              <input
-                type="checkbox"
-                id="UDA-skip-duringPlay"
-                className="uda-checkbox flex-vcenter"
-                checked={getObjData(item?.objectdata)?.meta?.skipDuringPlay}
-                onClick={handleSkipPlay(index)}
-              />
-              <label className="uda-checkbox-label">Skip during play</label>
-              <span
-                className="info-icon"
-                title="Select this box if this field / text is not required to navigate while processing."
-              >
-                <BsFillInfoCircleFill />
-              </span>
-            </div>
-
+            
             {recordData?.length - 1 === index && (
-              <div className="flex-card flex-vcenter small-text">
-                <input
-                  type="checkbox"
-                  id="isPersonal"
-                  checked={getObjData(item?.objectdata)?.meta?.isPersonal}
-                  onClick={handlePersonal(index)}
-                />
-                <label>Personal Information</label>
-                <span
-                  className="info-icon"
-                  title="select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."
-                >
-                  <BsFillInfoCircleFill />
-                </span>
-              </div>
+              <>
+                <div className="flex-card flex-vcenter small-text">
+                  <input
+                    type="checkbox"
+                    id="UDA-skip-duringPlay"
+                    className="uda-checkbox flex-vcenter"
+                    checked={getObjData(item?.objectdata)?.meta?.skipDuringPlay}
+                    onClick={handleSkipPlay(index)}
+                  />
+                  <label className="uda-checkbox-label">Skip during play</label>
+                  <span
+                    className="info-icon"
+                    title="Select this box if this field / text is not required to navigate while processing."
+                  >
+                    <BsFillInfoCircleFill />
+                  </span>
+                </div>
+
+                <div className="flex-card flex-vcenter small-text">
+                  <input
+                    type="checkbox"
+                    id="isPersonal"
+                    checked={getObjData(item?.objectdata)?.meta?.isPersonal}
+                    onClick={handlePersonal(index)}
+                  />
+                  <label>Personal Information</label>
+                  <span
+                    className="info-icon"
+                    title="select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."
+                  >
+                    <BsFillInfoCircleFill />
+                  </span>
+                </div>
+              </>
             )}
           </li>
         );

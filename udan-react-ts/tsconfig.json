@@ -23,6 +23,7 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports":true,
+    "esModuleInterop": true,
     "outDir": "./dist/",
     "noImplicitAny": false,
     "module": "es6",

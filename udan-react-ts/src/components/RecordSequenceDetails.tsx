@@ -6,7 +6,6 @@
  */
 
 import React, { useEffect } from "react";
-// import "../App.scss";
 import {
   BsXCircle,
   BsTrashFill,
@@ -21,13 +20,9 @@ import {
   // addToolTip,
   setToStore,
   getToolTipElement,
-  getFromStore,
-  getLookUpSelector,
   getTooltipPositionClass,
   removeToolTip,
   getCurrentPlayItem,
-  getAllChildren,
-  compareNodes,
   getObjData,
   getAbsoluteOffsets,
   sleep,
@@ -36,79 +31,17 @@ import { deleteRecording, vote } from "../services/recordService";
 import { jaroWinkler } from "jaro-winkler-typescript";
 import { CONFIG } from "../config";
 
+
 export interface MProps {
   data?: any;
   config?: any;
   refetchSearch?: Function;
-  recordButtonVisibility?: boolean;
-  recordSequenceVisibility?: boolean;
   recordSequenceDetailsVisibility?: boolean;
   cancelHandler?: Function;
-  recordHandler?: Function;
-  recordSeqHandler?: Function;
   playHandler?: Function;
   isPlaying?: string;
-  togglePanel?: Function;
+ 
 }
-
-/**
- * To render record sequence container
- * @returns HTML Elements
- */
-
-export const RecordSequence = (props: MProps) => {
-  const cancelRecording = () => {
-    if (props.cancelHandler) props.cancelHandler();
-  };
-  return props?.recordSequenceVisibility ? (
-    <div className="uda-card-details">
-      <h5>Recorded Sequence</h5> <hr />
-      <h5>Please navigate in the page to record.</h5> <br />
-      <div className="uda-recording" style={{ textAlign: "center" }}>
-        <button
-          className="uda-record-btn"
-          data-exclude={true}
-          onClick={() => cancelRecording()}
-        >
-          Cancel and Exit
-        </button>
-      </div>
-    </div>
-  ) : null;
-};
-
-/**
- * To render record container
- * @returns HTML Element
- */
-export const RecordButton = (props: MProps) => {
-  const cancel = (flag: boolean) => {
-    if (props.cancelHandler) props.cancelHandler();
-  };
-  const recordSequence = () => {
-    if (props.recordSeqHandler) props.recordSeqHandler();
-  };
-  return props?.recordButtonVisibility ? (
-    <div className="uda-card-details">
-      <span style={{ float: "right" }} onClick={() => cancel(false)}>
-        <BsXCircle size={16} />
-      </span>
-      <h5>Create your own action</h5>
-      <div className="flex-card flex-center">
-        <button
-          style={{ marginTop: 20, flexDirection: "column" }}
-          className="uda-record-round-btn flex-card flex-center round"
-          id="uda-enable-record"
-          onClick={() => recordSequence()}
-        >
-          <BsMic size={24} />
-          <span style={{ fontSize: 10, marginTop: 6 }}>Record</span>
-          {/* <BsFillRecord2Fill size={16} /> <span>Rec</span> */}
-        </button>
-      </div>
-    </div>
-  ) : null;
-};
 
 /**
  * To render record sequence details
