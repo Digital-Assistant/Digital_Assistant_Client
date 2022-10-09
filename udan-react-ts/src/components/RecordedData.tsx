@@ -5,13 +5,11 @@
  * Associated Route/Usage: *
  */
 
-import React, { useCallback, useEffect } from "react";
-import "../App.scss";
+import React, { useCallback } from "react";
 import {
-  BsFillPencilFill,
-  BsFillTrashFill,
-  BsFillInfoCircleFill,
-} from "react-icons/bs";
+  InfoCircleOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import _, { debounce } from "lodash";
 import { setToStore, postRecordSequenceData, getObjData } from "../util";
 import { updateRecordClicks, profanityCheck } from "../services/recordService";
@@ -188,7 +186,8 @@ export const RecordedData = (props: MProps) => {
           >
             <div
               className="flex-card flex-center"
-              style={{ alignItems: "center" }}>
+              style={{ alignItems: "center" }}
+            >
               <span id="uda-display-clicked-text" style={{ flex: 2 }}>
                 <input
                   type="text"
@@ -211,7 +210,7 @@ export const RecordedData = (props: MProps) => {
               </span>
               <br />
             </div>
-            
+
             {recordData?.length - 1 === index && (
               <>
                 <div className="flex-card flex-vcenter small-text">
@@ -227,7 +226,7 @@ export const RecordedData = (props: MProps) => {
                     className="info-icon"
                     title="Select this box if this field / text is not required to navigate while processing."
                   >
-                    <BsFillInfoCircleFill />
+                    <InfoCircleOutlined />
                   </span>
                 </div>
 
@@ -243,7 +242,7 @@ export const RecordedData = (props: MProps) => {
                     className="info-icon"
                     title="select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."
                   >
-                    <BsFillInfoCircleFill />
+                    <InfoCircleOutlined />
                   </span>
                 </div>
               </>
@@ -301,7 +300,7 @@ export const RecordedData = (props: MProps) => {
                   style={{ color: "white", width: 40, marginLeft: 16 }}
                   onClick={() => removeLabel(index)}
                 >
-                  <BsFillTrashFill />
+                  <DeleteOutlined />
                 </button>
               </div>
             );

@@ -1228,6 +1228,9 @@ top:30px;
                                                         
 
 .udan-main-panel{
+    h4{
+        border-bottom:none !important;
+    }
     button{
         cursor: pointer;
     }
@@ -1305,6 +1308,7 @@ top:30px;
         margin-top: -40px;
     }
     .ant-list-item-meta-description{
+        padding: 10px 0;
         color: #666;
         font-size: 12px;
         font-style: italic;

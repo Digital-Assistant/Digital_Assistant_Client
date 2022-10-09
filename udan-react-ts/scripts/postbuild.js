@@ -21,3 +21,4 @@ fs.readFile(`${targetDir}/assets/bundle.js`, 'utf-8', function (err, contents) {
 fs.writeFileSync(`${targetDir}/background.js`, fs.readFileSync(`${sourceDir}/background.js`));
 fs.writeFileSync(`${targetDir}/index.js`, fs.readFileSync(`${sourceDir}/index.js`));
 fs.writeFileSync(`${targetDir}/manifest.json`, fs.readFileSync(`${sourceDir}/manifest.json`));
+fs.writeFileSync(`${targetDir}/assets/antd.css`, fs.readFileSync(`${sourceDir}/css/antd.css`));

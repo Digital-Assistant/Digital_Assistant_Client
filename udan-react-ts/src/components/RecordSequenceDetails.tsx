@@ -6,15 +6,13 @@
  */
 
 import React, { useEffect } from "react";
+import { Row, Col, Button, List, Popconfirm, message } from "antd";
 import {
-  BsXCircle,
-  BsTrashFill,
-  BsFillHeartFill,
-  BsFillRecord2Fill,
-  BsPlayCircleFill,
-  BsArrowLeft,
-  BsMic,
-} from "react-icons/bs";
+  LeftOutlined,
+  DeleteOutlined,
+  LikeOutlined,
+  PlayCircleOutlined
+} from "@ant-design/icons";
 import { createPopperLite as createPopper } from "@popperjs/core";
 import {
   // addToolTip,
@@ -225,7 +223,7 @@ export const RecordSequenceDetails = (props: MProps) => {
     } catch (e) {
       return _toolTipFlag;
     }
-    // if (!_toolTipFlag) message.error("Error occurred, try again!");
+    if (!_toolTipFlag) message.error("Error occurred, try again!");
     return _toolTipFlag;
   };
 
@@ -335,35 +333,55 @@ export const RecordSequenceDetails = (props: MProps) => {
         }}
       >
         <div className="uda-card-btns">
-          <div className="uda-loading-bar" id="nist-autoplay">
-            <span onClick={() => play()}>
-              <BsPlayCircleFill />
-            </span>
-          </div>
+          <Button
+            type="primary"
+            shape="circle"
+            size="small"
+            style={{ position: "absolute", top: 12, left: 0 }}
+            onClick={() => backNav()}
+          >
+            <LeftOutlined />
+          </Button>
+          <PlayCircleOutlined
+            className="large secondary"
+            onClick={() => play()}
+          />
         </div>
-        <div
-          className="uda-card-right-dbl-arrow"
-          id="uda-backto-search"
-          onClick={() => backNav()}
-        >
-          <BsArrowLeft color="white" size={24} />
-        </div>
+
         <h5>{getName()}</h5> <hr />
         <ul className="uda-suggestion-list" id="uda-sequence-steps">
-          {renderData()}
+          {/* {renderData()} */}
+          {props?.data && (
+            <List
+              itemLayout="horizontal"
+              dataSource={selectedRecordingDetails?.userclicknodesSet}
+              renderItem={(item: any, index: number) => (
+                <List.Item
+                  className={item.status}
+                  onClick={() => setToolTip(item, index)}
+                >
+                  <List.Item.Meta title={item?.clickednodename} />
+                </List.Item>
+              )}
+            />
+          )}
         </ul>
       </div>
       <div className="uda-details-footer">
-        <div className="">
-          <button onClick={removeRecording}>
-            <BsTrashFill color="#ff5722" />
-          </button>
-        </div>
-        <div className="">
-          <button onClick={() => manageVote()}>
-            <BsFillHeartFill color="#ff5722" />
-          </button>
-        </div>
+        <Row>
+          <Col span={12} style={{ textAlign: "center" }}>
+            <Popconfirm title="Are you sure?" onConfirm={removeRecording}>
+              <Button size="small">
+                <DeleteOutlined width={33} />
+              </Button>
+            </Popconfirm>
+          </Col>
+          <Col span={12} style={{ textAlign: "center" }}>
+            <Button size="small" onClick={() => manageVote()}>
+              <LikeOutlined width={33} />
+            </Button>
+          </Col>
+        </Row>
       </div>
     </>
   ) : null;

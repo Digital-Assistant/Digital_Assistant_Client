@@ -6,12 +6,10 @@
  */
 
 import React, { useEffect } from "react";
-
 import {
-  BsXCircle,
-  BsMic,
-} from "react-icons/bs";
- 
+  CloseCircleOutlined,
+  VideoCameraAddOutlined,
+} from "@ant-design/icons";
 export interface MProps {
   recordButtonVisibility?: boolean;
   cancelHandler?: Function;
@@ -32,8 +30,8 @@ export const RecordButton = (props: MProps) => {
   };
   return props?.recordButtonVisibility ? (
     <div className="uda-card-details">
-      <span style={{ float: "right" }} onClick={() => cancel(false)}>
-        <BsXCircle size={16} />
+      <span style={{ float: "right" }}>
+        <CloseCircleOutlined className="small" onClick={() => cancel(false)} />
       </span>
       <h5>Create your own action</h5>
       <div className="flex-card flex-center">
@@ -43,9 +41,8 @@ export const RecordButton = (props: MProps) => {
           id="uda-enable-record"
           onClick={() => recordSequence()}
         >
-          <BsMic size={24} />
+          <VideoCameraAddOutlined />
           <span style={{ fontSize: 10, marginTop: 6 }}>Record</span>
-          {/* <BsFillRecord2Fill size={16} /> <span>Rec</span> */}
         </button>
       </div>
     </div>

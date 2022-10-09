@@ -6,10 +6,11 @@
  */
 
 import React, { useEffect } from "react";
-import "../App.scss";
+import { Empty, List } from "antd";
+import { DoubleRightOutlined } from "@ant-design/icons";
 import { getRowObject, setToStore } from "../util";
 import InfiniteScroll from "react-infinite-scroller";
-import { fetchSearchResults } from "../services/searchService";
+// import { fetchSearchResults } from "../services/searchService";
 
 export interface MProps {
   visibility?: boolean;
@@ -53,19 +54,25 @@ export const SearchResults = (props: MProps) => {
 
   const renderData = () => {
     if (!props?.visibility) return;
-    return searchResults?.map((item: any, index: number) => {
-      const _row = getRowObject(item);
-      return (
-        <div
-          className="uda-card"
-          onClick={() => selectItem(item)}
-          key={`${index}-search-result`}
-        >
-          <h5>{_row.sequenceName}</h5>
-          <i>{_row.path}</i>
-        </div>
-      );
-    });
+    return !props?.visibility ? null : !props?.data?.length ? (
+      <Empty />
+    ) : (
+      <List
+        itemLayout="horizontal"
+        dataSource={props?.data}
+        renderItem={(item) => (
+          <List.Item onClick={() => selectItem(item)}>
+            <List.Item.Meta
+              title={getRowObject(item)?.sequenceName}
+              description={getRowObject(item)?.path}
+            />
+            <div className="arrow">
+              <DoubleRightOutlined />
+            </div>
+          </List.Item>
+        )}
+      />
+    );
   };
 
   // return renderData();

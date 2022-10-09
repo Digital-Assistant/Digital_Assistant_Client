@@ -4,7 +4,8 @@ const webpack = require('webpack')
 module.exports = {
   entry: [
     './src/index.tsx',
-    './src/App.scss'
+    './src/App.scss',
+    './public/css/antd.css'
   ]
   ,
   mode: 'development',
@@ -22,7 +23,10 @@ module.exports = {
         use: 'ts-loader',
         exclude: /node_modules/,
       },
-     
+      {
+        test:/\.css$/,
+        use:['style-loader','css-loader']
+      },
       {
         test: /\.scss$/,
         exclude: /node_modules/,
@@ -67,7 +71,7 @@ module.exports = {
       // })
   ],
   resolve: {
-    extensions: ['.tsx', '.ts', '.js', '.scss'],
+    extensions: ['.tsx', '.ts', '.js', '.css','.scss'],
     modules: ['./node_modules'],
     alias: {
       process: "process/browser",

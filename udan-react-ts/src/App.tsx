@@ -7,6 +7,8 @@
 // import logo from "./logo.svg";
 // import "./config/test";
 import React, { useState, useEffect, useCallback } from "react";
+import { Spin } from "antd";
+import "../public/css/antd.css";
 import { fetchSearchResults } from "./services/searchService";
 import { login, getUserSession } from "./services/authService";
 import _ from "lodash";
@@ -115,7 +117,6 @@ function App() {
   }, [isRecording]);
 
   React.useEffect(() => {
-    console.log(refetchSearch);
     if (refetchSearch == "on") {
       setSearchKeyword("");
       getSearchResults("");
@@ -323,20 +324,10 @@ function App() {
                   toggleHandler={toggleHandler}
                   i18={t}
                 />
-                {/* {global.udaGlobalConfig.permissions && "hurreeeyyyy"} */}
                 <Body
                   content={
                     <>
-                      {showLoader && (
-                        <Circles
-                          height="60"
-                          width="60"
-                          color="#ff5722"
-                          ariaLabel="circles-loading"
-                          wrapperClass="loader"
-                          visible={true}
-                        />
-                      )}
+                      {showLoader && <Spin tip="Loading..." />}
 
                       <UdanMain.RecordButton
                         recordHandler={showRecordHandler}
