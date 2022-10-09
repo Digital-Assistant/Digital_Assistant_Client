@@ -1,5 +1,5 @@
 import domJSON from "domJson";
-import { CONFIG } from "../config";
+import {CONFIG} from "../config";
 import {
   recordClicks,
   recordSequence,
@@ -8,9 +8,11 @@ import {
 import {
   fetchSpecialNodes
 } from "../services/searchService";
-import { createPopperLite as createPopper } from "@popperjs/core";
-import { jaroWinkler } from "jaro-winkler-typescript";
-import { UDAErrorLogger } from "../config/error-log";
+import {createPopperLite as createPopper} from "@popperjs/core";
+import {jaroWinkler} from "jaro-winkler-typescript";
+import {UDAErrorLogger} from "../config/error-log";
+import {removeFromArray} from "./removeFromArray";
+export {indexnode} from "./indexNode";
 
 
 export const UDAClickObjects: any = [];
@@ -23,7 +25,7 @@ export const ignoreNodesContainingClassNames: any = [];
 export const cancelRecordingDuringRecordingNodes: any = [];
 export let udanSpecialNodes: any = {
   include: {
-    tags: ["a", "button", "input", "textarea", "select","mat-select"],
+    tags: ["a", "button", "input", "textarea", "select", "mat-select"],
     classes: ["ng-select", "ngb-datepicker"],
   },
   exclude: {
@@ -41,7 +43,7 @@ export let udanSpecialNodes: any = {
       "defs",
       "linearGradient",
     ],
-    classes: ["uda_exclude","ngx-daterangepicker-material"],
+    classes: ["uda_exclude", "ngx-daterangepicker-material"],
   },
 };
 export const EXCLUDE_ATTRIB = "data-exclude";
@@ -52,15 +54,15 @@ export const EXCLUDE_ATTRIB = "data-exclude";
  */
 declare global {
   interface Window {
-      onDomChange: any;
-      udanSelectedNodes: any;
-    }
+    onDomChange: any;
+    udanSelectedNodes: any;
+  }
 }
 
 /**
  * Set ignorable classes for Udan con
  */
-export const init = async() => {
+export const init = async () => {
 
   UDAErrorLogger.error("test", new Error("test"));
   //fetch special nodes for REST service
@@ -76,25 +78,26 @@ export const init = async() => {
 
 
   const children = getAllChildren(
-    document.querySelector(`.${CONFIG.UDA_CONTAINER_CLASS}`)
+      document.querySelector(`.${CONFIG.UDA_CONTAINER_CLASS}`)
   );
   for (let i = 0; i < children?.length; i++) {
     try {
       // console.log(children[i]);
       if (
-        children[i] &&
-        !udanSpecialNodes?.exclude?.tags?.includes(
-          children[i]?.tagName?.trim()?.toLocaleLowerCase()
-        ) &&
-        children[i].className.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) == -1
+          children[i] &&
+          !udanSpecialNodes?.exclude?.tags?.includes(
+              children[i]?.tagName?.trim()?.toLocaleLowerCase()
+          ) &&
+          children[i].className.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) == -1
       )
         children[i].className += " " + CONFIG.UDA_CLICK_IGNORE_CLASS;
-    } catch (e) { }
+    } catch (e) {
+    }
   }
 };
 
 // let onDomChange = window.onDomChange; 
-        
+
 /**
  *
  * @param data
@@ -133,12 +136,12 @@ export const removeFromStore = (key: string) => {
 export const generateUUID = () => {
   let d = new Date().getTime();
   let uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-    /[xy]/g,
-    function (c) {
-      let r = (d + Math.random() * 16) % 16 | 0;
-      d = Math.floor(d / 16);
-      return (c == "x" ? r : (r & 0x7) | 0x8).toString(16);
-    }
+      /[xy]/g,
+      function (c) {
+        let r = (d + Math.random() * 16) % 16 | 0;
+        d = Math.floor(d / 16);
+        return (c == "x" ? r : (r & 0x7) | 0x8).toString(16);
+      }
   );
 
   return uuid.toUpperCase();
@@ -172,7 +175,7 @@ export const getRowObject = (data: any) => {
   } catch (e) {
     sequenceName = data.name.toString();
   }
-  return { sequenceName, path };
+  return {sequenceName, path};
 };
 
 /**
@@ -182,26 +185,26 @@ export const getRowObject = (data: any) => {
 export const addBodyEvents = (selector: HTMLElement) => {
   //exclude content-serving elements from click objects
   init();
-  let els:any = document.body.querySelectorAll("*"),//getAllClickableElements(),
-    len = els?.length,
-    i = 0;
-  
+  let els: any = document.body.querySelectorAll("*"),//getAllClickableElements(),
+      len = els?.length,
+      i = 0;
+
   for (; i < len; i++) {
     try {
       /**exclude event attachment for selective elements  */
       if (
-        els[i] &&
-        // !udanSpecialNodes?.exclude?.tags.includes(els[i]?.tagName?.trim()?.toLocaleLowerCase()) &&
-        // els[i]?.className?.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) === -1 &&
-        // els[i]?.parentNode?.className?.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) === -1 &&
-        !els[i]?.getAttribute(EXCLUDE_ATTRIB) &&
-        isClickable(els[i])
+          els[i] &&
+          // !udanSpecialNodes?.exclude?.tags.includes(els[i]?.tagName?.trim()?.toLocaleLowerCase()) &&
+          // els[i]?.className?.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) === -1 &&
+          // els[i]?.parentNode?.className?.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) === -1 &&
+          !els[i]?.getAttribute(EXCLUDE_ATTRIB) &&
+          isClickable(els[i])
       ) {
         addClickToNode(els[i]);
       }
     } catch (e) {
       // console.log(els[i].tagName, e);
-     }
+    }
   }
 };
 
@@ -289,8 +292,8 @@ export const removeToolTip = () => {
  */
 export const getToolTipElement = () => {
   let toolTipContentSection =
-    '<button class="uda-tutorial-btn" style="margin-top:10px; margin-right: 5px;" type="button" uda-added="true" id="uda-autoplay-continue">Continue</button>' +
-    '<button class="uda-tutorial-exit-btn" style="margin-top:10px;" type="button" uda-added="true" id="uda-autoplay-exit">Exit</button>';
+      '<button class="uda-tutorial-btn" style="margin-top:10px; margin-right: 5px;" type="button" uda-added="true" id="uda-autoplay-continue">Continue</button>' +
+      '<button class="uda-tutorial-exit-btn" style="margin-top:10px;" type="button" uda-added="true" id="uda-autoplay-exit">Exit</button>';
 
   let toolTipContentElement = document.createElement("div");
   toolTipContentElement.innerHTML = toolTipContentSection.trim();
@@ -300,7 +303,7 @@ export const getToolTipElement = () => {
   tooltipDivElement.id = "uda-tooltip";
   tooltipDivElement.classList.add("uda-tooltip");
   tooltipDivElement.innerHTML =
-    '<div id="uda-arrow" class="uda-arrow" data-popper-arrow></div>';
+      '<div id="uda-arrow" class="uda-arrow" data-popper-arrow></div>';
   tooltipDivElement.prepend(toolTipContentElement);
 
   const toolTipExists = document.getElementById("uda-tooltip");
@@ -325,14 +328,14 @@ export const addToolTip = (invokingNode: any, index: any) => {
     let originalElement = originalNode?.node;
 
     document
-      .getElementById("uda-autoplay-continue")
-      ?.addEventListener("click", (e: Event) => {
-        const elementsFromStore = getFromStore("selectedRecordedItem", false);
-        addToolTip(
-          elementsFromStore?.userclicknodesSet[index + 1]?.objectdata,
-          index + 1
-        );
-      });
+        .getElementById("uda-autoplay-continue")
+        ?.addEventListener("click", (e: Event) => {
+          const elementsFromStore = getFromStore("selectedRecordedItem", false);
+          addToolTip(
+              elementsFromStore?.userclicknodesSet[index + 1]?.objectdata,
+              index + 1
+          );
+        });
 
     let selector = getLookUpSelector(originalElement);
 
@@ -342,8 +345,8 @@ export const addToolTip = (invokingNode: any, index: any) => {
 
     if (originalElement) {
       let toolTipPositionClass: any = getTooltipPositionClass(
-        originalElement,
-        tooltipDivElement
+          originalElement,
+          tooltipDivElement
       );
       createPopper(originalElement, tooltipDivElement, {
         placement: toolTipPositionClass,
@@ -354,7 +357,8 @@ export const addToolTip = (invokingNode: any, index: any) => {
   }
 };
 
-export const playNext = () => {};
+export const playNext = () => {
+};
 /**
  * tooltip placement calculation
  */
@@ -364,30 +368,30 @@ export const playNext = () => {};
  * @returns object
  */
 export const getScreenSize = () => {
-  let page = { height: 0, width: 0 };
-  let screen = { height: 0, width: 0 };
+  let page = {height: 0, width: 0};
+  let screen = {height: 0, width: 0};
   let body = document.body,
-    html = document.documentElement;
+      html = document.documentElement;
 
   const docEl = document.documentElement;
   const scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
   const scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
 
-  let resolution = { height: 0, width: 0 };
+  let resolution = {height: 0, width: 0};
 
   page.height = Math.max(
-    body.scrollHeight,
-    body.offsetHeight,
-    html.clientHeight,
-    html.scrollHeight,
-    html.offsetHeight
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight
   );
   page.width = Math.max(
-    body.scrollWidth,
-    body.offsetWidth,
-    html.clientWidth,
-    html.scrollWidth,
-    html.offsetWidth
+      body.scrollWidth,
+      body.offsetWidth,
+      html.clientWidth,
+      html.scrollWidth,
+      html.offsetWidth
   );
   if (window.innerWidth !== undefined) {
     screen.width = window.innerWidth * 0.75;
@@ -404,7 +408,7 @@ export const getScreenSize = () => {
   let windowProperties = {
     page: page,
     screen: screen,
-    scrollInfo: { scrollTop: scrollTop, scrollLeft: scrollLeft },
+    scrollInfo: {scrollTop: scrollTop, scrollLeft: scrollLeft},
     resolution,
   };
   return windowProperties;
@@ -433,8 +437,8 @@ export const getNodeCoordinates = (element: HTMLElement, windowSize: any) => {
  * @returns object
  */
 export const getTooltipPositionClass = (
-  targetElement: HTMLElement,
-  tooltipElement: HTMLElement
+    targetElement: HTMLElement,
+    tooltipElement: HTMLElement
 ) => {
   const availablePositions = ["right", "top", "left", "bottom"].slice();
   const screenSize = getScreenSize();
@@ -445,8 +449,8 @@ export const getTooltipPositionClass = (
 
   // Check for space to the right
   if (
-    tooltipPos && targetElementRect.right + tooltipPos.width >
-    screenSize.screen.width
+      tooltipPos && targetElementRect.right + tooltipPos.width >
+      screenSize.screen.width
   ) {
     removeFromArray(availablePositions, "right");
   }
@@ -463,8 +467,8 @@ export const getTooltipPositionClass = (
 
   // Check for space below
   if (
-    tooltipPos && targetElementRect.bottom + tooltipPos.height >
-    screenSize.page.height
+      tooltipPos && targetElementRect.bottom + tooltipPos.height >
+      screenSize.page.height
   ) {
     removeFromArray(availablePositions, "bottom");
   }
@@ -474,17 +478,6 @@ export const getTooltipPositionClass = (
   }
 
   return finalCssClass;
-};
-
-/**
- * Remove element from array
- * @param array
- * @param value
- */
-export const removeFromArray = (array: any, value: any) => {
-  if (array?.includes(value)) {
-    array.splice(array.indexOf(value), 1);
-  }
 };
 
 // // getting the text for the clicknodes.
@@ -632,358 +625,15 @@ export const removeFromArray = (array: any, value: any) => {
 
 //   return inputlabels;
 // };
-// Check for each node and then match it with the available clicknodes which are identified by links.js
-export const indexnode = (
-  node: any,
-  parentnode: any,
-  hasparentnodeclick = false,
-  fromdocumentclick = false
-) => {
-  const elementdata: any = {
-    "element-type": "",
-    "element-labels": [],
-    "element-action": "",
-    "element-path": "",
-    "element-url": "",
-    "element-data": [],
-    "menu-items": [],
-  };
 
-  let clickobjectexists = false;
-  let udaClickObject = {};
 
-  if (node.hasAttribute("nist-voice") && node.getAttribute("nist-voice")) {
-    return node;
-  }
 
-  if (node.hasAttribute("uda-added") && node.getAttribute("uda-added")) {
-    return node;
-  }
-
-  if (node.nodeName.toLowerCase() === "mat-checkbox") {
-    return node;
-  }
-
-  if (
-    inArray(node.nodeName.toLowerCase(), CONFIG.ignoreClicksOnSpecialNodes) !==
-    -1
-  ) {
-    return node;
-  }
-
-  if (parentnode.classList && parentnode.classList.contains("tab-content")) {
-    node.displaytype = "tab-content";
-    node.tabid = node.id;
-  }
-
-  // Multiple clicks are recorded for select2-selection class. select2-selection--multiple
-  // This will create a problem during playback. We should record only one click to avoid this problem
-  if (
-    node.classList &&
-    (node.classList.contains("select2-search__field") ||
-      node.classList.contains("cdk-overlay-backdrop") ||
-      node.classList.contains("cdk-overlay-pane"))
-  ) {
-    logInfo(node.classList);
-    return node;
-  }
-
-  if (node.hasAttribute("disabled")) {
-    return node;
-  }
-
-  if (node.hasAttribute("readOnly")) {
-    // return node;
-  }
-
-  if (CONFIG?.htmlindex?.length > 0) {
-    for (let htmli = 0; htmli < CONFIG?.htmlindex?.length; htmli++) {
-      if (node?.isSameNode(CONFIG.htmlindex[htmli]["element-data"])) {
-        node.hasclick = true;
-        return node;
-      }
-    }
-  }
-
-  for (let i = 0; i < UDAClickObjects?.length; i++) {
-    if (UDAClickObjects[i].element === window) {
-      continue;
-    }
-    if (node?.isSameNode(UDAClickObjects[i].element)) {
-      clickobjectexists = true;
-      udaClickObject = UDAClickObjects[i];
-    }
-  }
-
-  if (
-    inArray(node.nodeName.toLowerCase(), CONFIG.ignoreNodesFromIndexing) !== -1
-  ) {
-    logInfo({ indexingnode: node });
-  }
-
-  if (node.hasAttribute("type") && node.getAttribute("type") === "hidden") {
-    return node;
-  }
-
-  if (fromdocumentclick) {
-    clickobjectexists = true;
-    udaClickObject = node;
-  }
-
-  if (clickobjectexists) {
-    node.hasclick = true;
-    elementdata["element-type"] = node.nodeName.toLowerCase();
-    elementdata["element-url"] = window.location.href;
-
-    if (parentnode.classList && parentnode.classList.contains("tab-content")) {
-      node.displaytype = "tab-content";
-    }
-
-    if (elementdata["element-labels"]?.length === 0) {
-      elementdata["element-labels"] = getNodeLabels(node, [], 1);
-    }
-
-    if (elementdata["element-labels"]?.length === 0) {
-      return node;
-    }
-
-    if (
-      (node.hasOwnProperty("displaytype") &&
-        node.displaytype === "tab-content") ||
-      (node.hasOwnProperty("navtype") && node.navtype === "navtab")
-    ) {
-      for (let j = 0; j < menuitems?.length; j++) {
-        let menuitem = menuitems[j];
-        if (menuitem.refid === node.tabid) {
-          if (menuitem.menunode.hasOwnProperty("path")) {
-            node.path = menuitem.menunode.path + ">" + menuitem.name;
-          } else {
-            node.path = menuitem.name;
-          }
-          if (node.hasOwnProperty("menuitems")) {
-            node.menuitems.push(menuitem);
-          } else {
-            node.menuitems = [];
-            node.menuitems.push(menuitem);
-          }
-        }
-      }
-    }
-
-    if (elementdata["element-path"] === "") {
-      if (node.hasOwnProperty("path")) {
-        elementdata["element-path"] = node.path;
-      }
-    }
-
-    if (
-      node.getAttribute("data-toggle") &&
-      node.getAttribute("data-toggle") === "tab"
-    ) {
-      node.navtype = "navtab";
-      elementdata["element-action"] = "navtab";
-    }
-
-    let uda_custom = {
-      hasparentclick: false,
-      parentnode: {},
-      domJson: domJSON.toJSON(node),
-    };
-    if (hasparentnodeclick) {
-      uda_custom.hasparentclick = true;
-      uda_custom.parentnode = parentnode;
-    }
-    node.uda_custom = uda_custom;
-
-    elementdata["element-data"] = node;
-    elementdata["clickobject"] = udaClickObject;
-
-    htmlindex.push(elementdata);
-  }
-
-  return node;
-};
-
-// indexing functionality for the entire dom
-export const indexDom = (
-  node: any,
-  ret = false,
-  parentnode = "",
-  textlabel = "",
-  hasparentnodeclick = false,
-  parentclicknode = null
-) => {
-  switch (node.nodeType) {
-    case Node.ELEMENT_NODE:
-      if (!ret && parentnode !== "") {
-        try {
-          node = indexnode(node, parentnode, hasparentnodeclick, false);
-        } catch (e) {
-          errorLog(
-            "Unable to index node " + node.nodeName + " got exception " + e
-          );
-          return node;
-        }
-      }
-
-      node.haschildclick = false;
-
-      // Checking for ignore nodes during indexing
-      if (
-        inArray(node.nodeName.toLowerCase(), ignoreNodesFromIndexing) !== -1
-      ) {
-        if (
-          node.nodeName.toLowerCase() === "ckeditor" &&
-          node.childNodes?.length > 2 &&
-          CONFIG.recording
-        ) {
-          // let addToolTip = true;
-          for (let checknode of tooltipDisplayedNodes) {
-            if (node?.isSameNode(checknode)) {
-              // addToolTip = false;
-            }
-          }
-          if (addToolTip) {
-            tooltipDisplayedNodes.push(node);
-            addToolTip(node, 0);
-          }
-        } else if (
-          !node.hasclick &&
-          inArray(
-            node.nodeName.toLowerCase(),
-            CONFIG.addClickToSpecialNodes
-          ) !== -1 &&
-          inArray(node.nodeName.toLowerCase(), ignoreClicksOnSpecialNodes) ===
-            -1
-        ) {
-          logInfo(
-            "Child nodes ignored for node and added click to: " + node.nodeName
-          );
-          addClickToNode(node);
-        } else if (
-          node &&
-          cancelRecordingDuringRecordingNodes.indexOf(
-            node?.nodeName?.toLowerCase()
-          ) !== -1
-        ) {
-          // addClickToNode(node);
-        } else {
-          logInfo("Child nodes ignored for node: " + node.nodeName);
-        }
-      } else if (
-        node.classList &&
-        node.classList.contains("select2-container--open") &&
-        !node.classList.contains("select2-container--focus")
-      ) {
-        //	do nothing as we are not going to deal with special classes
-        logInfo("unwanted indexing prevention");
-      } else if (
-        node.nodeName.toLowerCase() === "div" &&
-        (node.hasAttribute("uib-datepicker-popup-wrap") ||
-          (node.id && node.id === "recognize_modal"))
-      ) {
-        // fix for not indexing datepicker popup and nominate popup
-        logInfo("date picker in javascript");
-      } else if (
-        node.nodeName.toLowerCase() === "span" &&
-        node.classList.contains("radio") &&
-        node.classList.contains("replacement")
-      ) {
-        addClickToNode(node);
-      } else if (checkCssClassNames(node)) {
-        logInfo({ cssIgnoredNode: node });
-        // addClickToNode(node);
-      } else if (node.hasChildNodes()) {
-        let childnodes = node.childNodes;
-        let hasparentclick = false;
-        if (node.hasOwnProperty("hasclick") || hasparentnodeclick) {
-          hasparentclick = true;
-          if (parentclicknode === "") {
-            parentclicknode = node;
-          }
-        }
-
-        if (childnodes?.length > 0) {
-          for (let i = 0; i < childnodes?.length; i++) {
-            let childnode = childnodes[i];
-            CONFIG.nodeid++;
-            if (
-              CONFIG.ignoreelements.indexOf(
-                childnode.nodeName.toLowerCase()
-              ) === -1
-            ) {
-              if (ret) {
-                if (textlabel === "") {
-                  textlabel = indexDom(childnode, ret, node, textlabel);
-                } else {
-                  textlabel += " " + indexDom(childnode, ret, node, textlabel);
-                }
-              } else {
-                try {
-                  node.childNodes[i] = indexDom(
-                    childnode,
-                    ret,
-                    node,
-                    "",
-                    hasparentclick,
-                    parentclicknode
-                  );
-                } catch (e) {}
-                if (
-                  node.childNodes[i].hasOwnProperty("hasclick") &&
-                  node.childNodes[i].hasclick
-                ) {
-                  node.haschildclick = true;
-                }
-                if (
-                  hasparentclick &&
-                  node.childNodes[i].hasOwnProperty("haschildclick") &&
-                  node.childNodes[i].haschildclick
-                ) {
-                  node.haschildclick = true;
-                }
-              }
-            }
-          }
-        }
-      }
-
-      // add click to node to send what user has clicked.
-      // known scenario that node has parent click
-      if (
-        node.hasOwnProperty("hasclick") &&
-        node.hasclick &&
-        (node.nodeName.toLowerCase() === "select" || !node.haschildclick)
-      ) {
-        node = addClickToNode(node);
-      } else if (
-        node.hasOwnProperty("hasclick") &&
-        node.hasclick &&
-        node.haschildclick
-      ) {
-        node = addClickToNode(node, true);
-      }
-
-      break;
-    case Node.TEXT_NODE:
-      if (node.nodeValue !== "") {
-        textlabel = node.nodeValue;
-      }
-      break;
-  }
-
-  if (ret && textlabel !== "") {
-    return textlabel;
-  } else if (!ret) {
-    return node;
-  }
-};
 
 export const addClickToNode = (node: any, confirmdialog = false) => {
   try {
     if (
-      node.hasOwnProperty("addedclickrecord") &&
-      node.addedclickrecord === true
+        node.hasOwnProperty("addedclickrecord") &&
+        node.addedclickrecord === true
     ) {
       return;
     }
@@ -1069,7 +719,7 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
   } catch (e) {
     // errorLog("Unable to add click to node " + node.outerHTML + " " + e);
     UDAErrorLogger.error(
-      "Unable to add click to node " + node.outerHTML + " " + e
+        "Unable to add click to node " + node.outerHTML + " " + e
     );
   }
 };
@@ -1079,7 +729,7 @@ export const isAllowedMiscElement = (element: HTMLElement) => {
   if (!element) return false;
 
   let isAllowedElement: boolean =
-    window.getComputedStyle(element).cursor == "pointer";
+      window.getComputedStyle(element).cursor == "pointer";
   let parentEl: any = element;
   /**traversing 3 level parents for contenteditable property */
   for (let i = 0; i <= 3; i++) {
@@ -1096,7 +746,7 @@ export const isAllowedMiscElement = (element: HTMLElement) => {
     }
   }
 
-   
+
   // console.log(
   //   "before",
   //   isAllowedElement,
@@ -1105,8 +755,8 @@ export const isAllowedMiscElement = (element: HTMLElement) => {
 
   //check if special classes to be included in recordable elements
   if (
-    hasClass(element, udanSpecialNodes.include.classes) ||
-    udanSpecialNodes?.include?.tags?.includes(element.tagName.toLowerCase())
+      hasClass(element, udanSpecialNodes.include.classes) ||
+      udanSpecialNodes?.include?.tags?.includes(element.tagName.toLowerCase())
   ) {
     isAllowedElement = true;
   }
@@ -1114,10 +764,10 @@ export const isAllowedMiscElement = (element: HTMLElement) => {
   // console.log("include", isAllowedElement, udanSpecialNodes?.include?.tags.includes(element.tagName.toLowerCase()));
   //check if special classes to be excluded from recordable elements
   if (
-    udanSpecialNodes?.exclude?.tags?.includes(
-      element?.tagName?.trim()?.toLocaleLowerCase()
-    ) ||
-    hasClass(element, udanSpecialNodes.exclude.classes)
+      udanSpecialNodes?.exclude?.tags?.includes(
+          element?.tagName?.trim()?.toLocaleLowerCase()
+      ) ||
+      hasClass(element, udanSpecialNodes.exclude.classes)
   ) {
     isAllowedElement = false;
   }
@@ -1125,7 +775,7 @@ export const isAllowedMiscElement = (element: HTMLElement) => {
   //   isAllowedElement,
   //   udanSpecialNodes?.exclude?.tags.includes(element.tagName.toLowerCase())
   // );
-  
+
   // console.log(element?.tagName, isAllowedElement);
   // if(element.onclick != null || element.addEventListener != null ||)
   return isAllowedElement;
@@ -1155,61 +805,60 @@ export const delayLink = (node: HTMLElement) => {
  * @returns
  */
 export const recorduserclick = async (
-  node: HTMLElement,
-  fromdocument = false,
-  selectchange = false,
-  event: any,
-  confirmdialog = false,
-  hasparentclick = false
+    node: HTMLElement,
+    fromdocument = false,
+    selectchange = false,
+    event: any,
+    confirmdialog = false,
+    hasparentclick = false
 ) => {
 
 
   if (!node) return false;
 
   if (
-    !node.isSameNode(event.target) || clickableElementExists(event.target) ||
-    !isClickable(event.target)
+      !node.isSameNode(event.target) || clickableElementExists(event.target) ||
+      !isClickable(event.target)
   ) {
     return;
   }
-    
+
   node = event.target;
   if (!window.udanSelectedNodes) window.udanSelectedNodes = [];
   window.udanSelectedNodes.push(node);
-  
-  const isRecording =
-    getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true" ? true : false;
 
-  
+  const isRecording =
+      getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true" ? true : false;
+
+
   const parentAnchorElement = parentUpTo(node, "a");
   // console.log(isRecording, node, parentAnchorElement);
-  
+
   if (!isRecording) {
     if (parentAnchorElement) {
       try {
         window.location.href = parentAnchorElement?.getAttribute("href") || "/";
-      }catch(e){}
+      } catch (e) {
+      }
       return true;
-    } 
-    else {
+    } else {
       return;
     }
     // return;
   }
-    
+
   const _text = getclickedinputlabels(node);
-  
+
   console.log("recording... " + node.innerText + "," + _text);
-  
+
   if (!_text || _text?.length > 100 || !_text?.trim()?.length) return;
 
-  
 
   const resp = await postClickData(node, _text);
   if (resp) {
     const activeRecordingData: any = getFromStore(
-      CONFIG.RECORDING_SEQUENCE,
-      false
+        CONFIG.RECORDING_SEQUENCE,
+        false
     );
     if (activeRecordingData) {
       activeRecordingData.push(resp);
@@ -1217,17 +866,18 @@ export const recorduserclick = async (
     } else {
       setToStore([resp], CONFIG.RECORDING_SEQUENCE, false);
     }
-  } else { 
-      UDAErrorLogger.error("Unable save record click " + node.outerHTML );
+  } else {
+    UDAErrorLogger.error("Unable save record click " + node.outerHTML);
   }
 
   if (
-    parentAnchorElement && node.getAttribute("href")
+      parentAnchorElement && node.getAttribute("href")
   ) {
     //return;
     try {
       window.location.href = parentAnchorElement?.getAttribute("href") || "";
-    }catch(e){}
+    } catch (e) {
+    }
   }
 };
 
@@ -1235,16 +885,16 @@ export const recorduserclick = async (
  * return parent element
  * @param el target element
  * @param tagName tag name to be matched
- * @returns 
+ * @returns
  */
-export const parentUpTo=(el:any, tagName:string)=> {
+export const parentUpTo = (el: any, tagName: string) => {
   tagName = tagName.toLowerCase();
-  
+
   if (el.tagName && el.tagName.toLowerCase() == tagName) return el;
-  
+
   let depth = 0;
-  
-  while (el && el.parentNode && depth<=6) {
+
+  while (el && el.parentNode && depth <= 6) {
     el = el.parentNode;
     if (el.tagName && el.tagName.toLowerCase() == tagName) {
       return el;
@@ -1263,9 +913,9 @@ export const parentUpTo=(el:any, tagName:string)=> {
  * @param node HTMLElement
  * @returns promise
  */
-export const postClickData = async (node: HTMLElement, text:string) => {
+export const postClickData = async (node: HTMLElement, text: string) => {
   // console.log(getclickedinputlabels(node));
-  let objectData:any = domJSON.toJSON(node);
+  let objectData: any = domJSON.toJSON(node);
   objectData.node.outerHTML = node.outerHTML;
   objectData.offset = getAbsoluteOffsets(node);
   console.log(objectData);
@@ -1323,7 +973,7 @@ export const putUserClickData = async (request: any) => {
  */
 export const getCurrentPlayItem = () => {
   const elementsFromStore = getFromStore("selectedRecordedItem", false);
-  const retObj: any = { index: 0, node: null };
+  const retObj: any = {index: 0, node: null};
   for (let i = 0; i < elementsFromStore?.userclicknodesSet?.length; i++) {
     if (elementsFromStore?.userclicknodesSet[i].status != "completed") {
       retObj.index = i;
@@ -1336,31 +986,31 @@ export const getCurrentPlayItem = () => {
 
 
 // getting the text for the clicknodes.
-export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, iterate = true, getchildlabels = true, fromclick = false, iteratelimit = 3, ignorenode: any = [])=>{
+export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, iterate = true, getchildlabels = true, fromclick = false, iteratelimit = 3, ignorenode: any = []) => {
 
-      if (!node) return inputlabels;
+  if (!node) return inputlabels;
 
-  try { 
+  try {
     if (Array.isArray(ignorenode)) {
       ignorenode = node;
     }
 
     if (
-      (node.nodeName.toLowerCase() === "select" ||
-        node.nodeName.toLowerCase() === "checkbox") &&
-      iterate &&
-      inputlabels.length === 0
+        (node.nodeName.toLowerCase() === "select" ||
+            node.nodeName.toLowerCase() === "checkbox") &&
+        iterate &&
+        inputlabels.length === 0
     ) {
       iterationno++;
       inputlabels = getNodeLabels(
-        node?.parentNode,
-        inputlabels,
-        iterationno,
-        iterate,
-        true,
-        fromclick,
-        iteratelimit,
-        ignorenode
+          node?.parentNode,
+          inputlabels,
+          iterationno,
+          iterate,
+          true,
+          fromclick,
+          iteratelimit,
+          ignorenode
       );
       if (fromclick) {
         //todo need to rework
@@ -1368,13 +1018,13 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
     }
 
     if (
-      node.nodeName.toLowerCase() === "input" ||
-      node.nodeName.toLowerCase() === "textarea" ||
-      node.nodeName.toLowerCase() === "img"
+        node.nodeName.toLowerCase() === "input" ||
+        node.nodeName.toLowerCase() === "textarea" ||
+        node.nodeName.toLowerCase() === "img"
     ) {
       if (
-        node.getAttribute("placeholder") &&
-        node.getAttribute("placeholder") !== ""
+          node.getAttribute("placeholder") &&
+          node.getAttribute("placeholder") !== ""
       ) {
         inputlabels.push({
           text: node.getAttribute("placeholder").toString(),
@@ -1382,9 +1032,9 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
         });
       }
       if (
-        node.getAttribute("type") &&
-        (node.getAttribute("type").toLowerCase() === "submit" ||
-          node.getAttribute("type").toLowerCase() === "file")
+          node.getAttribute("type") &&
+          (node.getAttribute("type").toLowerCase() === "submit" ||
+              node.getAttribute("type").toLowerCase() === "file")
       ) {
         if (node.getAttribute("value")) {
           inputlabels.push({
@@ -1406,21 +1056,21 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
       var childnodes = node.childNodes;
       childnodes?.forEach(function (childnode: any, key: any) {
         if (
-          childnode.nodeName.toLowerCase() !== "script" &&
-          childnode.nodeName.toLowerCase() !== "select" &&
-          childnode.nodeName.toLowerCase() !== "#comment"
+            childnode.nodeName.toLowerCase() !== "script" &&
+            childnode.nodeName.toLowerCase() !== "select" &&
+            childnode.nodeName.toLowerCase() !== "#comment"
         ) {
           var textcontent = childnode.textContent
-            .replace(/[\n\r]+|[\s]{2,}/g, " ")
-            .trim();
-          
+              .replace(/[\n\r]+|[\s]{2,}/g, " ")
+              .trim();
+
           if (
-            textcontent !== "" &&
-            typeof ignorenode?.isSameNode === "function" &&
-            ignorenode?.isSameNode(childnode) === false
+              textcontent !== "" &&
+              typeof ignorenode?.isSameNode === "function" &&
+              ignorenode?.isSameNode(childnode) === false
           ) {
             // if (textcontent !== "") {
-            inputlabels.push({ text: textcontent, match: false });
+            inputlabels.push({text: textcontent, match: false});
           }
         }
       });
@@ -1442,21 +1092,21 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
 
     //todo fix for image tags
     if (
-      iterate &&
-      node.nodeName.toLowerCase() !== "img" &&
-      inputlabels.length === 0 &&
-      iterationno <= iteratelimit
+        iterate &&
+        node.nodeName.toLowerCase() !== "img" &&
+        inputlabels.length === 0 &&
+        iterationno <= iteratelimit
     ) {
       iterationno++;
       inputlabels = getNodeLabels(
-        node.parentNode,
-        [],
-        iterationno,
-        iterate,
-        getchildlabels,
-        fromclick,
-        iteratelimit,
-        null
+          node.parentNode,
+          [],
+          iterationno,
+          iterate,
+          getchildlabels,
+          fromclick,
+          iteratelimit,
+          null
       );
     }
 
@@ -1466,10 +1116,10 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
         match: false,
       });
     } else if (
-      inputlabels.length === 0 &&
-      node.hasAttribute("class") &&
-      node.className &&
-      node.className !== ""
+        inputlabels.length === 0 &&
+        node.hasAttribute("class") &&
+        node.className &&
+        node.className !== ""
     ) {
       var classname = node.className.toString();
       inputlabels.push({
@@ -1477,23 +1127,23 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
         match: false,
       });
     } else if (inputlabels.length === 0) {
-      inputlabels.push({ text: node.nodeName.toLowerCase(), match: false });
+      inputlabels.push({text: node.nodeName.toLowerCase(), match: false});
     }
-  } catch (e) { 
+  } catch (e) {
     // console.log(e);
   }
-    return inputlabels;
-      
+  return inputlabels;
+
 }
 
-export const getDirectInnerText=(element:any)=> {
+export const getDirectInnerText = (element: any) => {
   const x = [];
   let child = element.firstChild;
   while (child) {
     if (child.nodeType == 3) {
       x.push(child.nodeValue);
     } else if (child.nodeType == 1) {
-      let ii:any = getDirectInnerText(child);
+      let ii: any = getDirectInnerText(child);
       if (ii.length > 0) x.push(ii);
     }
     child = child.nextSibling;
@@ -1504,19 +1154,20 @@ export const getDirectInnerText=(element:any)=> {
 
 /**
  * To get selected text from list options
- * @param node 
- * @returns 
+ * @param node
+ * @returns
  */
 export const getSelectedTextFromSelectBox = (node: any) => {
   try {
     return node?.options?.[node?.selectedIndex].text;
-  } catch (e) { }
+  } catch (e) {
+  }
 }
 
 export const getLabelsForInputElement = (element: any) => {
   let labels: any = [],
-    id = element.id, name = element.name,
-    elements: any = [];
+      id = element.id, name = element.name,
+      elements: any = [];
 
   if (id) elements = document.querySelector("label[for='" + id + "']");
   if (name && !element) elements = document.querySelector("label[for='" + name + "']");
@@ -1535,39 +1186,51 @@ export const getLabelsForInputElement = (element: any) => {
 };
 
 //getting input label for the clicked node
-export const getclickedinputlabels=(node:HTMLElement, fromdocument=false, selectchange=false)=>{
-			if (!node) {
-				return null;
-			}
-			let inputlabels:any="";
-      let nodename = node.nodeName.toLowerCase();
-  
-      try {
-        inputlabels = getLabelsForInputElement(node);
-        console.log("labesl", inputlabels)
-        if (inputlabels) return inputlabels;
-      }catch(e){}
-      // if (node?.previousElementSibling?.tagName?.toLocaleLowerCase() == 'label') {
-        
-      //   return node?.previousSibling?.textContent;;
-      // }
-			switch (nodename) {
-				case "select":
-					if(selectchange) {
-						inputlabels = getSelectedTextFromSelectBox(node);
-					} else {
-						var textlabels = getNodeLabels(node, [], 1, true, false, true);
-						if (textlabels.length > 0) {
-							var labels = [];
-							for (var j = 0; j < textlabels.length; j++) {
-								labels.push(textlabels[j].text);
-							}
-							inputlabels = labels.toString();
-						}
-					}
-					break;
-        case "input":
-          if (!node.hasAttribute("type")) {
+export const getclickedinputlabels = (node: HTMLElement, fromdocument = false, selectchange = false) => {
+  if (!node) {
+    return null;
+  }
+  let inputlabels: any = "";
+  let nodename = node.nodeName.toLowerCase();
+
+  try {
+    inputlabels = getLabelsForInputElement(node);
+    console.log("labesl", inputlabels)
+    if (inputlabels) return inputlabels;
+  } catch (e) {
+  }
+  // if (node?.previousElementSibling?.tagName?.toLocaleLowerCase() == 'label') {
+
+  //   return node?.previousSibling?.textContent;;
+  // }
+  switch (nodename) {
+    case "select":
+      if (selectchange) {
+        inputlabels = getSelectedTextFromSelectBox(node);
+      } else {
+        var textlabels = getNodeLabels(node, [], 1, true, false, true);
+        if (textlabels.length > 0) {
+          var labels = [];
+          for (var j = 0; j < textlabels.length; j++) {
+            labels.push(textlabels[j].text);
+          }
+          inputlabels = labels.toString();
+        }
+      }
+      break;
+    case "input":
+      if (!node.hasAttribute("type")) {
+        var textlabels = getNodeLabels(node, [], 1, true, true, true);
+        if (textlabels.length > 0) {
+          var labels = [];
+          for (var j = 0; j < textlabels.length; j++) {
+            labels.push(textlabels[j].text);
+          }
+          inputlabels = labels.toString();
+        }
+      } else {
+        switch (node?.getAttribute("type")?.toLowerCase()) {
+          default:
             var textlabels = getNodeLabels(node, [], 1, true, true, true);
             if (textlabels.length > 0) {
               var labels = [];
@@ -1576,65 +1239,54 @@ export const getclickedinputlabels=(node:HTMLElement, fromdocument=false, select
               }
               inputlabels = labels.toString();
             }
-          } else {
-            switch (node?.getAttribute("type")?.toLowerCase()) {
-              default:
-                var textlabels = getNodeLabels(node, [], 1, true, true, true);
-                if (textlabels.length > 0) {
-                  var labels = [];
-                  for (var j = 0; j < textlabels.length; j++) {
-                    labels.push(textlabels[j].text);
-                  }
-                  inputlabels = labels.toString();
-                }
-            }
-            break;
-          }
+        }
         break;
-				case "textarea":
-					var textlabels = getNodeLabels(node, [], 1, true, true, true);
-					if (textlabels.length > 0) {
-						var labels = [];
-						for (var j = 0; j < textlabels.length; j++) {
-							labels.push(textlabels[j].text);
-						}
-						inputlabels = labels.toString();
-					}
-					break;
-				case "img":
-					var textlabels = getNodeLabels(node, [], 1, true, false, true);
-					if (textlabels.length > 0) {
-						var labels = [];
-						for (var j = 0; j < textlabels.length; j++) {
-							labels.push(textlabels[j].text);
-						}
-						inputlabels = labels.toString();
-					}
-					break;
-        default:
-          if (!node?.children?.length && node?.innerText?.trim()?.length>0) {
-            return node?.innerText;
-          }
-					var textlabels = getNodeLabels(node, [], 1, false, true, true);
-					if (textlabels.length > 0) {
-						var labels = [];
-						for (var j = 0; j < textlabels.length; j++) {
-							labels.push(textlabels[j].text);
-						}
-						inputlabels = labels.toString();
-					}
-			}
-			return inputlabels;
+      }
+      break;
+    case "textarea":
+      var textlabels = getNodeLabels(node, [], 1, true, true, true);
+      if (textlabels.length > 0) {
+        var labels = [];
+        for (var j = 0; j < textlabels.length; j++) {
+          labels.push(textlabels[j].text);
+        }
+        inputlabels = labels.toString();
+      }
+      break;
+    case "img":
+      var textlabels = getNodeLabels(node, [], 1, true, false, true);
+      if (textlabels.length > 0) {
+        var labels = [];
+        for (var j = 0; j < textlabels.length; j++) {
+          labels.push(textlabels[j].text);
+        }
+        inputlabels = labels.toString();
+      }
+      break;
+    default:
+      if (!node?.children?.length && node?.innerText?.trim()?.length > 0) {
+        return node?.innerText;
+      }
+      var textlabels = getNodeLabels(node, [], 1, false, true, true);
+      if (textlabels.length > 0) {
+        var labels = [];
+        for (var j = 0; j < textlabels.length; j++) {
+          labels.push(textlabels[j].text);
+        }
+        inputlabels = labels.toString();
+      }
+  }
+  return inputlabels;
 }
 
 
 /**
  * To get all the children of a given parent
- * @param htmlElement 
+ * @param htmlElement
  * @returns HTMLElements Collection
  */
 export const getAllChildren = (htmlElement: any) => {
-   let allChildElements = [];
+  let allChildElements = [];
   try {
     if (htmlElement?.children?.length === 0) return [htmlElement];
 
@@ -1643,37 +1295,38 @@ export const getAllChildren = (htmlElement: any) => {
       if (children) allChildElements.push(...children);
     }
     allChildElements.push(htmlElement);
-  }catch(e){}
+  } catch (e) {
+  }
   return allChildElements;
 };
 
 
 /**
  * To recorded meta data
- * @param obj 
- * @returns 
+ * @param obj
+ * @returns
  */
 export const getObjData = (obj: string) => {
-    try {
-      const _objData = JSON.parse(obj);
-      if (_objData && _objData.meta === undefined) _objData.meta = {};
-      return _objData;
-    } catch (e) {
-      console.log(e);
-      return {};
-    }
+  try {
+    const _objData = JSON.parse(obj);
+    if (_objData && _objData.meta === undefined) _objData.meta = {};
+    return _objData;
+  } catch (e) {
+    console.log(e);
+    return {};
+  }
 };
-  
+
 
 /**
  * To check if a given element is already captured / recorded
  * @param comparable HTMLElement
  * @returns boolean
  */
-export const clickableElementExists = (compareNode:HTMLElement) => { 
+export const clickableElementExists = (compareNode: HTMLElement) => {
   let existFlag = false;
   if (!window.udanSelectedNodes) window.udanSelectedNodes = [];
-  window?.udanSelectedNodes?.forEach((element:any) => {
+  window?.udanSelectedNodes?.forEach((element: any) => {
     if (element.isSameNode(compareNode)) existFlag = true;
   });
   return existFlag;
@@ -1681,7 +1334,7 @@ export const clickableElementExists = (compareNode:HTMLElement) => {
 
 /**
  * To findout out a given element is clickable or not!
- * @param HTMLElement 
+ * @param HTMLElement
  * @returns boolean
  */
 export const isClickable = (element: HTMLElement) => {
@@ -1699,9 +1352,9 @@ export const isClickable = (element: HTMLElement) => {
 
 /**
  * To find an dom object has a given class
- * @param element 
- * @param classList 
- * @returns 
+ * @param element
+ * @param classList
+ * @returns
  */
 export const hasClass = (element: HTMLElement, classList: string[]) => {
   let existsFlag = false;
@@ -1711,83 +1364,85 @@ export const hasClass = (element: HTMLElement, classList: string[]) => {
         existsFlag = true;
         return existsFlag;
       }
-    }catch(e){return false}
+    } catch (e) {
+      return false
+    }
   });
   return existsFlag;
 }
 
 /**
  * To compare two nodes equality
- * @param comparenode 
- * @param originalnode 
- * @param isPersonalNode 
- * @param match 
- * @returns 
+ * @param comparenode
+ * @param originalnode
+ * @param isPersonalNode
+ * @param match
+ * @returns
  */
 export const compareNodes = (
-  comparenode: any,
-  originalnode: any,
-  isPersonalNode = false,
-  match:any = {
-    count: 0,
-    matched: 0,
-    unmatched: [],
-    innerTextFlag: false,
-    innerChildNodes: 0,
-  }
+    comparenode: any,
+    originalnode: any,
+    isPersonalNode = false,
+    match: any = {
+      count: 0,
+      matched: 0,
+      unmatched: [],
+      innerTextFlag: false,
+      innerChildNodes: 0,
+    }
 ) => {
   // sum the childnodes
   if (comparenode.hasOwnProperty("childNodes")) {
     match.innerChildNodes =
-      match.innerChildNodes + comparenode.childNodes.length;
+        match.innerChildNodes + comparenode.childNodes.length;
   }
   for (let key in originalnode) {
     if (CONFIG.ignoreattributes.indexOf(key) !== -1) {
       continue;
     } else if (
-      key.indexOf("_ngcontent") !== -1 ||
-      key.indexOf("jQuery") !== -1 ||
-      key.indexOf("__zone_symbol__") !== -1
+        key.indexOf("_ngcontent") !== -1 ||
+        key.indexOf("jQuery") !== -1 ||
+        key.indexOf("__zone_symbol__") !== -1
     ) {
       continue;
     } else {
       match.count++;
     }
     if (
-      comparenode.hasOwnProperty(key) &&
-      typeof originalnode[key] === "object" &&
-      typeof comparenode[key] === "object"
+        comparenode.hasOwnProperty(key) &&
+        typeof originalnode[key] === "object" &&
+        typeof comparenode[key] === "object"
     ) {
       match.matched++;
       match = compareNodes(
-        comparenode[key],
-        originalnode[key],
-        isPersonalNode,
-        match
+          comparenode[key],
+          originalnode[key],
+          isPersonalNode,
+          match
       );
     } else if (
-      comparenode.hasOwnProperty(key) &&
-      Array.isArray(originalnode[key]) &&
-      originalnode[key].length > 0 &&
-      Array.isArray(comparenode[key]) &&
-      comparenode[key].length > 0
+        comparenode.hasOwnProperty(key) &&
+        Array.isArray(originalnode[key]) &&
+        originalnode[key].length > 0 &&
+        Array.isArray(comparenode[key]) &&
+        comparenode[key].length > 0
     ) {
       match.matched++;
       if (comparenode[key].length === originalnode[key].length) {
         match.matched++;
         for (var i = 0; i < originalnode[key].length; i++) {
           match = compareNodes(
-            comparenode[key][i],
-            originalnode[key][i],
-            isPersonalNode,
-            match
+              comparenode[key][i],
+              originalnode[key][i],
+              isPersonalNode,
+              match
           );
         }
       }
     } else if (
-      (key === "class" || key === "className") &&
-      originalnode.hasOwnProperty(key) &&
-      comparenode.hasOwnProperty(key)
+        (key === "class" || key === "className") &&
+        originalnode.hasOwnProperty(key) &&
+        comparenode.hasOwnProperty(key)
     ) {
       // fix for calendar issue
       comparenode[key] = comparenode[key].replace(" ng-star-inserted", "");
@@ -1808,10 +1463,10 @@ export const compareNodes = (
         }
       }
     } else if (
-      key === "innerText" &&
-      originalnode.hasOwnProperty(key) &&
-      comparenode.hasOwnProperty(key) &&
-      comparenode[key].trim() === originalnode[key].trim()
+        key === "innerText" &&
+        originalnode.hasOwnProperty(key) &&
+        comparenode.hasOwnProperty(key) &&
+        comparenode[key].trim() === originalnode[key].trim()
     ) {
       // matching inner text should be weighted more. We will add an arbitrarily large number - innerTextWeight.
       // since this will match for every child node, we need to accommodate this logic whenever 'compareNodes' is called
@@ -1821,21 +1476,21 @@ export const compareNodes = (
       match.matched = match.matched + CONFIG.innerTextWeight;
       // match.matched++;
     } else if (
-      comparenode.hasOwnProperty(key) &&
-      comparenode[key] === originalnode[key]
+        comparenode.hasOwnProperty(key) &&
+        comparenode[key] === originalnode[key]
     ) {
       match.matched++;
     } else if (
-      comparenode.hasOwnProperty(key) &&
-      comparenode[key] !== originalnode[key] &&
-      key === "href" &&
-      originalnode[key].indexOf(comparenode[key]) !== -1
+        comparenode.hasOwnProperty(key) &&
+        comparenode[key] !== originalnode[key] &&
+        key === "href" &&
+        originalnode[key].indexOf(comparenode[key]) !== -1
     ) {
       match.matched++;
     } else if (
-      comparenode.hasOwnProperty(key) &&
-      (key === "id" || key === "name") &&
-      comparenode[key] !== originalnode[key]
+        comparenode.hasOwnProperty(key) &&
+        (key === "id" || key === "name") &&
+        comparenode[key] !== originalnode[key]
     ) {
       let weight = jaroWinkler(originalnode[key], comparenode[key]);
       if (weight > 0.9) {
@@ -1844,8 +1499,8 @@ export const compareNodes = (
     }
     // matching personal node key value pairs for personal tag true
     else if (
-      isPersonalNode &&
-      CONFIG.personalNodeIgnoreAttributes.indexOf(key) !== -1
+        isPersonalNode &&
+        CONFIG.personalNodeIgnoreAttributes.indexOf(key) !== -1
     ) {
       // make inner text flag to true if personal tag is true
       if (key === "innerText") {
@@ -1864,10 +1519,10 @@ export const compareNodes = (
   }
   return match;
 };
-    
+
 /**
  * sleep javascript execution time
- * @param milliseconds 
+ * @param milliseconds
  */
 export const sleep = (ms) => {
   const end = Date.now() + ms;
@@ -1875,7 +1530,7 @@ export const sleep = (ms) => {
 };
 
 /**
- * to get all clickable elements 
+ * to get all clickable elements
  * @returns HTMLElements collection
  */
 export const getAllClickableElements = () => {
@@ -1883,42 +1538,42 @@ export const getAllClickableElements = () => {
   var bodyRect = document.body.getBoundingClientRect();
 
   var items = Array.prototype.slice
-    .call(document.querySelectorAll("*"))
-    .map(function (element) {
-      var rect = element?.getBoundingClientRect();
-      return {
-        element: element,
-        include:
-          element.tagName.toLowerCase() === "button" ||
-          element.tagName.toLowerCase() === "a" ||
-          element.tagName.toLowerCase() === "input" ||
-          element.tagName.toLowerCase() === "select" ||
-          element.tagName.toLowerCase() === "img" ||
-          element.onclick != null ||
-          element.addEventListener != null ||
-          window.getComputedStyle(element).cursor == "pointer",
-        rect: {
-          left: Math.max(rect.left - bodyRect.x, 0),
-          top: Math.max(rect.top - bodyRect.y, 0),
-          right: Math.min(rect.right - bodyRect.x, document.body.clientWidth),
-          bottom: Math.min(
-            rect.bottom - bodyRect.y,
-            document.body.clientHeight
-          ),
-        },
-        text: element.textContent.trim().replace(/\s{2,}/g, " "),
-      };
-    })
-    .filter(
-      (item) =>
-        item.include &&
-        (item.rect.right - item.rect.left) * (item.rect.bottom - item.rect.top) >=
-        20
-    );
+      .call(document.querySelectorAll("*"))
+      .map(function (element) {
+        var rect = element?.getBoundingClientRect();
+        return {
+          element: element,
+          include:
+              element.tagName.toLowerCase() === "button" ||
+              element.tagName.toLowerCase() === "a" ||
+              element.tagName.toLowerCase() === "input" ||
+              element.tagName.toLowerCase() === "select" ||
+              element.tagName.toLowerCase() === "img" ||
+              element.onclick != null ||
+              element.addEventListener != null ||
+              window.getComputedStyle(element).cursor == "pointer",
+          rect: {
+            left: Math.max(rect.left - bodyRect.x, 0),
+            top: Math.max(rect.top - bodyRect.y, 0),
+            right: Math.min(rect.right - bodyRect.x, document.body.clientWidth),
+            bottom: Math.min(
+                rect.bottom - bodyRect.y,
+                document.body.clientHeight
+            ),
+          },
+          text: element.textContent.trim().replace(/\s{2,}/g, " "),
+        };
+      })
+      .filter(
+          (item) =>
+              item.include &&
+              (item.rect.right - item.rect.left) * (item.rect.bottom - item.rect.top) >=
+              20
+      );
 
   // Only keep inner clickable items
-  const clickableItems =  items.filter(
-    (x) => !items.some((y) => x.element.contains(y.element) && !(x == y))
+  const clickableItems = items.filter(
+      (x) => !items.some((y) => x.element.contains(y.element) && !(x == y))
   );
 
   //console.log(clickableItems);
@@ -1927,8 +1582,8 @@ export const getAllClickableElements = () => {
 }
 
 
-export const getAbsoluteOffsets=(element:HTMLElement)=> {
-  let cords = { x: 0, y: 0 };
+export const getAbsoluteOffsets = (element: HTMLElement) => {
+  let cords = {x: 0, y: 0};
   try {
     let currentElement: any = element;
 
@@ -1939,7 +1594,9 @@ export const getAbsoluteOffsets=(element:HTMLElement)=> {
       cords.y -= currentElement.scrollTop;
       currentElement = currentElement.offsetParent;
     }
-  }catch(e){console.log(e)}
+  } catch (e) {
+    console.log(e)
+  }
 
   return cords;
 }
@@ -2014,18 +1671,18 @@ export const getAbsoluteOffsets=(element:HTMLElement)=> {
   function decide() {
     if (support.DOMNodeInserted) {
       window.addEventListener(
-        "DOMContentLoaded",
-        function () {
-          if (support.DOMSubtreeModified) {
-            // for FF 3+, Chrome
-            el.addEventListener("DOMSubtreeModified", callback, false);
-          } else {
-            // for FF 2, Safari, Opera 9.6+
-            el.addEventListener("DOMNodeInserted", callback, false);
-            el.addEventListener("DOMNodeRemoved", callback, false);
-          }
-        },
-        false
+          "DOMContentLoaded",
+          function () {
+            if (support.DOMSubtreeModified) {
+              // for FF 3+, Chrome
+              el.addEventListener("DOMSubtreeModified", callback, false);
+            } else {
+              // for FF 2, Safari, Opera 9.6+
+              el.addEventListener("DOMNodeInserted", callback, false);
+              el.addEventListener("DOMNodeRemoved", callback, false);
+            }
+          },
+          false
       );
     } else {
       // fallback
@@ -2036,13 +1693,13 @@ export const getAbsoluteOffsets=(element:HTMLElement)=> {
   // checks a particular event
   function test(event: any) {
     el.addEventListener(
-      event,
-      function fn() {
-        support[event] = true;
-        el.removeEventListener(event, fn, false);
-        if (--remain === 0) decide();
-      },
-      false
+        event,
+        function fn() {
+          support[event] = true;
+          el.removeEventListener(event, fn, false);
+          if (--remain === 0) decide();
+        },
+        false
     );
   }
 
