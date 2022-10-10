@@ -2070,6 +2070,5 @@ export const getAbsoluteOffsets=(element:HTMLElement)=> {
 
 window.onDomChange(function () {
   addBodyEvents(document.body);
-  //console.log("dom updated");
 });
 
