@@ -55,7 +55,7 @@ export const SearchResults = (props: MProps) => {
   const renderData = () => {
     if (!props?.visibility) return;
     return !props?.visibility ? null : !props?.data?.length ? (
-      <Empty />
+      <Empty description={"No results found"} />
     ) : (
       <List
         itemLayout="horizontal"
@@ -80,7 +80,7 @@ export const SearchResults = (props: MProps) => {
     <>
       {!searchResults?.length && (
         <div className="uda-no-results">
-          <p>No results found</p>
+          <Empty description={"No results found"} />
         </div>
       )}
       {searchResults?.length > 0 && (

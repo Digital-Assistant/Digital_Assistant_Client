@@ -347,7 +347,6 @@ export const RecordSequenceDetails = (props: MProps) => {
             onClick={() => play()}
           />
         </div>
-
         <h5>{getName()}</h5> <hr />
         <ul className="uda-suggestion-list" id="uda-sequence-steps">
           {/* {renderData()} */}
@@ -371,14 +370,14 @@ export const RecordSequenceDetails = (props: MProps) => {
         <Row>
           <Col span={12} style={{ textAlign: "center" }}>
             <Popconfirm title="Are you sure?" onConfirm={removeRecording}>
-              <Button size="small">
-                <DeleteOutlined width={33} />
+              <Button>
+                <DeleteOutlined width={33} className="secondary" />
               </Button>
             </Popconfirm>
           </Col>
           <Col span={12} style={{ textAlign: "center" }}>
-            <Button size="small" onClick={() => manageVote()}>
-              <LikeOutlined width={33} />
+            <Button onClick={() => manageVote()}>
+              <LikeOutlined width={33} className="secondary" />
             </Button>
           </Col>
         </Row>

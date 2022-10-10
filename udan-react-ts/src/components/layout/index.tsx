@@ -196,10 +196,10 @@ export const Footer = (props: MProps) => {
       <div className="uda-footer-bar">
         <div className="uda-container">
           <button
-            className="uda-new-seq uda-exclude"
+            className="uda-new-seq uda-exclude "
             onClick={() => setShowRecord(true)}
           >
-            <PlusOutlined color="#ff5722"/>
+            <PlusOutlined className="secondary" />
           </button>
         </div>
         <div

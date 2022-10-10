@@ -41,6 +41,7 @@ global.udaGlobalConfig = CONFIG;
 declare global {
   interface Window {
     isRecording: boolean;
+    domJSON: any;
   }
 }
 

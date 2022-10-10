@@ -583,6 +583,7 @@ body {
                                 position: relative;
                                 font-size: 14px;
                                 cursor: pointer;
+                                padding-left: 20px;
                                 i{
                                     padding-left: 20px;
                                 }
@@ -594,7 +595,7 @@ body {
                                     border-radius: 50%;
                                     position: absolute;
                                     left: -10px;
-                                    top: 10px;
+                                    top: 18px;
                                 }
 
                                 &.completed {
