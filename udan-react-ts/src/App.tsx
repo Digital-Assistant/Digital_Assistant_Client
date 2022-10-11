@@ -7,6 +7,8 @@
 // import logo from "./logo.svg";
 // import "./config/test";
 import React, { useState, useEffect, useCallback } from "react";
+import { Spin } from "antd";
+import "../public/css/antd.css";
 import { fetchSearchResults } from "./services/searchService";
 import { login, getUserSession } from "./services/authService";
 import _ from "lodash";
@@ -39,6 +41,7 @@ global.udaGlobalConfig = CONFIG;
 declare global {
   interface Window {
     isRecording: boolean;
+    domJSON: any;
   }
 }
 
@@ -115,8 +118,15 @@ function App() {
   }, [isRecording]);
 
   React.useEffect(() => {
-    if (refetchSearch == "on") getSearchResults("");
+    if (refetchSearch == "on") {
+      setSearchKeyword("");
+      getSearchResults("");
+    }
   }, [refetchSearch]);
+
+  React.useEffect(() => {
+    console.log(searchResults);
+  }, [searchResults]);
 
   /**
    * Sync data with storage
@@ -166,7 +176,7 @@ function App() {
    */
   const getSearchResults = async (keyword: string, _page = 1) => {
     // if (!showSearch) return;
-    console.log(page);
+    // console.log(page);
     setShowLoader(true);
     setSearchKeyword(keyword);
     const _searchResults = await fetchSearchResults({
@@ -224,7 +234,8 @@ function App() {
    * search handler callback function
    * @param data search handler callback function
    */
-  const searchHandler = (data: any) => {
+  const searchHandler = (data: any, keyword) => {
+    setSearchKeyword(keyword);
     setSearchResults([...data]);
   };
 
@@ -314,20 +325,10 @@ function App() {
                   toggleHandler={toggleHandler}
                   i18={t}
                 />
-                {/* {global.udaGlobalConfig.permissions && "hurreeeyyyy"} */}
                 <Body
                   content={
                     <>
-                      {showLoader && (
-                        <Circles
-                          height="60"
-                          width="60"
-                          color="#ff5722"
-                          ariaLabel="circles-loading"
-                          wrapperClass="loader"
-                          visible={true}
-                        />
-                      )}
+                      {showLoader && <Spin tip="Loading..." />}
 
                       <UdanMain.RecordButton
                         recordHandler={showRecordHandler}
@@ -349,6 +350,7 @@ function App() {
                           showDetails={showRecordingDetails}
                           visibility={toggleContainer("search-results")}
                           addRecordHandler={setShowRecord}
+                          searchKeyword={searchKeyword}
                           // key={searchResults.length + showLoader}
                           searchHandler={getSearchResults}
                           page={page}

@@ -6,14 +6,13 @@
  */
 
 import React, { useEffect } from "react";
-import "../../App.scss";
 import { fetchSearchResults } from "../../services/searchService";
-// import logo from "../../logo.svg";
 import {
-  BsChevronDoubleRight,
-  BsPlusLg,
-  BsChevronDoubleLeft,
-} from "react-icons/bs";
+  DoubleLeftOutlined ,
+  DoubleRightOutlined,
+  PlusOutlined
+} from "@ant-design/icons";
+// import logo from "../../logo.svg";
 export interface MProps {
   searchHandler?: Function;
   toggleFlag: boolean;
@@ -34,7 +33,7 @@ export const Toggler = (props: MProps) => {
     >
       <img className="uda_exclude" src={getLogo()} alt={"udan logo"} />
       <span className="arrow">
-        <BsChevronDoubleLeft size={16} />
+        <DoubleLeftOutlined size={16} />
       </span>
     </div>
   );
@@ -97,7 +96,7 @@ export const Header = (props: MProps) => {
     });
     setSearchResults([..._searchResults]);
     if (props.searchHandler) {
-      props.searchHandler(_searchResults);
+      props.searchHandler(_searchResults, searchKeyword);
     }
   };
 
@@ -110,7 +109,7 @@ export const Header = (props: MProps) => {
           onClick={() => togglePanel()}
         >
           <span className="arrow">
-            <BsChevronDoubleRight size={16} />
+            <DoubleRightOutlined size={16} />
           </span>
         </div>
         <div className="uda-icon-txt">
@@ -197,40 +196,11 @@ export const Footer = (props: MProps) => {
       <div className="uda-footer-bar">
         <div className="uda-container">
           <button
-            className="uda-new-seq uda-exclude"
+            className="uda-new-seq uda-exclude "
             onClick={() => setShowRecord(true)}
           >
-            <BsPlusLg color="#ff5722" />
+            <PlusOutlined className="secondary" />
           </button>
-          {/* <div
-            className="uda-advanced-btn-content"
-            onClick={() => setShowRecord(true)}
-          >
-            <span
-              id="uda-advance-section"
-              className="uda-advanced-btn-content"
-              data-exclude="true"
-            >
-              New Sequence
-            </span>
-          </div> */}
-          {/* <div className="uda-dropdown" id="uda-advanced-btn">
-            <button className="uda-advanced-btn">
-              <span>Advanced</span>
-            </button>
-            <div
-              className="uda-advanced-btn-content"
-              onClick={() => setShowRecord(true)}
-            >
-              <span
-                id="uda-advance-section"
-                className="uda-advanced-btn-content"
-                data-exclude="true"
-              >
-                New Sequence
-              </span>
-            </div>
-          </div> */}
         </div>
         <div
           className="uda-container"

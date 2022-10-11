@@ -6,14 +6,16 @@
  */
 
 import React, { useEffect } from "react";
-import "../App.scss";
+import { Empty, List } from "antd";
+import { DoubleRightOutlined } from "@ant-design/icons";
 import { getRowObject, setToStore } from "../util";
 import InfiniteScroll from "react-infinite-scroller";
-import { fetchSearchResults } from "../services/searchService";
+// import { fetchSearchResults } from "../services/searchService";
 
 export interface MProps {
   visibility?: boolean;
   data?: any;
+  searchKeyword?: string;
   showDetails?: Function;
   addRecordHandler?: Function;
   searchHandler?: Function;
@@ -30,8 +32,10 @@ export const SearchResults = (props: MProps) => {
   const [searchResults, setSearchResults] = React.useState<any>([]);
 
   React.useEffect(() => {
+    if (props?.searchKeyword) globalSearchResults = [];
     globalSearchResults = [...globalSearchResults, ...props?.data];
     setSearchResults([...globalSearchResults]);
+    console.log(props);
   }, [props?.data]);
 
   const selectItem = (item: any) => {
@@ -43,26 +47,32 @@ export const SearchResults = (props: MProps) => {
   const loadSearchResults = () => {
     if (props?.searchHandler)
       props.searchHandler(
-        "",
+        props?.searchKeyword,
         props?.page ? (props?.page === 1 ? 2 : props.page + 1) : 1
       );
   };
 
   const renderData = () => {
     if (!props?.visibility) return;
-    return searchResults?.map((item: any, index: number) => {
-      const _row = getRowObject(item);
-      return (
-        <div
-          className="uda-card"
-          onClick={() => selectItem(item)}
-          key={`${index}-search-result`}
-        >
-          <h5>{_row.sequenceName}</h5>
-          <i>{_row.path}</i>
-        </div>
-      );
-    });
+    return !props?.visibility ? null : !props?.data?.length ? (
+      <Empty description={"No results found"} />
+    ) : (
+      <List
+        itemLayout="horizontal"
+        dataSource={props?.data}
+        renderItem={(item) => (
+          <List.Item onClick={() => selectItem(item)}>
+            <List.Item.Meta
+              title={getRowObject(item)?.sequenceName}
+              description={getRowObject(item)?.path}
+            />
+            <div className="arrow">
+              <DoubleRightOutlined />
+            </div>
+          </List.Item>
+        )}
+      />
+    );
   };
 
   // return renderData();
@@ -70,14 +80,14 @@ export const SearchResults = (props: MProps) => {
     <>
       {!searchResults?.length && (
         <div className="uda-no-results">
-          <p>No results found</p>
+          <Empty description={"No results found"} />
         </div>
       )}
       {searchResults?.length > 0 && (
         <InfiniteScroll
           pageStart={0}
           loadMore={loadSearchResults}
-          hasMore={searchResults.length < 100}
+          hasMore={searchResults.length > 10 && searchResults.length < 100}
           useWindow={false}
         >
           {renderData()}

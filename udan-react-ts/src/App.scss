@@ -583,6 +583,7 @@ body {
                                 position: relative;
                                 font-size: 14px;
                                 cursor: pointer;
+                                padding-left: 20px;
                                 i{
                                     padding-left: 20px;
                                 }
@@ -594,7 +595,7 @@ body {
                                     border-radius: 50%;
                                     position: absolute;
                                     left: -10px;
-                                    top: 10px;
+                                    top: 18px;
                                 }
 
                                 &.completed {
@@ -1228,6 +1229,9 @@ top:30px;
                                                         
 
 .udan-main-panel{
+    h4{
+        border-bottom:none !important;
+    }
     button{
         cursor: pointer;
     }
@@ -1305,6 +1309,7 @@ top:30px;
         margin-top: -40px;
     }
     .ant-list-item-meta-description{
+        padding: 10px 0;
         color: #666;
         font-size: 12px;
         font-style: italic;

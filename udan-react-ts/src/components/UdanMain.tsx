@@ -5,15 +5,13 @@
  * Associated Route/Usage: *
  */
 
-import React, { useEffect } from "react";
+import React from "react";
 import "../App.scss";
-import { SearchResults } from "./SearchResults";
-import {
-  RecordSequence,
-  RecordButton,
-  RecordSequenceDetails,
-} from "./MiscComponents";
-import { RecordedSeq } from "./RecordedSeq";
+import {SearchResults } from "./SearchResults";
+import { RecordSequenceDetails } from "./RecordSequenceDetails";
+import { RecordSequence } from "./RecordSequence";
+import {RecordButton} from "./RecordButton";
+import { RecordedData } from "./RecordedData";
 
 export interface MProps {
   visibility?: boolean;
@@ -31,7 +29,7 @@ export function UdanMain(props: MProps) {}
 
 UdanMain.SearchResults = SearchResults;
 UdanMain.RecordButton = RecordButton;
-UdanMain.RecordedData = RecordedSeq;
+UdanMain.RecordedData = RecordedData;
 UdanMain.RecordSequence = RecordSequence;
 UdanMain.RecordSequenceDetails = RecordSequenceDetails;
 

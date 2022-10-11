@@ -6,28 +6,21 @@
  */
 
 import React, { useEffect } from "react";
-import "../App.scss";
+import { Row, Col, Button, List, Popconfirm, message } from "antd";
 import {
-  BsXCircle,
-  BsTrashFill,
-  BsFillHeartFill,
-  BsFillRecord2Fill,
-  BsPlayCircleFill,
-  BsArrowLeft,
-  BsMic,
-} from "react-icons/bs";
+  LeftOutlined,
+  DeleteOutlined,
+  LikeOutlined,
+  PlayCircleOutlined
+} from "@ant-design/icons";
 import { createPopperLite as createPopper } from "@popperjs/core";
 import {
   // addToolTip,
   setToStore,
   getToolTipElement,
-  getFromStore,
-  getLookUpSelector,
   getTooltipPositionClass,
   removeToolTip,
   getCurrentPlayItem,
-  getAllChildren,
-  compareNodes,
   getObjData,
   getAbsoluteOffsets,
   sleep,
@@ -36,79 +29,17 @@ import { deleteRecording, vote } from "../services/recordService";
 import { jaroWinkler } from "jaro-winkler-typescript";
 import { CONFIG } from "../config";
 
+
 export interface MProps {
   data?: any;
   config?: any;
   refetchSearch?: Function;
-  recordButtonVisibility?: boolean;
-  recordSequenceVisibility?: boolean;
   recordSequenceDetailsVisibility?: boolean;
   cancelHandler?: Function;
-  recordHandler?: Function;
-  recordSeqHandler?: Function;
   playHandler?: Function;
   isPlaying?: string;
-  togglePanel?: Function;
+ 
 }
-
-/**
- * To render record sequence container
- * @returns HTML Elements
- */
-
-export const RecordSequence = (props: MProps) => {
-  const cancelRecording = () => {
-    if (props.cancelHandler) props.cancelHandler();
-  };
-  return props?.recordSequenceVisibility ? (
-    <div className="uda-card-details">
-      <h5>Recorded Sequence</h5> <hr />
-      <h5>Please navigate in the page to record.</h5> <br />
-      <div className="uda-recording" style={{ textAlign: "center" }}>
-        <button
-          className="uda-record-btn"
-          data-exclude={true}
-          onClick={() => cancelRecording()}
-        >
-          Cancel and Exit
-        </button>
-      </div>
-    </div>
-  ) : null;
-};
-
-/**
- * To render record container
- * @returns HTML Element
- */
-export const RecordButton = (props: MProps) => {
-  const cancel = (flag: boolean) => {
-    if (props.cancelHandler) props.cancelHandler();
-  };
-  const recordSequence = () => {
-    if (props.recordSeqHandler) props.recordSeqHandler();
-  };
-  return props?.recordButtonVisibility ? (
-    <div className="uda-card-details">
-      <span style={{ float: "right" }} onClick={() => cancel(false)}>
-        <BsXCircle size={16} />
-      </span>
-      <h5>Create your own action</h5>
-      <div className="flex-card flex-center">
-        <button
-          style={{ marginTop: 20, flexDirection: "column" }}
-          className="uda-record-round-btn flex-card flex-center round"
-          id="uda-enable-record"
-          onClick={() => recordSequence()}
-        >
-          <BsMic size={24} />
-          <span style={{ fontSize: 10, marginTop: 6 }}>Record</span>
-          {/* <BsFillRecord2Fill size={16} /> <span>Rec</span> */}
-        </button>
-      </div>
-    </div>
-  ) : null;
-};
 
 /**
  * To render record sequence details
@@ -173,6 +104,7 @@ export const RecordSequenceDetails = (props: MProps) => {
             }
           }
         }
+        // console.log(originalElement);
         if (
           originalElement &&
           originalElement?.nodeName?.toLowerCase() === "a"
@@ -180,7 +112,10 @@ export const RecordSequenceDetails = (props: MProps) => {
           updateStatus(playItem.index);
           try {
             window.location.href = originalElement?.getAttribute("href") || "/";
-          } catch (e) {}
+          } catch (e) {
+            window.location.href = originalElement?.href;
+            console.log(e);
+          }
         }
       } else {
         //show tooltip
@@ -288,7 +223,7 @@ export const RecordSequenceDetails = (props: MProps) => {
     } catch (e) {
       return _toolTipFlag;
     }
-    // if (!_toolTipFlag) message.error("Error occurred, try again!");
+    if (!_toolTipFlag) message.error("Error occurred, try again!");
     return _toolTipFlag;
   };
 
@@ -398,35 +333,54 @@ export const RecordSequenceDetails = (props: MProps) => {
         }}
       >
         <div className="uda-card-btns">
-          <div className="uda-loading-bar" id="nist-autoplay">
-            <span onClick={() => play()}>
-              <BsPlayCircleFill />
-            </span>
-          </div>
-        </div>
-        <div
-          className="uda-card-right-dbl-arrow"
-          id="uda-backto-search"
-          onClick={() => backNav()}
-        >
-          <BsArrowLeft color="white" size={24} />
+          <Button
+            type="primary"
+            shape="circle"
+            size="small"
+            style={{ position: "absolute", top: 12, left: 0 }}
+            onClick={() => backNav()}
+          >
+            <LeftOutlined />
+          </Button>
+          <PlayCircleOutlined
+            className="large secondary"
+            onClick={() => play()}
+          />
         </div>
         <h5>{getName()}</h5> <hr />
         <ul className="uda-suggestion-list" id="uda-sequence-steps">
-          {renderData()}
+          {/* {renderData()} */}
+          {props?.data && (
+            <List
+              itemLayout="horizontal"
+              dataSource={selectedRecordingDetails?.userclicknodesSet}
+              renderItem={(item: any, index: number) => (
+                <List.Item
+                  className={item.status}
+                  onClick={() => setToolTip(item, index)}
+                >
+                  <List.Item.Meta title={item?.clickednodename} />
+                </List.Item>
+              )}
+            />
+          )}
         </ul>
       </div>
       <div className="uda-details-footer">
-        <div className="">
-          <button onClick={removeRecording}>
-            <BsTrashFill color="#ff5722" />
-          </button>
-        </div>
-        <div className="">
-          <button onClick={() => manageVote()}>
-            <BsFillHeartFill color="#ff5722" />
-          </button>
-        </div>
+        <Row>
+          <Col span={12} style={{ textAlign: "center" }}>
+            <Popconfirm title="Are you sure?" onConfirm={removeRecording}>
+              <Button>
+                <DeleteOutlined width={33} className="secondary" />
+              </Button>
+            </Popconfirm>
+          </Col>
+          <Col span={12} style={{ textAlign: "center" }}>
+            <Button onClick={() => manageVote()}>
+              <LikeOutlined width={33} className="secondary" />
+            </Button>
+          </Col>
+        </Row>
       </div>
     </>
   ) : null;
