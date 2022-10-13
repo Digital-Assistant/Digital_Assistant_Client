@@ -35,7 +35,6 @@ export const SearchResults = (props: MProps) => {
     if (props?.searchKeyword) globalSearchResults = [];
     globalSearchResults = [...globalSearchResults, ...props?.data];
     setSearchResults([...globalSearchResults]);
-    console.log(props);
   }, [props?.data]);
 
   const selectItem = (item: any) => {

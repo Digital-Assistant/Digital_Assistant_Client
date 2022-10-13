@@ -24,6 +24,7 @@ export const CONFIG = {
   RECORDING_MANUAL_PLAY: "udaManualPlay",
   RECORDING_SWITCH_KEY: "recordingSwitch",
   RECORDING_SEQUENCE: "activeRecordingData",
+  SELECTED_RECORDING: "selectedRecordedItem",
   USER_AUTH_DATA_KEY: "udaUserData",
   USER_SESSION_KEY: "udaSessionKey",
   USER_SESSION_ID: "udaSessionId",
@@ -31,7 +32,7 @@ export const CONFIG = {
   AUTO_PLAY_SLEEP_TIME: 2000,
   ENABLE_PERMISSIONS: false,
   PERMISSIONS: {},
-  JARO_WEIGHT: 0.89,
+  JARO_WEIGHT: 0.95,
   set Environment(value) {
     this.current = value.toString().toUpperCase();
     if (this.current === "PROD") {

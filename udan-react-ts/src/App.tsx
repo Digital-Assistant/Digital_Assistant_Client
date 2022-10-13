@@ -75,6 +75,7 @@ function App() {
   const [showLoader, setShowLoader] = React.useState<boolean>(true);
   const [showSearch, setShowSearch] = React.useState<boolean>(false);
   const [showRecord, setShowRecord] = React.useState<boolean>(false);
+  const [playDelay, setPlayDelay] = React.useState<string>("off");
   const [isPlaying, setIsPlaying] = React.useState<string>(
     getFromStore(CONFIG.RECORDING_IS_PLAYING, true) || "off"
   );
@@ -89,12 +90,17 @@ function App() {
   const [recordSequenceDetailsVisibility, setRecordSequenceDetailsVisibility] =
     React.useState<boolean>(false);
   const [selectedRecordingDetails, setSelectedRecordingDetails] =
-    React.useState<any>(getFromStore("selectedRecordedItem", false) || {});
+    React.useState<any>(getFromStore(CONFIG.SELECTED_RECORDING, false) || {});
 
   React.useEffect(() => {
     authHandler();
     //addBodyEvents(document.body);
-    if (isPlaying == "on" || manualPlay == "on") {
+    if (
+      isPlaying == "on" ||
+      manualPlay == "on" || !_.isEmpty(selectedRecordingDetails)) {
+       setTimeout(() => {
+         setPlayDelay("on");
+       }, 2000);
       togglePanel();
       offSearch();
       setRecordSequenceDetailsVisibility(true);
@@ -104,6 +110,9 @@ function App() {
       setShowSearch(true);
       getSearchResults("");
     }
+    
+   
+
     /*
     //language change test      
     setTimeout(() => {
@@ -123,10 +132,6 @@ function App() {
       getSearchResults("");
     }
   }, [refetchSearch]);
-
-  React.useEffect(() => {
-    console.log(searchResults);
-  }, [searchResults]);
 
   /**
    * Sync data with storage
@@ -159,7 +164,6 @@ function App() {
   const authHandler = async () => {
     setTimeout(() => {
       const authData = getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
-      // console.log(authData);
       if (!authData) return;
       setToStore(authData?.authdata?.id, CONFIG.USER_SESSION_ID, true);
       login(authData)?.then((resp) => {
@@ -176,7 +180,6 @@ function App() {
    */
   const getSearchResults = async (keyword: string, _page = 1) => {
     // if (!showSearch) return;
-    // console.log(page);
     setShowLoader(true);
     setSearchKeyword(keyword);
     const _searchResults = await fetchSearchResults({
@@ -207,6 +210,8 @@ function App() {
     setManualPlay("off");
     setToStore("off", CONFIG.RECORDING_MANUAL_PLAY, true);
     setToStore([], CONFIG.RECORDING_SEQUENCE, false);
+    setToStore({}, CONFIG.SELECTED_RECORDING, false);
+    setSelectedRecordingDetails({});
     setShowSearch(true);
     setRefetchSearch("on");
     if (window.udanSelectedNodes) window.udanSelectedNodes = [];
@@ -374,7 +379,7 @@ function App() {
                         }
                         cancelHandler={cancel}
                         playHandler={playHandler}
-                        isPlaying={isPlaying}
+                        isPlaying={playDelay}
                         // refetchSearch={setRefetchSearch}
                         key={"rSD" + recordSequenceDetailsVisibility}
                       />

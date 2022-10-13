@@ -63,7 +63,7 @@ export const RecordSequenceDetails = (props: MProps) => {
    * Record player(auto play)
    */
   const autoPlay = () => {
-    sleep(CONFIG.AUTO_PLAY_SLEEP_TIME);
+    // sleep(CONFIG.AUTO_PLAY_SLEEP_TIME);
     //get current play item from storage
     const playItem = getCurrentPlayItem();
 
@@ -114,7 +114,7 @@ export const RecordSequenceDetails = (props: MProps) => {
             window.location.href = originalElement?.getAttribute("href") || "/";
           } catch (e) {
             window.location.href = originalElement?.href;
-            console.log(e);
+            // console.log(e);
           }
         }
       } else {
