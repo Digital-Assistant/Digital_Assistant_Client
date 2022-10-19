@@ -46,7 +46,6 @@ export const SearchResults = (props: MProps) => {
   const loadSearchResults = () => {
     if (props?.searchHandler)
       props.searchHandler(
-        props?.searchKeyword,
         props?.page ? (props?.page === 1 ? 2 : props.page + 1) : 1
       );
   };
