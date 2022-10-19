@@ -7,7 +7,11 @@ import { REST } from ".";
  * @returns promise
  */
 
-export const fetchSearchResults = (request?: any) => {
+export const fetchSearchResults = (request?: {
+  keyword?:string,
+  page?:number,
+  domain?:string
+}) => {
   const parameters = {
     url: REST.processArgs(ENDPOINT.SEARCH, request),
     method: "GET",

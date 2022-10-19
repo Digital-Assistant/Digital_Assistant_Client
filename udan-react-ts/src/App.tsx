@@ -4,9 +4,8 @@
  * Objective: To render content script
  */
 ///<reference types="chrome"/>
-// import logo from "./logo.svg";
-// import "./config/test";
-import React, { useState, useEffect, useCallback } from "react";
+
+import React, { useState, useEffect } from "react";
 import { Spin } from "antd";
 import "../public/css/antd.css";
 import { fetchSearchResults } from "./services/searchService";
@@ -14,21 +13,19 @@ import { login, getUserSession } from "./services/authService";
 import _ from "lodash";
 import {
   squeezeBody,
-  getRowObject,
-  addBodyEvents,
   setToStore,
   getFromStore,
-  removeFromStore,
-  generateUUID,
   postRecordSequenceData,
 } from "./util";
 import { CONFIG } from "./config";
 import i18n from "i18next";
-import { useTranslation, initReactI18next } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import "./i18n";
 import UdanMain from "./components/UdanMain";
-import { Header, Body, Footer, Toggler } from "./components/layout";
-import { Circles } from "react-loader-spinner";
+import { Toggler } from "./components/layout/common";
+import  Header  from "./components/layout/Header";
+import Body from "./components/layout/Body";
+import Footer from "./components/layout/Footer";
 import useInterval from "react-useinterval";
 import "./App.scss";
 
@@ -55,7 +52,7 @@ const useMutationObserver = (
     subtree: true,
   }
 ) => {
-  React.useEffect(() => {
+  useEffect(() => {
     if (ref.current) {
       const observer = new MutationObserver(callback);
       observer.observe(ref.current, options);
@@ -66,33 +63,33 @@ const useMutationObserver = (
 
 function App() {
   const { t } = useTranslation();
-  const [isRecording, setIsRecording] = React.useState<boolean>(
+  const [isRecording, setIsRecording] = useState<boolean>(
     (getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true"
       ? true
       : false) || false
   );
-  const [hide, setHide] = React.useState<boolean>(isRecording ? false : true);
-  const [showLoader, setShowLoader] = React.useState<boolean>(true);
-  const [showSearch, setShowSearch] = React.useState<boolean>(false);
-  const [showRecord, setShowRecord] = React.useState<boolean>(false);
-  const [playDelay, setPlayDelay] = React.useState<string>("off");
-  const [isPlaying, setIsPlaying] = React.useState<string>(
+  const [hide, setHide] = useState<boolean>(isRecording ? false : true);
+  const [showLoader, setShowLoader] = useState<boolean>(true);
+  const [showSearch, setShowSearch] = useState<boolean>(false);
+  const [showRecord, setShowRecord] = useState<boolean>(false);
+  const [playDelay, setPlayDelay] = useState<string>("off");
+  const [isPlaying, setIsPlaying] = useState<string>(
     getFromStore(CONFIG.RECORDING_IS_PLAYING, true) || "off"
   );
-  const [manualPlay, setManualPlay] = React.useState<string>(
+  const [manualPlay, setManualPlay] = useState<string>(
     getFromStore(CONFIG.RECORDING_MANUAL_PLAY, true) || "off"
   );
-  const [searchKeyword, setSearchKeyword] = React.useState<string>("");
-  const [searchResults, setSearchResults] = React.useState<any>([]);
-  const [page, setPage] = React.useState<number>(1);
-  const [refetchSearch, setRefetchSearch] = React.useState<string>("");
-  const [recSequenceData, setRecSequenceData] = React.useState<any>([]);
+  const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const [searchResults, setSearchResults] = useState<any>([]);
+  const [page, setPage] = useState<number>(1);
+  const [refetchSearch, setRefetchSearch] = useState<string>("");
+  const [recSequenceData, setRecSequenceData] = useState<any>([]);
   const [recordSequenceDetailsVisibility, setRecordSequenceDetailsVisibility] =
-    React.useState<boolean>(false);
+    useState<boolean>(false);
   const [selectedRecordingDetails, setSelectedRecordingDetails] =
-    React.useState<any>(getFromStore(CONFIG.SELECTED_RECORDING, false) || {});
+    useState<any>(getFromStore(CONFIG.SELECTED_RECORDING, false) || {});
 
-  React.useEffect(() => {
+  useEffect(() => {
     authHandler();
     //addBodyEvents(document.body);
     if (
@@ -108,7 +105,7 @@ function App() {
       offSearch();
     } else {
       setShowSearch(true);
-      getSearchResults("");
+      setSearchKeyword("");
     }
     
    
@@ -121,17 +118,21 @@ function App() {
     */
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.isRecording = isRecording;
     setToStore(isRecording, CONFIG.RECORDING_SWITCH_KEY, true);
   }, [isRecording]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (refetchSearch == "on") {
       setSearchKeyword("");
-      getSearchResults("");
+      setSearchKeyword("");
     }
   }, [refetchSearch]);
+
+  useEffect(() => {
+    getSearchResults()
+  }, [searchKeyword]);
 
   /**
    * Sync data with storage
@@ -178,12 +179,11 @@ function App() {
    * HTTP search results service call
    @param keyword:string
    */
-  const getSearchResults = async (keyword: string, _page = 1) => {
+  const getSearchResults = async ( _page = 1) => {
     // if (!showSearch) return;
     setShowLoader(true);
-    setSearchKeyword(keyword);
     const _searchResults = await fetchSearchResults({
-      keyword,
+      keyword:searchKeyword,
       page,
       domain: encodeURI(window.location.host),
     });
@@ -226,22 +226,13 @@ function App() {
     switch (type) {
       case "submit":
         await postRecordSequenceData({ ...data });
-        await getSearchResults("");
+        await setSearchKeyword("");
         break;
       case "cancel":
         break;
     }
     setShowSearch(true);
     cancel();
-  };
-
-  /**
-   * search handler callback function
-   * @param data search handler callback function
-   */
-  const searchHandler = (data: any, keyword) => {
-    setSearchKeyword(keyword);
-    setSearchResults([...data]);
   };
 
   /**
@@ -325,7 +316,8 @@ function App() {
             <div>
               <div className="uda-page-right-bar">
                 <Header
-                  searchHandler={searchHandler}
+                  setSearchKeyword={setSearchKeyword}
+                  searchKeyword={searchKeyword}
                   toggleFlag={hide}
                   toggleHandler={toggleHandler}
                   i18={t}

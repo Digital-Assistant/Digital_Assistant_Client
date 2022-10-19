@@ -1,4 +1,4 @@
-import domJSON from "domJson";
+import domJSON from "domjson";
 import {CONFIG} from "../config";
 import {
   recordClicks,

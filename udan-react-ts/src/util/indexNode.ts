@@ -1,6 +1,6 @@
 // Check for each node and then match it with the available clicknodes which are identified by links.js
 import {CONFIG} from "../config";
-import domJSON from "domJson";
+import domJSON from "domjson";
 import {getNodeLabels, htmlindex, inArray, logInfo, menuitems, UDAClickObjects} from "./index";
 
 export const indexnode = (
