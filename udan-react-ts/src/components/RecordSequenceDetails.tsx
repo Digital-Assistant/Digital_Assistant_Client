@@ -11,7 +11,8 @@ import {
   LeftOutlined,
   DeleteOutlined,
   LikeOutlined,
-  PlayCircleOutlined
+  PlayCircleOutlined,
+  PauseCircleOutlined ,
 } from "@ant-design/icons";
 import { createPopperLite as createPopper } from "@popperjs/core";
 import {
@@ -63,7 +64,6 @@ export const RecordSequenceDetails = (props: MProps) => {
    * Record player(auto play)
    */
   const autoPlay = () => {
-    // sleep(CONFIG.AUTO_PLAY_SLEEP_TIME);
     //get current play item from storage
     const playItem = getCurrentPlayItem();
 
@@ -305,9 +305,17 @@ export const RecordSequenceDetails = (props: MProps) => {
    */
   const play = () => {
     resetStatus();
-    setToStore("on", CONFIG.RECORDING_IS_PLAYING, true);
-    autoPlay();
+    // setToStore("on", CONFIG.RECORDING_IS_PLAYING, true);
+    if (props.playHandler) props.playHandler("on");
+    // autoPlay();
     // setToolTip(selectedRecordingDetails?.userclicknodesSet[0], 0);
+  };
+
+  /**
+   * Pause the autoplay
+   */
+  const pause = () => {
+    if (props.playHandler) props.playHandler("off");
   };
 
   const removeRecording = async () => {
@@ -342,10 +350,18 @@ export const RecordSequenceDetails = (props: MProps) => {
           >
             <LeftOutlined />
           </Button>
-          <PlayCircleOutlined
-            className="large secondary"
-            onClick={() => play()}
-          />
+          {props?.isPlaying == "off" && (
+            <PlayCircleOutlined
+              className="large secondary"
+              onClick={() => play()}
+            />
+          )}
+          {props?.isPlaying == "on" && (
+            <PauseCircleOutlined
+              className="large secondary"
+              onClick={() => pause()}
+            />
+          )}
         </div>
         <h5>{getName()}</h5> <hr />
         <ul className="uda-suggestion-list" id="uda-sequence-steps">

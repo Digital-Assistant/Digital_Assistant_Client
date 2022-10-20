@@ -95,9 +95,8 @@ function App() {
   React.useEffect(() => {
     authHandler();
     //addBodyEvents(document.body);
-    if (
-      isPlaying == "on" ||
-      manualPlay == "on" || !_.isEmpty(selectedRecordingDetails)) {
+    if ((isPlaying == "on" || manualPlay == "on") && !_.isEmpty(selectedRecordingDetails)) {
+      console.log(isPlaying, manualPlay, selectedRecordingDetails);
        setTimeout(() => {
          setPlayDelay("on");
        }, 2000);
@@ -263,10 +262,9 @@ function App() {
    */
   const showRecordHandler = (flag: boolean) => {
     setShowSearch(false);
-    setIsPlaying("off");
     setManualPlay("off");
-    setToStore("off", CONFIG.RECORDING_IS_PLAYING, true);
-    setToStore("off", "udaManualPlay", true);
+    setToStore("off", CONFIG.RECORDING_MANUAL_PLAY, true);
+    playHandler("off");
     setShowRecord(flag);
   };
 
@@ -300,6 +298,7 @@ function App() {
    * @param data
    */
   const showRecordingDetails = (data: any) => {
+    playHandler("off")
     setShowSearch(false);
     setSelectedRecordingDetails({ ...data });
     setRecordSequenceDetailsVisibility(true);
@@ -310,6 +309,7 @@ function App() {
    * @param status
    */
   const playHandler = (status: string) => {
+    setPlayDelay(status);
     setIsPlaying(status);
     setToStore(status, CONFIG.RECORDING_IS_PLAYING, true);
   };
@@ -370,19 +370,21 @@ function App() {
                         config={global.udaGlobalConfig}
                       />
 
-                      <UdanMain.RecordSequenceDetails
-                        data={selectedRecordingDetails}
-                        recordSequenceDetailsVisibility={
-                          recordSequenceDetailsVisibility &&
-                          !isRecording &&
-                          !toggleContainer("record-button")
-                        }
-                        cancelHandler={cancel}
-                        playHandler={playHandler}
-                        isPlaying={playDelay}
-                        // refetchSearch={setRefetchSearch}
-                        key={"rSD" + recordSequenceDetailsVisibility}
-                      />
+                      {recordSequenceDetailsVisibility &&
+                        <UdanMain.RecordSequenceDetails
+                          data={selectedRecordingDetails}
+                          recordSequenceDetailsVisibility={
+                            recordSequenceDetailsVisibility &&
+                            !isRecording &&
+                            !toggleContainer("record-button")
+                          }
+                          cancelHandler={cancel}
+                          playHandler={playHandler}
+                          isPlaying={playDelay}
+                          // refetchSearch={setRefetchSearch}
+                          key={"rSD" + recordSequenceDetailsVisibility}
+                        />
+                      }
                     </>
                   }
                 />
