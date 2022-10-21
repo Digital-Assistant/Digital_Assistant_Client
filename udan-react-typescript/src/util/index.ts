@@ -167,8 +167,6 @@ export async function UDAdigestMessage(textmessage: string, algorithm: any) {
 let UDALastMutationTime = 0;
 // mutation observer initialization and adding the logic to process the clickobjects
 export const DSA_OBSERVER = new MutationObserver(function(mutations) {
-  // UDAConsoleLogger.info('------------ detected clicked objects-------------');
-  // UDAConsoleLogger.info(UDAClickObjects);
   mutations.forEach(function(mutation) {
     if (mutation.removedNodes.length) {
       [].some.call(mutation.removedNodes, UDAProcessRemovedNode);
@@ -178,7 +176,5 @@ export const DSA_OBSERVER = new MutationObserver(function(mutations) {
     }
     [].some.call(mutation.addedNodes, UDAProcessNode);
   });
-  // UDAConsoleLogger.info('------------ removed clicked objects-------------');
-  // UDAConsoleLogger.info(UDAClickObjects);
   UDALastMutationTime = Date.now();
 });

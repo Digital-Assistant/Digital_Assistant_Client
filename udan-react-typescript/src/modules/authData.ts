@@ -26,7 +26,7 @@ export const udaauthdata = {
     },
     set userRole(val) {
         UDAUserAuthData.role = val;
-        var sessionEvent = new CustomEvent("UDAClearSessionData", {detail: {data: "clearsession"}, bubbles: false, cancelable: false});
+        const sessionEvent = new CustomEvent("UDAClearSessionData", {detail: {data: "clearsession"}, bubbles: false, cancelable: false});
         document.dispatchEvent(sessionEvent);
     },
     get userRole() {
@@ -34,7 +34,7 @@ export const udaauthdata = {
     },
     set restrict_add_delete(val) {
         UDAUserAuthData.restrict_add_delete = val;
-        var sessionEvent = new CustomEvent("UDADisableButton", {detail: {data: "UDADisableButton"}, bubbles: false, cancelable: false});
+        const sessionEvent = new CustomEvent("UDADisableButton", {detail: {data: "UDADisableButton"}, bubbles: false, cancelable: false});
         document.dispatchEvent(sessionEvent);
     },
     get restrict_add_delete() {

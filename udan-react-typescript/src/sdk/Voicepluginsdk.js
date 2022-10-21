@@ -1,6 +1,7 @@
 import { UDAUserAuthData } from '../modules/authData';
 import { CONFIG } from '../config'
 import { UDAConsoleLogger, UDAErrorLogger } from '../config/error-log';
+const domJSON = require('domjson');
 
 UDAErrorLogger.error('here at showhtml function', {});
 

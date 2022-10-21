@@ -3,6 +3,66 @@
     export const isUDASdk: any = undefined;
     export const domJSON: any = undefined;
     
+
+	let UDABadBrowser=false;
+	if(navigator.appName.indexOf("Internet Explorer") !== -1){
+		UDABadBrowser=(navigator.appVersion.indexOf("MSIE 1") === -1);
+	}
+	let UDASpeechRecognitionAvailable=false;
+	let UDAVoiceRecognition;
+	
+	const UDA_POST_INTERVAL = CONFIG.UDA_POST_INTERVAL;
+	let UDALastMutationTime = CONFIG.UDALastMutationTime;
+	// initializing voice recognition library
+	if(!window.hasOwnProperty("webkitSpeechRecognition")){
+		UDASpeechRecognitionAvailable=false;
+	} else {
+		UDASpeechRecognitionAvailable=true;
+		UDAVoiceRecognition = window.webkitSpeechRecognition;
+	}
+
+	// listening for user session data from extension call
+	document.addEventListener("UDAUserSessionData", function(data) {
+		UDAPluginSDK.createsession(JSON.parse(data.detail.data));
+	});
+
+	// Clearing user session in case if the id gets changed
+	document.addEventListener("UDAClearSessionData", function(data){
+		UDAPluginSDK.clearSession();
+	});
+
+	/**
+	 * Disabling record button when the attribute is set to true.
+	 */
+	document.addEventListener("UDADisableButton", function(data) {
+		UDAPluginSDK.disableRecordButton();
+	});
+
+	document.addEventListener("UDAAuthenticatedUserSessionData", function(data) {
+		UDAPluginSDK.createsession(JSON.parse(data.detail.data));
+		UDAPluginSDK.openmodal(true);
+	});
+
+	document.addEventListener("UDAAlertMessageData", function(data) {
+		alert(JSON.parse(data.detail.data));
+	});
+
+	/**
+	 * Load custom theme to plugin
+	 */
+	document.addEventListener("UDALoadCustomCSS", function(data) {
+		UDAPluginSDK.loadCssScript(UDACustomCss.src);
+	});
+
+	const UDADebug = {};
+	let UDADebugSetEvent = new CustomEvent("UDADebugSetEvent", {detail: {data: {action:'Debugvalueset',value:UDADebug}}, bubbles: false, cancelable: false});
+	document.dispatchEvent(UDADebugSetEvent);
+
+	// initializing the sdk variable need to change to a new variable in future.
+	const UDA_API_URL = CONFIG.UDA_API_URL, UDALogLevel = CONFIG.UDALogLevel, isUDAAllowed = 1, UDAClickObjects = [];
+	let UDALastIndexTime = 0;
+	let UDASessionID = null;
+	
 	export const UDAPluginSDK:any={
 		sdkUrl: "/",
 		apihost: UDA_API_URL,
@@ -259,7 +319,7 @@
 			document.getElementsByTagName("head")[0].appendChild(script);
 		},
 		loadOtherScript: function(url:string) {
-			var script :any= document.createElement("script");
+			let script :any= document.createElement("script");
 			script.type = "text/javascript";
 			script.src = url;
 			if (script.readyState){
@@ -356,9 +416,9 @@
 
 				this.recognition.onresult = function(event) {
 					if (event.results.length > 0) {
-						var current = event.resultIndex;
+						let current = event.resultIndex;
 						// Get a transcript of what was said.
-						var transcript = event.results[current][0].transcript;
+						let transcript = event.results[current][0].transcript;
 						jQuery("#uda-search-input").val(transcript);
 						UDAPluginSDK.searchinelastic();
 						UDAPluginSDK.recognition.stop();
@@ -416,7 +476,7 @@
             }
         },
 		checkuserkeyexists:function(){
-			var sessionevent = new CustomEvent("RequestUDASessionData", {detail: {data: "getusersessiondata"}, bubbles: false, cancelable: false});
+			let sessionevent = new CustomEvent("RequestUDASessionData", {detail: {data: "getusersessiondata"}, bubbles: false, cancelable: false});
 			document.dispatchEvent(sessionevent);
 		},
 		createsession:function(data){
@@ -433,7 +493,7 @@
 			this.closemodal();
 		},
 		modifybodyhtml:function(){
-			var html='<div id="uda-btn" nist-voice="true"></div><div id="uda-html-container" style="display: none;"><div id="uda-html-content" nist-voice="true"></div></div><div id="uda-alerthtml-container" nist-voice="true"></div>';
+			let html='<div id="uda-btn" nist-voice="true"></div><div id="uda-html-container" style="display: none;"><div id="uda-html-content" nist-voice="true"></div></div><div id="uda-alerthtml-container" nist-voice="true"></div>';
 
 			jQuery(document.body).prepend(html);
 
@@ -489,7 +549,7 @@
 			}
 
 			jQuery("#uda-btn").unbind("click").html("");
-			var buttonhtml	=	'<div class="uda-nistapp-logo '+udaIconDisabled+'">'
+			let buttonhtml	=	'<div class="uda-nistapp-logo '+udaIconDisabled+'">'
 								+'	<div class="uda-icon" style="text-align: center;">'
 								+'		<img src="'+this.extensionpath+'images/icons/nist-logo.png">'
 								+'		<p style="padding:0; margin:0px;color: #303f9f; font-weight: bold; font-size: 11px;">UDAN(Beta)</p>'
@@ -498,7 +558,7 @@
 								+'		</span>'
 								+'	</div>'
 								+'</div>';
-			var modal =jQuery("#uda-btn");
+			let modal =jQuery("#uda-btn");
 			modal.append(buttonhtml);
 			if(!udaIconDisabled) {
 				modal.click(function () {
@@ -516,7 +576,7 @@
 			}
 		},
 		rightPanelHtml: function(){
-			var html = 	'<uda-panel>'
+			let html = 	'<uda-panel>'
 						+'<div class="uda-page-right-bar">'
 						+'<div>'
 							+'<div class="uda-ribbon-arrow" id="uda-close-panel"><img src="'+this.extensionpath+'images/icons/right-arrow.png"></div>'
@@ -658,12 +718,12 @@
 
 			jQuery("#uda-alerthtml-container").html(html);
 			// Get the modal
-			var modal = document.getElementById("udaModal");
+			let modal = document.getElementById("udaModal");
 
 			// Get the <span> element that closes the modal
-			var span = document.getElementsByClassName("udaclose")[0];
-			var closeBtn = document.getElementById('udacloseBtn');
-			var continueBtn = document.getElementById('udacontinueBtn');
+			let span = document.getElementsByClassName("udaclose")[0];
+			let closeBtn = document.getElementById('udacloseBtn');
+			let continueBtn = document.getElementById('udacontinueBtn');
 
 			closeBtn.onclick=function(){
 				modal.style.display = "none";
@@ -736,10 +796,10 @@
 
 			jQuery("#uda-alerthtml-container").html(html);
 
-			var modal = document.getElementById("udaModal");
-			var span = document.getElementsByClassName("udaclose")[0];
-			var closeBtn = document.getElementById('udacloseBtn');
-			var continueBtn = document.getElementById('udacontinueBtn');
+			let modal = document.getElementById("udaModal");
+			let span = document.getElementsByClassName("udaclose")[0];
+			let closeBtn = document.getElementById('udacloseBtn');
+			let continueBtn = document.getElementById('udacontinueBtn');
 
 			closeBtn.onclick=function(){
 				modal.style.display = "none";
@@ -796,7 +856,7 @@
         	if(this.sessiondata.authenticated) {
 				jQuery("#uda-btn").hide();
 				jQuery('#uda-html-container').show();
-				var searchinput=jQuery("#uda-search-input");
+				let searchinput=jQuery("#uda-search-input");
 				searchinput.val("");
 				if (focus) {
 					searchinput.focus();
@@ -816,7 +876,7 @@
 					});
 				}
 			} else {
-				var sessionevent = new CustomEvent("RequestUDASessionData", {detail: {data: "authtenicate"}, bubbles: false, cancelable: false});
+				let sessionevent = new CustomEvent("RequestUDASessionData", {detail: {data: "authtenicate"}, bubbles: false, cancelable: false});
 				document.dispatchEvent(sessionevent);
 			}
 		},
@@ -826,7 +886,7 @@
 			jQuery('#uda-html-container').hide();
 			this.recordedsequenceids=[];
 			jQuery("#uda-btn").show();
-			var navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
+			let navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 			// this.cancelrecordingsequence(false);
 			let bodychildren = document.body.childNodes;
@@ -846,10 +906,10 @@
 		//render the required html for showing up the proper html
 		showhtml:function(){
 			this.rerenderhtml=false;
-			var addnisticon=true;
-			var checkrecording = this.getstoragedata(this.recordingcookiename);
+			let addnisticon=true;
+			let checkrecording = this.getstoragedata(this.recordingcookiename);
 			if(checkrecording){
-				var checkrecordingdata=JSON.parse(checkrecording);
+				let checkrecordingdata=JSON.parse(checkrecording);
 				if(checkrecordingdata.hasOwnProperty("recording") && checkrecordingdata.recording){
 					addnisticon=false;
 					this.recording=true;
@@ -860,9 +920,9 @@
 			}
 			if(addnisticon){
 				this.addvoicesearchmodal(addnisticon);
-				var navigationcookie=this.getstoragedata(this.navigationcookiename);
+				let navigationcookie=this.getstoragedata(this.navigationcookiename);
 				if(navigationcookie){
-					var navigationcookiedata = JSON.parse(navigationcookie);
+					let navigationcookiedata = JSON.parse(navigationcookie);
 					if(navigationcookiedata.shownav) {
 						this.openmodal();
 						if(navigationcookiedata.autoplay){
@@ -939,11 +999,11 @@
 			if(this.htmlindex.length>0){
 				let newhtmlindex=[];
 				let htmlindexlength=this.htmlindex.length;
-				for(var htmli=0;htmli<htmlindexlength;htmli++) {
+				for(let htmli=0;htmli<htmlindexlength;htmli++) {
 					let checknode=this.htmlindex[htmli];
 					let removedclickobjectslength=UDARemovedClickObjects.length;
 					let foundremovedindexednode=-1;
-					for (var k = 0; k < removedclickobjectslength; k++) {
+					for (let k = 0; k < removedclickobjectslength; k++) {
 						if(UDARemovedClickObjects[k].element === window){
 							continue;
 						}
@@ -1014,8 +1074,8 @@
 						UDAConsoleLogger.info({cssIgnoredNode:node}, 3);
 						// this.addClickToNode(node);
 					} else if(node.hasChildNodes()){
-						var childnodes =  node.childNodes;
-						var hasparentclick = false;
+						let childnodes =  node.childNodes;
+						let hasparentclick = false;
 						if(node.hasOwnProperty("hasclick") || hasparentnodeclick){
 							hasparentclick=true;
 							if(parentclicknode===""){
@@ -1024,8 +1084,8 @@
 						}
 
 						if(childnodes.length>0){
-							for (var i=0;i<childnodes.length;i++){
-								var childnode=childnodes[i];
+							for (let i=0;i<childnodes.length;i++){
+								let childnode=childnodes[i];
 								this.nodeid++;
 								if(this.ignoreelements.indexOf(childnode.nodeName.toLowerCase())===-1) {
 									if(ret){
@@ -1086,10 +1146,10 @@
 		},
 		// Check for each node and then match it with the available clicknodes which are identified by links.js
 		indexnode: function(node:any, parentnode:any, hasparentnodeclick=false, fromdocumentclick=false, parentclicknode=""){
-			var elementdata = {"element-type": "", "element-labels" : [], "element-action" : "", "element-path" : "","element-url":"", "element-data":[],"menu-items":[]};
+			let elementdata = {"element-type": "", "element-labels" : [], "element-action" : "", "element-path" : "","element-url":"", "element-data":[],"menu-items":[]};
 
-			var clickobjectexists=false;
-			var udaClickObject={};
+			let clickobjectexists=false;
+			let udaClickObject={};
 
 			if(node.hasAttribute("nist-voice") && node.getAttribute("nist-voice")){
 				return node;
@@ -1128,7 +1188,7 @@
 			}
 
 			if(this.htmlindex.length>0){
-				for(var htmli=0;htmli<this.htmlindex.length;htmli++){
+				for(let htmli=0;htmli<this.htmlindex.length;htmli++){
 					if(node.isSameNode(this.htmlindex[htmli]['element-data'])){
 						node.hasclick=true;
 						return node;
@@ -1136,7 +1196,7 @@
 				}
 			}
 
-			for (var i = 0; i < UDAClickObjects.length; i++) {
+			for (let i = 0; i < UDAClickObjects.length; i++) {
 				if(UDAClickObjects[i].element===window){
 					continue;
 				}
@@ -1177,8 +1237,8 @@
 				}
 
 				if((node.hasOwnProperty("displaytype") && node.displaytype==="tab-content") || (node.hasOwnProperty("navtype") && node.navtype==="navtab")){
-					for(var j=0;j<this.menuitems.length;j++){
-						var menuitem=this.menuitems[j];
+					for(let j=0;j<this.menuitems.length;j++){
+						let menuitem=this.menuitems[j];
 						if(menuitem.refid === node.tabid) {
 							if(menuitem.menunode.hasOwnProperty("path")){
 								node.path =  menuitem.menunode.path+">"+menuitem.name;
@@ -1253,10 +1313,10 @@
 			}
 
 			if(getchildlabels && node.childNodes.length>0){
-				var childnodes = node.childNodes;
+				let childnodes = node.childNodes;
 				childnodes.forEach(function (childnode, key) {
 					if(childnode.nodeName.toLowerCase() !=="script" && childnode.nodeName.toLowerCase() !== "select" && childnode.nodeName.toLowerCase() !== '#comment') {
-						var textcontent = childnode.textContent.replace(/[\n\r]+|[\s]{2,}/g, ' ').trim();
+						let textcontent = childnode.textContent.replace(/[\n\r]+|[\s]{2,}/g, ' ').trim();
 						if (textcontent !== "" && ignorenode.isSameNode(childnode) === false) {
 							inputlabels.push({"text": textcontent, "match": false});
 						}
@@ -1281,7 +1341,7 @@
 			if(inputlabels.length===0 && node.id!==""){
 				inputlabels.push({"text":(node.nodeName.toLowerCase()+"-"+node.id),"match":false});
 			}else if(inputlabels.length===0 && node.hasAttribute("class") && node.className && node.className!==""){
-				var classname=node.className.toString();
+				let classname=node.className.toString();
 				inputlabels.push({"text":(node.nodeName.toLowerCase()+"-"+classname.replace(" ","-")),"match":false});
 			} else if(inputlabels.length===0){
 				inputlabels.push({"text":(node.nodeName.toLowerCase()),"match":false});
@@ -1290,7 +1350,7 @@
 			return inputlabels;
 		},
 		getsingleinputlabel: function(parentnode, inputlabel){
-			var childnodes = parentnode.childNodes;
+			let childnodes = parentnode.childNodes;
 
 			childnodes.forEach(function (childnode, key) {
 				if(inputlabel === ""){
@@ -1310,7 +1370,7 @@
 					return;
 				}
 
-				var nodename=node.nodeName.toLowerCase();
+				let nodename=node.nodeName.toLowerCase();
 				switch (nodename) {
 					case "select":
 						jQuery(node).on({"focus":function(event){
@@ -1325,7 +1385,7 @@
 							});
 							return;
 						}
-						var inputtype=node.getAttribute("type").toLowerCase();
+						let inputtype=node.getAttribute("type").toLowerCase();
 						switch (inputtype) {
 							case "email":
 							case "text":
@@ -1389,8 +1449,8 @@
 			if(close) {
 				this.closemodal();
 			}
-			var node=data["element-data"];
-			var timetoinvoke=1000;
+			let node=data["element-data"];
+			let timetoinvoke=1000;
 
 			if(!this.playNextAction) {
 				return;
@@ -1414,8 +1474,8 @@
 
 			this.simulateHover(node);
 
-			var navigationcookie=this.getstoragedata(this.navigationcookiename);
-			var navigationcookiedata = null;
+			let navigationcookie=this.getstoragedata(this.navigationcookiename);
+			let navigationcookiedata = null;
 			if(navigationcookie) {
 				navigationcookiedata = JSON.parse(navigationcookie);
 			}
@@ -1771,8 +1831,8 @@
 				this.popperInstance.destroy();
 			}
 			this.playNextAction = true;
-			var navigationcookie=this.getstoragedata(this.navigationcookiename);
-			var navigationcookiedata = null;
+			let navigationcookie=this.getstoragedata(this.navigationcookiename);
+			let navigationcookiedata = null;
 			if(navigationcookie) {
 				navigationcookiedata = JSON.parse(navigationcookie);
 			}
@@ -1806,12 +1866,12 @@
 		},
 		//simulate hover functionality
 		simulateHover: function(node){
-			var event = new MouseEvent('mouseover', {
+			let event = new MouseEvent('mouseover', {
 				'view': window,
 				'bubbles': true,
 				'cancelable': true
 			});
-			var canceled = !node.dispatchEvent(event);
+			let canceled = !node.dispatchEvent(event);
 			if (canceled) {
 				// A handler called preventDefault.
 				UDAConsoleLogger.info('hover cancelled');
@@ -1826,7 +1886,7 @@
 			if (el.fireEvent) {
 				el.fireEvent('on' + etype);
 			} else {
-				var evObj = document.createEvent('Events');
+				let evObj = document.createEvent('Events');
 				evObj.initEvent(etype, true, false);
 				el.dispatchEvent(evObj);
 			}
@@ -1910,10 +1970,10 @@
 				}
 
 				// processing document click
-				var processclick=true;
+				let processclick=true;
 				if(fromdocument && this.htmlindex.length>0){
-					for(var i=0;i<this.htmlindex.length;i++){
-						var processnode=this.htmlindex[i];
+					for(let i=0;i<this.htmlindex.length;i++){
+						let processnode=this.htmlindex[i];
 						if(node.isSameNode(processnode['element-data'])){
 							processclick=false;
 						}
@@ -1924,13 +1984,13 @@
 					return true;
 				}
 
-				// var domjson = domJSON.toJSON(node);
+				// let domjson = domJSON.toJSON(node);
 				if (node.hasOwnProperty('uda_custom') && node.uda_custom.domJson) {
-					var domjson = node.uda_custom.domJson;
+					let domjson = node.uda_custom.domJson;
 					domjson.meta = {};
 					//fix for position issue #89
 					if(domjson.node.nodeInfo.nodePosition.x === 0 && domjson.node.nodeInfo.nodePosition.y === 0) {
-						var domjson1 = domJSON.toJSON(node);
+						let domjson1 = domJSON.toJSON(node);
 						domjson.node.nodeInfo.nodePosition = domjson1.node.nodeInfo.nodePosition;
 					}
 				} else {
@@ -1955,7 +2015,7 @@
 				}
 
 				if(node.nodeName.toLowerCase()==="input" && node.getAttribute("type")==="radio"){
-					var postdata = {
+					let postdata = {
 						domain: window.location.host,
 						urlpath: window.location.pathname,
 						sessionid: this.sessionID,
@@ -1964,8 +2024,8 @@
 						clickedpath: "",
 						objectdata: ""
 					};
-					var cache = [];
-					var stringifiednode=JSON.stringify(domjson.node, function(key, value) {
+					let cache = [];
+					let stringifiednode=JSON.stringify(domjson.node, function(key, value) {
 						if (typeof value === 'object' && value !== null) {
 							if (cache.indexOf(value) !== -1) {
 								// Duplicate reference found, discard key
@@ -1980,7 +2040,7 @@
 					domjson.node=JSON.parse(stringifiednode);
 					postdata.objectdata=JSON.stringify(domjson);
 				} else {
-					var postdata = {
+					let postdata = {
 						domain: window.location.host,
 						urlpath: window.location.pathname,
 						sessionid: this.sessionID,
@@ -2004,8 +2064,8 @@
 				this.addclickedrecordcookie(postdata.clickednodename);
 				this.lastclickednode=node;
 				this.lastclickedtime=Date.now();
-				var outputdata = JSON.stringify(postdata);
-				var xhr = new XMLHttpRequest();
+				let outputdata = JSON.stringify(postdata);
+				let xhr = new XMLHttpRequest();
 				xhr.open("POST", UDA_API_URL+"/user/clickednode", false);
 				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 				xhr.onload = function(event){
@@ -2046,7 +2106,7 @@
 		confirmParentClick:function(node, fromdocument, selectchange, event, postdata) {
 			let prevClickText = this.getclickedinputlabels(this.lastclickednode, fromdocument, selectchange);
 			if(node.hasChildNodes()) {
-				var childTextExists = this.processparentchildnodes(node, prevClickText);
+				let childTextExists = this.processparentchildnodes(node, prevClickText);
 				if(!childTextExists) {
 					// truncating text to max 120char
 					let displayText = ((postdata.clickednodename.length > 120) ? (postdata.clickednodename.substr(0, 120) + '...') : (postdata.clickednodename) );
@@ -2062,7 +2122,7 @@
 			}
 		},
 		processparentchildnodes:function(node, prevtext) {
-			var childtextexists = false;
+			let childtextexists = false;
 			for(const childnode of node.childNodes) {
 				if (childnode.nodeType === Node.ELEMENT_NODE) {
 					if (this.lastclickednode && childnode.isSameNode(this.lastclickednode)) {
@@ -2090,17 +2150,17 @@
 			if (!node) {
 				return null;
 			}
-			var inputlabels="";
-			var nodename=node.nodeName.toLowerCase();
+			let inputlabels="";
+			let nodename=node.nodeName.toLowerCase();
 			switch (nodename) {
 				case "select":
 					if(selectchange) {
 						inputlabels = jQuery(node).find(":selected").text();
 					} else {
-						var textlabels = this.getInputLabels(node, [], 1, true, false, true);
+						let textlabels = this.getInputLabels(node, [], 1, true, false, true);
 						if (textlabels.length > 0) {
-							var labels = [];
-							for (var j = 0; j < textlabels.length; j++) {
+							let labels = [];
+							for (let j = 0; j < textlabels.length; j++) {
 								labels.push(textlabels[j].text);
 							}
 							inputlabels = labels.toString();
@@ -2109,10 +2169,10 @@
 					break;
 				case "input":
 					if(!node.hasAttribute("type")){
-						var textlabels = this.getInputLabels(node, [], 1, true, true, true);
+						let textlabels = this.getInputLabels(node, [], 1, true, true, true);
 						if (textlabels.length > 0) {
-							var labels = [];
-							for (var j = 0; j < textlabels.length; j++) {
+							let labels = [];
+							for (let j = 0; j < textlabels.length; j++) {
 								labels.push(textlabels[j].text);
 							}
 							inputlabels = labels.toString();
@@ -2120,10 +2180,10 @@
 					} else {
 						switch (node.getAttribute("type").toLowerCase()) {
 							default:
-								var textlabels = this.getInputLabels(node, [], 1, true, true, true);
+								let textlabels = this.getInputLabels(node, [], 1, true, true, true);
 								if (textlabels.length > 0) {
-									var labels = [];
-									for (var j = 0; j < textlabels.length; j++) {
+									let labels = [];
+									for (let j = 0; j < textlabels.length; j++) {
 										labels.push(textlabels[j].text);
 									}
 									inputlabels = labels.toString();
@@ -2132,30 +2192,30 @@
 						break;
 					}
 				case "textarea":
-					var textlabels = this.getInputLabels(node, [], 1, true, true, true);
+					let textlabels = this.getInputLabels(node, [], 1, true, true, true);
 					if (textlabels.length > 0) {
-						var labels = [];
-						for (var j = 0; j < textlabels.length; j++) {
+						let labels = [];
+						for (let j = 0; j < textlabels.length; j++) {
 							labels.push(textlabels[j].text);
 						}
 						inputlabels = labels.toString();
 					}
 					break;
 				case "img":
-					var textlabels = this.getInputLabels(node, [], 1, true, false, true);
+					let textlabels = this.getInputLabels(node, [], 1, true, false, true);
 					if (textlabels.length > 0) {
-						var labels = [];
-						for (var j = 0; j < textlabels.length; j++) {
+						let labels = [];
+						for (let j = 0; j < textlabels.length; j++) {
 							labels.push(textlabels[j].text);
 						}
 						inputlabels = labels.toString();
 					}
 					break;
 				default:
-					var textlabels = this.getInputLabels(node, [], 1, false, true, true);
+					let textlabels = this.getInputLabels(node, [], 1, false, true, true);
 					if (textlabels.length > 0) {
-						var labels = [];
-						for (var j = 0; j < textlabels.length; j++) {
+						let labels = [];
+						for (let j = 0; j < textlabels.length; j++) {
 							labels.push(textlabels[j].text);
 						}
 						inputlabels = labels.toString();
@@ -2173,7 +2233,7 @@
 		//adding current timestamp to the required actions under recording functionality
 		gettimestamp:function(buttonclicked){
 			if(buttonclicked !== "") {
-				var result = Date.now();
+				let result = Date.now();
 				if(buttonclicked==="start"){
 					this.startrecordingsequence(result);
 				} else if(buttonclicked==="stop"){
@@ -2183,11 +2243,11 @@
 		},
 		//show recorded results in UDA screen
 		showrecordedresults:function(){
-			var recordingcookie = this.getstoragedata(this.recordingcookiename);
-			var starttime=null;
-			var endtime=Date.now();
+			let recordingcookie = this.getstoragedata(this.recordingcookiename);
+			let starttime=null;
+			let endtime=Date.now();
 			if(recordingcookie){
-				var recordingcookiedata=JSON.parse(recordingcookie);
+				let recordingcookiedata=JSON.parse(recordingcookie);
 				starttime=recordingcookiedata.starttime;
 			} else {
 				return false;
@@ -2201,7 +2261,7 @@
 				return ;
 			}
 
-			var xhr = new XMLHttpRequest();
+			let xhr = new XMLHttpRequest();
 			xhr.open("GET", UDA_API_URL+"/clickevents/fetchrecorddata?start="+starttime+"&end="+endtime+"&sessionid="+UDAPluginSDK.sessionID+"&domain="+recordingcookiedata.domain, true);
 			xhr.onload = function(event){
 				if(xhr.status === 200){
@@ -2212,14 +2272,14 @@
 		},
 		//start recording the user click to form a sequence
 		startrecordingsequence:function(currenttimestamp){
-			var recordingcookie = this.getstoragedata(this.recordingcookiename);
+			let recordingcookie = this.getstoragedata(this.recordingcookiename);
 			if (recordingcookie) {
-				var recordingcookiedata = JSON.parse(recordingcookie);
+				let recordingcookiedata = JSON.parse(recordingcookie);
 				recordingcookiedata.starttime = currenttimestamp;
 				recordingcookiedata.recording = true;
 				recordingcookiedata.endtime = null;
 			} else {
-				var recordingcookiedata = {recording: true, starttime: currenttimestamp, endtime: null};
+				let recordingcookiedata = {recording: true, starttime: currenttimestamp, endtime: null};
 			}
 			recordingcookiedata.domain = window.location.host;
 			this.createstoragedata(this.recordingcookiename,JSON.stringify(recordingcookiedata));
@@ -2233,9 +2293,9 @@
 		},
 		//stop recording sequence that has been started and show recorded results
 		stoprecordingsequence:function(currenttimestamp){
-			var recordingcookie = this.getstoragedata(this.recordingcookiename);
+			let recordingcookie = this.getstoragedata(this.recordingcookiename);
 			if(recordingcookie){
-				var recordingcookiedata=JSON.parse(recordingcookie);
+				let recordingcookiedata=JSON.parse(recordingcookie);
 				recordingcookiedata.endtime=currenttimestamp;
 				recordingcookiedata.recording=false;
 			} else {
@@ -2248,7 +2308,7 @@
 
 			this.showhtml();
 			jQuery("#uda-content-container").html("");
-			var xhr = new XMLHttpRequest();
+			let xhr = new XMLHttpRequest();
 			xhr.open("GET", UDA_API_URL+"/clickevents/fetchrecorddata?start="+recordingcookiedata.starttime+"&end="+recordingcookiedata.endtime+"&sessionid="+UDAPluginSDK.sessionID+"&domain="+recordingcookiedata.domain, true);
 			xhr.onload = function(event){
 				if(xhr.status === 200){
@@ -2260,9 +2320,9 @@
 		//cancel the recording sequence
 		cancelrecordingsequence:function(render=true){
 			// jQuery('#uda-advanced-btn').hide();
-			var recordingcookie = this.getstoragedata(this.recordingcookiename);
+			let recordingcookie = this.getstoragedata(this.recordingcookiename);
 			if(recordingcookie){
-				var recordingcookiedata=JSON.parse(recordingcookie);
+				let recordingcookiedata=JSON.parse(recordingcookie);
 				if(!recordingcookiedata.recording){
 					return false;
 				}
@@ -2272,7 +2332,7 @@
 				return false;
 			}
 			this.createstoragedata(this.recordingcookiename,JSON.stringify(recordingcookiedata));
-			var navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
+			let navcookiedata = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 
 			let tooltipnodes = document.getElementsByClassName('uda-tooltip');
@@ -2293,7 +2353,7 @@
 			if(data.length>0) {
 				this.recordedsequenceids=data;
 				jQuery("#uda-content-container").html(this.renderRecordedSequenceHtml());
-				for(var i=0;i<data.length;i++){
+				for(let i=0;i<data.length;i++){
 					// modification for personal button addition
 					if(i===(data.length-1)){
 						this.renderrecordresultrow(data[i],i,true);
@@ -2308,7 +2368,7 @@
 			this.openmodal(false);
 		},
 		renderRecordedSequenceHtml: function(){
-			var html =	'<div class="uda-card-details">'
+			let html =	'<div class="uda-card-details">'
 						+'	<h5>Recorded Sequence</h5>'
 						+'	<hr style="border:1px solid #969696; width:100%;">'
 						+'	<ul class="uda-recording" id="uda-recorded-results">'
@@ -2362,7 +2422,7 @@
 			});
 		},
 		renderEmptyRecordedSequenceHtml: function(){
-			var html =	'<div class="uda-card-details">'
+			let html =	'<div class="uda-card-details">'
 						// +'<span class="uda-close-icon">×</span>'
 						+'	<h5>Recorded Sequence</h5>'
 						+'	<hr>'
@@ -2381,12 +2441,12 @@
 			index++;
 			// let clickedname=((data.clickednodename.length>this.maxstringlength)?data.clickednodename.substr(0,this.maxstringlength)+'...':data.clickednodename);
 			let nodeData = JSON.parse(data.objectdata);
-			var originalName = '';
+			let originalName = '';
 			if(nodeData.meta.hasOwnProperty('displayText') && nodeData.meta.displayText !== ''){
-				var clickedname = ((nodeData.meta.displayText.length > this.maxstringlength) ? nodeData.meta.displayText.substr(0, this.maxstringlength) + '...' : nodeData.meta.displayText);
+				let clickedname = ((nodeData.meta.displayText.length > this.maxstringlength) ? nodeData.meta.displayText.substr(0, this.maxstringlength) + '...' : nodeData.meta.displayText);
 				originalName = nodeData.meta.displayText;
 			} else {
-				var clickedname = ((data.clickednodename.length > this.maxstringlength) ? data.clickednodename.substr(0, this.maxstringlength) + '...' : data.clickednodename);
+				let clickedname = ((data.clickednodename.length > this.maxstringlength) ? data.clickednodename.substr(0, this.maxstringlength) + '...' : data.clickednodename);
 				originalName = data.clickednodename;
 			}
 			// let clickedname=data.clickednodename;
@@ -2398,22 +2458,22 @@
 			// personal button appearance
 			if(showPersonalButton){
 				// clickedname=((data.clickednodename.length>(this.maxstringlength-24))?data.clickednodename.substr(0,(this.maxstringlength-24))+'...':data.clickednodename);
-				var editBtn = 	'			<span>'
+				let editBtn = 	'			<span>'
 								+'				<button class="uda-tutorial-btn" style="padding:0px;" type="button" id="uda-edit-clickedname"><img src="'+this.extensionpath+'images/icons/edit.png"></button>'
 								+'			</span>'
 								+'			<input type="text" id="uda-edited-name" name="uda-edited-name" class="uda-form-input" placeholder="Enter Name" value="'+originalName+'" style="display: none;">';
 				if(nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal){
-					// var personalHtml = '&nbsp; &nbsp; (personal)';
-					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" checked /> <label style="font-size:14px;">Personal Information</label>';
+					// let personalHtml = '&nbsp; &nbsp; (personal)';
+					let personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" checked /> <label style="font-size:14px;">Personal Information</label>';
 				} else {
-					var personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" /> <label style="font-size:14px;">Personal Information</label>';
+					let personalHtml = '&nbsp; &nbsp;<input type="checkbox" id="isPersonal" /> <label style="font-size:14px;">Personal Information</label>';
 				}
 				personalHtml += '			<span style="position: relative; top: 0px;"><img src="'+this.extensionpath+'images/icons/info.png" title="select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."></span>';
 
 				// adding clicked element type
 				let selectedElementHtml = (this.enableNodeTypeChangeSelection)?'Clicked on : <select name="UDASelectedElement" id="UDASelectedElement"></select>':'';
 
-				var html =	'<li class="uda-recorded-label-editable"><i>'
+				let html =	'<li class="uda-recorded-label-editable"><i>'
 								+clickedname
 								// +editBtn
 								+'<br />'
@@ -2424,12 +2484,12 @@
 								+'<br />'
 								+selectedElementHtml
 							+'</li>';
-				var element = jQuery(html);
+				let element = jQuery(html);
 				jQuery("#uda-recorded-results").append(element);
 				jQuery("#isPersonal").click(function (){
 					UDAPluginSDK.personalNode(data);
 				});
-				var beforeEditText = originalName;
+				let beforeEditText = originalName;
 				jQuery("#uda-edit-clickedname").click(function (){
 					jQuery("#uda-edited-name").show();
 				});
@@ -2480,9 +2540,9 @@
 					if (nodeData.meta.hasOwnProperty('selectedElement') && nodeData.meta.selectedElement) {
 						selectedElement = nodeData.meta.selectedElement;
 					}
-					var $UDASelectedElementHtml = jQuery('#UDASelectedElement');
+					let $UDASelectedElementHtml = jQuery('#UDASelectedElement');
 					if (selectedElement.inputElement === '') {
-						var $option = jQuery("<option/>", {
+						let $option = jQuery("<option/>", {
 							value: JSON.stringify(selectedElement),
 							text: selectedElement.displayName,
 							selected: true
@@ -2490,7 +2550,7 @@
 						$UDASelectedElementHtml.append($option);
 					}
 					for (let htmlFormElement of this.fetchHtmlFormElements()) {
-						var $option = jQuery("<option/>", {
+						let $option = jQuery("<option/>", {
 							value: JSON.stringify(htmlFormElement),
 							text: htmlFormElement.displayName,
 							selected: (htmlFormElement.systemTag === selectedElement.systemTag)
@@ -2498,17 +2558,17 @@
 						$UDASelectedElementHtml.append($option);
 					}
 					$UDASelectedElementHtml.on('change', function (e) {
-						var optionSelected = jQuery("option:selected", this);
-						var valueSelected = JSON.parse(this.value);
+						let optionSelected = jQuery("option:selected", this);
+						let valueSelected = JSON.parse(this.value);
 						UDAPluginSDK.editAndSaveSelectedHtmlElement(data, valueSelected);
 					});
 				}
 			} else {
 				clickedname += (nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal)?'&nbsp; &nbsp;(personal)':'';
-				var html = '<li><i>' +
+				let html = '<li><i>' +
 					clickedname +
 					'</i></li>';
-				var element = jQuery(html);
+				let element = jQuery(html);
 				jQuery("#uda-recorded-results").append(element);
 			}
 		},
@@ -2585,8 +2645,8 @@
 				nodeData.meta.selectedElement = value;
 			}
 			data.objectdata = JSON.stringify(nodeData);
-			var outputdata = JSON.stringify(data);
-			var xhr = new XMLHttpRequest();
+			let outputdata = JSON.stringify(data);
+			let xhr = new XMLHttpRequest();
 			xhr.open("POST", UDA_API_URL+"/user/updateclickednode");
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
@@ -2669,8 +2729,8 @@
 				nodeData.meta.tooltipInfo = value;
 			}
 			data.objectdata = JSON.stringify(nodeData);
-			var outputdata = JSON.stringify(data);
-			var xhr = new XMLHttpRequest();
+			let outputdata = JSON.stringify(data);
+			let xhr = new XMLHttpRequest();
 			xhr.open("POST", UDA_API_URL+"/user/updateclickednode");
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
@@ -2691,8 +2751,8 @@
 				nodeData.meta.isPersonal = true;
 			}
 			data.objectdata = JSON.stringify(nodeData);
-			var outputdata = JSON.stringify(data);
-			var xhr = new XMLHttpRequest();
+			let outputdata = JSON.stringify(data);
+			let xhr = new XMLHttpRequest();
 			xhr.open("POST", UDA_API_URL+"/user/updateclickednode");
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
@@ -2710,8 +2770,8 @@
 				nodeData.meta.displayText = value;
 			}
 			data.objectdata = JSON.stringify(nodeData);
-			var outputdata = JSON.stringify(data);
-			var xhr = new XMLHttpRequest();
+			let outputdata = JSON.stringify(data);
+			let xhr = new XMLHttpRequest();
 			xhr.open("POST", UDA_API_URL+"/user/updateclickednode");
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
@@ -2721,9 +2781,9 @@
 		},
 		// submit functionality of the recorded sequence.
 		submitrecordedlabel:function(submittype="recording"){
-			// var sequencename=jQuery("#uda-recorded-name").val();
+			// let sequencename=jQuery("#uda-recorded-name").val();
 			let sequencenames = [];
-			var sequencenamearray=jQuery("input[name='uda-save-recorded[]']").map(function (){
+			let sequencenamearray=jQuery("input[name='uda-save-recorded[]']").map(function (){
 				// detect for profanity
 				let sequencename = this.value;
 				if(UDAPluginSDK.profanity.enabled) {
@@ -2733,7 +2793,7 @@
 				sequencenames.push(sequencename);
 			});
 			let sequencename = JSON.stringify(sequencenames);
-			var sequencelistdata={name:"",domain:window.location.host,usersessionid:this.sessiondata.authdata.id.toString(),userclicknodelist:[].toString(),userclicknodesSet:this.recordedsequenceids,isValid:1,isIgnored:0};
+			let sequencelistdata={name:"",domain:window.location.host,usersessionid:this.sessiondata.authdata.id.toString(),userclicknodelist:[].toString(),userclicknodesSet:this.recordedsequenceids,isValid:1,isIgnored:0};
 			if(submittype==='recording') {
 				if (sequencename === '') {
 					alert('Please enter proper label');
@@ -2753,8 +2813,8 @@
 				sequencelistdata.isIgnored=1;
 			}
 
-			var sequenceids = [];
-			for(var i=0;i<this.recordedsequenceids.length;i++){
+			let sequenceids = [];
+			for(let i=0;i<this.recordedsequenceids.length;i++){
 				sequenceids.push(this.recordedsequenceids[i].id);
 			}
 			sequencelistdata.name=sequencename;
@@ -2762,7 +2822,7 @@
 			this.cancelrecordingsequence(false);
 			this.currentPage='SequenceSubmitted';
 			this.showhtml();
-			var xhr = new XMLHttpRequest();
+			let xhr = new XMLHttpRequest();
 			xhr.open("POST", UDA_API_URL + "/clickevents/recordsequencedata", true);
 			xhr.setRequestHeader('Content-Type', 'application/json');
 			xhr.onload = function(event){
@@ -2783,7 +2843,7 @@
 			}
 			switch (this.profanity.provider.toLowerCase()){
 				case 'azure':
-					var xhr = new XMLHttpRequest();
+					let xhr = new XMLHttpRequest();
 					xhr.open("POST", this.profanity.config.endPoint, false);
 					xhr.setRequestHeader('Content-Type', 'text/plain');
 					xhr.setRequestHeader('Ocp-Apim-Subscription-Key', this.profanity.config.key1);
@@ -2821,9 +2881,9 @@
 			this.currentPage='advanced';
 
 			if(searchterm) {
-				var searchtext = searchterm;
+				let searchtext = searchterm;
 			} else {
-				var searchtext = jQuery("#uda-search-input").val();
+				let searchtext = jQuery("#uda-search-input").val();
 			}
             // translating from other language to english
 			if(this.multilingual.selectedLang !== this.multilingual.searchInLang) {
@@ -2833,7 +2893,7 @@
                         posturl = this.multilingual.translate.apiurl+'?key='+encodeURIComponent(this.multilingual.translate.apikey)+'&target=en&q='+encodeURIComponent(searchtext);
                         break;
                 }
-                var translatexhr = new XMLHttpRequest();
+                let translatexhr = new XMLHttpRequest();
                 translatexhr.open("POST", posturl, false);
                 translatexhr.onload = function(event){
                     if(translatexhr.status === 200){
@@ -2873,7 +2933,7 @@
 			//add analtytics
 			this.recordclick('search',searchtext);
 
-			var xhr = new XMLHttpRequest();
+			let xhr = new XMLHttpRequest();
 			let searchUrl = "/clickevents/sequence/search?query="+searchtext+"&domain="+encodeURI(window.location.host);
 			if(this.enableNodeTypeChangeSelection){
 				searchUrl +='&enabledNodeTypeSelection=true';
@@ -2903,10 +2963,10 @@
 				jQuery("#uda-advance-section").show();
 			}
 
-			var matchnodes = data;
+			let matchnodes = data;
 			if(matchnodes.length>0){
 				jQuery("#uda-content-container").html('');
-				for(var k=0;k<matchnodes.length;k++){
+				for(let k=0;k<matchnodes.length;k++){
 					if(matchnodes[k].hasOwnProperty("deleted") && matchnodes[k].deleted===0) {
 						this.renderSequenceRow(matchnodes[k], k);
 					} else if(!matchnodes[k].hasOwnProperty("deleted")) {
@@ -2942,7 +3002,7 @@
 		},
 		//rendering each row html of the search result
 		renderSequenceRow:function(data){
-			var element=jQuery(this.getRowHtml(data));
+			let element=jQuery(this.getRowHtml(data));
 			element.click(function () {
 				UDAPluginSDK.showSelectedSequence(data);
 			});
@@ -2950,8 +3010,8 @@
 		},
 		//Sequence row html
 		getRowHtml: function(data){
-			var path='';
-			for(var i=0;i<data.userclicknodesSet.length;i++){
+			let path='';
+			for(let i=0;i<data.userclicknodesSet.length;i++){
 				if(path!==''){
 					path +=' >> ';
 				}
@@ -2963,7 +3023,7 @@
 			} catch (e) {
 				sequencename = data.name.toString();
 			}
-			var html =	'<div class="uda-card">'
+			let html =	'<div class="uda-card">'
 						+'	<h5>'+sequencename+'</h5>'
 						+'	<i>'+path+'</i>'
 						+'</div>';
@@ -2971,7 +3031,7 @@
 		},
 		//selected search result functionality
 		showSelectedSequence:function(data){
-			var navcookiedata = {shownav: true, data: data, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
+			let navcookiedata = {shownav: true, data: data, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:''};
 			navcookiedata.searchterm=jQuery("#uda-search-input").val();
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata));
 			this.autoplay = false;
@@ -3008,7 +3068,7 @@
 			} catch (e) {
 				sequencename = data.name.toString();
 			}
-			var html =	'<div class="uda-card-details" style="border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;">'
+			let html =	'<div class="uda-card-details" style="border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;">'
 						+'    <div class="uda-card-btns">'
 						// +'        <button class="uda-play-btn" '+((isPlaying)?'disabled="disabled"':'id="nist-autoplay"')+'><img src="'+this.extensionpath+'images/icons/play-icon.png"></button>'
 						// +'        <button class="uda-stop-btn" '+((!isPlaying)?'disabled="disabled"':'id="nist-autoplay"')+'><img src="'+this.extensionpath+'images/icons/stop-icon.png"></button>'
@@ -3038,7 +3098,7 @@
 			if(shownodelist && navcookiedata.data.userclicknodesSet.length===navcookiedata.navigateddata.length){
 				navcookiedata.navcompleted=true;
 			}
-			var isPlaying =  false;
+			let isPlaying =  false;
 
 			this.currentPage='SelectedSequence';
 
@@ -3052,11 +3112,11 @@
 				}
 			}
 
-			var element=jQuery(this.renderSelectedSequenceHtml(data, isPlaying));
+			let element=jQuery(this.renderSelectedSequenceHtml(data, isPlaying));
 			jQuery("#uda-content-container").html(element);
-			var performactionnode=false;
-			for(var i=0;i<data.userclicknodesSet.length;i++){
-				var visited = -1;
+			let performactionnode=false;
+			for(let i=0;i<data.userclicknodesSet.length;i++){
+				let visited = -1;
 				if(navcookiedata.navigateddata.length>0) {
 					visited = this.inArray(data.userclicknodesSet[i].id, navcookiedata.navigateddata);
 				}
@@ -3126,11 +3186,11 @@
 			if(nodeData.meta.hasOwnProperty('isPersonal') && nodeData.meta.isPersonal){
 				clickedname=((data.clickednodename.length>(this.maxstringlength-26))?data.clickednodename.substr(0,(this.maxstringlength-26))+'... (personal)':data.clickednodename);
 			}
-			var clickedtext = clickedname;
+			let clickedtext = clickedname;
 			if(visited>-1) {
-				var template = jQuery("<li class='completed'><i>" + clickedtext + "</i></li>");
+				let template = jQuery("<li class='completed'><i>" + clickedtext + "</i></li>");
 			} else {
-				var template = jQuery("<li class='inactive'><i>" + clickedtext + "</i></li>");
+				let template = jQuery("<li class='inactive'><i>" + clickedtext + "</i></li>");
 			}
 			if(visited === -1) {
 				template.click(function () {
@@ -3304,7 +3364,7 @@
 					match.matched++;
 					if(comparenode[key].length===originalnode[key].length) {
 						match.matched++;
-						for (var i = 0; i < originalnode[key].length; i++) {
+						for (let i = 0; i < originalnode[key].length; i++) {
 							match=this.comparenodes(comparenode[key][i], originalnode[key][i], isPersonalNode, match);
 						}
 					}
@@ -3361,7 +3421,7 @@
 			return match;
 		},
 		JaroWrinker: function (s1:any, s2:any) {
-			var m = 0;
+			let m = 0;
 
 			// Exit early if either are empty.
 			if ( s1.length === 0 || s2.length === 0 ) {
@@ -3373,12 +3433,12 @@
 				return 1;
 			}
 
-			var range     = (Math.floor(Math.max(s1.length, s2.length) / 2)) - 1,
+			let range     = (Math.floor(Math.max(s1.length, s2.length) / 2)) - 1,
 				s1Matches = new Array(s1.length),
 				s2Matches = new Array(s2.length);
 
 			for (let i = 0; i < s1.length; i++ ) {
-				var low  = (i >= range) ? i - range : 0,
+				let low  = (i >= range) ? i - range : 0,
 					high = (i + range <= s2.length) ? (i + range) : (s2.length - 1);
 
 				for (let j = low; j <= high; j++ ) {
@@ -3396,7 +3456,7 @@
 			}
 
 			// Count the transpositions.
-			var k = n_trans = 0;
+			let k = n_trans = 0;
 
 			for ( i = 0; i < s1.length; i++ ) {
 				if ( s1Matches[i] === true ) {
@@ -3413,7 +3473,7 @@
 				}
 			}
 
-			var weight = (m / s1.length + m / s2.length + (m - (n_trans / 2)) / m) / 3,
+			let weight = (m / s1.length + m / s2.length + (m - (n_trans / 2)) / m) / 3,
 				l      = 0,
 				p      = 0.1;
 
@@ -3509,7 +3569,7 @@
 		//getting the data from the storage
 		getstoragedata:function(key:string){
 			try {
-				var result=window.localStorage.getItem(key);
+				let result=window.localStorage.getItem(key);
 				return result;
 			} catch (e) {
 				return false;
@@ -3524,16 +3584,16 @@
 			} catch (e) {
 				sequencename = data.name.toString();
 			}
-			var confirmdialog=confirm("Are you sure want to delete "+sequencename);
+			let confirmdialog=confirm("Are you sure want to delete "+sequencename);
 			if(confirmdialog === true){
 				UDAPluginSDK.confirmdelete(data);
 			}
 		},
 		//confirmation for the deletion of the sequence list
 		confirmdelete:function (data:any) {
-			// var senddata=JSON.stringify({usersessionid:this.UDASessionID,id:data.id});
-			var senddata=JSON.stringify({usersessionid:this.sessiondata.authdata.id,id:data.id});
-			var xhr = new XMLHttpRequest();
+			// let senddata=JSON.stringify({usersessionid:this.UDASessionID,id:data.id});
+			let senddata=JSON.stringify({usersessionid:this.sessiondata.authdata.id,id:data.id});
+			let xhr = new XMLHttpRequest();
 			xhr.open("POST", UDA_API_URL + "/clickevents/sequence/delete", false);
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
@@ -3545,13 +3605,13 @@
 		},
 		//adding vote functionality
 		addvote:function(votetype:string,data:any){
-			var senddata={"usersessionid": this.sessionID, "sequenceid" : data.id, "upvote":0, "downvote":0};
+			let senddata={"usersessionid": this.sessionID, "sequenceid" : data.id, "upvote":0, "downvote":0};
 			if(votetype==="up"){
 				senddata.upvote=1;
 			} else if(votetype==="down"){
 				senddata.downvote=1;
 			}
-			var xhr = new XMLHttpRequest();
+			let xhr = new XMLHttpRequest();
 			xhr.open("POST", UDA_API_URL + "/clickevents/sequence/addvote", true);
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.send(JSON.stringify(senddata));
@@ -3588,9 +3648,9 @@
 		//back to search results functionality
 		backtosearchresults:function (navcookiedata:any) {
 			if(navcookiedata.searchterm!==''){
-				var navcookiedata1 = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:<any>[],searchterm:navcookiedata.searchterm};
+				let navcookiedata1 = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:<any>[],searchterm:navcookiedata.searchterm};
 			} else {
-				var navcookiedata1 = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:""};
+				let navcookiedata1 = {shownav: false, data: {}, autoplay:false, pause:false, stop:false, navcompleted:false, navigateddata:[],searchterm:""};
 			}
 			this.createstoragedata(this.navigationcookiename,JSON.stringify(navcookiedata1));
 			this.autoplay=false;
@@ -3602,8 +3662,8 @@
 			this.searchinelastic(navcookiedata.searchterm);
 		},
 		recordclick:function (clicktype='sequencerecord',clickedname='',recordid=0) {
-			var senddata={usersessionid:this.sessionID,clicktype:clicktype,clickedname:clickedname,recordid:recordid};
-			var xhr = new XMLHttpRequest();
+			let senddata={usersessionid:this.sessionID,clicktype:clicktype,clickedname:clickedname,recordid:recordid};
+			let xhr = new XMLHttpRequest();
 			xhr.open("PUT", UDA_API_URL + "/clickevents/userclick", true);
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.send(JSON.stringify(senddata));
@@ -3619,7 +3679,7 @@
 			jQuery("#nistvoiceback").click(function () {
 				UDAPluginSDK.backtomodal();
 			});
-			var xhr = new XMLHttpRequest();
+			let xhr = new XMLHttpRequest();
 			xhr.open("GET", UDA_API_URL + "/clickevents/suggested?domain="+encodeURI(window.location.host), true);
 			xhr.onload = function(event){
 				if(xhr.status === 200){
@@ -3630,7 +3690,7 @@
 		},
 		// advanced html
 		getAdvancedHtml: function (){
-			var html =	'<div class="uda-card-details">'
+			let html =	'<div class="uda-card-details">'
 							// +'<div><button class="uda-tutorial-btn" type="button">Tutorial</button></div>'
 							// +'<hr>'
 							+'<span class="uda-close-icon" onclick="UDAPluginSDK.searchinelastic();">×</span>'
@@ -3642,7 +3702,7 @@
 		showsuggestedhtml:function(data:any){
 			if(data.length>0) {
 				this.recordedsequenceids = data;
-				var html = '   <div class="voice-suggesion-card">' +
+				let html = '   <div class="voice-suggesion-card">' +
 					'		<div class="voice-card-left">' +
 					'			<h4>Our AI detected this sequence. <br /> Do you want to name it? <br /><span style="color:#ff4800;font-weight:bold;">(Beta version: Not reliable)</span></h4>' +
 					'			<ul id="uda-recorded-results" class="voice-sugggesion-bullet">' +
@@ -3655,7 +3715,7 @@
 					'	</div>';
 
 				jQuery("#uda-content-container").append(html);
-				for (var i = 0; i < data.length; i++) {
+				for (let i = 0; i < data.length; i++) {
 					this.renderrecordresultrow(data[i], i);
 				}
 			}
