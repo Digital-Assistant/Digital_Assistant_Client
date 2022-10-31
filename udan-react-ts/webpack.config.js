@@ -11,6 +11,8 @@
 
 const path = require('path');
 const webpack = require('webpack')
+const CopyPlugin = require("copy-webpack-plugin");
+
 
 module.exports = {
   
@@ -94,10 +96,15 @@ module.exports = {
     }),
     new webpack.ProvidePlugin({
       'utils': 'utils'
-    })
+    }),
       // new HtmlWebpackPlugin({
       //     title: 'digitalassist.com'
       // })
+      new CopyPlugin({
+        patterns: [
+          { from: 'src/logo.*', to: "../[name][ext]" },
+        ],
+      }),
   ],
   resolve: {
     // options for resolving module requests
