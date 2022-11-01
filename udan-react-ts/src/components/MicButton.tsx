@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from "react";
 
-interface IMicButtonProps{
-    onSpeech: (text: string) => void
+interface IMicButtonProps {
+  onSpeech: (text: string) => void;
+  selectedLang: string;
 }
 
 const speech = (window as any).webkitSpeechRecognition;
@@ -10,13 +11,15 @@ if (speech) {
   UDAVoiceRecognition = speech;
 }
 
-const MicButton = ({onSpeech}:IMicButtonProps) => {
+const MicButton = ({ onSpeech, selectedLang }: IMicButtonProps) => {
   const [isRecording, setIsRecording] = React.useState<boolean>(false);
 
-  const recognition = useRef<typeof UDAVoiceRecognition>( new UDAVoiceRecognition())
+  const recognition = useRef<typeof UDAVoiceRecognition>(
+    new UDAVoiceRecognition()
+  );
 
   useEffect(() => {
-    recognition.current.lang = "en-US";
+    recognition.current.lang = selectedLang;
 
     recognition.current.onstart = function () {
       setIsRecording(true);
@@ -31,8 +34,6 @@ const MicButton = ({onSpeech}:IMicButtonProps) => {
     };
 
     recognition.current.onresult = function (event: any) {
-        console.log(event, 'speech event recognised in MicButton.tsx line 33');
-        
       if (event.results.length > 0) {
         const current = event.resultIndex;
         // Get a transcript of what was said.
@@ -40,10 +41,10 @@ const MicButton = ({onSpeech}:IMicButtonProps) => {
         // setSearchKeyword(transcript);
         setIsRecording(false);
         stopRecord();
-        onSpeech(transcript)
+        onSpeech(transcript);
       }
     };
-  }, []);
+  }, [selectedLang]);
 
   const startRecord = () => {
     recognition.current.start();
@@ -52,7 +53,6 @@ const MicButton = ({onSpeech}:IMicButtonProps) => {
   const stopRecord = () => {
     recognition.current.stop();
   };
-
 
   return (
     <button

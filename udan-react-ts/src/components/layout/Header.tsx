@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { DoubleRightOutlined } from "@ant-design/icons";
 
@@ -6,14 +6,25 @@ import { HeaderProps } from "./interfaces";
 import MicButton from "../MicButton";
 import { getLogo } from "./common";
 
+import { CONFIG } from "../../config";
+import LanguageSelect from "./LanguageSelect";
+import { translateText } from "../../services/translateService";
+
 /**
  * To render search result elements
  * @returns HTML Elements
  */
 
 const Header = (props: HeaderProps) => {
-  const [hide, setHide] = React.useState<boolean>(props?.toggleFlag);
-  const [searchKeyword, setSearchKeyword] = React.useState<string>("");
+  const {
+    selectedLang: selectedLanguage,
+    searchInLang,
+    enabled: multiLingualEnabled,
+  } = CONFIG.multilingual;
+
+  const [hide, setHide] = useState<boolean>(props?.toggleFlag);
+  const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const [selectedLang, setSelectedLang] = useState<string>(selectedLanguage);
 
   /**
    * Toggle right side panel visibility
@@ -25,8 +36,14 @@ const Header = (props: HeaderProps) => {
   /**
    * Trigger search action for fetching search results
    */
-  const doSearch = async () => {
-    props.setSearchKeyword(searchKeyword);
+  const multiLangSearch = async (searchText: string) => {
+    if (searchInLang !== selectedLang) {
+      props.setSearchKeyword(
+        await translateText(searchText, selectedLang, searchInLang)
+      );
+      return;
+    }
+    props.setSearchKeyword(searchText);
   };
 
   return (
@@ -58,8 +75,9 @@ const Header = (props: HeaderProps) => {
             <MicButton
               onSpeech={(text: string) => {
                 setSearchKeyword(text);
-                props.setSearchKeyword(text);
+                multiLangSearch(text);
               }}
+              selectedLang={selectedLang}
             />
             <input
               type="text"
@@ -74,9 +92,15 @@ const Header = (props: HeaderProps) => {
               className="uda-search-btn"
               id="uda-search-btn"
               style={{ borderRadius: "0px 5px 5px 0px" }}
-              onClick={() => doSearch()}
+              onClick={() => multiLangSearch(searchKeyword)}
             />
           </div>
+          {multiLingualEnabled && (
+            <LanguageSelect
+              onLanguageChange={setSelectedLang}
+              selectedLang={selectedLang}
+            />
+          )}
         </div>
       </div>
       <hr style={{ border: "1px solid #969696", width: "100%" }} />
