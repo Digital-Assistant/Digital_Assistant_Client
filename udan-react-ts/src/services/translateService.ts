@@ -21,8 +21,8 @@ export const translateText = async (
   }
   const response = await fetch(posturl);
   const jsonData = await response.json();
-  if (jsonData.data.translations.length > 0) {
-    return jsonData.data.translations[0].translatedText;
+  if (jsonData?.data?.translations?.length > 0) {
+    return jsonData?.data?.translations[0]?.translatedText;
   }
   throw new Error("Failed to translate");
 };
