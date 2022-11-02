@@ -12,6 +12,7 @@
 const path = require('path');
 const webpack = require('webpack')
 const CopyPlugin = require("copy-webpack-plugin");
+const transform = require("typescript-json/lib/transform").default;
 
 
 module.exports = {
@@ -41,11 +42,27 @@ module.exports = {
         loader: 'babel-loader', // the loader which should be applied, it'll be resolved relative to the context
         options: { presets: ['@babel/env', '@babel/preset-react'] },  // options for the loader
       },
-      {
+     /* {
          // Conditions:
         test: /\.tsx?$/,
         use: 'ts-loader',
         exclude: /node_modules/,
+      },*/
+      {
+        test: /\.(ts|tsx)$/,
+        exclude: /node_modules/,
+        loader: 'ts-loader',
+        options: {
+          getCustomTransformers: program => ({
+            before: [transform(program)]
+            // before: [
+            //     transform(program, {
+            //         functional: true,
+            //         numeric: true
+            // })
+            // ]
+          })
+        }
       },
       {
          // Conditions:
