@@ -1,7 +1,7 @@
 {
-  "name": "UDAN-React-App",
-  "author": "Yureswar Ravuri",
-  "version": "0.1.1",
+  "name": "UDAN-react-app",
+  "author": "Yureswar Ravuri <yureshwar@gmail.com>",
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@2toad/profanity": "^1.4.0",
@@ -35,6 +35,7 @@
     "stream-http": "^3.2.0",
     "svg-url-loader": "^8.0.0",
     "ts-loader": "^9.4.1",
+    "typescript-json": "^3.3.19",
     "uglifyjs": "^2.4.11",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "url": "^0.11.0",
@@ -100,6 +101,8 @@
     "sass-loader": "^13.0.2",
     "style-loader": "^3.3.1",
     "ts-jest": "^29.0.3",
+    "ts-node": "^10.9.1",
+    "ttypescript": "^1.5.13",
     "typescript": "^4.6.3",
     "vite": "^2.9.6",
     "vite-plugin-svgr": "^1.1.0",

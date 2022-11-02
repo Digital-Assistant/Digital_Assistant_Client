@@ -1,3 +1,5 @@
+import TSON from "typescript-json";
+
 export const REST = {
   apiCal,
   syncApiCal,
@@ -26,7 +28,7 @@ function apiCal(options: any) {
   const requestOptions = {
     method: options.method,
     headers: options?.headers ? options?.headers : getHTTPHeaders("json"),
-    body: options.body ? JSON.stringify(options.body) : null,
+    body: options.body ? TSON.stringify(options.body) : null,
   };
 
   return fetch(options.url, requestOptions)
@@ -58,7 +60,7 @@ async function syncApiCal(options: any) {
   const requestOptions = {
     method: options.method,
     headers: getHTTPHeaders("json"),
-    body: options.body ? JSON.stringify(options.body) : null,
+    body: options.body ? TSON.stringify(options.body) : null,
   };
 
   let response: any = {};
