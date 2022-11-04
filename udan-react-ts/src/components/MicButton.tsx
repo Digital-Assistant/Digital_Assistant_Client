@@ -52,6 +52,7 @@ const MicButton = ({ onSpeech, selectedLang }: IMicButtonProps) => {
 
   const stopRecord = () => {
     recognition.current.stop();
+    setIsRecording(false);
   };
 
   return (
