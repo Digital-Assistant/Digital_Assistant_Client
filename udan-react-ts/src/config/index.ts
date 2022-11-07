@@ -27,6 +27,7 @@ export const CONFIG = {
   SELECTED_RECORDING: "selectedRecordedItem",
   USER_AUTH_DATA_KEY: "udaUserData",
   USER_SESSION_KEY: "udaSessionKey",
+  UDAKeyCloakKey: "UDAKeyCloak",
   USER_SESSION_ID: "udaSessionId",
   SYNC_INTERVAL: 1000,
   AUTO_PLAY_SLEEP_TIME: 2000,

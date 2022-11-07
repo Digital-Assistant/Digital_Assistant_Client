@@ -10,13 +10,13 @@ const body = document.querySelector("body");
 
 const app = document.createElement("div");
 
-app.id = "react-root";
+app.id = "udan-react-root";
 
 if (body) {
-  body.prepend(app);
+  body.appendChild(app);
 }
 
-const container = document.getElementById("react-root");
+const container = document.getElementById("udan-react-root");
 const root = createRoot(container!);
 
 root.render(<App />);
