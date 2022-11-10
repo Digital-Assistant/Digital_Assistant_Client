@@ -5,9 +5,9 @@
  */
 ///<reference types="chrome"/>
 
-import React, {useState, useEffect} from "react";
-import {Spin} from "antd";
-import "../public/css/antd.css";
+import React, {useState, useEffect, useCallback, useContext, createContext} from "react";
+import {Button, Spin} from "antd";
+import "./css/antd.css";
 import {fetchSearchResults} from "./services/searchService";
 import {login, getUserSession} from "./services/authService";
 import _ from "lodash";
@@ -29,6 +29,9 @@ import Footer from "./components/layout/Footer";
 import useInterval from "react-useinterval";
 import "./App.scss";
 import keycloak from './config/keycloak';
+import {off, on, trigger} from "./util/events";
+import {UserDataContext} from "./providers/UserDataContext";
+
 
 global.udaGlobalConfig = CONFIG;
 
@@ -54,6 +57,7 @@ const useMutationObserver = (
     }
 ) => {
   useEffect(() => {
+    console.log(callback);
     if (ref.current) {
       const observer = new MutationObserver(callback);
       observer.observe(ref.current, options);
@@ -61,6 +65,7 @@ const useMutationObserver = (
     }
   }, [callback, options]);
 };
+
 
 function App() {
   const {t} = useTranslation();
@@ -85,45 +90,70 @@ function App() {
   const [selectedRecordingDetails, setSelectedRecordingDetails] = useState<any>(getFromStore(CONFIG.SELECTED_RECORDING, false) || {});
 
   /**
+   * Global user session creation
+   */
+  const [udaUserSessionData, setUdaUserSessionData] = useState(null);
+
+  /**
    * keycloak integration
    */
   const [authenticated, setAuthenticated] = useState(false);
   const [userSessionData, setUserSessionData] = useState(null);
+  const [invokeKeycloak, setInvokeKeycloak] = useState(false);
 
-  useEffect(()=>{
-    let userSessionData = getFromStore(CONFIG.UDAKeyCloakKey, false);
-    if(userSessionData){
-      console.log(userSessionData);
-      setUserSessionData(userSessionData);
-      setAuthenticated(true);
-    } else {
-      console.log('token not found');
-    }
-  },[]);
-
-  useEffect(()=>{
-    if(!keycloak.authenticated && !userSessionData) {
-      keycloak.init({}).then(auth => {
-        console.log(auth);
-        setAuthenticated(auth);
-        if(keycloak.authenticated) {
-          let userData: any = {token: keycloak.token, refreshToken: keycloak.refreshToken, userId: keycloak.subject, authenticated: auth, idToken: keycloak.idToken};
-          console.log(userData);
-          setToStore(userData, CONFIG.UDAKeyCloakKey, false);
-          setUserSessionData(userData);
-        }
-      }).catch((e) => {
-        console.log(e);
-      });
-    } else {
-      console.log(userSessionData);
-      keycloak.init({token: userSessionData.token, refreshToken: userSessionData.refreshToken, idToken: userSessionData.idToken}).then(auth => {
-        console.log(auth);
-      });
-    }
-  }, [keycloak, userSessionData]);
-  
   useEffect(() => {
+    if(invokeKeycloak) {
+      let userSessionData = getFromStore(CONFIG.UDAKeyCloakKey, false);
+      if (userSessionData) {
+        console.log(userSessionData);
+        setUserSessionData(userSessionData);
+        setAuthenticated(true);
+      } else {
+        console.log('token not found');
+      }
+    }
+  }, [invokeKeycloak, userSessionData]);
+
+  useEffect(() => {
+    if(invokeKeycloak) {
+      if (!keycloak.authenticated && !userSessionData && !authenticated) {
+        keycloak.init({}).then(auth => {
+          console.log(auth);
+          setAuthenticated(auth);
+          if (keycloak.authenticated) {
+            let userData: any = {
+              token: keycloak.token,
+              refreshToken: keycloak.refreshToken,
+              id: keycloak.subject,
+              authenticated: auth,
+              idToken: keycloak.idToken
+            };
+            setToStore(userData, CONFIG.UDAKeyCloakKey, false);
+            setUserSessionData(userData);
+            trigger("CreateUDASessionData", {
+              detail: {action: 'createSession', data: userData},
+              bubbles: false,
+              cancelable: false
+            });
+          }
+        }).catch((e) => {
+          console.log(e);
+        });
+      } else {
+        console.log(userSessionData);
+        keycloak.init({
+          token: userSessionData.authdata.token,
+          refreshToken: userSessionData.authdata.refreshToken,
+          idToken: userSessionData.authdata.idToken
+        }).then(auth => {
+          console.log(auth);
+          console.log({...keycloak});
+        });
+      }
+    }
+  }, [keycloak, userSessionData, invokeKeycloak]);
+
+  /*useEffect(() => {
     authHandler();
     //addBodyEvents(document.body);
     if ((isPlaying == "on" || manualPlay == "on") && !_.isEmpty(selectedRecordingDetails)) {
@@ -139,6 +169,67 @@ function App() {
     } else {
       setShowSearch(true);
       setSearchKeyword("");
+    }
+  }, []);*/
+
+  /**
+   * User authentication implementation
+   *
+   */
+  const openUDAPanel = () => {
+    if ((isPlaying == "on" || manualPlay == "on") && !_.isEmpty(selectedRecordingDetails)) {
+      console.log(isPlaying, manualPlay, selectedRecordingDetails);
+      setTimeout(() => {
+        setPlayDelay("on");
+      }, 2000);
+      togglePanel();
+      offSearch();
+      setRecordSequenceDetailsVisibility(true);
+    } else if (isRecording) {
+      offSearch();
+    } else {
+      setShowSearch(true);
+      setSearchKeyword("");
+    }
+  };
+
+  const createSession = useCallback((data) => {
+    console.log(data);
+    setToStore(data.detail.data, CONFIG.USER_AUTH_DATA_KEY, true);
+    setAuthenticated(true);
+    setUserSessionData(data.detail.data);
+    openUDAPanel();
+  }, []);
+
+  const authenticationError = useCallback((data) => {
+    console.log(data);
+    if (data.detail.data === 'login') {
+      setInvokeKeycloak(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    let userSessionData = getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
+    if (!userSessionData) {
+      trigger("RequestUDASessionData", {detail: {data: "getusersessiondata"}, bubbles: false, cancelable: false});
+    } else {
+      console.log(userSessionData);
+      setUserSessionData(userSessionData);
+      if (userSessionData.authenticationsource === 'keycloak') {
+        setInvokeKeycloak(true);
+      } else {
+        setAuthenticated(true);
+      }
+    }
+
+    on("UDAUserSessionData", createSession);
+    on("UDAAuthenticatedUserSessionData", createSession);
+    on("UDAAlertMessageData", authenticationError);
+
+    return () => {
+      off("UDAUserSessionData", createSession);
+      off("UDAAuthenticatedUserSessionData", createSession);
+      off("UDAAlertMessageData", authenticationError);
     }
   }, []);
 
@@ -169,12 +260,14 @@ function App() {
    * Toggle right side panel visibility
    */
   const togglePanel = () => {
-    if(!keycloak.authenticated){
+    /*if(!keycloak.authenticated){
       keycloak.login();
     } else {
       setHide(!hide);
       squeezeBody(!hide);
-    }
+    }*/
+    setHide(!hide);
+    squeezeBody(!hide);
   };
 
   /**
@@ -190,18 +283,18 @@ function App() {
     setShowLoader(false);
   };
 
-  const authHandler = async () => {
-    setTimeout(() => {
-      const authData = getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
-      if (!authData) return;
-      setToStore(authData?.authdata?.id, CONFIG.USER_SESSION_ID, true);
-      login(authData)?.then((resp) => {
-        getUserSession().then((session) => {
-          setToStore(session, CONFIG.USER_SESSION_KEY, true);
+  /*  const authHandler = async () => {
+      setTimeout(() => {
+        const authData = getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
+        if (!authData) return;
+        setToStore(authData?.authdata?.id, CONFIG.USER_SESSION_ID, true);
+        login(authData)?.then((resp) => {
+          getUserSession().then((session) => {
+            setToStore(session, CONFIG.USER_SESSION_KEY, true);
+          });
         });
-      });
-    }, 7000);
-  };
+      }, 7000);
+    };*/
 
   /**
    * HTTP search results service call
@@ -335,7 +428,7 @@ function App() {
   };
 
   return (
-      <>
+      <UserDataContext.Provider value={userSessionData}>
         <div
             className="udan-main-panel"
             style={{display: hide ? "none" : "block", position: "relative"}}
@@ -344,76 +437,86 @@ function App() {
             <div id="uda-html-content" nist-voice="true">
               <div>
                 <div className="uda-page-right-bar">
-                  <Header
-                      setSearchKeyword={setSearchKeyword}
-                      searchKeyword={searchKeyword}
-                      toggleFlag={hide}
-                      toggleHandler={toggleHandler}
-                      i18={t}
-                  />
-                  <Body
-                      content={
-                        <>
-                          {showLoader && <Spin tip="Loading..."/>}
-
-                          <UdanMain.RecordButton
-                              recordHandler={showRecordHandler}
-                              cancelHandler={cancel}
-                              recordSeqHandler={recordSequence}
-                              recordButtonVisibility={toggleContainer(
-                                  "record-button"
-                              )}
+                  {authenticated &&
+                      <>
+                          <Header
+                              setSearchKeyword={setSearchKeyword}
+                              searchKeyword={searchKeyword}
+                              toggleFlag={hide}
+                              toggleHandler={toggleHandler}
+                              i18={t}
                           />
+                          <Body
+                              content={
+                                <>
+                                  {showLoader && <Spin tip="Loading..."/>}
 
-                          <UdanMain.RecordSequence
-                              cancelHandler={cancel}
-                              recordSequenceVisibility={toggleContainer("record-seq")}
-                          />
+                                  <UdanMain.RecordButton
+                                      recordHandler={showRecordHandler}
+                                      cancelHandler={cancel}
+                                      recordSeqHandler={recordSequence}
+                                      recordButtonVisibility={toggleContainer(
+                                          "record-button"
+                                      )}
+                                  />
 
-                          {!showLoader && showSearch && (
-                              <UdanMain.SearchResults
-                                  data={searchResults}
-                                  showDetails={showRecordingDetails}
-                                  visibility={toggleContainer("search-results")}
-                                  addRecordHandler={setShowRecord}
-                                  searchKeyword={searchKeyword}
-                                  // key={searchResults.length + showLoader}
-                                  searchHandler={getSearchResults}
-                                  page={page}
-                              />
-                          )}
+                                  <UdanMain.RecordSequence
+                                      cancelHandler={cancel}
+                                      recordSequenceVisibility={toggleContainer("record-seq")}
+                                  />
 
-                          <UdanMain.RecordedData
-                              isShown={toggleContainer("recorded-data")}
-                              data={recSequenceData}
-                              recordHandler={recordHandler}
-                              refetchSearch={setRefetchSearch}
-                              config={global.udaGlobalConfig}
-                          />
+                                  {!showLoader && showSearch && (
+                                      <UdanMain.SearchResults
+                                          data={searchResults}
+                                          showDetails={showRecordingDetails}
+                                          visibility={toggleContainer("search-results")}
+                                          addRecordHandler={setShowRecord}
+                                          searchKeyword={searchKeyword}
+                                          // key={searchResults.length + showLoader}
+                                          searchHandler={getSearchResults}
+                                          page={page}
+                                      />
+                                  )}
 
-                          {recordSequenceDetailsVisibility &&
-                              <UdanMain.RecordSequenceDetails
-                                  data={selectedRecordingDetails}
-                                  recordSequenceDetailsVisibility={
-                                      recordSequenceDetailsVisibility &&
-                                      !isRecording &&
-                                      !toggleContainer("record-button")
+                                  <UdanMain.RecordedData
+                                      isShown={toggleContainer("recorded-data")}
+                                      data={recSequenceData}
+                                      recordHandler={recordHandler}
+                                      refetchSearch={setRefetchSearch}
+                                      config={global.udaGlobalConfig}
+                                  />
+
+                                  {recordSequenceDetailsVisibility &&
+                                      <UdanMain.RecordSequenceDetails
+                                          data={selectedRecordingDetails}
+                                          recordSequenceDetailsVisibility={
+                                              recordSequenceDetailsVisibility &&
+                                              !isRecording &&
+                                              !toggleContainer("record-button")
+                                          }
+                                          cancelHandler={cancel}
+                                          playHandler={playHandler}
+                                          isPlaying={playDelay}
+                                          // refetchSearch={setRefetchSearch}
+                                          key={"rSD" + recordSequenceDetailsVisibility}
+                                      />
                                   }
-                                  cancelHandler={cancel}
-                                  playHandler={playHandler}
-                                  isPlaying={playDelay}
-                                  // refetchSearch={setRefetchSearch}
-                                  key={"rSD" + recordSequenceDetailsVisibility}
-                              />
-                          }
-                        </>
-                      }
-                  />
-                  <Footer
-                      toggleFlag={hide}
-                      addRecordBtnStatus={showRecord}
-                      toggleHandler={toggleHandler}
-                  />
+                                </>
+                              }
+                          />
+                          <Footer
+                              toggleFlag={hide}
+                              addRecordBtnStatus={showRecord}
+                              toggleHandler={toggleHandler}
+                          />
+                      </>
+                  }
+
+                  {!authenticated && <>
+                      <Button type="primary" onClick={() => {
+                        keycloak.login();
+                      }}>Login</Button>
+                  </>}
                 </div>
               </div>
             </div>
@@ -421,7 +524,7 @@ function App() {
         </div>
 
         <Toggler toggleFlag={hide} toggleHandler={togglePanel}/>
-      </>
+      </UserDataContext.Provider>
   );
 }
 

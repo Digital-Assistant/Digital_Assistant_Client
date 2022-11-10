@@ -12,6 +12,7 @@ import {createPopperLite as createPopper} from "@popperjs/core";
 import {jaroWinkler} from "jaro-winkler-typescript";
 import {UDAErrorLogger} from "../config/error-log";
 import {removeFromArray} from "./removeFromArray";
+
 export {indexnode} from "./indexNode";
 
 import TSON from "typescript-json";
@@ -627,8 +628,6 @@ export const getTooltipPositionClass = (
 
 //   return inputlabels;
 // };
-
-
 
 
 export const addClickToNode = (node: any, confirmdialog = false) => {
