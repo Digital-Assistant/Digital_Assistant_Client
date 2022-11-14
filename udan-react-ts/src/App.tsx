@@ -76,7 +76,7 @@ function App() {
   );
   const [hide, setHide] = useState<boolean>(isRecording ? false : true);
   const [showLoader, setShowLoader] = useState<boolean>(true);
-  const [showSearch, setShowSearch] = useState<boolean>(false);
+  const [showSearch, setShowSearch] = useState<boolean>(true);
   const [showRecord, setShowRecord] = useState<boolean>(false);
   const [playDelay, setPlayDelay] = useState<string>("off");
   const [isPlaying, setIsPlaying] = useState<string>(getFromStore(CONFIG.RECORDING_IS_PLAYING, true) || "off");
@@ -184,6 +184,7 @@ function App() {
       }, 2000);
       togglePanel();
       offSearch();
+      setShowSearch(true);
       setRecordSequenceDetailsVisibility(true);
     } else if (isRecording) {
       offSearch();
@@ -215,6 +216,8 @@ function App() {
     } else {
       console.log(userSessionData);
       setUserSessionData(userSessionData);
+      setAuthenticated(true);
+      openUDAPanel();
       if (userSessionData.authenticationsource === 'keycloak') {
         setInvokeKeycloak(true);
       } else {
@@ -260,12 +263,6 @@ function App() {
    * Toggle right side panel visibility
    */
   const togglePanel = () => {
-    /*if(!keycloak.authenticated){
-      keycloak.login();
-    } else {
-      setHide(!hide);
-      squeezeBody(!hide);
-    }*/
     setHide(!hide);
     squeezeBody(!hide);
   };

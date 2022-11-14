@@ -1,7 +1,7 @@
 import { ENDPOINT } from "../config/endpoints";
 import { REST } from ".";
-import { getFromStore } from "../util";
 import { CONFIG } from "../config";
+import { getSessionKey, getUserId } from "./userService";
 
 /**
  * To record each action/event
@@ -9,28 +9,7 @@ import { CONFIG } from "../config";
  * @returns promise
  */
 
-export const getUserId = async () => {
-  let userSessionData = await getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
-  console.log(userSessionData);
-  if(userSessionData && userSessionData.authdata){
-    return userSessionData.authdata.id;
-  } else {
-    return null;
-  }
-}
-
-export const getSessionKey = async () => {
-  let userSessionData = await getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
-  console.log(userSessionData);
-  if(userSessionData && userSessionData.sessionkey){
-    return userSessionData.sessionkey;
-  } else {
-    return null;
-  }
-}
-
 export const recordClicks = async (request?: any) => {
-  // request.sessionid = getFromStore("udaSessionKey", true);
   request.sessionid = await getSessionKey();
   const parameters = {
     url: ENDPOINT.RECORD,
@@ -47,7 +26,6 @@ export const recordClicks = async (request?: any) => {
  */
 
 export const updateRecordClicks = async (request?: any) => {
-  // request.sessionid = getFromStore("udaSessionKey", true);
   request.sessionid = await getSessionKey();
   const parameters = {
     url: ENDPOINT.UPDATE_RECORD,
@@ -64,7 +42,6 @@ export const updateRecordClicks = async (request?: any) => {
  */
 
 export const recordSequence = async (request?: any) => {
-  // request.usersessionid = getFromStore("udaSessionId", true);
   request.usersessionid = await getUserId();
   const parameters = {
     url: ENDPOINT.RECORD_SEQUENCE,
@@ -81,7 +58,6 @@ export const recordSequence = async (request?: any) => {
  */
 
 export const userClick = async (request?: any) => {
-  // request.usersessionid = getFromStore("udaSessionId", true);
   request.usersessionid = await getUserId();
   request.clickedname = window.location.host;
   const parameters = {

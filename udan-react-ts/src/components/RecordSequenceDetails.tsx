@@ -26,9 +26,10 @@ import {
   getAbsoluteOffsets,
   sleep,
 } from "../util";
-import {deleteRecording, getUserId, vote} from "../services/recordService";
+import {deleteRecording, vote} from "../services/recordService";
 import {jaroWinkler} from "jaro-winkler-typescript";
 import {CONFIG} from "../config";
+import {getUserId} from "../services/userService";
 
 
 export interface MProps {
@@ -387,7 +388,7 @@ export const RecordSequenceDetails = (props: MProps) => {
         </div>
         <div className="uda-details-footer">
           <Row>
-            {(selectedRecordingDetails.usersessionid === getUserId) &&
+            {(selectedRecordingDetails.usersessionid === getUserId()) &&
                 <Col span={12} style={{textAlign: "center"}}>
                     <Popconfirm title="Are you sure?" onConfirm={removeRecording}>
                         <Button>
