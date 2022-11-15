@@ -12,7 +12,10 @@ import {createPopperLite as createPopper} from "@popperjs/core";
 import {jaroWinkler} from "jaro-winkler-typescript";
 import {UDAErrorLogger} from "../config/error-log";
 import {removeFromArray} from "./removeFromArray";
+
 export {indexnode} from "./indexNode";
+
+import TSON from "typescript-json";
 
 
 export const UDAClickObjects: any = [];
@@ -105,7 +108,7 @@ export const init = async () => {
  * @param isRaw - is raw data or json
  */
 export const setToStore = (data: any, key: string, isRaw: boolean) => {
-  localStorage.setItem(key, !isRaw ? JSON.stringify(data) : data);
+  localStorage.setItem(key, !isRaw ? TSON.stringify(data) : data);
 };
 
 /**
@@ -627,8 +630,6 @@ export const getTooltipPositionClass = (
 // };
 
 
-
-
 export const addClickToNode = (node: any, confirmdialog = false) => {
   try {
     if (
@@ -926,7 +927,7 @@ export const postClickData = async (node: HTMLElement, text: string) => {
     clickednodename: text,
     html5: 0,
     clickedpath: "",
-    objectdata: JSON.stringify(objectData),
+    objectdata: TSON.stringify(objectData),
   };
 
   return recordClicks(payload);

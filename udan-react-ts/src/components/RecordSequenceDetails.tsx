@@ -5,16 +5,16 @@
  * Associated Route/Usage: *
  */
 
-import React, { useEffect } from "react";
-import { Row, Col, Button, List, Popconfirm, message } from "antd";
+import React, {useEffect} from "react";
+import {Row, Col, Button, List, Popconfirm, message} from "antd";
 import {
   LeftOutlined,
   DeleteOutlined,
   LikeOutlined,
   PlayCircleOutlined,
-  PauseCircleOutlined ,
+  PauseCircleOutlined,
 } from "@ant-design/icons";
-import { createPopperLite as createPopper } from "@popperjs/core";
+import {createPopperLite as createPopper} from "@popperjs/core";
 import {
   // addToolTip,
   setToStore,
@@ -26,9 +26,10 @@ import {
   getAbsoluteOffsets,
   sleep,
 } from "../util";
-import { deleteRecording, vote } from "../services/recordService";
-import { jaroWinkler } from "jaro-winkler-typescript";
-import { CONFIG } from "../config";
+import {deleteRecording, vote} from "../services/recordService";
+import {jaroWinkler} from "jaro-winkler-typescript";
+import {CONFIG} from "../config";
+import {getUserId} from "../services/userService";
 
 
 export interface MProps {
@@ -39,7 +40,7 @@ export interface MProps {
   cancelHandler?: Function;
   playHandler?: Function;
   isPlaying?: string;
- 
+
 }
 
 /**
@@ -49,7 +50,7 @@ export interface MProps {
 
 export const RecordSequenceDetails = (props: MProps) => {
   const [selectedRecordingDetails, setSelectedRecordingDetails] =
-    React.useState<any>(props.data);
+      React.useState<any>(props.data);
 
   /**
    * Every time isPlaying state changes, and status is "on", play continues
@@ -82,20 +83,20 @@ export const RecordSequenceDetails = (props: MProps) => {
         // const selector = getLookUpSelector(originalElement);
         // const targetElement = document.querySelector(selector);
         let compareElements = document.querySelectorAll(
-          originalElement.nodeName
+            originalElement.nodeName
         );
         for (let i = 0; i < compareElements?.length; i++) {
           if (
-            jaroWinkler(
-              originalElement.outerHTML,
-              compareElements[i].outerHTML
-            ) >= CONFIG.JARO_WEIGHT
+              jaroWinkler(
+                  originalElement.outerHTML,
+                  compareElements[i].outerHTML
+              ) >= CONFIG.JARO_WEIGHT
           ) {
             if (originalNode.offset) {
               const _offsets = getAbsoluteOffsets(compareElements[i]);
               if (
-                _offsets.x == originalNode.offset.x ||
-                _offsets.y == originalNode.offset.y
+                  _offsets.x == originalNode.offset.x ||
+                  _offsets.y == originalNode.offset.y
               ) {
                 originalElement = compareElements[i];
               }
@@ -106,8 +107,8 @@ export const RecordSequenceDetails = (props: MProps) => {
         }
         // console.log(originalElement);
         if (
-          originalElement &&
-          originalElement?.nodeName?.toLowerCase() === "a"
+            originalElement &&
+            originalElement?.nodeName?.toLowerCase() === "a"
         ) {
           updateStatus(playItem.index);
           try {
@@ -140,8 +141,8 @@ export const RecordSequenceDetails = (props: MProps) => {
       const _metaData = getObjData(invokingNode);
       //ignore if recorded node is personal / marked as skip
       if (
-        _metaData &&
-        (_metaData.meta.isPersonal || _metaData.meta.skipDuringPlay)
+          _metaData &&
+          (_metaData.meta.isPersonal || _metaData.meta.skipDuringPlay)
       )
         return;
 
@@ -155,17 +156,17 @@ export const RecordSequenceDetails = (props: MProps) => {
         // );
         // if (originalElement.outerHTML == compareElements[i].outerHTML) {
         if (
-          jaroWinkler(
-            originalElement.outerHTML,
-            compareElements[i].outerHTML
-          ) >= CONFIG.JARO_WEIGHT
+            jaroWinkler(
+                originalElement.outerHTML,
+                compareElements[i].outerHTML
+            ) >= CONFIG.JARO_WEIGHT
         ) {
           _toolTipFlag = true;
           if (originalNode.offset) {
             const _offsets = getAbsoluteOffsets(compareElements[i]);
             if (
-              _offsets.x == originalNode.offset.x ||
-              _offsets.y == originalNode.offset.y
+                _offsets.x == originalNode.offset.x ||
+                _offsets.y == originalNode.offset.y
             ) {
               originalElement = compareElements[i];
             } else {
@@ -183,27 +184,28 @@ export const RecordSequenceDetails = (props: MProps) => {
         setToStore("on", CONFIG.RECORDING_MANUAL_PLAY, true);
         try {
           window.location.href = originalElement?.getAttribute("href") || "/";
-        } catch (e) {}
+        } catch (e) {
+        }
         return;
       }
 
       //attach event to continue button in tooltip
       document
-        .getElementById("uda-autoplay-continue")
-        ?.addEventListener("click", (e: Event) => {
-          // const elementsFromStore = getFromStore("selectedRecordedItem", false);
-          setToolTip(
-            selectedRecordingDetails?.userclicknodesSet[index + 1],
-            index + 1
-          );
-        });
+          .getElementById("uda-autoplay-continue")
+          ?.addEventListener("click", (e: Event) => {
+            // const elementsFromStore = getFromStore("selectedRecordedItem", false);
+            setToolTip(
+                selectedRecordingDetails?.userclicknodesSet[index + 1],
+                index + 1
+            );
+          });
 
       //attach event to close tooltip
       document
-        .getElementById("uda-autoplay-exit")
-        ?.addEventListener("click", (e: Event) => {
-          removeToolTip();
-        });
+          .getElementById("uda-autoplay-exit")
+          ?.addEventListener("click", (e: Event) => {
+            removeToolTip();
+          });
 
       //let selector = getLookUpSelector(originalElement);
 
@@ -213,8 +215,8 @@ export const RecordSequenceDetails = (props: MProps) => {
 
       if (originalElement) {
         let toolTipPositionClass: any = getTooltipPositionClass(
-          originalElement,
-          tooltipDivElement
+            originalElement,
+            tooltipDivElement
         );
         createPopper(originalElement, tooltipDivElement, {
           placement: toolTipPositionClass,
@@ -244,7 +246,7 @@ export const RecordSequenceDetails = (props: MProps) => {
   const updateStatus = (index: number) => {
     selectedRecordingDetails.userclicknodesSet[index].status = "completed";
     setToStore(selectedRecordingDetails, "selectedRecordedItem", false);
-    setSelectedRecordingDetails({ ...selectedRecordingDetails });
+    setSelectedRecordingDetails({...selectedRecordingDetails});
   };
 
   /**
@@ -255,7 +257,7 @@ export const RecordSequenceDetails = (props: MProps) => {
       element.status = "none";
     });
     setToStore(selectedRecordingDetails, "selectedRecordedItem", false);
-    setSelectedRecordingDetails({ ...selectedRecordingDetails });
+    setSelectedRecordingDetails({...selectedRecordingDetails});
   };
 
   /**
@@ -267,7 +269,8 @@ export const RecordSequenceDetails = (props: MProps) => {
     if (props.data) {
       try {
         name = JSON.parse(props?.data?.name)?.join(",");
-      } catch (e) {}
+      } catch (e) {
+      }
     }
     return name;
   };
@@ -279,17 +282,17 @@ export const RecordSequenceDetails = (props: MProps) => {
   const renderData = () => {
     if (!props?.data) return;
     return selectedRecordingDetails?.userclicknodesSet?.map(
-      (item: any, index: number) => {
-        return (
-          <li
-            key={`rec-details-${index}`}
-            className={item.status}
-            onClick={() => setToolTip(item, index)}
-          >
-            <i>{item?.clickednodename}</i>
-          </li>
-        );
-      }
+        (item: any, index: number) => {
+          return (
+              <li
+                  key={`rec-details-${index}`}
+                  className={item.status}
+                  onClick={() => setToolTip(item, index)}
+              >
+                <i>{item?.clickednodename}</i>
+              </li>
+          );
+        }
     );
   };
 
@@ -320,7 +323,7 @@ export const RecordSequenceDetails = (props: MProps) => {
 
   const removeRecording = async () => {
     if (!window.confirm("Sure you want to delete?")) return;
-    await deleteRecording({ id: selectedRecordingDetails.id });
+    await deleteRecording({id: selectedRecordingDetails.id});
     if (props?.refetchSearch) {
       props.refetchSearch("on");
     }
@@ -328,76 +331,79 @@ export const RecordSequenceDetails = (props: MProps) => {
   };
 
   const manageVote = async () => {
-    await vote({ id: selectedRecordingDetails.id }, "up");
+    await vote({id: selectedRecordingDetails.id}, "up");
   };
 
   return props?.recordSequenceDetailsVisibility ? (
-    <>
-      <div
-        className="uda-card-details"
-        style={{
-          borderBottomLeftRadius: "0px",
-          borderBottomRightRadius: "0px",
-        }}
-      >
-        <div className="uda-card-btns">
-          <Button
-            type="primary"
-            shape="circle"
-            size="small"
-            style={{ position: "absolute", top: 12, left: 0 }}
-            onClick={() => backNav()}
-          >
-            <LeftOutlined />
-          </Button>
-          {props?.isPlaying == "off" && (
-            <PlayCircleOutlined
-              className="large secondary"
-              onClick={() => play()}
-            />
-          )}
-          {props?.isPlaying == "on" && (
-            <PauseCircleOutlined
-              className="large secondary"
-              onClick={() => pause()}
-            />
-          )}
-        </div>
-        <h5>{getName()}</h5> <hr />
-        <ul className="uda-suggestion-list" id="uda-sequence-steps">
-          {/* {renderData()} */}
-          {props?.data && (
-            <List
-              itemLayout="horizontal"
-              dataSource={selectedRecordingDetails?.userclicknodesSet}
-              renderItem={(item: any, index: number) => (
-                <List.Item
-                  className={item.status}
-                  onClick={() => setToolTip(item, index)}
-                >
-                  <List.Item.Meta title={item?.clickednodename} />
-                </List.Item>
-              )}
-            />
-          )}
-        </ul>
-      </div>
-      <div className="uda-details-footer">
-        <Row>
-          <Col span={12} style={{ textAlign: "center" }}>
-            <Popconfirm title="Are you sure?" onConfirm={removeRecording}>
-              <Button>
-                <DeleteOutlined width={33} className="secondary" />
-              </Button>
-            </Popconfirm>
-          </Col>
-          <Col span={12} style={{ textAlign: "center" }}>
-            <Button onClick={() => manageVote()}>
-              <LikeOutlined width={33} className="secondary" />
+      <>
+        <div
+            className="uda-card-details"
+            style={{
+              borderBottomLeftRadius: "0px",
+              borderBottomRightRadius: "0px",
+            }}
+        >
+          <div className="uda-card-btns">
+            <Button
+                type="primary"
+                shape="circle"
+                size="small"
+                style={{position: "absolute", top: 12, left: 0}}
+                onClick={() => backNav()}
+            >
+              <LeftOutlined/>
             </Button>
-          </Col>
-        </Row>
-      </div>
-    </>
+            {props?.isPlaying == "off" && (
+                <PlayCircleOutlined
+                    className="large secondary"
+                    onClick={() => play()}
+                />
+            )}
+            {props?.isPlaying == "on" && (
+                <PauseCircleOutlined
+                    className="large secondary"
+                    onClick={() => pause()}
+                />
+            )}
+          </div>
+          <h5>{getName()}</h5>
+          <hr/>
+          <ul className="uda-suggestion-list" id="uda-sequence-steps">
+            {/* {renderData()} */}
+            {props?.data && (
+                <List
+                    itemLayout="horizontal"
+                    dataSource={selectedRecordingDetails?.userclicknodesSet}
+                    renderItem={(item: any, index: number) => (
+                        <List.Item
+                            className={item.status}
+                            onClick={() => setToolTip(item, index)}
+                        >
+                          <List.Item.Meta title={item?.clickednodename}/>
+                        </List.Item>
+                    )}
+                />
+            )}
+          </ul>
+        </div>
+        <div className="uda-details-footer">
+          <Row>
+            {(selectedRecordingDetails.usersessionid === getUserId()) &&
+                <Col span={12} style={{textAlign: "center"}}>
+                    <Popconfirm title="Are you sure?" onConfirm={removeRecording}>
+                        <Button>
+                            <DeleteOutlined width={33} className="secondary"/>
+                        </Button>
+                    </Popconfirm>
+                </Col>
+            }
+            <Col span={12} style={{textAlign: "center"}}>
+              <Button onClick={() => manageVote()}>
+                <LikeOutlined width={33} className="secondary"/>
+              </Button>
+            </Col>
+          </Row>
+        </div>
+      </>
   ) : null;
 };

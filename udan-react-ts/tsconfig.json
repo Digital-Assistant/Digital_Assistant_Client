@@ -30,6 +30,13 @@
     "target": "es5",
     "jsx": "react",
     "allowJs": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "plugins": [
+      {
+        "transform": "typescript-json/lib/transform",
+        // "functional": true, // test function type
+        // "numeric": true, // test `isNaN()` and `isFinite()`
+      }
+    ]
   }
 }

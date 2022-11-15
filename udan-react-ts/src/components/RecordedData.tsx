@@ -15,6 +15,8 @@ import { setToStore, postRecordSequenceData, getObjData } from "../util";
 import { updateRecordClicks, profanityCheck } from "../services/recordService";
 import { CONFIG } from "../config";
 
+import TSON from "typescript-json";
+
 export interface MProps {
   sequenceName?: string;
   isShown?: boolean;
@@ -75,8 +77,8 @@ export const RecordedData = (props: MProps) => {
     if (!_.isEmpty(_objData)) {
       setRecordData([...props?.data]);
       _objData.meta.displayText = inputValue;
-      _cloneRecObj.objectdata = JSON.stringify(_objData);
-      recordData[index].objectdata = JSON.stringify(_objData);
+      _cloneRecObj.objectdata = TSON.stringify(_objData);
+      recordData[index].objectdata = TSON.stringify(_objData);
       storeRecording(recordData);
       await updateRecordClicks(_cloneRecObj);
     }
@@ -104,7 +106,7 @@ export const RecordedData = (props: MProps) => {
       if (_objData.meta[key] === undefined) _objData.meta[key] = false;
       _objData.meta[key] = !_objData.meta[key];
       console.log(_objData);
-      recordData[index].objectdata = JSON.stringify(_objData);
+      recordData[index].objectdata = TSON.stringify(_objData);
       storeRecording(recordData);
       updateRecordClicks(recordData[index]);
     }
@@ -132,7 +134,7 @@ export const RecordedData = (props: MProps) => {
     }
 
     const _payload: any = {
-      name: JSON.stringify(_labels),
+      name: TSON.stringify(_labels),
     };
 
     //if additional params available send them part of payload
