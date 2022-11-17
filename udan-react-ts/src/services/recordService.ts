@@ -110,7 +110,7 @@ export const vote = async (request?: any, type?: string) => {
 
 export const profanityCheck = async (request?: any) => {
   // request.usersessionid = getFromStore("udaSessionId", true);
-  request.usersessionid = await getUserId();
+  // request.usersessionid = await getUserId();
   const headers = new Headers();
   headers.append("Content-Type", "text/plain");
   headers.append("Ocp-Apim-Subscription-Key", CONFIG.profanity.config.key1);

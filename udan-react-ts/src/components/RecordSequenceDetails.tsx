@@ -5,7 +5,7 @@
  * Associated Route/Usage: *
  */
 
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {Row, Col, Button, List, Popconfirm, message} from "antd";
 import {
   LeftOutlined,
@@ -324,15 +324,24 @@ export const RecordSequenceDetails = (props: MProps) => {
   const removeRecording = async () => {
     if (!window.confirm("Sure you want to delete?")) return;
     await deleteRecording({id: selectedRecordingDetails.id});
-    if (props?.refetchSearch) {
+    /*if (props?.refetchSearch) {
       props.refetchSearch("on");
-    }
+    }*/
     backNav();
   };
 
   const manageVote = async () => {
     await vote({id: selectedRecordingDetails.id}, "up");
   };
+
+  const [userId, setUserId] = useState<string>(null);
+
+  useEffect(() => {
+    (async () => {
+      setUserId(await getUserId());
+    })();
+  }, []);
+
 
   return props?.recordSequenceDetailsVisibility ? (
       <>
@@ -388,7 +397,7 @@ export const RecordSequenceDetails = (props: MProps) => {
         </div>
         <div className="uda-details-footer">
           <Row>
-            {(selectedRecordingDetails.usersessionid === getUserId()) &&
+            {(selectedRecordingDetails.usersessionid === userId) &&
                 <Col span={12} style={{textAlign: "center"}}>
                     <Popconfirm title="Are you sure?" onConfirm={removeRecording}>
                         <Button>

@@ -5,11 +5,11 @@
  */
 ///<reference types="chrome"/>
 
-import React, {useState, useEffect, useCallback, useContext, createContext} from "react";
+import React, {useState, useEffect, useCallback} from "react";
 import {Button, Spin} from "antd";
 import "./css/antd.css";
 import {fetchSearchResults} from "./services/searchService";
-import {login, getUserSession} from "./services/authService";
+import {login} from "./services/authService";
 import _ from "lodash";
 import {
   squeezeBody,
@@ -74,7 +74,7 @@ function App() {
           ? true
           : false) || false
   );
-  const [hide, setHide] = useState<boolean>(isRecording ? false : true);
+  const [hide, setHide] = useState<boolean>(!isRecording);
   const [showLoader, setShowLoader] = useState<boolean>(true);
   const [showSearch, setShowSearch] = useState<boolean>(true);
   const [showRecord, setShowRecord] = useState<boolean>(false);
@@ -88,11 +88,6 @@ function App() {
   const [recSequenceData, setRecSequenceData] = useState<any>([]);
   const [recordSequenceDetailsVisibility, setRecordSequenceDetailsVisibility] = useState<boolean>(false);
   const [selectedRecordingDetails, setSelectedRecordingDetails] = useState<any>(getFromStore(CONFIG.SELECTED_RECORDING, false) || {});
-
-  /**
-   * Global user session creation
-   */
-  const [udaUserSessionData, setUdaUserSessionData] = useState(null);
 
   /**
    * keycloak integration
@@ -184,11 +179,13 @@ function App() {
       }, 2000);
       togglePanel();
       offSearch();
+      setRefetchSearch('on');
       setShowSearch(true);
       setRecordSequenceDetailsVisibility(true);
     } else if (isRecording) {
       offSearch();
     } else {
+      setRefetchSearch('on');
       setShowSearch(true);
       setSearchKeyword("");
     }
@@ -243,10 +240,9 @@ function App() {
 
   useEffect(() => {
     if (refetchSearch == "on") {
-      setSearchKeyword("");
-      setSearchKeyword("");
+      getSearchResults();
     }
-  }, [refetchSearch]);
+  }, [refetchSearch, showSearch]);
 
   useEffect(() => {
     getSearchResults()
@@ -276,6 +272,7 @@ function App() {
   };
 
   const offSearch = () => {
+    setRefetchSearch('');
     setShowSearch(false);
     setShowLoader(false);
   };
@@ -300,10 +297,13 @@ function App() {
   const getSearchResults = async (_page = 1) => {
     // if (!showSearch) return;
     setShowLoader(true);
+    let additionalParams: any = (CONFIG.ENABLE_PERMISSIONS)? {...CONFIG.PERMISSIONS}: null;
+    console.log(additionalParams);
     const _searchResults = await fetchSearchResults({
       keyword: searchKeyword,
       page,
       domain: encodeURI(window.location.host),
+      additionalParams: (CONFIG.ENABLE_PERMISSIONS)?encodeURI(JSON.stringify(CONFIG.PERMISSIONS)):null,
     });
     setPage(_page);
     setTimeout(() => setShowLoader(false), 500);
@@ -315,6 +315,7 @@ function App() {
     playHandler("off");
     setIsRecording(true);
     setShowRecord(false);
+    setRefetchSearch('');
     setShowSearch(false);
   };
 
@@ -330,8 +331,8 @@ function App() {
     setToStore([], CONFIG.RECORDING_SEQUENCE, false);
     setToStore({}, CONFIG.SELECTED_RECORDING, false);
     setSelectedRecordingDetails({});
+    setRefetchSearch('on');
     setShowSearch(true);
-    setRefetchSearch("on");
     if (window.udanSelectedNodes) window.udanSelectedNodes = [];
   };
 
@@ -349,6 +350,7 @@ function App() {
       case "cancel":
         break;
     }
+    setRefetchSearch('on');
     setShowSearch(true);
     cancel();
   };
@@ -360,6 +362,7 @@ function App() {
    */
   const toggleHandler = (hideFlag: boolean, type: string) => {
     if (type == "footer") {
+      setRefetchSearch('');
       setShowSearch(false);
       setToStore([], CONFIG.RECORDING_SEQUENCE, false);
       setShowRecord(hideFlag);
@@ -371,6 +374,7 @@ function App() {
    * @param flag
    */
   const showRecordHandler = (flag: boolean) => {
+    setRefetchSearch('');
     setShowSearch(false);
     setManualPlay("off");
     setToStore("off", CONFIG.RECORDING_MANUAL_PLAY, true);
@@ -409,6 +413,7 @@ function App() {
    */
   const showRecordingDetails = (data: any) => {
     playHandler("off")
+    setRefetchSearch('');
     setShowSearch(false);
     setSelectedRecordingDetails({...data});
     setRecordSequenceDetailsVisibility(true);

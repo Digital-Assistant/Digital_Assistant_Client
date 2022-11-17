@@ -10,12 +10,26 @@ import { REST } from ".";
 export const fetchSearchResults = (request?: {
   keyword?:string,
   page?:number,
-  domain?:string
+  domain?:string,
+  additionalParams?: any
 }) => {
-  const parameters = {
-    url: REST.processArgs(ENDPOINT.SEARCH, request),
-    method: "GET",
-  };
+  console.log(request.additionalParams);
+  if(request.additionalParams===null){
+    delete request.additionalParams;
+  }
+  let parameters: any;
+  if(request.additionalParams != null){
+    parameters = {
+      url: REST.processArgs(ENDPOINT.SEARCH_WITH_PERMISSIONS, request),
+      method: "GET",
+    };
+  } else {
+    parameters = {
+      url: REST.processArgs(ENDPOINT.SEARCH, request),
+      method: "GET",
+    };
+  }
+
   return REST.apiCal(parameters);
 };
 
