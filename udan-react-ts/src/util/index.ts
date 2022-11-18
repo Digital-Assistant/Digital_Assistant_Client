@@ -991,10 +991,15 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
     const nodename = node.nodeName.toLowerCase();
     // console.log(domJSON.toJSON(node));
 
+    if (node && node.onclick) {
+      node.setAttribute("data-onclick", node.getAttribute("onclick"));
+     node.setAttribute("onclick", "");
+    }
+
+      
     switch (nodename) {
       case "a":
         addEvent(node, "click", function (event: any) {
-          event.preventDefault();
           recorduserclick(event.target, false, false, event, confirmdialog);
         });
         break;
@@ -1037,7 +1042,6 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
           case "textarea":
           case "week":
             addEvent(node, "click", function (event: any) {
-              console.log(node);
               recorduserclick(node, false, false, event, confirmdialog);
             });
             break;
@@ -1166,6 +1170,10 @@ export const recorduserclick = async (
 
   if (!node) return false;
 
+
+  event.preventDefault();
+  event.stopPropagation();
+
   if (
     !node.isSameNode(event.target) || clickableElementExists(event.target) ||
     !isClickable(event.target)
@@ -1222,6 +1230,16 @@ export const recorduserclick = async (
   }
 
   if (
+    parentAnchorElement && node.getAttribute("data-onclick")
+  ) {
+    parentAnchorElement?.setAttribute(
+      "onclick",
+      parentAnchorElement?.getAttribute("data-onclick")
+    );
+    parentAnchorElement?.removeAttribute("data-onclick");
+    parentAnchorElement.dispatchEvent(new Event("click"));
+  }
+  else if (
     parentAnchorElement && node.getAttribute("href")
   ) {
     //return;
@@ -1338,7 +1356,8 @@ export const getCurrentPlayItem = () => {
 // getting the text for the clicknodes.
 export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, iterate = true, getchildlabels = true, fromclick = false, iteratelimit = 3, ignorenode: any = [])=>{
 
-      if (!node) return inputlabels;
+  console.log(JSON.stringify(node))
+  if (!node) return inputlabels;
 
   try { 
     if (Array.isArray(ignorenode)) {
@@ -1654,12 +1673,14 @@ export const getAllChildren = (htmlElement: any) => {
  * @returns 
  */
 export const getObjData = (obj: string) => {
+  if (!obj) return {}
+  console.log(obj)
     try {
       const _objData = JSON.parse(obj);
       if (_objData && _objData.meta === undefined) _objData.meta = {};
       return _objData;
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       return {};
     }
 };
