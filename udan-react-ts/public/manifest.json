@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "UDAN-React-Library",
-  "version": "0.1.1",
+  "version": "0.9.0",
   "content_scripts": [
     {
       "matches": [

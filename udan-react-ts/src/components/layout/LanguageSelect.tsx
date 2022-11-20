@@ -23,7 +23,7 @@ const LanguageSelect = ({
      */
     if (CONFIG.multilingual.enabled) {
       const tempLangOptions = [];
-      CONFIG.bcplang.forEach((langcode) => {
+      CONFIG.bcpLang.forEach((langcode) => {
         if (langcode.length > 2) {
           langcode.forEach((sublang, sublangindex) => {
             if (sublangindex !== 0) {

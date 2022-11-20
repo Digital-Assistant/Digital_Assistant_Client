@@ -13,7 +13,6 @@ export const fetchSearchResults = (request?: {
   domain?:string,
   additionalParams?: any
 }) => {
-  console.log(request.additionalParams);
   if(request.additionalParams===null){
     delete request.additionalParams;
   }

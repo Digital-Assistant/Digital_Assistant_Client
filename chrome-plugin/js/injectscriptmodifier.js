@@ -2,6 +2,8 @@ var s = document.createElement('script');
 s.async = false;
 s.onload = function() {
 };
+/*var scriptpath = chrome.runtime.getURL("js/Voicepluginsdk.js");
+s.src = scriptpath;*/
 s.text = `
 /***
  * Logger codebase

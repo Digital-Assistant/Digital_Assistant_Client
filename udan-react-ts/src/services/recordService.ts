@@ -69,7 +69,6 @@ export const userClick = async (request?: any) => {
 };
 
 export const deleteRecording = async (request?: any) => {
-  // request.usersessionid = getFromStore("udaSessionId", true);
   request.usersessionid = await getUserId();
   const parameters = {
     url: ENDPOINT.DELETE_SEQUENCE,
@@ -109,8 +108,6 @@ export const vote = async (request?: any, type?: string) => {
  */
 
 export const profanityCheck = async (request?: any) => {
-  // request.usersessionid = getFromStore("udaSessionId", true);
-  // request.usersessionid = await getUserId();
   const headers = new Headers();
   headers.append("Content-Type", "text/plain");
   headers.append("Ocp-Apim-Subscription-Key", CONFIG.profanity.config.key1);

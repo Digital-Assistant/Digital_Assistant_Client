@@ -16,6 +16,7 @@ import {updateRecordClicks, profanityCheck} from "../services/recordService";
 import {CONFIG} from "../config";
 
 import TSON from "typescript-json";
+import {translate} from "../util/translation";
 
 export interface MProps {
   sequenceName?: string;
@@ -40,6 +41,8 @@ export const RecordedData = (props: MProps) => {
   const [advBtnShow, setAdvBtnShow] = React.useState<boolean>(false);
   const [tmpPermissionsObj, setTmpPermissionsObj] = useState<any>({});
   const [inputAlert, setInputAlert] = useState<any>({});
+  const [inputError, setInputError] = useState<any>({});
+  const [tooltip, setToolTip] = React.useState<string>("");
 
   useEffect(() => {
     setRecordData([...(props.data || [])]);
@@ -60,30 +63,31 @@ export const RecordedData = (props: MProps) => {
   };
 
   const setEdit = (index: number) => {
-    recordData[index].editable = true;
-    storeRecording(recordData);
+    if (CONFIG.enableEditClickedName === true) {
+      recordData[index].editable = true;
+      storeRecording(recordData);
+    }
   };
 
   const checkProfanity = async (keyword: any) => {
-    if (!CONFIG.profanity.enabled) return false;
+    if (!CONFIG.profanity.enabled) return keyword.trim();
     const response: any = await profanityCheck(keyword);
-    if (response.Terms && response.Terms.length>0) {
+    if (response.Terms && response.Terms.length > 0) {
       response.Terms.forEach(function (term) {
         keyword = keyword.replaceAll(term.Term, '');
       });
     }
     return keyword.trim();
-    // return resp.error ? true : false;
   };
 
+  /**check profanity for input text */
   const handleDebounceFn = async (index: number, inputValue: string) => {
-    /**check profanity for input text */
-    /*if (await checkProfanity(inputValue)) {
-      recordData[index].profanity = true;
-      storeRecording(recordData);
-      setDisableForm(true);
+    if (!validateInput(inputValue)) {
+      setInputError({...inputError, clickedNodeName: true});
       return;
-    }*/
+    } else {
+      setInputError({...inputError, clickedNodeName: false});
+    }
     recordData[index].clickednodename = inputValue;
     if (timer) {
       clearTimeout(timer);
@@ -92,8 +96,7 @@ export const RecordedData = (props: MProps) => {
     setTimer(
         setTimeout(async () => {
           let changedName: any = await checkProfanity(inputValue);
-          console.log(changedName);
-          recordData[index].clickednodename = changedName.trim();
+          // recordData[index].clickednodename = changedName.trim();
           delete recordData[index].profanity;
           setDisableForm(false);
           const _cloneRecObj = _.cloneDeep(props?.data?.[index]);
@@ -101,25 +104,23 @@ export const RecordedData = (props: MProps) => {
           const _objData: any = getObjData(_cloneRecObj?.objectdata);
           if (!_.isEmpty(_objData)) {
             setRecordData([...props?.data]);
-            _objData.meta.displayText = inputValue;
+            _objData.meta.displayText = changedName.trim();
             _cloneRecObj.objectdata = TSON.stringify(_objData);
             recordData[index].objectdata = TSON.stringify(_objData);
             storeRecording(recordData);
             await updateRecordClicks(_cloneRecObj);
           }
-        }, 3000)
+        }, CONFIG.DEBOUNCE_INTERVAL)
     );
 
   };
 
-  /*const debounceFn = useCallback(debounce(handleDebounceFn, 3000), [
-    props?.data,
-  ]);*/
-
   const handleChange = (index: number) => async (event: any) => {
     // debounceFn(index, event.target.value);
-    recordData[index].clickednodename = event.target.value;
-    await handleDebounceFn(index, event.target.value);
+    if (CONFIG.enableEditClickedName === true) {
+      recordData[index].clickednodename = event.target.value;
+      await handleDebounceFn(index, event.target.value);
+    }
   };
 
   const handlePersonal = (index: number) => (event: any) => {
@@ -145,19 +146,29 @@ export const RecordedData = (props: MProps) => {
     labels.push({label: ""});
   };
 
+  /**
+   * remove added label
+   * @param index
+   */
   const removeLabel = (index: number) => {
     labels.splice(index, 1);
     setLabels([...labels]);
   };
 
+  /**
+   * cancel recording
+   */
   const cancelRecording = () => {
     if (props.recordHandler) props.recordHandler("cancel");
     setToStore([], CONFIG.RECORDING_SEQUENCE, false);
   };
 
+  /**
+   * submit the clicked input record to backend
+   */
   const submitRecording = async () => {
 
-    if(name===""){
+    if (name === "") {
       setInputAlert({...inputAlert, name: true});
       return false;
     }
@@ -165,8 +176,8 @@ export const RecordedData = (props: MProps) => {
     let _labels: any = [name];
     if (labels.length) {
       const _extraLabels = labels.map((label: any) => {
-        if(label.label) {
-         return label.label;
+        if (label.label) {
+          return label.label;
         }
       });
       _labels = [..._labels, ..._extraLabels];
@@ -191,8 +202,18 @@ export const RecordedData = (props: MProps) => {
 
   const [timer, setTimer] = useState(null);
 
+  /**
+   * validate and update of first label
+   * @param e
+   */
   const onChange = async (e: any) => {
     setName(e.target.value);
+    if (!validateInput(e.target.value)) {
+      setInputError({...inputError, name: true})
+      return;
+    } else {
+      setInputError({...inputError, name: false})
+    }
     if (timer) {
       clearTimeout(timer);
       setTimer(null);
@@ -201,13 +222,36 @@ export const RecordedData = (props: MProps) => {
         setTimeout(async () => {
           let changedName: any = await checkProfanity(e.target.value);
           setName(changedName);
-        }, 3000)
+        }, CONFIG.DEBOUNCE_INTERVAL)
     );
-
   };
 
+  /**
+   * Validate and check profanity of label input
+   * @param index
+   */
   const onExtraLabelChange = (index: number) => async (e: any) => {
+    let label: any;
+    if (inputError['label' + index]) {
+      label = inputError['label' + index];
+    } else {
+      inputError['label' + index] = {error: false};
+      label = inputError['label' + index];
+      setInputError({...inputError});
+    }
+
     labels[index].label = e.target.value;
+    setLabels([...labels]);
+    if (!validateInput(e.target.value)) {
+      label.error = true;
+      inputError['label' + index] = label;
+      setInputError({...inputError})
+      return;
+    } else {
+      label.error = false;
+      inputError['label' + index] = label;
+      setInputError({...inputError});
+    }
     if (timer) {
       clearTimeout(timer);
       setTimer(null);
@@ -215,21 +259,59 @@ export const RecordedData = (props: MProps) => {
     setTimer(
         setTimeout(async () => {
           let changedName: any = await checkProfanity(e.target.value);
-          console.log(changedName);
           labels[index].label = changedName;
-        }, 3000)
+          setLabels([...labels]);
+        }, CONFIG.DEBOUNCE_INTERVAL)
     );
-    /*setLabels([...labels]);
-    const prof = await checkProfanity(e.target.value);
-    if (prof) {
-      labels[index].profanity = true;
-      setLabels([...labels]);
-      setDisableForm(true);
+  };
+
+  /**
+   * Validate input of given string
+   * @param value
+   */
+  const validateInput = (value) => {
+    let validateCondition = new RegExp("^[0-9A-Za-z _.-]+$");
+    return (validateCondition.test(value));
+  }
+
+  /**
+   * validate input change of tooltip
+   * @param e
+   */
+  const onChangeTooltip = async (e: any) => {
+    setToolTip(e.target.value);
+    if (!validateInput(e.target.value)) {
+      setInputError({...inputError, tooltip: true})
       return;
     } else {
-      delete labels[index].profanity;
-      setDisableForm(false);
-    }*/
+      setInputError({...inputError, tooltip: false})
+    }
+    if (timer) {
+      clearTimeout(timer);
+      setTimer(null);
+    }
+    setTimer(
+        setTimeout(async () => {
+          let changedName: any = await checkProfanity(e.target.value);
+          setToolTip(changedName);
+        }, CONFIG.DEBOUNCE_INTERVAL)
+    );
+  };
+
+  /**
+   * Add custom tooltip to the clicked element
+   * @param key
+   * @param index
+   */
+  const updateTooltip = async (key: string, index: number) => {
+    const _objData = getObjData(recordData[index]?.objectdata);
+    if (_objData) {
+      if (_objData.meta[key] === undefined) _objData.meta[key] = tooltip;
+      _objData.meta[key] = tooltip
+      recordData[index].objectdata = TSON.stringify(_objData);
+      storeRecording(recordData);
+      await updateRecordClicks(recordData[index]);
+    }
   };
 
   const renderData = () => {
@@ -245,26 +327,27 @@ export const RecordedData = (props: MProps) => {
                   className="flex-card flex-center"
                   style={{alignItems: "center"}}
               >
-              <span id="uda-display-clicked-text" style={{flex: 2}}>
-                <input
-                    type="text"
-                    id="uda-edited-name"
-                    name="uda-edited-name"
-                    className={`uda-form-input ${
-                        !item.editable ? "non-editable" : ""
-                    } ${item.profanity ? "profanity" : ""}`}
-                    placeholder="Enter Name"
-                    // onChange={onLabelChange(index)}
-                    onChange={handleChange(index)}
-                    readOnly={!item.editable}
-                    style={{width: "85%! important"}}
-                    // onKeyDown={handleLabelChange(index)}
-                    onClick={() => {
-                      setEdit(index);
-                    }}
-                    value={item.clickednodename}
-                />
-              </span>
+                <span id="uda-display-clicked-text" style={{flex: 2}}>
+                  <input
+                      type="text"
+                      id="uda-edited-name"
+                      name="uda-edited-name"
+                      className={`uda-form-input ${
+                          !item.editable ? "non-editable" : ""
+                      } ${item.profanity ? "profanity" : ""}`}
+                      placeholder="Enter Name"
+                      // onChange={onLabelChange(index)}
+                      onChange={handleChange(index)}
+                      readOnly={!item.editable}
+                      style={{width: "85%! important"}}
+                      // onKeyDown={handleLabelChange(index)}
+                      onClick={() => {
+                        setEdit(index);
+                      }}
+                      value={item.clickednodename}
+                  />
+                  {inputError.clickednodename && <span className={`uda-alert`}> {translate('inputError')}</span>}
+                </span>
                 <br/>
               </div>
 
@@ -283,8 +366,8 @@ export const RecordedData = (props: MProps) => {
                           className="info-icon"
                           title="Select this box if this field / text is not required to navigate while processing."
                       >
-                    <InfoCircleOutlined/>
-                  </span>
+                        <InfoCircleOutlined/>
+                      </span>
                     </div>
 
                     <div className="flex-card flex-vcenter small-text">
@@ -299,9 +382,26 @@ export const RecordedData = (props: MProps) => {
                           className="info-icon"
                           title="select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."
                       >
-                    <InfoCircleOutlined/>
-                  </span>
+                        <InfoCircleOutlined/>
+                      </span>
                     </div>
+
+                    {CONFIG.enableTooltipAddition === true &&
+                        <>
+                            <div className="uda-recording" style={{textAlign: "center"}}>
+                                <input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip"
+                                       className="uda-form-input" placeholder="Custom Tooltip (Optional)"
+                                       style={{width: "68% !important"}} onChange={onChangeTooltip} value={tooltip}/>
+                              {inputError.tooltip && <span className={`uda-alert`}> {translate('inputError')}</span>}
+                                <span>
+                              <button className="delete-btn" style={{color: "#fff"}} id="uda-tooltip-save"
+                                      onClick={() => {
+                                        updateTooltip('tooltipInfo', index)
+                                      }}>Save</button>
+                            </span>
+                            </div>
+                        </>
+                    }
                   </>
               )}
             </li>
@@ -340,34 +440,41 @@ export const RecordedData = (props: MProps) => {
               type="text"
               id="uda-recorded-name"
               name="uda-save-recorded[]"
-              className={`uda-form-input}`}
+              className={`uda-form-input`}
               placeholder="Enter Label"
               onChange={onChange}
               value={name}
           />
-          {inputAlert.name && <span className={`uda-alert`}> Please input proper name.</span>}
+          {inputAlert.name && <span className={`uda-alert`}> {translate('inputMandatory')}</span>}
+          {inputError.name && <span className={`uda-alert`}> {translate('inputError')}</span>}
           <div id="uda-sequence-names">
             {labels?.map((item: any, index: number) => {
               return (
-                  <div className="flex-card flex-center" key={`label-${index}`}>
-                    <input
-                        type="text"
-                        id="uda-recorded-name"
-                        name="uda-save-recorded[]"
-                        className={`uda-form-input uda-form-input-reduced ${
-                            item.profanity ? "profanity" : ""
-                        }`}
-                        placeholder="Enter Label"
-                        onChange={onExtraLabelChange(index)}
-                        value={item.label}
-                    />
-                    <button
-                        className="delete-btn uda-remove-row"
-                        style={{color: "white", width: 40, marginLeft: 16}}
-                        onClick={() => removeLabel(index)}
-                    >
-                      <DeleteOutlined/>
-                    </button>
+                  <div key={`label-${index}`}>
+                    <div className="flex-card flex-center">
+                      <input
+                          type="text"
+                          id="uda-recorded-name"
+                          name="uda-save-recorded[]"
+                          className={`uda-form-input uda-form-input-reduced ${
+                              item.profanity ? "profanity" : ""
+                          }`}
+                          placeholder="Enter Label"
+                          onChange={onExtraLabelChange(index)}
+                          value={item.label}
+                      />
+                      <button
+                          className="delete-btn uda-remove-row"
+                          style={{color: "white", width: 40, marginLeft: 16}}
+                          onClick={() => removeLabel(index)}
+                      >
+                        <DeleteOutlined/>
+                      </button>
+                    </div>
+                    <div className="flex-card flex-center">
+                      {(inputError['label' + index] && inputError['label' + index].error) &&
+                          <span className={`uda-alert`}> {translate('inputError')}</span>}
+                    </div>
                   </div>
               );
             })}

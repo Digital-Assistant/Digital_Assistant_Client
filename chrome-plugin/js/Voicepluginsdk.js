@@ -2840,7 +2840,7 @@ if (typeof UDAPluginSDK === 'undefined') {
         },
         editAndSaveTooltip: function(data, value) {
             let nodeData = JSON.parse(data.objectdata);
-            var validateCondition=new RegExp("^[0-9A-Za-z _.-]+$");
+            let validateCondition=new RegExp("^[0-9A-Za-z _.-]+$");
             if(!validateCondition.test(value)){
                 alert("Not valid input");
                 return;

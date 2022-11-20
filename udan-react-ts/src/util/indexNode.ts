@@ -66,9 +66,9 @@ export const indexnode = (
     // return node;
   }
 
-  if (CONFIG?.htmlindex?.length > 0) {
-    for (let htmli = 0; htmli < CONFIG?.htmlindex?.length; htmli++) {
-      if (node?.isSameNode(CONFIG.htmlindex[htmli]["element-data"])) {
+  if (CONFIG?.htmlIndex?.length > 0) {
+    for (let htmli = 0; htmli < CONFIG?.htmlIndex?.length; htmli++) {
+      if (node?.isSameNode(CONFIG.htmlIndex[htmli]["element-data"])) {
         node.hasclick = true;
         return node;
       }

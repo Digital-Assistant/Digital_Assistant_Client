@@ -3,7 +3,6 @@
  * Type: App Component
  * Objective: To render content script
  */
-///<reference types="chrome"/>
 
 import React, {useState, useEffect, useCallback} from "react";
 import {Button, Spin} from "antd";
@@ -17,10 +16,7 @@ import {
   getFromStore,
   postRecordSequenceData,
 } from "./util";
-import {CONFIG} from "./config";
-import i18n from "i18next";
-import {useTranslation} from "react-i18next";
-import "./i18n";
+import {AppConfig, CONFIG} from "./config";
 import UdanMain from "./components/UdanMain";
 import {Toggler} from "./components/layout/common";
 import Header from "./components/layout/Header";
@@ -32,12 +28,8 @@ import keycloak from './config/keycloak';
 import {off, on, trigger} from "./util/events";
 import {UserDataContext} from "./providers/UserDataContext";
 
-
 global.udaGlobalConfig = CONFIG;
-
-// i18n
-//   .use(initReactI18next) // passes i18n down to react-i18next
-//   .init(RESOURCES);
+  global.udaPluginSDK = AppConfig;
 
 declare global {
   interface Window {
@@ -46,29 +38,10 @@ declare global {
   }
 }
 
-const useMutationObserver = (
-    ref: any,
-    callback: any,
-    options = {
-      attributes: true,
-      characterData: true,
-      childList: true,
-      subtree: true,
-    }
-) => {
-  useEffect(() => {
-    console.log(callback);
-    if (ref.current) {
-      const observer = new MutationObserver(callback);
-      observer.observe(ref.current, options);
-      return () => observer.disconnect();
-    }
-  }, [callback, options]);
-};
+
 
 
 function App() {
-  const {t} = useTranslation();
   const [isRecording, setIsRecording] = useState<boolean>(
       (getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true"
           ? true
@@ -80,7 +53,7 @@ function App() {
   const [showRecord, setShowRecord] = useState<boolean>(false);
   const [playDelay, setPlayDelay] = useState<string>("off");
   const [isPlaying, setIsPlaying] = useState<string>(getFromStore(CONFIG.RECORDING_IS_PLAYING, true) || "off");
-  const [manualPlay, setManualPlay] = useState<string>(getFromStore(CONFIG.RECORDING_MANUAL_PLAY, true) || "off");
+  const [, setManualPlay] = useState<string>(getFromStore(CONFIG.RECORDING_MANUAL_PLAY, true) || "off");
   const [searchKeyword, setSearchKeyword] = useState<string>("");
   const [searchResults, setSearchResults] = useState<any>([]);
   const [page, setPage] = useState<number>(1);
@@ -97,10 +70,14 @@ function App() {
   const [invokeKeycloak, setInvokeKeycloak] = useState(false);
 
   useEffect(() => {
+    console.log(AppConfig);
+  }, [AppConfig]);
+
+
+  useEffect(() => {
     if(invokeKeycloak) {
       let userSessionData = getFromStore(CONFIG.UDAKeyCloakKey, false);
       if (userSessionData) {
-        console.log(userSessionData);
         setUserSessionData(userSessionData);
         setAuthenticated(true);
       } else {
@@ -113,7 +90,6 @@ function App() {
     if(invokeKeycloak) {
       if (!keycloak.authenticated && !userSessionData && !authenticated) {
         keycloak.init({}).then(auth => {
-          console.log(auth);
           setAuthenticated(auth);
           if (keycloak.authenticated) {
             let userData: any = {
@@ -135,48 +111,28 @@ function App() {
           console.log(e);
         });
       } else {
-        console.log(userSessionData);
         keycloak.init({
           token: userSessionData.authdata.token,
           refreshToken: userSessionData.authdata.refreshToken,
           idToken: userSessionData.authdata.idToken
         }).then(auth => {
-          console.log(auth);
-          console.log({...keycloak});
+          setAuthenticated(auth);
         });
       }
     }
   }, [keycloak, userSessionData, invokeKeycloak]);
-
-  /*useEffect(() => {
-    authHandler();
-    //addBodyEvents(document.body);
-    if ((isPlaying == "on" || manualPlay == "on") && !_.isEmpty(selectedRecordingDetails)) {
-      console.log(isPlaying, manualPlay, selectedRecordingDetails);
-      setTimeout(() => {
-        setPlayDelay("on");
-      }, 2000);
-      togglePanel();
-      offSearch();
-      setRecordSequenceDetailsVisibility(true);
-    } else if (isRecording) {
-      offSearch();
-    } else {
-      setShowSearch(true);
-      setSearchKeyword("");
-    }
-  }, []);*/
 
   /**
    * User authentication implementation
    *
    */
   const openUDAPanel = () => {
-    if ((isPlaying == "on" || manualPlay == "on") && !_.isEmpty(selectedRecordingDetails)) {
-      console.log(isPlaying, manualPlay, selectedRecordingDetails);
-      setTimeout(() => {
-        setPlayDelay("on");
-      }, 2000);
+    if (!_.isEmpty(selectedRecordingDetails)) {
+      if(isPlaying == "on") {
+        setTimeout(() => {
+          setPlayDelay("on");
+        }, 2000);
+      }
       togglePanel();
       offSearch();
       setRefetchSearch('on');
@@ -192,7 +148,6 @@ function App() {
   };
 
   const createSession = useCallback((data) => {
-    console.log(data);
     setToStore(data.detail.data, CONFIG.USER_AUTH_DATA_KEY, true);
     setAuthenticated(true);
     setUserSessionData(data.detail.data);
@@ -200,7 +155,6 @@ function App() {
   }, []);
 
   const authenticationError = useCallback((data) => {
-    console.log(data);
     if (data.detail.data === 'login') {
       setInvokeKeycloak(true);
     }
@@ -211,7 +165,6 @@ function App() {
     if (!userSessionData) {
       trigger("RequestUDASessionData", {detail: {data: "getusersessiondata"}, bubbles: false, cancelable: false});
     } else {
-      console.log(userSessionData);
       setUserSessionData(userSessionData);
       setAuthenticated(true);
       openUDAPanel();
@@ -263,32 +216,11 @@ function App() {
     squeezeBody(!hide);
   };
 
-  /**
-   * to change the language
-   * @param locale
-   */
-  const changeLanguage = (locale: string) => {
-    i18n.changeLanguage(locale);
-  };
-
   const offSearch = () => {
     setRefetchSearch('');
     setShowSearch(false);
     setShowLoader(false);
   };
-
-  /*  const authHandler = async () => {
-      setTimeout(() => {
-        const authData = getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
-        if (!authData) return;
-        setToStore(authData?.authdata?.id, CONFIG.USER_SESSION_ID, true);
-        login(authData)?.then((resp) => {
-          getUserSession().then((session) => {
-            setToStore(session, CONFIG.USER_SESSION_KEY, true);
-          });
-        });
-      }, 7000);
-    };*/
 
   /**
    * HTTP search results service call
@@ -297,8 +229,7 @@ function App() {
   const getSearchResults = async (_page = 1) => {
     // if (!showSearch) return;
     setShowLoader(true);
-    let additionalParams: any = (CONFIG.ENABLE_PERMISSIONS)? {...CONFIG.PERMISSIONS}: null;
-    console.log(additionalParams);
+
     const _searchResults = await fetchSearchResults({
       keyword: searchKeyword,
       page,
@@ -446,7 +377,6 @@ function App() {
                               searchKeyword={searchKeyword}
                               toggleFlag={hide}
                               toggleHandler={toggleHandler}
-                              i18={t}
                           />
                           <Body
                               content={
