@@ -68,7 +68,6 @@ declare global {
  */
 export const init = async () => {
 
-  // UDAErrorLogger.error("test", new Error("test"));
   //fetch special nodes for REST service
   if (!getFromStore("specialNodes", false)) {
     const _specialNodes = fetchSpecialNodes();
@@ -186,7 +185,7 @@ export const getRowObject = (data: any) => {
 export const addBodyEvents = async (selector: HTMLElement) => {
   //exclude content-serving elements from click objects
   await init();
-  let els: any = document.body.querySelectorAll("*"),//getAllClickableElements(),
+  let els: any = document.body.querySelectorAll("*"),
       len = els?.length,
       i = 0;
 
@@ -395,12 +394,10 @@ export const getScreenSize = () => {
   if (window.innerWidth !== undefined) {
     screen.width = window.innerWidth * 0.75;
     screen.height = window.innerHeight;
-    // return { width: (window.innerWidth*0.75), height: window.innerHeight };
   } else {
     const D = document.documentElement;
     screen.width = D.clientWidth;
     screen.height = D.clientHeight * 0.75;
-    // return { width: D.clientWidth*0.75, height: D.clientHeight };
   }
   resolution.height = window.screen.height;
   resolution.width = window.screen.width;

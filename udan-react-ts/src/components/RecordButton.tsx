@@ -10,11 +10,14 @@ import {
   CloseCircleOutlined,
   VideoCameraAddOutlined,
 } from "@ant-design/icons";
-export interface MProps {
+
+
+interface MProps {
   recordButtonVisibility?: boolean;
   cancelHandler?: Function;
   recordHandler?: Function;
   recordSeqHandler?: Function;
+  config?: any;
 }
 
 /**

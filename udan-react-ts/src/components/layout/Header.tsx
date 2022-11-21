@@ -10,6 +10,7 @@ import { CONFIG } from "../../config";
 import LanguageSelect from "./LanguageSelect";
 import { translateText } from "../../services/translateService";
 import {translate} from "../../util/translation";
+import {CustomConfig} from "../../config/CustomConfig";
 
 /**
  * To render search result elements
@@ -20,8 +21,10 @@ const Header = (props: HeaderProps) => {
   const {
     selectedLang: selectedLanguage,
     searchInLang,
-    enabled: multiLingualEnabled,
+    // enabled: multiLingualEnabled,
   } = CONFIG.multilingual;
+
+  const multiLingualEnabled = props?.config?.enableMultilingual;
 
   const [hide, setHide] = useState<boolean>(props?.toggleFlag);
   const [searchKeyword, setSearchKeyword] = useState<string>("");

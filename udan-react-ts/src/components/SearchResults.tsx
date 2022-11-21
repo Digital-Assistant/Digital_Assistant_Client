@@ -10,7 +10,6 @@ import { Empty, List } from "antd";
 import { DoubleRightOutlined } from "@ant-design/icons";
 import { getRowObject, setToStore } from "../util";
 import InfiniteScroll from "react-infinite-scroller";
-// import { fetchSearchResults } from "../services/searchService";
 
 export interface MProps {
   visibility?: boolean;
@@ -20,6 +19,7 @@ export interface MProps {
   addRecordHandler?: Function;
   searchHandler?: Function;
   page?: number;
+  config?: any;
 }
 
 let globalSearchResults: any = [];
@@ -38,7 +38,6 @@ export const SearchResults = (props: MProps) => {
   }, [props?.data]);
 
   const selectItem = (item: any) => {
-    //if (props.addRecordHandler) props.addRecordHandler(true);
     setToStore(item, "selectedRecordedItem", false);
     if (props?.showDetails) props.showDetails(item);
   };

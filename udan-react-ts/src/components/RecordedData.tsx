@@ -53,9 +53,9 @@ export const RecordedData = (props: MProps) => {
    */
 
   useEffect(() => {
-    let permissions = {...props?.config?.PERMISSIONS};
+    let permissions = {...props?.config?.permissions};
     setTmpPermissionsObj(permissions);
-  }, [props.config.PERMISSIONS]);
+  }, [props.config.permissions]);
 
   const storeRecording = (data: any) => {
     setRecordData([...data]);
@@ -63,14 +63,14 @@ export const RecordedData = (props: MProps) => {
   };
 
   const setEdit = (index: number) => {
-    if (CONFIG.enableEditClickedName === true) {
+    if (props.config.enableEditClickedName === true) {
       recordData[index].editable = true;
       storeRecording(recordData);
     }
   };
 
   const checkProfanity = async (keyword: any) => {
-    if (!CONFIG.profanity.enabled) return keyword.trim();
+    if (!props.config.enableProfanity) return keyword.trim();
     const response: any = await profanityCheck(keyword);
     if (response.Terms && response.Terms.length > 0) {
       response.Terms.forEach(function (term) {
@@ -96,7 +96,6 @@ export const RecordedData = (props: MProps) => {
     setTimer(
         setTimeout(async () => {
           let changedName: any = await checkProfanity(inputValue);
-          // recordData[index].clickednodename = changedName.trim();
           delete recordData[index].profanity;
           setDisableForm(false);
           const _cloneRecObj = _.cloneDeep(props?.data?.[index]);
@@ -116,8 +115,7 @@ export const RecordedData = (props: MProps) => {
   };
 
   const handleChange = (index: number) => async (event: any) => {
-    // debounceFn(index, event.target.value);
-    if (CONFIG.enableEditClickedName === true) {
+    if (props.config.enableEditClickedName === true) {
       recordData[index].clickednodename = event.target.value;
       await handleDebounceFn(index, event.target.value);
     }
@@ -353,40 +351,44 @@ export const RecordedData = (props: MProps) => {
 
               {recordData?.length - 1 === index && (
                   <>
-                    <div className="flex-card flex-vcenter small-text">
-                      <input
-                          type="checkbox"
-                          id="UDA-skip-duringPlay"
-                          className="uda-checkbox flex-vcenter"
-                          checked={getObjData(item?.objectdata)?.meta?.skipDuringPlay}
-                          onClick={handleSkipPlay(index)}
-                      />
-                      <label className="uda-checkbox-label">Skip during play</label>
-                      <span
-                          className="info-icon"
-                          title="Select this box if this field / text is not required to navigate while processing."
-                      >
+                    {props.config.enableSkipDuringPlay &&
+                        <>
+                            <div className="flex-card flex-vcenter small-text">
+                                <input
+                                    type="checkbox"
+                                    id="UDA-skip-duringPlay"
+                                    className="uda-checkbox flex-vcenter"
+                                    checked={getObjData(item?.objectdata)?.meta?.skipDuringPlay}
+                                    onClick={handleSkipPlay(index)}
+                                />
+                                <label className="uda-checkbox-label">Skip during play</label>
+                                <span
+                                    className="info-icon"
+                                    title="Select this box if this field / text is not required to navigate while processing."
+                                >
+                                  <InfoCircleOutlined/>
+                                </span>
+                            </div>
+                        </>
+                    }
+                    <>
+                      <div className="flex-card flex-vcenter small-text">
+                        <input
+                            type="checkbox"
+                            id="isPersonal"
+                            checked={getObjData(item?.objectdata)?.meta?.isPersonal}
+                            onClick={handlePersonal(index)}
+                        />
+                        <label>Personal Information</label>
+                        <span
+                            className="info-icon"
+                            title="select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."
+                        >
                         <InfoCircleOutlined/>
                       </span>
-                    </div>
-
-                    <div className="flex-card flex-vcenter small-text">
-                      <input
-                          type="checkbox"
-                          id="isPersonal"
-                          checked={getObjData(item?.objectdata)?.meta?.isPersonal}
-                          onClick={handlePersonal(index)}
-                      />
-                      <label>Personal Information</label>
-                      <span
-                          className="info-icon"
-                          title="select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."
-                      >
-                        <InfoCircleOutlined/>
-                      </span>
-                    </div>
-
-                    {CONFIG.enableTooltipAddition === true &&
+                      </div>
+                    </>
+                    {props.config.enableTooltip === true &&
                         <>
                             <div className="uda-recording" style={{textAlign: "center"}}>
                                 <input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip"
@@ -486,7 +488,7 @@ export const RecordedData = (props: MProps) => {
             </button>
           </div>
 
-          {props?.config?.ENABLE_PERMISSIONS && (
+          {props?.config?.enablePermissions && (
               <div id="uda-permissions-section" style={{padding: "30px 0px"}}>
                 <div>
                   <button
@@ -500,7 +502,7 @@ export const RecordedData = (props: MProps) => {
                 {
                     advBtnShow &&
                     <div>
-                      {Object.entries(props?.config?.PERMISSIONS).map(([key, value]) => {
+                      {Object.entries(props?.config?.permissions).map(([key, value]) => {
                         return <div key={key}>
                           <input
                               type="checkbox"

@@ -38,7 +38,6 @@ const MicButton = ({ onSpeech, selectedLang }: IMicButtonProps) => {
         const current = event.resultIndex;
         // Get a transcript of what was said.
         const transcript = event.results[current][0].transcript;
-        // setSearchKeyword(transcript);
         setIsRecording(false);
         stopRecord();
         onSpeech(transcript);

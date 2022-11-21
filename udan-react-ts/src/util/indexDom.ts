@@ -43,7 +43,6 @@ export const indexDom = (
             node.childNodes?.length > 2 &&
             CONFIG.recording
         ) {
-          // let addToolTip = true;
           for (let checknode of tooltipDisplayedNodes) {
             if (node?.isSameNode(checknode)) {
               // addToolTip = false;

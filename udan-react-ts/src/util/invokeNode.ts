@@ -17,6 +17,7 @@ import {UDAConsoleLogger} from "../config/error-log";
 import {trigger} from "./events";
 import domJSON from "domjson";
 import {translate} from "./translation";
+import {CustomConfig} from "../config/CustomConfig";
 
 export const getSelectedRecordFromStore = () => {
   return getFromStore(CONFIG.SELECTED_RECORDING, false);
@@ -41,7 +42,7 @@ export const matchNode = (recordedNode: any) => {
   const originalNode = getObjData(recordedNode?.node?.objectdata);
 
   //ignore if recorded node is personal / marked as skip
-  if (CONFIG.enableSkipDuringPlay && originalNode.meta.skipDuringPlay) {
+  if (CustomConfig.enableSkipDuringPlay && originalNode.meta.skipDuringPlay) {
     return true;
   }
 
@@ -49,10 +50,7 @@ export const matchNode = (recordedNode: any) => {
   let clickObjects = document.getElementsByTagName(
       originalElement.nodeName
   );
-  // let clickObjects = CONFIG.clickObjects;
-  /*let compareElements = CONFIG.clickObjects.filter((node, index) => {
-    return node.nodeName.toLowerCase() === originalElement.nodeName.toLowerCase();
-  });*/
+
   let compareElements: any = []
   let matchedElements: any = [];
   let leastWeight = -1;

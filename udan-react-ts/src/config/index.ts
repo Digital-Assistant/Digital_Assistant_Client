@@ -3,46 +3,6 @@
  * Type: MAP
  * Objective: Config Objects
  */
-import {environment} from "../../environments/environment";
-import React, {FC} from "react";
-
-const base = environment.baseURL;
-
-/**
- * Interface for exposing the parameters
- */
-export interface ConfigParams {
-  enableNodeTypeChangeSelection: boolean,
-  enableMultilingual: boolean,
-  enablePermissions: boolean,
-  permissions: Object,
-  enableProfanity: boolean,
-  enableTooltip: boolean,
-  enableEditClickedName: boolean,
-  enableSkipDuringPlay: boolean
-}
-
-export const AppConfig  = ({
-                             enableNodeTypeChangeSelection,
-                             enableMultilingual,
-                             enablePermissions,
-                             permissions,
-                             enableProfanity,
-                             enableTooltip,
-                             enableEditClickedName,
-                             enableSkipDuringPlay
-                           }: ConfigParams) => {
-  return {
-    enableNodeTypeChangeSelection,
-    enableMultilingual,
-    enablePermissions,
-    permissions,
-    enableProfanity,
-    enableTooltip,
-    enableEditClickedName,
-    enableSkipDuringPlay
-  };
-}
 
 export const CONFIG = {
   current: "TEST",
@@ -69,8 +29,6 @@ export const CONFIG = {
   USER_SESSION_ID: "udaSessionId",
   SYNC_INTERVAL: 1000,
   AUTO_PLAY_SLEEP_TIME: 2000,
-  ENABLE_PERMISSIONS: false,
-  PERMISSIONS: {},
   JARO_WEIGHT: 0.95,
   JARO_WEIGHT_PERSONAL: 0.90,
   set Environment(value) {
@@ -86,9 +44,6 @@ export const CONFIG = {
     return this.current;
   },
   DEBOUNCE_INTERVAL: 2000,
-  enableEditClickedName: true,
-  enableSkipDuringPlay: true,
-  enableTooltipAddition: true,
   clickObjects: [],
   nodeId: 0,
   recording: false,
@@ -176,13 +131,6 @@ export const CONFIG = {
       translateTo: "en",
       apiurl: "https://translation.googleapis.com/language/translate/v2",
     },
-  },
-  set enableMultilingual(val) {
-    this.multilingual.enabled = val;
-    // this.showhtml();
-  },
-  get enableMultilingual() {
-    return CONFIG.multilingual.enabled;
   },
   // BCP list of languages
   bcpLang: [
