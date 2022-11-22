@@ -14,6 +14,7 @@ import _, { debounce } from "lodash";
 import { setToStore, postRecordSequenceData, getObjData } from "../util";
 import { updateRecordClicks, profanityCheck } from "../services/recordService";
 import { CONFIG } from "../config";
+import SelectedElement from "./SelectedElement";
 
 export interface MProps {
   sequenceName?: string;
@@ -245,6 +246,7 @@ export const RecordedData = (props: MProps) => {
                     <InfoCircleOutlined />
                   </span>
                 </div>
+                <SelectedElement data={item}/>
               </>
             )}
           </li>

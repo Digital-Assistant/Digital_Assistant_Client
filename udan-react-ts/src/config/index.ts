@@ -363,7 +363,7 @@ export const CONFIG = {
     ["ภาษาไทย", ["th-TH"]],
   ],
   // Flag to enable node type detection
-  enableNodeTypeChangeSelection: false,
+  enableNodeTypeChangeSelection: true,
   set enableNodeTypeSelection(val) {
     this.enableNodeTypeChangeSelection = val;
     // this.showhtml();

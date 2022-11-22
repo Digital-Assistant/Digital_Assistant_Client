@@ -16,6 +16,7 @@ import {
   setToStore,
   getFromStore,
   postRecordSequenceData,
+  addBodyEvents,
 } from "./util";
 import { CONFIG } from "./config";
 import i18n from "i18next";
@@ -91,7 +92,7 @@ function App() {
 
   useEffect(() => {
     authHandler();
-    //addBodyEvents(document.body);
+    addBodyEvents(document.body);
     if (
       isPlaying == "on" ||
       manualPlay == "on" || !_.isEmpty(selectedRecordingDetails)) {

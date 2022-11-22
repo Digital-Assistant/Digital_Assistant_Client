@@ -32,6 +32,8 @@ export const indexDom = (
         }
       }
 
+      console.log("Line 35 loggin uda_custom of each node", node, "..... custom is ....", node.uda_custom);
+
       node.haschildclick = false;
 
       // Checking for ignore nodes during indexing

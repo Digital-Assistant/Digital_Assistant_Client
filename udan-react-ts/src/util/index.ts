@@ -12,6 +12,7 @@ import {createPopperLite as createPopper} from "@popperjs/core";
 import {jaroWinkler} from "jaro-winkler-typescript";
 import {UDAErrorLogger} from "../config/error-log";
 import {removeFromArray} from "./removeFromArray";
+import mapClickedElementToHtmlFormElement from "./recording-utils/mapClickedElementToHtmlFormElement";
 export {indexnode} from "./indexNode";
 
 
@@ -650,6 +651,7 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
         break;
       case "select":
         addEvent(node, "focus", function (event: any) {
+          console.log("Line 654, index.ts addClickToNode")
           recorduserclick(event.target, false, false, event, confirmdialog);
         });
         break;
@@ -805,7 +807,7 @@ export const delayLink = (node: HTMLElement) => {
  * @returns
  */
 export const recorduserclick = async (
-    node: HTMLElement,
+    node: HTMLElement ,
     fromdocument = false,
     selectchange = false,
     event: any,
@@ -813,6 +815,7 @@ export const recorduserclick = async (
     hasparentclick = false
 ) => {
 
+  const {ignoreNodesFromIndexing, customNameForSpecialNodes, enableNodeTypeChangeSelection} = CONFIG;
 
   if (!node) return false;
 
@@ -823,7 +826,7 @@ export const recorduserclick = async (
     return;
   }
 
-  node = event.target;
+  // node = event.target;
   if (!window.udanSelectedNodes) window.udanSelectedNodes = [];
   window.udanSelectedNodes.push(node);
 
@@ -846,6 +849,22 @@ export const recorduserclick = async (
     }
     // return;
   }
+
+  /******************************************* Added By Manibabu CognitivZen Technologies ----- Start Here ****************************************/
+  console.log("Line 853 inside recorduserclick, the node is ", node)
+
+
+  // adding default system detected html element type in metadata
+  // if(enableNodeTypeChangeSelection) {
+  //   console.log("Line 2071 domjson.meta.systemDetected = this.mapClickedElementToHtmlFormElement(node);", node, mapClickedElementToHtmlFormElement(node))
+  //   domjson.meta.systemDetected = mapClickedElementToHtmlFormElement(node);
+  //   if (domjson.meta.systemDetected.inputElement !== 'others') {
+  //     domjson.meta.selectedElement = domjson.meta.systemDetected;
+  //   }
+  // }
+
+
+  /******************************************* Added By Manibabu CognitivZen Technologies ----- End Here ****************************************/
 
   const _text = getclickedinputlabels(node);
 
