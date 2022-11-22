@@ -33,9 +33,5 @@ export const Toggler = (props: MProps) => {
  * @returns logo path
  */
 export const getLogo = () => {
-  // if (window?.chrome) {
-  //   console.log(window?.chrome?.runtime?.getURL(logo));
-  //   return window?.chrome?.runtime?.getURL(logo);
-  // }
   return "https://cdn.statically.io/gh/Digital-Assistant/Digital_Assistant_Client/react-typescript/udan-react-ts/src/logo.svg";
 };

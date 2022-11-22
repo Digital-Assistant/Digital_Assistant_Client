@@ -1,14 +1,32 @@
 'use strict';
 
-var updatedata=false;
-var UDADebug=false; //this variable exists in links.js file also
-var apihost=(UDADebug)?"http://localhost:11080/voiceapi":"https://udan.nistapp.ai/voiceapi"; //this variable exists in links.js file also
-var cookiename="uda-sessiondata";
-var CSPStorageName="uda-csp-storage";
-var activetabs=[];
-var sessionkey="";
-var sessiondata={sessionkey:"",authenticated:false,authenticationsource:"",authdata:{}, csp: {cspenabled: false, udanallowed: true, domain: ''}};
-var apikey = 'AIzaSyBeCZ1su0BYG5uGTHqqdg1bczlsubDuDrU';
+const updateData = false;
+let UDADebug = false; //this variable exists in links.js file also
+const apiHost = (UDADebug) ? "http://localhost:11080/voiceapi" : "https://udan.nistapp.ai/voiceapi"; //this variable exists in links.js file also
+const cookieName = "uda-sessiondata";
+const CSPStorageName = "uda-csp-storage";
+const activeTabs = [];
+const sessionKey = "";
+let sessionData = {
+	sessionkey: "",
+	authenticated: false,
+	authenticationsource: "",
+	authdata: {},
+	csp: {cspenabled: false, udanallowed: true, domain: ''}
+};
+const apikey = 'AIzaSyBeCZ1su0BYG5uGTHqqdg1bczlsubDuDrU';
+
+let currentTab = [];
+
+
+let activeTabId;
+
+/**
+ * Storing the active tab id to fetch for further data.
+ */
+chrome.tabs.onActivated.addListener(function (activeInfo) {
+	activeTabId = activeInfo.tabId;
+});
 
 /**
  *
@@ -31,193 +49,200 @@ async function UDAdigestMessage(textmessage, algorithm) {
 }
 
 //login with chrome identity functionality
-function loginWithGoogle(){
-    sessiondata.authenticationsource = "google";
-    return new Promise(function (resolve, reject) {
-        chrome.identity.getProfileUserInfo({ accountStatus: 'ANY' }, function (data) {
-            if (data.id !== '' && data.email !== "") {
-                sessiondata.authenticated = true;
-                sessiondata.authdata = data;
-                UDAdigestMessage(sessiondata.authdata.id, "SHA-512").then(encryptedid => {
-                    sessiondata.authdata.id = encryptedid;
-                    UDAdigestMessage(sessiondata.authdata.email, "SHA-512").then(encryptedemail => {
-                        sessiondata.authdata.email = encryptedemail;
-                        //bindAuthenticatedAccount();
-                        resolve(sessiondata);
-                    });
-                });
-            } else {
-                //sendSessionData("UDAAlertMessageData","UDA: Please login into chrome browser.")
-            }
-        });
-    });
+async function loginWithChrome() {
+	sessionData.authenticationsource = "google";
+	chrome.identity.getProfileUserInfo({accountStatus: 'ANY'}, async function (data) {
+		if (data.id !== '' && data.email !== "") {
+			sessionData.authenticated = true;
+			sessionData.authdata = data;
+			UDAdigestMessage(sessionData.authdata.id, "SHA-512").then(async (encryptedid) => {
+				sessionData.authdata.id = encryptedid;
+				UDAdigestMessage(sessionData.authdata.email, "SHA-512").then(async (encryptedemail) => {
+					sessionData.authdata.email = encryptedemail;
+					await bindAuthenticatedAccount();
+				});
+			});
+		} else {
+			await sendSessionData("UDAAlertMessageData", "login")
+		}
+	});
+	return true;
 }
 
 //send the sessiondata to the webpage functionality
-function sendSessionData(sendaction="UDAUserSessionData",message=''){
-	if(sendaction==="UDAAlertMessageData"){
-		chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-			chrome.tabs.sendMessage(tabs[0].id, {action: sendaction, data: JSON.stringify(message)});
-		});
+async function sendSessionData(sendaction = "UDAUserSessionData", message = '') {
+	let tab = await getTab();
+	if (sendaction === "UDAAlertMessageData") {
+		await chrome.tabs.sendMessage(tab.id, {action: sendaction, data: message});
+		return true;
 	} else {
-		chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-			if(tabs.length>0) {
-				var tab = tabs[0];
-				var url = new URL(tab.url);
-				var domain = url.protocol+'//'+url.hostname;
-				let csprecord={cspenabled: false, udanallowed: true, domain: ''};
-				let cspdata = getStorageData(CSPStorageName);
-				let recordexists = false;
-				if(cspdata) {
-					let csprecords = cspdata;
-					if (csprecords.length > 0) {
-						for (var i = 0; i < csprecords.length; i++) {
-							if (csprecords[i].domain === domain) {
-								recordexists = true;
-								csprecord=csprecords[i];
-								break;
-							}
-						}
-						if(recordexists){
-							sessiondata.csp=csprecord;
-						}
+		let url = new URL(tab.url);
+		let domain = url.protocol + '//' + url.hostname;
+		let csprecord = {cspenabled: false, udanallowed: true, domain: ''};
+		let cspdata = getstoragedata(CSPStorageName);
+		let recordexists = false;
+		if (cspdata) {
+			let csprecords = cspdata;
+			if (csprecords.length > 0) {
+				for (let i = 0; i < csprecords.length; i++) {
+					if (csprecords[i].domain === domain) {
+						recordexists = true;
+						csprecord = csprecords[i];
+						break;
 					}
 				}
-				sessiondata.csp=csprecord;
-				chrome.tabs.sendMessage(tab.id, {action: sendaction, data: JSON.stringify(sessiondata)});
-			} else {
-				console.log('failed to send session data');
+				if (recordexists) {
+					sessionData.csp = csprecord;
+				}
 			}
-		});
+		}
+		sessionData.csp = csprecord;
+		console.log(sessionData);
+		await chrome.tabs.sendMessage(tab.id, {action: sendaction, data: JSON.stringify(sessionData)});
+		return true;
 	}
 }
 
+/**
+ *
+ * @returns {currentTab}
+ */
+async function getTab() {
+	let queryOptions = {active: true, currentWindow: true};
+	let tab = (await chrome.tabs.query(queryOptions))[0];
+	// let tab = await chrome.tabs.getCurrent();
+	if (tab) {
+		return tab;
+	} else {
+		tab = await chrome.tabs.get(activeTabId);
+		if (tab) {
+			return tab;
+		} else {
+			console.log('No active tab identified.');
+		}
+	}
+	return tab;
+}
+
 // listen for the requests made from webpage for accessing userdata
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    // sendResponse(request)
-	if(request.action === "getusersessiondata")
-	{
-		chrome.storage.local.get([cookiename],function (storedsessiondata) {
-			if(chrome.runtime.lastError){
+chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
+	console.log(request);
+	if (request.action === "getusersessiondata") {
+		chrome.storage.local.get([cookieName], async function (storedsessiondata) {
+			if (chrome.runtime.lastError) {
 				console.log('failed to read stored session data');
 			} else {
 				// looks like chrome storage might have changed so changing the reading the data has been changed. For to work with old version have added the new code to else if statement
-				if(storedsessiondata.hasOwnProperty("sessionkey") && storedsessiondata["sessionkey"]){
-					sessiondata=storedsessiondata;
-					sendSessionData();
-				} else if(storedsessiondata.hasOwnProperty(cookiename) && storedsessiondata[cookiename].hasOwnProperty("sessionkey") && storedsessiondata[cookiename]["sessionkey"]){
-					sessiondata=storedsessiondata[cookiename];
-					sendSessionData();
+				if (storedsessiondata.hasOwnProperty("sessionkey") && storedsessiondata["sessionKey"] && typeof storedsessiondata["sessionKey"] != 'object') {
+					sessionData = storedsessiondata;
+					if(storedsessiondata.hasOwnProperty('authenticated') && storedsessiondata.authenticated) {
+						await sendSessionData();
+					} else {
+						await loginWithChrome();
+					}
+				} else if (storedsessiondata.hasOwnProperty(cookieName) && storedsessiondata[cookieName].hasOwnProperty("sessionkey") && storedsessiondata[cookieName]["sessionKey"] && typeof storedsessiondata[cookieName]["sessionKey"] != 'object') {
+					sessionData = storedsessiondata[cookieName];
+					// await sendSessionData();
+					if(storedsessiondata.hasOwnProperty('authenticated') && storedsessiondata.authenticated) {
+						await sendSessionData();
+					} else {
+						await loginWithChrome();
+					}
 				} else {
-					getsessionKey();
+					await getSessionKey(false);
+					await loginWithChrome();
 				}
 			}
 		});
 
-    } else if (request.action === "login") {
-		loginWithGoogle().then((data) => {
-			if (data) {
-				chrome.storage.local.set({ "udaUserData": JSON.stringify(data) });
-				chrome.storage.local.get().then((data) => {
-					console.log(data);
-				 });
-			}
-            sendResponse(data)
-        })
-	} else if(request.action === "Debugvalueset"){
-		UDADebug=request.data;
+	} else if (request.action === "authtenicate") {
+		await loginWithChrome();
+	} else if (request.action === "Debugvalueset") {
+		UDADebug = request.data;
+	} else if (request.action === "createSession") {
+		await keycloakStore(request.data);
 	}
 });
 
 //storing the data to the chrome storage
-function storeSessionData(){
-	var storagedata={};
-	storagedata[cookiename]=sessiondata;
-	chrome.storage.local.set(storagedata, function() {
-	});
+async function storeSessionData() {
+	let storageData = {};
+	storageData[cookieName] = sessionData;
+	await chrome.storage.local.set(storageData);
+	return true;
 }
 
 //getting the sessionkey from backend server
-function getsessionKey(){
-	var xhr = new XMLHttpRequest();
-	xhr.open("Get", apihost+"/user/getsessionKey", true);
-	xhr.onload = function(event){
-		if(xhr.status === 200){
-			sessiondata.sessionkey=xhr.response;
-			storeSessionData();
-			sendSessionData();
-		} else {
-			console.log(xhr.status+" : "+xhr.statusText);
-		}
-	};
-	xhr.send();
+async function getSessionKey(senddata = true) {
+	let response = await invokeApi(apiHost + "/user/getsessionkey", "GET", null, false);
+	console.log(response);
+	if(!response){
+		return response;
+	}
+	sessionData.sessionkey = response;
+	await storeSessionData();
+	if(senddata){
+		await sendSessionData();
+	}
+
 }
 
 //binding the sessionkey and chrome identity id
-function bindAuthenticatedAccount(){
-	var xhr = new window.XMLHttpRequest();
-    var authdata = { authid: sessiondata.authdata.id, emailid: sessiondata.authdata.email, authsource: sessiondata.authenticationsource };
-    window.localStorage.setItem('udaAuthData', JSON.stringify(authdata));
-	xhr.open("POST", apihost+"/user/checkauthid", true);
-	xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-	xhr.onload = function(event){
-		if(xhr.status === 200){
-			bindaccount(JSON.parse(xhr.response));
-		} else {
-			console.log(xhr.status+" : "+xhr.statusText);
-		}
+async function bindAuthenticatedAccount() {
+	let authdata = {
+		authid: sessionData.authdata.id,
+		emailid: (sessionData.authdata.email)?sessionData.authdata.email:'',
+		authsource: sessionData.authenticationsource
 	};
-	xhr.send(JSON.stringify(authdata));
+	let response = await invokeApi(apiHost + "/user/checkauthid", "POST", authdata);
+	if(response) {
+		await bindAccount(response);
+		return true;
+	} else {
+		return response;
+	}
 }
 
 //binding the session to the authid
-function bindaccount(userauthdata){
-	var xhr = new XMLHttpRequest();
-	var usersessiondata={userauthid:userauthdata.id,usersessionid:sessiondata.sessionkey};
-	xhr.open("POST", apihost+"/user/checkusersession", true);
-	xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-	xhr.onload = function(event){
-		if(xhr.status === 200){
-			storeSessionData();
-			sendSessionData("UDAAuthenticatedUserSessionData");
-		} else {
-			console.log(xhr.status+" : "+xhr.statusText);
-		}
-	};
-	xhr.send(JSON.stringify(usersessiondata));
+async function bindAccount(userauthdata) {
+	const usersessiondata = {userauthid: userauthdata.id, usersessionid: sessionData.sessionkey};
+	let response = await invokeApi(apiHost + "/user/checkusersession", "POST", usersessiondata);
+	await storeSessionData();
+	await sendSessionData("UDAAuthenticatedUserSessionData");
+	return true;
 }
 
-function CheckCSPStorage(cspenabled=false, udanallowed=false, domain){
-	var csprecord = {cspenabled, udanallowed, domain};
-	let cspdata = getStorageData(CSPStorageName);
-	if(cspdata) {
+function CheckCSPStorage(cspenabled = false, udanallowed = false, domain) {
+	const csprecord = {cspenabled, udanallowed, domain};
+	let cspdata = getstoragedata(CSPStorageName);
+	if (cspdata) {
 		let csprecords = cspdata;
-		if(csprecords.length>0){
-			let recordexists=false;
-			for(var i=0; i< csprecords.length; i++){
-				let record=csprecords[i];
-				if(record.domain === domain){
-					recordexists=true;
-					csprecords[i]=csprecord;
-					createStorageData(CSPStorageName, csprecords);
+		if (csprecords.length > 0) {
+			let recordexists = false;
+			for (let i = 0; i < csprecords.length; i++) {
+				let record = csprecords[i];
+				if (record.domain === domain) {
+					recordexists = true;
+					csprecords[i] = csprecord;
+					createstoragedata(CSPStorageName, csprecords);
 				}
 			}
-			if(!recordexists){
+			if (!recordexists) {
 				csprecords.push(csprecord);
-				createStorageData(CSPStorageName, csprecords);
+				createstoragedata(CSPStorageName, csprecords);
 			}
 		} else {
 			csprecords.push(csprecord);
-			createStorageData(CSPStorageName, csprecords);
+			createstoragedata(CSPStorageName, csprecords);
 		}
 	} else {
 		var csprecords = [];
 		csprecords.push(csprecord);
-		createStorageData(CSPStorageName, csprecords);
+		createstoragedata(CSPStorageName, csprecords);
 	}
 }
 
-function createStorageData(key,value){
+function createstoragedata(key, value) {
 	try {
 		localStorage.setItem(key, JSON.stringify(value));
 		return true;
@@ -226,65 +251,109 @@ function createStorageData(key,value){
 	}
 }
 
-function getStorageData(key){
+function getstoragedata(key) {
 	try {
-		var result=localStorage.getItem(key);
+		const result = localStorage.getItem(key);
 		return JSON.parse(result);
 	} catch (e) {
 		return false;
 	}
 }
 
-function ProcessCSPValues(value='', domain){
-	let udanallowed=false;
-	let cspenabled=true;
-	if(value){
+function ProcessCSPValues(value = '', domain) {
+	let udanallowed = false;
+	let cspenabled = true;
+	if (value) {
 		let allowedSrcs = value.split(";");
-		if(allowedSrcs.length>0){
-			for(var i=0;i<allowedSrcs.length;i++) {
+		if (allowedSrcs.length > 0) {
+			for (let i = 0; i < allowedSrcs.length; i++) {
 				let allowedSrc = allowedSrcs[i];
 				let allowedDomains = allowedSrc.split(' ');
-				if(allowedDomains.length>1 && allowedDomains[0].toLowerCase() === 'default-src'){
-					for(let index=0; index < allowedDomains.length; index++) {
+				if (allowedDomains.length > 1 && allowedDomains[0].toLowerCase() === 'default-src') {
+					for (let index = 0; index < allowedDomains.length; index++) {
 						let allowedDomain = allowedDomains[index];
-						if(allowedDomain === 'default-src'){
+						if (allowedDomain === 'default-src') {
 							continue;
 						}
-						switch (allowedDomain.toLowerCase()){
+						switch (allowedDomain.toLowerCase()) {
 							case '*':
 							case 'https:':
 								udanallowed = true;
-								cspenabled=true;
+								cspenabled = true;
 								break;
 						}
 					}
-				} else if(allowedDomains.length>0 && allowedDomains[0].toLowerCase() === 'default-src'){
+				} else if (allowedDomains.length > 0 && allowedDomains[0].toLowerCase() === 'default-src') {
 					udanallowed = true;
-					cspenabled=true;
+					cspenabled = true;
 				}
 			}
 		}
 	} else {
 		udanallowed = true;
-		cspenabled=true;
+		cspenabled = true;
 	}
 	CheckCSPStorage(cspenabled, udanallowed, domain);
 }
 
-// let onHeadersReceived = function (details) {
-// 	let url = new URL(details.url);
-// 	var domain = url.protocol+'//'+url.hostname;
-// 	for (var i = 0; i < details.responseHeaders.length; i++) {
-// 		if (details.responseHeaders[i].name.toLowerCase() === 'content-security-policy') {
-// 			ProcessCSPValues(details.responseHeaders[i].value, domain);
-// 		}
-// 	}
-// };
+let onHeadersReceived = function (details) {
+	let url = new URL(details.url);
+	const domain = url.protocol + '//' + url.hostname;
+	for (let i = 0; i < details.responseHeaders.length; i++) {
+		if (details.responseHeaders[i].name.toLowerCase() === 'content-security-policy') {
+			ProcessCSPValues(details.responseHeaders[i].value, domain);
+		}
+	}
+};
 
-// let onHeaderFilter = { urls: ['*://*/*'], types: ['main_frame'] };
+let onHeaderFilter = {urls: ['*://*/*'], types: ['main_frame']};
 
-// chrome.webRequest.onHeadersReceived.addListener(
-// 	onHeadersReceived, onHeaderFilter, ['blocking', 'responseHeaders']
-// );
+/*chrome.declarativeNetRequest.onHeadersReceived.addListener(
+	onHeadersReceived, onHeaderFilter, ['blocking', 'responseHeaders']
+);*/
 
+
+/**
+ * Common API call functionality
+ */
+async function invokeApi(url, method, data, parseJson = true) {
+	try {
+		const config = {
+			method: method,
+			headers: {
+				'Content-Type': 'application/json',
+				'charset': 'UTF-8'
+			}
+		};
+		if (data) {
+			config.body = JSON.stringify(data);
+		}
+		let response = await fetch(url, config);
+		console.log(response);
+		if (response.ok) {
+			if (parseJson) {
+				return response.json();
+			} else {
+				return response.text();
+			}
+		} else {
+			return false;
+		}
+	} catch (e) {
+		console.log(e);
+		return false;
+	}
+}
+
+/**
+ * Store keycloak data in chrome extension storage for retrival for other sites
+ */
+async function keycloakStore(data){
+	console.log('creating session at extension');
+	sessionData.authenticationsource = 'keycloak';
+	sessionData.authenticated = true;
+	sessionData.authdata = data;
+	await getSessionKey(false);
+	await bindAuthenticatedAccount();
+}
 

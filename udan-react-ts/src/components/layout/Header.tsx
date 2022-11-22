@@ -9,6 +9,7 @@ import { getLogo } from "./common";
 import { CONFIG } from "../../config";
 import LanguageSelect from "./LanguageSelect";
 import { translateText } from "../../services/translateService";
+import {translate} from "../../util/translation";
 
 /**
  * To render search result elements
@@ -60,11 +61,11 @@ const Header = (props: HeaderProps) => {
         </div>
         <div className="uda-icon-txt">
           <img src={getLogo()} />
-          <span className="uda-help-bg-tooltip">{props.i18("needHelp")}?</span>
+          <span className="uda-help-bg-tooltip">{translate("needHelp")}?</span>
         </div>
         <div className="uda-icon-txt">
           <span className="" style={{ color: "#303f9f", fontWeight: "bold" }}>
-            {props.i18("logoText")}
+            {translate("logoText")}
           </span>
         </div>
         <div

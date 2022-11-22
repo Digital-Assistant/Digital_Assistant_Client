@@ -1,12 +1,22 @@
 {
   "manifest_version": 3,
   "name": "UDAN-React-Library",
-  "version": "0.0.1",
+  "version": "0.9.0",
   "content_scripts": [
     {
       "matches": [
-        "http://*/*",
-        "https://*/*"
+        "*://localhost/*",
+        "*://*.nistapp.com/*",
+        "*://*.rknowsys.com/*",
+        "*://*.atlassian.net/*",
+        "*://*.vantagecircle.com/*",
+        "*://*.vantagecircle.co.in/*",
+        "*://*.vantagecircle.in/*",
+        "*://*.sportsplus-qaf.app/*",
+        "*://*.zigtal.com/*",
+        "*://*.discoversaudi.sa/*",
+        "*://*.nanohealthplan.com/*",
+        "*://*.nanohealth.in/*"
       ],
       "run_at": "document_end",
       "js": [
@@ -22,10 +32,11 @@
     "service_worker": "./background.js"
   },
   "permissions": [
-    "activeTab",
     "identity",
     "identity.email",
-    "storage"
+    "storage",
+    "tabs",
+    "activeTab"
   ],
   "web_accessible_resources": [
     {

@@ -13,7 +13,11 @@ import {jaroWinkler} from "jaro-winkler-typescript";
 import {UDAErrorLogger} from "../config/error-log";
 import {removeFromArray} from "./removeFromArray";
 import mapClickedElementToHtmlFormElement from "./recording-utils/mapClickedElementToHtmlFormElement";
+
 export {indexnode} from "./indexNode";
+
+import TSON from "typescript-json";
+import {getNodeInfo} from "./nodeInfo";
 
 
 export const UDAClickObjects: any = [];
@@ -83,7 +87,6 @@ export const init = async () => {
   );
   for (let i = 0; i < children?.length; i++) {
     try {
-      // console.log(children[i]);
       if (
           children[i] &&
           !udanSpecialNodes?.exclude?.tags?.includes(
@@ -97,8 +100,6 @@ export const init = async () => {
   }
 };
 
-// let onDomChange = window.onDomChange; 
-
 /**
  *
  * @param data
@@ -106,7 +107,7 @@ export const init = async () => {
  * @param isRaw - is raw data or json
  */
 export const setToStore = (data: any, key: string, isRaw: boolean) => {
-  localStorage.setItem(key, !isRaw ? JSON.stringify(data) : data);
+  localStorage.setItem(key, !isRaw ? TSON.stringify(data) : data);
 };
 
 /**
@@ -183,9 +184,9 @@ export const getRowObject = (data: any) => {
  * Add events to body elements
  * @param selector
  */
-export const addBodyEvents = (selector: HTMLElement) => {
+export const addBodyEvents = async (selector: HTMLElement) => {
   //exclude content-serving elements from click objects
-  init();
+  await init();
   let els: any = document.body.querySelectorAll("*"),//getAllClickableElements(),
       len = els?.length,
       i = 0;
@@ -195,16 +196,13 @@ export const addBodyEvents = (selector: HTMLElement) => {
       /**exclude event attachment for selective elements  */
       if (
           els[i] &&
-          // !udanSpecialNodes?.exclude?.tags.includes(els[i]?.tagName?.trim()?.toLocaleLowerCase()) &&
-          // els[i]?.className?.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) === -1 &&
-          // els[i]?.parentNode?.className?.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) === -1 &&
           !els[i]?.getAttribute(EXCLUDE_ATTRIB) &&
           isClickable(els[i])
       ) {
         addClickToNode(els[i]);
       }
     } catch (e) {
-      // console.log(els[i].tagName, e);
+
     }
   }
 };
@@ -237,7 +235,6 @@ export const inArray = (elem: any, array: any) => {
  * @returns void
  */
 export const addEvent = (node: any, eventType: string, callback: Function) => {
-  // console.log("add event", node);
   node.addEventListener(eventType, callback);
 };
 
@@ -270,7 +267,7 @@ export const checkCssClassNames = (node: any) => {
 export const getLookUpSelector = (originalElement: HTMLElement) => {
   let selector = "";
   for (let [key, value] of Object.entries(originalElement?.attributes)) {
-    if (key == "href") continue;//selector += `[${key}="#"]`;
+    if (key == "href") continue;
     else selector += `[${key}="${value}"]`;
   }
   return selector;
@@ -291,10 +288,14 @@ export const removeToolTip = () => {
  * Constructs tooltip element & adds to body (if not exist)
  * @returns HTML Element
  */
-export const getToolTipElement = () => {
-  let toolTipContentSection =
-      '<button class="uda-tutorial-btn" style="margin-top:10px; margin-right: 5px;" type="button" uda-added="true" id="uda-autoplay-continue">Continue</button>' +
-      '<button class="uda-tutorial-exit-btn" style="margin-top:10px;" type="button" uda-added="true" id="uda-autoplay-exit">Exit</button>';
+export const getToolTipElement = (message = 'Please input the value and then click on', showButtons = true) => {
+  let toolTipContentSection = message
+      + '<br/>';
+  if (showButtons) {
+    toolTipContentSection +=
+        '<button class="uda-tutorial-btn" style="margin-top:10px; margin-right: 5px;" type="button" uda-added="true" id="uda-autoplay-continue">Continue</button>' +
+        '<button class="uda-tutorial-exit-btn" style="margin-top:10px;" type="button" uda-added="true" id="uda-autoplay-exit">Exit</button>';
+  }
 
   let toolTipContentElement = document.createElement("div");
   toolTipContentElement.innerHTML = toolTipContentSection.trim();
@@ -340,8 +341,6 @@ export const addToolTip = (invokingNode: any, index: any) => {
 
     let selector = getLookUpSelector(originalElement);
 
-    // console.log("'" + selector + index + "'");
-
     originalElement = document.querySelector(selector);
 
     if (originalElement) {
@@ -354,7 +353,7 @@ export const addToolTip = (invokingNode: any, index: any) => {
       });
     }
   } catch (e) {
-    // console.log(e);
+
   }
 };
 
@@ -481,155 +480,6 @@ export const getTooltipPositionClass = (
   return finalCssClass;
 };
 
-// // getting the text for the clicknodes.
-// export const getNodeLabels = (
-//   node: any,
-//   inputlabels: any,
-//   iterationno: any,
-//   iterate = true,
-//   getchildlabels = true,
-//   fromclick = false,
-//   iteratelimit = 3,
-//   ignorenode: any = []
-// ) => {
-//   if (Array.isArray(ignorenode)) {
-//     ignorenode = node;
-//   }
-
-//   if (
-//     (node.nodeName.toLowerCase() === "select" ||
-//       node.nodeName.toLowerCase() === "checkbox") &&
-//     iterate &&
-//     inputlabels?.length === 0
-//   ) {
-//     iterationno++;
-//     inputlabels = getNodeLabels(
-//       node.parentNode,
-//       inputlabels,
-//       iterationno,
-//       iterate,
-//       true,
-//       fromclick,
-//       iteratelimit,
-//       ignorenode
-//     );
-//     if (fromclick) {
-//       //todo need to rework
-//     }
-//   }
-
-//   if (
-//     node.nodeName.toLowerCase() === "input" ||
-//     node.nodeName.toLowerCase() === "textarea" ||
-//     node.nodeName.toLowerCase() === "img"
-//   ) {
-//     if (
-//       node.getAttribute("placeholder") &&
-//       node.getAttribute("placeholder") !== ""
-//     ) {
-//       inputlabels.push({
-//         text: node.getAttribute("placeholder").toString(),
-//         match: false,
-//       });
-//     }
-//     if (
-//       node.getAttribute("type") &&
-//       (node.getAttribute("type").toLowerCase() === "submit" ||
-//         node.getAttribute("type").toLowerCase() === "file")
-//     ) {
-//       if (node.getAttribute("value")) {
-//         inputlabels.push({
-//           text: node.getAttribute("value").toString(),
-//           match: false,
-//         });
-//         iterate = false;
-//       }
-//     }
-//     if (node.getAttribute("alt")) {
-//       inputlabels.push({
-//         text: node.getAttribute("alt").toString(),
-//         match: false,
-//       });
-//     }
-//   }
-
-//   if (getchildlabels && node.childNodes?.length > 0) {
-//     let childnodes = node.childNodes;
-//     childnodes.forEach(function (childnode: any) {
-//       if (
-//         childnode.nodeName.toLowerCase() !== "script" &&
-//         childnode.nodeName.toLowerCase() !== "select" &&
-//         childnode.nodeName.toLowerCase() !== "#comment"
-//       ) {
-//         let textcontent = childnode.textContent
-//           .replace(/[\n\r]+|[\s]{2,}/g, " ")
-//           .trim();
-//         if (textcontent !== "" && ignorenode?.isSameNode(childnode) === false) {
-//           inputlabels.push({ text: textcontent, match: false });
-//         }
-//       }
-//     });
-//   }
-
-//   if (inputlabels?.length === 0 && node.getAttribute("data-tooltip")) {
-//     inputlabels.push({
-//       text: node.getAttribute("data-tooltip").toString(),
-//       match: false,
-//     });
-//   }
-
-//   if (inputlabels?.length === 0 && node.getAttribute("aria-label")) {
-//     inputlabels.push({
-//       text: node.getAttribute("aria-label").toString(),
-//       match: false,
-//     });
-//   }
-
-//   //todo fix for image tags
-//   if (
-//     iterate &&
-//     node.nodeName.toLowerCase() !== "img" &&
-//     inputlabels?.length === 0 &&
-//     iterationno <= iteratelimit
-//   ) {
-//     iterationno++;
-//     inputlabels = getNodeLabels(
-//       node.parentNode,
-//       [],
-//       iterationno,
-//       iterate,
-//       getchildlabels,
-//       fromclick,
-//       iteratelimit
-//     );
-//   }
-
-//   if (inputlabels?.length === 0 && node.id !== "") {
-//     inputlabels.push({
-//       text: node.nodeName.toLowerCase() + "-" + node.id,
-//       match: false,
-//     });
-//   } else if (
-//     inputlabels?.length === 0 &&
-//     node.hasAttribute("class") &&
-//     node.className &&
-//     node.className !== ""
-//   ) {
-//     let classname = node.className.toString();
-//     inputlabels.push({
-//       text: node.nodeName.toLowerCase() + "-" + classname.replace(" ", "-"),
-//       match: false,
-//     });
-//   } else if (inputlabels?.length === 0) {
-//     inputlabels.push({ text: node.nodeName.toLowerCase(), match: false });
-//   }
-
-//   return inputlabels;
-// };
-
-
-
-
 export const addClickToNode = (node: any, confirmdialog = false) => {
   try {
     if (
@@ -639,26 +489,25 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
       return;
     }
 
-    const nodename = node.nodeName.toLowerCase();
-    // console.log(domJSON.toJSON(node));
+    const nodeName = node.nodeName.toLowerCase();
 
-    switch (nodename) {
+    switch (nodeName) {
       case "a":
         addEvent(node, "click", function (event: any) {
           event.preventDefault();
-          recorduserclick(event.target, false, false, event, confirmdialog);
+          recordUserClick(event.target, false, false, event, confirmdialog);
         });
         break;
       case "select":
         addEvent(node, "focus", function (event: any) {
           console.log("Line 654, index.ts addClickToNode")
-          recorduserclick(event.target, false, false, event, confirmdialog);
+          recordUserClick(event.target, false, false, event, confirmdialog);
         });
         break;
       case "input":
         if (!node.hasAttribute("type")) {
           addEvent(node, "click", function (event: any) {
-            recorduserclick(event.target, false, false, event, confirmdialog);
+            recordUserClick(event.target, false, false, event, confirmdialog);
           });
           return;
         }
@@ -689,13 +538,12 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
           case "textarea":
           case "week":
             addEvent(node, "click", function (event: any) {
-              console.log(node);
-              recorduserclick(node, false, false, event, confirmdialog);
+              recordUserClick(node, false, false, event, confirmdialog);
             });
             break;
           default:
             addEvent(node, "click", function (event: any) {
-              recorduserclick(node, false, false, event, confirmdialog);
+              recordUserClick(node, false, false, event, confirmdialog);
             });
             break;
         }
@@ -705,21 +553,21 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
       case "button":
       case "tr":
         addEvent(node, "click", function (event: any) {
-          recorduserclick(event.target, false, false, event, confirmdialog);
+          recordUserClick(event.target, false, false, event, confirmdialog);
         });
         break;
       default:
         addEvent(node, "click", function (event: any) {
           if (isAllowedMiscElement(event.target)) {
-            recorduserclick(event.target, false, false, event, confirmdialog);
+            recordUserClick(event.target, false, false, event, confirmdialog);
           }
         });
         break;
     }
     node.addedclickrecord = true;
+    CONFIG.clickObjects.push({nodeName: node.nodeName,node});
     return node;
   } catch (e) {
-    // errorLog("Unable to add click to node " + node.outerHTML + " " + e);
     UDAErrorLogger.error(
         "Unable to add click to node " + node.outerHTML + " " + e
     );
@@ -749,12 +597,6 @@ export const isAllowedMiscElement = (element: HTMLElement) => {
   }
 
 
-  // console.log(
-  //   "before",
-  //   isAllowedElement,
-
-  // );
-
   //check if special classes to be included in recordable elements
   if (
       hasClass(element, udanSpecialNodes.include.classes) ||
@@ -763,7 +605,6 @@ export const isAllowedMiscElement = (element: HTMLElement) => {
     isAllowedElement = true;
   }
 
-  // console.log("include", isAllowedElement, udanSpecialNodes?.include?.tags.includes(element.tagName.toLowerCase()));
   //check if special classes to be excluded from recordable elements
   if (
       udanSpecialNodes?.exclude?.tags?.includes(
@@ -773,13 +614,7 @@ export const isAllowedMiscElement = (element: HTMLElement) => {
   ) {
     isAllowedElement = false;
   }
-  // console.log("exclude", element.tagName,
-  //   isAllowedElement,
-  //   udanSpecialNodes?.exclude?.tags.includes(element.tagName.toLowerCase())
-  // );
 
-  // console.log(element?.tagName, isAllowedElement);
-  // if(element.onclick != null || element.addEventListener != null ||)
   return isAllowedElement;
 };
 
@@ -789,7 +624,6 @@ export const isAllowedMiscElement = (element: HTMLElement) => {
  */
 export const delayLink = (node: HTMLElement) => {
   const _href = node.getAttribute("href");
-  //node.setAttribute("href", "#");
   if (_href) {
     node.setAttribute("data-href", _href);
     //setTimeout(function () { window.location = _href }, 500);
@@ -799,20 +633,20 @@ export const delayLink = (node: HTMLElement) => {
 /**
  *
  * @param node
- * @param fromdocument
- * @param selectchange
+ * @param fromDocument
+ * @param selectChange
  * @param event
- * @param confirmdialog
- * @param hasparentclick
+ * @param confirmDialog
+ * @param hasParentClick
  * @returns
  */
-export const recorduserclick = async (
-    node: HTMLElement ,
-    fromdocument = false,
-    selectchange = false,
+export const recordUserClick = async (
+    node: HTMLElement,
+    fromDocument = false,
+    selectChange = false,
     event: any,
-    confirmdialog = false,
-    hasparentclick = false
+    confirmDialog = false,
+    hasParentClick = false
 ) => {
 
   const {ignoreNodesFromIndexing, customNameForSpecialNodes, enableNodeTypeChangeSelection} = CONFIG;
@@ -835,7 +669,6 @@ export const recorduserclick = async (
 
 
   const parentAnchorElement = parentUpTo(node, "a");
-  // console.log(isRecording, node, parentAnchorElement);
 
   if (!isRecording) {
     if (parentAnchorElement) {
@@ -847,7 +680,6 @@ export const recorduserclick = async (
     } else {
       return;
     }
-    // return;
   }
 
   /******************************************* Added By Manibabu CognitivZen Technologies ----- Start Here ****************************************/
@@ -867,8 +699,6 @@ export const recorduserclick = async (
   /******************************************* Added By Manibabu CognitivZen Technologies ----- End Here ****************************************/
 
   const _text = getclickedinputlabels(node);
-
-  console.log("recording... " + node.innerText + "," + _text);
 
   if (!_text || _text?.length > 100 || !_text?.trim()?.length) return;
 
@@ -933,11 +763,16 @@ export const parentUpTo = (el: any, tagName: string) => {
  * @returns promise
  */
 export const postClickData = async (node: HTMLElement, text: string) => {
-  // console.log(getclickedinputlabels(node));
-  let objectData: any = domJSON.toJSON(node);
+  let objectData: any = domJSON.toJSON(node, {metadata: true});
+  if(objectData.meta) {
+    objectData.meta = {};
+  } else {
+    objectData.meta = {};
+  }
   objectData.node.outerHTML = node.outerHTML;
   objectData.offset = getAbsoluteOffsets(node);
-  console.log(objectData);
+  objectData.node.nodeInfo = getNodeInfo(node);
+
   const payload = {
     domain: window.location.host,
     urlpath: window.location.pathname,
@@ -945,7 +780,7 @@ export const postClickData = async (node: HTMLElement, text: string) => {
     clickednodename: text,
     html5: 0,
     clickedpath: "",
-    objectdata: JSON.stringify(objectData),
+    objectdata: TSON.stringify(objectData),
   };
 
   return recordClicks(payload);
@@ -1416,7 +1251,7 @@ export const compareNodes = (
         match.innerChildNodes + comparenode.childNodes.length;
   }
   for (let key in originalnode) {
-    if (CONFIG.ignoreattributes.indexOf(key) !== -1) {
+    if (CONFIG.ignoreAttributes.indexOf(key) !== -1) {
       continue;
     } else if (
         key.indexOf("_ngcontent") !== -1 ||

@@ -3,9 +3,46 @@
  * Type: MAP
  * Objective: Config Objects
  */
-import { environment } from "../../environments/environment";
+import {environment} from "../../environments/environment";
+import React, {FC} from "react";
 
 const base = environment.baseURL;
+
+/**
+ * Interface for exposing the parameters
+ */
+export interface ConfigParams {
+  enableNodeTypeChangeSelection: boolean,
+  enableMultilingual: boolean,
+  enablePermissions: boolean,
+  permissions: Object,
+  enableProfanity: boolean,
+  enableTooltip: boolean,
+  enableEditClickedName: boolean,
+  enableSkipDuringPlay: boolean
+}
+
+export const AppConfig  = ({
+                             enableNodeTypeChangeSelection,
+                             enableMultilingual,
+                             enablePermissions,
+                             permissions,
+                             enableProfanity,
+                             enableTooltip,
+                             enableEditClickedName,
+                             enableSkipDuringPlay
+                           }: ConfigParams) => {
+  return {
+    enableNodeTypeChangeSelection,
+    enableMultilingual,
+    enablePermissions,
+    permissions,
+    enableProfanity,
+    enableTooltip,
+    enableEditClickedName,
+    enableSkipDuringPlay
+  };
+}
 
 export const CONFIG = {
   current: "TEST",
@@ -14,9 +51,10 @@ export const CONFIG = {
   UDA_CLICK_IGNORE_CLASS: "uda_exclude",
   UDA_DOMAIN: "https://udantest.nistapp.ai",
   UDA_API_URL: "https://udantest.nistapp.ai/voiceapi",
-  UDASessionID:
-    Math.random().toString(36).substring(2, 15) +
-    Math.random().toString(36).substring(2, 15),
+  UDASessionID: (
+      Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15)
+  ),
   UDA_POST_INTERVAL: 1000,
   UDALastMutationTime: 0,
   UDALogLevel: 0,
@@ -27,12 +65,14 @@ export const CONFIG = {
   SELECTED_RECORDING: "selectedRecordedItem",
   USER_AUTH_DATA_KEY: "udaUserData",
   USER_SESSION_KEY: "udaSessionKey",
+  UDAKeyCloakKey: "UDAKeyCloak",
   USER_SESSION_ID: "udaSessionId",
   SYNC_INTERVAL: 1000,
   AUTO_PLAY_SLEEP_TIME: 2000,
   ENABLE_PERMISSIONS: false,
   PERMISSIONS: {},
   JARO_WEIGHT: 0.95,
+  JARO_WEIGHT_PERSONAL: 0.90,
   set Environment(value) {
     this.current = value.toString().toUpperCase();
     if (this.current === "PROD") {
@@ -45,130 +85,28 @@ export const CONFIG = {
   get Environment() {
     return this.current;
   },
-  sdkUrl: "/",
-  totalScripts: 0,
-  scriptsCompleted: 0,
-  totalotherScripts: 0,
-  totalotherScriptsCompleted: 0,
-  functionsToRunWhenReady: [],
-  jqueryready: false,
-  request: {},
-  userdata: {},
-  ignoreelements: ["script", "h1", "h2", "h3", "link", "noscript", "style"],
-  availablenavtabs: [],
-  htmlindex: [],
-  textfromspeech: "",
-  nodeid: 0,
-  speechrecognitionavailable: false,
-  SpeechRecognition: [],
-  recognition: {},
-  targetNode: [],
-  updatesOccur: true,
-  updatecounter: 0,
-  lastupdatecounter: 0,
-  menuitems: [],
-  indexnewnodes: false,
-  previousurl: "",
-  currenturl: "",
-  sessionID: "",
-  sessiondata: {
-    sessionkey: "",
-    authenticated: false,
-    authenticationsource: "",
-    authdata: {},
-    csp: { cspenabled: false, udanallowed: true, domain: "" },
-  },
-  cookiename: "nist-voice-usersessionid",
-  recordingcookiename: "nistsequence",
-  recordedsequenceids: [],
-  recordclicknodecookiename: "nistclickrecord",
-  cookieexpires: 365,
-  addedtoslidingdiv: false,
-  elastic: {
-    apiurl: "http://localhost:9200",
-    indexname: "nistapp",
-    currentpage: 0,
-    querystring: "",
-  },
-  navigationcookiename: "nistnavshow",
-  autoplay: false,
-  processcount: 0,
-  totalcount: 0,
-  rerenderhtml: true,
-  processingnodes: false,
-  processedclickobjectscount: 0,
+  DEBOUNCE_INTERVAL: 2000,
+  enableEditClickedName: true,
+  enableSkipDuringPlay: true,
+  enableTooltipAddition: true,
+  clickObjects: [],
+  nodeId: 0,
   recording: false,
-  addcustomcssdomains: [
-    "app.vantagecircle.co.in",
-    "app.vantagecircle.com",
-    "dashboard.vantagecircle.com",
-    "dashboard.vantagecircle.co.in",
-  ],
-  containersections: [],
-  lastclickednode: "",
-  lastclickedtime: "",
-  maxstringlength: 40,
-  confirmednode: false,
-  ignoreattributes: [
-    "translate",
-    "draggable",
-    "spellcheck",
-    "tabindex",
-    "clientHeight",
-    "clientLeft",
-    "clientTop",
-    "clientWidth",
-    "offsetHeight",
-    "offsetLeft",
-    "offsetTop",
-    "offsetWidth",
-    "scrollHeight",
-    "scrollLeft",
-    "scrollTop",
-    "scrollWidth",
-    "baseURI",
-    "isConnected",
-    "ariaPressed",
-    "aria-pressed",
-    "nodePosition",
-    "outerHTML",
-    "innerHTML",
-    "style",
-    "aria-controls",
-    "aria-activedescendant",
-    "ariaExpanded",
-    "autocomplete",
-    "aria-expanded",
-    "aria-owns",
-    "formAction",
-    "ng-star-inserted",
-    "ng-star",
-    "aria-describedby",
-    "width",
-    "height",
-    "x",
-    "y",
-    "selectionStart",
-    "selectionEnd",
-    "required",
-    "validationMessage",
-    "selectionDirection",
-    "naturalWidth",
-    "naturalHeight",
-    "complete",
-    "_indexOf",
-    "value",
-    "defaultValue",
-    "min",
-    "max",
-    "nodeInfo",
+  htmlIndex : [],
+  invokeTime: 1000,
+  maxStringLength:40,
+  playNextAction: true,
+  navigatedToNextPage: {check: false, url: ''},
+  ignoreElements: ["script", "h1", "h2", "h3", "link", "noscript", "style"],
+  ignoreAttributes: [
+    'translate','draggable','spellcheck','tabindex','clientHeight','clientLeft','clientTop','clientWidth',
+    'offsetHeight','offsetLeft','offsetTop','offsetWidth','scrollHeight','scrollLeft','scrollTop','scrollWidth',
+    'baseURI','isConnected','ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
+    'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
+    'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y', 'selectionStart', 'selectionEnd', 'required', 'validationMessage', 'selectionDirection',
+    'naturalWidth', 'naturalHeight', 'complete', '_indexOf', 'value', 'defaultValue', 'min', 'max', 'nodeInfo', 'data-tooltip-id'
   ],
   innerTextWeight: 5,
-  logLevel: 1,
-  playNextAction: true,
-  forceReindex: false,
-  searchText: null,
-  searchInProgress: false,
   ignoreNodesFromIndexing: [
     "ng-dropdown-panel",
     "ckeditor",
@@ -214,11 +152,6 @@ export const CONFIG = {
     "naturalHeight",
     "currentSrc",
   ],
-  clickeOn: "",
-  invokingnode: null,
-  currentPage: "search",
-  navigatedToNextPage: { check: false, url: "" },
-  popperInstance: null,
   //Azure content moderator attributes
   profanity: {
     enabled: true,
@@ -227,12 +160,12 @@ export const CONFIG = {
       key1: "bc015cc4090543d58c3056e8dc98cc9b",
       key2: "",
       endPoint:
-        "https://nistapp-content-moderator.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessText/Screen",
+          "https://nistapp-content-moderator.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessText/Screen",
       region: "eastus",
     },
   },
   multilingual: {
-    enabled: true,
+    enabled: false,
     searchInLang: "en-US",
     selectedLang: "en-US",
     displayText: "",
@@ -252,7 +185,7 @@ export const CONFIG = {
     return CONFIG.multilingual.enabled;
   },
   // BCP list of languages
-  bcplang: [
+  bcpLang: [
     ["Afrikaans", ["af-ZA"]],
     ["አማርኛ", ["am-ET"]],
     ["Azərbaycanca", ["az-AZ"]],
@@ -373,10 +306,10 @@ export const CONFIG = {
   },
   cspUserAcceptance: {
     storageName: "uda-csp-user-consent",
-    data: { proceed: true },
+    data: {proceed: true},
   },
   screenAcceptance: {
     storageName: "uda-user-screen-consent",
-    data: { proceed: true },
+    data: {proceed: true},
   },
 };

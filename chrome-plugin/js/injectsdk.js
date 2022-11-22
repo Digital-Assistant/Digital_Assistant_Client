@@ -1,5 +1,5 @@
 var s = document.createElement('script');
-var scriptpath = chrome.extension.getURL("js/Voicepluginsdk.js");
+var scriptpath = chrome.runtime.getURL("js/Voicepluginsdk.js");
 s.src = scriptpath;
 s.onload = function() {
 };

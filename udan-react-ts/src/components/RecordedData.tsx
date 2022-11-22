@@ -5,16 +5,19 @@
  * Associated Route/Usage: *
  */
 
-import React, { useCallback } from "react";
+import React, {useEffect, useState} from "react";
 import {
   InfoCircleOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
-import _, { debounce } from "lodash";
-import { setToStore, postRecordSequenceData, getObjData } from "../util";
-import { updateRecordClicks, profanityCheck } from "../services/recordService";
-import { CONFIG } from "../config";
+import _ from "lodash";
+import {setToStore, postRecordSequenceData, getObjData} from "../util";
+import {updateRecordClicks, profanityCheck} from "../services/recordService";
+import {CONFIG} from "../config";
 import SelectedElement from "./SelectedElement";
+
+import TSON from "typescript-json";
+import {translate} from "../util/translation";
 
 export interface MProps {
   sequenceName?: string;
@@ -34,15 +37,26 @@ export interface MProps {
 export const RecordedData = (props: MProps) => {
   const [name, setName] = React.useState<string>("");
   const [labels, setLabels] = React.useState<any>([]);
-  const [labelProfanity, setLabelProfanity] = React.useState<boolean>(false);
   const [disableForm, setDisableForm] = React.useState<boolean>(false);
   const [recordData, setRecordData] = React.useState<any>(props.data || []);
-  const [permissionsObj, setPermissionsObj] = React.useState<any>({});
   const [advBtnShow, setAdvBtnShow] = React.useState<boolean>(false);
+  const [tmpPermissionsObj, setTmpPermissionsObj] = useState<any>({});
+  const [inputAlert, setInputAlert] = useState<any>({});
+  const [inputError, setInputError] = useState<any>({});
+  const [tooltip, setToolTip] = React.useState<string>("");
 
-  React.useEffect(() => {
+  useEffect(() => {
     setRecordData([...(props.data || [])]);
   }, [props.data]);
+
+  /**
+   * @param data
+   */
+
+  useEffect(() => {
+    let permissions = {...props?.config?.PERMISSIONS};
+    setTmpPermissionsObj(permissions);
+  }, [props.config.PERMISSIONS]);
 
   const storeRecording = (data: any) => {
     setRecordData([...data]);
@@ -50,45 +64,64 @@ export const RecordedData = (props: MProps) => {
   };
 
   const setEdit = (index: number) => {
-    recordData[index].editable = true;
-    storeRecording(recordData);
+    if (CONFIG.enableEditClickedName === true) {
+      recordData[index].editable = true;
+      storeRecording(recordData);
+    }
   };
 
-  const checkProfanity = async (keyword: string) => {
-    if (!CONFIG.profanity.enabled) return false;
-    const resp = await profanityCheck(keyword);
-    return resp.error ? true : false;
+  const checkProfanity = async (keyword: any) => {
+    if (!CONFIG.profanity.enabled) return keyword.trim();
+    const response: any = await profanityCheck(keyword);
+    if (response.Terms && response.Terms.length > 0) {
+      response.Terms.forEach(function (term) {
+        keyword = keyword.replaceAll(term.Term, '');
+      });
+    }
+    return keyword.trim();
   };
 
+  /**check profanity for input text */
   const handleDebounceFn = async (index: number, inputValue: string) => {
-    /**check profanity for input text */
-    if (await checkProfanity(inputValue)) {
-      recordData[index].profanity = true;
-      storeRecording(recordData);
-      setDisableForm(true);
+    if (!validateInput(inputValue)) {
+      setInputError({...inputError, clickedNodeName: true});
       return;
+    } else {
+      setInputError({...inputError, clickedNodeName: false});
     }
-    delete recordData[index].profanity;
-    setDisableForm(false);
-    const _cloneRecObj = _.cloneDeep(props?.data?.[index]);
-    if (_.isEmpty(_cloneRecObj)) return;
-    const _objData: any = getObjData(_cloneRecObj?.objectdata);
-    if (!_.isEmpty(_objData)) {
-      setRecordData([...props?.data]);
-      _objData.meta.displayText = inputValue;
-      _cloneRecObj.objectdata = JSON.stringify(_objData);
-      recordData[index].objectdata = JSON.stringify(_objData);
-      storeRecording(recordData);
-      await updateRecordClicks(_cloneRecObj);
+    recordData[index].clickednodename = inputValue;
+    if (timer) {
+      clearTimeout(timer);
+      setTimer(null);
     }
+    setTimer(
+        setTimeout(async () => {
+          let changedName: any = await checkProfanity(inputValue);
+          // recordData[index].clickednodename = changedName.trim();
+          delete recordData[index].profanity;
+          setDisableForm(false);
+          const _cloneRecObj = _.cloneDeep(props?.data?.[index]);
+          if (_.isEmpty(_cloneRecObj)) return;
+          const _objData: any = getObjData(_cloneRecObj?.objectdata);
+          if (!_.isEmpty(_objData)) {
+            setRecordData([...props?.data]);
+            _objData.meta.displayText = changedName.trim();
+            _cloneRecObj.objectdata = TSON.stringify(_objData);
+            recordData[index].objectdata = TSON.stringify(_objData);
+            storeRecording(recordData);
+            await updateRecordClicks(_cloneRecObj);
+          }
+        }, CONFIG.DEBOUNCE_INTERVAL)
+    );
+
   };
 
-  const debounceFn = useCallback(debounce(handleDebounceFn, 1000), [
-    props?.data,
-  ]);
-
-  const handleChange = (index: number) => (event: any) => {
-    debounceFn(index, event.target.value);
+  const handleChange = (index: number) => async (event: any) => {
+    // debounceFn(index, event.target.value);
+    if (CONFIG.enableEditClickedName === true) {
+      recordData[index].clickednodename = event.target.value;
+      await handleDebounceFn(index, event.target.value);
+    }
   };
 
   const handlePersonal = (index: number) => (event: any) => {
@@ -104,40 +137,59 @@ export const RecordedData = (props: MProps) => {
     if (_objData) {
       if (_objData.meta[key] === undefined) _objData.meta[key] = false;
       _objData.meta[key] = !_objData.meta[key];
-      console.log(_objData);
-      recordData[index].objectdata = JSON.stringify(_objData);
+      recordData[index].objectdata = TSON.stringify(_objData);
       storeRecording(recordData);
       updateRecordClicks(recordData[index]);
     }
   };
 
   const addLabel = () => {
-    labels.push({ label: "" });
+    labels.push({label: ""});
   };
 
+  /**
+   * remove added label
+   * @param index
+   */
   const removeLabel = (index: number) => {
     labels.splice(index, 1);
     setLabels([...labels]);
   };
 
+  /**
+   * cancel recording
+   */
   const cancelRecording = () => {
     if (props.recordHandler) props.recordHandler("cancel");
     setToStore([], CONFIG.RECORDING_SEQUENCE, false);
   };
 
+  /**
+   * submit the clicked input record to backend
+   */
   const submitRecording = async () => {
+
+    if (name === "") {
+      setInputAlert({...inputAlert, name: true});
+      return false;
+    }
+
     let _labels: any = [name];
     if (labels.length) {
-      const _extraLabels = labels.map((label: any) => label.label);
+      const _extraLabels = labels.map((label: any) => {
+        if (label.label) {
+          return label.label;
+        }
+      });
       _labels = [..._labels, ..._extraLabels];
     }
 
     const _payload: any = {
-      name: JSON.stringify(_labels),
+      name: TSON.stringify(_labels),
     };
 
     //if additional params available send them part of payload
-    if (!_.isEmpty(permissionsObj)) _payload.additionalParams = permissionsObj;
+    if (!_.isEmpty(tmpPermissionsObj)) _payload.additionalParams = tmpPermissionsObj;
 
     const instance = await postRecordSequenceData(_payload);
     if (instance && props?.refetchSearch) {
@@ -149,30 +201,117 @@ export const RecordedData = (props: MProps) => {
     setToStore([], CONFIG.RECORDING_SEQUENCE, false);
   };
 
+  const [timer, setTimer] = useState(null);
+
+  /**
+   * validate and update of first label
+   * @param e
+   */
   const onChange = async (e: any) => {
     setName(e.target.value);
-    if (await checkProfanity(e.target.value)) {
-      setLabelProfanity(true);
-      setDisableForm(true);
+    if (!validateInput(e.target.value)) {
+      setInputError({...inputError, name: true})
       return;
     } else {
-      setLabelProfanity(false);
-      setDisableForm(false);
+      setInputError({...inputError, name: false})
     }
+    if (timer) {
+      clearTimeout(timer);
+      setTimer(null);
+    }
+    setTimer(
+        setTimeout(async () => {
+          let changedName: any = await checkProfanity(e.target.value);
+          setName(changedName);
+        }, CONFIG.DEBOUNCE_INTERVAL)
+    );
   };
 
-  const onExtraLabelChange = (index: number) => (e: any) => {
+  /**
+   * Validate and check profanity of label input
+   * @param index
+   */
+  const onExtraLabelChange = (index: number) => async (e: any) => {
+    let label: any;
+    if (inputError['label' + index]) {
+      label = inputError['label' + index];
+    } else {
+      inputError['label' + index] = {error: false};
+      label = inputError['label' + index];
+      setInputError({...inputError});
+    }
+
     labels[index].label = e.target.value;
     setLabels([...labels]);
-    const prof = checkProfanity(e.target.value);
-    if (prof) {
-      labels[index].profanity = true;
-      setLabels([...labels]);
-      setDisableForm(true);
+    if (!validateInput(e.target.value)) {
+      label.error = true;
+      inputError['label' + index] = label;
+      setInputError({...inputError})
       return;
     } else {
-      delete labels[index].profanity;
-      setDisableForm(false);
+      label.error = false;
+      inputError['label' + index] = label;
+      setInputError({...inputError});
+    }
+    if (timer) {
+      clearTimeout(timer);
+      setTimer(null);
+    }
+    setTimer(
+        setTimeout(async () => {
+          let changedName: any = await checkProfanity(e.target.value);
+          labels[index].label = changedName;
+          setLabels([...labels]);
+        }, CONFIG.DEBOUNCE_INTERVAL)
+    );
+  };
+
+  /**
+   * Validate input of given string
+   * @param value
+   */
+  const validateInput = (value) => {
+    let validateCondition = new RegExp("^[0-9A-Za-z _.-]+$");
+    return (validateCondition.test(value));
+  }
+
+  /**
+   * validate input change of tooltip
+   * @param e
+   */
+  const onChangeTooltip = async (e: any) => {
+    setToolTip(e.target.value);
+    if (!validateInput(e.target.value)) {
+      setInputError({...inputError, tooltip: true})
+      return;
+    } else {
+      setInputError({...inputError, tooltip: false})
+    }
+    if (timer) {
+      clearTimeout(timer);
+      setTimer(null);
+    }
+    setTimer(
+        setTimeout(async () => {
+          let changedName: any = await checkProfanity(e.target.value);
+          setToolTip(changedName);
+        }, CONFIG.DEBOUNCE_INTERVAL)
+    );
+  };
+
+  /**
+   * Add custom tooltip to the clicked element
+   * @param key
+   * @param index
+   */
+  const updateTooltip = async (key: string, index: number) => {
+    const _objData = getObjData(recordData[index]?.objectdata);
+    if (_objData) {
+      if (_objData.meta[key] === undefined) _objData.meta[key] = tooltip;
+      _objData.meta[key] = tooltip
+      recordData[index].objectdata = TSON.stringify(_objData);
+      storeRecording(recordData);
+      await updateRecordClicks(recordData[index]);
     }
   };
 
@@ -181,75 +320,93 @@ export const RecordedData = (props: MProps) => {
     else
       return recordData?.map((item: any, index: number) => {
         return (
-          <li
-            className="uda-recorded-label-editable completed"
-            key={`rec-seq-${index}`}
-          >
-            <div
-              className="flex-card flex-center"
-              style={{ alignItems: "center" }}
+            <li
+                className="uda-recorded-label-editable completed"
+                key={`rec-seq-${index}`}
             >
-              <span id="uda-display-clicked-text" style={{ flex: 2 }}>
-                <input
-                  type="text"
-                  id="uda-edited-name"
-                  name="uda-edited-name"
-                  className={`uda-form-input ${
-                    !item.editable ? "non-editable" : ""
-                  } ${item.profanity ? "profanity" : ""}`}
-                  placeholder="Enter Name"
-                  // onChange={onLabelChange(index)}
-                  onChange={handleChange(index)}
-                  defaultValue={item?.clickednodename}
-                  readOnly={item.editable ? false : true}
-                  style={{ width: "85%! important" }}
-                  // onKeyDown={handleLabelChange(index)}
-                  onClick={() => {
-                    setEdit(index);
-                  }}
-                />
-              </span>
-              <br />
-            </div>
-
-            {recordData?.length - 1 === index && (
-              <>
-                <div className="flex-card flex-vcenter small-text">
+              <div
+                  className="flex-card flex-center"
+                  style={{alignItems: "center"}}
+              >
+                <span id="uda-display-clicked-text" style={{flex: 2}}>
                   <input
-                    type="checkbox"
-                    id="UDA-skip-duringPlay"
-                    className="uda-checkbox flex-vcenter"
-                    checked={getObjData(item?.objectdata)?.meta?.skipDuringPlay}
-                    onClick={handleSkipPlay(index)}
+                      type="text"
+                      id="uda-edited-name"
+                      name="uda-edited-name"
+                      className={`uda-form-input ${
+                          !item.editable ? "non-editable" : ""
+                      } ${item.profanity ? "profanity" : ""}`}
+                      placeholder="Enter Name"
+                      // onChange={onLabelChange(index)}
+                      onChange={handleChange(index)}
+                      readOnly={!item.editable}
+                      style={{width: "85%! important"}}
+                      // onKeyDown={handleLabelChange(index)}
+                      onClick={() => {
+                        setEdit(index);
+                      }}
+                      value={item.clickednodename}
                   />
-                  <label className="uda-checkbox-label">Skip during play</label>
-                  <span
-                    className="info-icon"
-                    title="Select this box if this field / text is not required to navigate while processing."
-                  >
-                    <InfoCircleOutlined />
-                  </span>
-                </div>
+                  {inputError.clickednodename && <span className={`uda-alert`}> {translate('inputError')}</span>}
+                </span>
+                <br/>
+              </div>
 
-                <div className="flex-card flex-vcenter small-text">
-                  <input
-                    type="checkbox"
-                    id="isPersonal"
-                    checked={getObjData(item?.objectdata)?.meta?.isPersonal}
-                    onClick={handlePersonal(index)}
-                  />
-                  <label>Personal Information</label>
-                  <span
-                    className="info-icon"
-                    title="select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."
-                  >
-                    <InfoCircleOutlined />
-                  </span>
-                </div>
-                <SelectedElement data={item}/>
-              </>
-            )}
-          </li>
+              {recordData?.length - 1 === index && (
+                  <>
+                    <div className="flex-card flex-vcenter small-text">
+                      <input
+                          type="checkbox"
+                          id="UDA-skip-duringPlay"
+                          className="uda-checkbox flex-vcenter"
+                          checked={getObjData(item?.objectdata)?.meta?.skipDuringPlay}
+                          onClick={handleSkipPlay(index)}
+                      />
+                      <label className="uda-checkbox-label">Skip during play</label>
+                      <span
+                          className="info-icon"
+                          title="Select this box if this field / text is not required to navigate while processing."
+                      >
+                        <InfoCircleOutlined/>
+                      </span>
+                    </div>
+
+                    <div className="flex-card flex-vcenter small-text">
+                      <input
+                          type="checkbox"
+                          id="isPersonal"
+                          checked={getObjData(item?.objectdata)?.meta?.isPersonal}
+                          onClick={handlePersonal(index)}
+                      />
+                      <label>Personal Information</label>
+                      <span
+                          className="info-icon"
+                          title="select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."
+                      >
+                        <InfoCircleOutlined/>
+                      </span>
+                    </div>
+
+                    {CONFIG.enableTooltipAddition === true &&
+                        <>
+                            <div className="uda-recording" style={{textAlign: "center"}}>
+                                <input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip"
+                                       className="uda-form-input" placeholder="Custom Tooltip (Optional)"
+                                       style={{width: "68% !important"}} onChange={onChangeTooltip} value={tooltip}/>
+                              {inputError.tooltip && <span className={`uda-alert`}> {translate('inputError')}</span>}
+                                <span>
+                              <button className="delete-btn" style={{color: "#fff"}} id="uda-tooltip-save"
+                                      onClick={() => {
+                                        updateTooltip('tooltipInfo', index)
+                                      }}>Save</button>
+                            </span>
+                            </div>
+                        </>
+                    }
+                    <SelectedElement data={item}/>
+                  </>
+              )}
+            </li>
         );
       });
   };
@@ -259,115 +416,136 @@ export const RecordedData = (props: MProps) => {
   };
 
   const handlePermissions = (obj: any) => (event: any) => {
-    if (permissionsObj[obj.key]) delete permissionsObj[obj.key];
-    else permissionsObj[obj.key] = obj.key;
-    setPermissionsObj({ ...permissionsObj });
+    let permissions = tmpPermissionsObj;
+    if (permissions[obj.key]) {
+      delete permissions[obj.key];
+    } else {
+      permissions[obj.key] = obj[obj.key];
+    }
+    setTmpPermissionsObj({...permissions});
+  };
+
+  const displayKeyValue = (key: string, value: any) => {
+    return <span>{key}:{value}</span>
   };
 
   return props?.isShown ? (
-    <div className="uda-card-details">
-      <h5>Recorded Sequence</h5>
-      <hr style={{ border: "1px solid #969696", width: "100%" }} />
-      <ul className="uda-recording" id="uda-recorded-results">
-        {renderData()}
-      </ul>
-      <hr style={{ border: "1px solid #969696", width: "100%" }} />
-      <div style={{ textAlign: "left" }}>
-        <input
-          type="text"
-          id="uda-recorded-name"
-          name="uda-save-recorded[]"
-          className={`uda-form-input ${labelProfanity ? "profanity" : ""}`}
-          placeholder="Enter Label"
-          onChange={onChange}
-        />
+      <div className="uda-card-details">
+        <h5>Recorded Sequence</h5>
+        <hr style={{border: "1px solid #969696", width: "100%"}}/>
+        <ul className="uda-recording" id="uda-recorded-results">
+          {renderData()}
+        </ul>
+        <hr style={{border: "1px solid #969696", width: "100%"}}/>
+        <div style={{textAlign: "left"}}>
+          <input
+              type="text"
+              id="uda-recorded-name"
+              name="uda-save-recorded[]"
+              className={`uda-form-input`}
+              placeholder="Enter Label"
+              onChange={onChange}
+              value={name}
+          />
+          {inputAlert.name && <span className={`uda-alert`}> {translate('inputMandatory')}</span>}
+          {inputError.name && <span className={`uda-alert`}> {translate('inputError')}</span>}
+          <div id="uda-sequence-names">
+            {labels?.map((item: any, index: number) => {
+              return (
+                  <div key={`label-${index}`}>
+                    <div className="flex-card flex-center">
+                      <input
+                          type="text"
+                          id="uda-recorded-name"
+                          name="uda-save-recorded[]"
+                          className={`uda-form-input uda-form-input-reduced ${
+                              item.profanity ? "profanity" : ""
+                          }`}
+                          placeholder="Enter Label"
+                          onChange={onExtraLabelChange(index)}
+                          value={item.label}
+                      />
+                      <button
+                          className="delete-btn uda-remove-row"
+                          style={{color: "white", width: 40, marginLeft: 16}}
+                          onClick={() => removeLabel(index)}
+                      >
+                        <DeleteOutlined/>
+                      </button>
+                    </div>
+                    <div className="flex-card flex-center">
+                      {(inputError['label' + index] && inputError['label' + index].error) &&
+                          <span className={`uda-alert`}> {translate('inputError')}</span>}
+                    </div>
+                  </div>
+              );
+            })}
+          </div>
 
-        <div id="uda-sequence-names">
-          {labels?.map((item: any, index: number) => {
-            return (
-              <div className="flex-card flex-center" key={`label-${index}`}>
-                <input
-                  type="text"
-                  id="uda-recorded-name"
-                  name="uda-save-recorded[]"
-                  className={`uda-form-input uda-form-input-reduced ${
-                    item.profanity ? "profanity" : ""
-                  }`}
-                  placeholder="Enter Label"
-                  onChange={onExtraLabelChange(index)}
-                  value={item.label}
-                />
-                <button
-                  className="delete-btn uda-remove-row"
-                  style={{ color: "white", width: 40, marginLeft: 16 }}
-                  onClick={() => removeLabel(index)}
-                >
-                  <DeleteOutlined />
-                </button>
+          <div style={{marginBottom: "10px", padding: "20px 0"}}>
+            <button className="add-btn uda_exclude" onClick={() => addLabel()}>
+              + Add Label
+            </button>
+          </div>
+
+          {props?.config?.ENABLE_PERMISSIONS && (
+              <div id="uda-permissions-section" style={{padding: "30px 0px"}}>
+                <div>
+                  <button
+                      className="add-btn uda_exclude"
+                      onClick={() => toggleAdvanced()}
+                  >
+                    {advBtnShow ? "Hide Permissions" : "Show Permissions"}
+                  </button>
+                </div>
+
+                {
+                    advBtnShow &&
+                    <div>
+                      {Object.entries(props?.config?.PERMISSIONS).map(([key, value]) => {
+                        return <div key={key}>
+                          <input
+                              type="checkbox"
+                              id="uda-recorded-name"
+                              checked={tmpPermissionsObj[key] !== undefined}
+                              onChange={handlePermissions({[key]: value, key})}
+                          />
+                          {displayKeyValue(key, value)}
+                        </div>
+                      })
+                      }
+                    </div>
+                }
               </div>
-            );
-          })}
-        </div>
+          )}
 
-        <div style={{ marginBottom: "10px", padding: "20px 0" }}>
-          <button className="add-btn uda_exclude" onClick={() => addLabel()}>
-            + Add Label
-          </button>
-        </div>
-
-        {props?.config?.ENABLE_PERMISSIONS && (
-          <div id="uda-permissions-section" style={{ padding: "30px 0px" }}>
-            <div>
+          <div
+              className="flex-card flex-center"
+              style={{clear: "both", marginTop: 50}}
+          >
+            <div className="flex-card flex-start" style={{flex: 2}}>
               <button
-                className="add-btn uda_exclude"
-                onClick={() => toggleAdvanced()}
+                  className="uda-record-btn"
+                  onClick={() => cancelRecording()}
+                  style={{flex: 1}}
               >
-                {advBtnShow ? "Hide Permissions" : "Show Permissions"}
+                <span className="uda_exclude">Cancel and Exit</span>
               </button>
             </div>
-
-            {advBtnShow &&
-              Object.entries(props?.config?.PERMISSIONS).map(([key, value]) => (
-                <li key={key}>
-                  <input
-                    type="checkbox"
-                    id="uda-recorded-name"
-                    checked={permissionsObj[key] !== undefined}
-                    onClick={handlePermissions({ [key]: value, key })}
-                  />
-                  {key}
-                </li>
-              ))}
-          </div>
-        )}
-
-        <div
-          className="flex-card flex-center"
-          style={{ clear: "both", marginTop: 50 }}
-        >
-          <div className="flex-card flex-start" style={{ flex: 2 }}>
-            <button
-              className="uda-record-btn"
-              onClick={() => cancelRecording()}
-              style={{ flex: 1 }}
-            >
-              <span className="uda_exclude">Cancel and Exit</span>
-            </button>
-          </div>
-          <div className="flex-card flex-end" style={{ flex: 1 }}>
-            <button
-              className={`uda-tutorial-btn uda_exclude ${
-                disableForm ? "disabled" : ""
-              }`}
-              onClick={() => submitRecording()}
-              disabled={disableForm}
-              // style={{ float: "right", padding: "5px 20px" }}
-            >
-              Submit
-            </button>
+            <div className="flex-card flex-end" style={{flex: 1}}>
+              <button
+                  className={`uda-tutorial-btn uda_exclude ${
+                      disableForm ? "disabled" : ""
+                  }`}
+                  onClick={() => submitRecording()}
+                  disabled={disableForm}
+                  // style={{ float: "right", padding: "5px 20px" }}
+              >
+                Submit
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
   ) : null;
 };

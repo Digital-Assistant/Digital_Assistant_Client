@@ -114,9 +114,9 @@ export const indexDom = (
         if (childnodes?.length > 0) {
           for (let i = 0; i < childnodes?.length; i++) {
             let childnode = childnodes[i];
-            CONFIG.nodeid++;
+            CONFIG.nodeId++;
             if (
-                CONFIG.ignoreelements.indexOf(
+                CONFIG.ignoreElements.indexOf(
                     childnode.nodeName.toLowerCase()
                 ) === -1
             ) {
