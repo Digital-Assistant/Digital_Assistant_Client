@@ -108,6 +108,10 @@ export const matchNode = (recordedNode: any) => {
     }
   }
 
+  console.log(compareElements);
+  console.log(matchedElements);
+  console.log(finalMatchElement);
+
   if (finalMatchElement === null) {
     if (matchedElements.length == 1) {
       finalMatchElement = matchedElements[0];
@@ -118,6 +122,8 @@ export const matchNode = (recordedNode: any) => {
       finalMatchElement = searchNodes(recordedNode, compareElements);
     }
   }
+
+  console.log(finalMatchElement);
 
   if (finalMatchElement !== null) {
     matchAction(finalMatchElement, recordedNode.node)

@@ -228,7 +228,7 @@ export const inArray = (elem: any, array: any) => {
  * Adds event to an element
  * @param node
  * @param eventType
- * @param callBack function
+ * @param callback
  * @returns void
  */
 export const addEvent = (node: any, eventType: string, callback: Function) => {
@@ -488,14 +488,14 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
 
     if (node && node.onclick) {
       node.setAttribute("data-onclick", node.getAttribute("onclick"));
-     node.setAttribute("onclick", "");
+      node.setAttribute("onclick", "");
     }
 
 
-    switch (nodename) {
+    switch (nodeName) {
       case "a":
         addEvent(node, "click", function (event: any) {
-          recorduserclick(event.target, false, false, event, confirmdialog);
+          recordUserClick(event.target, false, false, event, confirmdialog);
         });
         break;
       case "select":
@@ -537,7 +537,7 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
           case "textarea":
           case "week":
             addEvent(node, "click", function (event: any) {
-              recorduserclick(node, false, false, event, confirmdialog);
+              recordUserClick(node, false, false, event, confirmdialog);
             });
             break;
           default:
@@ -564,7 +564,7 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
         break;
     }
     node.addedclickrecord = true;
-    CONFIG.clickObjects.push({nodeName: node.nodeName,node});
+    CONFIG.clickObjects.push({nodeName: node.nodeName, node});
     return node;
   } catch (e) {
     UDAErrorLogger.error(
@@ -705,17 +705,16 @@ export const recordUserClick = async (
   }
 
   if (
-    parentAnchorElement && node.getAttribute("data-onclick")
+      parentAnchorElement && node.getAttribute("data-onclick")
   ) {
     parentAnchorElement?.setAttribute(
-      "onclick",
-      parentAnchorElement?.getAttribute("data-onclick")
+        "onclick",
+        parentAnchorElement?.getAttribute("data-onclick")
     );
     parentAnchorElement?.removeAttribute("data-onclick");
     parentAnchorElement.dispatchEvent(new Event("click"));
-  }
-  else if (
-    parentAnchorElement && node.getAttribute("href")
+  } else if (
+      parentAnchorElement && node.getAttribute("href")
   ) {
     try {
       window.location.href = parentAnchorElement?.getAttribute("href") || "";
@@ -758,17 +757,19 @@ export const parentUpTo = (el: any, tagName: string) => {
  */
 export const postClickData = async (node: HTMLElement, text: string) => {
   let objectData: any = domJSON.toJSON(node, {serialProperties: true});
-  if(objectData.meta) {
+  if (objectData.meta) {
     objectData.meta = {};
   } else {
     objectData.meta = {};
   }
 
-  if(inArray(node.nodeName.toLowerCase(), CONFIG.ignoreNodesFromIndexing) !== -1 && CONFIG.customNameForSpecialNodes.hasOwnProperty(node.nodeName.toLowerCase())){
+  console.log(node);
+
+  if (inArray(node.nodeName.toLowerCase(), CONFIG.ignoreNodesFromIndexing) !== -1 && CONFIG.customNameForSpecialNodes.hasOwnProperty(node.nodeName.toLowerCase())) {
     objectData.meta.displayText = CONFIG.customNameForSpecialNodes[node.nodeName.toLowerCase()];
   }
 
-  if(!objectData.node.outerHTML) {
+  if (!objectData.node.outerHTML) {
     objectData.node.outerHTML = node.outerHTML;
   }
 
@@ -908,23 +909,22 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
     }
 
     if (getchildlabels && node.childNodes.length > 0) {
-      let childnodes = node.childNodes;
-      childnodes?.forEach(function (childnode: any, key: any) {
+      let childNodes = node.childNodes;
+      childNodes?.forEach(function (childNode: any, key: any) {
         if (
-            childnode.nodeName.toLowerCase() !== "script" &&
-            childnode.nodeName.toLowerCase() !== "select" &&
-            childnode.nodeName.toLowerCase() !== "#comment"
+            childNode.nodeName.toLowerCase() !== "script" &&
+            childNode.nodeName.toLowerCase() !== "select" &&
+            childNode.nodeName.toLowerCase() !== "#comment"
         ) {
-          let textcontent = childnode.textContent
+          let textcontent = childNode.textContent
               .replace(/[\n\r]+|[\s]{2,}/g, " ")
               .trim();
 
           if (
               textcontent !== "" &&
               typeof ignorenode?.isSameNode === "function" &&
-              ignorenode?.isSameNode(childnode) === false
+              ignorenode?.isSameNode(childNode) === false
           ) {
-            // if (textcontent !== "") {
             inputlabels.push({text: textcontent, match: false});
           }
         }
@@ -1171,8 +1171,8 @@ export const getObjData = (obj: string) => {
 
 /**
  * To check if a given element is already captured / recorded
- * @param comparable HTMLElement
  * @returns boolean
+ * @param compareNode
  */
 export const clickableElementExists = (compareNode: HTMLElement) => {
   let existFlag = false;
@@ -1417,8 +1417,6 @@ export const getAllClickableElements = () => {
   const clickableItems = items.filter(
       (x) => !items.some((y) => x.element.contains(y.element) && !(x == y))
   );
-
-  //console.log(clickableItems);
 
   return clickableItems;
 }
