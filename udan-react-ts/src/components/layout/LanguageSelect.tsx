@@ -50,6 +50,7 @@ const LanguageSelect = ({
     <select
       name="uda-lang-select"
       id="uda-lang-select"
+      className="uda_exclude"
       onChange={(e)=>onLanguageChange(e.target.value)}
       value={selectedLang}
     >

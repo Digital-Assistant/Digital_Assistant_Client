@@ -1,6 +1,6 @@
 import {
   getAbsoluteOffsets,
-  getclickedinputlabels,
+  getClickedInputLabels,
   getFromStore,
   getObjData,
   getToolTipElement,
@@ -17,12 +17,18 @@ import {UDAConsoleLogger} from "../config/error-log";
 import {trigger} from "./events";
 import domJSON from "domjson";
 import {translate} from "./translation";
-import {CustomConfig} from "../config/CustomConfig";
 
+/**
+ * Get selected record from storage
+ */
 export const getSelectedRecordFromStore = () => {
   return getFromStore(CONFIG.SELECTED_RECORDING, false);
 }
 
+/**
+ * Update the record data to storage
+ * @param index
+ */
 export const updateRecordToStore = async (index) => {
   let selectedRecordingDetails: any = await getFromStore(CONFIG.SELECTED_RECORDING, false);
   selectedRecordingDetails.userclicknodesSet[index].status = "completed";
@@ -38,11 +44,19 @@ export const playNextNode = async () => {
  * @param recordedNode
  */
 export const matchNode = (recordedNode: any) => {
-  // const originalNode = JSON.parse(recordedNode.node.objectdata);
+
+  if(!recordedNode.node){
+    return true;
+  }
+
   const originalNode = getObjData(recordedNode?.node?.objectdata);
 
   //ignore if recorded node is personal / marked as skip
-  if (CustomConfig.enableSkipDuringPlay && originalNode.meta.skipDuringPlay) {
+  if (originalNode.meta.hasOwnProperty('skipDuringPlay') && originalNode.meta.skipDuringPlay) {
+    removeToolTip();
+    setTimeout(function () {
+      trigger("UDAPlayNext", {"playNext": true});
+    }, CONFIG.DEBOUNCE_INTERVAL);
     return true;
   }
 
@@ -105,6 +119,7 @@ export const matchNode = (recordedNode: any) => {
     matchAction(finalMatchElement, recordedNode.node)
     return true;
   } else {
+    alert(translate('playBackError'));
     return false;
   }
 }
@@ -170,10 +185,10 @@ export const searchNodes = (recordedNode, compareElements) => {
 
     matchNodes.forEach(function (matchNode) {
       if (matchNode) {
-        const inputLabels = getclickedinputlabels(matchNode);
+        const inputLabels = getClickedInputLabels(matchNode);
         if (inputLabels === recordedNode.clickednodename) {
           finalMatchNodes.push(matchNode);
-        } else if (matchNode.originalNode["element-data"].classList && matchNode.originalNode["element-data"].classList.contains('expand-button')) {
+        } else if (matchNode.classList && matchNode.classList.contains('expand-button')) {
           // collapsable buttons are treated as matched nodes to check distance for further processing
           finalMatchNodes.push(matchNode);
         }
@@ -186,7 +201,7 @@ export const searchNodes = (recordedNode, compareElements) => {
 
     // process matching nodes after comparing labels
     if (finalMatchNodes.length === 1) {
-      finalMatchNode = finalMatchNodes[0].originalNode;
+      finalMatchNode = finalMatchNodes[0];
     } else if (finalMatchNodes.length > 1) {
       // compare element positions as there are multiple matching nodes with same labels
       finalMatchNode = processDistanceOfNodes(finalMatchNodes, originalNode.node);
@@ -194,12 +209,7 @@ export const searchNodes = (recordedNode, compareElements) => {
 
     if (finalMatchNode) {
       finalMatchElement = finalMatchNode;
-    } else {
-      alert(translate('playBackError'));
     }
-
-  } else {
-    alert(translate('playBackError'));
   }
   return finalMatchElement;
 }
@@ -214,9 +224,9 @@ export const matchAction = (node, selectedNode) => {
 
   let timeToInvoke = CONFIG.invokeTime;
 
-  if (!CONFIG.playNextAction) {
+  /*if (!CONFIG.playNextAction) {
     return;
-  }
+  }*/
 
   // remove added tooltips before invoking
   removeToolTip();
@@ -229,7 +239,7 @@ export const matchAction = (node, selectedNode) => {
 
   // const recordedNodeData = JSON.parse(selectedNode.objectdata);
   const recordedNodeData = selectedNode.objectdata;
-  if (recordedNodeData.meta && recordedNodeData.meta.selectedElement && recordedNodeData.meta.selectedElement.systemTag.trim() != 'others') {
+  if (recordedNodeData.meta && recordedNodeData.meta.hasOwnProperty('selectedElement') && recordedNodeData.meta.selectedElement && recordedNodeData.meta.selectedElement.systemTag.trim() != 'others') {
     let performedAction = mapSelectedElementAction(node, selectedNode, navigationCookieData, recordedNodeData);
     if (performedAction) {
       return;
@@ -381,13 +391,11 @@ export const invokeNextNode = (node, timeToInvoke) => {
   if (!link) {
     UDAConsoleLogger.info(node, 2);
     setTimeout(function () {
-      // UDAPluginSDK.showhtml();
       trigger("UDAPlayNext", {"playNext": true});
     }, timeToInvoke);
   } else {
     timeToInvoke = timeToInvoke + 3000;
     setTimeout(function () {
-      // UDAPluginSDK.showhtml();
       trigger("UDAPlayNext", {"playNext": true});
     }, timeToInvoke);
   }
@@ -458,8 +466,6 @@ export const mapSelectedElementAction = (node, recordedNode, navigationCookieDat
 //add tooltip display
 export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navigationCookieData, enableClick = false, enableFocus = false, enableIntroJs = false, message = translate('tooltipMessage'), showButtons = true) => {
 
-  console.log(invokingNode);
-
   if (recordedData !== null) {
     let recordedNodeData = JSON.parse(recordedData.objectdata);
     if (recordedNodeData.hasOwnProperty('meta') && recordedNodeData.meta.hasOwnProperty('tooltipInfo') && recordedNodeData.meta.tooltipInfo != '') {
@@ -494,7 +500,7 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
       .getElementById("uda-autoplay-continue")
       ?.addEventListener("click", () => {
         removeToolTip();
-        trigger("ContinuePlay", {data: 'ContinuePlay'})
+        trigger("ContinuePlay", {data: 'ContinuePlay'});
       });
 
   //attach event to close tooltip
@@ -624,27 +630,16 @@ export const processDistanceOfNodes = (matchingNodes, selectedNode) => {
         leastDistanceNode = node;
         leastDistance = 0;
         break;
-      } else if (node.originalNode['element-data'].hasAttribute('aria-label')
-          && node.originalNode['element-data'].getAttribute('aria-label').toLowerCase() === 'open calendar') {
+      } else {
         let nodeInfo = getNodeInfo(node);
         let dist = getDistance(selectedNode.nodeInfo, nodeInfo);
         // default adding first element as least distance and then comparing with last distance calculated
         if (leastDistance === -1) {
           leastDistance = dist;
-          leastDistanceNode = node.originalNode;
+          leastDistanceNode = node;
         } else if (dist < leastDistance) {
           leastDistance = dist;
-          leastDistanceNode = node.originalNode;
-        }
-      } else if (node.domJson.hasOwnProperty('nodeInfo')) {
-        let dist = getDistance(selectedNode.nodeInfo, node.domJson.nodeInfo);
-        // default adding first element as least distance and then comparing with last distance calculated
-        if (leastDistance === -1) {
-          leastDistance = dist;
-          leastDistanceNode = node.originalNode;
-        } else if (dist < leastDistance) {
-          leastDistance = dist;
-          leastDistanceNode = node.originalNode;
+          leastDistanceNode = node;
         }
       }
     }

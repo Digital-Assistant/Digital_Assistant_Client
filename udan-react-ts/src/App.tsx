@@ -30,9 +30,8 @@ import {UserDataContext} from "./providers/UserDataContext";
 import {AppConfig} from "./config/AppConfig";
 import {CustomConfig} from "./config/CustomConfig";
 
-// global.UDAGlobalConfig = CONFIG;
+// adding global variable declaration for exposing react custom configuration
 global.UDAPluginSDK = AppConfig;
-// global.UDACustomConfig = CustomConfig;
 global.UDAGlobalConfig = CustomConfig;
 
 declare global {
@@ -71,9 +70,12 @@ function App() {
   const [userSessionData, setUserSessionData] = useState(null);
   const [invokeKeycloak, setInvokeKeycloak] = useState(false);
 
+  const config = global.UDAGlobalConfig;
+
   useEffect(() => {
     console.log(CustomConfig);
-  }, [CustomConfig]);
+    getSearchResults();
+  }, [config]);
 
 
   useEffect(() => {

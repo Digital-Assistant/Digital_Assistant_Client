@@ -122,7 +122,6 @@ export const getFromStore = (key: string, isRaw: boolean) => {
 /**
  *
  * @param key
- * @param isRaw - is raw data or json
  * @returns
  */
 export const removeFromStore = (key: string) => {
@@ -576,7 +575,7 @@ export const isAllowedMiscElement = (element: HTMLElement) => {
   let isAllowedElement: boolean =
       window.getComputedStyle(element).cursor == "pointer";
   let parentEl: any = element;
-  /**traversing 3 level parents for contenteditable property */
+  /**traversing 3 level parents for content editable property */
   for (let i = 0; i <= 3; i++) {
     if (element.getAttribute("contenteditable")) {
       isAllowedElement = true;
@@ -621,7 +620,6 @@ export const delayLink = (node: HTMLElement) => {
   const _href = node.getAttribute("href");
   if (_href) {
     node.setAttribute("data-href", _href);
-    //setTimeout(function () { window.location = _href }, 500);
   }
 };
 
@@ -676,7 +674,7 @@ export const recordUserClick = async (
     }
   }
 
-  const _text = getclickedinputlabels(node);
+  const _text = getClickedInputLabels(node);
 
   if (!_text || _text?.length > 100 || !_text?.trim()?.length) return;
 
@@ -700,7 +698,6 @@ export const recordUserClick = async (
   if (
       parentAnchorElement && node.getAttribute("href")
   ) {
-    //return;
     try {
       window.location.href = parentAnchorElement?.getAttribute("href") || "";
     } catch (e) {
@@ -747,14 +744,20 @@ export const postClickData = async (node: HTMLElement, text: string) => {
   } else {
     objectData.meta = {};
   }
-  objectData.node.outerHTML = node.outerHTML;
+
+  if(inArray(node.nodeName.toLowerCase(), CONFIG.ignoreNodesFromIndexing) !== -1 && CONFIG.customNameForSpecialNodes.hasOwnProperty(node.nodeName.toLowerCase())){
+    objectData.meta.displayText = CONFIG.customNameForSpecialNodes[node.nodeName.toLowerCase()];
+  }
+
+  if(objectData.node.outerHTML) {
+    objectData.node.outerHTML = node.outerHTML;
+  }
   objectData.offset = getAbsoluteOffsets(node);
   objectData.node.nodeInfo = getNodeInfo(node);
 
   const payload = {
     domain: window.location.host,
     urlpath: window.location.pathname,
-    // sessionid: CONFIG.sessionID,
     clickednodename: text,
     html5: 0,
     clickedpath: "",
@@ -885,14 +888,14 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
     }
 
     if (getchildlabels && node.childNodes.length > 0) {
-      var childnodes = node.childNodes;
+      let childnodes = node.childNodes;
       childnodes?.forEach(function (childnode: any, key: any) {
         if (
             childnode.nodeName.toLowerCase() !== "script" &&
             childnode.nodeName.toLowerCase() !== "select" &&
             childnode.nodeName.toLowerCase() !== "#comment"
         ) {
-          var textcontent = childnode.textContent
+          let textcontent = childnode.textContent
               .replace(/[\n\r]+|[\s]{2,}/g, " ")
               .trim();
 
@@ -953,7 +956,7 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
         node.className &&
         node.className !== ""
     ) {
-      var classname = node.className.toString();
+      let classname = node.className.toString();
       inputlabels.push({
         text: node.nodeName.toLowerCase() + "-" + classname.replace(" ", "-"),
         match: false,
@@ -1018,97 +1021,93 @@ export const getLabelsForInputElement = (element: any) => {
 };
 
 //getting input label for the clicked node
-export const getclickedinputlabels = (node: HTMLElement, fromdocument = false, selectchange = false) => {
+export const getClickedInputLabels = (node: HTMLElement, fromDocument = false, selectchange = false) => {
   if (!node) {
     return null;
   }
-  let inputlabels: any = "";
-  let nodename = node.nodeName.toLowerCase();
+  let inputLabels: any = "";
+  let nodeName = node.nodeName.toLowerCase();
+  let textLabels: any = [];
 
   try {
-    inputlabels = getLabelsForInputElement(node);
-    console.log("labesl", inputlabels)
-    if (inputlabels) return inputlabels;
+    inputLabels = getLabelsForInputElement(node);
+    if (inputLabels) return inputLabels;
   } catch (e) {
   }
-  // if (node?.previousElementSibling?.tagName?.toLocaleLowerCase() == 'label') {
-
-  //   return node?.previousSibling?.textContent;;
-  // }
-  switch (nodename) {
+  switch (nodeName) {
     case "select":
       if (selectchange) {
-        inputlabels = getSelectedTextFromSelectBox(node);
+        inputLabels = getSelectedTextFromSelectBox(node);
       } else {
-        var textlabels = getNodeLabels(node, [], 1, true, false, true);
-        if (textlabels.length > 0) {
-          var labels = [];
-          for (var j = 0; j < textlabels.length; j++) {
-            labels.push(textlabels[j].text);
+        textLabels = getNodeLabels(node, [], 1, true, false, true);
+        if (textLabels.length > 0) {
+          let labels = [];
+          for (let j = 0; j < textLabels.length; j++) {
+            labels.push(textLabels[j].text);
           }
-          inputlabels = labels.toString();
+          inputLabels = labels.toString();
         }
       }
       break;
     case "input":
       if (!node.hasAttribute("type")) {
-        var textlabels = getNodeLabels(node, [], 1, true, true, true);
-        if (textlabels.length > 0) {
-          var labels = [];
-          for (var j = 0; j < textlabels.length; j++) {
-            labels.push(textlabels[j].text);
+        textLabels = getNodeLabels(node, [], 1, true, true, true);
+        if (textLabels.length > 0) {
+          let labels = [];
+          for (let j = 0; j < textLabels.length; j++) {
+            labels.push(textLabels[j].text);
           }
-          inputlabels = labels.toString();
+          inputLabels = labels.toString();
         }
       } else {
         switch (node?.getAttribute("type")?.toLowerCase()) {
           default:
-            var textlabels = getNodeLabels(node, [], 1, true, true, true);
-            if (textlabels.length > 0) {
-              var labels = [];
-              for (var j = 0; j < textlabels.length; j++) {
-                labels.push(textlabels[j].text);
+            textLabels = getNodeLabels(node, [], 1, true, true, true);
+            if (textLabels.length > 0) {
+              let labels = [];
+              for (let j = 0; j < textLabels.length; j++) {
+                labels.push(textLabels[j].text);
               }
-              inputlabels = labels.toString();
+              inputLabels = labels.toString();
             }
         }
         break;
       }
       break;
     case "textarea":
-      var textlabels = getNodeLabels(node, [], 1, true, true, true);
-      if (textlabels.length > 0) {
-        var labels = [];
-        for (var j = 0; j < textlabels.length; j++) {
-          labels.push(textlabels[j].text);
+      textLabels = getNodeLabels(node, [], 1, true, true, true);
+      if (textLabels.length > 0) {
+        let labels = [];
+        for (let j = 0; j < textLabels.length; j++) {
+          labels.push(textLabels[j].text);
         }
-        inputlabels = labels.toString();
+        inputLabels = labels.toString();
       }
       break;
     case "img":
-      var textlabels = getNodeLabels(node, [], 1, true, false, true);
-      if (textlabels.length > 0) {
-        var labels = [];
-        for (var j = 0; j < textlabels.length; j++) {
-          labels.push(textlabels[j].text);
+      textLabels = getNodeLabels(node, [], 1, true, false, true);
+      if (textLabels.length > 0) {
+        let labels = [];
+        for (let j = 0; j < textLabels.length; j++) {
+          labels.push(textLabels[j].text);
         }
-        inputlabels = labels.toString();
+        inputLabels = labels.toString();
       }
       break;
     default:
       if (!node?.children?.length && node?.innerText?.trim()?.length > 0) {
         return node?.innerText;
       }
-      var textlabels = getNodeLabels(node, [], 1, false, true, true);
-      if (textlabels.length > 0) {
-        var labels = [];
-        for (var j = 0; j < textlabels.length; j++) {
-          labels.push(textlabels[j].text);
+      textLabels = getNodeLabels(node, [], 1, false, true, true);
+      if (textLabels.length > 0) {
+        let labels = [];
+        for (let j = 0; j < textLabels.length; j++) {
+          labels.push(textLabels[j].text);
         }
-        inputlabels = labels.toString();
+        inputLabels = labels.toString();
       }
   }
-  return inputlabels;
+  return inputLabels;
 }
 
 
@@ -1171,15 +1170,6 @@ export const clickableElementExists = (compareNode: HTMLElement) => {
  */
 export const isClickable = (element: HTMLElement) => {
   return isAllowedMiscElement(element);
-  /*
-  try {
-    return (
-      ( element.onclick != null ||
-        element.addEventListener != null ||
-        window.getComputedStyle(element).cursor == "pointer") 
-    );
-  }catch(e){return false}
-  */
 }
 
 /**
@@ -1262,7 +1252,7 @@ export const compareNodes = (
       match.matched++;
       if (comparenode[key].length === originalnode[key].length) {
         match.matched++;
-        for (var i = 0; i < originalnode[key].length; i++) {
+        for (let i = 0; i < originalnode[key].length; i++) {
           match = compareNodes(
               comparenode[key][i],
               originalnode[key][i],
@@ -1354,7 +1344,7 @@ export const compareNodes = (
 
 /**
  * sleep javascript execution time
- * @param milliseconds
+ * @param ms
  */
 export const sleep = (ms) => {
   const end = Date.now() + ms;
@@ -1367,12 +1357,12 @@ export const sleep = (ms) => {
  */
 export const getAllClickableElements = () => {
   window.scrollTo(0, 0);
-  var bodyRect = document.body.getBoundingClientRect();
+  let bodyRect = document.body.getBoundingClientRect();
 
-  var items = Array.prototype.slice
+  let items = Array.prototype.slice
       .call(document.querySelectorAll("*"))
       .map(function (element) {
-        var rect = element?.getBoundingClientRect();
+        let rect = element?.getBoundingClientRect();
         return {
           element: element,
           include:
@@ -1438,16 +1428,16 @@ export const getAbsoluteOffsets = (element: HTMLElement) => {
  * self calling function to detech dom changes
  */
 (function (window) {
-  var last = +new Date();
-  var delay = 100; // default delay
+  let last = +new Date();
+  let delay = 100; // default delay
 
   // Manage event queue
   let stack: any = [];
 
   function callback() {
-    var now = +new Date();
+    let now = +new Date();
     if (now - last > delay) {
-      for (var i = 0; i < stack.length; i++) {
+      for (let i = 0; i < stack.length; i++) {
         stack[i]();
       }
       last = now;
@@ -1463,25 +1453,25 @@ export const getAbsoluteOffsets = (element: HTMLElement) => {
   // Naive approach for compatibility
   function naive() {
     let last: any = document.getElementsByTagName("*");
-    var lastlen = last.length;
-    var timer = setTimeout(function check() {
+    let lastLen = last.length;
+    setTimeout(function check() {
       // get current state of the document
-      var current = document.getElementsByTagName("*");
-      var len = current.length;
+      let current = document.getElementsByTagName("*");
+      let len = current.length;
 
       // if the length is different
       // it's fairly obvious
-      if (len != lastlen) {
+      if (len != lastLen) {
         // just make sure the loop finishes early
         last = [];
       }
 
       // go check every element in order
-      for (var i = 0; i < len; i++) {
+      for (let i = 0; i < len; i++) {
         if (current[i] !== last[i]) {
           callback();
           last = current;
-          lastlen = len;
+          lastLen = len;
           break;
         }
       }
@@ -1494,10 +1484,10 @@ export const getAbsoluteOffsets = (element: HTMLElement) => {
   //
   //  Check for mutation events support
   //
-  var support: any = {};
+  let support: any = {};
 
-  var el = document.documentElement;
-  var remain = 3;
+  let el = document.documentElement;
+  let remain = 3;
 
   // callback for the tests
   function decide() {
@@ -1545,7 +1535,7 @@ export const getAbsoluteOffsets = (element: HTMLElement) => {
   // }
 
   // do the dummy test
-  var dummy = document.createElement("div");
+  let dummy = document.createElement("div");
   el.appendChild(dummy);
   el.removeChild(dummy);
 

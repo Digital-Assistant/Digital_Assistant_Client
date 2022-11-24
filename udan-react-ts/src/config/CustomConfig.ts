@@ -1,5 +1,5 @@
 /**
- * Author: Lakshman Veti
+ * Author: Yureswar Ravuri
  * Type: MAP
  * Objective: Config Objects
  */
@@ -16,6 +16,7 @@ export interface CustomConfigPropTypes {
   enableRecording: boolean,
 }
 
+// assigning default values to the default configuration
 export const CustomConfig: CustomConfigPropTypes = {
   enableEditClickedName: true,
   enableSkipDuringPlay: true,

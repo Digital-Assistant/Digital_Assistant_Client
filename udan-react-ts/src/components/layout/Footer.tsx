@@ -21,7 +21,7 @@ const Footer = (props: MProps) => {
         {props.config.enableRecording &&
             <div className="uda-container">
                 <button
-                    className="uda-new-seq uda-exclude "
+                    className="uda-new-seq uda-exclude"
                     onClick={() => setShowRecord(true)}
                 >
                     <PlusOutlined className="secondary"/>

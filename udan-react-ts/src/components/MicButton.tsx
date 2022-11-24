@@ -56,7 +56,7 @@ const MicButton = ({ onSpeech, selectedLang }: IMicButtonProps) => {
 
   return (
     <button
-      className={isRecording ? "uda-stop-btn-bg" : "uda-mic-btn"}
+      className={(isRecording ? "uda-stop-btn-bg" : "uda-mic-btn")+" uda_exclude"}
       onClick={isRecording ? stopRecord : startRecord}
       style={{ borderRadius: "5px 0px 0px 5px" }}
       id="uda-voice-icon-start"

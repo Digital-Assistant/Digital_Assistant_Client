@@ -17,6 +17,7 @@ import {CONFIG} from "../config";
 
 import TSON from "typescript-json";
 import {translate} from "../util/translation";
+import {isInputNode} from "../util/checkNode";
 
 export interface MProps {
   sequenceName?: string;
@@ -170,6 +171,8 @@ export const RecordedData = (props: MProps) => {
       setInputAlert({...inputAlert, name: true});
       return false;
     }
+
+    setDisableForm(true);
 
     let _labels: any = [name];
     if (labels.length) {
@@ -330,7 +333,7 @@ export const RecordedData = (props: MProps) => {
                       type="text"
                       id="uda-edited-name"
                       name="uda-edited-name"
-                      className={`uda-form-input ${
+                      className={`uda-form-input uda_exclude ${
                           !item.editable ? "non-editable" : ""
                       } ${item.profanity ? "profanity" : ""}`}
                       placeholder="Enter Name"
@@ -357,7 +360,7 @@ export const RecordedData = (props: MProps) => {
                                 <input
                                     type="checkbox"
                                     id="UDA-skip-duringPlay"
-                                    className="uda-checkbox flex-vcenter"
+                                    className="uda-checkbox flex-vcenter uda_exclude"
                                     checked={getObjData(item?.objectdata)?.meta?.skipDuringPlay}
                                     onClick={handleSkipPlay(index)}
                                 />
@@ -376,6 +379,7 @@ export const RecordedData = (props: MProps) => {
                         <input
                             type="checkbox"
                             id="isPersonal"
+                            className="uda_exclude"
                             checked={getObjData(item?.objectdata)?.meta?.isPersonal}
                             onClick={handlePersonal(index)}
                         />
@@ -388,19 +392,19 @@ export const RecordedData = (props: MProps) => {
                       </span>
                       </div>
                     </>
-                    {props.config.enableTooltip === true &&
+                    {(props.config.enableTooltip === true && isInputNode(getObjData(item?.objectdata).node)) &&
                         <>
                             <div className="uda-recording" style={{textAlign: "center"}}>
                                 <input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip"
-                                       className="uda-form-input" placeholder="Custom Tooltip (Optional)"
+                                       className="uda-form-input uda_exclude" placeholder="Custom Tooltip (Optional)"
                                        style={{width: "68% !important"}} onChange={onChangeTooltip} value={tooltip}/>
                               {inputError.tooltip && <span className={`uda-alert`}> {translate('inputError')}</span>}
                                 <span>
-                              <button className="delete-btn" style={{color: "#fff"}} id="uda-tooltip-save"
+                                  <button className="delete-btn uda_exclude" style={{color: "#fff"}} id="uda-tooltip-save"
                                       onClick={() => {
                                         updateTooltip('tooltipInfo', index)
                                       }}>Save</button>
-                            </span>
+                                </span>
                             </div>
                         </>
                     }
@@ -442,7 +446,7 @@ export const RecordedData = (props: MProps) => {
               type="text"
               id="uda-recorded-name"
               name="uda-save-recorded[]"
-              className={`uda-form-input`}
+              className={`uda-form-input uda_exclude`}
               placeholder="Enter Label"
               onChange={onChange}
               value={name}
@@ -458,7 +462,7 @@ export const RecordedData = (props: MProps) => {
                           type="text"
                           id="uda-recorded-name"
                           name="uda-save-recorded[]"
-                          className={`uda-form-input uda-form-input-reduced ${
+                          className={`uda-form-input uda-form-input-reduced uda_exclude ${
                               item.profanity ? "profanity" : ""
                           }`}
                           placeholder="Enter Label"
@@ -466,7 +470,7 @@ export const RecordedData = (props: MProps) => {
                           value={item.label}
                       />
                       <button
-                          className="delete-btn uda-remove-row"
+                          className="delete-btn uda-remove-row uda_exclude"
                           style={{color: "white", width: 40, marginLeft: 16}}
                           onClick={() => removeLabel(index)}
                       >
@@ -507,6 +511,7 @@ export const RecordedData = (props: MProps) => {
                           <input
                               type="checkbox"
                               id="uda-recorded-name"
+                              className="uda_exclude"
                               checked={tmpPermissionsObj[key] !== undefined}
                               onChange={handlePermissions({[key]: value, key})}
                           />
@@ -525,9 +530,10 @@ export const RecordedData = (props: MProps) => {
           >
             <div className="flex-card flex-start" style={{flex: 2}}>
               <button
-                  className="uda-record-btn"
+                  className="uda-record-btn uda_exclude"
                   onClick={() => cancelRecording()}
                   style={{flex: 1}}
+                  disabled={disableForm}
               >
                 <span className="uda_exclude">Cancel and Exit</span>
               </button>

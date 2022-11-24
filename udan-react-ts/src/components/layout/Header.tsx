@@ -54,7 +54,7 @@ const Header = (props: HeaderProps) => {
     <>
       <div>
         <div
-          className="uda-ribbon-arrow flex-card flex-center "
+          className="uda-ribbon-arrow flex-card flex-center uda_exclude"
           id="uda-close-panel"
           onClick={() => togglePanel()}
         >
@@ -86,14 +86,14 @@ const Header = (props: HeaderProps) => {
             <input
               type="text"
               name="uda-search-input"
-              className="uda-input-cntrl"
+              className="uda-input-cntrl uda_exclude"
               placeholder="search..."
               id="uda-search-input"
               value={searchKeyword}
               onChange={(e) => setSearchKeyword(e.target.value)}
             />
             <button
-              className="uda-search-btn"
+              className="uda-search-btn uda_exclude"
               id="uda-search-btn"
               style={{ borderRadius: "0px 5px 5px 0px" }}
               onClick={() => multiLangSearch(searchKeyword)}
