@@ -31,6 +31,8 @@ export const CONFIG = {
   AUTO_PLAY_SLEEP_TIME: 2000,
   JARO_WEIGHT: 0.95,
   JARO_WEIGHT_PERSONAL: 0.90,
+  enableInfiniteScroll: false,
+  enableInfiniteScrollPageLength: 10,
   set Environment(value) {
     this.current = value.toString().toUpperCase();
     if (this.current === "PROD") {
@@ -59,7 +61,7 @@ export const CONFIG = {
     'baseURI','isConnected','ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
     'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
     'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y', 'selectionStart', 'selectionEnd', 'required', 'validationMessage', 'selectionDirection',
-    'naturalWidth', 'naturalHeight', 'complete', '_indexOf', 'value', 'defaultValue', 'min', 'max', 'nodeInfo', 'data-tooltip-id', 'addedclickrecord'
+    'naturalWidth', 'naturalHeight', 'complete', '_indexOf', 'value', 'defaultValue', 'min', 'max', 'nodeInfo', 'data-tooltip-id', 'addedclickrecord', 'checked'
   ],
   innerTextWeight: 5,
   ignoreNodesFromIndexing: ['ng-dropdown-panel','ckeditor','fusioncharts','ngb-datepicker','ngx-daterangepicker-material','uda-panel','mat-datepicker-content','ng-select'],

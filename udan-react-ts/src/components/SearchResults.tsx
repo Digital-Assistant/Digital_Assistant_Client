@@ -10,6 +10,7 @@ import { Empty, List } from "antd";
 import { DoubleRightOutlined } from "@ant-design/icons";
 import { getRowObject, setToStore } from "../util";
 import InfiniteScroll from "react-infinite-scroller";
+import {CONFIG} from "../config";
 
 export interface MProps {
   visibility?: boolean;
@@ -50,7 +51,7 @@ export const SearchResults = (props: MProps) => {
   };
 
   const renderData = () => {
-    if (!props?.visibility) return;
+    if (!props?.visibility) return <></>;
     return !props?.visibility ? null : !props?.data?.length ? (
       <Empty description={"No results found"} />
     ) : (
@@ -84,7 +85,7 @@ export const SearchResults = (props: MProps) => {
         <InfiniteScroll
           pageStart={0}
           loadMore={loadSearchResults}
-          hasMore={searchResults.length > 10 && searchResults.length < 100}
+          hasMore={CONFIG.enableInfiniteScroll && searchResults.length > CONFIG.enableInfiniteScrollPageLength}
           useWindow={false}
         >
           {renderData()}

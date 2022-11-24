@@ -55,7 +55,8 @@ export const matchNode = (recordedNode: any) => {
   if (originalNode.meta.hasOwnProperty('skipDuringPlay') && originalNode.meta.skipDuringPlay) {
     removeToolTip();
     setTimeout(function () {
-      trigger("UDAPlayNext", {"playNext": true});
+      removeToolTip();
+      trigger("ContinuePlay", {action: 'ContinuePlay'});
     }, CONFIG.DEBOUNCE_INTERVAL);
     return true;
   }
@@ -74,10 +75,13 @@ export const matchNode = (recordedNode: any) => {
   for (let i = 0; i < clickObjects.length; i++) {
     let compareElement = clickObjects[i];
     if (compareElement.nodeName.toLowerCase() === originalElement.nodeName.toLowerCase()) {
-      let textWeight = jaroWinkler(
-          originalElement.outerHTML,
-          compareElement.outerHTML
-      );
+      let textWeight = 0;
+      if(originalElement.outerHTML && compareElement.outerHTML){
+        jaroWinkler(
+            originalElement.outerHTML,
+            compareElement.outerHTML
+        );
+      }
       if (originalElement.offset) {
         const _offsets = getAbsoluteOffsets(compareElement);
         if (
@@ -141,7 +145,7 @@ export const searchNodes = (recordedNode, compareElements) => {
   }
   for (let searchNode of compareElements) {
     let searchLabelExists = false;
-    let compareNode = domJSON.toJSON(searchNode.node);
+    let compareNode = domJSON.toJSON(searchNode.node, {serialProperties: true});
     // compare recorded node with personal node tag or not
     let match = compareNodes(compareNode.node, originalNode.node, isPersonalNode);
 
@@ -233,21 +237,21 @@ export const matchAction = (node, selectedNode) => {
 
   simulateHover(node);
 
-  const navigationCookieData = getSelectedRecordFromStore();
+  const navigationData = getSelectedRecordFromStore();
 
   // perform click action based on the input given
 
   // const recordedNodeData = JSON.parse(selectedNode.objectdata);
   const recordedNodeData = selectedNode.objectdata;
   if (recordedNodeData.meta && recordedNodeData.meta.hasOwnProperty('selectedElement') && recordedNodeData.meta.selectedElement && recordedNodeData.meta.selectedElement.systemTag.trim() != 'others') {
-    let performedAction = mapSelectedElementAction(node, selectedNode, navigationCookieData, recordedNodeData);
+    let performedAction = mapSelectedElementAction(node, selectedNode, navigationData, recordedNodeData);
     if (performedAction) {
       return;
     }
   }
 
   if (inArray(node.nodeName.toLowerCase(), CONFIG.ignoreNodesFromIndexing) !== -1) {
-    addToolTip(node, node.parentNode, selectedNode, navigationCookieData, false, false, false);
+    addToolTip(node, node.parentNode, selectedNode, navigationData, false, false, false);
     return;
   }
 
@@ -255,25 +259,25 @@ export const matchAction = (node, selectedNode) => {
     case "input":
       // functionality for detecting multi select box and highlighting the recorded node
       if (node.classList && (node.classList.contains('select2-search__field') || node.classList.contains('mat-autocomplete-trigger'))) {
-        addToolTip(node, node.parentNode.parentNode.parentNode.parentNode.parentNode, selectedNode, navigationCookieData, false, true);
+        addToolTip(node, node.parentNode.parentNode.parentNode.parentNode.parentNode, selectedNode, navigationData, false, true);
       } else if (node.hasAttribute('role') && (node.getAttribute('role') === 'combobox')) {
-        addToolTip(node, node.parentNode.parentNode.parentNode.parentNode, selectedNode, navigationCookieData, false, false, true);
+        addToolTip(node, node.parentNode.parentNode.parentNode.parentNode, selectedNode, navigationData, false, false, true);
       } else if (node.hasAttribute('type') && (node.getAttribute('type') === 'checkbox' || node.getAttribute('type') === 'radio') && node.classList && (node.classList.contains('mat-checkbox-input') || node.classList.contains('mat-radio-input'))) {
-        addToolTip(node, node.parentNode.parentNode, selectedNode, navigationCookieData, false, false, true);
+        addToolTip(node, node.parentNode.parentNode, selectedNode, navigationData, false, false, true);
       } else if (node.hasAttribute('type')) {
         switch (node.getAttribute('type').toLowerCase()) {
           case 'checkbox':
             if (node.parentNode && node.parentNode.classList && node.parentNode.classList.contains('vc_checkbox')) {
-              addToolTip(node, node.parentNode, selectedNode, navigationCookieData, false, false, true);
+              addToolTip(node, node.parentNode, selectedNode, navigationData, false, false, true);
             } else {
-              addToolTip(node, node.parentNode.parentNode, selectedNode, navigationCookieData, false, false, true);
+              addToolTip(node, node.parentNode.parentNode, selectedNode, navigationData, false, false, true);
             }
             break;
           case 'radio':
             if (node.parentNode && node.parentNode.classList && node.parentNode.classList.contains('vc_label')) {
-              addToolTip(node, node.parentNode, selectedNode, navigationCookieData, false, false, true);
+              addToolTip(node, node.parentNode, selectedNode, navigationData, false, false, true);
             } else {
-              addToolTip(node, node.parentNode.parentNode, selectedNode, navigationCookieData, false, false, true);
+              addToolTip(node, node.parentNode.parentNode, selectedNode, navigationData, false, false, true);
             }
             break;
           case 'submit':
@@ -283,39 +287,38 @@ export const matchAction = (node, selectedNode) => {
             break;
           case 'text':
             if (node.attributes && node.attributes.length > 0 && (node.hasAttribute('ngxdaterangepickermd'))) {
-              addToolTip(node, node.parentNode, selectedNode, navigationCookieData, false, false, false);
+              addToolTip(node, node.parentNode, selectedNode, navigationData, false, false, false);
             } else if (node.attributes && node.attributes.length > 0 && (node.hasAttribute('uib-datepicker-popup'))) {
-              addToolTip(node, node.parentNode.parentNode, selectedNode, navigationCookieData, true, false);
+              addToolTip(node, node.parentNode.parentNode, selectedNode, navigationData, true, false);
             } else {
-              addToolTip(node, node.parentNode, selectedNode, navigationCookieData, false, true, true);
+              addToolTip(node, node.parentNode, selectedNode, navigationData, false, true, true);
             }
             break;
           default:
-            addToolTip(node, node.parentNode, selectedNode, navigationCookieData, false, false, true);
+            addToolTip(node, node.parentNode, selectedNode, navigationData, false, false, true);
             break;
         }
       } else {
-        addToolTip(node, node.parentNode, selectedNode, navigationCookieData, false, false, true);
+        addToolTip(node, node.parentNode, selectedNode, navigationData, false, false, true);
       }
       break;
     case "textarea":
       CONFIG.playNextAction = false;
-      addToolTip(node, node.parentNode, selectedNode, navigationCookieData, false, false, true);
+      addToolTip(node, node.parentNode, selectedNode, navigationData, false, false, true);
       break;
     case "select":
-      // addToolTip(node, node.parentNode, navigationcookiedata, false, false, true);
-      addToolTip(node, node, selectedNode, navigationCookieData, false, false, true);
+      addToolTip(node, node, selectedNode, navigationData, false, false, true);
       break;
     case "option":
-      addToolTip(node, node.parentNode, selectedNode, navigationCookieData, false, false, true);
+      addToolTip(node, node.parentNode, selectedNode, navigationData, false, false, true);
       break;
     case "checkbox":
-      addToolTip(node, node, selectedNode, navigationCookieData, false, false, true);
+      addToolTip(node, node, selectedNode, navigationData, false, false, true);
       break;
       // Additional processing for calendar selection
     case "button":
       if (node.hasAttribute('aria-label') && node.getAttribute('aria-label').toLowerCase() === 'open calendar') {
-        addToolTip(node, node.parentNode, selectedNode, navigationCookieData, true, false);
+        addToolTip(node, node.parentNode, selectedNode, navigationData, true, false);
       } else if (node.classList && node.classList.contains('btn-pill')) {
         node.click();
         invokeNextNode(node, timeToInvoke);
@@ -326,9 +329,9 @@ export const matchAction = (node, selectedNode) => {
       break;
     case 'span':
       if (node.classList && node.classList.contains('select2-selection')) {
-        addToolTip(node, node.parentNode.parentNode, selectedNode, navigationCookieData, true, false);
+        addToolTip(node, node.parentNode.parentNode, selectedNode, navigationData, true, false);
       } else if (node.classList.contains("radio") && node.classList.contains("replacement")) {
-        addToolTip(node, node.parentNode.parentNode, selectedNode, navigationCookieData, false, false, true);
+        addToolTip(node, node.parentNode.parentNode, selectedNode, navigationData, false, false, true);
       } else {
         node.click();
         invokeNextNode(node, timeToInvoke);
@@ -336,7 +339,7 @@ export const matchAction = (node, selectedNode) => {
       break;
     case 'div':
       if (node.classList && (node.classList.contains('mat-form-field-flex') || node.classList.contains('mat-select-trigger'))) {
-        addToolTip(node, node.parentNode.parentNode, selectedNode, navigationCookieData, true, false);
+        addToolTip(node, node.parentNode.parentNode, selectedNode, navigationData, true, false);
       } else {
         node.click();
         invokeNextNode(node, timeToInvoke);
@@ -344,10 +347,10 @@ export const matchAction = (node, selectedNode) => {
       break;
       //	fix for text editor during playback
     case 'ckeditor':
-      addToolTip(node, node, selectedNode, navigationCookieData, true, false);
+      addToolTip(node, node, selectedNode, navigationData, true, false);
       break;
     case 'ng-select':
-      addToolTip(node, node, selectedNode, navigationCookieData, false, false);
+      addToolTip(node, node, selectedNode, navigationData, false, false);
       break;
     default:
 
@@ -362,7 +365,7 @@ export const matchAction = (node, selectedNode) => {
       }
 
       if (specialInputNode) {
-        addToolTip(node, node, selectedNode, navigationCookieData, true, false);
+        addToolTip(node, node, selectedNode, navigationData, true, false);
       } else {
         node.click();
       }
@@ -484,13 +487,13 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
     placement: toolTipPositionClass,
     modifiers: [
       {
-        name: 'offset',
+        name: 'popperOffsets',
         enabled: true,
         phase: 'main',
         options: {
-          offset: [0, 20],
-        },
-      },
+          offset: ({ placement, reference, popper }) => [0, 50],
+        }
+      }
     ],
   });
 
@@ -500,7 +503,7 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
       .getElementById("uda-autoplay-continue")
       ?.addEventListener("click", () => {
         removeToolTip();
-        trigger("ContinuePlay", {data: 'ContinuePlay'});
+        trigger("ContinuePlay", {action: 'ContinuePlay'});
       });
 
   //attach event to close tooltip
@@ -508,7 +511,7 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
       .getElementById("uda-autoplay-exit")
       ?.addEventListener("click", () => {
         removeToolTip();
-        trigger("BackToSearchResults", {data: 'BackToSearchResults'});
+        trigger("BackToSearchResults", {action: 'BackToSearchResults'});
       });
   /*jQuery('html, body').animate({
     scrollTop: (jQuery(invokingnode).offset().top - 250)
@@ -557,7 +560,9 @@ export const compareNodes = (compareNode, originalNode, isPersonalNode = false, 
       match = compareNodes(compareNode[key], originalNode[key], isPersonalNode, match);
     } else if (compareNode.hasOwnProperty(key) && Array.isArray(originalNode[key]) && originalNode[key].length > 0 && Array.isArray(compareNode[key]) && compareNode[key].length > 0) {
       match.matched++;
-      if (compareNode[key].length === originalNode[key].length) {
+      if(compareNode.nodeName === 'select' && key === 'childNodes') {
+        continue;
+      } else if (compareNode[key].length === originalNode[key].length) {
         match.matched++;
         for (let i = 0; i < originalNode[key].length; i++) {
           match = compareNodes(compareNode[key][i], originalNode[key][i], isPersonalNode, match);
@@ -572,7 +577,7 @@ export const compareNodes = (compareNode, originalNode, isPersonalNode = false, 
       } else {
         // jaro wrinker comparision for classname
         let weight = jaroWinkler(originalNode[key], compareNode[key]);
-        if (weight > 0.90) {
+        if (weight > CONFIG.JARO_WEIGHT_PERSONAL) {
           match.matched++;
         } else {
           match.unmatched.push({
@@ -623,9 +628,9 @@ export const processDistanceOfNodes = (matchingNodes, selectedNode) => {
     let leastDistance = -1;
     for (let node of matchingNodes) {
       const _offsets = getAbsoluteOffsets(node);
-      if (
-          _offsets.x == selectedNode.offset.x ||
-          _offsets.y == selectedNode.offset.y
+      if (selectedNode.offset &&
+          (_offsets.x == selectedNode.offset.x ||
+          _offsets.y == selectedNode.offset.y)
       ) {
         leastDistanceNode = node;
         leastDistance = 0;

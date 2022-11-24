@@ -16,7 +16,7 @@ import {
 } from "@ant-design/icons";
 import {
   setToStore,
-  getCurrentPlayItem,
+  getCurrentPlayItem, getObjData,
 } from "../util";
 import {deleteRecording, vote} from "../services/recordService";
 import {getUserId} from "../services/userService";
@@ -70,10 +70,10 @@ export const RecordSequenceDetails = (props: MProps) => {
   /**
    * Record player(auto play)
    */
-  const autoPlay = () => {
-    if (props?.isPlaying == "on") {
+  const autoPlay = (data = null) => {
+    if (props?.isPlaying == "on" || data?.type == "ContinuePlay") {
       const playItem = getCurrentPlayItem();
-      if (matchNode(playItem)) {
+      if (playItem.node && matchNode(playItem)) {
         updateStatus(playItem.index);
       } else {
         pause();
@@ -182,6 +182,17 @@ export const RecordSequenceDetails = (props: MProps) => {
     })();
   }, []);
 
+  const addSkipClass = (item) => {
+    if(item.status !== 'completed'){
+      return '';
+    }
+    let nodeData = getObjData(item.objectdata);
+    if(nodeData.meta.hasOwnProperty('skipDuringPlay') && nodeData.meta.skipDuringPlay){
+      return 'skipped';
+    }
+    return item.status;
+  }
+
   return props?.recordSequenceDetailsVisibility ? (
       <>
         <div
@@ -224,7 +235,7 @@ export const RecordSequenceDetails = (props: MProps) => {
                     dataSource={selectedRecordingDetails?.userclicknodesSet}
                     renderItem={(item: any, index: number) => (
                         <List.Item
-                            className={item.status}
+                            className={addSkipClass(item)}
                             onClick={() => playNode(item, index)}
                         >
                           <List.Item.Meta title={getClickedNodeLabel(item)}/>

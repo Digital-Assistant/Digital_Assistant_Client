@@ -738,7 +738,7 @@ export const parentUpTo = (el: any, tagName: string) => {
  * @returns promise
  */
 export const postClickData = async (node: HTMLElement, text: string) => {
-  let objectData: any = domJSON.toJSON(node, {metadata: true});
+  let objectData: any = domJSON.toJSON(node, {serialProperties: true});
   if(objectData.meta) {
     objectData.meta = {};
   } else {
@@ -749,9 +749,10 @@ export const postClickData = async (node: HTMLElement, text: string) => {
     objectData.meta.displayText = CONFIG.customNameForSpecialNodes[node.nodeName.toLowerCase()];
   }
 
-  if(objectData.node.outerHTML) {
+  if(!objectData.node.outerHTML) {
     objectData.node.outerHTML = node.outerHTML;
   }
+
   objectData.offset = getAbsoluteOffsets(node);
   objectData.node.nodeInfo = getNodeInfo(node);
 
