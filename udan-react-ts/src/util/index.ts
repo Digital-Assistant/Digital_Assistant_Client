@@ -475,7 +475,7 @@ export const getTooltipPositionClass = (
   return finalCssClass;
 };
 
-export const addClickToNode = (node: any, confirmdialog = false) => {
+export const addClickToNode = (node: any) => {
   try {
     if (
         node.hasOwnProperty("addedclickrecord") &&
@@ -495,23 +495,23 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
     switch (nodeName) {
       case "a":
         addEvent(node, "click", function (event: any) {
-          recordUserClick(event.target, false, false, event, confirmdialog);
+          recordUserClick(event.target, false, false, event);
         });
         break;
       case "select":
         addEvent(node, "focus", function (event: any) {
-          recordUserClick(event.target, false, false, event, confirmdialog);
+          recordUserClick(event.target, false, false, event);
         });
         break;
       case "input":
         if (!node.hasAttribute("type")) {
           addEvent(node, "click", function (event: any) {
-            recordUserClick(event.target, false, false, event, confirmdialog);
+            recordUserClick(event.target, false, false, event);
           });
           return;
         }
-        const inputtype = node.getAttribute("type").toLowerCase();
-        switch (inputtype) {
+        const inputType = node.getAttribute("type").toLowerCase();
+        switch (inputType) {
           case "email":
           case "text":
           case "button":
@@ -537,12 +537,12 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
           case "textarea":
           case "week":
             addEvent(node, "click", function (event: any) {
-              recordUserClick(node, false, false, event, confirmdialog);
+              recordUserClick(node, false, false, event);
             });
             break;
           default:
             addEvent(node, "click", function (event: any) {
-              recordUserClick(node, false, false, event, confirmdialog);
+              recordUserClick(node, false, false, event);
             });
             break;
         }
@@ -552,13 +552,13 @@ export const addClickToNode = (node: any, confirmdialog = false) => {
       case "button":
       case "tr":
         addEvent(node, "click", function (event: any) {
-          recordUserClick(event.target, false, false, event, confirmdialog);
+          recordUserClick(event.target, false, false, event);
         });
         break;
       default:
         addEvent(node, "click", function (event: any) {
           if (isAllowedMiscElement(event.target)) {
-            recordUserClick(event.target, false, false, event, confirmdialog);
+            recordUserClick(event.target, false, false, event);
           }
         });
         break;
@@ -581,6 +581,7 @@ export const isAllowedMiscElement = (element: HTMLElement) => {
       window.getComputedStyle(element).cursor == "pointer";
   let parentEl: any = element;
   /**traversing 3 level parents for content editable property */
+  //wrong logic needs to improve
   for (let i = 0; i <= 3; i++) {
     if (element.getAttribute("contenteditable")) {
       isAllowedElement = true;
@@ -634,22 +635,17 @@ export const delayLink = (node: HTMLElement) => {
  * @param fromDocument
  * @param selectChange
  * @param event
- * @param confirmDialog
- * @param hasParentClick
  * @returns
  */
 export const recordUserClick = async (
     node: HTMLElement,
-    fromDocument = false,
-    selectChange = false,
-    event: any,
-    confirmDialog = false,
-    hasParentClick = false
+    fromDocument: boolean = false,
+    selectChange: boolean = false,
+    event: any
 ) => {
 
 
   if (!node) return false;
-
 
   event.preventDefault();
   event.stopPropagation();

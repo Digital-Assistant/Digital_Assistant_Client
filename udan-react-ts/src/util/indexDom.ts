@@ -167,7 +167,7 @@ export const indexDom = (
           node.hasclick &&
           node.haschildclick
       ) {
-        node = addClickToNode(node, true);
+        node = addClickToNode(node);
       }
 
       break;
