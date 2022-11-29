@@ -60,6 +60,7 @@ declare global {
   interface Window {
     onDomChange: any;
     udanSelectedNodes: any;
+    clickedNode: any;
   }
 }
 
@@ -647,8 +648,22 @@ export const recordUserClick = async (
 
   if (!node) return false;
 
-  event.preventDefault();
-  event.stopPropagation();
+  const isRecording =
+      getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true" ? true : false;
+
+  if (!isRecording) {
+    return;
+  }
+
+  if(node.isSameNode(window.clickedNode)) {
+    return;
+  }
+
+  if (typeof event.cancelable !== 'boolean' || event.cancelable) {
+    event.preventDefault();
+    event.stopPropagation();
+    window.clickedNode = event.target;
+  }
 
   if (
       !node.isSameNode(event.target) || clickableElementExists(event.target) ||
@@ -661,23 +676,6 @@ export const recordUserClick = async (
   if (!window.udanSelectedNodes) window.udanSelectedNodes = [];
   window.udanSelectedNodes.push(node);
 
-  const isRecording =
-      getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true" ? true : false;
-
-
-  const parentAnchorElement = parentUpTo(node, "a");
-
-  if (!isRecording) {
-    if (parentAnchorElement) {
-      try {
-        window.location.href = parentAnchorElement?.getAttribute("href") || "/";
-      } catch (e) {
-      }
-      return true;
-    } else {
-      return;
-    }
-  }
 
   const _text = getClickedInputLabels(node);
 
@@ -700,23 +698,7 @@ export const recordUserClick = async (
     UDAErrorLogger.error("Unable save record click " + node.outerHTML);
   }
 
-  if (
-      parentAnchorElement && node.getAttribute("data-onclick")
-  ) {
-    parentAnchorElement?.setAttribute(
-        "onclick",
-        parentAnchorElement?.getAttribute("data-onclick")
-    );
-    parentAnchorElement?.removeAttribute("data-onclick");
-    parentAnchorElement.dispatchEvent(new Event("click"));
-  } else if (
-      parentAnchorElement && node.getAttribute("href")
-  ) {
-    try {
-      window.location.href = parentAnchorElement?.getAttribute("href") || "";
-    } catch (e) {
-    }
-  }
+  event.target.click();
 };
 
 /**

@@ -23,7 +23,7 @@
         "index.js"
       ],
       "css": [
-        "assets/App.min.css"
+
       ],
       "media": []
     }
@@ -41,10 +41,8 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "assets/bundle.js",
         "index.js",
-        "assets/App.min.css",
-        "assets/logo.svg"
+        "assets/*"
       ],
       "matches": [
         "http://*/*",

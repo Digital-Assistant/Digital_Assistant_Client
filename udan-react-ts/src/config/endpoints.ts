@@ -3,9 +3,7 @@
  * Type: MAP
  * Objective: HTTP Endpoints
  */
-import { environment } from "../../environments/environment";
-
-const base = environment.baseURL;
+const base = process.env.baseURL;
 
 export const ENDPOINT = {
   USER_LOGIN: `${base}/user/checkauthid`,

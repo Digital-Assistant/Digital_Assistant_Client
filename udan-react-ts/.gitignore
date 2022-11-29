@@ -31,3 +31,6 @@ node_modules/
 package-lock.json
 
 .idea/
+
+#ignore all the configuration values
+environments/*

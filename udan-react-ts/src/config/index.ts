@@ -9,8 +9,8 @@ export const CONFIG = {
   UDADebug: false,
   UDA_CONTAINER_CLASS: "udan-main-panel",
   UDA_CLICK_IGNORE_CLASS: "uda_exclude",
-  UDA_DOMAIN: "https://udantest.nistapp.ai",
-  UDA_API_URL: "https://udantest.nistapp.ai/voiceapi",
+  UDA_DOMAIN: process.env.baseURL,
+  UDA_API_URL: process.env.baseURL+"/voiceapi",
   UDASessionID: (
       Math.random().toString(36).substring(2, 15) +
       Math.random().toString(36).substring(2, 15)
@@ -94,11 +94,10 @@ export const CONFIG = {
     enabled: true,
     provider: "azure",
     config: {
-      key1: "bc015cc4090543d58c3056e8dc98cc9b",
-      key2: "",
-      endPoint:
-          "https://nistapp-content-moderator.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessText/Screen",
-      region: "eastus",
+      key1: process.env.profanityKey,
+      key2: process.env.profanityKey,
+      endPoint: process.env.profanityUrl,
+      region: process.env.profanityRegion,
     },
   },
   multilingual: {
@@ -109,9 +108,9 @@ export const CONFIG = {
     translatedText: "",
     translate: {
       provider: "google",
-      apikey: "",
+      apikey: process.env.googleTranslateApiKey,
       translateTo: "en",
-      apiurl: "https://translation.googleapis.com/language/translate/v2",
+      apiurl: process.env.googleTranslateUrl,
     },
   },
   // BCP list of languages
