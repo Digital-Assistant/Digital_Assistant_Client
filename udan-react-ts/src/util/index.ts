@@ -13,20 +13,19 @@ import {jaroWinkler} from "jaro-winkler-typescript";
 import {UDAErrorLogger} from "../config/error-log";
 import {removeFromArray} from "./removeFromArray";
 
-export {indexnode} from "./indexNode";
+export {indexNode} from "./indexNode";
 
 import TSON from "typescript-json";
 import {getNodeInfo} from "./nodeInfo";
+import {indexDom} from "./indexDom";
 
 
 export const UDAClickObjects: any = [];
-export const htmlindex: any = [];
-export const menuitems: any = [];
-export const ignoreNodesFromIndexing: any = [];
-export const tooltipDisplayedNodes: any = [];
-export const ignoreClicksOnSpecialNodes: any = [];
-export const ignoreNodesContainingClassNames: any = [];
-export const cancelRecordingDuringRecordingNodes: any = [];
+export const htmlIndex: any = [];
+export const menuItems: any = [];
+export const ignoreClicksOnSpecialNodes: any = ['ngx-daterangepicker-material'];
+export const addClickToSpecialNodes: any = ['ng-select', 'ngb-datepicker'];
+export const ignoreNodesContainingClassNames: any = ['cke_dialog_container','cke_notifications_area','gldp-default','ajs-layer','aui-list','herknl'];
 export let udanSpecialNodes: any = {
   include: {
     tags: ["a", "button", "input", "textarea", "select", "mat-select"],
@@ -247,8 +246,8 @@ export const logInfo = (info: any) => {
 //check css classnames for ignoring
 export const checkCssClassNames = (node: any) => {
   let cssClassExist = false;
-  if (ignoreNodesContainingClassNames?.length > 0) {
-    for (const className of ignoreNodesContainingClassNames) {
+  if (CONFIG.ignoreNodesContainingClassNames?.length > 0) {
+    for (const className of CONFIG.ignoreNodesContainingClassNames) {
       if (node.classList.contains(className)) {
         cssClassExist = true;
       }
@@ -581,13 +580,13 @@ export const isAllowedMiscElement = (element: HTMLElement) => {
   let isAllowedElement: boolean =
       window.getComputedStyle(element).cursor == "pointer";
   let parentEl: any = element;
+
+  if (element.getAttribute("contenteditable")) {
+    isAllowedElement = true;
+  }
+
   /**traversing 3 level parents for content editable property */
-  //wrong logic needs to improve
   for (let i = 0; i <= 3; i++) {
-    if (element.getAttribute("contenteditable")) {
-      isAllowedElement = true;
-      break;
-    }
     if (parentEl.parentNode) {
       parentEl = parentEl.parentNode;
     }
@@ -1545,5 +1544,6 @@ export const getAbsoluteOffsets = (element: HTMLElement) => {
 
 window.onDomChange(function () {
   addBodyEvents(document.body);
+  // indexDom(document.body);
 });
 

@@ -1,15 +1,15 @@
 // Check for each node and then match it with the available clicknodes which are identified by links.js
 import {CONFIG} from "../config";
 import domJSON from "domjson";
-import {getNodeLabels, htmlindex, inArray, logInfo, menuitems, UDAClickObjects} from "./index";
+import {getNodeLabels, htmlIndex, inArray, logInfo, menuItems, UDAClickObjects} from "./index";
 
-export const indexnode = (
+export const indexNode = (
     node: any,
-    parentnode: any,
-    hasparentnodeclick = false,
-    fromdocumentclick = false
+    parentNode: any,
+    hasParentNodeClick = false,
+    fromDocumentClick = false
 ) => {
-  const elementdata: any = {
+  const elementData: any = {
     "element-type": "",
     "element-labels": [],
     "element-action": "",
@@ -19,7 +19,7 @@ export const indexnode = (
     "menu-items": [],
   };
 
-  let clickobjectexists = false;
+  let clickObjectExists = false;
   let udaClickObject = {};
 
   if (node.hasAttribute("nist-voice") && node.getAttribute("nist-voice")) {
@@ -41,7 +41,7 @@ export const indexnode = (
     return node;
   }
 
-  if (parentnode.classList && parentnode.classList.contains("tab-content")) {
+  if (parentNode.classList && parentNode.classList.contains("tab-content")) {
     node.displaytype = "tab-content";
     node.tabid = node.id;
   }
@@ -67,8 +67,8 @@ export const indexnode = (
   }
 
   if (CONFIG?.htmlIndex?.length > 0) {
-    for (let htmli = 0; htmli < CONFIG?.htmlIndex?.length; htmli++) {
-      if (node?.isSameNode(CONFIG.htmlIndex[htmli]["element-data"])) {
+    for (let htmlI = 0; htmlI < CONFIG?.htmlIndex?.length; htmlI++) {
+      if (node?.isSameNode(CONFIG.htmlIndex[htmlI]["element-data"])) {
         node.hasclick = true;
         return node;
       }
@@ -80,7 +80,7 @@ export const indexnode = (
       continue;
     }
     if (node?.isSameNode(UDAClickObjects[i].element)) {
-      clickobjectexists = true;
+      clickObjectExists = true;
       udaClickObject = UDAClickObjects[i];
     }
   }
@@ -95,25 +95,25 @@ export const indexnode = (
     return node;
   }
 
-  if (fromdocumentclick) {
-    clickobjectexists = true;
+  if (fromDocumentClick) {
+    clickObjectExists = true;
     udaClickObject = node;
   }
 
-  if (clickobjectexists) {
+  if (clickObjectExists) {
     node.hasclick = true;
-    elementdata["element-type"] = node.nodeName.toLowerCase();
-    elementdata["element-url"] = window.location.href;
+    elementData["element-type"] = node.nodeName.toLowerCase();
+    elementData["element-url"] = window.location.href;
 
-    if (parentnode.classList && parentnode.classList.contains("tab-content")) {
+    if (parentNode.classList && parentNode.classList.contains("tab-content")) {
       node.displaytype = "tab-content";
     }
 
-    if (elementdata["element-labels"]?.length === 0) {
-      elementdata["element-labels"] = getNodeLabels(node, [], 1);
+    if (elementData["element-labels"]?.length === 0) {
+      elementData["element-labels"] = getNodeLabels(node, [], 1);
     }
 
-    if (elementdata["element-labels"]?.length === 0) {
+    if (elementData["element-labels"]?.length === 0) {
       return node;
     }
 
@@ -122,8 +122,8 @@ export const indexnode = (
             node.displaytype === "tab-content") ||
         (node.hasOwnProperty("navtype") && node.navtype === "navtab")
     ) {
-      for (let j = 0; j < menuitems?.length; j++) {
-        let menuitem = menuitems[j];
+      for (let j = 0; j < menuItems?.length; j++) {
+        let menuitem = menuItems[j];
         if (menuitem.refid === node.tabid) {
           if (menuitem.menunode.hasOwnProperty("path")) {
             node.path = menuitem.menunode.path + ">" + menuitem.name;
@@ -140,9 +140,9 @@ export const indexnode = (
       }
     }
 
-    if (elementdata["element-path"] === "") {
+    if (elementData["element-path"] === "") {
       if (node.hasOwnProperty("path")) {
-        elementdata["element-path"] = node.path;
+        elementData["element-path"] = node.path;
       }
     }
 
@@ -151,24 +151,24 @@ export const indexnode = (
         node.getAttribute("data-toggle") === "tab"
     ) {
       node.navtype = "navtab";
-      elementdata["element-action"] = "navtab";
+      elementData["element-action"] = "navtab";
     }
 
     let uda_custom = {
-      hasparentclick: false,
-      parentnode: {},
+      hasParentClick: false,
+      parentNode: {},
       domJson: domJSON.toJSON(node, {serialProperties: true}),
     };
-    if (hasparentnodeclick) {
-      uda_custom.hasparentclick = true;
-      uda_custom.parentnode = parentnode;
+    if (hasParentNodeClick) {
+      uda_custom.hasParentClick = true;
+      uda_custom.parentNode = parentNode;
     }
     node.uda_custom = uda_custom;
 
-    elementdata["element-data"] = node;
-    elementdata["clickobject"] = udaClickObject;
+    elementData["element-data"] = node;
+    elementData["clickobject"] = udaClickObject;
 
-    htmlindex.push(elementdata);
+    CONFIG.htmlIndex.push(elementData);
   }
 
   return node;

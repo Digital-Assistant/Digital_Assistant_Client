@@ -2,28 +2,25 @@
 import {CONFIG} from "../config";
 import {
   addClickToNode,
-  addToolTip, cancelRecordingDuringRecordingNodes, checkCssClassNames,
+  addToolTip, checkCssClassNames,
   errorLog,
-  ignoreClicksOnSpecialNodes,
-  ignoreNodesFromIndexing,
   inArray, logInfo,
-  tooltipDisplayedNodes,
-  indexnode
+  indexNode
 } from "./index";
 
 export const indexDom = (
     node: any,
     ret = false,
-    parentnode = "",
-    textlabel = "",
-    hasparentnodeclick = false,
-    parentclicknode = null
+    parentNode = "",
+    textLabel = "",
+    hasParentNodeClick = false,
+    parentClickNode = null
 ) => {
   switch (node.nodeType) {
     case Node.ELEMENT_NODE:
-      if (!ret && parentnode !== "") {
+      if (!ret && parentNode !== "") {
         try {
-          node = indexnode(node, parentnode, hasparentnodeclick, false);
+          node = indexNode(node, parentNode, hasParentNodeClick, false);
         } catch (e) {
           errorLog(
               "Unable to index node " + node.nodeName + " got exception " + e
@@ -32,33 +29,33 @@ export const indexDom = (
         }
       }
 
-      node.haschildclick = false;
+      node.hasChildClick = false;
 
       // Checking for ignore nodes during indexing
       if (
-          inArray(node.nodeName.toLowerCase(), ignoreNodesFromIndexing) !== -1
+          inArray(node.nodeName.toLowerCase(), CONFIG.ignoreNodesFromIndexing) !== -1
       ) {
         if (
             node.nodeName.toLowerCase() === "ckeditor" &&
             node.childNodes?.length > 2 &&
             CONFIG.recording
         ) {
-          for (let checknode of tooltipDisplayedNodes) {
-            if (node?.isSameNode(checknode)) {
+          for (let checkNode of CONFIG.tooltipDisplayedNodes) {
+            if (node?.isSameNode(checkNode)) {
               // addToolTip = false;
             }
           }
           if (addToolTip) {
-            tooltipDisplayedNodes.push(node);
+            CONFIG.tooltipDisplayedNodes.push(node);
             addToolTip(node, 0);
           }
         } else if (
-            !node.hasclick &&
+            !node.hasClick &&
             inArray(
                 node.nodeName.toLowerCase(),
                 CONFIG.addClickToSpecialNodes
             ) !== -1 &&
-            inArray(node.nodeName.toLowerCase(), ignoreClicksOnSpecialNodes) ===
+            inArray(node.nodeName.toLowerCase(), CONFIG.ignoreClicksOnSpecialNodes) ===
             -1
         ) {
           logInfo(
@@ -67,7 +64,7 @@ export const indexDom = (
           addClickToNode(node);
         } else if (
             node &&
-            cancelRecordingDuringRecordingNodes.indexOf(
+            CONFIG.cancelRecordingDuringRecordingNodes.indexOf(
                 node?.nodeName?.toLowerCase()
             ) !== -1
         ) {
@@ -99,54 +96,54 @@ export const indexDom = (
         logInfo({cssIgnoredNode: node});
         // addClickToNode(node);
       } else if (node.hasChildNodes()) {
-        let childnodes = node.childNodes;
-        let hasparentclick = false;
-        if (node.hasOwnProperty("hasclick") || hasparentnodeclick) {
-          hasparentclick = true;
-          if (parentclicknode === "") {
-            parentclicknode = node;
+        let childNodes = node.childNodes;
+        let hasParentClick = false;
+        if (node.hasOwnProperty("hasClick") || hasParentNodeClick) {
+          hasParentClick = true;
+          if (parentClickNode === "") {
+            parentClickNode = node;
           }
         }
 
-        if (childnodes?.length > 0) {
-          for (let i = 0; i < childnodes?.length; i++) {
-            let childnode = childnodes[i];
+        if (childNodes?.length > 0) {
+          for (let i = 0; i < childNodes?.length; i++) {
+            let childNode = childNodes[i];
             CONFIG.nodeId++;
             if (
                 CONFIG.ignoreElements.indexOf(
-                    childnode.nodeName.toLowerCase()
+                    childNode.nodeName.toLowerCase()
                 ) === -1
             ) {
               if (ret) {
-                if (textlabel === "") {
-                  textlabel = indexDom(childnode, ret, node, textlabel);
+                if (textLabel === "") {
+                  textLabel = indexDom(childNode, ret, node, textLabel);
                 } else {
-                  textlabel += " " + indexDom(childnode, ret, node, textlabel);
+                  textLabel += " " + indexDom(childNode, ret, node, textLabel);
                 }
               } else {
                 try {
                   node.childNodes[i] = indexDom(
-                      childnode,
+                      childNode,
                       ret,
                       node,
                       "",
-                      hasparentclick,
-                      parentclicknode
+                      hasParentClick,
+                      parentClickNode
                   );
                 } catch (e) {
                 }
                 if (
-                    node.childNodes[i].hasOwnProperty("hasclick") &&
-                    node.childNodes[i].hasclick
+                    node.childNodes[i].hasOwnProperty("hasClick") &&
+                    node.childNodes[i].hasClick
                 ) {
-                  node.haschildclick = true;
+                  node.hasChildClick = true;
                 }
                 if (
-                    hasparentclick &&
-                    node.childNodes[i].hasOwnProperty("haschildclick") &&
-                    node.childNodes[i].haschildclick
+                    hasParentClick &&
+                    node.childNodes[i].hasOwnProperty("hasChildClick") &&
+                    node.childNodes[i].hasChildClick
                 ) {
-                  node.haschildclick = true;
+                  node.hasChildClick = true;
                 }
               }
             }
@@ -157,15 +154,15 @@ export const indexDom = (
       // add click to node to send what user has clicked.
       // known scenario that node has parent click
       if (
-          node.hasOwnProperty("hasclick") &&
-          node.hasclick &&
-          (node.nodeName.toLowerCase() === "select" || !node.haschildclick)
+          node.hasOwnProperty("hasClick") &&
+          node.hasClick &&
+          (node.nodeName.toLowerCase() === "select" || !node.hasChildClick)
       ) {
         node = addClickToNode(node);
       } else if (
-          node.hasOwnProperty("hasclick") &&
-          node.hasclick &&
-          node.haschildclick
+          node.hasOwnProperty("hasClick") &&
+          node.hasClick &&
+          node.hasChildClick
       ) {
         node = addClickToNode(node);
       }
@@ -173,13 +170,13 @@ export const indexDom = (
       break;
     case Node.TEXT_NODE:
       if (node.nodeValue !== "") {
-        textlabel = node.nodeValue;
+        textLabel = node.nodeValue;
       }
       break;
   }
 
-  if (ret && textlabel !== "") {
-    return textlabel;
+  if (ret && textLabel !== "") {
+    return textLabel;
   } else if (!ret) {
     return node;
   }
