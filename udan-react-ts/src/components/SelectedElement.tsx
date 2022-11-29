@@ -6,7 +6,6 @@ import fetchHtmlFormElements from "../util/recording-utils/fetchHtmlFormElements
 const SelectedElement = ({ data }) => {
   const { enableNodeTypeChangeSelection } = CONFIG;
   let nodeData = JSON.parse(data.objectdata);
-  console.log("Line 9 SelectedElement.tsx nodeData", nodeData)
   let optionsArray = [];
 
   const editAndSaveSelectedHtmlElement = (event) => {
@@ -29,7 +28,6 @@ const SelectedElement = ({ data }) => {
   };
 
   const getOptions = () => {
-    console.log("Line 32 SelectedElement.tsx Inside getOptions for dropdown");
     let selectedElement = {
       inputElement: "",
       inputType: "",
@@ -58,7 +56,7 @@ const SelectedElement = ({ data }) => {
     }
     return optionsArray.map((eachOption) => {
       return (
-        <option key={eachOption.text} value={eachOption.value}>
+        <option key={eachOption.text} value={eachOption.value} selected={eachOption.selected}>
           {eachOption.text}
         </option>
       );
@@ -67,7 +65,7 @@ const SelectedElement = ({ data }) => {
 
   return enableNodeTypeChangeSelection ? (
     <>
-      <span>Clicked on </span>
+      <span style={{marginRight:"4px"}}>Clicked on </span>
       <select
         name="UDASelectedElement"
         id="UDASelectedElement"

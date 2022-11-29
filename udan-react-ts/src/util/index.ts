@@ -773,6 +773,15 @@ export const postClickData = async (node: HTMLElement, text: string) => {
   objectData.offset = getAbsoluteOffsets(node);
   objectData.node.nodeInfo = getNodeInfo(node);
 
+  const {enableNodeTypeChangeSelection} = CONFIG;
+
+  if(enableNodeTypeChangeSelection) {
+    objectData.meta.systemDetected = mapClickedElementToHtmlFormElement(node);
+    if (objectData.meta.systemDetected.inputElement !== 'others') {
+      objectData.meta.selectedElement = objectData.meta.systemDetected;
+    }
+  }
+ 
   const payload = {
     domain: window.location.host,
     urlpath: window.location.pathname,

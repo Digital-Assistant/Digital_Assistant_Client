@@ -394,8 +394,11 @@ export const RecordedData = (props: MProps) => {
                                        className="uda-form-input" placeholder="Custom Tooltip (Optional)"
                                        style={{width: "68% !important"}} onChange={onChangeTooltip} value={tooltip}/>
                               {inputError.tooltip && <span className={`uda-alert`}> {translate('inputError')}</span>}
-                                <span>
-                              <button className="delete-btn" style={{color: "#fff"}} id="uda-tooltip-save"
+                              <div style={{display:"flex"}}>
+                              <SelectedElement data={item}/>
+                              </div>
+                              <span>
+                              <button className="delete-btn" style={{color: "#fff",marginTop:'8px'}} id="uda-tooltip-save"
                                       onClick={() => {
                                         updateTooltip('tooltipInfo', index)
                                       }}>Save</button>
@@ -403,7 +406,6 @@ export const RecordedData = (props: MProps) => {
                             </div>
                         </>
                     }
-                    <SelectedElement data={item}/>
                   </>
               )}
             </li>
