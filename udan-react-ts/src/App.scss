@@ -625,7 +625,12 @@ body {
                                 
                                 &.completed {
                                     &::before {
-                                        background-color: lightgreen;
+                                        background-image: url(assets/images/icons/bullet.png);
+                                    }
+                                }
+                                &.skipped {
+                                    &::before {
+                                        background-image: url(assets/images/icons/bullet.png);
                                     }
                                 }
                                 .uda-tutorial-btn{

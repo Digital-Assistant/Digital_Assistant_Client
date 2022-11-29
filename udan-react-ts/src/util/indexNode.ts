@@ -157,7 +157,7 @@ export const indexnode = (
     let uda_custom = {
       hasparentclick: false,
       parentnode: {},
-      domJson: domJSON.toJSON(node),
+      domJson: domJSON.toJSON(node, {serialProperties: true}),
     };
     if (hasparentnodeclick) {
       uda_custom.hasparentclick = true;

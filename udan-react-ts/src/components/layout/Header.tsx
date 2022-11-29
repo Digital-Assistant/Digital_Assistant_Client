@@ -10,6 +10,7 @@ import { CONFIG } from "../../config";
 import LanguageSelect from "./LanguageSelect";
 import { translateText } from "../../services/translateService";
 import {translate} from "../../util/translation";
+import {CustomConfig} from "../../config/CustomConfig";
 
 /**
  * To render search result elements
@@ -20,8 +21,10 @@ const Header = (props: HeaderProps) => {
   const {
     selectedLang: selectedLanguage,
     searchInLang,
-    enabled: multiLingualEnabled,
+    // enabled: multiLingualEnabled,
   } = CONFIG.multilingual;
+
+  const multiLingualEnabled = props?.config?.enableMultilingual;
 
   const [hide, setHide] = useState<boolean>(props?.toggleFlag);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
@@ -51,7 +54,7 @@ const Header = (props: HeaderProps) => {
     <>
       <div>
         <div
-          className="uda-ribbon-arrow flex-card flex-center "
+          className="uda-ribbon-arrow flex-card flex-center uda_exclude"
           id="uda-close-panel"
           onClick={() => togglePanel()}
         >
@@ -83,14 +86,14 @@ const Header = (props: HeaderProps) => {
             <input
               type="text"
               name="uda-search-input"
-              className="uda-input-cntrl"
+              className="uda-input-cntrl uda_exclude"
               placeholder="search..."
               id="uda-search-input"
               value={searchKeyword}
               onChange={(e) => setSearchKeyword(e.target.value)}
             />
             <button
-              className="uda-search-btn"
+              className="uda-search-btn uda_exclude"
               id="uda-search-btn"
               style={{ borderRadius: "0px 5px 5px 0px" }}
               onClick={() => multiLangSearch(searchKeyword)}

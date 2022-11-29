@@ -3,46 +3,6 @@
  * Type: MAP
  * Objective: Config Objects
  */
-import {environment} from "../../environments/environment";
-import React, {FC} from "react";
-
-const base = environment.baseURL;
-
-/**
- * Interface for exposing the parameters
- */
-export interface ConfigParams {
-  enableNodeTypeChangeSelection: boolean,
-  enableMultilingual: boolean,
-  enablePermissions: boolean,
-  permissions: Object,
-  enableProfanity: boolean,
-  enableTooltip: boolean,
-  enableEditClickedName: boolean,
-  enableSkipDuringPlay: boolean
-}
-
-export const AppConfig  = ({
-                             enableNodeTypeChangeSelection,
-                             enableMultilingual,
-                             enablePermissions,
-                             permissions,
-                             enableProfanity,
-                             enableTooltip,
-                             enableEditClickedName,
-                             enableSkipDuringPlay
-                           }: ConfigParams) => {
-  return {
-    enableNodeTypeChangeSelection,
-    enableMultilingual,
-    enablePermissions,
-    permissions,
-    enableProfanity,
-    enableTooltip,
-    enableEditClickedName,
-    enableSkipDuringPlay
-  };
-}
 
 export const CONFIG = {
   current: "TEST",
@@ -69,10 +29,10 @@ export const CONFIG = {
   USER_SESSION_ID: "udaSessionId",
   SYNC_INTERVAL: 1000,
   AUTO_PLAY_SLEEP_TIME: 2000,
-  ENABLE_PERMISSIONS: false,
-  PERMISSIONS: {},
   JARO_WEIGHT: 0.95,
   JARO_WEIGHT_PERSONAL: 0.90,
+  enableInfiniteScroll: false,
+  enableInfiniteScrollPageLength: 10,
   set Environment(value) {
     this.current = value.toString().toUpperCase();
     if (this.current === "PROD") {
@@ -86,9 +46,6 @@ export const CONFIG = {
     return this.current;
   },
   DEBOUNCE_INTERVAL: 2000,
-  enableEditClickedName: true,
-  enableSkipDuringPlay: true,
-  enableTooltipAddition: true,
   clickObjects: [],
   nodeId: 0,
   recording: false,
@@ -104,36 +61,16 @@ export const CONFIG = {
     'baseURI','isConnected','ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
     'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
     'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y', 'selectionStart', 'selectionEnd', 'required', 'validationMessage', 'selectionDirection',
-    'naturalWidth', 'naturalHeight', 'complete', '_indexOf', 'value', 'defaultValue', 'min', 'max', 'nodeInfo', 'data-tooltip-id'
+    'naturalWidth', 'naturalHeight', 'complete', '_indexOf', 'value', 'defaultValue', 'min', 'max', 'nodeInfo', 'data-tooltip-id', 'addedclickrecord', 'checked'
   ],
   innerTextWeight: 5,
-  ignoreNodesFromIndexing: [
-    "ng-dropdown-panel",
-    "ckeditor",
-    "fusioncharts",
-    "ngb-datepicker",
-    "ngx-daterangepicker-material",
-    "uda-panel",
-    "mat-datepicker-content",
-    "ng-select",
-  ],
-  ignoreNodesContainingClassNames: [
-    "cke_dialog_container",
-    "cke_notifications_area",
-    "gldp-default",
-    "ajs-layer",
-    "aui-list",
-    "herknl",
-  ],
+  ignoreNodesFromIndexing: ['ng-dropdown-panel','ckeditor','fusioncharts','ngb-datepicker','ngx-daterangepicker-material','uda-panel','mat-datepicker-content','ng-select'],
+  ignoreNodesContainingClassNames:['cke_dialog_container','cke_notifications_area','gldp-default','ajs-layer','aui-list','herknl'],
   cancelRecordingDuringRecordingNodes: [],
-  addClickToSpecialNodes: ["ng-select", "ngb-datepicker"],
-  ignoreClicksOnSpecialNodes: ["ngx-daterangepicker-material"],
-  customNameForSpecialNodes: {
-    "ngb-datepicker": "Date selector",
-    "mat-datepicker-content": "Date selector",
-    "ngx-daterangepicker-material": "Date Range Selector",
-  },
-  specialInputClickClassNames: ["ghx-dropdown-trigger", "aui-list"],
+  addClickToSpecialNodes: ['ng-select', 'ngb-datepicker'],
+  ignoreClicksOnSpecialNodes: ['ngx-daterangepicker-material'],
+  customNameForSpecialNodes: {'ngb-datepicker': 'Date selector','mat-datepicker-content': 'Date selector', 'ngx-daterangepicker-material': 'Date Range Selector'},
+  specialInputClickClassNames: ['ghx-dropdown-trigger','aui-list'],
   tooltipDisplayedNodes: [],
   // replay variables
   autoplayCompleted: false,
@@ -176,13 +113,6 @@ export const CONFIG = {
       translateTo: "en",
       apiurl: "https://translation.googleapis.com/language/translate/v2",
     },
-  },
-  set enableMultilingual(val) {
-    this.multilingual.enabled = val;
-    // this.showhtml();
-  },
-  get enableMultilingual() {
-    return CONFIG.multilingual.enabled;
   },
   // BCP list of languages
   bcpLang: [

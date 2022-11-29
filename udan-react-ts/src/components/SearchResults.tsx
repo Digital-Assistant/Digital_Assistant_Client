@@ -10,7 +10,7 @@ import { Empty, List } from "antd";
 import { DoubleRightOutlined } from "@ant-design/icons";
 import { getRowObject, setToStore } from "../util";
 import InfiniteScroll from "react-infinite-scroller";
-// import { fetchSearchResults } from "../services/searchService";
+import {CONFIG} from "../config";
 
 export interface MProps {
   visibility?: boolean;
@@ -20,6 +20,7 @@ export interface MProps {
   addRecordHandler?: Function;
   searchHandler?: Function;
   page?: number;
+  config?: any;
 }
 
 let globalSearchResults: any = [];
@@ -38,7 +39,6 @@ export const SearchResults = (props: MProps) => {
   }, [props?.data]);
 
   const selectItem = (item: any) => {
-    //if (props.addRecordHandler) props.addRecordHandler(true);
     setToStore(item, "selectedRecordedItem", false);
     if (props?.showDetails) props.showDetails(item);
   };
@@ -51,7 +51,7 @@ export const SearchResults = (props: MProps) => {
   };
 
   const renderData = () => {
-    if (!props?.visibility) return;
+    if (!props?.visibility) return <></>;
     return !props?.visibility ? null : !props?.data?.length ? (
       <Empty description={"No results found"} />
     ) : (
@@ -85,7 +85,7 @@ export const SearchResults = (props: MProps) => {
         <InfiniteScroll
           pageStart={0}
           loadMore={loadSearchResults}
-          hasMore={searchResults.length > 10 && searchResults.length < 100}
+          hasMore={CONFIG.enableInfiniteScroll && searchResults.length > CONFIG.enableInfiniteScrollPageLength}
           useWindow={false}
         >
           {renderData()}

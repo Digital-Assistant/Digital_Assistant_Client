@@ -18,14 +18,16 @@ const Footer = (props: MProps) => {
   return (
     <div>
       <div className="uda-footer-bar">
-        <div className="uda-container">
-          <button
-            className="uda-new-seq uda-exclude "
-            onClick={() => setShowRecord(true)}
-          >
-            <PlusOutlined className="secondary" />
-          </button>
-        </div>
+        {props.config.enableRecording &&
+            <div className="uda-container">
+                <button
+                    className="uda-new-seq uda-exclude"
+                    onClick={() => setShowRecord(true)}
+                >
+                    <PlusOutlined className="secondary"/>
+                </button>
+            </div>
+        }
         <div
           className="uda-container"
           style={{ borderTop: "1px solid #969696", marginTop: 30 }}

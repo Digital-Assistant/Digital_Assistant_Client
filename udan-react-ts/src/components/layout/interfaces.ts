@@ -3,6 +3,7 @@ export interface MProps {
   toggleHandler?: Function;
   addRecordBtnStatus?: boolean;
   i18?: any;
+  config?: any;
 }
 
 export interface HeaderProps extends MProps {

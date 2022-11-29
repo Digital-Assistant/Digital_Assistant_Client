@@ -17,7 +17,7 @@ import {
   postRecordSequenceData,
   addBodyEvents,
 } from "./util";
-import {AppConfig, CONFIG} from "./config";
+import {CONFIG} from "./config";
 import UdanMain from "./components/UdanMain";
 import {Toggler} from "./components/layout/common";
 import Header from "./components/layout/Header";
@@ -28,9 +28,12 @@ import "./App.scss";
 import keycloak from './config/keycloak';
 import {off, on, trigger} from "./util/events";
 import {UserDataContext} from "./providers/UserDataContext";
+import {AppConfig} from "./config/AppConfig";
+import {CustomConfig} from "./config/CustomConfig";
 
-global.udaGlobalConfig = CONFIG;
-  global.udaPluginSDK = AppConfig;
+// adding global variable declaration for exposing react custom configuration
+global.UDAPluginSDK = AppConfig;
+global.UDAGlobalConfig = CustomConfig;
 
 declare global {
   interface Window {
@@ -38,8 +41,6 @@ declare global {
     domJSON: any;
   }
 }
-
-
 
 
 function App() {
@@ -70,13 +71,16 @@ function App() {
   const [userSessionData, setUserSessionData] = useState(null);
   const [invokeKeycloak, setInvokeKeycloak] = useState(false);
 
+  const config = global.UDAGlobalConfig;
+
   useEffect(() => {
-    console.log(AppConfig);
-  }, [AppConfig]);
+    console.log(CustomConfig);
+    getSearchResults();
+  }, [config]);
 
 
   useEffect(() => {
-    if(invokeKeycloak) {
+    if (invokeKeycloak) {
       let userSessionData = getFromStore(CONFIG.UDAKeyCloakKey, false);
       if (userSessionData) {
         setUserSessionData(userSessionData);
@@ -88,7 +92,7 @@ function App() {
   }, [invokeKeycloak, userSessionData]);
 
   useEffect(() => {
-    if(invokeKeycloak) {
+    if (invokeKeycloak) {
       if (!keycloak.authenticated && !userSessionData && !authenticated) {
         keycloak.init({}).then(auth => {
           setAuthenticated(auth);
@@ -129,7 +133,7 @@ function App() {
    */
   const openUDAPanel = () => {
     if (!_.isEmpty(selectedRecordingDetails)) {
-      if(isPlaying == "on") {
+      if (isPlaying == "on") {
         setTimeout(() => {
           setPlayDelay("on");
         }, 2000);
@@ -228,14 +232,13 @@ function App() {
    @param keyword:string
    */
   const getSearchResults = async (_page = 1) => {
-    // if (!showSearch) return;
     setShowLoader(true);
 
     const _searchResults = await fetchSearchResults({
       keyword: searchKeyword,
       page,
       domain: encodeURI(window.location.host),
-      additionalParams: (CONFIG.ENABLE_PERMISSIONS)?encodeURI(JSON.stringify(CONFIG.PERMISSIONS)):null,
+      additionalParams: (CustomConfig.enablePermissions) ? encodeURI(JSON.stringify(CustomConfig.permissions)) : null,
     });
     setPage(_page);
     setTimeout(() => setShowLoader(false), 500);
@@ -253,7 +256,6 @@ function App() {
 
   /**common cancel button handler */
   const cancel = () => {
-    // removeFromStore("udaSessionId");
     setIsRecording(false);
     setShowRecord(false);
     setRecordSequenceDetailsVisibility(false);
@@ -391,6 +393,7 @@ function App() {
                                       recordButtonVisibility={toggleContainer(
                                           "record-button"
                                       )}
+                                      config={global.UDAGlobalConfig}
                                   />
 
                                   <UdanMain.RecordSequence
@@ -405,9 +408,9 @@ function App() {
                                           visibility={toggleContainer("search-results")}
                                           addRecordHandler={setShowRecord}
                                           searchKeyword={searchKeyword}
-                                          // key={searchResults.length + showLoader}
                                           searchHandler={getSearchResults}
                                           page={page}
+                                          config={global.UDAGlobalConfig}
                                       />
                                   )}
 
@@ -416,7 +419,7 @@ function App() {
                                       data={recSequenceData}
                                       recordHandler={recordHandler}
                                       refetchSearch={setRefetchSearch}
-                                      config={global.udaGlobalConfig}
+                                      config={global.UDAGlobalConfig}
                                   />
 
                                   {recordSequenceDetailsVisibility &&
@@ -430,8 +433,8 @@ function App() {
                                           cancelHandler={cancel}
                                           playHandler={playHandler}
                                           isPlaying={playDelay}
-                                          // refetchSearch={setRefetchSearch}
                                           key={"rSD" + recordSequenceDetailsVisibility}
+                                          config={global.UDAGlobalConfig}
                                       />
                                   }
                                 </>
@@ -441,6 +444,7 @@ function App() {
                               toggleFlag={hide}
                               addRecordBtnStatus={showRecord}
                               toggleHandler={toggleHandler}
+                              config={global.UDAGlobalConfig}
                           />
                       </>
                   }
