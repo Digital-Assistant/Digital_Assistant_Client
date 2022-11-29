@@ -2,7 +2,6 @@ import fetchHtmlFormElements from "./fetchHtmlFormElements";
 
 
 const mapClickedElementToHtmlFormElement = (node) => {
-    console.log("Line 2760 Inside mapClickedElementToHtmlFormElement", node)
     let htmlFormElements = fetchHtmlFormElements();
     let selectedFormElement: any = {inputElement: 'others', inputType: 'others', displayName: 'Other HTML Element', systemTag: ''};
     for(let htmlFormElement of htmlFormElements) {

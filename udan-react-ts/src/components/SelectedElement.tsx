@@ -9,7 +9,6 @@ const SelectedElement = ({ data }) => {
   let optionsArray = [];
 
   const editAndSaveSelectedHtmlElement = (event) => {
-    console.log("Line 123", event.target.value);
     const valueSelected = JSON.parse(event.target.value);
     let nodeData = JSON.parse(data.objectdata);
     if (valueSelected.inputElement === "") {
@@ -23,7 +22,6 @@ const SelectedElement = ({ data }) => {
     }
     data.objectdata = JSON.stringify(nodeData);
     // var outputdata = JSON.stringify(data);
-    console.log("Line 137", data);
     updateRecordClicks(data);
   };
 
