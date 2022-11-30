@@ -7,8 +7,8 @@
 import React, {useState, useEffect, useCallback} from "react";
 import "./css/antd.css";
 import "./css/UDAN.scss";
-// import "./App.scss";
-import "./css/custom.scss";
+import "./App.scss";
+// import "./css/custom.scss";
 import {Button, Spin} from "antd";
 import {fetchSearchResults} from "./services/searchService";
 import {login} from "./services/authService";
