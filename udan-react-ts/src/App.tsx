@@ -6,9 +6,9 @@
 
 import React, {useState, useEffect, useCallback} from "react";
 import "./css/antd.css";
-import "./css/UDAN.scss";
-// import "./App.scss";
-import "./css/custom.scss";
+// import "./css/UDAN.scss";
+import "./App.scss";
+// import "./css/custom.scss";
 import {Button, Spin} from "antd";
 import {fetchSearchResults} from "./services/searchService";
 import {login} from "./services/authService";
@@ -46,9 +46,7 @@ declare global {
 
 function App() {
   const [isRecording, setIsRecording] = useState<boolean>(
-      (getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true"
-          ? true
-          : false) || false
+      (getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true") || false
   );
   const [hide, setHide] = useState<boolean>(!isRecording);
   const [showLoader, setShowLoader] = useState<boolean>(true);
@@ -230,7 +228,7 @@ function App() {
 
   /**
    * HTTP search results service call
-   @param keyword:string
+   * @param _page
    */
   const getSearchResults = async (_page = 1) => {
     setShowLoader(true);
@@ -319,8 +317,8 @@ function App() {
 
   /**
    * common toggle function based on card type
-   * @param type
    * @returns
+   * @param card
    */
   const toggleContainer = (card: string) => {
     if (card == "record-button") {
@@ -371,9 +369,9 @@ function App() {
             style={{display: hide ? "none" : "block", position: "relative"}}
         >
           <div id="uda-html-container">
-            <div id="uda-html-content" nist-voice="true">
+            <div id="uda-html-content" className="uda_exclude">
               <div>
-                <div className="uda-page-right-bar">
+                <div className="uda-page-right-bar uda_exclude">
                   {authenticated &&
                       <>
                           <Header
@@ -451,7 +449,7 @@ function App() {
                   }
 
                   {!authenticated && <>
-                      <Button type="primary" onClick={() => {
+                      <Button type="primary" className="uda_exclude" onClick={() => {
                         keycloak.login();
                       }}>Login</Button>
                   </>}

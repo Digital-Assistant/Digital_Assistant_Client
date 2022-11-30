@@ -1,7 +1,6 @@
 // Check for each node and then match it with the available clicknodes which are identified by links.js
 import {CONFIG} from "../config";
-import domJSON from "domjson";
-import {getNodeLabels, inArray, menuItems} from "./index";
+import {inArray} from "./index";
 import {UDAConsoleLogger} from "../config/error-log";
 
 declare let UDAClickObjects: any;

@@ -136,6 +136,7 @@ export const RecordSequenceDetails = (props: MProps) => {
    * Navigates back to search results card
    */
   const backNav = () => {
+    resetStatus();
     if (props.cancelHandler) props.cancelHandler();
   };
 
@@ -184,13 +185,13 @@ export const RecordSequenceDetails = (props: MProps) => {
 
   const addSkipClass = (item) => {
     if(item.status !== 'completed'){
-      return '';
+      return 'uda_exclude';
     }
     let nodeData = getObjData(item.objectdata);
     if(nodeData.meta.hasOwnProperty('skipDuringPlay') && nodeData.meta.skipDuringPlay){
-      return 'skipped';
+      return 'skipped uda_exclude';
     }
-    return item.status;
+    return item.status + ' uda_exclude';
   }
 
   return props?.recordSequenceDetailsVisibility ? (
@@ -208,19 +209,20 @@ export const RecordSequenceDetails = (props: MProps) => {
                 shape="circle"
                 size="small"
                 style={{position: "absolute", top: 12, left: 0}}
+                className="uda_exclude"
                 onClick={() => backNav()}
             >
               <LeftOutlined/>
             </Button>
             {props?.isPlaying == "off" && (
                 <PlayCircleOutlined
-                    className="large secondary"
+                    className="large secondary uda_exclude"
                     onClick={() => play()}
                 />
             )}
             {props?.isPlaying == "on" && (
                 <PauseCircleOutlined
-                    className="large secondary"
+                    className="large secondary uda_exclude"
                     onClick={() => pause()}
                 />
             )}
@@ -249,15 +251,15 @@ export const RecordSequenceDetails = (props: MProps) => {
           <Row>
             {(selectedRecordingDetails.usersessionid === userId) &&
                 <Col span={12} style={{textAlign: "center"}}>
-                    <Popconfirm title="Are you sure?" onConfirm={removeRecording}>
-                        <Button>
-                            <DeleteOutlined width={33} className="secondary"/>
+                    <Popconfirm title="Are you sure?" onConfirm={removeRecording} className="uda_exclude">
+                        <Button className="uda_exclude">
+                            <DeleteOutlined width={33} className="secondary uda_exclude"/>
                         </Button>
                     </Popconfirm>
                 </Col>
             }
             <Col span={12} style={{textAlign: "center"}}>
-              <Button onClick={() => manageVote()}>
+              <Button onClick={() => manageVote()} className="uda_exclude">
                 <LikeOutlined width={33} className="secondary"/>
               </Button>
             </Col>

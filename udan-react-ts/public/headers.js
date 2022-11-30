@@ -1,5 +1,5 @@
 var s = document.createElement('script');
-var scriptpath = chrome?.runtime?.getURL("assets/Headers.js");
+var scriptpath = chrome?.runtime?.getURL("assets/UdanHeaders.js");
 s.src = scriptpath;
 s.onload = function() {
 };

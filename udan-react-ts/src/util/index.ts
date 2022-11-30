@@ -19,8 +19,6 @@ import TSON from "typescript-json";
 import {getNodeInfo} from "./nodeInfo";
 import {indexDom} from "./indexDom";
 
-
-export const UDAClickObjects: any = [];
 export const htmlIndex: any = [];
 export const menuItems: any = [];
 export const ignoreClicksOnSpecialNodes: any = ['ngx-daterangepicker-material'];
@@ -477,6 +475,11 @@ export const getTooltipPositionClass = (
 
 export const addClickToNode = (node: any) => {
   try {
+
+    if(node.classList && node.classList.contains('uda_exclude')){
+      return ;
+    }
+
     if (
         node.hasOwnProperty("addedclickrecord") &&
         node.addedclickrecord === true

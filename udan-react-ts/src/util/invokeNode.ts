@@ -293,8 +293,11 @@ export const matchAction = (node, selectedNode) => {
             } else if (node.attributes && node.attributes.length > 0 && (node.hasAttribute('uib-datepicker-popup'))) {
               addToolTip(node, node.parentNode.parentNode, selectedNode, navigationData, true, false);
             } else {
-              addToolTip(node, node.parentNode, selectedNode, navigationData, false, true, true);
+              addToolTip(node, node, selectedNode, navigationData, false, true, true);
             }
+            break;
+          case 'date':
+            addToolTip(node, node.parentNode, selectedNode, navigationData, false, false, false);
             break;
           default:
             addToolTip(node, node.parentNode, selectedNode, navigationData, false, false, true);
@@ -469,7 +472,7 @@ export const mapSelectedElementAction = (node, recordedNode, navigationCookieDat
  */
 
 //add tooltip display
-export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navigationCookieData, enableClick = false, enableFocus = false, enableIntroJs = false, message = translate('tooltipMessage'), showButtons = true) => {
+export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navigationCookieData, enableClick = false, enableFocus = false, enableAnimate = false, message = translate('tooltipMessage'), showButtons = true) => {
 
   if (recordedData !== null) {
     let recordedNodeData = JSON.parse(recordedData.objectdata);

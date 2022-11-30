@@ -6,13 +6,10 @@
  */
 
 import React, {useEffect, useState} from "react";
-import {
-  InfoCircleOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
+import {DeleteOutlined, InfoCircleOutlined,} from "@ant-design/icons";
 import _ from "lodash";
-import {setToStore, postRecordSequenceData, getObjData} from "../util";
-import {updateRecordClicks, profanityCheck} from "../services/recordService";
+import {getObjData, postRecordSequenceData, setToStore} from "../util";
+import {profanityCheck, updateRecordClicks} from "../services/recordService";
 import {CONFIG} from "../config";
 
 import TSON from "typescript-json";
@@ -259,8 +256,7 @@ export const RecordedData = (props: MProps) => {
     }
     setTimer(
         setTimeout(async () => {
-          let changedName: any = await checkProfanity(e.target.value);
-          labels[index].label = changedName;
+          labels[index].label = await checkProfanity(e.target.value);
           setLabels([...labels]);
         }, CONFIG.DEBOUNCE_INTERVAL)
     );
@@ -361,8 +357,9 @@ export const RecordedData = (props: MProps) => {
                                     type="checkbox"
                                     id="UDA-skip-duringPlay"
                                     className="uda-checkbox flex-vcenter uda_exclude"
+                                    value={getObjData(item?.objectdata)?.meta?.skipDuringPlay?1:0}
                                     checked={getObjData(item?.objectdata)?.meta?.skipDuringPlay}
-                                    onClick={handleSkipPlay(index)}
+                                    onChange={handleSkipPlay(index)}
                                 />
                                 <label className="uda-checkbox-label">Skip during play</label>
                                 <span
@@ -380,8 +377,9 @@ export const RecordedData = (props: MProps) => {
                             type="checkbox"
                             id="isPersonal"
                             className="uda_exclude"
+                            value={getObjData(item?.objectdata)?.meta?.isPersonal?1:0}
                             checked={getObjData(item?.objectdata)?.meta?.isPersonal}
-                            onClick={handlePersonal(index)}
+                            onChange={handlePersonal(index)}
                         />
                         <label>Personal Information</label>
                         <span
@@ -394,7 +392,7 @@ export const RecordedData = (props: MProps) => {
                     </>
                     {(props.config.enableTooltip === true && isInputNode(getObjData(item?.objectdata).node)) &&
                         <>
-                            <div className="uda-recording" style={{textAlign: "center"}}>
+                            <div className="uda-recording uda_exclude" style={{textAlign: "center"}}>
                                 <input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip"
                                        className="uda-form-input uda_exclude" placeholder="Custom Tooltip (Optional)"
                                        style={{width: "68% !important"}} onChange={onChangeTooltip} value={tooltip}/>

@@ -21,8 +21,8 @@ export const Toggler = (props: MProps) => {
       onClick={() => toggle()}
     >
       <img className="uda_exclude" src={getLogo()} alt={"udan logo"} />
-      <span className="arrow">
-        <DoubleLeftOutlined size={16} />
+      <span className="arrow uda_exclude">
+        <DoubleLeftOutlined size={16} className="uda_exclude" />
       </span>
     </div>
   );

@@ -29,7 +29,7 @@ module.exports = (env, argv) => {
             // Here the application starts executing
             // and webpack starts bundling
             'UdanSDK': './src/index.tsx',
-            'Headers': './src/Headers.tsx'
+            'UdanHeaders': './src/Headers.tsx'
         },
         mode: 'development',// "production" | "development" | "none"
         devtool: 'cheap-module-source-map',// enum
