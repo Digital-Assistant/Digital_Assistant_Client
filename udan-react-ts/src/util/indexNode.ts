@@ -1,7 +1,10 @@
 // Check for each node and then match it with the available clicknodes which are identified by links.js
 import {CONFIG} from "../config";
 import domJSON from "domjson";
-import {getNodeLabels, htmlIndex, inArray, logInfo, menuItems, UDAClickObjects} from "./index";
+import {getNodeLabels, inArray, menuItems} from "./index";
+import {UDAConsoleLogger} from "../config/error-log";
+
+declare let UDAClickObjects: any;
 
 export const indexNode = (
     node: any,
@@ -9,15 +12,6 @@ export const indexNode = (
     hasParentNodeClick = false,
     fromDocumentClick = false
 ) => {
-  const elementData: any = {
-    "element-type": "",
-    "element-labels": [],
-    "element-action": "",
-    "element-path": "",
-    "element-url": "",
-    "element-data": [],
-    "menu-items": [],
-  };
 
   let clickObjectExists = false;
   let udaClickObject = {};
@@ -41,11 +35,6 @@ export const indexNode = (
     return node;
   }
 
-  if (parentNode.classList && parentNode.classList.contains("tab-content")) {
-    node.displaytype = "tab-content";
-    node.tabid = node.id;
-  }
-
   // Multiple clicks are recorded for select2-selection class. select2-selection--multiple
   // This will create a problem during playback. We should record only one click to avoid this problem
   if (
@@ -54,7 +43,7 @@ export const indexNode = (
           node.classList.contains("cdk-overlay-backdrop") ||
           node.classList.contains("cdk-overlay-pane"))
   ) {
-    logInfo(node.classList);
+    UDAConsoleLogger.info(node.classList);
     return node;
   }
 
@@ -66,13 +55,12 @@ export const indexNode = (
     // return node;
   }
 
-  if (CONFIG?.htmlIndex?.length > 0) {
-    for (let htmlI = 0; htmlI < CONFIG?.htmlIndex?.length; htmlI++) {
-      if (node?.isSameNode(CONFIG.htmlIndex[htmlI]["element-data"])) {
-        node.hasclick = true;
-        return node;
-      }
-    }
+  if(node.hasOwnProperty('addedClickRecord') && node.addedClickRecord){
+    return node;
+  }
+
+  if (!parentNode) {
+    console.log(UDAClickObjects);
   }
 
   for (let i = 0; i < UDAClickObjects?.length; i++) {
@@ -88,7 +76,7 @@ export const indexNode = (
   if (
       inArray(node.nodeName.toLowerCase(), CONFIG.ignoreNodesFromIndexing) !== -1
   ) {
-    logInfo({indexingnode: node});
+    UDAConsoleLogger.info({indexingNode: node});
   }
 
   if (node.hasAttribute("type") && node.getAttribute("type") === "hidden") {
@@ -97,78 +85,10 @@ export const indexNode = (
 
   if (fromDocumentClick) {
     clickObjectExists = true;
-    udaClickObject = node;
   }
 
   if (clickObjectExists) {
     node.hasclick = true;
-    elementData["element-type"] = node.nodeName.toLowerCase();
-    elementData["element-url"] = window.location.href;
-
-    if (parentNode.classList && parentNode.classList.contains("tab-content")) {
-      node.displaytype = "tab-content";
-    }
-
-    if (elementData["element-labels"]?.length === 0) {
-      elementData["element-labels"] = getNodeLabels(node, [], 1);
-    }
-
-    if (elementData["element-labels"]?.length === 0) {
-      return node;
-    }
-
-    if (
-        (node.hasOwnProperty("displaytype") &&
-            node.displaytype === "tab-content") ||
-        (node.hasOwnProperty("navtype") && node.navtype === "navtab")
-    ) {
-      for (let j = 0; j < menuItems?.length; j++) {
-        let menuitem = menuItems[j];
-        if (menuitem.refid === node.tabid) {
-          if (menuitem.menunode.hasOwnProperty("path")) {
-            node.path = menuitem.menunode.path + ">" + menuitem.name;
-          } else {
-            node.path = menuitem.name;
-          }
-          if (node.hasOwnProperty("menuitems")) {
-            node.menuitems.push(menuitem);
-          } else {
-            node.menuitems = [];
-            node.menuitems.push(menuitem);
-          }
-        }
-      }
-    }
-
-    if (elementData["element-path"] === "") {
-      if (node.hasOwnProperty("path")) {
-        elementData["element-path"] = node.path;
-      }
-    }
-
-    if (
-        node.getAttribute("data-toggle") &&
-        node.getAttribute("data-toggle") === "tab"
-    ) {
-      node.navtype = "navtab";
-      elementData["element-action"] = "navtab";
-    }
-
-    let uda_custom = {
-      hasParentClick: false,
-      parentNode: {},
-      domJson: domJSON.toJSON(node, {serialProperties: true}),
-    };
-    if (hasParentNodeClick) {
-      uda_custom.hasParentClick = true;
-      uda_custom.parentNode = parentNode;
-    }
-    node.uda_custom = uda_custom;
-
-    elementData["element-data"] = node;
-    elementData["clickobject"] = udaClickObject;
-
-    CONFIG.htmlIndex.push(elementData);
   }
 
   return node;

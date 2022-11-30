@@ -16,7 +16,7 @@ export const Toggler = (props: MProps) => {
   };
   return (
     <div
-      className="default-logo exclude"
+      className="default-logo uda_exclude"
       style={{ display: !props?.toggleFlag ? "none" : "block" }}
       onClick={() => toggle()}
     >

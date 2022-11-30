@@ -5,8 +5,11 @@
  */
 
 import React, {useState, useEffect, useCallback} from "react";
-import {Button, Spin} from "antd";
 import "./css/antd.css";
+import "./css/UDAN.scss";
+// import "./App.scss";
+import "./css/custom.scss";
+import {Button, Spin} from "antd";
 import {fetchSearchResults} from "./services/searchService";
 import {login} from "./services/authService";
 import _ from "lodash";
@@ -23,7 +26,6 @@ import Header from "./components/layout/Header";
 import Body from "./components/layout/Body";
 import Footer from "./components/layout/Footer";
 import useInterval from "react-useinterval";
-import "./App.scss";
 import keycloak from './config/keycloak';
 import {off, on, trigger} from "./util/events";
 import {UserDataContext} from "./providers/UserDataContext";

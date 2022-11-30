@@ -1,12 +1,13 @@
 // indexing functionality for the entire dom
 import {CONFIG} from "../config";
+import {UDAConsoleLogger, UDAErrorLogger} from "../config/error-log";
 import {
   addClickToNode,
-  addToolTip, checkCssClassNames,
-  errorLog,
-  inArray, logInfo,
-  indexNode
+  checkCssClassNames,
+  inArray, indexNode
 } from "./index";
+import {addToolTip} from "./invokeNode";
+import { translate } from "./translation";
 
 export const indexDom = (
     node: any,
@@ -22,9 +23,7 @@ export const indexDom = (
         try {
           node = indexNode(node, parentNode, hasParentNodeClick, false);
         } catch (e) {
-          errorLog(
-              "Unable to index node " + node.nodeName + " got exception " + e
-          );
+          UDAErrorLogger.error("Unable to index node " + node.nodeName + " got exception " + e);
           return node;
         }
       }
@@ -35,6 +34,7 @@ export const indexDom = (
       if (
           inArray(node.nodeName.toLowerCase(), CONFIG.ignoreNodesFromIndexing) !== -1
       ) {
+        let addToolTipToNode = true;
         if (
             node.nodeName.toLowerCase() === "ckeditor" &&
             node.childNodes?.length > 2 &&
@@ -42,12 +42,12 @@ export const indexDom = (
         ) {
           for (let checkNode of CONFIG.tooltipDisplayedNodes) {
             if (node?.isSameNode(checkNode)) {
-              // addToolTip = false;
+              // addToolTipToNode = false;
             }
           }
-          if (addToolTip) {
+          if (addToolTipToNode) {
             CONFIG.tooltipDisplayedNodes.push(node);
-            addToolTip(node, 0);
+            addToolTip(node, node, false, false, false, false, false, translate('textEditorHelpText'), false);
           }
         } else if (
             !node.hasClick &&
@@ -58,7 +58,7 @@ export const indexDom = (
             inArray(node.nodeName.toLowerCase(), CONFIG.ignoreClicksOnSpecialNodes) ===
             -1
         ) {
-          logInfo(
+          UDAConsoleLogger.info(
               "Child nodes ignored for node and added click to: " + node.nodeName
           );
           addClickToNode(node);
@@ -70,7 +70,7 @@ export const indexDom = (
         ) {
           // addClickToNode(node);
         } else {
-          logInfo("Child nodes ignored for node: " + node.nodeName);
+          UDAConsoleLogger.info("Child nodes ignored for node: " + node.nodeName);
         }
       } else if (
           node.classList &&
@@ -78,14 +78,14 @@ export const indexDom = (
           !node.classList.contains("select2-container--focus")
       ) {
         //	do nothing as we are not going to deal with special classes
-        logInfo("unwanted indexing prevention");
+        UDAConsoleLogger.info("unwanted indexing prevention");
       } else if (
           node.nodeName.toLowerCase() === "div" &&
           (node.hasAttribute("uib-datepicker-popup-wrap") ||
               (node.id && node.id === "recognize_modal"))
       ) {
         // fix for not indexing datepicker popup and nominate popup
-        logInfo("date picker in javascript");
+        UDAConsoleLogger.info("date picker in javascript");
       } else if (
           node.nodeName.toLowerCase() === "span" &&
           node.classList.contains("radio") &&
@@ -93,7 +93,7 @@ export const indexDom = (
       ) {
         addClickToNode(node);
       } else if (checkCssClassNames(node)) {
-        logInfo({cssIgnoredNode: node});
+        UDAConsoleLogger.info({cssIgnoredNode: node});
         // addClickToNode(node);
       } else if (node.hasChildNodes()) {
         let childNodes = node.childNodes;
@@ -166,7 +166,6 @@ export const indexDom = (
       ) {
         node = addClickToNode(node);
       }
-
       break;
     case Node.TEXT_NODE:
       if (node.nodeValue !== "") {

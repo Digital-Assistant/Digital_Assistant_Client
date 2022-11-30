@@ -35,15 +35,15 @@ export interface MProps {
  */
 
 export const RecordedData = (props: MProps) => {
-  const [name, setName] = React.useState<string>("");
-  const [labels, setLabels] = React.useState<any>([]);
-  const [disableForm, setDisableForm] = React.useState<boolean>(false);
-  const [recordData, setRecordData] = React.useState<any>(props.data || []);
-  const [advBtnShow, setAdvBtnShow] = React.useState<boolean>(false);
+  const [name, setName] = useState<string>("");
+  const [labels, setLabels] = useState<any>([]);
+  const [disableForm, setDisableForm] = useState<boolean>(false);
+  const [recordData, setRecordData] = useState<any>(props.data || []);
+  const [advBtnShow, setAdvBtnShow] = useState<boolean>(false);
   const [tmpPermissionsObj, setTmpPermissionsObj] = useState<any>({});
   const [inputAlert, setInputAlert] = useState<any>({});
   const [inputError, setInputError] = useState<any>({});
-  const [tooltip, setToolTip] = React.useState<string>("");
+  const [tooltip, setToolTip] = useState<string>("");
 
   useEffect(() => {
     setRecordData([...(props.data || [])]);

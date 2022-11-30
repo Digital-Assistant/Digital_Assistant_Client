@@ -4,6 +4,26 @@
   "version": "0.9.0",
   "content_scripts": [
     {
+      "js": [
+        "headers.js"
+      ],
+      "run_at": "document_start",
+      "matches": [
+        "*://localhost/*",
+        "*://*.nistapp.com/*",
+        "*://*.rknowsys.com/*",
+        "*://*.atlassian.net/*",
+        "*://*.vantagecircle.com/*",
+        "*://*.vantagecircle.co.in/*",
+        "*://*.vantagecircle.in/*",
+        "*://*.sportsplus-qaf.app/*",
+        "*://*.zigtal.com/*",
+        "*://*.discoversaudi.sa/*",
+        "*://*.nanohealthplan.com/*",
+        "*://*.nanohealth.in/*"
+      ]
+    },
+    {
       "matches": [
         "*://localhost/*",
         "*://*.nistapp.com/*",

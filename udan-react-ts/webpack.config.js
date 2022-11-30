@@ -23,19 +23,20 @@ module.exports = (env, argv) => {
 
     const webpackConfig = {
 
-        entry: [
+        entry: {
             // string | object | array
             // defaults to ./src
             // Here the application starts executing
             // and webpack starts bundling
-            './src/index.tsx'
-        ],
+            'UdanSDK': './src/index.tsx',
+            'Headers': './src/Headers.tsx'
+        },
         mode: 'development',// "production" | "development" | "none"
         devtool: 'cheap-module-source-map',// enum
         // enhance debugging by adding meta info for the browser devtools
         // source-map most detailed at the expense of build speed.
 
-        watch: false,
+        // watch: false,
 
         watchOptions: {
             ignored: '/node_modules/',
@@ -165,8 +166,8 @@ module.exports = (env, argv) => {
         output: {
             // options related to how webpack emits results
             publicPath: '',
-            filename: 'udan.js', // the filename template for entry chunks
-            library: 'udanLibrary',
+            filename: '[name].js', // the filename template for entry chunks
+            library: 'UdanLibrary',
             libraryTarget: 'var',
             path: path.resolve(__dirname, 'build/assets'), // the target directory for all output files
             // must be an absolute path (use the Node.js path module)
