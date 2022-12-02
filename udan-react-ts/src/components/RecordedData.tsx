@@ -315,6 +315,7 @@ export const RecordedData = (props: MProps) => {
     if (!props.isShown) return;
     else
       return recordData?.map((item: any, index: number) => {
+        let objectData = getObjData(item?.objectdata);
         return (
             <li
                 className="uda-recorded-label-editable completed"
@@ -357,8 +358,8 @@ export const RecordedData = (props: MProps) => {
                                     type="checkbox"
                                     id="UDA-skip-duringPlay"
                                     className="uda-checkbox flex-vcenter uda_exclude"
-                                    value={getObjData(item?.objectdata)?.meta?.skipDuringPlay?1:0}
-                                    checked={getObjData(item?.objectdata)?.meta?.skipDuringPlay}
+                                    value={(objectData.meta.hasOwnProperty('skipDuringPlay') && objectData.meta.skipDuringPlay)?1:0}
+                                    checked={(objectData.meta.hasOwnProperty('skipDuringPlay') && objectData.meta.skipDuringPlay)}
                                     onChange={handleSkipPlay(index)}
                                 />
                                 <label className="uda-checkbox-label">Skip during play</label>
@@ -377,8 +378,8 @@ export const RecordedData = (props: MProps) => {
                             type="checkbox"
                             id="isPersonal"
                             className="uda_exclude"
-                            value={getObjData(item?.objectdata)?.meta?.isPersonal?1:0}
-                            checked={getObjData(item?.objectdata)?.meta?.isPersonal}
+                            value={(objectData.meta.hasOwnProperty('isPersonal') && objectData.meta.isPersonal)?1:0}
+                            checked={(objectData.meta.hasOwnProperty('isPersonal') && objectData.meta.isPersonal)}
                             onChange={handlePersonal(index)}
                         />
                         <label>Personal Information</label>
@@ -390,7 +391,7 @@ export const RecordedData = (props: MProps) => {
                       </span>
                       </div>
                     </>
-                    {(props.config.enableTooltip === true && isInputNode(getObjData(item?.objectdata).node)) &&
+                    {(props.config.enableTooltip === true && isInputNode(objectData.node)) &&
                         <>
                             <div className="uda-recording uda_exclude" style={{textAlign: "center"}}>
                                 <input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip"

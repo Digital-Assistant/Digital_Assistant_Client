@@ -1,5 +1,5 @@
 import {UDAErrorLogger} from "../config/error-log";
-import {addClickToNode} from "./index";
+import {addClickToNode} from "./addClickToNode";
 export const UDAClickObjects: any = [];
 
 global.UDAClickObjects = UDAClickObjects;

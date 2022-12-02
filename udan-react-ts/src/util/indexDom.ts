@@ -2,12 +2,12 @@
 import {CONFIG} from "../config";
 import {UDAConsoleLogger, UDAErrorLogger} from "../config/error-log";
 import {
-  addClickToNode,
-  checkCssClassNames,
   inArray, indexNode
 } from "./index";
-import {addToolTip} from "./invokeNode";
 import { translate } from "./translation";
+import {addClickToNode} from "./addClickToNode";
+import {addToolTip} from "./addToolTip";
+import {checkCssClassNames} from "./checkCssClassNames";
 
 export const indexDom = (
     node: any,
