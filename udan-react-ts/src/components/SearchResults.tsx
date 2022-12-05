@@ -5,7 +5,7 @@
  * Associated Route/Usage: *
  */
 
-import React, { useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import { Empty, List } from "antd";
 import { DoubleRightOutlined } from "@ant-design/icons";
 import { getRowObject, setToStore } from "../util";
@@ -30,9 +30,9 @@ let globalSearchResults: any = [];
  */
 
 export const SearchResults = (props: MProps) => {
-  const [searchResults, setSearchResults] = React.useState<any>([]);
+  const [searchResults, setSearchResults] = useState<any>([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (props?.searchKeyword) globalSearchResults = [];
     globalSearchResults = [...globalSearchResults, ...props?.data];
     setSearchResults([...globalSearchResults]);
@@ -59,7 +59,7 @@ export const SearchResults = (props: MProps) => {
         itemLayout="horizontal"
         dataSource={props?.data}
         renderItem={(item) => (
-          <List.Item onClick={() => selectItem(item)}>
+          <List.Item onClick={() => selectItem(item)} className="uda_exclude">
             <List.Item.Meta
               title={getRowObject(item)?.sequenceName}
               description={getRowObject(item)?.path}

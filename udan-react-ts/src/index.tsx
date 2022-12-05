@@ -12,6 +12,7 @@ const body = document.querySelector("body");
 const app = document.createElement("div");
 
 app.id = "udan-react-root";
+app.classList.add('uda_exclude');
 
 if (body) {
   body.appendChild(app);

@@ -62,7 +62,8 @@
     {
       "resources": [
         "index.js",
-        "assets/*"
+        "assets/*",
+        "./*"
       ],
       "matches": [
         "http://*/*",

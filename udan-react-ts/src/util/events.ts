@@ -19,5 +19,3 @@ export const trigger = (eventType, data) => {
   const event = new CustomEvent(eventType, data);
   document.dispatchEvent(event);
 }
-
-// export { on, once, off, trigger };

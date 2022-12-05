@@ -4,9 +4,9 @@
  * Objective: To render content script
  */
 
-import React, {useState, useEffect, useCallback} from "react";
+import React, {useState, useEffect, useCallback, useRef} from "react";
 import "./css/antd.css";
-import "./css/UDAN.scss";
+// import "./css/UDAN.scss";
 import "./App.scss";
 // import "./css/custom.scss";
 import {Button, Spin} from "antd";
@@ -46,9 +46,7 @@ declare global {
 
 function App() {
   const [isRecording, setIsRecording] = useState<boolean>(
-      (getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true"
-          ? true
-          : false) || false
+      (getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true") || false
   );
   const [hide, setHide] = useState<boolean>(!isRecording);
   const [showLoader, setShowLoader] = useState<boolean>(true);
@@ -56,14 +54,14 @@ function App() {
   const [showRecord, setShowRecord] = useState<boolean>(false);
   const [playDelay, setPlayDelay] = useState<string>("off");
   const [isPlaying, setIsPlaying] = useState<string>(getFromStore(CONFIG.RECORDING_IS_PLAYING, true) || "off");
-  const [, setManualPlay] = useState<string>(getFromStore(CONFIG.RECORDING_MANUAL_PLAY, true) || "off");
-  const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const [manualPlay, setManualPlay] = useState<string>(getFromStore(CONFIG.RECORDING_MANUAL_PLAY, true) || "off");
+  const [searchKeyword, setSearchKeyword] = useState<string>('');
   const [searchResults, setSearchResults] = useState<any>([]);
   const [page, setPage] = useState<number>(1);
-  const [refetchSearch, setRefetchSearch] = useState<string>("");
+  const [refetchSearch, setRefetchSearch] = useState<string>("off");
   const [recSequenceData, setRecSequenceData] = useState<any>([]);
   const [recordSequenceDetailsVisibility, setRecordSequenceDetailsVisibility] = useState<boolean>(false);
-  const [selectedRecordingDetails, setSelectedRecordingDetails] = useState<any>(getFromStore(CONFIG.SELECTED_RECORDING, false) || {});
+  const [selectedRecordingDetails, setSelectedRecordingDetails] = useState<any>(getFromStore(CONFIG.SELECTED_RECORDING, false) || false);
 
   /**
    * keycloak integration
@@ -72,11 +70,12 @@ function App() {
   const [userSessionData, setUserSessionData] = useState(null);
   const [invokeKeycloak, setInvokeKeycloak] = useState(false);
 
+  const previousSearchKeyword = useRef('');
+
   const config = global.UDAGlobalConfig;
 
   useEffect(() => {
-    console.log(CustomConfig);
-    getSearchResults();
+    // getSearchResults();
   }, [config]);
 
 
@@ -141,15 +140,11 @@ function App() {
       }
       togglePanel();
       offSearch();
-      setRefetchSearch('on');
-      setShowSearch(true);
       setRecordSequenceDetailsVisibility(true);
     } else if (isRecording) {
       offSearch();
     } else {
-      setRefetchSearch('on');
       setShowSearch(true);
-      setSearchKeyword("");
     }
   };
 
@@ -198,14 +193,20 @@ function App() {
   }, [isRecording]);
 
   useEffect(() => {
-    if (refetchSearch == "on") {
-      getSearchResults();
-    }
-  }, [refetchSearch, showSearch]);
+    getSearchResults()
+  },[]);
 
   useEffect(() => {
-    getSearchResults()
-  }, [searchKeyword]);
+    if(searchKeyword !== previousSearchKeyword.current) {
+      previousSearchKeyword.current = searchKeyword;
+      getSearchResults();
+    }
+
+    if (refetchSearch === "on") {
+      getSearchResults();
+      setRefetchSearch("off");
+    }
+  }, [searchKeyword, refetchSearch]);
 
   /**
    * Sync data with storage
@@ -223,18 +224,21 @@ function App() {
   };
 
   const offSearch = () => {
-    setRefetchSearch('');
+    setRefetchSearch('off');
     setShowSearch(false);
     setShowLoader(false);
   };
 
   /**
    * HTTP search results service call
-   @param keyword:string
+   * @param _page
    */
   const getSearchResults = async (_page = 1) => {
+    /*if(isRecording || !_.isEmpty(selectedRecordingDetails)){
+      offSearch();
+      return;
+    }*/
     setShowLoader(true);
-
     const _searchResults = await fetchSearchResults({
       keyword: searchKeyword,
       page,
@@ -297,7 +301,7 @@ function App() {
    */
   const toggleHandler = (hideFlag: boolean, type: string) => {
     if (type == "footer") {
-      setRefetchSearch('');
+      setRefetchSearch('off');
       setShowSearch(false);
       setToStore([], CONFIG.RECORDING_SEQUENCE, false);
       setShowRecord(hideFlag);
@@ -319,8 +323,8 @@ function App() {
 
   /**
    * common toggle function based on card type
-   * @param type
    * @returns
+   * @param card
    */
   const toggleContainer = (card: string) => {
     if (card == "record-button") {
@@ -371,9 +375,9 @@ function App() {
             style={{display: hide ? "none" : "block", position: "relative"}}
         >
           <div id="uda-html-container">
-            <div id="uda-html-content" nist-voice="true">
+            <div id="uda-html-content" className="uda_exclude">
               <div>
-                <div className="uda-page-right-bar">
+                <div className="uda-page-right-bar uda_exclude">
                   {authenticated &&
                       <>
                           <Header
@@ -451,7 +455,7 @@ function App() {
                   }
 
                   {!authenticated && <>
-                      <Button type="primary" onClick={() => {
+                      <Button type="primary" className="uda_exclude" onClick={() => {
                         keycloak.login();
                       }}>Login</Button>
                   </>}

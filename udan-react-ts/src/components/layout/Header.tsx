@@ -50,6 +50,12 @@ const Header = (props: HeaderProps) => {
     props.setSearchKeyword(searchText);
   };
 
+  const submitSearch = (event) => {
+    if(event.keyCode == 13){
+      props.setSearchKeyword(searchKeyword);
+    }
+  }
+
   return (
     <>
       <div>
@@ -91,6 +97,7 @@ const Header = (props: HeaderProps) => {
               id="uda-search-input"
               value={searchKeyword}
               onChange={(e) => setSearchKeyword(e.target.value)}
+              onKeyDown={submitSearch}
             />
             <button
               className="uda-search-btn uda_exclude"
