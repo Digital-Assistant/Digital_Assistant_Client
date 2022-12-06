@@ -2,21 +2,15 @@
 import {CONFIG} from "../config";
 import {UDAConsoleLogger, UDAErrorLogger} from "../config/error-log";
 import {
-  inArray, indexNode
+  inArray, indexNode, init
 } from "./index";
 import { translate } from "./translation";
 import {addClickToNode} from "./addClickToNode";
 import {addToolTip} from "./addToolTip";
 import {checkCssClassNames} from "./checkCssClassNames";
 
-export const indexDom = (
-    node: any,
-    ret = false,
-    parentNode = "",
-    textLabel = "",
-    hasParentNodeClick = false,
-    parentClickNode = null
-) => {
+export const indexDom = async (node: any, ret = false, parentNode = "", textLabel = "", hasParentNodeClick = false, parentClickNode = null) => {
+  await init();
   switch (node.nodeType) {
     case Node.ELEMENT_NODE:
       if (!ret && parentNode !== "") {
@@ -31,15 +25,9 @@ export const indexDom = (
       node.hasChildClick = false;
 
       // Checking for ignore nodes during indexing
-      if (
-          inArray(node.nodeName.toLowerCase(), CONFIG.ignoreNodesFromIndexing) !== -1
-      ) {
+      if (inArray(node.nodeName.toLowerCase(), CONFIG.ignoreNodesFromIndexing) !== -1) {
         let addToolTipToNode = true;
-        if (
-            node.nodeName.toLowerCase() === "ckeditor" &&
-            node.childNodes?.length > 2 &&
-            CONFIG.recording
-        ) {
+        if (node.nodeName.toLowerCase() === "ckeditor" && node.childNodes?.length > 2 && CONFIG.isRecording) {
           for (let checkNode of CONFIG.tooltipDisplayedNodes) {
             if (node?.isSameNode(checkNode)) {
               // addToolTipToNode = false;
@@ -49,48 +37,21 @@ export const indexDom = (
             CONFIG.tooltipDisplayedNodes.push(node);
             addToolTip(node, node, false, false, false, false, false, translate('textEditorHelpText'), false);
           }
-        } else if (
-            !node.hasClick &&
-            inArray(
-                node.nodeName.toLowerCase(),
-                CONFIG.addClickToSpecialNodes
-            ) !== -1 &&
-            inArray(node.nodeName.toLowerCase(), CONFIG.ignoreClicksOnSpecialNodes) ===
-            -1
-        ) {
-          UDAConsoleLogger.info(
-              "Child nodes ignored for node and added click to: " + node.nodeName
-          );
+        } else if (!node.hasClick && inArray(node.nodeName.toLowerCase(), CONFIG.addClickToSpecialNodes) !== -1 && inArray(node.nodeName.toLowerCase(), CONFIG.ignoreClicksOnSpecialNodes) === -1) {
+          UDAConsoleLogger.info("Child nodes ignored for node and added click to: " + node.nodeName);
           addClickToNode(node);
-        } else if (
-            node &&
-            CONFIG.cancelRecordingDuringRecordingNodes.indexOf(
-                node?.nodeName?.toLowerCase()
-            ) !== -1
-        ) {
+        } else if (node && CONFIG.cancelRecordingDuringRecordingNodes.indexOf(node?.nodeName?.toLowerCase()) !== -1) {
           // addClickToNode(node);
         } else {
           UDAConsoleLogger.info("Child nodes ignored for node: " + node.nodeName);
         }
-      } else if (
-          node.classList &&
-          node.classList.contains("select2-container--open") &&
-          !node.classList.contains("select2-container--focus")
-      ) {
+      } else if (node.classList && node.classList.contains("select2-container--open") && !node.classList.contains("select2-container--focus")) {
         //	do nothing as we are not going to deal with special classes
         UDAConsoleLogger.info("unwanted indexing prevention");
-      } else if (
-          node.nodeName.toLowerCase() === "div" &&
-          (node.hasAttribute("uib-datepicker-popup-wrap") ||
-              (node.id && node.id === "recognize_modal"))
-      ) {
+      } else if (node.nodeName.toLowerCase() === "div" && (node.hasAttribute("uib-datepicker-popup-wrap") || (node.id && node.id === "recognize_modal"))) {
         // fix for not indexing datepicker popup and nominate popup
         UDAConsoleLogger.info("date picker in javascript");
-      } else if (
-          node.nodeName.toLowerCase() === "span" &&
-          node.classList.contains("radio") &&
-          node.classList.contains("replacement")
-      ) {
+      } else if (node.nodeName.toLowerCase() === "span" && node.classList.contains("radio") && node.classList.contains("replacement")) {
         addClickToNode(node);
       } else if (checkCssClassNames(node)) {
         UDAConsoleLogger.info({cssIgnoredNode: node});
@@ -108,41 +69,23 @@ export const indexDom = (
         if (childNodes?.length > 0) {
           for (let i = 0; i < childNodes?.length; i++) {
             let childNode = childNodes[i];
-            CONFIG.nodeId++;
-            if (
-                CONFIG.ignoreElements.indexOf(
-                    childNode.nodeName.toLowerCase()
-                ) === -1
-            ) {
+            if (CONFIG.ignoreElements.indexOf(childNode.nodeName.toLowerCase()) === -1) {
               if (ret) {
                 if (textLabel === "") {
-                  textLabel = indexDom(childNode, ret, node, textLabel);
+                  textLabel = await indexDom(childNode, ret, node, textLabel);
                 } else {
-                  textLabel += " " + indexDom(childNode, ret, node, textLabel);
+                  textLabel += " " + await indexDom(childNode, ret, node, textLabel);
                 }
               } else {
                 try {
-                  node.childNodes[i] = indexDom(
-                      childNode,
-                      ret,
-                      node,
-                      "",
-                      hasParentClick,
-                      parentClickNode
-                  );
+                  node.childNodes[i] = await indexDom(childNode, ret, node, "", hasParentClick, parentClickNode);
                 } catch (e) {
+
                 }
-                if (
-                    node.childNodes[i].hasOwnProperty("hasClick") &&
-                    node.childNodes[i].hasClick
-                ) {
+                if (node.childNodes[i].hasOwnProperty("hasClick") && node.childNodes[i].hasClick) {
                   node.hasChildClick = true;
                 }
-                if (
-                    hasParentClick &&
-                    node.childNodes[i].hasOwnProperty("hasChildClick") &&
-                    node.childNodes[i].hasChildClick
-                ) {
+                if (hasParentClick && node.childNodes[i].hasOwnProperty("hasChildClick") && node.childNodes[i].hasChildClick) {
                   node.hasChildClick = true;
                 }
               }
@@ -153,17 +96,9 @@ export const indexDom = (
 
       // add click to node to send what user has clicked.
       // known scenario that node has parent click
-      if (
-          node.hasOwnProperty("hasClick") &&
-          node.hasClick &&
-          (node.nodeName.toLowerCase() === "select" || !node.hasChildClick)
-      ) {
+      if (node.hasOwnProperty("hasClick") && node.hasClick && (node.nodeName.toLowerCase() === "select" || !node.hasChildClick)) {
         node = addClickToNode(node);
-      } else if (
-          node.hasOwnProperty("hasClick") &&
-          node.hasClick &&
-          node.hasChildClick
-      ) {
+      } else if (node.hasOwnProperty("hasClick") && node.hasClick && node.hasChildClick) {
         node = addClickToNode(node);
       }
       break;

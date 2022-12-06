@@ -1,9 +1,9 @@
-var s = document.createElement('script');
-var scriptpath = chrome?.runtime?.getURL("assets/UdanSDK.js");
-s.src = scriptpath;
-s.onload = function() {
+let s1 = document.createElement('script');
+let scriptPath = chrome?.runtime?.getURL("assets/UdanSDK.js");
+s1.src = scriptPath;
+s1.onload = function() {
 };
-(document.body || document.documentElement).appendChild(s);
+(document.body || document.documentElement).appendChild(s1);
 
 document.addEventListener("RequestUDASessionData", function(data) {
     console.log('Requesting data');

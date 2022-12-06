@@ -2,15 +2,9 @@
 import {CONFIG} from "../config";
 import {inArray} from "./index";
 import {UDAConsoleLogger} from "../config/error-log";
+declare const UDAClickObjects;
 
-declare let UDAClickObjects: any;
-
-export const indexNode = (
-    node: any,
-    parentNode: any,
-    hasParentNodeClick = false,
-    fromDocumentClick = false
-) => {
+export const indexNode = (node: any, parentNode: any, hasParentNodeClick = false, fromDocumentClick = false) => {
 
   let clickObjectExists = false;
   let udaClickObject = {};
@@ -27,21 +21,13 @@ export const indexNode = (
     return node;
   }
 
-  if (
-      inArray(node.nodeName.toLowerCase(), CONFIG.ignoreClicksOnSpecialNodes) !==
-      -1
-  ) {
+  if (inArray(node.nodeName.toLowerCase(), CONFIG.ignoreClicksOnSpecialNodes) !== -1) {
     return node;
   }
 
   // Multiple clicks are recorded for select2-selection class. select2-selection--multiple
   // This will create a problem during playback. We should record only one click to avoid this problem
-  if (
-      node.classList &&
-      (node.classList.contains("select2-search__field") ||
-          node.classList.contains("cdk-overlay-backdrop") ||
-          node.classList.contains("cdk-overlay-pane"))
-  ) {
+  if (node.classList && (node.classList.contains("select2-search__field") || node.classList.contains("cdk-overlay-backdrop") || node.classList.contains("cdk-overlay-pane"))) {
     UDAConsoleLogger.info(node.classList);
     return node;
   }
@@ -72,9 +58,7 @@ export const indexNode = (
     }
   }
 
-  if (
-      inArray(node.nodeName.toLowerCase(), CONFIG.ignoreNodesFromIndexing) !== -1
-  ) {
+  if (inArray(node.nodeName.toLowerCase(), CONFIG.ignoreNodesFromIndexing) !== -1) {
     UDAConsoleLogger.info({indexingNode: node});
   }
 
@@ -88,6 +72,7 @@ export const indexNode = (
 
   if (clickObjectExists) {
     node.hasclick = true;
+    console.log(node);
   }
 
   return node;

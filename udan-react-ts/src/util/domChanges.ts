@@ -1,7 +1,12 @@
 import {addBodyEvents} from "./addBodyEvents";
+import {indexDom} from "./indexDom";
+import {CONFIG} from "../config";
+import {getFromStore} from "./index";
+
+declare const UDAClickObjects;
 
 /**
- * self calling function to detech dom changes
+ * self calling function to detect dom changes
  */
 (function (window) {
   let last = +new Date();
@@ -103,11 +108,11 @@ import {addBodyEvents} from "./addBodyEvents";
 
   // attach test events
   // if (window.addEventListener) {
-  test("DOMSubtreeModified");
-  test("DOMNodeInserted");
-  test("DOMNodeRemoved");
+    test("DOMSubtreeModified");
+    test("DOMNodeInserted");
+    test("DOMNodeRemoved");
   // } else {
-  decide();
+    decide();
   // }
 
   // do the dummy test
@@ -124,7 +129,36 @@ import {addBodyEvents} from "./addBodyEvents";
  * To listen to dom changes
  */
 
-window.onDomChange(function () {
-  addBodyEvents(document.body);
-  // indexDom(document.body);
+/*window.onDomChange(async () => {
+  console.log(UDAClickObjects);
+  console.log(CONFIG.isRecording);
+  const isRecording =
+      await getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true" ? true : false;
+
+  CONFIG.isRecording = isRecording;
+
+  if (isRecording) {
+    // addBodyEvents(document.body);
+    await indexDom(document.body);
+  }
+});*/
+
+const observer = new MutationObserver( (list) => {
+  setTimeout(async () => {
+    console.log(list);
+    console.log(UDAClickObjects);
+    console.log(CONFIG.isRecording);
+    const isRecording =
+        await getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true" ? true : false;
+
+    CONFIG.isRecording = isRecording;
+    console.log(CONFIG.isRecording);
+
+    if (isRecording) {
+      // addBodyEvents(document.body);
+      await indexDom(document.body);
+    }
+  }, CONFIG.DEBOUNCE_INTERVAL);
+
 });
+observer.observe(document.body, {attributes: true, childList: true, subtree: true});

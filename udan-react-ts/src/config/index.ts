@@ -48,7 +48,7 @@ export const CONFIG = {
   DEBOUNCE_INTERVAL: 2000,
   clickObjects: [],
   nodeId: 0,
-  recording: false,
+  isRecording: false,
   htmlIndex : [],
   invokeTime: 1000,
   maxStringLength:40,
@@ -241,4 +241,28 @@ export const CONFIG = {
     storageName: "uda-user-screen-consent",
     data: {proceed: true},
   },
+  udanSpecialNodes: {
+    include: {
+      tags: ["a", "button", "input", "textarea", "select", "mat-select"],
+      classes: ["ng-select", "ngb-datepicker"],
+    },
+    exclude: {
+      tags: [
+        "link",
+        "meta",
+        "script",
+        "svg",
+        "style",
+        "path",
+        "circle",
+        "g",
+        "rect",
+        "stop",
+        "defs",
+        "linearGradient",
+      ],
+      classes: ["uda_exclude", "ngx-daterangepicker-material"],
+    },
+  },
+  EXCLUDE_ATTRIB: "data-exclude"
 };

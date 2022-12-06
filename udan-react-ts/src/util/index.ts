@@ -13,11 +13,6 @@ export {indexNode} from "./indexNode";
 
 require("./domChanges");
 
-export const htmlIndex: any = [];
-export const menuItems: any = [];
-export const ignoreClicksOnSpecialNodes: any = ['ngx-daterangepicker-material'];
-export const addClickToSpecialNodes: any = ['ng-select', 'ngb-datepicker'];
-export const ignoreNodesContainingClassNames: any = ['cke_dialog_container','cke_notifications_area','gldp-default','ajs-layer','aui-list','herknl'];
 export let udanSpecialNodes: any = {
   include: {
     tags: ["a", "button", "input", "textarea", "select", "mat-select"],
