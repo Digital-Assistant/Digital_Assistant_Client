@@ -81,7 +81,7 @@ export const matchAction = (node, selectedNode) => {
             }
             break;
           case 'date':
-            addToolTip(node, node.parentNode, selectedNode, navigationData, false, false, false);
+            addToolTip(node, node, selectedNode, navigationData, false, false, false);
             break;
           default:
             addToolTip(node, node.parentNode, selectedNode, navigationData, false, false, true);
