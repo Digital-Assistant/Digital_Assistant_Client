@@ -1112,7 +1112,7 @@ screen and (max-height: 600px) {
 }
 
 .uda-recorded-label-editable {
-  border: 2px dotted #969696 !important;
+  // border: 2px dotted #969696 !important;
   padding: 5px !important;
 
   .info-icon {
@@ -1413,4 +1413,12 @@ screen and (max-height: 600px) {
 
 .ant-tooltip {
   z-index: 99999999 !important;
+}
+
+
+/* Check box tick mark */
+
+[type="checkbox"]:not(:checked), [type="checkbox"]:checked{
+  pointer-events: auto !important;
+  left: 2px !important;
 }
