@@ -1,43 +1,8 @@
-import domJSON from "domjson";
 import {CONFIG} from "../config";
-import {recordClicks, recordSequence, userClick,} from "../services/recordService";
-import {fetchSpecialNodes} from "../services/searchService";
 import {jaroWinkler} from "jaro-winkler-typescript";
-import {UDAErrorLogger} from "../config/error-log";
 import TSON from "typescript-json";
-import {getNodeInfo} from "./nodeInfo";
-import {isAllowedMiscElement} from "./isAllowedMiscElement";
-import {getClickedInputLabels} from "./getClickedInputLabels";
-
-export {indexNode} from "./indexNode";
 
 require("./domChanges");
-
-export let udanSpecialNodes: any = {
-  include: {
-    tags: ["a", "button", "input", "textarea", "select", "mat-select"],
-    classes: ["ng-select", "ngb-datepicker"],
-  },
-  exclude: {
-    tags: [
-      "link",
-      "meta",
-      "script",
-      "svg",
-      "style",
-      "path",
-      "circle",
-      "g",
-      "rect",
-      "stop",
-      "defs",
-      "linearGradient",
-    ],
-    classes: ["uda_exclude", "ngx-daterangepicker-material"],
-  },
-};
-export const EXCLUDE_ATTRIB = "data-exclude";
-
 
 /**
  * Browser Window Interface Definition
@@ -49,41 +14,6 @@ declare global {
     clickedNode: any;
   }
 }
-
-/**
- * Set ignorable classes for Udan con
- */
-export const init = async () => {
-
-  //fetch special nodes for REST service
-  if (!getFromStore("specialNodes", false)) {
-    const _specialNodes = fetchSpecialNodes();
-    setToStore(_specialNodes, "specialNodes", false);
-  }
-
-  const specialNodes = getFromStore("specialNodes", false);
-  if (specialNodes) {
-    udanSpecialNodes = specialNodes;
-  }
-
-
-  const children = getAllChildren(
-      document.querySelector(`.${CONFIG.UDA_CONTAINER_CLASS}`)
-  );
-  for (let i = 0; i < children?.length; i++) {
-    try {
-      if (
-          children[i] &&
-          !udanSpecialNodes?.exclude?.tags?.includes(
-              children[i]?.tagName?.trim()?.toLocaleLowerCase()
-          ) &&
-          children[i].className.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) == -1
-      )
-        children[i].className += " " + CONFIG.UDA_CLICK_IGNORE_CLASS;
-    } catch (e) {
-    }
-  }
-};
 
 /**
  *
@@ -155,7 +85,7 @@ export const getRowObject = (data: any) => {
     }
     path += row.clickednodename;
   }
-  let sequenceName = "";
+  let sequenceName: string;
   try {
     sequenceName = JSON.parse(data.name)[0];
   } catch (e) {
@@ -216,77 +146,6 @@ export const delayLink = (node: HTMLElement) => {
 };
 
 /**
- *
- * @param node
- * @param fromDocument
- * @param selectChange
- * @param event
- * @returns
- */
-export const recordUserClick = async (
-    node: HTMLElement,
-    fromDocument: boolean = false,
-    selectChange: boolean = false,
-    event: any
-) => {
-
-
-  if (!node) return false;
-
-  const isRecording =
-      getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true" ? true : false;
-
-  if (!isRecording) {
-    return;
-  }
-
-  if(node.isSameNode(window.clickedNode)) {
-    return;
-  }
-
-  if (typeof event.cancelable !== 'boolean' || event.cancelable) {
-    event.preventDefault();
-    event.stopPropagation();
-    window.clickedNode = event.target;
-  }
-
-  if (
-      !node.isSameNode(event.target) || clickableElementExists(event.target) ||
-      !isClickable(event.target)
-  ) {
-    return;
-  }
-
-  node = event.target;
-  if (!window.udanSelectedNodes) window.udanSelectedNodes = [];
-  window.udanSelectedNodes.push(node);
-
-
-  const _text = getClickedInputLabels(node);
-
-  if (!_text || _text?.length > 100 || !_text?.trim()?.length) return;
-
-
-  const resp = await postClickData(node, _text);
-  if (resp) {
-    const activeRecordingData: any = getFromStore(
-        CONFIG.RECORDING_SEQUENCE,
-        false
-    );
-    if (activeRecordingData) {
-      activeRecordingData.push(resp);
-      setToStore(activeRecordingData, CONFIG.RECORDING_SEQUENCE, false);
-    } else {
-      setToStore([resp], CONFIG.RECORDING_SEQUENCE, false);
-    }
-  } else {
-    UDAErrorLogger.error("Unable save record click " + node.outerHTML);
-  }
-
-  event.target.click();
-};
-
-/**
  * return parent element
  * @param el target element
  * @param tagName tag name to be matched
@@ -312,79 +171,6 @@ export const parentUpTo = (el: any, tagName: string) => {
   // return undefined
   return null;
 }
-
-/**
- * To post click data to REST
- * @param node HTMLElement
- * @returns promise
- */
-export const postClickData = async (node: HTMLElement, text: string) => {
-  let objectData: any = domJSON.toJSON(node, {serialProperties: true});
-  if (objectData.meta) {
-    objectData.meta = {};
-  } else {
-    objectData.meta = {};
-  }
-
-  console.log(node);
-
-  if (inArray(node.nodeName.toLowerCase(), CONFIG.ignoreNodesFromIndexing) !== -1 && CONFIG.customNameForSpecialNodes.hasOwnProperty(node.nodeName.toLowerCase())) {
-    objectData.meta.displayText = CONFIG.customNameForSpecialNodes[node.nodeName.toLowerCase()];
-  }
-
-  if (!objectData.node.outerHTML) {
-    objectData.node.outerHTML = node.outerHTML;
-  }
-
-  objectData.offset = getAbsoluteOffsets(node);
-  objectData.node.nodeInfo = getNodeInfo(node);
-
-  const payload = {
-    domain: window.location.host,
-    urlpath: window.location.pathname,
-    clickednodename: text,
-    html5: 0,
-    clickedpath: "",
-    objectdata: TSON.stringify(objectData),
-  };
-
-  return recordClicks(payload);
-};
-
-/**
- * * To post click sequence data to REST
- * @param request
- * @returns promise
- */
-export const postRecordSequenceData = async (request: any) => {
-  window.udanSelectedNodes = [];
-  const userclicknodesSet = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
-  const ids = userclicknodesSet.map((item: any) => item.id);
-  const payload = {
-    ...request,
-    domain: window.location.host,
-    isIgnored: 0,
-    isValid: 1,
-    userclicknodelist: ids.join(","),
-    userclicknodesSet,
-  };
-  return recordSequence(payload);
-};
-
-/**
- * To update click data to REST
- * @param node HTMLElement
- * @returns  promise
- */
-export const putUserClickData = async (request: any) => {
-  const payload = {
-    ...request,
-    clickedname: '["Test"]',
-    clicktype: "sequencerecord",
-    recordid: 1375,
-  };
-  return userClick(payload);
-};
 
 /**
  * compares current playable node from storage based on status "completed"
@@ -473,7 +259,7 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
 
     if (getchildlabels && node.childNodes.length > 0) {
       let childNodes = node.childNodes;
-      childNodes?.forEach(function (childNode: any, key: any) {
+      childNodes?.forEach(function (childNode: any) {
         if (
             childNode.nodeName.toLowerCase() !== "script" &&
             childNode.nodeName.toLowerCase() !== "select" &&
@@ -657,15 +443,6 @@ export const clickableElementExists = (compareNode: HTMLElement) => {
 }
 
 /**
- * To findout out a given element is clickable or not!
- * @param HTMLElement
- * @returns boolean
- */
-export const isClickable = (element: HTMLElement) => {
-  return isAllowedMiscElement(element);
-}
-
-/**
  * To find an dom object has a given class
  * @param element
  * @param classList
@@ -836,15 +613,6 @@ export const compareNodes = (
 };
 
 /**
- * sleep javascript execution time
- * @param ms
- */
-export const sleep = (ms) => {
-  const end = Date.now() + ms;
-  while (Date.now() < end) continue;
-};
-
-/**
  * to get all clickable elements
  * @returns HTMLElements collection
  */
@@ -887,11 +655,9 @@ export const getAllClickableElements = () => {
       );
 
   // Only keep inner clickable items
-  const clickableItems = items.filter(
+  return items.filter(
       (x) => !items.some((y) => x.element.contains(y.element) && !(x == y))
   );
-
-  return clickableItems;
 }
 
 

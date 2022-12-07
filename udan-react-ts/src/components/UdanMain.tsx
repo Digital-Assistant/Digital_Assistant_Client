@@ -6,7 +6,7 @@
  */
 
 import React from "react";
-import "../App.scss";
+import "../css/App.scss";
 import {SearchResults } from "./SearchResults";
 import { RecordSequenceDetails } from "./RecordSequenceDetails";
 import { RecordSequence } from "./RecordSequence";
@@ -25,7 +25,7 @@ export interface MProps {
  * @returns HTML Elements
  */
 
-export function UdanMain(props: MProps) {}
+export function UdanMain() {}
 
 UdanMain.SearchResults = SearchResults;
 UdanMain.RecordButton = RecordButton;

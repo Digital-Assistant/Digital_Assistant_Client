@@ -632,13 +632,13 @@ body {
 
   &.completed {
     &::before {
-      background-image: url(assets/images/icons/bullet.png);
+      background-image: url(../assets/images/icons/bullet.png);
     }
   }
 
   &.skipped {
     &::before {
-      background-image: url(assets/images/icons/bullet.png);
+      background-image: url(../assets/images/icons/bullet.png);
     }
   }
 
@@ -1116,7 +1116,7 @@ screen and (max-height: 600px) {
   padding: 5px !important;
 
   .info-icon {
-    position: "relative";
+    position: relative;
     top: 0px;
     margin-left: 10px;
     color: #ccc;

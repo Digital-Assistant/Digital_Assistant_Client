@@ -31,6 +31,7 @@ export const CONFIG = {
   AUTO_PLAY_SLEEP_TIME: 2000,
   JARO_WEIGHT: 0.95,
   JARO_WEIGHT_PERSONAL: 0.90,
+  specialNodeKey: "UDASpecialNodes",
   enableInfiniteScroll: false,
   enableInfiniteScrollPageLength: 10,
   set Environment(value) {
@@ -46,6 +47,7 @@ export const CONFIG = {
     return this.current;
   },
   DEBOUNCE_INTERVAL: 2000,
+  indexInterval: 1000,
   clickObjects: [],
   nodeId: 0,
   isRecording: false,
@@ -65,7 +67,7 @@ export const CONFIG = {
   ],
   innerTextWeight: 5,
   ignoreNodesFromIndexing: ['ng-dropdown-panel','ckeditor','fusioncharts','ngb-datepicker','ngx-daterangepicker-material','uda-panel','mat-datepicker-content','ng-select'],
-  ignoreNodesContainingClassNames:['cke_dialog_container','cke_notifications_area','gldp-default','ajs-layer','aui-list','herknl'],
+  ignoreNodesContainingClassNames:['cke_dialog_container','cke_notifications_area','gldp-default','ajs-layer','aui-list','herknl','jstBlock'],
   cancelRecordingDuringRecordingNodes: [],
   addClickToSpecialNodes: ['ng-select', 'ngb-datepicker'],
   ignoreClicksOnSpecialNodes: ['ngx-daterangepicker-material'],
@@ -240,29 +242,5 @@ export const CONFIG = {
   screenAcceptance: {
     storageName: "uda-user-screen-consent",
     data: {proceed: true},
-  },
-  udanSpecialNodes: {
-    include: {
-      tags: ["a", "button", "input", "textarea", "select", "mat-select"],
-      classes: ["ng-select", "ngb-datepicker"],
-    },
-    exclude: {
-      tags: [
-        "link",
-        "meta",
-        "script",
-        "svg",
-        "style",
-        "path",
-        "circle",
-        "g",
-        "rect",
-        "stop",
-        "defs",
-        "linearGradient",
-      ],
-      classes: ["uda_exclude", "ngx-daterangepicker-material"],
-    },
-  },
-  EXCLUDE_ATTRIB: "data-exclude"
+  }
 };

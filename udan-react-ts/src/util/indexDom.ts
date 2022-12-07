@@ -1,16 +1,16 @@
 // indexing functionality for the entire dom
 import {CONFIG} from "../config";
 import {UDAConsoleLogger, UDAErrorLogger} from "../config/error-log";
-import {
-  inArray, indexNode, init
-} from "./index";
-import { translate } from "./translation";
+import {inArray} from "./index";
+import {translate} from "./translation";
 import {addClickToNode} from "./addClickToNode";
 import {addToolTip} from "./addToolTip";
 import {checkCssClassNames} from "./checkCssClassNames";
+import {indexNode} from "./indexNode";
+import {initSpecialNodes} from "./initSpecialNodes";
 
-export const indexDom = async (node: any, ret = false, parentNode = "", textLabel = "", hasParentNodeClick = false, parentClickNode = null) => {
-  await init();
+export const indexDom = async (node: any, ret: boolean = false, parentNode: any = "", textLabel: string = "", hasParentNodeClick: boolean = false, parentClickNode: any = null) => {
+  await initSpecialNodes();
   switch (node.nodeType) {
     case Node.ELEMENT_NODE:
       if (!ret && parentNode !== "") {
@@ -49,9 +49,9 @@ export const indexDom = async (node: any, ret = false, parentNode = "", textLabe
         //	do nothing as we are not going to deal with special classes
         UDAConsoleLogger.info("unwanted indexing prevention");
       } else if (node.nodeName.toLowerCase() === "div" && (node.hasAttribute("uib-datepicker-popup-wrap") || (node.id && node.id === "recognize_modal"))) {
-        // fix for not indexing datepicker popup and nominate popup
         UDAConsoleLogger.info("date picker in javascript");
       } else if (node.nodeName.toLowerCase() === "span" && node.classList.contains("radio") && node.classList.contains("replacement")) {
+        // fix for not indexing datepicker popup and nominate popup
         addClickToNode(node);
       } else if (checkCssClassNames(node)) {
         UDAConsoleLogger.info({cssIgnoredNode: node});

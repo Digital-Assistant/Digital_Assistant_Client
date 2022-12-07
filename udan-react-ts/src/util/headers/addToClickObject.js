@@ -1,4 +1,4 @@
-export const ignoreTags = ["body", "document", "window", "html", "script", "style", "iframe", "doctype"];
+export const ignoreTags = ["body", "document", "window", "html", "script", "style", "iframe", "doctype", "link", "svg", "path", "meta", "circle", "rect", "stop", "defs", "linearGradient", "g"];
 
 export const AddToClickObjects = (node) => {
   try {
@@ -31,7 +31,6 @@ export const AddToClickObjects = (node) => {
 
     // addClickToNode(node);
   } catch (e) {
-    let htmlElement = node;
-    console.log('Unable to process clickable object - '+htmlElement, e);
+    console.log('Unable to process clickable object - '+node, e);
   }
 }
