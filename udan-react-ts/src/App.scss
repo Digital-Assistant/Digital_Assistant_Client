@@ -562,13 +562,13 @@ body {
 
     &.completed {
       &::before {
-        background-color: lightgreen;
+        // background-color: lightgreen;
         background-image: url('./assets/images/icons/bullet.png');
       }
     }
     &.skipped{
       &::before{
-        background-color: red;
+        // background-color: red;
         background-image: url('./assets/images/icons/bullet-grey.png');
 
       }
