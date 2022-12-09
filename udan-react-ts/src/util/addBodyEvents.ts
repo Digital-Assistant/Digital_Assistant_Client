@@ -1,6 +1,5 @@
 import {addClickToNode} from "./addClickToNode";
 import {isClickableNode} from "./isClickableNode";
-import {specialNodes} from "./specialNodes";
 import {initSpecialNodes} from "./initSpecialNodes";
 
 /**
@@ -16,11 +15,7 @@ export const addBodyEvents = async () => {
   for (; i < len; i++) {
     try {
       /**exclude event attachment for selective elements  */
-      if (
-          els[i] &&
-          !els[i]?.getAttribute(specialNodes.EXCLUDE_ATTRIB) &&
-          isClickableNode(els[i])
-      ) {
+      if (els[i] && isClickableNode(els[i])) {
         addClickToNode(els[i]);
       }
     } catch (e) {

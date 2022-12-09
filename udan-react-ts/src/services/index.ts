@@ -1,16 +1,10 @@
 import TSON from "typescript-json";
 
-export const REST = {
-  apiCal,
-  syncApiCal,
-  processArgs,
-};
-
 /**
  * common REST call
  * @options : object (properties needed for REST call)
  */
-function apiCal(options: any) {
+export const apiCal = (options: any) => {
   // const validate = checkValidUser()
   // if(!validate) return
   const requestOptions = {
@@ -42,7 +36,7 @@ function apiCal(options: any) {
  * common sync REST call
  * @options : object (properties needed for REST call)
  */
-async function syncApiCal(options: any) {
+export const syncApiCal = async (options: any) => {
   // const validate = checkValidUser()
   // if(!validate) return
   const requestOptions = {
@@ -63,7 +57,7 @@ async function syncApiCal(options: any) {
  * @param contentType
  * @returns HTTP headers
  */
-function getHTTPHeaders(contentType: string) {
+export const getHTTPHeaders = (contentType: string) => {
   const headers = new Headers();
   if (contentType === "json")
     headers.append("Content-Type", "application/json");
@@ -77,9 +71,16 @@ function getHTTPHeaders(contentType: string) {
  * @param val
  * @returns reconstructed url
  */
-function processArgs(url: string, val: any) {
+export const processArgs1 = (url: string, val: any) => {
   return url?.replace(/#([^#]+)#/g, (_, key) => (val[key] || "") && val[key]);
 }
+
 export {putUserClickData} from "./recordService";
 export {postRecordSequenceData} from "./recordService";
 export {postClickData} from "./recordService";
+
+export const REST = {
+  apiCal,
+  syncApiCal,
+  processArgs: processArgs1,
+};

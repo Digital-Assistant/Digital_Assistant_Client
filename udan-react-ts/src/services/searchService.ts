@@ -9,16 +9,16 @@ import {specialNodes} from "../util/specialNodes";
  */
 
 export const fetchSearchResults = (request?: {
-  keyword?:string,
-  page?:number,
-  domain?:string,
+  keyword?: string,
+  page?: number,
+  domain?: string,
   additionalParams?: any
 }) => {
-  if(request.additionalParams===null){
+  if (request.additionalParams === null) {
     delete request.additionalParams;
   }
   let parameters: any;
-  if(request.additionalParams != null){
+  if (request.additionalParams != null) {
     parameters = {
       url: REST.processArgs(ENDPOINT.SEARCH_WITH_PERMISSIONS, request),
       method: "GET",
@@ -33,6 +33,10 @@ export const fetchSearchResults = (request?: {
   return REST.apiCal(parameters);
 };
 
+/**
+ * Fetch special nodes processing from backend
+ * @param request
+ */
 export const fetchSpecialNodes = async (request?: any) => {
   const parameters = {
     url: REST.processArgs(ENDPOINT.SPECIAL_NODES, request),
