@@ -1,13 +1,14 @@
-import {EXCLUDE_ATTRIB, init, isClickable} from "./index";
 import {addClickToNode} from "./addClickToNode";
+import {isClickableNode} from "./isClickableNode";
+import {specialNodes} from "./specialNodes";
+import {initSpecialNodes} from "./initSpecialNodes";
 
 /**
  * Add events to body elements
- * @param selector
  */
-export const addBodyEvents = async (selector: HTMLElement) => {
+export const addBodyEvents = async () => {
   //exclude content-serving elements from click objects
-  await init();
+  await initSpecialNodes();
   let els: any = document.body.querySelectorAll("*"),
       len = els?.length,
       i = 0;
@@ -17,8 +18,8 @@ export const addBodyEvents = async (selector: HTMLElement) => {
       /**exclude event attachment for selective elements  */
       if (
           els[i] &&
-          !els[i]?.getAttribute(EXCLUDE_ATTRIB) &&
-          isClickable(els[i])
+          !els[i]?.getAttribute(specialNodes.EXCLUDE_ATTRIB) &&
+          isClickableNode(els[i])
       ) {
         addClickToNode(els[i]);
       }

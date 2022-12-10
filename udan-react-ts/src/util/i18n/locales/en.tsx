@@ -6,5 +6,7 @@ export const TRANSLATIONS_EN = {
   playBackError: "Nistapp UDA ran into a problem and will exit",
   tooltipMessage: "Please input the value and then click on",
   inputError: 'Please input proper name.',
-  inputMandatory: "Please input value"
+  inputMandatory: "Please input value",
+  cancelRecording: "Cancel and Exit",
+  submitButton: "Submit"
 };

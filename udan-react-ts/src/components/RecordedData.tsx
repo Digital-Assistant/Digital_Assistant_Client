@@ -8,8 +8,8 @@
 import React, {useEffect, useState} from "react";
 import {DeleteOutlined, InfoCircleOutlined,} from "@ant-design/icons";
 import _ from "lodash";
-import {getObjData, postRecordSequenceData, setToStore} from "../util";
-import {profanityCheck, updateRecordClicks} from "../services/recordService";
+import {getObjData, setToStore} from "../util";
+import {postRecordSequenceData, profanityCheck, updateRecordClicks} from "../services/recordService";
 import {CONFIG} from "../config";
 
 import TSON from "typescript-json";
@@ -119,22 +119,22 @@ export const RecordedData = (props: MProps) => {
     }
   };
 
-  const handlePersonal = (index: number) => (event: any) => {
-    updatePersonalOrSkipPlay("isPersonal", index);
+  const handlePersonal = (index: number) => async () => {
+    await updatePersonalOrSkipPlay("isPersonal", index);
   };
 
-  const handleSkipPlay = (index: number) => (event: any) => {
-    updatePersonalOrSkipPlay("skipDuringPlay", index);
+  const handleSkipPlay = (index: number) => async () => {
+    await updatePersonalOrSkipPlay("skipDuringPlay", index);
   };
 
-  const updatePersonalOrSkipPlay = (key: string, index: number) => {
+  const updatePersonalOrSkipPlay = async (key: string, index: number) => {
     const _objData = getObjData(recordData[index]?.objectdata);
     if (_objData) {
       if (_objData.meta[key] === undefined) _objData.meta[key] = false;
       _objData.meta[key] = !_objData.meta[key];
       recordData[index].objectdata = TSON.stringify(_objData);
       storeRecording(recordData);
-      updateRecordClicks(recordData[index]);
+      await updateRecordClicks(recordData[index]);
     }
   };
 
@@ -155,7 +155,9 @@ export const RecordedData = (props: MProps) => {
    * cancel recording
    */
   const cancelRecording = () => {
-    if (props.recordHandler) props.recordHandler("cancel");
+    if (props.recordHandler) {
+      props.recordHandler("cancel");
+    }
     setToStore([], CONFIG.RECORDING_SEQUENCE, false);
   };
 
@@ -358,7 +360,7 @@ export const RecordedData = (props: MProps) => {
                                     type="checkbox"
                                     id="UDA-skip-duringPlay"
                                     className="uda-checkbox flex-vcenter uda_exclude"
-                                    value={(objectData.meta.hasOwnProperty('skipDuringPlay') && objectData.meta.skipDuringPlay)?1:0}
+                                    value={(objectData.meta.hasOwnProperty('skipDuringPlay') && objectData.meta.skipDuringPlay) ? 1 : 0}
                                     checked={(objectData.meta.hasOwnProperty('skipDuringPlay') && objectData.meta.skipDuringPlay)}
                                     onChange={handleSkipPlay(index)}
                                 />
@@ -378,7 +380,7 @@ export const RecordedData = (props: MProps) => {
                             type="checkbox"
                             id="isPersonal"
                             className="uda_exclude"
-                            value={(objectData.meta.hasOwnProperty('isPersonal') && objectData.meta.isPersonal)?1:0}
+                            value={(objectData.meta.hasOwnProperty('isPersonal') && objectData.meta.isPersonal) ? 1 : 0}
                             checked={(objectData.meta.hasOwnProperty('isPersonal') && objectData.meta.isPersonal)}
                             onChange={handlePersonal(index)}
                         />
@@ -399,10 +401,11 @@ export const RecordedData = (props: MProps) => {
                                        style={{width: "68% !important"}} onChange={onChangeTooltip} value={tooltip}/>
                               {inputError.tooltip && <span className={`uda-alert`}> {translate('inputError')}</span>}
                                 <span>
-                                  <button className="delete-btn uda_exclude" style={{color: "#fff"}} id="uda-tooltip-save"
-                                      onClick={() => {
-                                        updateTooltip('tooltipInfo', index)
-                                      }}>Save</button>
+                                  <button className="delete-btn uda_exclude" style={{color: "#fff"}}
+                                          id="uda-tooltip-save"
+                                          onClick={() => {
+                                            updateTooltip('tooltipInfo', index)
+                                          }}>Save</button>
                                 </span>
                             </div>
                         </>
@@ -418,7 +421,7 @@ export const RecordedData = (props: MProps) => {
     setAdvBtnShow(!advBtnShow);
   };
 
-  const handlePermissions = (obj: any) => (event: any) => {
+  const handlePermissions = (obj: any) => () => {
     let permissions = tmpPermissionsObj;
     if (permissions[obj.key]) {
       delete permissions[obj.key];
@@ -530,11 +533,11 @@ export const RecordedData = (props: MProps) => {
             <div className="flex-card flex-start" style={{flex: 2}}>
               <button
                   className="uda-record-btn uda_exclude"
-                  onClick={() => cancelRecording()}
+                  onClick={()=>{cancelRecording()}}
                   style={{flex: 1}}
                   disabled={disableForm}
               >
-                <span className="uda_exclude">Cancel and Exit</span>
+                <span className="uda_exclude">{translate('cancelRecording')}</span>
               </button>
             </div>
             <div className="flex-card flex-end" style={{flex: 1}}>
@@ -546,7 +549,7 @@ export const RecordedData = (props: MProps) => {
                   disabled={disableForm}
                   // style={{ float: "right", padding: "5px 20px" }}
               >
-                Submit
+                {translate('submitButton')}
               </button>
             </div>
           </div>

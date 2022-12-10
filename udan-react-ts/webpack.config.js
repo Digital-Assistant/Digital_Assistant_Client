@@ -28,15 +28,23 @@ module.exports = (env, argv) => {
             // defaults to ./src
             // Here the application starts executing
             // and webpack starts bundling
+            'UdanHeaders': './src/Headers.js',
             'UdanSDK': './src/index.tsx',
-            'UdanHeaders': './src/Headers.tsx'
         },
         mode: 'development',// "production" | "development" | "none"
         devtool: 'cheap-module-source-map',// enum
+        // mode: 'production',
+
         // enhance debugging by adding meta info for the browser devtools
         // source-map most detailed at the expense of build speed.
+        /*devtool: 'source-map',
+        devServer: {
+            watchContentBase: true,
+            contentBase: path.resolve(__dirname, 'dist'),
+            port: 9000
+        },*/
 
-        // watch: false,
+        watch: false,
 
         watchOptions: {
             ignored: '/node_modules/',
@@ -117,9 +125,9 @@ module.exports = (env, argv) => {
                 process: 'process/browser',
                 Buffer: ['buffer', 'Buffer']
             }),
-            new webpack.ProvidePlugin({
+            /*new webpack.ProvidePlugin({
                 'utils': 'utils'
-            }),
+            }),*/
             new CopyPlugin({
                 patterns: [
                     {from: 'src/logo.*', to: "../[name][ext]"},
@@ -174,7 +182,7 @@ module.exports = (env, argv) => {
             filename: '[name].js', // the filename template for entry chunks
             library: 'UdanLibrary',
             libraryTarget: 'var',
-            path: path.resolve(__dirname, 'build/assets'), // the target directory for all output files
+            path: path.resolve(__dirname, 'build/assets'),  // the target directory for all output files
             // must be an absolute path (use the Node.js path module)
         },
     };

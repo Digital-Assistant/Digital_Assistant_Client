@@ -24,7 +24,7 @@ export interface MProps {
  * @returns HTML Elements
  */
 
-export function UdanMain(props: MProps) {}
+export function UdanMain() {}
 
 UdanMain.SearchResults = SearchResults;
 UdanMain.RecordButton = RecordButton;

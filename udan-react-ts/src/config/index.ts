@@ -31,6 +31,7 @@ export const CONFIG = {
   AUTO_PLAY_SLEEP_TIME: 2000,
   JARO_WEIGHT: 0.95,
   JARO_WEIGHT_PERSONAL: 0.90,
+  specialNodeKey: "UDASpecialNodes",
   enableInfiniteScroll: false,
   enableInfiniteScrollPageLength: 10,
   set Environment(value) {
@@ -46,9 +47,10 @@ export const CONFIG = {
     return this.current;
   },
   DEBOUNCE_INTERVAL: 2000,
+  indexInterval: 1000,
   clickObjects: [],
   nodeId: 0,
-  recording: false,
+  isRecording: false,
   htmlIndex : [],
   invokeTime: 1000,
   maxStringLength:40,
@@ -65,7 +67,7 @@ export const CONFIG = {
   ],
   innerTextWeight: 5,
   ignoreNodesFromIndexing: ['ng-dropdown-panel','ckeditor','fusioncharts','ngb-datepicker','ngx-daterangepicker-material','uda-panel','mat-datepicker-content','ng-select'],
-  ignoreNodesContainingClassNames:['cke_dialog_container','cke_notifications_area','gldp-default','ajs-layer','aui-list','herknl'],
+  ignoreNodesContainingClassNames:['cke_dialog_container','cke_notifications_area','gldp-default','ajs-layer','aui-list','herknl','jstBlock'],
   cancelRecordingDuringRecordingNodes: [],
   addClickToSpecialNodes: ['ng-select', 'ngb-datepicker'],
   ignoreClicksOnSpecialNodes: ['ngx-daterangepicker-material'],
@@ -240,5 +242,5 @@ export const CONFIG = {
   screenAcceptance: {
     storageName: "uda-user-screen-consent",
     data: {proceed: true},
-  },
+  }
 };

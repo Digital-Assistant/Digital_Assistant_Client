@@ -17,7 +17,7 @@ import {
   squeezeBody,
   setToStore,
   getFromStore,
-  postRecordSequenceData,
+
 } from "./util";
 import {CONFIG} from "./config";
 import UdanMain from "./components/UdanMain";
@@ -31,6 +31,8 @@ import {off, on, trigger} from "./util/events";
 import {UserDataContext} from "./providers/UserDataContext";
 import {AppConfig} from "./config/AppConfig";
 import {CustomConfig} from "./config/CustomConfig";
+import {postRecordSequenceData} from "./services";
+import {addBodyEvents} from "./util/addBodyEvents";
 
 // adding global variable declaration for exposing react custom configuration
 global.UDAPluginSDK = AppConfig;
@@ -195,6 +197,7 @@ function App() {
 
   useEffect(() => {
     window.isRecording = isRecording;
+    CONFIG.isRecording = isRecording;
     setToStore(isRecording, CONFIG.RECORDING_SWITCH_KEY, true);
   }, [isRecording]);
 
@@ -260,12 +263,13 @@ function App() {
   };
 
   /**to enable record sequence card/container */
-  const recordSequence = () => {
+  const recordSequence = async () => {
     playHandler("off");
     setIsRecording(true);
     setShowRecord(false);
     setRefetchSearch('');
     setShowSearch(false);
+    await addBodyEvents();
   };
 
   /**common cancel button handler */
@@ -296,6 +300,8 @@ function App() {
         await setSearchKeyword("");
         break;
       case "cancel":
+        setIsRecording(false);
+        await setSearchKeyword("");
         break;
     }
     setRefetchSearch('on');
@@ -409,12 +415,12 @@ function App() {
                                       )}
                                       config={global.UDAGlobalConfig}
                                   />
-
-                                  <UdanMain.RecordSequence
-                                      cancelHandler={cancel}
-                                      recordSequenceVisibility={toggleContainer("record-seq")}
-                                  />
-
+                                  {toggleContainer("record-seq") &&
+                                      <UdanMain.RecordSequence
+                                          cancelHandler={cancel}
+                                          recordSequenceVisibility={toggleContainer("record-seq")}
+                                      />
+                                  }
                                   {!showLoader && showSearch && (
                                       <UdanMain.SearchResults
                                           data={searchResults}

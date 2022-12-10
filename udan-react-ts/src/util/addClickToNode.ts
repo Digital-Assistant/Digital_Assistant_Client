@@ -1,7 +1,6 @@
-import {CONFIG} from "../config";
 import {UDAErrorLogger} from "../config/error-log";
-import {addEvent, recordUserClick} from "./index";
-import {isAllowedMiscElement} from "./isAllowedMiscElement";
+import {addEvent} from "./index";
+import {recordUserClick} from "./recordUserClick";
 
 export const addClickToNode = (node: any) => {
   try {
@@ -10,34 +9,43 @@ export const addClickToNode = (node: any) => {
       return;
     }
 
-    if (
-        node.hasOwnProperty("addedclickrecord") &&
-        node.addedclickrecord === true
-    ) {
+    if (node.hasOwnProperty("addedClickRecord") && node.addedClickRecord === true) {
       return;
     }
 
-    const nodeName = node.nodeName.toLowerCase();
+    let clickableNode = node;
+    let recordNode = node;
+
+    //Todo add the record click for parent element and ignore the children
+    /*const parentNode = node.closest(".jstBlock");
+
+    if(parentNode){
+      console.log(parentNode);
+      // recordNode = parentNode;
+      // parentNode.addedClickRecord = true;
+    }*/
+
+    const nodeName = clickableNode.nodeName.toLowerCase();
 
     switch (nodeName) {
       case "a":
-        addEvent(node, "click", function (event: any) {
-          recordUserClick(event.target, false, false, event);
+        addEvent(clickableNode, "click", function (event: any) {
+          recordUserClick(recordNode, false, false, event);
         });
         break;
       case "select":
-        addEvent(node, "focus", function (event: any) {
-          recordUserClick(event.target, false, false, event);
+        addEvent(clickableNode, "focus", function (event: any) {
+          recordUserClick(recordNode, false, false, event);
         });
         break;
       case "input":
-        if (!node.hasAttribute("type")) {
-          addEvent(node, "click", function (event: any) {
-            recordUserClick(event.target, false, false, event);
+        if (!clickableNode.hasAttribute("type")) {
+          addEvent(clickableNode, "click", function (event: any) {
+            recordUserClick(recordNode, false, false, event);
           });
-          return;
+          return node;
         }
-        const inputType = node.getAttribute("type").toLowerCase();
+        const inputType = clickableNode.getAttribute("type").toLowerCase();
         switch (inputType) {
           case "email":
           case "text":
@@ -58,18 +66,17 @@ export const addClickToNode = (node: any) => {
           case "search":
           case "submit":
           case "tel":
-          case "text":
           case "time":
           case "url":
           case "textarea":
           case "week":
-            addEvent(node, "click", function (event: any) {
-              recordUserClick(node, false, false, event);
+            addEvent(clickableNode, "click", function (event: any) {
+              recordUserClick(recordNode, false, false, event);
             });
             break;
           default:
-            addEvent(node, "click", function (event: any) {
-              recordUserClick(node, false, false, event);
+            addEvent(clickableNode, "click", function (event: any) {
+              recordUserClick(recordNode, false, false, event);
             });
             break;
         }
@@ -78,20 +85,19 @@ export const addClickToNode = (node: any) => {
       case "textarea":
       case "button":
       case "tr":
-        addEvent(node, "click", function (event: any) {
-          recordUserClick(event.target, false, false, event);
+        addEvent(clickableNode, "click", function (event: any) {
+          recordUserClick(recordNode, false, false, event);
         });
         break;
       default:
-        addEvent(node, "click", function (event: any) {
-          if (isAllowedMiscElement(event.target)) {
-            recordUserClick(event.target, false, false, event);
-          }
+        addEvent(clickableNode, "click", function (event: any) {
+          // if (isClickableNode(event.target)) {
+            recordUserClick(recordNode, false, false, event);
+          // }
         });
         break;
     }
-    node.addedclickrecord = true;
-    CONFIG.clickObjects.push({nodeName: node.nodeName, node});
+    clickableNode.addedClickRecord = true;
     return node;
   } catch (e) {
     UDAErrorLogger.error(
