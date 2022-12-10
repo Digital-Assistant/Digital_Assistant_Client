@@ -143,9 +143,33 @@ export const generateUUID = () => {
  * @param hide
  */
 export const squeezeBody = (hide: boolean) => {
-  const _body = document.body;
-  if (_body) {
-    _body.style.width = hide ? "" : window.innerWidth - 350 + "px";
+  if(global.UDAGlobalConfig.enableOverlay) {
+    let documentBody = document.body;
+    let bodyChildren: any = documentBody.childNodes;
+    if (!hide) {
+      if (bodyChildren.length > 0) {
+        bodyChildren.forEach(function (childNode, childNodeIndex) {
+          if (childNode.classList && childNode.classList.contains("container")) {
+            childNode.classList.remove("container");
+          }
+          if (childNode.nodeType === Node.ELEMENT_NODE && (childNode.id !== 'uda-btn' && childNode.id !== 'uda-html-container') && udanSpecialNodes.exclude.tags.indexOf(childNode.nodeName.toLowerCase()) === -1) {
+            if (childNode.classList && !childNode.classList.contains("uda-original-content")) {
+              childNode.classList.add("uda-original-content");
+            }
+          }
+        });
+      }
+    } else {
+      if (bodyChildren.length > 0) {
+        bodyChildren.forEach(function (childNode, childNodeIndex) {
+          if (childNode.nodeType === Node.ELEMENT_NODE && (childNode.id !== 'uda-btn' && childNode.id !== 'uda-html-container') && udanSpecialNodes.exclude.tags.indexOf(childNode.nodeName.toLowerCase()) === -1) {
+            if (childNode.classList && childNode.classList.contains("uda-original-content")) {
+              childNode.classList.remove("uda-original-content");
+            }
+          }
+        });
+      }
+    }
   }
 };
 

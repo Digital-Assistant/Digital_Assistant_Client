@@ -6,7 +6,6 @@
  */
 
 import React from "react";
-import "../App.scss";
 import {SearchResults } from "./SearchResults";
 import { RecordSequenceDetails } from "./RecordSequenceDetails";
 import { RecordSequence } from "./RecordSequence";
