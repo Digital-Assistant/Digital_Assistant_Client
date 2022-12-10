@@ -4,6 +4,8 @@ import TSON from "typescript-json";
 
 require("./domChanges");
 
+declare const udanSpecialNodes;
+
 /**
  * Browser Window Interface Definition
  */
