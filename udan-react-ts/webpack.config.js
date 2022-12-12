@@ -184,6 +184,7 @@ module.exports = (env, argv) => {
             libraryTarget: 'var',
             path: path.resolve(__dirname, 'build/assets'),  // the target directory for all output files
             // must be an absolute path (use the Node.js path module)
+            clean: true
         },
     };
 
