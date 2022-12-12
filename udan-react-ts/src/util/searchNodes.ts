@@ -26,6 +26,12 @@ export const searchNodes = (recordedNode, compareElements) => {
     // compare recorded node with personal node tag or not
     let match = compareNodes(compareNode.node, originalNode.node, isPersonalNode);
 
+    // uncomment for debugging
+    /*if(match.matched+10 >= match.count){
+      console.log(compareNode);
+      console.log(match);
+    }*/
+
     // we are incrementing 'matched' by 'innerTextWeight' for 'this' node and every child node and we are matching innerchildcounts that were returned from comparenodes
     if (compareNode.node.nodeName === originalNode.node.nodeName) {
       if (match.innerTextFlag && Math.abs((match.matched) - match.count) <= (match.innerChildNodes * CONFIG.innerTextWeight)) {

@@ -5,10 +5,10 @@
  */
 
 import React, {useState, useEffect, useCallback, useRef} from "react";
-import "./css/antd.css";
-// import "./css/UDAN.scss";
-import "./css/App.scss";
-// import "./css/custom.scss";
+// import 'antd/dist/reset.css';
+import './css/antd.css';
+import "./css/UDAN.scss";
+
 import {Button, Spin} from "antd";
 import {fetchSearchResults} from "./services/searchService";
 import {login} from "./services/authService";
@@ -182,6 +182,12 @@ function App() {
     on("UDAAuthenticatedUserSessionData", createSession);
     on("UDAAlertMessageData", authenticationError);
 
+    //adding class to body tag
+    let documentBody = document.body;
+    if(!documentBody.classList.contains('universal-digital-parent-ele')){
+      documentBody.classList.add('universal-digital-parent-ele');
+    }
+
     return () => {
       off("UDAUserSessionData", createSession);
       off("UDAAuthenticatedUserSessionData", createSession);
@@ -196,7 +202,10 @@ function App() {
   }, [isRecording]);
 
   useEffect(() => {
-    getSearchResults()
+    getSearchResults();
+    if(hide) {
+      squeezeBody(true);
+    }
   },[]);
 
   useEffect(() => {

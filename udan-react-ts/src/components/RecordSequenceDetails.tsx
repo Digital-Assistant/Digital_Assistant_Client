@@ -258,11 +258,13 @@ export const RecordSequenceDetails = (props: MProps) => {
                     </Popconfirm>
                 </Col>
             }
-            <Col span={12} style={{textAlign: "center"}}>
-              <Button onClick={() => manageVote()} className="uda_exclude">
-                <LikeOutlined width={33} className="secondary"/>
-              </Button>
-            </Col>
+            {
+              /*<Col span={12} style={{textAlign: "center"}}>
+                <Button onClick={() => manageVote()} className="uda_exclude">
+                  <LikeOutlined width={33} className="secondary"/>
+                </Button>
+              </Col>*/
+            }
           </Row>
         </div>
       </>

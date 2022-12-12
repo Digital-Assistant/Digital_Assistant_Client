@@ -469,6 +469,9 @@ body {
   display: block;
   margin-top: -35px;
   position: relative;
+  .ant-btn-circle{
+    margin-top: 20px;
+  }
 }
 
 .uda-play-btn {
@@ -562,7 +565,15 @@ body {
 
     &.completed {
       &::before {
-        background-color: lightgreen;
+        // background-color: lightgreen;
+        background-image: url('../assets/images/icons/bullet.png');
+      }
+    }
+    &.skipped{
+      &::before{
+        // background-color: red;
+        background-image: url('../assets/images/icons/bullet-grey.png');
+
       }
     }
 
@@ -632,13 +643,13 @@ body {
 
   &.completed {
     &::before {
-      background-image: url(../assets/images/icons/bullet.png);
+      background-image: url('../assets/images/icons/bullet.png');
     }
   }
 
   &.skipped {
     &::before {
-      background-image: url(../assets/images/icons/bullet.png);
+      background-image: url('../assets/images/icons/bullet.png');
     }
   }
 
@@ -1254,6 +1265,7 @@ screen and (max-height: 600px) {
 .udan-main-panel {
   h4 {
     border-bottom: none !important;
+    text-align: left !important;
   }
 
   button {

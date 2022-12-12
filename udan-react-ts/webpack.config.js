@@ -92,6 +92,11 @@ module.exports = (env, argv) => {
                     ]
                 },
                 {
+                    test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
+                    // More information here https://webpack.js.org/guides/asset-modules/
+                    type: "asset",
+                },
+                {
                     // Conditions:
                     test: /\.(jpe?g|png|gif|svg)$/i,
                     use: [{
@@ -179,6 +184,7 @@ module.exports = (env, argv) => {
             libraryTarget: 'var',
             path: path.resolve(__dirname, 'build/assets'),  // the target directory for all output files
             // must be an absolute path (use the Node.js path module)
+            clean: true
         },
     };
 
