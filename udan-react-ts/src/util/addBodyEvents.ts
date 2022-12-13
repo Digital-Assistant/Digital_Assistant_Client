@@ -11,7 +11,7 @@ export const addBodyEvents = async () => {
   let els: any = document.body.querySelectorAll("*"),
       len = els?.length,
       i = 0;
-
+  console.log(els);
   for (; i < len; i++) {
     try {
       /**exclude event attachment for selective elements  */

@@ -4,10 +4,15 @@
  * @param array2
  */
 export const compareArrays = (array1, array2) => {
-  for (let value of array1) {
-    if (array2.indexOf(value) > -1) {
-      return true;
+  let valueExists = false;
+  if(array1.length > 0) {
+    arrayLoop:
+    for (let value of array1) {
+      if (array2.includes(value)) {
+        valueExists = true;
+        break arrayLoop;
+      }
     }
   }
-  return false;
+  return valueExists;
 }

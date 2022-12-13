@@ -1,18 +1,27 @@
-import {compareArrays} from "./compareArrays";
+import {hasClass} from "./hasClass";
 
-export const checkNodeObjectKeyValue = (node, key, objectValues) => {
+export const checkNodeObjectKeyValue = (node: any, key: string, objectValues: Array<string>, checkType: string) => {
+  let exists = false;
   switch (key.toLowerCase()) {
     case 'tags':
-      if (objectValues.includes(node.tagName.toLowerCase())) {
-        return true;
+      if (objectValues.includes(node?.tagName?.trim().toLowerCase())) {
+        exists = true;
       }
       break;
     case 'classes':
+      if(hasClass(node, objectValues)){
+        exists = true;
+      }
+      break;
     case 'attributes':
-      if (compareArrays(objectValues, node.classList)) {
-        return true;
+      attributeLoop:
+      for(const attribute of objectValues){
+        if(node.hasAttribute(attribute)){
+          exists = true;
+          break attributeLoop;
+        }
       }
       break;
   }
-  return false;
+  return exists;
 }

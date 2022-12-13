@@ -1,8 +1,9 @@
 // Check for each node and then match it with the available clicknodes which are identified by links.js
 import {CONFIG} from "../config";
-import {hasClass, inArray} from "./index";
+import {inArray} from "./index";
 import {UDAConsoleLogger} from "../config/error-log";
 import {specialNodes} from "./specialNodes";
+import {hasClass} from "./hasClass";
 
 declare const UDAClickObjects;
 

@@ -1,86 +1,50 @@
-import {checkNodeObjectKeyValue} from "./checkNodeObjectKeyValue";
-import {hasClass} from "./index";
-
+import {checkNodeValues} from "./checkNodeValues";
+// import {hasClass} from "./index";
 declare const UDAClickObjects;
-declare let udaSpecialNodes;
 
 export const isClickableNode = (element: HTMLElement) => {
   if (!element) return false;
 
+  //check for stopping children elements for adding event listeners
+  /*const closestParent = element.closest('.ignoreChildren');
+  if (closestParent) {
+    return false;
+  }*/
+
   let isAllowedElement: boolean =
       window.getComputedStyle(element).cursor == "pointer";
 
-
-  /**traversing 3 level parents for content editable property */
-  //wrong logic needs to modify this to other logical way for finding parent clickable element.
-  /*
-  let parentEl: any = element;
-  for (let i = 0; i <= 3; i++) {
-    if (parentEl.parentNode) {
-      parentEl = parentEl.parentNode;
-    }
-    if (parentEl.getAttribute("contenteditable")) {
-      isAllowedElement = true;
-      break;
-    }
-  }
-  */
-
-  console.log({element});
-
-  //check if special classes, tags and attributes to be excluded from recordable elements
-  let exclude = checkNodeValues(element, 'exclude');
-  if (exclude) {
-    console.log('ignored '+element.nodeName);
-    isAllowedElement = false;
-  }
-
-  //check if special classes, tags and attributes to be included in recordable elements
-  console.log('check for include');
-  let include = checkNodeValues(element, 'include')
-  if (include) {
-    console.log('allowed '+element.nodeName);
+  // checking the node exists in the included list for further processing.
+  if (checkNodeValues(element, 'include')) {
     isAllowedElement = true;
-  }
-
-  if (hasClass(element, udaSpecialNodes.include.classes) || udaSpecialNodes?.include?.tags?.includes(element.tagName.toLowerCase())) {
-    isAllowedElement = true;
+    console.log('here at the include check');
   }
 
   //Check the clickable element exists in clickable objects
   if (!isAllowedElement) {
-    for (let i = 0; i < UDAClickObjects?.length; i++) {
-      if (UDAClickObjects[i].element === window) {
-        continue;
-      }
-      if (element.isSameNode(UDAClickObjects[i].element)) {
-        isAllowedElement = true;
-        break;
-      }
-    }
+    clickObjectLoop:
+        for (let i = 0; i < UDAClickObjects?.length; i++) {
+          if (element.isSameNode(UDAClickObjects[i].element)) {
+            isAllowedElement = true;
+            console.log('here at the clickObjectLoop');
+            break clickObjectLoop;
+          }
+        }
   }
 
-  /*if (udaSpecialNodes?.exclude?.tags?.includes(element?.tagName?.trim()?.toLocaleLowerCase()) || hasClass(element, udaSpecialNodes.exclude.classes)) {
-    isAllowedElement = false;
-  }*/
-
-  //check for stopping children elements for adding event listeners
-  if (isAllowedElement) {
+  // checking the node exists in the children ignore list for further processing.
+  if (checkNodeValues(element, 'ignoreChildren')) {
+    console.log('here at ignoreChildren');
     console.log(element);
+    element.classList.add('ignoreChildren');
+    isAllowedElement = true;
+  }
+
+  // checking the node exists in the excluded list for further processing.
+  if (isAllowedElement && checkNodeValues(element, 'exclude')) {
+    isAllowedElement = false;
   }
 
   return isAllowedElement;
 };
-
-export const checkNodeValues = (node, checkType) => {
-  if (udaSpecialNodes[checkType] && node) {
-    let isAllowed = false;
-    for (const key in udaSpecialNodes[checkType]) {
-      if (checkNodeObjectKeyValue(node, key, udaSpecialNodes[checkType][key])) {
-        return true;
-      }
-    }
-    return isAllowed;
-  }
-}
 

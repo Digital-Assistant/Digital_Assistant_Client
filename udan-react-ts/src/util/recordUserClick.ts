@@ -3,7 +3,6 @@ import {getClickedInputLabels} from "./getClickedInputLabels";
 import {UDAErrorLogger} from "../config/error-log";
 import {clickableElementExists, getFromStore, setToStore} from "./index";
 import {postClickData} from "../services";
-import {isClickableNode} from "./isClickableNode";
 
 /**
  *
@@ -27,7 +26,7 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
     return;
   }
 
-  if (!node.isSameNode(event.target) || clickableElementExists(event.target) ||  !isClickableNode(event.target)) {
+  if (!node.isSameNode(event.target) || clickableElementExists(event.target)) {
     return;
   }
 
