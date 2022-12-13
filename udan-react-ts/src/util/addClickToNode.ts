@@ -16,15 +16,6 @@ export const addClickToNode = (node: any) => {
     let clickableNode = node;
     let recordNode = node;
 
-    //Todo add the record click for parent element and ignore the children
-    /*const parentNode = node.closest(".jstBlock");
-
-    if(parentNode){
-      console.log(parentNode);
-      // recordNode = parentNode;
-      // parentNode.addedClickRecord = true;
-    }*/
-
     const nodeName = clickableNode.nodeName.toLowerCase();
 
     switch (nodeName) {

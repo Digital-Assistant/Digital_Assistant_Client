@@ -52,11 +52,23 @@ export const matchNode = (recordedNode: any) => {
     return true;
   }
 
+  let clickObjects: any = [];
   let originalElement = originalNode?.node;
-  let clickObjects = document.getElementsByTagName(
-      originalElement.nodeName
-  );
-
+  if(CONFIG.commonTags.includes(originalElement.nodeName.toLowerCase())){
+    let querySelector = '';
+    const classList = originalElement.className.split(" ");
+    for(const className of classList){
+      if(querySelector!==''){
+        querySelector +=', ';
+      }
+      querySelector += originalElement.nodeName.toLowerCase()+" ."+className
+    }
+    clickObjects = document.querySelectorAll(querySelector);
+  } else {
+    clickObjects = document.getElementsByTagName(
+        originalElement.nodeName
+    );
+  }
   let compareElements: any = []
   let matchedElements: any = [];
   let leastWeight = -1;

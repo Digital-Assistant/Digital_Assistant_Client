@@ -26,14 +26,11 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
     return;
   }
 
-  if (!node.isSameNode(event.target) || clickableElementExists(event.target)) {
+  /*if (!node.isSameNode(event.target) || clickableElementExists(event.target)) {
     return;
-  }
+  }*/
 
   // node = event.target;
-  if (!window.udanSelectedNodes) window.udanSelectedNodes = [];
-  window.udanSelectedNodes.push(node);
-
 
   if (typeof event.cancelable !== 'boolean' || event.cancelable) {
     event.preventDefault();
@@ -45,9 +42,27 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
 
   if (!_text || _text?.length > 100 || !_text?.trim()?.length) return;
 
+  let recordingNode = node;
 
-  const resp = await postClickData(node, _text);
+  //add the record click for parent element and ignore the children
+  const closestParent: any = node.closest('[udaIgnoreChildren]');
+  if (closestParent) {
+    console.log(closestParent);
+    recordingNode = closestParent;
+  }
+
+  if (clickableElementExists(recordingNode)) {
+    return;
+  }
+
+  const resp = await postClickData(recordingNode, _text);
   if (resp) {
+    if (!window.udanSelectedNodes){
+      window.udanSelectedNodes = [];
+    }
+
+    window.udanSelectedNodes.push(recordingNode);
+
     const activeRecordingData: any = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
     if (activeRecordingData) {
       activeRecordingData.push(resp);
@@ -59,5 +74,5 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
     UDAErrorLogger.error("Unable save record click " + node.outerHTML);
   }
 
-  node.click();
+  event.target.click();
 };

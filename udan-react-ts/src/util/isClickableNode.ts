@@ -5,19 +5,12 @@ declare const UDAClickObjects;
 export const isClickableNode = (element: HTMLElement) => {
   if (!element) return false;
 
-  //check for stopping children elements for adding event listeners
-  /*const closestParent = element.closest('.ignoreChildren');
-  if (closestParent) {
-    return false;
-  }*/
-
   let isAllowedElement: boolean =
       window.getComputedStyle(element).cursor == "pointer";
 
   // checking the node exists in the included list for further processing.
   if (checkNodeValues(element, 'include')) {
     isAllowedElement = true;
-    console.log('here at the include check');
   }
 
   //Check the clickable element exists in clickable objects
@@ -26,7 +19,6 @@ export const isClickableNode = (element: HTMLElement) => {
         for (let i = 0; i < UDAClickObjects?.length; i++) {
           if (element.isSameNode(UDAClickObjects[i].element)) {
             isAllowedElement = true;
-            console.log('here at the clickObjectLoop');
             break clickObjectLoop;
           }
         }
@@ -34,10 +26,11 @@ export const isClickableNode = (element: HTMLElement) => {
 
   // checking the node exists in the children ignore list for further processing.
   if (checkNodeValues(element, 'ignoreChildren')) {
-    console.log('here at ignoreChildren');
-    console.log(element);
-    element.classList.add('ignoreChildren');
-    isAllowedElement = true;
+    if(!element.hasAttribute('udaIgnoreChildren')) {
+      // element.classList.add('ignoreChildren');
+      element.setAttribute('udaIgnoreChildren', String(true));
+      isAllowedElement = true;
+    }
   }
 
   // checking the node exists in the excluded list for further processing.
@@ -46,5 +39,4 @@ export const isClickableNode = (element: HTMLElement) => {
   }
 
   return isAllowedElement;
-};
-
+}

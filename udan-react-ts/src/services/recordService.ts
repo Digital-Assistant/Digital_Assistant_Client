@@ -142,8 +142,7 @@ export const postClickData = async (node: HTMLElement, text: string) => {
   //removing the unwanted attributes which were added while processing click objects.
   delete(objectData.node.addedClickRecord);
   delete(objectData.node.hasClick);
-
-  console.log(objectData);
+  delete(objectData.node.udaIgnoreChildren);
 
   if (inArray(node.nodeName.toLowerCase(), CONFIG.ignoreNodesFromIndexing) !== -1 && CONFIG.customNameForSpecialNodes.hasOwnProperty(node.nodeName.toLowerCase())) {
     objectData.meta.displayText = CONFIG.customNameForSpecialNodes[node.nodeName.toLowerCase()];

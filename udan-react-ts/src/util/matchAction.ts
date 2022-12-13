@@ -27,8 +27,6 @@ export const matchAction = (node, selectedNode) => {
   const navigationData = getSelectedRecordFromStore();
 
   // perform click action based on the input given
-
-  // const recordedNodeData = JSON.parse(selectedNode.objectdata);
   const recordedNodeData = selectedNode.objectdata;
   if (recordedNodeData.meta && recordedNodeData.meta.hasOwnProperty('selectedElement') && recordedNodeData.meta.selectedElement && recordedNodeData.meta.selectedElement.systemTag.trim() != 'others') {
     let performedAction = mapSelectedElementAction(node, selectedNode, navigationData, recordedNodeData);
@@ -126,14 +124,14 @@ export const matchAction = (node, selectedNode) => {
         invokeNextNode(node, timeToInvoke);
       }
       break;
-    case 'div':
+    /*case 'div':
       if (node.classList && (node.classList.contains('mat-form-field-flex') || node.classList.contains('mat-select-trigger'))) {
         addToolTip(node, node.parentNode.parentNode, selectedNode, navigationData, true, false);
       } else {
         node.click();
         invokeNextNode(node, timeToInvoke);
       }
-      break;
+      break;*/
       //	fix for text editor during playback
     case 'ckeditor':
       addToolTip(node, node, selectedNode, navigationData, true, false);
@@ -146,9 +144,13 @@ export const matchAction = (node, selectedNode) => {
       // check for special input nodes and add tooltip
       let specialInputNode = false;
       if (node.classList) {
+        console.log(node.classList);
+        classListLoop:
         for (let val of node.classList) {
           if (inArray(val, CONFIG.specialInputClickClassNames) !== -1) {
             specialInputNode = true;
+            console.log(node);
+            break classListLoop;
           }
         }
       }
