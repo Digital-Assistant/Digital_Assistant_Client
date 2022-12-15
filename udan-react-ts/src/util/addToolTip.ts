@@ -34,7 +34,7 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
         enabled: true,
         phase: 'main',
         options: {
-          offset: ({placement, reference, popper}) => [0, 50],
+          offset: ({placement, reference, popper}) => [0, 30],
         }
       }
     ],

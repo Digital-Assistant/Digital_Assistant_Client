@@ -28,5 +28,5 @@ export const CustomConfig: CustomConfigPropTypes = {
   permissions: {},
   enableProfanity: true,
   enableRecording: true,
-  enableOverlay: false
+  enableOverlay: true
 };

@@ -1,6 +1,6 @@
 import {UDAErrorLogger} from "../config/error-log";
-import {addEvent} from "./index";
 import {recordUserClick} from "./recordUserClick";
+import {addEvent} from "./addEvent";
 
 export const addClickToNode = (node: any) => {
   try {
@@ -41,7 +41,6 @@ export const addClickToNode = (node: any) => {
           case "email":
           case "text":
           case "button":
-          case "checkbox":
           case "color":
           case "date":
           case "datetime-local":
@@ -51,7 +50,6 @@ export const addClickToNode = (node: any) => {
           case "month":
           case "number":
           case "password":
-          case "radio":
           case "range":
           case "reset":
           case "search":
@@ -62,6 +60,12 @@ export const addClickToNode = (node: any) => {
           case "textarea":
           case "week":
             addEvent(clickableNode, "click", function (event: any) {
+              recordUserClick(recordNode, false, false, event);
+            });
+            break;
+          case "checkbox":
+          case "radio":
+            addEvent(clickableNode, "change", function (event: any) {
               recordUserClick(recordNode, false, false, event);
             });
             break;
@@ -82,9 +86,7 @@ export const addClickToNode = (node: any) => {
         break;
       default:
         addEvent(clickableNode, "click", function (event: any) {
-          // if (isClickableNode(event.target)) {
-            recordUserClick(recordNode, false, false, event);
-          // }
+          recordUserClick(recordNode, false, false, event);
         });
         break;
     }

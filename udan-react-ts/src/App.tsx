@@ -33,6 +33,7 @@ import {AppConfig} from "./config/AppConfig";
 import {CustomConfig} from "./config/CustomConfig";
 import {postRecordSequenceData} from "./services";
 import {addBodyEvents} from "./util/addBodyEvents";
+import {initSpecialNodes} from "./util/initSpecialNodes";
 
 // adding global variable declaration for exposing react custom configuration
 global.UDAPluginSDK = AppConfig;
@@ -202,10 +203,15 @@ function App() {
   }, [isRecording]);
 
   useEffect(() => {
-    getSearchResults();
-    if(hide) {
-      squeezeBody(true);
+    const init = async () => {
+      await initSpecialNodes();
+      await getSearchResults();
+      if(hide) {
+        squeezeBody(true);
+      }
     }
+
+    init();
   },[]);
 
   useEffect(() => {

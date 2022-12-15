@@ -61,14 +61,18 @@ export const matchNode = (recordedNode: any) => {
       if(querySelector!==''){
         querySelector +=', ';
       }
-      querySelector += originalElement.nodeName.toLowerCase()+" ."+className
+      querySelector += originalElement.nodeName.toLowerCase()+"."+className
     }
-    clickObjects = document.querySelectorAll(querySelector);
-  } else {
+    if(querySelector)
+      clickObjects = document.querySelectorAll(querySelector);
+  }
+
+  if(clickObjects.length === 0) {
     clickObjects = document.getElementsByTagName(
         originalElement.nodeName
     );
   }
+
   let compareElements: any = []
   let matchedElements: any = [];
   let leastWeight = -1;

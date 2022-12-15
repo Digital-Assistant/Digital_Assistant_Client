@@ -6,6 +6,7 @@ import {mapSelectedElementAction} from "./mapSelectedElementAction";
 import {addToolTip, removeToolTip} from "./addToolTip";
 import {invokeNextNode} from "./invokeNextNode";
 import {getSelectedRecordFromStore} from "./invokeNode";
+import {checkNodeValues} from "./checkNodeValues";
 
 export const matchAction = (node, selectedNode) => {
 
@@ -35,8 +36,31 @@ export const matchAction = (node, selectedNode) => {
     }
   }
 
+  // adding tooltip to text editor elements
+  if(checkNodeValues(node, 'textEditors')){
+    addToolTip(node, node, selectedNode, navigationData, false, false, false);
+    invokeNextNode(node, timeToInvoke);
+    return;
+  }
+
+  // adding tooltip to drop down elements
+  if(checkNodeValues(node, 'dropDowns')){
+    addToolTip(node, node, selectedNode, navigationData, false, false, false);
+    invokeNextNode(node, timeToInvoke);
+    return;
+  }
+
+  // adding tooltip to Date selector elements
+  if(checkNodeValues(node, 'datePicker')){
+    addToolTip(node, node, selectedNode, navigationData, false, false, false);
+    invokeNextNode(node, timeToInvoke);
+    return;
+  }
+
+
   if (inArray(node.nodeName.toLowerCase(), CONFIG.ignoreNodesFromIndexing) !== -1) {
     addToolTip(node, node.parentNode, selectedNode, navigationData, false, false, false);
+    invokeNextNode(node, timeToInvoke);
     return;
   }
 
@@ -144,7 +168,6 @@ export const matchAction = (node, selectedNode) => {
       // check for special input nodes and add tooltip
       let specialInputNode = false;
       if (node.classList) {
-        console.log(node.classList);
         classListLoop:
         for (let val of node.classList) {
           if (inArray(val, CONFIG.specialInputClickClassNames) !== -1) {

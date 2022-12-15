@@ -22,6 +22,11 @@ export const checkNodeObjectKeyValue = (node: any, key: string, objectValues: Ar
         }
       }
       break;
+    case 'ids':
+      if(node.id && objectValues.includes(node.id.trim().toLowerCase())){
+        exists=true;
+      }
+      break;
   }
   return exists;
 }

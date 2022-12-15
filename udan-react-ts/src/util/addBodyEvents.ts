@@ -7,7 +7,6 @@ import {initSpecialNodes} from "./initSpecialNodes";
  */
 export const addBodyEvents = async () => {
   //exclude content-serving elements from click objects
-  await initSpecialNodes();
   let els: any = document.body.querySelectorAll("*"),
       len = els?.length,
       i = 0;

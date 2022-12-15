@@ -344,7 +344,7 @@ export const RecordedData = (props: MProps) => {
                       onClick={() => {
                         setEdit(index);
                       }}
-                      value={item.clickednodename}
+                      value={(objectData.meta.hasOwnProperty('displayText'))?objectData.meta.displayText:item.clickednodename}
                   />
                   {inputError.clickednodename && <span className={`uda-alert`}> {translate('inputError')}</span>}
                 </span>

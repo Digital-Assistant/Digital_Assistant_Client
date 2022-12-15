@@ -131,18 +131,19 @@ export const profanityCheck = async (request?: any) => {
  * @param text
  * @returns promise
  */
-export const postClickData = async (node: HTMLElement, text: string) => {
+export const postClickData = async (node: HTMLElement, text: string, meta: any) => {
   let objectData: any = domJSON.toJSON(node, {serialProperties: true});
   if (objectData.meta) {
-    objectData.meta = {};
+    objectData.meta = meta;
   } else {
-    objectData.meta = {};
+    objectData.meta = meta;
   }
 
   //removing the unwanted attributes which were added while processing click objects.
   delete(objectData.node.addedClickRecord);
   delete(objectData.node.hasClick);
   delete(objectData.node.udaIgnoreChildren);
+  delete(objectData.node.udaIgnoreClick);
 
   if (inArray(node.nodeName.toLowerCase(), CONFIG.ignoreNodesFromIndexing) !== -1 && CONFIG.customNameForSpecialNodes.hasOwnProperty(node.nodeName.toLowerCase())) {
     objectData.meta.displayText = CONFIG.customNameForSpecialNodes[node.nodeName.toLowerCase()];
@@ -164,7 +165,7 @@ export const postClickData = async (node: HTMLElement, text: string) => {
     objectdata: TSON.stringify(objectData),
   };
 
-  return recordClicks(payload);
+  return await recordClicks(payload);
 };
 
 /**

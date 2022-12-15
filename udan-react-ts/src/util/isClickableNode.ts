@@ -5,6 +5,17 @@ declare const UDAClickObjects;
 export const isClickableNode = (element: HTMLElement) => {
   if (!element) return false;
 
+  const isUdaPanel: any = element.closest('#udan-react-root');
+  if(isUdaPanel){
+    return false;
+  }
+
+  //add the record click for parent element and ignore the children
+  const closestParent: any = element.closest('[udaIgnoreChildren]');
+  if (closestParent) {
+    return false;
+  }
+
   let isAllowedElement: boolean =
       window.getComputedStyle(element).cursor == "pointer";
 
@@ -27,9 +38,15 @@ export const isClickableNode = (element: HTMLElement) => {
   // checking the node exists in the children ignore list for further processing.
   if (checkNodeValues(element, 'ignoreChildren')) {
     if(!element.hasAttribute('udaIgnoreChildren')) {
-      // element.classList.add('ignoreChildren');
       element.setAttribute('udaIgnoreChildren', String(true));
       isAllowedElement = true;
+    }
+  }
+
+  if(checkNodeValues(element, 'ignoreClicksOnNodes')){
+    if(!element.hasAttribute('udaIgnoreClick')) {
+      element.setAttribute('udaIgnoreClick', String(true));
+      isAllowedElement = false;
     }
   }
 
