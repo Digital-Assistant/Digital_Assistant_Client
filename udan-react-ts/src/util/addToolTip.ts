@@ -56,17 +56,9 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
         removeToolTip();
         trigger("BackToSearchResults", {action: 'BackToSearchResults'});
       });
-  /*jQuery('html, body').animate({
-    scrollTop: (jQuery(invokingnode).offset().top - 250)
-  }, 2000, function(){
-    if(enableFocus){
-      invokingnode.focus();
-    }
-    if(enableClick){
-      invokingnode.click();
-    }
-  });*/
+
   //add scrolltop functionality
+  invokingNode.scrollIntoView({behavior: 'smooth', block: "start", inline: "nearest"});
   setTimeout(function () {
     if (enableFocus) {
       invokingNode.focus();

@@ -236,12 +236,12 @@ export const RecordSequenceDetails = (props: MProps) => {
                     itemLayout="horizontal"
                     dataSource={selectedRecordingDetails?.userclicknodesSet}
                     renderItem={(item: any, index: number) => (
-                        <List.Item
+                        <li
                             className={addSkipClass(item)}
                             onClick={() => playNode(item, index)}
                         >
-                          <List.Item.Meta title={getClickedNodeLabel(item)}/>
-                        </List.Item>
+                          <i>{getClickedNodeLabel(item)}</i>
+                        </li>
                     )}
                 />
             )}

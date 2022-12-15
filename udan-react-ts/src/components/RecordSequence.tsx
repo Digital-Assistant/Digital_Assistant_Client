@@ -30,7 +30,7 @@ export const RecordSequence = (props: MProps) => {
       <h5>Please navigate in the page to record.</h5> <br />
       <div className="uda-recording" style={{ textAlign: "center" }}>
         <button
-          className="uda-record-btn uda_exclude"
+          className="uda-record-btn uda-record-btn-icon uda_exclude"
           data-exclude={true}
           onClick={()=>{cancelRecording();}}
         >
