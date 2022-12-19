@@ -58,7 +58,7 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
       });
 
   //add scrolltop functionality
-  invokingNode.scrollIntoView({behavior: 'smooth', block: "start", inline: "nearest"});
+  tooltipNode.scrollIntoView({behavior: 'smooth', block: "start", inline: "center"});
   setTimeout(function () {
     if (enableFocus) {
       invokingNode.focus();

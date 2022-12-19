@@ -18,6 +18,15 @@ export const addClickToNode = (node: any) => {
 
     const nodeName = clickableNode.nodeName.toLowerCase();
 
+    // fix for select2 library
+    if(node.classList && node.classList.contains('select2-selection')){
+      addEvent(node, 'focus', function(event: any){
+        recordUserClick(recordNode, false, false, event);
+      });
+      node.addedClickRecord = true;
+      return ;
+    }
+
     switch (nodeName) {
       case "a":
         addEvent(clickableNode, "click", function (event: any) {

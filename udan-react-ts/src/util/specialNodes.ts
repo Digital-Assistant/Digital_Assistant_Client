@@ -2,7 +2,7 @@ export const specialNodes = {
   // list of including nodes for attaching events
   "include": {
     "tags": ['a', 'button', 'input', 'textarea', 'select', 'option', 'mat-select', 'ckeditor', 'ng-select', 'ngb-datepicker'],
-    "classes": ['ng-select', 'ngb-datepicker', 'dropdown-toggle', 'expand-button', 'btn-pill', 'radio', 'replacement', 'select-wrapper', 'select2', 'select-dropdown', 'datepicker', 'fa-calendar'],
+    "classes": ['ng-select', 'ngb-datepicker', 'dropdown-toggle', 'expand-button', 'btn-pill', 'radio', 'replacement', 'select-dropdown', 'datepicker', 'fa-calendar', 'select2-selection'],
     "attributes": ['ng-click', 'onclick', 'contenteditable']
   },
   // list of excluding nodes from attaching events
@@ -15,13 +15,13 @@ export const specialNodes = {
   // ignore clickable nodes while attaching event listeners
   "ignoreChildren": {
     "tags": ['ng-select', 'ngb-datepicker', 'ng-dropdown-panel', 'ckeditor', 'fusioncharts', 'ngb-datepicker', 'ngx-daterangepicker-material', 'mat-datepicker-content'],
-    "classes": ['cke_dialog_container', 'cke_notifications_area', 'gldp-default', 'ajs-layer', 'aui-list', 'herknl', 'uda_exclude', 'jstBlock', 'select-wrapper','datepicker' , 'fa-calendar', 'drdn-content', 'dropdown-button', 'select2'],
+    "classes": ['cke_dialog_container', 'cke_notifications_area', 'gldp-default', 'ajs-layer', 'aui-list', 'herknl', 'uda_exclude', 'jstBlock', 'datepicker', 'fa-calendar', 'drdn-content', 'dropdown-button', 'dropdown-content', 'select2-selection', 'select2-container--open'],
     "attributes": ['uib-datepicker-popup-wrap']
   },
   // ignore clicks on special nodes
   "ignoreClicksOnNodes": {
     "tags": ['ngx-daterangepicker-material', 'i'],
-    "classes": ['drdn-content', 'datepicker-modal', 'parallel', 'tabs', 'select2-container--open'],
+    "classes": ['drdn-content', 'datepicker-modal', 'parallel', 'tabs', 'dropdown-content', 'select2-container--open'],
     "attributes": ['uib-datepicker-popup-wrap'],
     "ids": ['content']
   },

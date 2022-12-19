@@ -391,10 +391,7 @@ function App() {
 
   return (
       <UserDataContext.Provider value={userSessionData}>
-        <div
-            className="udan-main-panel"
-            style={{display: hide ? "none" : "block", position: "relative"}}
-        >
+        <div className="udan-main-panel" style={{display: hide ? "none" : "block", position: "relative"}}>
           <div id="uda-html-container">
             <div id="uda-html-content" className="uda_exclude">
               <div>

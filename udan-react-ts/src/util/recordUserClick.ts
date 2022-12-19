@@ -27,6 +27,10 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
     return;
   }
 
+  if(CONFIG.lastClickedTime && (CONFIG.lastClickedTime === Date.now() || ((CONFIG.lastClickedTime + 300) >= Date.now()))){
+    return ;
+  }
+
   //should not record untrusted clicks
   if(!event.isTrusted){
     console.log('untrusted click on : ')
@@ -40,13 +44,13 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
   // node = event.target;
   let recordingNode = node;
 
-  console.log(node);
-  console.log(event.target);
+  let addIsPersonal = false;
 
   //add the record click for parent element and ignore the children
   const closestParent: any = node.closest('[udaIgnoreChildren]');
   if (closestParent) {
     recordingNode = closestParent;
+    addIsPersonal =  true;
   }
 
 
@@ -74,6 +78,11 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
   let meta: any = {};
 
   let _text = getClickedInputLabels(recordingNode);
+
+  if(addIsPersonal) {
+    meta.isPersonal = true;
+  }
+
 
   if (!_text || _text?.length > 100 || !_text?.trim()?.length) {
 
@@ -107,6 +116,8 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
 
     window.udanSelectedNodes.push(recordingNode);
     window.udanSelectedNodes.push(node);
+
+    CONFIG.lastClickedTime=Date.now();
 
     const activeRecordingData: any = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
     if (activeRecordingData) {

@@ -31,6 +31,7 @@ export const CONFIG = {
   AUTO_PLAY_SLEEP_TIME: 2000,
   JARO_WEIGHT: 0.95,
   JARO_WEIGHT_PERSONAL: 0.90,
+  lastClickedTime: null,
   specialNodeKey: "UDASpecialNodes",
   enableInfiniteScroll: false,
   enableInfiniteScrollPageLength: 10,
@@ -64,7 +65,7 @@ export const CONFIG = {
     'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
     'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y', 'selectionStart', 'selectionEnd', 'required', 'validationMessage', 'selectionDirection',
     'naturalWidth', 'naturalHeight', 'complete', '_indexOf', 'value', 'defaultValue', 'min', 'max', 'nodeInfo', 'data-tooltip-id', 'addedclickrecord', 'checked', 'data-tribute',
-    'hasclick', 'addedClickRecord', 'hasClick', 'valueAsNumber', 'udaIgnoreChildren', 'udaIgnoreClick'
+    'hasclick', 'addedClickRecord', 'hasClick', 'valueAsNumber', 'udaIgnoreChildren', 'udaIgnoreClick', 'udaignorechildren', 'udaignoreclick'
   ],
   innerTextWeight: 5,
   ignoreNodesFromIndexing: ['ng-dropdown-panel', 'ckeditor', 'fusioncharts', 'ngb-datepicker', 'ngx-daterangepicker-material', 'uda-panel', 'mat-datepicker-content', 'ng-select'],

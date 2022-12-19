@@ -5,6 +5,14 @@ declare const UDAClickObjects;
 export const isClickableNode = (element: HTMLElement) => {
   if (!element) return false;
 
+  if(element.hasAttribute("udaIgnoreChildren")) {
+    element.removeAttribute("udaIgnoreChildren");
+  }
+
+  if(element.hasAttribute("udaIgnoreNode")) {
+    element.removeAttribute("udaIgnoreNode");
+  }
+
   const isUdaPanel: any = element.closest('#udan-react-root');
   if(isUdaPanel){
     return false;
