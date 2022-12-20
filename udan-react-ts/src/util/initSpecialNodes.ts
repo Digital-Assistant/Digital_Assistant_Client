@@ -1,9 +1,14 @@
 import {fetchSpecialNodes} from "../services/searchService";
 import {CONFIG} from "../config";
-import {getAllChildren, getFromStore, setToStore} from "./index";
-import {specialNodes} from "./specialNodes";
+import {getAllChildren} from "./index";
 
-export let udaSpecialNodes: any = specialNodes;
+global.udaSpecialNodes;
+
+declare global {
+  interface Window {
+    udaSpecialNodes: any;
+  }
+}
 
 /**
  * Set ignorable classes for Udan con
@@ -11,14 +16,7 @@ export let udaSpecialNodes: any = specialNodes;
 export const initSpecialNodes = async () => {
 
   //fetch special nodes for REST service
-  let fetchedSpecialNodes = getFromStore(CONFIG.specialNodeKey, false);
-
-  if (!fetchedSpecialNodes) {
-    fetchedSpecialNodes = await fetchSpecialNodes();
-    setToStore(fetchedSpecialNodes, CONFIG.specialNodeKey, false);
-  } else if (fetchedSpecialNodes) {
-    udaSpecialNodes = fetchedSpecialNodes;
-  }
+  global.udaSpecialNodes = await fetchSpecialNodes();
 
   const children = getAllChildren(
       document.querySelector(`.${CONFIG.UDA_CONTAINER_CLASS}`)
@@ -27,7 +25,7 @@ export const initSpecialNodes = async () => {
     try {
       if (
           children[i] &&
-          !udaSpecialNodes?.exclude?.tags?.includes(
+          !global.udaSpecialNodes?.exclude?.tags?.includes(
               children[i]?.tagName?.trim()?.toLocaleLowerCase()
           ) &&
           children[i].className.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) == -1
