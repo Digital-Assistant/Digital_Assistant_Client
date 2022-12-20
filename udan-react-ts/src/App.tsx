@@ -145,6 +145,7 @@ function App() {
       offSearch();
       setRecordSequenceDetailsVisibility(true);
     } else if (isRecording) {
+      togglePanel();
       offSearch();
     } else {
       setShowSearch(true);
@@ -189,6 +190,16 @@ function App() {
       documentBody.classList.add('universal-digital-parent-ele');
     }
 
+    const init = async () => {
+      await initSpecialNodes();
+      await getSearchResults();
+      if(hide) {
+        squeezeBody(true);
+      }
+    }
+
+    init();
+
     return () => {
       off("UDAUserSessionData", createSession);
       off("UDAAuthenticatedUserSessionData", createSession);
@@ -200,19 +211,10 @@ function App() {
     window.isRecording = isRecording;
     CONFIG.isRecording = isRecording;
     setToStore(isRecording, CONFIG.RECORDING_SWITCH_KEY, true);
-  }, [isRecording]);
-
-  useEffect(() => {
-    const init = async () => {
-      await initSpecialNodes();
-      await getSearchResults();
-      if(hide) {
-        squeezeBody(true);
-      }
+    if(isRecording) {
+      setHide(false);
     }
-
-    init();
-  },[]);
+  }, [isRecording]);
 
   useEffect(() => {
     if(searchKeyword !== previousSearchKeyword.current) {

@@ -157,18 +157,15 @@ export const RecordSequenceDetails = (props: MProps) => {
 
   const playNode = (item, index) => {
     if (matchNode({node: item, index})) {
-      // setToolTip(item, index)
       updateStatus(index);
     }
   }
 
   const removeRecording = async () => {
-    if (!window.confirm("Sure you want to delete?")) return;
     await deleteRecording({id: selectedRecordingDetails.id});
-    /*if (props?.refetchSearch) {
-      props.refetchSearch("on");
-    }*/
-    backNav();
+    setTimeout(()=>{
+      backNav();
+    }, CONFIG.indexInterval);
   };
 
   const manageVote = async () => {
