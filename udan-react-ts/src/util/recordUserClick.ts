@@ -61,8 +61,9 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
 
   //ToDo improve stop propagation by checking only for elements that needs to be stopped
   if (typeof event.cancelable !== 'boolean' || event.cancelable) {
-    event.stopImmediatePropagation();
     event.preventDefault();
+    event.stopImmediatePropagation();
+    event.stopPropagation();
   }
 
   window.clickedNode = event.target;

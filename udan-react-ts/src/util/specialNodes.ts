@@ -7,7 +7,7 @@ export const specialNodes = {
   },
   // list of excluding nodes from attaching events
   "exclude": {
-    "tags": ['body', 'link', 'meta', 'script', 'svg', 'style', 'path', 'circle', 'g', 'rect', 'stop', 'defs', 'linearGradient', 'mat-checkbox'],
+    "tags": ['body', 'link', 'meta', 'script', 'svg', 'style', 'path', 'circle', 'g', 'rect', 'stop', 'defs', 'linearGradient', 'mat-checkbox', 'table'],
     "classes": ['uda_exclude', 'datepicker-modal'],
     "attributes": ['uib-datepicker-popup-wrap', 'data-exclude'],
     "ids": ['content']
