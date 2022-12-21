@@ -15,6 +15,7 @@ import {CONFIG} from "../config";
 import TSON from "typescript-json";
 import {translate} from "../util/translation";
 import {isInputNode} from "../util/checkNode";
+import { left } from "@popperjs/core";
 
 export interface MProps {
   sequenceName?: string;
@@ -417,7 +418,7 @@ export const RecordedData = (props: MProps) => {
                                        style={{width: "68% !important"}} onChange={onChangeTooltip} value={(tooltip)? tooltip: (objectData.meta?.tooltipInfo)} />
                               {inputError.tooltip && <span className={`uda-alert`}> {translate('inputError')}</span>}
                                 <span>
-                                  <button className={`uda-tutorial-btn uda_exclude ${(disableTooltipSubmitBtn) ? "disabled" : ""}`} style={{color: "#fff"}}
+                                  <button className={`uda-tutorial-btn uda_exclude ${(disableTooltipSubmitBtn) ? "disabled" : ""}`} style={{color: "#fff", marginTop:"10px}}
                                           id="uda-tooltip-save"
                                           disabled={disableTooltipSubmitBtn}
                                           onClick={async () => {
@@ -547,7 +548,7 @@ export const RecordedData = (props: MProps) => {
               className="flex-card flex-center"
               style={{clear: "both", marginTop: 50}}
           >
-            <div className="flex-card flex-start" style={{flex: 2}}>
+            <div className="flex-card flex-start" style={{flex: 1}}>
               <button
                   className="uda-record-btn uda_exclude"
                   onClick={()=>{cancelRecording()}}
@@ -564,7 +565,8 @@ export const RecordedData = (props: MProps) => {
                   }`}
                   onClick={() => submitRecording()}
                   disabled={disableForm}
-                  // style={{ float: "right", padding: "5px 20px" }}
+
+                  style={{ flex: 1, marginLeft: "5px" }}
               >
                 {translate('submitButton')}
               </button>
