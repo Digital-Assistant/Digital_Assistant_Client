@@ -6,6 +6,11 @@ header.uda-original-content {
 }
 .drag-target.uda-original-content {
     display: none;
+    height: inherit !important;
+    width: inherit !important;
+    position: inherit !important;
+    top: inherit !important;
+    z-index: inherit !important;
 }
 .uda-original-content .main-heading.nav-wrappe, .uda-original-content .main-heading.nav-wrapper {
     width: 77vw !important;

@@ -15,6 +15,7 @@ import {CONFIG} from "../config";
 import TSON from "typescript-json";
 import {translate} from "../util/translation";
 import {isInputNode} from "../util/checkNode";
+import { left } from "@popperjs/core";
 
 export interface MProps {
   sequenceName?: string;
@@ -379,12 +380,12 @@ export const RecordedData = (props: MProps) => {
                         <input
                             type="checkbox"
                             id="isPersonal"
-                            className="uda_exclude"
+                            className="uda-checkbox uda_exclude"
                             value={(objectData.meta.hasOwnProperty('isPersonal') && objectData.meta.isPersonal) ? 1 : 0}
                             checked={(objectData.meta.hasOwnProperty('isPersonal') && objectData.meta.isPersonal)}
                             onChange={handlePersonal(index)}
                         />
-                        <label>Personal Information</label>
+                        <label className="uda-checkbox-label">Personal Information</label>
                         <span
                             className="info-icon"
                             title="select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."
@@ -401,7 +402,7 @@ export const RecordedData = (props: MProps) => {
                                        style={{width: "68% !important"}} onChange={onChangeTooltip} value={tooltip}/>
                               {inputError.tooltip && <span className={`uda-alert`}> {translate('inputError')}</span>}
                                 <span>
-                                  <button className="delete-btn uda_exclude" style={{color: "#fff"}}
+                                  <button className="uda-tutorial-btn uda_exclude" style={{color: "#fff", marginTop:"10px"}}
                                           id="uda-tooltip-save"
                                           onClick={() => {
                                             updateTooltip('tooltipInfo', index)
@@ -530,7 +531,7 @@ export const RecordedData = (props: MProps) => {
               className="flex-card flex-center"
               style={{clear: "both", marginTop: 50}}
           >
-            <div className="flex-card flex-start" style={{flex: 2}}>
+            <div className="flex-card flex-start" style={{flex: 1}}>
               <button
                   className="uda-record-btn uda_exclude"
                   onClick={()=>{cancelRecording()}}
@@ -547,7 +548,8 @@ export const RecordedData = (props: MProps) => {
                   }`}
                   onClick={() => submitRecording()}
                   disabled={disableForm}
-                  // style={{ float: "right", padding: "5px 20px" }}
+                  
+                  style={{ flex: 1, marginLeft: "5px" }}
               >
                 {translate('submitButton')}
               </button>
