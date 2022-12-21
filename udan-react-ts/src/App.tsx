@@ -185,8 +185,8 @@ function App() {
 
     //adding class to body tag
     let documentBody = document.body;
-    if(!documentBody.classList.contains('universal-digital-parent-ele')){
-      documentBody.classList.add('universal-digital-parent-ele');
+    if(!documentBody.classList.contains('uda-body')){
+      documentBody.classList.add('uda-body');
     }
 
     const init = async () => {

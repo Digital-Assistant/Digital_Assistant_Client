@@ -418,7 +418,7 @@ export const RecordedData = (props: MProps) => {
                                        style={{width: "68% !important"}} onChange={onChangeTooltip} value={(tooltip)? tooltip: (objectData.meta?.tooltipInfo)} />
                               {inputError.tooltip && <span className={`uda-alert`}> {translate('inputError')}</span>}
                                 <span>
-                                  <button className={`uda-tutorial-btn uda_exclude ${(disableTooltipSubmitBtn) ? "disabled" : ""}`} style={{color: "#fff", marginTop:"10px}}
+                                  <button className={`uda-tutorial-btn uda_exclude ${(disableTooltipSubmitBtn) ? "disabled" : ""}`} style={{color: "#fff", marginTop:"10px"}}
                                           id="uda-tooltip-save"
                                           disabled={disableTooltipSubmitBtn}
                                           onClick={async () => {
