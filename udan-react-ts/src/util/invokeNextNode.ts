@@ -5,7 +5,7 @@ import {trigger} from "./events";
 
 export const invokeNextNode = (node, timeToInvoke) => {
   let link = false;
-  timeToInvoke = timeToInvoke + 4000;
+  timeToInvoke = timeToInvoke + 2000;
   if (typeof node.href !== 'undefined' && node.href !== '') {
     if (typeof node.target !== 'undefined' && node.target === '_blank') {
       // toggleautoplay(navigationCookieData);
@@ -26,7 +26,6 @@ export const invokeNextNode = (node, timeToInvoke) => {
       trigger("UDAPlayNext", {"playNext": true});
     }, timeToInvoke);
   } else {
-    timeToInvoke = timeToInvoke + 3000;
     setTimeout(function () {
       trigger("UDAPlayNext", {"playNext": true});
     }, timeToInvoke);

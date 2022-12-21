@@ -24,6 +24,7 @@ export interface MProps {
   config?: any;
   refetchSearch?: Function;
   recordHandler?: Function;
+  showLoader?: Function;
 }
 
 /**
@@ -41,6 +42,7 @@ export const RecordedData = (props: MProps) => {
   const [inputAlert, setInputAlert] = useState<any>({});
   const [inputError, setInputError] = useState<any>({});
   const [tooltip, setToolTip] = useState<string>("");
+  const [disableTooltipSubmitBtn, setDisableTooltipSubmitBtn] = useState<boolean>(false);
 
   useEffect(() => {
     setRecordData([...(props.data || [])]);
@@ -172,6 +174,7 @@ export const RecordedData = (props: MProps) => {
     }
 
     setDisableForm(true);
+    props.showLoader(true);
 
     let _labels: any = [name];
     if (labels.length) {
@@ -192,7 +195,9 @@ export const RecordedData = (props: MProps) => {
 
     const instance = await postRecordSequenceData(_payload);
     if (instance && props?.refetchSearch) {
-      props.refetchSearch("on");
+      setTimeout(()=>{
+        props.refetchSearch("on");
+      }, CONFIG.indexInterval);
     }
 
     if (props.recordHandler) props.recordHandler("cancel");
@@ -303,6 +308,8 @@ export const RecordedData = (props: MProps) => {
    * @param index
    */
   const updateTooltip = async (key: string, index: number) => {
+    props.showLoader(true);
+    setDisableTooltipSubmitBtn( true);
     const _objData = getObjData(recordData[index]?.objectdata);
     if (_objData) {
       if (_objData.meta[key] === undefined) _objData.meta[key] = tooltip;
@@ -311,6 +318,8 @@ export const RecordedData = (props: MProps) => {
       storeRecording(recordData);
       await updateRecordClicks(recordData[index]);
     }
+    setDisableTooltipSubmitBtn( false);
+    props.showLoader(false);
   };
 
   const renderData = () => {
@@ -327,27 +336,34 @@ export const RecordedData = (props: MProps) => {
                   className="flex-card flex-center"
                   style={{alignItems: "center"}}
               >
-                <span id="uda-display-clicked-text" style={{flex: 2}}>
-                  <input
-                      type="text"
-                      id="uda-edited-name"
-                      name="uda-edited-name"
-                      className={`uda-form-input uda_exclude ${
-                          !item.editable ? "non-editable" : ""
-                      } ${item.profanity ? "profanity" : ""}`}
-                      placeholder="Enter Name"
-                      // onChange={onLabelChange(index)}
-                      onChange={handleChange(index)}
-                      readOnly={!item.editable}
-                      style={{width: "85%! important"}}
-                      // onKeyDown={handleLabelChange(index)}
-                      onClick={() => {
-                        setEdit(index);
-                      }}
-                      value={(objectData.meta.hasOwnProperty('displayText'))?objectData.meta.displayText:item.clickednodename}
-                  />
-                  {inputError.clickednodename && <span className={`uda-alert`}> {translate('inputError')}</span>}
-                </span>
+                {recordData?.length - 1 != index &&
+                    <span id="uda-display-clicked-text" style={{flex: 2}}>
+                        {(objectData.meta.hasOwnProperty('displayText'))?objectData.meta.displayText:item.clickednodename}
+                    </span>
+                }
+                {recordData?.length - 1 === index && (
+                  <span id="uda-display-clicked-text" style={{flex: 2}}>
+                    <input
+                        type="text"
+                        id="uda-edited-name"
+                        name="uda-edited-name"
+                        className={`uda-form-input uda_exclude ${
+                            !item.editable ? "non-editable" : ""
+                        } ${item.profanity ? "profanity" : ""}`}
+                        placeholder="Enter Name"
+                        // onChange={onLabelChange(index)}
+                        onChange={handleChange(index)}
+                        readOnly={!item.editable}
+                        style={{width: "85%! important"}}
+                        // onKeyDown={handleLabelChange(index)}
+                        onClick={() => {
+                          setEdit(index);
+                        }}
+                        value={(objectData.meta.hasOwnProperty('displayText'))?objectData.meta.displayText:item.clickednodename}
+                    />
+                    {inputError.clickednodename && <span className={`uda-alert`}> {translate('inputError')}</span>}
+                  </span>
+                )}
                 <br/>
               </div>
 
@@ -367,7 +383,7 @@ export const RecordedData = (props: MProps) => {
                                 <label className="uda-checkbox-label">Skip during play</label>
                                 <span
                                     className="info-icon"
-                                    title="Select this box if this field / text is not required to navigate while processing."
+                                    title={translate('skipInfo')}
                                 >
                                   <InfoCircleOutlined/>
                                 </span>
@@ -379,15 +395,15 @@ export const RecordedData = (props: MProps) => {
                         <input
                             type="checkbox"
                             id="isPersonal"
-                            className="uda_exclude"
+                            className="uda-checkbox uda_exclude"
                             value={(objectData.meta.hasOwnProperty('isPersonal') && objectData.meta.isPersonal) ? 1 : 0}
                             checked={(objectData.meta.hasOwnProperty('isPersonal') && objectData.meta.isPersonal)}
                             onChange={handlePersonal(index)}
                         />
-                        <label>Personal Information</label>
+                        <label className="uda-checkbox-label">{translate('personalInfoLabel')}</label>
                         <span
                             className="info-icon"
-                            title="select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."
+                            title={translate('personalInfoTooltip')}
                         >
                         <InfoCircleOutlined/>
                       </span>
@@ -397,15 +413,16 @@ export const RecordedData = (props: MProps) => {
                         <>
                             <div className="uda-recording uda_exclude" style={{textAlign: "center"}}>
                                 <input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip"
-                                       className="uda-form-input uda_exclude" placeholder="Custom Tooltip (Optional)"
-                                       style={{width: "68% !important"}} onChange={onChangeTooltip} value={tooltip}/>
+                                       className="uda-form-input uda_exclude" placeholder={translate('toolTipPlaceHolder')}
+                                       style={{width: "68% !important"}} onChange={onChangeTooltip} value={(tooltip)? tooltip: (objectData.meta?.tooltipInfo)} />
                               {inputError.tooltip && <span className={`uda-alert`}> {translate('inputError')}</span>}
                                 <span>
-                                  <button className="delete-btn uda_exclude" style={{color: "#fff"}}
+                                  <button className={`uda-tutorial-btn uda_exclude ${(disableTooltipSubmitBtn) ? "disabled" : ""}`} style={{color: "#fff"}}
                                           id="uda-tooltip-save"
-                                          onClick={() => {
-                                            updateTooltip('tooltipInfo', index)
-                                          }}>Save</button>
+                                          disabled={disableTooltipSubmitBtn}
+                                          onClick={async () => {
+                                            await updateTooltip('tooltipInfo', index)
+                                          }}>{translate('submitTooltip')}</button>
                                 </span>
                             </div>
                         </>

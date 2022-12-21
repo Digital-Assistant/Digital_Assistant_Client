@@ -172,7 +172,6 @@ export const matchAction = (node, selectedNode) => {
         for (let val of node.classList) {
           if (inArray(val, CONFIG.specialInputClickClassNames) !== -1) {
             specialInputNode = true;
-            console.log(node);
             break classListLoop;
           }
         }

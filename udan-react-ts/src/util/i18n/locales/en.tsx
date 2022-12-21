@@ -8,5 +8,11 @@ export const TRANSLATIONS_EN = {
   inputError: 'Please input proper name.',
   inputMandatory: "Please input value",
   cancelRecording: "Cancel and Exit",
-  submitButton: "Submit"
+  submitButton: "Submit",
+  skipInfo: "Select this box if this field / text is not required to navigate while processing.",
+  personalInfoLabel: "Personal Information",
+  personalInfoTooltip: "select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing.",
+  submitTooltip: "Save Tooltip",
+  toolTipPlaceHolder: "Custom Tooltip (Optional)",
+  deleteRecording: "Are you sure?"
 };

@@ -443,6 +443,7 @@ function App() {
                                       data={recSequenceData}
                                       recordHandler={recordHandler}
                                       refetchSearch={setRefetchSearch}
+                                      showLoader={setShowLoader}
                                       config={global.UDAGlobalConfig}
                                   />
 
@@ -459,6 +460,7 @@ function App() {
                                           isPlaying={playDelay}
                                           key={"rSD" + recordSequenceDetailsVisibility}
                                           config={global.UDAGlobalConfig}
+                                          showLoader={setShowLoader}
                                       />
                                   }
                                 </>

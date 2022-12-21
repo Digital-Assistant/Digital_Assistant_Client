@@ -39,7 +39,7 @@ export const SearchResults = (props: MProps) => {
   }, [props?.data]);
 
   const selectItem = (item: any) => {
-    setToStore(item, "selectedRecordedItem", false);
+    setToStore(item, CONFIG.SELECTED_RECORDING, false);
     if (props?.showDetails) props.showDetails(item);
   };
 

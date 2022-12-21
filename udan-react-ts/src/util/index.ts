@@ -194,7 +194,7 @@ export const parentUpTo = (el: any, tagName: string) => {
  * @returns object with index and node
  */
 export const getCurrentPlayItem = () => {
-  const elementsFromStore = getFromStore("selectedRecordedItem", false);
+  const elementsFromStore = getFromStore(CONFIG.SELECTED_RECORDING, false);
   const retObj: any = {index: 0, node: null};
   for (let i = 0; i < elementsFromStore?.userclicknodesSet?.length; i++) {
     if (elementsFromStore?.userclicknodesSet[i].status != "completed") {

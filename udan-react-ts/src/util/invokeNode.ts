@@ -117,11 +117,13 @@ export const matchNode = (recordedNode: any) => {
 
   if (finalMatchElement === null) {
     if (matchedElements.length == 1) {
+      // add to the variable as only one element matched
       finalMatchElement = matchedElements[0];
     } else if (matchedElements.length > 1) {
+      // check the distance of the matched elements on the page
       finalMatchElement = processDistanceOfNodes(matchedElements, recordedNode);
     } else if (matchedElements.length === 0) {
-      //  fall back old logic
+      //  fall back to old logic
       finalMatchElement = searchNodes(recordedNode, compareElements);
     }
   }
@@ -130,6 +132,7 @@ export const matchNode = (recordedNode: any) => {
     matchAction(finalMatchElement, recordedNode.node)
     return true;
   } else {
+    // show alert to the user as we didnt found the recorded element on the page.
     alert(translate('playBackError'));
     return false;
   }

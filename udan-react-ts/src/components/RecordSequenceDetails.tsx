@@ -23,6 +23,7 @@ import {getUserId} from "../services/userService";
 import {matchNode} from "../util/invokeNode";
 import {CONFIG} from "../config";
 import {off, on} from "../util/events";
+import {translate} from "../util/translation";
 
 
 interface MProps {
@@ -33,6 +34,7 @@ interface MProps {
   cancelHandler?: Function;
   playHandler?: Function;
   isPlaying?: string;
+  showLoader?: Function;
 }
 
 /**
@@ -58,6 +60,7 @@ export const RecordSequenceDetails = (props: MProps) => {
     on("ContinuePlay", autoPlay);
     on("BackToSearchResults", backNav);
     on("PausePlay", pause);
+
     return () => {
       off("UDAPlayNext", autoPlay);
       off("ContinuePlay", autoPlay);
@@ -71,13 +74,11 @@ export const RecordSequenceDetails = (props: MProps) => {
    * Record player(auto play)
    */
   const autoPlay = (data = null) => {
-    if (props?.isPlaying == "on" || data?.type == "ContinuePlay") {
-      const playItem = getCurrentPlayItem();
-      if (playItem.node && matchNode(playItem)) {
-        updateStatus(playItem.index);
-      } else {
-        pause();
-      }
+    const playItem = getCurrentPlayItem();
+    if (playItem.node && matchNode(playItem)) {
+      updateStatus(playItem.index);
+    } else {
+      pause();
     }
   };
 
@@ -98,7 +99,7 @@ export const RecordSequenceDetails = (props: MProps) => {
     selectedRecordingDetails?.userclicknodesSet?.forEach((element: any) => {
       element.status = "none";
     });
-    setToStore(selectedRecordingDetails, "selectedRecordedItem", false);
+    setToStore(selectedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
     setSelectedRecordingDetails({...selectedRecordingDetails});
   };
 
@@ -162,6 +163,7 @@ export const RecordSequenceDetails = (props: MProps) => {
   }
 
   const removeRecording = async () => {
+    props.showLoader(true);
     await deleteRecording({id: selectedRecordingDetails.id});
     setTimeout(()=>{
       backNav();
@@ -248,7 +250,7 @@ export const RecordSequenceDetails = (props: MProps) => {
           <Row>
             {(selectedRecordingDetails.usersessionid === userId) &&
                 <Col span={12} style={{textAlign: "center"}}>
-                    <Popconfirm title="Are you sure?" onConfirm={removeRecording} className="uda_exclude">
+                    <Popconfirm title={translate('deleteRecording')} onConfirm={removeRecording} className="uda_exclude">
                         <Button className="uda_exclude">
                             <DeleteOutlined width={33} className="secondary uda_exclude"/>
                         </Button>
