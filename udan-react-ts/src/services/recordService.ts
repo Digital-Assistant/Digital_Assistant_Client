@@ -1,7 +1,12 @@
-import { ENDPOINT } from "../config/endpoints";
-import { REST } from ".";
-import { CONFIG } from "../config";
-import { getSessionKey, getUserId } from "./userService";
+import {ENDPOINT} from "../config/endpoints";
+import {REST} from ".";
+import {CONFIG} from "../config";
+import {getSessionKey, getUserId} from "./userService";
+import {getNodeInfo} from "../util/nodeInfo";
+import TSON from "typescript-json";
+import {getAbsoluteOffsets, getFromStore, inArray} from "../util";
+import domJSON from "domjson";
+import mapClickedElementToHtmlFormElement from "../util/recording-utils/mapClickedElementToHtmlFormElement";
 
 /**
  * To record each action/event
@@ -81,6 +86,7 @@ export const deleteRecording = async (request?: any) => {
 /**
  * To vote/de-vote the recording
  * @param request
+ * @param type
  * @returns promise
  */
 
@@ -118,4 +124,91 @@ export const profanityCheck = async (request?: any) => {
     headers,
   };
   return REST.apiCal(parameters);
+};
+
+/**
+ * To post click data to REST
+ * @param node HTMLElement
+ * @param text
+ * @returns promise
+ */
+export const postClickData = async (node: HTMLElement, text: string) => {
+  let objectData: any = domJSON.toJSON(node, {serialProperties: true});
+  if (objectData.meta) {
+    objectData.meta = {};
+  } else {
+    objectData.meta = {};
+  }
+
+  //removing the unwanted attributes which were added while processing click objects.
+  delete(objectData.node.addedClickRecord);
+  delete(objectData.node.hasClick);
+
+  console.log(objectData);
+
+  if (inArray(node.nodeName.toLowerCase(), CONFIG.ignoreNodesFromIndexing) !== -1 && CONFIG.customNameForSpecialNodes.hasOwnProperty(node.nodeName.toLowerCase())) {
+    objectData.meta.displayText = CONFIG.customNameForSpecialNodes[node.nodeName.toLowerCase()];
+  }
+
+  if (!objectData.node.outerHTML) {
+    objectData.node.outerHTML = node.outerHTML;
+  }
+
+  objectData.offset = getAbsoluteOffsets(node);
+  objectData.node.nodeInfo = getNodeInfo(node);
+
+  const {enableNodeTypeChangeSelection} = CONFIG;
+
+  if(enableNodeTypeChangeSelection) {
+    objectData.meta.systemDetected = mapClickedElementToHtmlFormElement(node);
+    if (objectData.meta.systemDetected.inputElement !== 'others') {
+      objectData.meta.selectedElement = objectData.meta.systemDetected;
+    }
+  }
+
+  const payload = {
+    domain: window.location.host,
+    urlpath: window.location.pathname,
+    clickednodename: text,
+    html5: 0,
+    clickedpath: "",
+    objectdata: TSON.stringify(objectData),
+  };
+
+  return recordClicks(payload);
+};
+
+/**
+ * * To post click sequence data to REST
+ * @param request
+ * @returns promise
+ */
+export const postRecordSequenceData = async (request: any) => {
+  window.udanSelectedNodes = [];
+  const userclicknodesSet = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
+  const ids = userclicknodesSet.map((item: any) => item.id);
+  const payload = {
+    ...request,
+    domain: window.location.host,
+    isIgnored: 0,
+    isValid: 1,
+    userclicknodelist: ids.join(","),
+    userclicknodesSet,
+  };
+  return recordSequence(payload);
+};
+
+/**
+ * To update click data to REST
+ * @returns  promise
+ * @param request
+ */
+export const putUserClickData = async (request: any) => {
+  const payload = {
+    ...request,
+    clickedname: '["Test"]',
+    clicktype: "sequencerecord",
+    recordid: 1375,
+  };
+  return userClick(payload);
 };

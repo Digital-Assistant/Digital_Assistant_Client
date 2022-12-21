@@ -1,4 +1,4 @@
-import { TRANSLATIONS_EN } from "./locales/en";
+import {TRANSLATIONS_EN} from "./locales/en";
 
 export const RESOURCES = {
   // the translations

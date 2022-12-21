@@ -6,13 +6,10 @@
  */
 
 import React, {useEffect, useState} from "react";
-import {
-  InfoCircleOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
+import {DeleteOutlined, InfoCircleOutlined,} from "@ant-design/icons";
 import _ from "lodash";
-import {setToStore, postRecordSequenceData, getObjData} from "../util";
-import {updateRecordClicks, profanityCheck} from "../services/recordService";
+import {getObjData, setToStore} from "../util";
+import {postRecordSequenceData, profanityCheck, updateRecordClicks} from "../services/recordService";
 import {CONFIG} from "../config";
 import SelectedElement from "./SelectedElement";
 
@@ -36,15 +33,15 @@ export interface MProps {
  */
 
 export const RecordedData = (props: MProps) => {
-  const [name, setName] = React.useState<string>("");
-  const [labels, setLabels] = React.useState<any>([]);
-  const [disableForm, setDisableForm] = React.useState<boolean>(false);
-  const [recordData, setRecordData] = React.useState<any>(props.data || []);
-  const [advBtnShow, setAdvBtnShow] = React.useState<boolean>(false);
+  const [name, setName] = useState<string>("");
+  const [labels, setLabels] = useState<any>([]);
+  const [disableForm, setDisableForm] = useState<boolean>(false);
+  const [recordData, setRecordData] = useState<any>(props.data || []);
+  const [advBtnShow, setAdvBtnShow] = useState<boolean>(false);
   const [tmpPermissionsObj, setTmpPermissionsObj] = useState<any>({});
   const [inputAlert, setInputAlert] = useState<any>({});
   const [inputError, setInputError] = useState<any>({});
-  const [tooltip, setToolTip] = React.useState<string>("");
+  const [tooltip, setToolTip] = useState<string>("");
 
   useEffect(() => {
     setRecordData([...(props.data || [])]);
@@ -123,22 +120,22 @@ export const RecordedData = (props: MProps) => {
     }
   };
 
-  const handlePersonal = (index: number) => (event: any) => {
-    updatePersonalOrSkipPlay("isPersonal", index);
+  const handlePersonal = (index: number) => async () => {
+    await updatePersonalOrSkipPlay("isPersonal", index);
   };
 
-  const handleSkipPlay = (index: number) => (event: any) => {
-    updatePersonalOrSkipPlay("skipDuringPlay", index);
+  const handleSkipPlay = (index: number) => async () => {
+    await updatePersonalOrSkipPlay("skipDuringPlay", index);
   };
 
-  const updatePersonalOrSkipPlay = (key: string, index: number) => {
+  const updatePersonalOrSkipPlay = async (key: string, index: number) => {
     const _objData = getObjData(recordData[index]?.objectdata);
     if (_objData) {
       if (_objData.meta[key] === undefined) _objData.meta[key] = false;
       _objData.meta[key] = !_objData.meta[key];
       recordData[index].objectdata = TSON.stringify(_objData);
       storeRecording(recordData);
-      updateRecordClicks(recordData[index]);
+      await updateRecordClicks(recordData[index]);
     }
   };
 
@@ -159,7 +156,9 @@ export const RecordedData = (props: MProps) => {
    * cancel recording
    */
   const cancelRecording = () => {
-    if (props.recordHandler) props.recordHandler("cancel");
+    if (props.recordHandler) {
+      props.recordHandler("cancel");
+    }
     setToStore([], CONFIG.RECORDING_SEQUENCE, false);
   };
 
@@ -260,8 +259,7 @@ export const RecordedData = (props: MProps) => {
     }
     setTimer(
         setTimeout(async () => {
-          let changedName: any = await checkProfanity(e.target.value);
-          labels[index].label = changedName;
+          labels[index].label = await checkProfanity(e.target.value);
           setLabels([...labels]);
         }, CONFIG.DEBOUNCE_INTERVAL)
     );
@@ -320,6 +318,7 @@ export const RecordedData = (props: MProps) => {
     if (!props.isShown) return;
     else
       return recordData?.map((item: any, index: number) => {
+        let objectData = getObjData(item?.objectdata);
         return (
             <li
                 className="uda-recorded-label-editable completed"
@@ -362,8 +361,9 @@ export const RecordedData = (props: MProps) => {
                                     type="checkbox"
                                     id="UDA-skip-duringPlay"
                                     className="uda-checkbox flex-vcenter uda_exclude"
-                                    checked={getObjData(item?.objectdata)?.meta?.skipDuringPlay}
-                                    onClick={handleSkipPlay(index)}
+                                    value={(objectData.meta.hasOwnProperty('skipDuringPlay') && objectData.meta.skipDuringPlay) ? 1 : 0}
+                                    checked={(objectData.meta.hasOwnProperty('skipDuringPlay') && objectData.meta.skipDuringPlay)}
+                                    onChange={handleSkipPlay(index)}
                                 />
                                 <label className="uda-checkbox-label">Skip during play</label>
                                 <span
@@ -381,10 +381,11 @@ export const RecordedData = (props: MProps) => {
                             type="checkbox"
                             id="isPersonal"
                             className="uda_exclude"
-                            checked={getObjData(item?.objectdata)?.meta?.isPersonal}
-                            onClick={handlePersonal(index)}
+                            value={(objectData.meta.hasOwnProperty('isPersonal') && objectData.meta.isPersonal) ? 1 : 0}
+                            checked={(objectData.meta.hasOwnProperty('isPersonal') && objectData.meta.isPersonal)}
+                            onChange={handlePersonal(index)}
                         />
-                        <label>Personal Information</label>
+                        <label className="uda-checkbox-label">Personal Information</label>
                         <span
                             className="info-icon"
                             title="select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing."
@@ -393,9 +394,9 @@ export const RecordedData = (props: MProps) => {
                       </span>
                       </div>
                     </>
-                    {(props.config.enableTooltip === true && isInputNode(getObjData(item?.objectdata).node)) &&
+                    {(props.config.enableTooltip === true && isInputNode(objectData.node)) &&
                         <>
-                            <div className="uda-recording" style={{textAlign: "center"}}>
+                            <div className="uda-recording uda_exclude" style={{textAlign: "center"}}>
                                 <input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip"
                                        className="uda-form-input uda_exclude" placeholder="Custom Tooltip (Optional)"
                                        style={{width: "68% !important"}} onChange={onChangeTooltip} value={tooltip}/>
@@ -423,7 +424,7 @@ export const RecordedData = (props: MProps) => {
     setAdvBtnShow(!advBtnShow);
   };
 
-  const handlePermissions = (obj: any) => (event: any) => {
+  const handlePermissions = (obj: any) => () => {
     let permissions = tmpPermissionsObj;
     if (permissions[obj.key]) {
       delete permissions[obj.key];
@@ -535,11 +536,11 @@ export const RecordedData = (props: MProps) => {
             <div className="flex-card flex-start" style={{flex: 2}}>
               <button
                   className="uda-record-btn uda_exclude"
-                  onClick={() => cancelRecording()}
+                  onClick={()=>{cancelRecording()}}
                   style={{flex: 1}}
                   disabled={disableForm}
               >
-                <span className="uda_exclude">Cancel and Exit</span>
+                <span className="uda_exclude">{translate('cancelRecording')}</span>
               </button>
             </div>
             <div className="flex-card flex-end" style={{flex: 1}}>
@@ -551,7 +552,7 @@ export const RecordedData = (props: MProps) => {
                   disabled={disableForm}
                   // style={{ float: "right", padding: "5px 20px" }}
               >
-                Submit
+                {translate('submitButton')}
               </button>
             </div>
           </div>

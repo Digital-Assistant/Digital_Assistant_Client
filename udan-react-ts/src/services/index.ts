@@ -6,18 +6,6 @@ export const REST = {
   processArgs,
 };
 
-function checkValidUser() {
-  let userData: any = localStorage.getItem("user");
-  userData = JSON.parse(userData);
-  if (userData && userData.tenantId !== sessionStorage.getItem("tenantId")) {
-    localStorage.clear();
-    window.location.href = "/";
-    return false;
-  } else {
-    return true;
-  }
-}
-
 /**
  * common REST call
  * @options : object (properties needed for REST call)
@@ -92,3 +80,6 @@ function getHTTPHeaders(contentType: string) {
 function processArgs(url: string, val: any) {
   return url?.replace(/#([^#]+)#/g, (_, key) => (val[key] || "") && val[key]);
 }
+export {putUserClickData} from "./recordService";
+export {postRecordSequenceData} from "./recordService";
+export {postClickData} from "./recordService";

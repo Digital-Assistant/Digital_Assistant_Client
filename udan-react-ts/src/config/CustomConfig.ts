@@ -14,6 +14,7 @@ export interface CustomConfigPropTypes {
   enableProfanity: boolean,
   enableNodeTypeSelection: boolean
   enableRecording: boolean,
+  enableOverlay: boolean
 }
 
 // assigning default values to the default configuration
@@ -26,5 +27,6 @@ export const CustomConfig: CustomConfigPropTypes = {
   enablePermissions: false,
   permissions: {},
   enableProfanity: true,
-  enableRecording: true
+  enableRecording: true,
+  enableOverlay: false
 };

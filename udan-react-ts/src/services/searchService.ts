@@ -1,5 +1,6 @@
-import { ENDPOINT } from "../config/endpoints";
-import { REST } from ".";
+import {ENDPOINT} from "../config/endpoints";
+import {REST} from ".";
+import {specialNodes} from "../util/specialNodes";
 
 /**
  * To serve search results
@@ -32,34 +33,11 @@ export const fetchSearchResults = (request?: {
   return REST.apiCal(parameters);
 };
 
-export const fetchSpecialNodes = (request?: any) => {
+export const fetchSpecialNodes = async (request?: any) => {
   const parameters = {
     url: REST.processArgs(ENDPOINT.SPECIAL_NODES, request),
     method: "GET",
   };
-  const resp = {
-    include: {
-      tags: ["a", "button", "input", "textarea", "select", "mat-select"],
-      classes: ["ng-select", "ngb-datepicker"],
-    },
-    exclude: {
-      tags: [
-        "link",
-        "meta",
-        "script",
-        "svg",
-        "style",
-        "path",
-        "circle",
-        "g",
-        "rect",
-        "stop",
-        "defs",
-        "linearGradient",
-      ],
-      classes: ["uda_exclude", "ngx-daterangepicker-material"],
-    },
-  };
   // return REST.apiCal(parameters);
-  return resp;
+  return specialNodes;
 };

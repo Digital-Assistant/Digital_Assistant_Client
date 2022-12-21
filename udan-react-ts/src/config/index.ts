@@ -9,8 +9,8 @@ export const CONFIG = {
   UDADebug: false,
   UDA_CONTAINER_CLASS: "udan-main-panel",
   UDA_CLICK_IGNORE_CLASS: "uda_exclude",
-  UDA_DOMAIN: "https://udantest.nistapp.ai",
-  UDA_API_URL: "https://udantest.nistapp.ai/voiceapi",
+  UDA_DOMAIN: process.env.baseURL,
+  UDA_API_URL: process.env.baseURL + "/voiceapi",
   UDASessionID: (
       Math.random().toString(36).substring(2, 15) +
       Math.random().toString(36).substring(2, 15)
@@ -31,6 +31,7 @@ export const CONFIG = {
   AUTO_PLAY_SLEEP_TIME: 2000,
   JARO_WEIGHT: 0.95,
   JARO_WEIGHT_PERSONAL: 0.90,
+  specialNodeKey: "UDASpecialNodes",
   enableInfiniteScroll: false,
   enableInfiniteScrollPageLength: 10,
   set Environment(value) {
@@ -46,31 +47,37 @@ export const CONFIG = {
     return this.current;
   },
   DEBOUNCE_INTERVAL: 2000,
+  indexInterval: 1000,
   clickObjects: [],
   nodeId: 0,
-  recording: false,
-  htmlIndex : [],
+  isRecording: false,
+  htmlIndex: [],
   invokeTime: 1000,
-  maxStringLength:40,
+  maxStringLength: 40,
   playNextAction: true,
   navigatedToNextPage: {check: false, url: ''},
   ignoreElements: ["script", "h1", "h2", "h3", "link", "noscript", "style"],
   ignoreAttributes: [
-    'translate','draggable','spellcheck','tabindex','clientHeight','clientLeft','clientTop','clientWidth',
-    'offsetHeight','offsetLeft','offsetTop','offsetWidth','scrollHeight','scrollLeft','scrollTop','scrollWidth',
-    'baseURI','isConnected','ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
+    'translate', 'draggable', 'spellcheck', 'tabindex', 'clientHeight', 'clientLeft', 'clientTop', 'clientWidth',
+    'offsetHeight', 'offsetLeft', 'offsetTop', 'offsetWidth', 'scrollHeight', 'scrollLeft', 'scrollTop', 'scrollWidth',
+    'baseURI', 'isConnected', 'ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
     'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
     'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y', 'selectionStart', 'selectionEnd', 'required', 'validationMessage', 'selectionDirection',
-    'naturalWidth', 'naturalHeight', 'complete', '_indexOf', 'value', 'defaultValue', 'min', 'max', 'nodeInfo', 'data-tooltip-id', 'addedclickrecord', 'checked'
+    'naturalWidth', 'naturalHeight', 'complete', '_indexOf', 'value', 'defaultValue', 'min', 'max', 'nodeInfo', 'data-tooltip-id', 'addedclickrecord', 'checked', 'data-tribute',
+    'hasclick', 'addedClickRecord', 'hasClick', 'valueAsNumber'
   ],
   innerTextWeight: 5,
-  ignoreNodesFromIndexing: ['ng-dropdown-panel','ckeditor','fusioncharts','ngb-datepicker','ngx-daterangepicker-material','uda-panel','mat-datepicker-content','ng-select'],
-  ignoreNodesContainingClassNames:['cke_dialog_container','cke_notifications_area','gldp-default','ajs-layer','aui-list','herknl'],
+  ignoreNodesFromIndexing: ['ng-dropdown-panel', 'ckeditor', 'fusioncharts', 'ngb-datepicker', 'ngx-daterangepicker-material', 'uda-panel', 'mat-datepicker-content', 'ng-select'],
+  ignoreNodesContainingClassNames: ['cke_dialog_container', 'cke_notifications_area', 'gldp-default', 'ajs-layer', 'aui-list', 'herknl', 'jstBlock'],
   cancelRecordingDuringRecordingNodes: [],
   addClickToSpecialNodes: ['ng-select', 'ngb-datepicker'],
   ignoreClicksOnSpecialNodes: ['ngx-daterangepicker-material'],
-  customNameForSpecialNodes: {'ngb-datepicker': 'Date selector','mat-datepicker-content': 'Date selector', 'ngx-daterangepicker-material': 'Date Range Selector'},
-  specialInputClickClassNames: ['ghx-dropdown-trigger','aui-list'],
+  customNameForSpecialNodes: {
+    'ngb-datepicker': 'Date selector',
+    'mat-datepicker-content': 'Date selector',
+    'ngx-daterangepicker-material': 'Date Range Selector'
+  },
+  specialInputClickClassNames: ['ghx-dropdown-trigger', 'aui-list'],
   tooltipDisplayedNodes: [],
   // replay variables
   autoplayCompleted: false,
@@ -94,11 +101,10 @@ export const CONFIG = {
     enabled: true,
     provider: "azure",
     config: {
-      key1: "bc015cc4090543d58c3056e8dc98cc9b",
-      key2: "",
-      endPoint:
-          "https://nistapp-content-moderator.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessText/Screen",
-      region: "eastus",
+      key1: process.env.profanityKey,
+      key2: process.env.profanityKey,
+      endPoint: process.env.profanityUrl,
+      region: process.env.profanityRegion,
     },
   },
   multilingual: {
@@ -109,9 +115,9 @@ export const CONFIG = {
     translatedText: "",
     translate: {
       provider: "google",
-      apikey: "",
+      apikey: process.env.googleTranslateApiKey,
       translateTo: "en",
-      apiurl: "https://translation.googleapis.com/language/translate/v2",
+      apiurl: process.env.googleTranslateUrl,
     },
   },
   // BCP list of languages
@@ -241,5 +247,5 @@ export const CONFIG = {
   screenAcceptance: {
     storageName: "uda-user-screen-consent",
     data: {proceed: true},
-  },
+  }
 };

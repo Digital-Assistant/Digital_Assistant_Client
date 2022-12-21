@@ -1,58 +1,10 @@
-import domJSON from "domjson";
 import {CONFIG} from "../config";
-import {
-  recordClicks,
-  recordSequence,
-  userClick,
-} from "../services/recordService";
-import {
-  fetchSpecialNodes
-} from "../services/searchService";
-import {createPopperLite as createPopper} from "@popperjs/core";
 import {jaroWinkler} from "jaro-winkler-typescript";
-import {UDAErrorLogger} from "../config/error-log";
-import {removeFromArray} from "./removeFromArray";
-import mapClickedElementToHtmlFormElement from "./recording-utils/mapClickedElementToHtmlFormElement";
-
-export {indexnode} from "./indexNode";
-
 import TSON from "typescript-json";
-import {getNodeInfo} from "./nodeInfo";
 
+require("./domChanges");
 
-export const UDAClickObjects: any = [];
-export const htmlindex: any = [];
-export const menuitems: any = [];
-export const ignoreNodesFromIndexing: any = [];
-export const tooltipDisplayedNodes: any = [];
-export const ignoreClicksOnSpecialNodes: any = [];
-export const ignoreNodesContainingClassNames: any = [];
-export const cancelRecordingDuringRecordingNodes: any = [];
-export let udanSpecialNodes: any = {
-  include: {
-    tags: ["a", "button", "input", "textarea", "select", "mat-select"],
-    classes: ["ng-select", "ngb-datepicker"],
-  },
-  exclude: {
-    tags: [
-      "link",
-      "meta",
-      "script",
-      "svg",
-      "style",
-      "path",
-      "circle",
-      "g",
-      "rect",
-      "stop",
-      "defs",
-      "linearGradient",
-    ],
-    classes: ["uda_exclude", "ngx-daterangepicker-material"],
-  },
-};
-export const EXCLUDE_ATTRIB = "data-exclude";
-
+declare const udanSpecialNodes;
 
 /**
  * Browser Window Interface Definition
@@ -61,43 +13,9 @@ declare global {
   interface Window {
     onDomChange: any;
     udanSelectedNodes: any;
+    clickedNode: any;
   }
 }
-
-/**
- * Set ignorable classes for Udan con
- */
-export const init = async () => {
-
-  //fetch special nodes for REST service
-  if (!getFromStore("specialNodes", false)) {
-    const _specialNodes = fetchSpecialNodes();
-    setToStore(_specialNodes, "specialNodes", false);
-  }
-
-  const specialNodes = getFromStore("specialNodes", false);
-  if (specialNodes) {
-    udanSpecialNodes = specialNodes;
-  }
-
-
-  const children = getAllChildren(
-      document.querySelector(`.${CONFIG.UDA_CONTAINER_CLASS}`)
-  );
-  for (let i = 0; i < children?.length; i++) {
-    try {
-      if (
-          children[i] &&
-          !udanSpecialNodes?.exclude?.tags?.includes(
-              children[i]?.tagName?.trim()?.toLocaleLowerCase()
-          ) &&
-          children[i].className.indexOf(CONFIG.UDA_CLICK_IGNORE_CLASS) == -1
-      )
-        children[i].className += " " + CONFIG.UDA_CLICK_IGNORE_CLASS;
-    } catch (e) {
-    }
-  }
-};
 
 /**
  *
@@ -152,9 +70,33 @@ export const generateUUID = () => {
  * @param hide
  */
 export const squeezeBody = (hide: boolean) => {
-  const _body = document.body;
-  if (_body) {
-    _body.style.width = hide ? "" : window.innerWidth - 350 + "px";
+  if(global.UDAGlobalConfig.enableOverlay) {
+    let documentBody = document.body;
+    let bodyChildren: any = documentBody.childNodes;
+    if (!hide) {
+      if (bodyChildren.length > 0) {
+        bodyChildren.forEach(function (childNode, childNodeIndex) {
+          if (childNode.classList && childNode.classList.contains("container")) {
+            childNode.classList.remove("container");
+          }
+          if (childNode.nodeType === Node.ELEMENT_NODE && (childNode.id !== 'uda-btn' && childNode.id !== 'uda-html-container') && udanSpecialNodes.exclude.tags.indexOf(childNode.nodeName.toLowerCase()) === -1) {
+            if (childNode.classList && !childNode.classList.contains("uda-original-content")) {
+              childNode.classList.add("uda-original-content");
+            }
+          }
+        });
+      }
+    } else {
+      if (bodyChildren.length > 0) {
+        bodyChildren.forEach(function (childNode, childNodeIndex) {
+          if (childNode.nodeType === Node.ELEMENT_NODE && (childNode.id !== 'uda-btn' && childNode.id !== 'uda-html-container') && udanSpecialNodes.exclude.tags.indexOf(childNode.nodeName.toLowerCase()) === -1) {
+            if (childNode.classList && childNode.classList.contains("uda-original-content")) {
+              childNode.classList.remove("uda-original-content");
+            }
+          }
+        });
+      }
+    }
   }
 };
 
@@ -169,40 +111,13 @@ export const getRowObject = (data: any) => {
     }
     path += row.clickednodename;
   }
-  let sequenceName = "";
+  let sequenceName: string;
   try {
     sequenceName = JSON.parse(data.name)[0];
   } catch (e) {
     sequenceName = data.name.toString();
   }
   return {sequenceName, path};
-};
-
-/**
- * Add events to body elements
- * @param selector
- */
-export const addBodyEvents = async (selector: HTMLElement) => {
-  //exclude content-serving elements from click objects
-  await init();
-  let els: any = document.body.querySelectorAll("*"),
-      len = els?.length,
-      i = 0;
-
-  for (; i < len; i++) {
-    try {
-      /**exclude event attachment for selective elements  */
-      if (
-          els[i] &&
-          !els[i]?.getAttribute(EXCLUDE_ATTRIB) &&
-          isClickable(els[i])
-      ) {
-        addClickToNode(els[i]);
-      }
-    } catch (e) {
-
-    }
-  }
 };
 
 /**
@@ -244,380 +159,6 @@ export const logInfo = (info: any) => {
   console.log(info);
 };
 
-//check css classnames for ignoring
-export const checkCssClassNames = (node: any) => {
-  let cssClassExist = false;
-  if (ignoreNodesContainingClassNames?.length > 0) {
-    for (const className of ignoreNodesContainingClassNames) {
-      if (node.classList.contains(className)) {
-        cssClassExist = true;
-      }
-    }
-  }
-  return cssClassExist;
-};
-
-/**
- * Constructs selectors based on attributes(for now)
- * @param originalElement HTML Element
- * @returns
- */
-export const getLookUpSelector = (originalElement: HTMLElement) => {
-  let selector = "";
-  for (let [key, value] of Object.entries(originalElement?.attributes)) {
-    if (key == "href") continue;
-    else selector += `[${key}="${value}"]`;
-  }
-  return selector;
-};
-
-/**
- * Removes tooltip element
- * Void()
- */
-export const removeToolTip = () => {
-  const toolTipExists = document.getElementById("uda-tooltip");
-  if (toolTipExists) {
-    document.body.removeChild(toolTipExists);
-  }
-};
-
-/**
- * Constructs tooltip element & adds to body (if not exist)
- * @returns HTML Element
- */
-export const getToolTipElement = (message = 'Please input the value and then click on', showButtons = true) => {
-  let toolTipContentSection = message
-      + '<br/>';
-  if (showButtons) {
-    toolTipContentSection +=
-        '<button class="uda-tutorial-btn" style="margin-top:10px; margin-right: 5px;" type="button" uda-added="true" id="uda-autoplay-continue">Continue</button>' +
-        '<button class="uda-tutorial-exit-btn" style="margin-top:10px;" type="button" uda-added="true" id="uda-autoplay-exit">Exit</button>';
-  }
-
-  let toolTipContentElement = document.createElement("div");
-  toolTipContentElement.innerHTML = toolTipContentSection.trim();
-  toolTipContentElement.classList.add("uda-tooltip-text-content");
-
-  let tooltipDivElement = document.createElement("div");
-  tooltipDivElement.id = "uda-tooltip";
-  tooltipDivElement.classList.add("uda-tooltip");
-  tooltipDivElement.innerHTML =
-      '<div id="uda-arrow" class="uda-arrow" data-popper-arrow></div>';
-  tooltipDivElement.prepend(toolTipContentElement);
-
-  const toolTipExists = document.getElementById("uda-tooltip");
-  if (toolTipExists) {
-    document.body.removeChild(toolTipExists);
-  }
-
-  document.body.appendChild(tooltipDivElement);
-  return tooltipDivElement;
-};
-
-/**
- * adds tooltip to target elements
- * @param invokingNode
- * @param index
- */
-export const addToolTip = (invokingNode: any, index: any) => {
-  const tooltipDivElement = getToolTipElement();
-  try {
-    const originalNode = JSON.parse(invokingNode);
-
-    let originalElement = originalNode?.node;
-
-    document
-        .getElementById("uda-autoplay-continue")
-        ?.addEventListener("click", (e: Event) => {
-          const elementsFromStore = getFromStore("selectedRecordedItem", false);
-          addToolTip(
-              elementsFromStore?.userclicknodesSet[index + 1]?.objectdata,
-              index + 1
-          );
-        });
-
-    let selector = getLookUpSelector(originalElement);
-
-    originalElement = document.querySelector(selector);
-
-    if (originalElement) {
-      let toolTipPositionClass: any = getTooltipPositionClass(
-          originalElement,
-          tooltipDivElement
-      );
-      createPopper(originalElement, tooltipDivElement, {
-        placement: toolTipPositionClass,
-      });
-    }
-  } catch (e) {
-
-  }
-};
-
-export const playNext = () => {
-};
-/**
- * tooltip placement calculation
- */
-
-/**
- * To get screen/window size
- * @returns object
- */
-export const getScreenSize = () => {
-  let page = {height: 0, width: 0};
-  let screen = {height: 0, width: 0};
-  let body = document.body,
-      html = document.documentElement;
-
-  const docEl = document.documentElement;
-  const scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
-  const scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
-
-  let resolution = {height: 0, width: 0};
-
-  page.height = Math.max(
-      body.scrollHeight,
-      body.offsetHeight,
-      html.clientHeight,
-      html.scrollHeight,
-      html.offsetHeight
-  );
-  page.width = Math.max(
-      body.scrollWidth,
-      body.offsetWidth,
-      html.clientWidth,
-      html.scrollWidth,
-      html.offsetWidth
-  );
-  if (window.innerWidth !== undefined) {
-    screen.width = window.innerWidth * 0.75;
-    screen.height = window.innerHeight;
-  } else {
-    const D = document.documentElement;
-    screen.width = D.clientWidth;
-    screen.height = D.clientHeight * 0.75;
-  }
-  resolution.height = window.screen.height;
-  resolution.width = window.screen.width;
-  let windowProperties = {
-    page: page,
-    screen: screen,
-    scrollInfo: {scrollTop: scrollTop, scrollLeft: scrollLeft},
-    resolution,
-  };
-  return windowProperties;
-};
-
-/**
- * //get node position on the page
- * @returns object
- */
-
-export const getNodeCoordinates = (element: HTMLElement, windowSize: any) => {
-  if (!element) return;
-  const x = element?.getBoundingClientRect();
-  let result = {
-    top: x.top + windowSize.scrollInfo.scrollTop,
-    width: x.width,
-    height: x.height,
-    left: x.left + windowSize.scrollInfo.scrollLeft,
-    actualPos: x,
-  };
-  return result;
-};
-
-/**
- * To figure out the tooltip position for target element
- * @returns object
- */
-export const getTooltipPositionClass = (
-    targetElement: HTMLElement,
-    tooltipElement: HTMLElement
-) => {
-  const availablePositions = ["right", "top", "left", "bottom"].slice();
-  const screenSize = getScreenSize();
-  const tooltipPos = getNodeCoordinates(tooltipElement, screenSize);
-  const targetElementRect = targetElement?.getBoundingClientRect();
-
-  let finalCssClass = "right";
-
-  // Check for space to the right
-  if (
-      tooltipPos && targetElementRect.right + tooltipPos.width >
-      screenSize.screen.width
-  ) {
-    removeFromArray(availablePositions, "right");
-  }
-
-  // Check for space above
-  if (tooltipPos && targetElementRect.top - tooltipPos.height < 0) {
-    removeFromArray(availablePositions, "top");
-  }
-
-  // Check for space to the left
-  if (tooltipPos && targetElementRect.left - tooltipPos.width < 0) {
-    removeFromArray(availablePositions, "left");
-  }
-
-  // Check for space below
-  if (
-      tooltipPos && targetElementRect.bottom + tooltipPos.height >
-      screenSize.page.height
-  ) {
-    removeFromArray(availablePositions, "bottom");
-  }
-
-  if (availablePositions?.length > 0) {
-    finalCssClass = availablePositions[0];
-  }
-
-  return finalCssClass;
-};
-
-export const addClickToNode = (node: any) => {
-  try {
-    if (
-        node.hasOwnProperty("addedclickrecord") &&
-        node.addedclickrecord === true
-    ) {
-      return;
-    }
-
-    const nodeName = node.nodeName.toLowerCase();
-
-    if (node && node.onclick) {
-      node.setAttribute("data-onclick", node.getAttribute("onclick"));
-      node.setAttribute("onclick", "");
-    }
-
-
-    switch (nodeName) {
-      case "a":
-        addEvent(node, "click", function (event: any) {
-          recordUserClick(event.target, false, false, event);
-        });
-        break;
-      case "select":
-        addEvent(node, "focus", function (event: any) {
-          recordUserClick(event.target, false, false, event);
-        });
-        break;
-      case "input":
-        if (!node.hasAttribute("type")) {
-          addEvent(node, "click", function (event: any) {
-            recordUserClick(event.target, false, false, event);
-          });
-          return;
-        }
-        const inputType = node.getAttribute("type").toLowerCase();
-        switch (inputType) {
-          case "email":
-          case "text":
-          case "button":
-          case "checkbox":
-          case "color":
-          case "date":
-          case "datetime-local":
-          case "file":
-          case "hidden":
-          case "image":
-          case "month":
-          case "number":
-          case "password":
-          case "radio":
-          case "range":
-          case "reset":
-          case "search":
-          case "submit":
-          case "tel":
-          case "text":
-          case "time":
-          case "url":
-          case "textarea":
-          case "week":
-            addEvent(node, "click", function (event: any) {
-              recordUserClick(node, false, false, event);
-            });
-            break;
-          default:
-            addEvent(node, "click", function (event: any) {
-              recordUserClick(node, false, false, event);
-            });
-            break;
-        }
-        break;
-      case "mat-select":
-      case "textarea":
-      case "button":
-      case "tr":
-        addEvent(node, "click", function (event: any) {
-          recordUserClick(event.target, false, false, event);
-        });
-        break;
-      default:
-        addEvent(node, "click", function (event: any) {
-          if (isAllowedMiscElement(event.target)) {
-            recordUserClick(event.target, false, false, event);
-          }
-        });
-        break;
-    }
-    node.addedclickrecord = true;
-    CONFIG.clickObjects.push({nodeName: node.nodeName, node});
-    return node;
-  } catch (e) {
-    UDAErrorLogger.error(
-        "Unable to add click to node " + node.outerHTML + " " + e
-    );
-  }
-};
-
-
-export const isAllowedMiscElement = (element: HTMLElement) => {
-  if (!element) return false;
-
-  let isAllowedElement: boolean =
-      window.getComputedStyle(element).cursor == "pointer";
-  let parentEl: any = element;
-  /**traversing 3 level parents for content editable property */
-  //wrong logic needs to improve
-  for (let i = 0; i <= 3; i++) {
-    if (element.getAttribute("contenteditable")) {
-      isAllowedElement = true;
-      break;
-    }
-    if (parentEl.parentNode) {
-      parentEl = parentEl.parentNode;
-    }
-    if (parentEl.getAttribute("contenteditable")) {
-      isAllowedElement = true;
-      break;
-    }
-  }
-
-
-  //check if special classes to be included in recordable elements
-  if (
-      hasClass(element, udanSpecialNodes.include.classes) ||
-      udanSpecialNodes?.include?.tags?.includes(element.tagName.toLowerCase())
-  ) {
-    isAllowedElement = true;
-  }
-
-  //check if special classes to be excluded from recordable elements
-  if (
-      udanSpecialNodes?.exclude?.tags?.includes(
-          element?.tagName?.trim()?.toLocaleLowerCase()
-      ) ||
-      hasClass(element, udanSpecialNodes.exclude.classes)
-  ) {
-    isAllowedElement = false;
-  }
-
-  return isAllowedElement;
-};
 
 /**
  * To delay Hyperlink click navitaion
@@ -627,97 +168,6 @@ export const delayLink = (node: HTMLElement) => {
   const _href = node.getAttribute("href");
   if (_href) {
     node.setAttribute("data-href", _href);
-  }
-};
-
-/**
- *
- * @param node
- * @param fromDocument
- * @param selectChange
- * @param event
- * @returns
- */
-export const recordUserClick = async (
-    node: HTMLElement,
-    fromDocument: boolean = false,
-    selectChange: boolean = false,
-    event: any
-) => {
-
-  const {ignoreNodesFromIndexing, customNameForSpecialNodes, enableNodeTypeChangeSelection} = CONFIG;
-
-  if (!node) return false;
-
-  event.preventDefault();
-  event.stopPropagation();
-
-  if (
-      !node.isSameNode(event.target) || clickableElementExists(event.target) ||
-      !isClickable(event.target)
-  ) {
-    return;
-  }
-
-  // node = event.target;
-  if (!window.udanSelectedNodes) window.udanSelectedNodes = [];
-  window.udanSelectedNodes.push(node);
-
-  const isRecording =
-      getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true" ? true : false;
-
-
-  const parentAnchorElement = parentUpTo(node, "a");
-
-  if (!isRecording) {
-    if (parentAnchorElement) {
-      try {
-        window.location.href = parentAnchorElement?.getAttribute("href") || "/";
-      } catch (e) {
-      }
-      return true;
-    } else {
-      return;
-    }
-  }
-
-  const _text = getClickedInputLabels(node);
-
-  if (!_text || _text?.length > 100 || !_text?.trim()?.length) return;
-
-
-  const resp = await postClickData(node, _text);
-  if (resp) {
-    const activeRecordingData: any = getFromStore(
-        CONFIG.RECORDING_SEQUENCE,
-        false
-    );
-    if (activeRecordingData) {
-      activeRecordingData.push(resp);
-      setToStore(activeRecordingData, CONFIG.RECORDING_SEQUENCE, false);
-    } else {
-      setToStore([resp], CONFIG.RECORDING_SEQUENCE, false);
-    }
-  } else {
-    UDAErrorLogger.error("Unable save record click " + node.outerHTML);
-  }
-
-  if (
-      parentAnchorElement && node.getAttribute("data-onclick")
-  ) {
-    parentAnchorElement?.setAttribute(
-        "onclick",
-        parentAnchorElement?.getAttribute("data-onclick")
-    );
-    parentAnchorElement?.removeAttribute("data-onclick");
-    parentAnchorElement.dispatchEvent(new Event("click"));
-  } else if (
-      parentAnchorElement && node.getAttribute("href")
-  ) {
-    try {
-      window.location.href = parentAnchorElement?.getAttribute("href") || "";
-    } catch (e) {
-    }
   }
 };
 
@@ -747,88 +197,6 @@ export const parentUpTo = (el: any, tagName: string) => {
   // return undefined
   return null;
 }
-
-/**
- * To post click data to REST
- * @param node HTMLElement
- * @returns promise
- */
-export const postClickData = async (node: HTMLElement, text: string) => {
-  let objectData: any = domJSON.toJSON(node, {serialProperties: true});
-  if (objectData.meta) {
-    objectData.meta = {};
-  } else {
-    objectData.meta = {};
-  }
-
-  console.log(node);
-
-  if (inArray(node.nodeName.toLowerCase(), CONFIG.ignoreNodesFromIndexing) !== -1 && CONFIG.customNameForSpecialNodes.hasOwnProperty(node.nodeName.toLowerCase())) {
-    objectData.meta.displayText = CONFIG.customNameForSpecialNodes[node.nodeName.toLowerCase()];
-  }
-
-  if (!objectData.node.outerHTML) {
-    objectData.node.outerHTML = node.outerHTML;
-  }
-
-  objectData.offset = getAbsoluteOffsets(node);
-  objectData.node.nodeInfo = getNodeInfo(node);
-
-  const {enableNodeTypeChangeSelection} = CONFIG;
-
-  if(enableNodeTypeChangeSelection) {
-    objectData.meta.systemDetected = mapClickedElementToHtmlFormElement(node);
-    if (objectData.meta.systemDetected.inputElement !== 'others') {
-      objectData.meta.selectedElement = objectData.meta.systemDetected;
-    }
-  }
- 
-  const payload = {
-    domain: window.location.host,
-    urlpath: window.location.pathname,
-    clickednodename: text,
-    html5: 0,
-    clickedpath: "",
-    objectdata: TSON.stringify(objectData),
-  };
-
-  return recordClicks(payload);
-};
-
-/**
- * * To post click sequence data to REST
- * @param request
- * @returns promise
- */
-export const postRecordSequenceData = async (request: any) => {
-  window.udanSelectedNodes = [];
-  const userclicknodesSet = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
-  const ids = userclicknodesSet.map((item: any) => item.id);
-  const payload = {
-    ...request,
-    domain: window.location.host,
-    isIgnored: 0,
-    isValid: 1,
-    userclicknodelist: ids.join(","),
-    userclicknodesSet,
-  };
-  return recordSequence(payload);
-};
-
-/**
- * To update click data to REST
- * @param node HTMLElement
- * @returns  promise
- */
-export const putUserClickData = async (request: any) => {
-  const payload = {
-    ...request,
-    clickedname: '["Test"]',
-    clicktype: "sequencerecord",
-    recordid: 1375,
-  };
-  return userClick(payload);
-};
 
 /**
  * compares current playable node from storage based on status "completed"
@@ -917,7 +285,7 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
 
     if (getchildlabels && node.childNodes.length > 0) {
       let childNodes = node.childNodes;
-      childNodes?.forEach(function (childNode: any, key: any) {
+      childNodes?.forEach(function (childNode: any) {
         if (
             childNode.nodeName.toLowerCase() !== "script" &&
             childNode.nodeName.toLowerCase() !== "select" &&
@@ -1047,96 +415,6 @@ export const getLabelsForInputElement = (element: any) => {
   return labels?.trim();
 };
 
-//getting input label for the clicked node
-export const getClickedInputLabels = (node: HTMLElement, fromDocument = false, selectchange = false) => {
-  if (!node) {
-    return null;
-  }
-  let inputLabels: any = "";
-  let nodeName = node.nodeName.toLowerCase();
-  let textLabels: any = [];
-
-  try {
-    inputLabels = getLabelsForInputElement(node);
-    if (inputLabels) return inputLabels;
-  } catch (e) {
-  }
-  switch (nodeName) {
-    case "select":
-      if (selectchange) {
-        inputLabels = getSelectedTextFromSelectBox(node);
-      } else {
-        textLabels = getNodeLabels(node, [], 1, true, false, true);
-        if (textLabels.length > 0) {
-          let labels = [];
-          for (let j = 0; j < textLabels.length; j++) {
-            labels.push(textLabels[j].text);
-          }
-          inputLabels = labels.toString();
-        }
-      }
-      break;
-    case "input":
-      if (!node.hasAttribute("type")) {
-        textLabels = getNodeLabels(node, [], 1, true, true, true);
-        if (textLabels.length > 0) {
-          let labels = [];
-          for (let j = 0; j < textLabels.length; j++) {
-            labels.push(textLabels[j].text);
-          }
-          inputLabels = labels.toString();
-        }
-      } else {
-        switch (node?.getAttribute("type")?.toLowerCase()) {
-          default:
-            textLabels = getNodeLabels(node, [], 1, true, true, true);
-            if (textLabels.length > 0) {
-              let labels = [];
-              for (let j = 0; j < textLabels.length; j++) {
-                labels.push(textLabels[j].text);
-              }
-              inputLabels = labels.toString();
-            }
-        }
-        break;
-      }
-      break;
-    case "textarea":
-      textLabels = getNodeLabels(node, [], 1, true, true, true);
-      if (textLabels.length > 0) {
-        let labels = [];
-        for (let j = 0; j < textLabels.length; j++) {
-          labels.push(textLabels[j].text);
-        }
-        inputLabels = labels.toString();
-      }
-      break;
-    case "img":
-      textLabels = getNodeLabels(node, [], 1, true, false, true);
-      if (textLabels.length > 0) {
-        let labels = [];
-        for (let j = 0; j < textLabels.length; j++) {
-          labels.push(textLabels[j].text);
-        }
-        inputLabels = labels.toString();
-      }
-      break;
-    default:
-      if (!node?.children?.length && node?.innerText?.trim()?.length > 0) {
-        return node?.innerText;
-      }
-      textLabels = getNodeLabels(node, [], 1, false, true, true);
-      if (textLabels.length > 0) {
-        let labels = [];
-        for (let j = 0; j < textLabels.length; j++) {
-          labels.push(textLabels[j].text);
-        }
-        inputLabels = labels.toString();
-      }
-  }
-  return inputLabels;
-}
-
 
 /**
  * To get all the children of a given parent
@@ -1188,15 +466,6 @@ export const clickableElementExists = (compareNode: HTMLElement) => {
     if (element.isSameNode(compareNode)) existFlag = true;
   });
   return existFlag;
-}
-
-/**
- * To findout out a given element is clickable or not!
- * @param HTMLElement
- * @returns boolean
- */
-export const isClickable = (element: HTMLElement) => {
-  return isAllowedMiscElement(element);
 }
 
 /**
@@ -1370,15 +639,6 @@ export const compareNodes = (
 };
 
 /**
- * sleep javascript execution time
- * @param ms
- */
-export const sleep = (ms) => {
-  const end = Date.now() + ms;
-  while (Date.now() < end) continue;
-};
-
-/**
  * to get all clickable elements
  * @returns HTMLElements collection
  */
@@ -1421,11 +681,9 @@ export const getAllClickableElements = () => {
       );
 
   // Only keep inner clickable items
-  const clickableItems = items.filter(
+  return items.filter(
       (x) => !items.some((y) => x.element.contains(y.element) && !(x == y))
   );
-
-  return clickableItems;
 }
 
 
@@ -1447,132 +705,4 @@ export const getAbsoluteOffsets = (element: HTMLElement) => {
 
   return cords;
 }
-
-
-/**
- * self calling function to detech dom changes
- */
-(function (window) {
-  let last = +new Date();
-  let delay = 100; // default delay
-
-  // Manage event queue
-  let stack: any = [];
-
-  function callback() {
-    let now = +new Date();
-    if (now - last > delay) {
-      for (let i = 0; i < stack.length; i++) {
-        stack[i]();
-      }
-      last = now;
-    }
-  }
-
-  // Public interface
-  const onDomChange = (fn: any, newdelay: any) => {
-    if (newdelay) delay = newdelay;
-    stack.push(fn);
-  };
-
-  // Naive approach for compatibility
-  function naive() {
-    let last: any = document.getElementsByTagName("*");
-    let lastLen = last.length;
-    setTimeout(function check() {
-      // get current state of the document
-      let current = document.getElementsByTagName("*");
-      let len = current.length;
-
-      // if the length is different
-      // it's fairly obvious
-      if (len != lastLen) {
-        // just make sure the loop finishes early
-        last = [];
-      }
-
-      // go check every element in order
-      for (let i = 0; i < len; i++) {
-        if (current[i] !== last[i]) {
-          callback();
-          last = current;
-          lastLen = len;
-          break;
-        }
-      }
-
-      // over, and over, and over again
-      setTimeout(check, delay);
-    }, delay);
-  }
-
-  //
-  //  Check for mutation events support
-  //
-  let support: any = {};
-
-  let el = document.documentElement;
-  let remain = 3;
-
-  // callback for the tests
-  function decide() {
-    if (support.DOMNodeInserted) {
-      window.addEventListener(
-          "DOMContentLoaded",
-          function () {
-            if (support.DOMSubtreeModified) {
-              // for FF 3+, Chrome
-              el.addEventListener("DOMSubtreeModified", callback, false);
-            } else {
-              // for FF 2, Safari, Opera 9.6+
-              el.addEventListener("DOMNodeInserted", callback, false);
-              el.addEventListener("DOMNodeRemoved", callback, false);
-            }
-          },
-          false
-      );
-    } else {
-      // fallback
-      naive();
-    }
-  }
-
-  // checks a particular event
-  function test(event: any) {
-    el.addEventListener(
-        event,
-        function fn() {
-          support[event] = true;
-          el.removeEventListener(event, fn, false);
-          if (--remain === 0) decide();
-        },
-        false
-    );
-  }
-
-  // attach test events
-  // if (window.addEventListener) {
-  test("DOMSubtreeModified");
-  test("DOMNodeInserted");
-  test("DOMNodeRemoved");
-  // } else {
-  decide();
-  // }
-
-  // do the dummy test
-  let dummy = document.createElement("div");
-  el.appendChild(dummy);
-  el.removeChild(dummy);
-
-  // expose
-  window.onDomChange = onDomChange;
-})(window);
-
-/**
- * To listen to dom changes
- */
-
-window.onDomChange(function () {
-  addBodyEvents(document.body);
-});
 

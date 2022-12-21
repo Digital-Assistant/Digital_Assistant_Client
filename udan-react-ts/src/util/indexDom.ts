@@ -1,153 +1,92 @@
 // indexing functionality for the entire dom
 import {CONFIG} from "../config";
-import {
-  addClickToNode,
-  addToolTip, cancelRecordingDuringRecordingNodes, checkCssClassNames,
-  errorLog,
-  ignoreClicksOnSpecialNodes,
-  ignoreNodesFromIndexing,
-  inArray, logInfo,
-  tooltipDisplayedNodes,
-  indexnode
-} from "./index";
+import {UDAConsoleLogger, UDAErrorLogger} from "../config/error-log";
+import {inArray} from "./index";
+import {translate} from "./translation";
+import {addClickToNode} from "./addClickToNode";
+import {addToolTip} from "./addToolTip";
+import {checkCssClassNames} from "./checkCssClassNames";
+import {indexNode} from "./indexNode";
+import {initSpecialNodes} from "./initSpecialNodes";
 
-export const indexDom = (
-    node: any,
-    ret = false,
-    parentnode = "",
-    textlabel = "",
-    hasparentnodeclick = false,
-    parentclicknode = null
-) => {
+export const indexDom = async (node: any, ret: boolean = false, parentNode: any = "", textLabel: string = "", hasParentNodeClick: boolean = false, parentClickNode: any = null) => {
+  await initSpecialNodes();
   switch (node.nodeType) {
     case Node.ELEMENT_NODE:
-      if (!ret && parentnode !== "") {
+      if (!ret && parentNode !== "") {
         try {
-          node = indexnode(node, parentnode, hasparentnodeclick, false);
+          node = indexNode(node, parentNode, hasParentNodeClick, false);
         } catch (e) {
-          errorLog(
-              "Unable to index node " + node.nodeName + " got exception " + e
-          );
+          UDAErrorLogger.error("Unable to index node " + node.nodeName + " got exception " + e);
           return node;
         }
       }
 
-
-      node.haschildclick = false;
+      node.hasChildClick = false;
 
       // Checking for ignore nodes during indexing
-      if (
-          inArray(node.nodeName.toLowerCase(), ignoreNodesFromIndexing) !== -1
-      ) {
-        if (
-            node.nodeName.toLowerCase() === "ckeditor" &&
-            node.childNodes?.length > 2 &&
-            CONFIG.recording
-        ) {
-          for (let checknode of tooltipDisplayedNodes) {
-            if (node?.isSameNode(checknode)) {
-              // addToolTip = false;
+      if (inArray(node.nodeName.toLowerCase(), CONFIG.ignoreNodesFromIndexing) !== -1) {
+        let addToolTipToNode = true;
+        if (node.nodeName.toLowerCase() === "ckeditor" && node.childNodes?.length > 2 && CONFIG.isRecording) {
+          for (let checkNode of CONFIG.tooltipDisplayedNodes) {
+            if (node?.isSameNode(checkNode)) {
+              // addToolTipToNode = false;
             }
           }
-          if (addToolTip) {
-            tooltipDisplayedNodes.push(node);
-            addToolTip(node, 0);
+          if (addToolTipToNode) {
+            CONFIG.tooltipDisplayedNodes.push(node);
+            addToolTip(node, node, false, false, false, false, false, translate('textEditorHelpText'), false);
           }
-        } else if (
-            !node.hasclick &&
-            inArray(
-                node.nodeName.toLowerCase(),
-                CONFIG.addClickToSpecialNodes
-            ) !== -1 &&
-            inArray(node.nodeName.toLowerCase(), ignoreClicksOnSpecialNodes) ===
-            -1
-        ) {
-          logInfo(
-              "Child nodes ignored for node and added click to: " + node.nodeName
-          );
+        } else if (!node.hasClick && inArray(node.nodeName.toLowerCase(), CONFIG.addClickToSpecialNodes) !== -1 && inArray(node.nodeName.toLowerCase(), CONFIG.ignoreClicksOnSpecialNodes) === -1) {
+          UDAConsoleLogger.info("Child nodes ignored for node and added click to: " + node.nodeName);
           addClickToNode(node);
-        } else if (
-            node &&
-            cancelRecordingDuringRecordingNodes.indexOf(
-                node?.nodeName?.toLowerCase()
-            ) !== -1
-        ) {
+        } else if (node && CONFIG.cancelRecordingDuringRecordingNodes.indexOf(node?.nodeName?.toLowerCase()) !== -1) {
           // addClickToNode(node);
         } else {
-          logInfo("Child nodes ignored for node: " + node.nodeName);
+          UDAConsoleLogger.info("Child nodes ignored for node: " + node.nodeName);
         }
-      } else if (
-          node.classList &&
-          node.classList.contains("select2-container--open") &&
-          !node.classList.contains("select2-container--focus")
-      ) {
+      } else if (node.classList && node.classList.contains("select2-container--open") && !node.classList.contains("select2-container--focus")) {
         //	do nothing as we are not going to deal with special classes
-        logInfo("unwanted indexing prevention");
-      } else if (
-          node.nodeName.toLowerCase() === "div" &&
-          (node.hasAttribute("uib-datepicker-popup-wrap") ||
-              (node.id && node.id === "recognize_modal"))
-      ) {
+        UDAConsoleLogger.info("unwanted indexing prevention");
+      } else if (node.nodeName.toLowerCase() === "div" && (node.hasAttribute("uib-datepicker-popup-wrap") || (node.id && node.id === "recognize_modal"))) {
+        UDAConsoleLogger.info("date picker in javascript");
+      } else if (node.nodeName.toLowerCase() === "span" && node.classList.contains("radio") && node.classList.contains("replacement")) {
         // fix for not indexing datepicker popup and nominate popup
-        logInfo("date picker in javascript");
-      } else if (
-          node.nodeName.toLowerCase() === "span" &&
-          node.classList.contains("radio") &&
-          node.classList.contains("replacement")
-      ) {
         addClickToNode(node);
       } else if (checkCssClassNames(node)) {
-        logInfo({cssIgnoredNode: node});
+        UDAConsoleLogger.info({cssIgnoredNode: node});
         // addClickToNode(node);
       } else if (node.hasChildNodes()) {
-        let childnodes = node.childNodes;
-        let hasparentclick = false;
-        if (node.hasOwnProperty("hasclick") || hasparentnodeclick) {
-          hasparentclick = true;
-          if (parentclicknode === "") {
-            parentclicknode = node;
+        let childNodes = node.childNodes;
+        let hasParentClick = false;
+        if (node.hasOwnProperty("hasClick") || hasParentNodeClick) {
+          hasParentClick = true;
+          if (parentClickNode === "") {
+            parentClickNode = node;
           }
         }
 
-        if (childnodes?.length > 0) {
-          for (let i = 0; i < childnodes?.length; i++) {
-            let childnode = childnodes[i];
-            CONFIG.nodeId++;
-            if (
-                CONFIG.ignoreElements.indexOf(
-                    childnode.nodeName.toLowerCase()
-                ) === -1
-            ) {
+        if (childNodes?.length > 0) {
+          for (let i = 0; i < childNodes?.length; i++) {
+            let childNode = childNodes[i];
+            if (CONFIG.ignoreElements.indexOf(childNode.nodeName.toLowerCase()) === -1) {
               if (ret) {
-                if (textlabel === "") {
-                  textlabel = indexDom(childnode, ret, node, textlabel);
+                if (textLabel === "") {
+                  textLabel = await indexDom(childNode, ret, node, textLabel);
                 } else {
-                  textlabel += " " + indexDom(childnode, ret, node, textlabel);
+                  textLabel += " " + await indexDom(childNode, ret, node, textLabel);
                 }
               } else {
                 try {
-                  node.childNodes[i] = indexDom(
-                      childnode,
-                      ret,
-                      node,
-                      "",
-                      hasparentclick,
-                      parentclicknode
-                  );
+                  node.childNodes[i] = await indexDom(childNode, ret, node, "", hasParentClick, parentClickNode);
                 } catch (e) {
+
                 }
-                if (
-                    node.childNodes[i].hasOwnProperty("hasclick") &&
-                    node.childNodes[i].hasclick
-                ) {
-                  node.haschildclick = true;
+                if (node.childNodes[i].hasOwnProperty("hasClick") && node.childNodes[i].hasClick) {
+                  node.hasChildClick = true;
                 }
-                if (
-                    hasparentclick &&
-                    node.childNodes[i].hasOwnProperty("haschildclick") &&
-                    node.childNodes[i].haschildclick
-                ) {
-                  node.haschildclick = true;
+                if (hasParentClick && node.childNodes[i].hasOwnProperty("hasChildClick") && node.childNodes[i].hasChildClick) {
+                  node.hasChildClick = true;
                 }
               }
             }
@@ -157,30 +96,21 @@ export const indexDom = (
 
       // add click to node to send what user has clicked.
       // known scenario that node has parent click
-      if (
-          node.hasOwnProperty("hasclick") &&
-          node.hasclick &&
-          (node.nodeName.toLowerCase() === "select" || !node.haschildclick)
-      ) {
+      if (node.hasOwnProperty("hasClick") && node.hasClick && (node.nodeName.toLowerCase() === "select" || !node.hasChildClick)) {
         node = addClickToNode(node);
-      } else if (
-          node.hasOwnProperty("hasclick") &&
-          node.hasclick &&
-          node.haschildclick
-      ) {
+      } else if (node.hasOwnProperty("hasClick") && node.hasClick && node.hasChildClick) {
         node = addClickToNode(node);
       }
-
       break;
     case Node.TEXT_NODE:
       if (node.nodeValue !== "") {
-        textlabel = node.nodeValue;
+        textLabel = node.nodeValue;
       }
       break;
   }
 
-  if (ret && textlabel !== "") {
-    return textlabel;
+  if (ret && textLabel !== "") {
+    return textLabel;
   } else if (!ret) {
     return node;
   }
