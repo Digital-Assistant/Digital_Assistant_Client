@@ -17,7 +17,6 @@ import {
   squeezeBody,
   setToStore,
   getFromStore,
-
 } from "./util";
 import {CONFIG} from "./config";
 import UdanMain from "./components/UdanMain";
