@@ -1,6 +1,6 @@
 import {UDAErrorLogger} from "../config/error-log";
-import {addEvent} from "./index";
 import {recordUserClick} from "./recordUserClick";
+import {addEvent} from "./addEvent";
 
 export const addClickToNode = (node: any) => {
   try {
@@ -16,16 +16,16 @@ export const addClickToNode = (node: any) => {
     let clickableNode = node;
     let recordNode = node;
 
-    //Todo add the record click for parent element and ignore the children
-    /*const parentNode = node.closest(".jstBlock");
-
-    if(parentNode){
-      console.log(parentNode);
-      // recordNode = parentNode;
-      // parentNode.addedClickRecord = true;
-    }*/
-
     const nodeName = clickableNode.nodeName.toLowerCase();
+
+    // fix for select2 library
+    if(node.classList && node.classList.contains('select2-selection')){
+      addEvent(node, 'focus', function(event: any){
+        recordUserClick(recordNode, false, false, event);
+      });
+      node.addedClickRecord = true;
+      return ;
+    }
 
     switch (nodeName) {
       case "a":
@@ -50,7 +50,6 @@ export const addClickToNode = (node: any) => {
           case "email":
           case "text":
           case "button":
-          case "checkbox":
           case "color":
           case "date":
           case "datetime-local":
@@ -60,7 +59,6 @@ export const addClickToNode = (node: any) => {
           case "month":
           case "number":
           case "password":
-          case "radio":
           case "range":
           case "reset":
           case "search":
@@ -71,6 +69,12 @@ export const addClickToNode = (node: any) => {
           case "textarea":
           case "week":
             addEvent(clickableNode, "click", function (event: any) {
+              recordUserClick(recordNode, false, false, event);
+            });
+            break;
+          case "checkbox":
+          case "radio":
+            addEvent(clickableNode, "change", function (event: any) {
               recordUserClick(recordNode, false, false, event);
             });
             break;
@@ -91,9 +95,7 @@ export const addClickToNode = (node: any) => {
         break;
       default:
         addEvent(clickableNode, "click", function (event: any) {
-          // if (isClickableNode(event.target)) {
-            recordUserClick(recordNode, false, false, event);
-          // }
+          recordUserClick(recordNode, false, false, event);
         });
         break;
     }

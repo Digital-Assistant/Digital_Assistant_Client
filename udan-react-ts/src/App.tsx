@@ -32,6 +32,7 @@ import {AppConfig} from "./config/AppConfig";
 import {CustomConfig} from "./config/CustomConfig";
 import {postRecordSequenceData} from "./services";
 import {addBodyEvents} from "./util/addBodyEvents";
+import {initSpecialNodes} from "./util/initSpecialNodes";
 
 // adding global variable declaration for exposing react custom configuration
 global.UDAPluginSDK = AppConfig;
@@ -143,6 +144,7 @@ function App() {
       offSearch();
       setRecordSequenceDetailsVisibility(true);
     } else if (isRecording) {
+      togglePanel();
       offSearch();
     } else {
       setShowSearch(true);
@@ -187,6 +189,16 @@ function App() {
       documentBody.classList.add('universal-digital-parent-ele');
     }
 
+    const init = async () => {
+      await initSpecialNodes();
+      await getSearchResults();
+      if(hide) {
+        squeezeBody(true);
+      }
+    }
+
+    init();
+
     return () => {
       off("UDAUserSessionData", createSession);
       off("UDAAuthenticatedUserSessionData", createSession);
@@ -198,14 +210,10 @@ function App() {
     window.isRecording = isRecording;
     CONFIG.isRecording = isRecording;
     setToStore(isRecording, CONFIG.RECORDING_SWITCH_KEY, true);
-  }, [isRecording]);
-
-  useEffect(() => {
-    getSearchResults();
-    if(hide) {
-      squeezeBody(true);
+    if(isRecording) {
+      setHide(false);
     }
-  },[]);
+  }, [isRecording]);
 
   useEffect(() => {
     if(searchKeyword !== previousSearchKeyword.current) {
@@ -384,10 +392,7 @@ function App() {
 
   return (
       <UserDataContext.Provider value={userSessionData}>
-        <div
-            className="udan-main-panel"
-            style={{display: hide ? "none" : "block", position: "relative"}}
-        >
+        <div className="udan-main-panel" style={{display: hide ? "none" : "block", position: "relative"}}>
           <div id="uda-html-container">
             <div id="uda-html-content" className="uda_exclude">
               <div>

@@ -19,7 +19,7 @@ EventTarget.prototype.addEventListener = function (addEventListener) {
 
 
 //mutation observer initialization and adding the logic to process the clickobjects
-export const UDAObserver = new MutationObserver(function (mutations) {
+/*export const UDAObserver = new MutationObserver(function (mutations) {
   mutations.forEach(function (mutation) {
     if (mutation.removedNodes.length) {
       [].some.call(mutation.removedNodes, UDAProcessRemovedNode);
@@ -36,4 +36,4 @@ export const UDAObserver = new MutationObserver(function (mutations) {
 UDAObserver.observe(document, {
   childList: true,
   subtree: true
-});
+});*/

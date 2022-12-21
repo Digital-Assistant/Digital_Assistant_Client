@@ -157,18 +157,15 @@ export const RecordSequenceDetails = (props: MProps) => {
 
   const playNode = (item, index) => {
     if (matchNode({node: item, index})) {
-      // setToolTip(item, index)
       updateStatus(index);
     }
   }
 
   const removeRecording = async () => {
-    if (!window.confirm("Sure you want to delete?")) return;
     await deleteRecording({id: selectedRecordingDetails.id});
-    /*if (props?.refetchSearch) {
-      props.refetchSearch("on");
-    }*/
-    backNav();
+    setTimeout(()=>{
+      backNav();
+    }, CONFIG.indexInterval);
   };
 
   const manageVote = async () => {
@@ -236,12 +233,12 @@ export const RecordSequenceDetails = (props: MProps) => {
                     itemLayout="horizontal"
                     dataSource={selectedRecordingDetails?.userclicknodesSet}
                     renderItem={(item: any, index: number) => (
-                        <List.Item
+                        <li
                             className={addSkipClass(item)}
                             onClick={() => playNode(item, index)}
                         >
-                          <List.Item.Meta title={getClickedNodeLabel(item)}/>
-                        </List.Item>
+                          <i>{getClickedNodeLabel(item)}</i>
+                        </li>
                     )}
                 />
             )}

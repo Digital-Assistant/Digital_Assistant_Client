@@ -159,20 +159,13 @@ module.exports = (env, argv) => {
             },
             fallback: { //fallback module dependencies
                 "fs": false,
-                "tls": false,
-                "net": false,
                 "http": require.resolve("stream-http"),
                 "https": require.resolve("https-browserify"),
-                "crypto": false,
-                "cluster": false,
-                "fs-extra": require.resolve("fs-extra/"),
                 "stream": require.resolve("stream-browserify"),
                 "zlib": require.resolve("browserify-zlib"),
                 "buffer": require.resolve("buffer/"),
                 "path": require.resolve("path-browserify"),
                 "os": require.resolve("os-browserify/browser"),
-                "url": require.resolve("url/"),
-                "constants": require.resolve("constants-browserify"),
                 "assert": require.resolve("assert/")
             }
         },

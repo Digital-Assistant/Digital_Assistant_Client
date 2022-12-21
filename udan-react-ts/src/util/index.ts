@@ -1,10 +1,11 @@
 import {CONFIG} from "../config";
 import {jaroWinkler} from "jaro-winkler-typescript";
 import TSON from "typescript-json";
+import {initSpecialNodes} from "./initSpecialNodes";
 
 require("./domChanges");
 
-declare const udanSpecialNodes;
+declare const udaSpecialNodes;
 
 /**
  * Browser Window Interface Definition
@@ -69,8 +70,9 @@ export const generateUUID = () => {
  * Toggles(squeeze) content body element width
  * @param hide
  */
-export const squeezeBody = (hide: boolean) => {
-  if(global.UDAGlobalConfig.enableOverlay) {
+export const squeezeBody = async (hide: boolean) => {
+  await initSpecialNodes();
+  if(!global.UDAGlobalConfig.enableOverlay) {
     let documentBody = document.body;
     let bodyChildren: any = documentBody.childNodes;
     if (!hide) {
@@ -79,7 +81,7 @@ export const squeezeBody = (hide: boolean) => {
           if (childNode.classList && childNode.classList.contains("container")) {
             childNode.classList.remove("container");
           }
-          if (childNode.nodeType === Node.ELEMENT_NODE && (childNode.id !== 'uda-btn' && childNode.id !== 'uda-html-container') && udanSpecialNodes.exclude.tags.indexOf(childNode.nodeName.toLowerCase()) === -1) {
+          if (childNode.nodeType === Node.ELEMENT_NODE && (childNode.id !== 'uda-btn' && childNode.id !== 'uda-html-container') && udaSpecialNodes.exclude.tags.indexOf(childNode.nodeName.toLowerCase()) === -1) {
             if (childNode.classList && !childNode.classList.contains("uda-original-content")) {
               childNode.classList.add("uda-original-content");
             }
@@ -89,7 +91,7 @@ export const squeezeBody = (hide: boolean) => {
     } else {
       if (bodyChildren.length > 0) {
         bodyChildren.forEach(function (childNode, childNodeIndex) {
-          if (childNode.nodeType === Node.ELEMENT_NODE && (childNode.id !== 'uda-btn' && childNode.id !== 'uda-html-container') && udanSpecialNodes.exclude.tags.indexOf(childNode.nodeName.toLowerCase()) === -1) {
+          if (childNode.nodeType === Node.ELEMENT_NODE && (childNode.id !== 'uda-btn' && childNode.id !== 'uda-html-container') && udaSpecialNodes.exclude.tags.indexOf(childNode.nodeName.toLowerCase()) === -1) {
             if (childNode.classList && childNode.classList.contains("uda-original-content")) {
               childNode.classList.remove("uda-original-content");
             }
@@ -138,17 +140,6 @@ export const inArray = (elem: any, array: any) => {
   }
 
   return -1;
-};
-
-/**
- * Adds event to an element
- * @param node
- * @param eventType
- * @param callback
- * @returns void
- */
-export const addEvent = (node: any, eventType: string, callback: Function) => {
-  node.addEventListener(eventType, callback);
 };
 
 export const errorLog = (err: string) => {
@@ -466,27 +457,6 @@ export const clickableElementExists = (compareNode: HTMLElement) => {
     if (element.isSameNode(compareNode)) existFlag = true;
   });
   return existFlag;
-}
-
-/**
- * To find an dom object has a given class
- * @param element
- * @param classList
- * @returns
- */
-export const hasClass = (element: HTMLElement, classList: string[]) => {
-  let existsFlag = false;
-  classList?.forEach(cls => {
-    try {
-      if (element?.className?.indexOf(cls) > -1) {
-        existsFlag = true;
-        return existsFlag;
-      }
-    } catch (e) {
-      return false
-    }
-  });
-  return existsFlag;
 }
 
 /**

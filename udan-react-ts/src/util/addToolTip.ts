@@ -34,7 +34,7 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
         enabled: true,
         phase: 'main',
         options: {
-          offset: ({placement, reference, popper}) => [0, 50],
+          offset: ({placement, reference, popper}) => [0, 30],
         }
       }
     ],
@@ -56,17 +56,9 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
         removeToolTip();
         trigger("BackToSearchResults", {action: 'BackToSearchResults'});
       });
-  /*jQuery('html, body').animate({
-    scrollTop: (jQuery(invokingnode).offset().top - 250)
-  }, 2000, function(){
-    if(enableFocus){
-      invokingnode.focus();
-    }
-    if(enableClick){
-      invokingnode.click();
-    }
-  });*/
+
   //add scrolltop functionality
+  tooltipNode.scrollIntoView({behavior: 'smooth', block: "start", inline: "center"});
   setTimeout(function () {
     if (enableFocus) {
       invokingNode.focus();

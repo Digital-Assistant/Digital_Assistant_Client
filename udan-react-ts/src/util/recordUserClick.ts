@@ -3,7 +3,7 @@ import {getClickedInputLabels} from "./getClickedInputLabels";
 import {UDAErrorLogger} from "../config/error-log";
 import {clickableElementExists, getFromStore, setToStore} from "./index";
 import {postClickData} from "../services";
-import {isClickableNode} from "./isClickableNode";
+import {checkNodeValues} from "./checkNodeValues";
 
 /**
  *
@@ -27,28 +27,98 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
     return;
   }
 
-  if (!node.isSameNode(event.target) || clickableElementExists(event.target) ||  !isClickableNode(event.target)) {
+  if(CONFIG.lastClickedTime && (CONFIG.lastClickedTime === Date.now() || ((CONFIG.lastClickedTime + 300) >= Date.now()))){
+    return ;
+  }
+
+  //should not record untrusted clicks
+  if(!event.isTrusted){
+    console.log('untrusted click on : ')
+    console.log(node);
+  }
+
+  /*if (!node.isSameNode(event.target) || clickableElementExists(event.target)) {
+    return;
+  }*/
+
+  // node = event.target;
+  let recordingNode = node;
+
+  let addIsPersonal = false;
+
+  //add the record click for parent element and ignore the children
+  const closestParent: any = node.closest('[udaIgnoreChildren]');
+  if (closestParent) {
+    recordingNode = closestParent;
+    addIsPersonal =  true;
+  }
+
+
+  // ignore click on unwanted node
+  if(recordingNode.hasAttribute('udaIgnoreClick')){
+    return ;
+  }
+
+  //ToDo improve stop propagation by checking only for elements that needs to be stopped
+  if (typeof event.cancelable !== 'boolean' || event.cancelable) {
+    event.stopImmediatePropagation();
+    event.preventDefault();
+  }
+
+  window.clickedNode = event.target;
+
+  if(checkNodeValues(recordingNode, 'exclude')){
+    return ;
+  }
+
+  if (clickableElementExists(recordingNode) || clickableElementExists(node)) {
     return;
   }
 
-  // node = event.target;
-  if (!window.udanSelectedNodes) window.udanSelectedNodes = [];
-  window.udanSelectedNodes.push(node);
+  let meta: any = {};
 
+  let _text = getClickedInputLabels(recordingNode);
 
-  if (typeof event.cancelable !== 'boolean' || event.cancelable) {
-    event.preventDefault();
-    event.stopPropagation();
-    window.clickedNode = event.target;
+  if(addIsPersonal) {
+    meta.isPersonal = true;
   }
 
-  const _text = getClickedInputLabels(node);
 
-  if (!_text || _text?.length > 100 || !_text?.trim()?.length) return;
+  if (!_text || _text?.length > 100 || !_text?.trim()?.length) {
 
 
-  const resp = await postClickData(node, _text);
-  if (resp) {
+    meta.isPersonal = true;
+
+    _text = recordingNode.nodeName;
+
+    // adding text editor name for the recording
+    if (checkNodeValues(recordingNode, 'textEditors')) {
+      meta.displayText = 'Text Editor';
+    }
+
+    // adding drop down name for the recording
+    if (checkNodeValues(recordingNode, 'dropDowns')) {
+      meta.displayText = 'Drop Down';
+    }
+
+    // adding Date selector for the recording
+    if (checkNodeValues(recordingNode, 'datePicker')) {
+      meta.displayText = 'Date Selector';
+    }
+
+  }
+
+  const resp: any = await postClickData(recordingNode, _text, meta);
+  if (resp && resp.id) {
+    if (!window.udanSelectedNodes){
+      window.udanSelectedNodes = [];
+    }
+
+    window.udanSelectedNodes.push(recordingNode);
+    window.udanSelectedNodes.push(node);
+
+    CONFIG.lastClickedTime=Date.now();
+
     const activeRecordingData: any = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
     if (activeRecordingData) {
       activeRecordingData.push(resp);
@@ -60,5 +130,9 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
     UDAErrorLogger.error("Unable save record click " + node.outerHTML);
   }
 
-  node.click();
+  event.target.click();
+  // do not remove the below click it was added for performing the click as the clicks are getting stopped in between
+  event.target.click();
+
+  return;
 };

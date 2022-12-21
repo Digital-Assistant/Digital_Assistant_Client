@@ -11,8 +11,10 @@ import * as domJSON from "domjson";
  * @param compareElements
  */
 export const searchNodes = (recordedNode, compareElements) => {
+
   //  fall back old logic
   const originalNode = getObjData(recordedNode?.node?.objectdata);
+
   let finalMatchElement = null;
   // personal tag check
   let isPersonalNode = false;
