@@ -15,6 +15,12 @@ const Footer = (props: MProps) => {
     if (props.toggleHandler) props.toggleHandler(flag, "footer");
   };
 
+  const printYear = ()=> {
+    const date = new Date();
+    const year = date.getFullYear();
+    return year;
+  }
+
   return (
     <div>
       <div className="uda-footer-bar">
@@ -32,7 +38,7 @@ const Footer = (props: MProps) => {
           className="uda-container"
           style={{ borderTop: "1px solid #969696", marginTop: 30 }}
         >
-          <div className="uda-footer-left">Copyrights Reserved 2022.</div>
+          <div className="uda-footer-left">Copyrights Reserved {printYear()}.</div>
           <div
             className="uda-footer-right"
             style={{ paddingTop: 5, textAlign: "right" }}
