@@ -19,6 +19,9 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
     }
   }
 
+  //add scrolltop functionality
+  tooltipNode.scrollIntoView({behavior: 'smooth', block: "start", inline: "center"});
+
   const tooltipDivElement = getToolTipElement(message, showButtons);
 
   /**
@@ -41,7 +44,7 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
   });
 
 
-//attach event to continue button in tooltip
+  //attach event to continue button in tooltip
   document
       .getElementById("uda-autoplay-continue")
       ?.addEventListener("click", () => {
@@ -57,8 +60,6 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
         trigger("BackToSearchResults", {action: 'BackToSearchResults'});
       });
 
-  //add scrolltop functionality
-  tooltipNode.scrollIntoView({behavior: 'smooth', block: "start", inline: "center"});
   setTimeout(function () {
     if (enableFocus) {
       invokingNode.focus();

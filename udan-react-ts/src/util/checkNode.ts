@@ -4,6 +4,12 @@ export const isInputNode = (node: any) => {
   }
   switch (node.nodeName.toLowerCase()) {
     case "input":
+      if(node.hasAttribute("type") && (node.getAttribute("type") === 'button' || node.getAttribute("type") === 'submit')) {
+        return false;
+      } else {
+        return true;
+      }
+      break;
     case "textarea":
     case "select":
     case "option":

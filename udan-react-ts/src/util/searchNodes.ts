@@ -30,6 +30,7 @@ export const searchNodes = (recordedNode, compareElements) => {
 
     // uncomment for debugging
     /*if(match.matched+10 >= match.count){
+      console.log(searchNode.node);
       console.log(compareNode);
       console.log(match);
     }*/

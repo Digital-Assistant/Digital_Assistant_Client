@@ -82,14 +82,20 @@ export const RecordedData = (props: MProps) => {
   };
 
   /**check profanity for input text */
-  const handleDebounceFn = async (index: number, inputValue: string) => {
+  const checkProfanityForGivenLabel = async (index: number, inputValue: string) => {
     if (!validateInput(inputValue)) {
       setInputError({...inputError, clickedNodeName: true});
       return;
     } else {
       setInputError({...inputError, clickedNodeName: false});
     }
-    recordData[index].clickednodename = inputValue;
+
+    const _objData: any = getObjData(recordData[index]?.objectdata);
+    _objData.meta.displayText = inputValue;
+    recordData[index].objectdata = TSON.stringify(_objData);
+    storeRecording(recordData);
+    setRecordData([...recordData]);
+
     if (timer) {
       clearTimeout(timer);
       setTimer(null);
@@ -99,16 +105,12 @@ export const RecordedData = (props: MProps) => {
           let changedName: any = await checkProfanity(inputValue);
           delete recordData[index].profanity;
           setDisableForm(false);
-          const _cloneRecObj = _.cloneDeep(props?.data?.[index]);
-          if (_.isEmpty(_cloneRecObj)) return;
-          const _objData: any = getObjData(_cloneRecObj?.objectdata);
           if (!_.isEmpty(_objData)) {
-            setRecordData([...props?.data]);
             _objData.meta.displayText = changedName.trim();
-            _cloneRecObj.objectdata = TSON.stringify(_objData);
             recordData[index].objectdata = TSON.stringify(_objData);
+            await updateRecordClicks(recordData[index]);
             storeRecording(recordData);
-            await updateRecordClicks(_cloneRecObj);
+            setRecordData([...recordData]);
           }
         }, CONFIG.DEBOUNCE_INTERVAL)
     );
@@ -117,8 +119,7 @@ export const RecordedData = (props: MProps) => {
 
   const handleChange = (index: number) => async (event: any) => {
     if (props.config.enableEditClickedName === true) {
-      recordData[index].clickednodename = event.target.value;
-      await handleDebounceFn(index, event.target.value);
+      await checkProfanityForGivenLabel(index, event.target.value);
     }
   };
 
