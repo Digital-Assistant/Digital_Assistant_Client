@@ -43,56 +43,18 @@ UDA-client currently works only with the chrome browser but we will be extending
 
 We solicit and welcome comments, help, documentation in improving the client.
 
-# Steps for installation
+## Installation instructions for developers
 
-### Chrome Plugin
+## Install dependencies
 
-```
-1. Download the git repo into local folder or install it from chrome store(coming soon..)
-2. Under chrome -> Extensions (enable developer mode) 
-3. Click on Load unpacked and select the chrome-plugin folder
-4. Ensure that profile sync is on in order to access the user information.
+```bash
+  npm install
 ```
 
-### Integrate as sdk into applications
+## Build
 
-1. Add the below Script in head as first script tag
-    ```
-    <script src="https://digital-assistant.github.io/Digital_Assistant_Client/chrome-plugin/js/links.js"></script>
-    ```
-2. Add the below script to the bottom of the page to load the SDK
-    ```
-    <script type="text/javascript">
-        (function(){
-            var uda = document.createElement('script'); uda.type = 'text/javascript'; uda.src = 'https://digital-assistant.github.io/Digital_Assistant_Client/lib/include.js';
-            document.body.appendChild(uda);
-            // unique reference for identifying the user these can be declared post login also.
-            udaauthdata.id='123456789';
-            // user emailid or name can be passed.
-            udaauthdata.email='dummy@dummy.com';
-        })();
-    </script>
-    ```
-3. For disabling the recording sequence functionality for unwanted users you can just make the below attribute true post
-   loading of the scripts
-    ```
-    udaauthdata.restrict_add_delete=true;
-    ```
-4. For adding custom colors you can create your own theme from below base theme url and you can put the css file in your
-   server and can pass it to the plugin as given below
+To build chrome extension (to build folder)
 
-   ### Base Theme URL
-    ```
-    https://digital-assistant.github.io/Digital_Assistant_Client/chrome-plugin/themes/base.css 
-    ```
-
-   ### Variable
-   ```
-   UDACustomCss.url = "path/to/your/css/file";
-   ```
-   
-   Example:
-    ```
-    UDACustomCss.url = "https://digital-assistant.github.io/Digital_Assistant_Client/chrome-plugin/themes/base.css";
-    ```
-
+```bash
+  npm run build
+```

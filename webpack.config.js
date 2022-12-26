@@ -21,6 +21,9 @@ module.exports = (env, argv) => {
 
     const envFile = './environments/'+((env.build) ? `${env.build}.env` : 'local.env');
 
+    const buildPath = (env.build && env.build == 'production') ? 'dist' : 'build';
+    console.log(buildPath);
+
     const webpackConfig = {
 
         entry: {
@@ -175,7 +178,7 @@ module.exports = (env, argv) => {
             filename: '[name].js', // the filename template for entry chunks
             library: 'UdanLibrary',
             libraryTarget: 'var',
-            path: path.resolve(__dirname, 'build/assets'),  // the target directory for all output files
+            path: path.resolve(__dirname, buildPath+'/assets'),  // the target directory for all output files
             // must be an absolute path (use the Node.js path module)
             clean: true
         },

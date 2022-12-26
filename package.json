@@ -44,7 +44,7 @@
     "postbuild:dev": "node ./scripts/postbuild.js",
     "prebuild:prod": "node ./scripts/prebuild.js",
     "build:prod": "webpack --env build=production",
-    "postbuild:prod": "node ./scripts/postbuild.js",
+    "postbuild:prod": "node ./scripts/postbuildprod.js",
     "test": "jest"
   },
   "jest": {

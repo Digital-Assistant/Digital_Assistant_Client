@@ -3,7 +3,7 @@ Voice plugin Javascript SDK Library
 IMPORTANT NOTE: Copying this library and hosting it locally is strongly discouraged.
  */
 // creating the sdk variable
-if (typeof UDAPluginSDK === 'undefined') {
+if (typeof UDAPluginSDKJS === 'undefined') {
 	var UDABadBrowser=false;
 	if(navigator.appName.indexOf("Internet Explorer") !== -1){
 		UDABadBrowser=(navigator.appVersion.indexOf("MSIE 1") === -1);
@@ -21,24 +21,24 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 	// listening for user session data from extension call
 	document.addEventListener("UDAUserSessionData", function(data) {
-		UDAPluginSDK.createsession(JSON.parse(data.detail.data));
+		UDAPluginSDKJS.createsession(JSON.parse(data.detail.data));
 	});
 
 	// Clearing user session in case if the id gets changed
 	document.addEventListener("UDAClearSessionData", function(data) {
-		UDAPluginSDK.clearSession();
+		UDAPluginSDKJS.clearSession();
 	});
 
 	/**
 	 * Disabling record button when the attribute is set to true.
 	 */
 	document.addEventListener("UDADisableButton", function(data) {
-		UDAPluginSDK.disableRecordButton();
+		UDAPluginSDKJS.disableRecordButton();
 	});
 
 	document.addEventListener("UDAAuthenticatedUserSessionData", function(data) {
-		UDAPluginSDK.createsession(JSON.parse(data.detail.data));
-		UDAPluginSDK.openmodal(true);
+		UDAPluginSDKJS.createsession(JSON.parse(data.detail.data));
+		UDAPluginSDKJS.openmodal(true);
 	});
 
 	document.addEventListener("UDAAlertMessageData", function(data) {
@@ -49,14 +49,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 	 * Load custom theme to plugin
 	 */
 	document.addEventListener("UDALoadCustomCSS", function(data) {
-		UDAPluginSDK.loadCssScript(UDACustomCss.src);
+		UDAPluginSDKJS.loadCssScript(UDACustomCss.src);
 	});
 
 	let UDADebugSetEvent = new CustomEvent("UDADebugSetEvent", {detail: {data: {action:'Debugvalueset',value:UDADebug}}, bubbles: false, cancelable: false});
 	document.dispatchEvent(UDADebugSetEvent);
 
 	// initializing the sdk variable need to change to a new variable in future.
-	var UDAPluginSDK = {
+	var UDAPluginSDKJS = {
 		sdkUrl: "/",
 		apihost: UDA_API_URL,
 		totalScripts: 0,
@@ -172,7 +172,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.showhtml();
 		},
 		get enableMultilingual() {
-			return UDAPluginSDK.multilingual.enabled;
+			return UDAPluginSDKJS.multilingual.enabled;
 		},
 		// BCP list of languages
 		bcplang :
@@ -333,20 +333,20 @@ if (typeof UDAPluginSDK === 'undefined') {
 				script.onreadystatechange = function(){
 					if (script.readyState === "loaded" || script.readyState === "complete"){
 						script.onreadystatechange = null;
-						UDAPluginSDK.scriptsCompleted++;
+						UDAPluginSDKJS.scriptsCompleted++;
 						if (typeof jQuery !== 'undefined') {
 							this.jqueryready=true;
-							UDAPluginSDK.otherscripts();
+							UDAPluginSDKJS.otherscripts();
 						}
 					}
 				};
 			} else {
 				script.onload = function(){
-					UDAPluginSDK.scriptsCompleted++;
+					UDAPluginSDKJS.scriptsCompleted++;
 					if (typeof jQuery !== 'undefined') {
 						this.jqueryready=true;
 						if(this.ready !== true){
-							UDAPluginSDK.otherscripts();
+							UDAPluginSDKJS.otherscripts();
 						}
 					}
 				};
@@ -363,17 +363,17 @@ if (typeof UDAPluginSDK === 'undefined') {
 				script.onreadystatechange = function(){
 					if (script.readyState === "loaded" || script.readyState === "complete"){
 						script.onreadystatechange = null;
-						UDAPluginSDK.totalotherScriptsCompleted++;
-						if (UDAPluginSDK.totalotherScriptsCompleted === UDAPluginSDK.totalotherScripts) {
-							UDAPluginSDK.allReady();
+						UDAPluginSDKJS.totalotherScriptsCompleted++;
+						if (UDAPluginSDKJS.totalotherScriptsCompleted === UDAPluginSDKJS.totalotherScripts) {
+							UDAPluginSDKJS.allReady();
 						}
 					}
 				};
 			} else {
 				script.onload = function(){
-					UDAPluginSDK.totalotherScriptsCompleted++;
-					if (UDAPluginSDK.totalotherScriptsCompleted === UDAPluginSDK.totalotherScripts) {
-						UDAPluginSDK.allReady();
+					UDAPluginSDKJS.totalotherScriptsCompleted++;
+					if (UDAPluginSDKJS.totalotherScriptsCompleted === UDAPluginSDKJS.totalotherScripts) {
+						UDAPluginSDKJS.allReady();
 					}
 				};
 			}
@@ -456,8 +456,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 						// Get a transcript of what was said.
 						var transcript = event.results[current][0].transcript;
 						jQuery("#uda-search-input").val(transcript);
-						UDAPluginSDK.searchinelastic();
-						UDAPluginSDK.recognition.stop();
+						UDAPluginSDKJS.searchinelastic();
+						UDAPluginSDKJS.recognition.stop();
 						jQuery("#uda-voice-icon-stop").hide();
 						jQuery("#uda-voice-icon-start").show();
 					}
@@ -483,9 +483,9 @@ if (typeof UDAPluginSDK === 'undefined') {
 			// listen for when to start the indexing of the dom based on the clicknodes availability
 			document.addEventListener("Indexnodes", function(data) {
 				if(data.detail.data==="indexclicknodes") {
-					UDAPluginSDK.indexclicknodes();
+					UDAPluginSDKJS.indexclicknodes();
 				} else if(data.detail.data==="indexnewclicknodes") {
-					UDAPluginSDK.indexnewclicknodes();
+					UDAPluginSDKJS.indexnewclicknodes();
 				}
 			});
 
@@ -496,7 +496,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			window.addEventListener('load', (event) => {
 				// delaying rendering of uda panel by 2seconds in order to wait for the page dom to complete
 				setTimeout(function (){
-					UDAPluginSDK.modifybodyhtml();
+					UDAPluginSDKJS.modifybodyhtml();
 				},2000);
 			});
 		},
@@ -536,16 +536,16 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			if(typeof isUDASdk === 'undefined') {
 				jQuery(window).trigger('resize').promise().done(function () {
-					UDAPluginSDK.indexclicknodes();
-					UDAPluginSDK.addbuttonhtml();
+					UDAPluginSDKJS.indexclicknodes();
+					UDAPluginSDKJS.addbuttonhtml();
 				});
 			} else {
-				UDAPluginSDK.indexclicknodes();
-				UDAPluginSDK.addbuttonhtml();
+				UDAPluginSDKJS.indexclicknodes();
+				UDAPluginSDKJS.addbuttonhtml();
 			}
 			setInterval(function () {
 				if(UDALastIndexTime!==0 && UDALastIndexTime<UDALastMutationTime) {
-					UDAPluginSDK.indexnewclicknodes();
+					UDAPluginSDKJS.indexnewclicknodes();
 				}
 			},UDA_POST_INTERVAL);
 		},
@@ -599,7 +599,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			modal.append(buttonhtml);
 			if(!udaIconDisabled) {
 				modal.click(function () {
-					UDAPluginSDK.openmodal(true);
+					UDAPluginSDKJS.openmodal(true);
 				});
 				if (this.rerenderhtml) {
 					this.showhtml();
@@ -607,7 +607,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			} else {
 				if(udaIconDisabledByCsp){
 					modal.click(function () {
-						UDAPluginSDK.showAlert(UDAPluginSDK.cspUserAcceptance, 'Do you want to enable "Universal Digital Assistant by Nistapp', true, 'Enable', 'Keep suspended');
+						UDAPluginSDKJS.showAlert(UDAPluginSDKJS.cspUserAcceptance, 'Do you want to enable "Universal Digital Assistant by Nistapp', true, 'Enable', 'Keep suspended');
 					});
 				}
 			}
@@ -632,7 +632,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 									+'<input type="text" name="uda-search-input" class="uda-input-cntrl" placeholder="Search..." id="uda-search-input" />'
 									+'<button class="uda-search-btn" id="uda-search-btn" style="border-radius: 0px 5px 5px 0px;"></button>'
 								+'</div>'
-                            +((this.multilingual.enabled)?'<select name="uda-lang-select" id="uda-lang-select" onchange="UDAPluginSDK.changeLanguage();"></select>':'')
+                            +((this.multilingual.enabled)?'<select name="uda-lang-select" id="uda-lang-select" onchange="UDAPluginSDKJS.changeLanguage();"></select>':'')
 							+'</div>'
 						+'</div>'
 						+'<hr style="border:1px solid #969696; width:100%;">'
@@ -691,30 +691,30 @@ if (typeof UDAPluginSDK === 'undefined') {
 				});
 			}
 			jQuery("#uda-close-panel").click(function(){
-				UDAPluginSDK.closemodal();
+				UDAPluginSDKJS.closemodal();
 			});
 			jQuery("#voicesearch").click(function(){
-				UDAPluginSDK.searchinelastic();
+				UDAPluginSDKJS.searchinelastic();
 			});
 			jQuery("#uda-search-input").keydown(function (e) {
 				if (e.keyCode === 13) {
 					jQuery("#uda-content-container").html("");
-					UDAPluginSDK.searchinelastic();
+					UDAPluginSDKJS.searchinelastic();
 					return false;
 				}
 			});
 			jQuery("#uda-search-btn").click(function(){
-				UDAPluginSDK.searchinelastic();
+				UDAPluginSDKJS.searchinelastic();
 			});
 			if(UDASpeechRecognitionAvailable){
 				jQuery("#uda-voice-icon-start").click(function () {
 					jQuery("#uda-content-container").html("");
-					UDAPluginSDK.recognition.start();
+					UDAPluginSDKJS.recognition.start();
 					jQuery("#uda-voice-icon-start").hide();
 					jQuery("#uda-voice-icon-stop").show();
 				});
 				jQuery("#uda-voice-icon-stop").click(function () {
-					UDAPluginSDK.recognition.stop();
+					UDAPluginSDKJS.recognition.stop();
 					jQuery("#uda-voice-icon-stop").hide();
 					jQuery("#uda-voice-icon-start").show();
 				});
@@ -726,7 +726,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				if(!UDAUserAuthData.restrict_add_delete) {
 					jQuery('#uda-advanced-btn').show();
 					jQuery("#uda-advance-section").click(function () {
-						UDAPluginSDK.showadvancedhtml();
+						UDAPluginSDKJS.showadvancedhtml();
 					});
 				}
 			} else {
@@ -764,19 +764,19 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			closeBtn.onclick=function(){
 				modal.style.display = "none";
-				UDAPluginSDK.cspDecline();
+				UDAPluginSDKJS.cspDecline();
 			}
 			// When the user clicks on <span> (x), close the modal
 			span.onclick = function() {
 				modal.style.display = "none";
-				UDAPluginSDK.cspDecline();
+				UDAPluginSDKJS.cspDecline();
 			}
 
 			modal.style.display = "block";
 
 			continueBtn.onclick=function (){
 				modal.style.display = "none";
-				UDAPluginSDK.cspAcceptance();
+				UDAPluginSDKJS.cspAcceptance();
 			};
 
 		},
@@ -841,14 +841,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 			closeBtn.onclick=function(){
 				modal.style.display = "none";
 				if(storageName) {
-					UDAPluginSDK.alertDecline(storageName);
+					UDAPluginSDKJS.alertDecline(storageName);
 				}
 			}
 
 			span.onclick = function() {
 				modal.style.display = "none";
 				if(storageName) {
-					UDAPluginSDK.alertDecline(storageName);
+					UDAPluginSDKJS.alertDecline(storageName);
 				}
 			}
 
@@ -858,7 +858,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				continueBtn.onclick = function () {
 					modal.style.display = "none";
 					if (storageName) {
-						UDAPluginSDK.alertAcceptance(storageName);
+						UDAPluginSDKJS.alertAcceptance(storageName);
 					}
 				};
 			}
@@ -906,7 +906,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					if (bodychildren.length > 0) {
 						bodychildren.forEach(function (childnode, childnodeindex) {
 							if (childnode.classList && childnode.classList.contains("container")) {
-								UDAPluginSDK.containersections.push(childnodeindex);
+								UDAPluginSDKJS.containersections.push(childnodeindex);
 								childnode.classList.remove("container");
 							}
 							if (childnode.nodeType === Node.ELEMENT_NODE && (childnode.id !== 'uda-btn' && childnode.id !== 'uda-html-container') && childnode.nodeName.toLowerCase() !== 'script' && childnode.nodeName.toLowerCase() !== 'noscript' && childnode.nodeName.toLowerCase() !== 'style') {
@@ -940,7 +940,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 								childnode.classList.remove("uda-original-content");
 							}
 						}
-						if (UDAPluginSDK.containersections.length > 0 && UDAPluginSDK.inArray(childnodeindex, UDAPluginSDK.containersections) !== -1) {
+						if (UDAPluginSDKJS.containersections.length > 0 && UDAPluginSDKJS.inArray(childnodeindex, UDAPluginSDKJS.containersections) !== -1) {
 							childnode.classList.add("container");
 						}
 					});
@@ -1030,7 +1030,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				UDAConsoleLogger.info('Need to do the processing');
 			}
 			if(this.navigatedToNextPage.check && this.navigatedToNextPage.url === window.location.href){
-				setTimeout(function(){UDAPluginSDK.showhtml();}, 5000);
+				setTimeout(function(){UDAPluginSDKJS.showhtml();}, 5000);
 				this.navigatedToNextPage.check = false;
 			}
 		},
@@ -1416,14 +1416,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 				switch (nodename) {
 					case "select":
 						jQuery(node).on({"focus":function(event){
-								UDAPluginSDK.recorduserclick(node, false,false, event, confirmdialog);
+								UDAPluginSDKJS.recorduserclick(node, false,false, event, confirmdialog);
 							}
 						});
 						break;
 					case "input":
 						if(!node.hasAttribute("type")){
 							jQuery(node).click(function (event) {
-								UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
+								UDAPluginSDKJS.recorduserclick(node, false, false, event, confirmdialog);
 							});
 							return;
 						}
@@ -1453,29 +1453,29 @@ if (typeof UDAPluginSDK === 'undefined') {
 							case "url":
 							case "week":
 								jQuery(node).click(function (event) {
-									UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
+									UDAPluginSDKJS.recorduserclick(node, false, false, event, confirmdialog);
 								});
 								break;
 							default:
 								jQuery(node).click(function (event) {
-									UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
+									UDAPluginSDKJS.recorduserclick(node, false, false, event, confirmdialog);
 								});
 								break;
 						}
 						break;
 					case "mat-select":
 						jQuery(node).click(function (event) {
-							UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
+							UDAPluginSDKJS.recorduserclick(node, false, false, event, confirmdialog);
 						});
 						break;
 					case 'tr':
 						jQuery(node).click(function (event) {
-							UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
+							UDAPluginSDKJS.recorduserclick(node, false, false, event, confirmdialog);
 						});
 						break;
 					default:
 						jQuery(node).click(function (event) {
-							UDAPluginSDK.recorduserclick(node, false, false, event, confirmdialog);
+							UDAPluginSDKJS.recorduserclick(node, false, false, event, confirmdialog);
 						});
 						break;
 				}
@@ -1639,7 +1639,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					// check for special input nodes and add tooltip
 					let specialInputNode = false;
 					node.classList.forEach(val => {
-						if(UDAPluginSDK.inArray(val, UDAPluginSDK.specialInputClickClassNames) !== -1){
+						if(UDAPluginSDKJS.inArray(val, UDAPluginSDKJS.specialInputClickClassNames) !== -1){
 							specialInputNode = true;
 						}
 					});
@@ -1728,7 +1728,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			let toolTipContentSection	=	message
 										+'<br/>';
 			if(showButtons) {
-				toolTipContentSection +=	'<button class="uda-tutorial-btn" style="margin-top:10px; margin-right: 5px;" type="button" uda-added="true" onclick="UDAPluginSDK.resumePlay();">Continue</button>'
+				toolTipContentSection +=	'<button class="uda-tutorial-btn" style="margin-top:10px; margin-right: 5px;" type="button" uda-added="true" onclick="UDAPluginSDKJS.resumePlay();">Continue</button>'
 											+ '<button class="uda-tutorial-exit-btn" style="margin-top:10px;" type="button" uda-added="true" id="uda-autoplay-exit">Exit</button>';
 			}
 
@@ -1761,7 +1761,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			});
 
 			jQuery("#uda-autoplay-exit").click(function () {
-				UDAPluginSDK.backToSearchResultsPage(navigationcookiedata);
+				UDAPluginSDKJS.backToSearchResultsPage(navigationcookiedata);
 			});
 
 			jQuery('html, body').animate({
@@ -1900,10 +1900,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			if(!link) {
 				UDAConsoleLogger.info(node,2);
-				setTimeout(function(){UDAPluginSDK.showhtml();}, timeToInvoke);
+				setTimeout(function(){UDAPluginSDKJS.showhtml();}, timeToInvoke);
 			} else {
 				timeToInvoke=timeToInvoke+3000;
-				setTimeout(function(){UDAPluginSDK.showhtml();}, timeToInvoke);
+				setTimeout(function(){UDAPluginSDKJS.showhtml();}, timeToInvoke);
 			}
 		},
 		//simulate hover functionality
@@ -1950,7 +1950,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 				if(this.autoplay){
 					this.forceReindex = true;
-					UDAPluginSDK.indexnewclicknodes();
+					UDAPluginSDKJS.indexnewclicknodes();
 					return true;
 				}
 
@@ -1970,7 +1970,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				if(node.style && node.style.display && node.style.display === 'none'){
 					let specialClassExists = false;
 					node.classList.forEach((val) => {
-						if(UDAPluginSDK.inArray(val, UDAPluginSDK.specialInputClickClassNames) !== -1){
+						if(UDAPluginSDKJS.inArray(val, UDAPluginSDKJS.specialInputClickClassNames) !== -1){
 							specialClassExists = true;
 							specialInputNode = true;
 						}
@@ -2112,11 +2112,11 @@ if (typeof UDAPluginSDK === 'undefined') {
 				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 				xhr.onload = function(event){
 					if(xhr.status === 200){
-						UDAPluginSDK.confirmednode = false;
+						UDAPluginSDKJS.confirmednode = false;
 						// rerender html if recording is enabled.
-						if(UDAPluginSDK.recording) {
+						if(UDAPluginSDKJS.recording) {
 							setTimeout(function () {
-								UDAPluginSDK.showhtml();
+								UDAPluginSDKJS.showhtml();
 							}, UDA_POST_INTERVAL);
 						}
 					}
@@ -2132,12 +2132,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 					if (node.hasAttribute('mattreenodetoggle')) {
 						this.forceReindex = true;
-						UDAPluginSDK.indexnewclicknodes();
+						UDAPluginSDKJS.indexnewclicknodes();
 					} else {
 						//processing new clicknodes if available after the click action.
 						setTimeout(function () {
 							this.forceReindex = true;
-							UDAPluginSDK.indexnewclicknodes();
+							UDAPluginSDKJS.indexnewclicknodes();
 						}, UDA_POST_INTERVAL);
 					}
 				}
@@ -2154,8 +2154,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 					let displayText = ((postdata.clickednodename.length > 120) ? (postdata.clickednodename.substr(0, 120) + '...') : (postdata.clickednodename) );
 					let confirmDialog = confirm("Did you click on: " + displayText);
 					if (confirmDialog === true) {
-						UDAPluginSDK.confirmednode = true;
-						UDAPluginSDK.recorduserclick(node, fromdocument, selectchange, event, false);
+						UDAPluginSDKJS.confirmednode = true;
+						UDAPluginSDKJS.recorduserclick(node, fromdocument, selectchange, event, false);
 					}
 					return false;
 				} else {
@@ -2298,16 +2298,16 @@ if (typeof UDAPluginSDK === 'undefined') {
 			jQuery("#uda-content-container").html("");
 
 			if(this.clickeOn && this.clickeOn === 'record-btn'){
-				UDAPluginSDK.addrecordresultshtml([]);
+				UDAPluginSDKJS.addrecordresultshtml([]);
 				this.clickeOn = '';
 				return ;
 			}
 
 			var xhr = new XMLHttpRequest();
-			xhr.open("GET", UDA_API_URL+"/clickevents/fetchrecorddata?start="+starttime+"&end="+endtime+"&sessionid="+UDAPluginSDK.sessionID+"&domain="+recordingcookiedata.domain, true);
+			xhr.open("GET", UDA_API_URL+"/clickevents/fetchrecorddata?start="+starttime+"&end="+endtime+"&sessionid="+UDAPluginSDKJS.sessionID+"&domain="+recordingcookiedata.domain, true);
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					UDAPluginSDK.addrecordresultshtml(JSON.parse(xhr.response));
+					UDAPluginSDKJS.addrecordresultshtml(JSON.parse(xhr.response));
 				}
 			};
 			xhr.send();
@@ -2351,10 +2351,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 			this.showhtml();
 			jQuery("#uda-content-container").html("");
 			var xhr = new XMLHttpRequest();
-			xhr.open("GET", UDA_API_URL+"/clickevents/fetchrecorddata?start="+recordingcookiedata.starttime+"&end="+recordingcookiedata.endtime+"&sessionid="+UDAPluginSDK.sessionID+"&domain="+recordingcookiedata.domain, true);
+			xhr.open("GET", UDA_API_URL+"/clickevents/fetchrecorddata?start="+recordingcookiedata.starttime+"&end="+recordingcookiedata.endtime+"&sessionid="+UDAPluginSDKJS.sessionID+"&domain="+recordingcookiedata.domain, true);
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					UDAPluginSDK.addrecordresultshtml(JSON.parse(xhr.response));
+					UDAPluginSDKJS.addrecordresultshtml(JSON.parse(xhr.response));
 				}
 			};
 			xhr.send();
@@ -2424,8 +2424,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			let permissionsHtml = '';
 			if(this.showPermissions && UDAUserAuthData.permissions) {
 				permissionsHtml += '<div>'
-								+'		<button class="add-btn" onclick="UDAPluginSDK.showPermissionsSection();" id="uda-permissions-show-btn">Advanced</button>'
-								+'		<button class="add-btn" style="display:none;" onclick="UDAPluginSDK.hidePermissionsSection();" id="uda-permissions-hide-btn">Hide</button>'
+								+'		<button class="add-btn" onclick="UDAPluginSDKJS.showPermissionsSection();" id="uda-permissions-show-btn">Advanced</button>'
+								+'		<button class="add-btn" style="display:none;" onclick="UDAPluginSDKJS.hidePermissionsSection();" id="uda-permissions-hide-btn">Hide</button>'
 								+'		<div id="uda-permissions-section" style="display: none;">';
 				for (let key in UDAUserAuthData.permissions) {
 					console.log(key);
@@ -2447,7 +2447,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'		<input type="text" id="uda-recorded-name" name="uda-save-recorded[]" class="uda-form-input" placeholder="Enter Label">'
 						+'		<div id="uda-sequence-names"></div>'
 						+'		<div style="margin-bottom:10px;">'
-						+'			<button class="add-btn" onclick="UDAPluginSDK.addSequenceNameRow();">+ Add Label</button>'
+						+'			<button class="add-btn" onclick="UDAPluginSDKJS.addSequenceNameRow();">+ Add Label</button>'
 						+'		</div>'
 						+'		<br>'
 						+'		<br>'
@@ -2455,8 +2455,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'		<br>'
 						+'		<br>'
 						+'		<div style="margin-top: 10px; max-width:100%;">'
-						+'			<button class="uda-record-btn" onclick="UDAPluginSDK.cancelrecordingsequence();"><span>Cancel and Exit</span></button>'
-						+'			<button class="uda-tutorial-btn" onclick="UDAPluginSDK.submitrecordedlabel();" style="float: right; padding:5px 20px;">Submit</button>'
+						+'			<button class="uda-record-btn" onclick="UDAPluginSDKJS.cancelrecordingsequence();"><span>Cancel and Exit</span></button>'
+						+'			<button class="uda-tutorial-btn" onclick="UDAPluginSDKJS.submitrecordedlabel();" style="float: right; padding:5px 20px;">Submit</button>'
 						+'		</div>'
 
 						+'	</div>'
@@ -2465,10 +2465,10 @@ if (typeof UDAPluginSDK === 'undefined') {
 						/*+'	<div class="uda-recording" style="text-align: center;">'
 						+'	<table id="uda-sequence-names"><tr>'
 						+'		<td><input type="text" id="uda-recorded-name" name="uda-save-recorded[]" class="uda-form-input" placeholder="Enter Label"></td>'
-						+'		<td><button class="uda-tutorial-btn" onclick="UDAPluginSDK.addSequenceNameRow();">Add</button></td>'
+						+'		<td><button class="uda-tutorial-btn" onclick="UDAPluginSDKJS.addSequenceNameRow();">Add</button></td>'
 						+'	</tr></table>'
-						+'		<button class="uda-record-btn" onclick="UDAPluginSDK.cancelrecordingsequence();"><span>Cancel and Exit</span></button>'
-						+'		<button class="uda-tutorial-btn" onclick="UDAPluginSDK.submitrecordedlabel();">Submit</button>'
+						+'		<button class="uda-record-btn" onclick="UDAPluginSDKJS.cancelrecordingsequence();"><span>Cancel and Exit</span></button>'
+						+'		<button class="uda-tutorial-btn" onclick="UDAPluginSDKJS.submitrecordedlabel();">Submit</button>'
 						+'	</div>'
 						+'</div>';*/
 			return html;
@@ -2500,8 +2500,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 						+'	<br />'
 						+'	<div class="uda-recording" style="text-align: center;">'
 						// +'		<input type="text" id="uda-recorded-name" name="uda-save-recorded" class="uda-form-input" placeholder="Enter Label">'
-						+'		<button class="uda-record-btn" onclick="UDAPluginSDK.cancelrecordingsequence();"><span>Cancel and Exit</span></button>'
-						// +'		<button class="uda-tutorial-btn" onclick="UDAPluginSDK.submitrecordedlabel();">Submit</button>'
+						+'		<button class="uda-record-btn" onclick="UDAPluginSDKJS.cancelrecordingsequence();"><span>Cancel and Exit</span></button>'
+						// +'		<button class="uda-tutorial-btn" onclick="UDAPluginSDKJS.submitrecordedlabel();">Submit</button>'
 						+'	</div>'
 						+'</div>';
 			return html;
@@ -2576,12 +2576,12 @@ if (typeof UDAPluginSDK === 'undefined') {
 				var element = jQuery(html);
 				jQuery("#uda-recorded-results").append(element);
 				jQuery("#UDA-is-personal").click(function (){
-					UDAPluginSDK.personalNode(data);
+					UDAPluginSDKJS.personalNode(data);
 				});
 				// skip during play click event
 				if(this.enableSkipDuringPlay) {
 					jQuery("#UDA-skip-duringPlay").click(function () {
-						UDAPluginSDK.skipDuringPlay(data);
+						UDAPluginSDKJS.skipDuringPlay(data);
 					});
 				}
 				var beforeEditText = originalName;
@@ -2594,14 +2594,14 @@ if (typeof UDAPluginSDK === 'undefined') {
 				/*jQuery('#uda-edited-name').blur(function() {
 					let editedName = jQuery("#uda-edited-name").val();
 					if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
-						UDAPluginSDK.editAndSave(data, editedName);
+						UDAPluginSDKJS.editAndSave(data, editedName);
 					}
 				});*/
 				jQuery("#uda-edited-name").keydown(function (e) {
 					if (e.keyCode === 13) {
 						let editedName = jQuery("#uda-edited-name").val();
 						if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
-							UDAPluginSDK.editAndSave(data, editedName);
+							UDAPluginSDKJS.editAndSave(data, editedName);
 						} else {
 							jQuery("#uda-display-clicked-text").show();
 							jQuery("#uda-edit-clickedname").show();
@@ -2613,7 +2613,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 				jQuery("#uda-edit-clickedname-submit").click(function (){
 					let editedName = jQuery("#uda-edited-name").val();
 					if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
-						UDAPluginSDK.editAndSave(data, editedName);
+						UDAPluginSDKJS.editAndSave(data, editedName);
 					} else {
 						jQuery("#uda-display-clicked-text").show();
 						jQuery("#uda-edit-clickedname").show();
@@ -2623,27 +2623,27 @@ if (typeof UDAPluginSDK === 'undefined') {
 				});
 				if(tooltipBtn) {
 					jQuery("#uda-edit-tooltip").click(function (){
-						// UDAPluginSDK.showTooltipInput(data);
+						// UDAPluginSDKJS.showTooltipInput(data);
 						jQuery("#uda-edited-tooltip").show();
 					});
 					/*jQuery('#uda-edited-tooltip').blur(function() {
 						let editedName = jQuery("#uda-edited-tooltip").val();
 						if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
-							UDAPluginSDK.editAndSaveTooltip(data, editedName);
+							UDAPluginSDKJS.editAndSaveTooltip(data, editedName);
 						}
 					});*/
 					jQuery("#uda-edited-tooltip").keydown(function (e) {
 						if (e.keyCode === 13) {
 							let editedName = jQuery("#uda-edited-tooltip").val();
 							if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
-								UDAPluginSDK.editAndSaveTooltip(data, editedName);
+								UDAPluginSDKJS.editAndSaveTooltip(data, editedName);
 							}
 						}
 					});
 					jQuery("#uda-tooltip-save").click(function (){
 						let editedName = jQuery("#uda-edited-tooltip").val();
 						if(editedName.trim() !== '' && beforeEditText.trim() != editedName.trim()){
-							UDAPluginSDK.editAndSaveTooltip(data, editedName);
+							UDAPluginSDKJS.editAndSaveTooltip(data, editedName);
 						}
 					});
 				}
@@ -2674,7 +2674,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					$UDASelectedElementHtml.on('change', function (e) {
 						var optionSelected = jQuery("option:selected", this);
 						var valueSelected = JSON.parse(this.value);
-						UDAPluginSDK.editAndSaveSelectedHtmlElement(data, valueSelected);
+						UDAPluginSDKJS.editAndSaveSelectedHtmlElement(data, valueSelected);
 					});
 				}
 			} else {
@@ -2770,7 +2770,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.open("POST", UDA_API_URL+"/user/updateclickednode");
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
-				UDAPluginSDK.showhtml();
+				UDAPluginSDKJS.showhtml();
 			};
 			xhr.send(outputdata);
 		},
@@ -2859,7 +2859,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.open("POST", UDA_API_URL+"/user/updateclickednode");
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
-				UDAPluginSDK.showhtml();
+				UDAPluginSDKJS.showhtml();
 			};
 			xhr.send(outputdata);
 		},
@@ -2881,7 +2881,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.open("POST", UDA_API_URL+"/user/updateclickednode");
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
-				UDAPluginSDK.showhtml();
+				UDAPluginSDKJS.showhtml();
 			};
 			xhr.send(outputdata);
 		},
@@ -2903,7 +2903,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.open("POST", UDA_API_URL+"/user/updateclickednode");
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
-				UDAPluginSDK.showhtml();
+				UDAPluginSDKJS.showhtml();
 			};
 			xhr.send(outputdata);
 		},
@@ -2927,7 +2927,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.open("POST", UDA_API_URL+"/user/updateclickednode");
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
-				UDAPluginSDK.showhtml();
+				UDAPluginSDKJS.showhtml();
 			};
 			xhr.send(outputdata);
 		},
@@ -2938,8 +2938,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			var sequencenamearray=jQuery("input[name='uda-save-recorded[]']").map(function (){
 				// detect for profanity
 				let sequencename = this.value;
-				if(UDAPluginSDK.profanity.enabled) {
-					sequencename = UDAPluginSDK.checkProfanity(sequencename);
+				if(UDAPluginSDKJS.profanity.enabled) {
+					sequencename = UDAPluginSDKJS.checkProfanity(sequencename);
 				}
 				sequencename = sequencename.trim();
 				sequencenames.push(sequencename);
@@ -2997,7 +2997,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.setRequestHeader('Content-Type', 'application/json');
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					UDAPluginSDK.showSelectedSequence(JSON.parse(xhr.response))
+					UDAPluginSDKJS.showSelectedSequence(JSON.parse(xhr.response))
 				}
 			};
 			xhr.send(JSON.stringify(sequencelistdata));
@@ -3115,17 +3115,17 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.open("GET", url, false);
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					UDAPluginSDK.searchInProgress=false;
-					UDAPluginSDK.renderSearchResults(JSON.parse(xhr.response));
+					UDAPluginSDKJS.searchInProgress=false;
+					UDAPluginSDKJS.renderSearchResults(JSON.parse(xhr.response));
 				} else {
-					UDAPluginSDK.renderMessage();
+					UDAPluginSDKJS.renderMessage();
 				}
 			};
-			// xhr.addEventListener("error", UDAPluginSDK.renderMessage());
+			// xhr.addEventListener("error", UDAPluginSDKJS.renderMessage());
 
 			xhr.onerror = function(){
 				console.log(xhr.status);
-				UDAPluginSDK.renderMessage();
+				UDAPluginSDKJS.renderMessage();
 			};
 			xhr.send();
 		},
@@ -3178,7 +3178,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 		renderSequenceRow:function(data){
 			var element=jQuery(this.getRowHtml(data));
 			element.click(function () {
-				UDAPluginSDK.showSelectedSequence(data);
+				UDAPluginSDKJS.showSelectedSequence(data);
 			});
 			jQuery("#uda-content-container").append(element);
 		},
@@ -3335,21 +3335,21 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 			if(this.sessionID && data.usersessionid && (this.sessionID.toString()===data.usersessionid.toString() || (this.sessiondata.authdata.hasOwnProperty('id') && this.sessiondata.authdata.id.toString()===data.usersessionid.toString()))){
 				jQuery("#uda-delete-sequence").click(function () {
-					UDAPluginSDK.deleteSequence(data);
+					UDAPluginSDKJS.deleteSequence(data);
 				});
 			} else {
 				jQuery("#uda-delete-sequence").hide();
 			}
 
 			jQuery('#uda-upvote').click(function () {
-				UDAPluginSDK.addvote("up",data);
+				UDAPluginSDKJS.addvote("up",data);
 			});
 			jQuery('#uda-downvote').click(function () {
-				UDAPluginSDK.addvote("down",data);
+				UDAPluginSDKJS.addvote("down",data);
 			});
 
 			jQuery("#nist-autoplay").click(function () {
-				UDAPluginSDK.toggleautoplay(navcookiedata);
+				UDAPluginSDKJS.toggleautoplay(navcookiedata);
 			});
 
 			// need to improve the autoplay functionality.
@@ -3362,15 +3362,15 @@ if (typeof UDAPluginSDK === 'undefined') {
 				this.toggleautoplay(navcookiedata);
 			}
 			jQuery("#uda-backto-search").click(function () {
-				UDAPluginSDK.backToSearchResultsPage(navcookiedata);
+				UDAPluginSDKJS.backToSearchResultsPage(navcookiedata);
 			});
 		},
 		backToSearchResultsPage: function(navcookiedata){
-			UDAPluginSDK.autoplay = false;
-			UDAPluginSDK.searchInProgress=false;
-			UDAPluginSDK.autoplayPaused=false;
-			UDAPluginSDK.playNextAction=true;
-			UDAPluginSDK.backtosearchresults(navcookiedata);
+			UDAPluginSDKJS.autoplay = false;
+			UDAPluginSDKJS.searchInProgress=false;
+			UDAPluginSDKJS.autoplayPaused=false;
+			UDAPluginSDKJS.playNextAction=true;
+			UDAPluginSDKJS.backtosearchresults(navcookiedata);
 			let tooltipnodes = document.getElementsByClassName('uda-tooltip');
 			if (tooltipnodes.length > 0) {
 				jQuery('.uda-tooltip').remove();
@@ -3399,8 +3399,8 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 			if(visited === -1) {
 				template.click(function () {
-					UDAPluginSDK.invokedActionManually = true;
-					UDAPluginSDK.performclickaction(data,navcookiedata);
+					UDAPluginSDKJS.invokedActionManually = true;
+					UDAPluginSDKJS.performclickaction(data,navcookiedata);
 				});
 			}
 			return template;
@@ -3499,7 +3499,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 
 				matchNodes.forEach(function (matchNode, matchnodeindex) {
 					if(matchNode.originalNode.hasOwnProperty("element-data")) {
-						const inputLabels = UDAPluginSDK.getclickedinputlabels(matchNode.originalNode["element-data"]);
+						const inputLabels = UDAPluginSDKJS.getclickedinputlabels(matchNode.originalNode["element-data"]);
 						UDAConsoleLogger.info('----------------------------input labels------------------------------');
 						UDAConsoleLogger.info(matchNode,2);
 						UDAConsoleLogger.info(inputLabels, 2);
@@ -3802,7 +3802,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 			var confirmdialog=confirm("Are you sure want to delete "+sequencename);
 			if(confirmdialog === true){
-				UDAPluginSDK.confirmdelete(data);
+				UDAPluginSDKJS.confirmdelete(data);
 			}
 		},
 		//confirmation for the deletion of the sequence list
@@ -3814,7 +3814,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					UDAPluginSDK.searchinelastic();
+					UDAPluginSDKJS.searchinelastic();
 				}
 			};
 			xhr.send(senddata);
@@ -3890,16 +3890,16 @@ if (typeof UDAPluginSDK === 'undefined') {
 			jQuery("#uda-content-container").html('');
 			jQuery("#uda-content-container").append(this.getAdvancedHtml());
 			jQuery("#uda-enable-record").click(function () {
-				UDAPluginSDK.gettimestamp("start");
+				UDAPluginSDKJS.gettimestamp("start");
 			});
 			jQuery("#nistvoiceback").click(function () {
-				UDAPluginSDK.backtomodal();
+				UDAPluginSDKJS.backtomodal();
 			});
 			var xhr = new XMLHttpRequest();
 			xhr.open("GET", UDA_API_URL + "/clickevents/suggested?domain="+encodeURI(window.location.host), true);
 			xhr.onload = function(event){
 				if(xhr.status === 200){
-					UDAPluginSDK.showsuggestedhtml(JSON.parse(xhr.response));
+					UDAPluginSDKJS.showsuggestedhtml(JSON.parse(xhr.response));
 				}
 			};
 			// xhr.send();
@@ -3909,7 +3909,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 			var html =	'<div class="uda-card-details">'
 							// +'<div><button class="uda-tutorial-btn" type="button">Tutorial</button></div>'
 							// +'<hr>'
-							+'<span class="uda-close-icon" onclick="UDAPluginSDK.searchinelastic();">×</span>'
+							+'<span class="uda-close-icon" onclick="UDAPluginSDKJS.searchinelastic();">×</span>'
 							+'<h5>Create your own action</h5>'
 							+'<div><button class="uda-record-btn" id="uda-enable-record"><span>Rec</span></button></div>'
 						+'</div>';
@@ -3925,7 +3925,7 @@ if (typeof UDAPluginSDK === 'undefined') {
 					'			</ul>' +
 					'			<div>' +
 					'				<input id="uda-recorded-name" type="text" name="uda-recorded-name" class="voice-save-recrded-inpt" placeholder="Enter label" nist-voice="true">' +
-					'				<button onclick="UDAPluginSDK.submitrecordedlabel(\'recording\');" class="voice-submit-btn">Submit</button><button class="voice-cancel-btn" onclick="UDAPluginSDK.submitrecordedlabel(\'invalid\');">Invalid Sequence</button><button class="voice-cancel-btn" onclick="UDAPluginSDK.submitrecordedlabel(\'ignore\');">Ignore</button>' +
+					'				<button onclick="UDAPluginSDKJS.submitrecordedlabel(\'recording\');" class="voice-submit-btn">Submit</button><button class="voice-cancel-btn" onclick="UDAPluginSDKJS.submitrecordedlabel(\'invalid\');">Invalid Sequence</button><button class="voice-cancel-btn" onclick="UDAPluginSDKJS.submitrecordedlabel(\'ignore\');">Ignore</button>' +
 					'			</div>' +
 					'		</div>' +
 					'	</div>';
@@ -3951,5 +3951,5 @@ if (typeof UDAPluginSDK === 'undefined') {
 			}
 		}
 	};
-	UDAPluginSDK.init();
+	UDAPluginSDKJS.init();
 }
