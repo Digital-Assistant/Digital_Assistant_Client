@@ -4,7 +4,7 @@ export const isInputNode = (node: any) => {
   }
   switch (node.nodeName.toLowerCase()) {
     case "input":
-      if(typeof node.hasAttribute !== "undefined" && node.hasAttribute("type") && (node.getAttribute("type") === 'button' || node.getAttribute("type") === 'submit')) {
+      if(typeof node.type !== "undefined" && node.type && (node.type === 'button' || node.type === 'submit')) {
         return false;
       } else {
         return true;

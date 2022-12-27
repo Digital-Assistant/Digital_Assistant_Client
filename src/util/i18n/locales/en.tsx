@@ -5,7 +5,7 @@ export const TRANSLATIONS_EN = {
   searchPlaceHolder: "Search recorded sequences",
   playBackError: "Nistapp UDA ran into a problem and will exit",
   tooltipMessage: "Please input the value and then click on",
-  inputError: 'Please input proper name.',
+  inputError: 'Please input proper name. Allowed character are [0-9][A-Z][a-z][ _.-]',
   inputMandatory: "Please input value",
   cancelRecording: "Cancel and Exit",
   submitButton: "Submit",

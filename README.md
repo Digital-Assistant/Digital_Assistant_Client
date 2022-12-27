@@ -58,3 +58,11 @@ To build chrome extension (to build folder)
 ```bash
   npm run build
 ```
+
+
+## Installing to Chrome as Plugin
+
+```
+1. Under chrome -> Extensions (enable developer mode) 
+2. Click on Load unpacked and select the build folder
+3. Now open new tab and enter the url that you want to use for

@@ -173,19 +173,37 @@ export const RecordedData = (props: MProps) => {
     if (name === "") {
       setInputAlert({...inputAlert, name: true});
       return false;
+    } else {
+      setInputAlert({...inputAlert, name: false});
+    }
+
+    if(name!==''){
+      if(!validateInput(name)){
+        setInputError({...inputError, name: true});
+        return false;
+      }
     }
 
     setDisableForm(true);
     props.showLoader(true);
 
+    let validInput = true;
+
     let _labels: any = [name];
     if (labels.length) {
       const _extraLabels = labels.map((label: any) => {
         if (label.label) {
+          if(!validateInput(label.label)){
+            validInput = false;
+          }
           return label.label;
         }
       });
       _labels = [..._labels, ..._extraLabels];
+    }
+
+    if(!validInput){
+      return false;
     }
 
     const _payload: any = {
@@ -219,6 +237,7 @@ export const RecordedData = (props: MProps) => {
       setInputError({...inputError, name: true})
       return;
     } else {
+      setInputAlert({...inputAlert, name: false});
       setInputError({...inputError, name: false})
     }
     if (timer) {
@@ -310,6 +329,10 @@ export const RecordedData = (props: MProps) => {
    * @param index
    */
   const updateTooltip = async (key: string, index: number) => {
+    if(!validateInput(tooltip)){
+      setInputError({...inputError, tooltip: true})
+      return;
+    }
     props.showLoader(true);
     setDisableTooltipSubmitBtn( true);
     const _objData = getObjData(recordData[index]?.objectdata);

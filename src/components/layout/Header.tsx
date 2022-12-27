@@ -53,6 +53,18 @@ const Header = (props: HeaderProps) => {
     }
   }
 
+  /**
+   * Validate input of given string
+   * @param value
+   */
+  const validateInput = (value) => {
+    let validateCondition = new RegExp("^[0-9A-Za-z _.-]+$");
+    if(value !== '')
+      return (validateCondition.test(value));
+    else
+      return true;
+  }
+
   return (
     <>
       <div>
@@ -91,7 +103,11 @@ const Header = (props: HeaderProps) => {
               placeholder="search..."
               id="uda-search-input"
               value={searchKeyword}
-              onChange={(e) => setSearchKeyword(e.target.value)}
+              onChange={(e) => {
+                if(validateInput(e.target.value)) {
+                  setSearchKeyword(e.target.value)
+                }
+              }}
               onKeyDown={submitSearch}
             />
             <button

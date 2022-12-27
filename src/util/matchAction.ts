@@ -39,28 +39,24 @@ export const matchAction = (node, selectedNode) => {
   // adding tooltip to text editor elements
   if(checkNodeValues(node, 'textEditors')){
     addToolTip(node, node, selectedNode, navigationData, false, false, false);
-    invokeNextNode(node, timeToInvoke);
     return;
   }
 
   // adding tooltip to drop down elements
   if(checkNodeValues(node, 'dropDowns')){
     addToolTip(node, node, selectedNode, navigationData, false, false, false);
-    invokeNextNode(node, timeToInvoke);
     return;
   }
 
   // adding tooltip to Date selector elements
   if(checkNodeValues(node, 'datePicker')){
     addToolTip(node, node, selectedNode, navigationData, false, false, false);
-    invokeNextNode(node, timeToInvoke);
     return;
   }
 
 
   if (inArray(node.nodeName.toLowerCase(), CONFIG.ignoreNodesFromIndexing) !== -1) {
     addToolTip(node, node.parentNode, selectedNode, navigationData, false, false, false);
-    invokeNextNode(node, timeToInvoke);
     return;
   }
 
