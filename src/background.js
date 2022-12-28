@@ -1,8 +1,7 @@
 'use strict';
 
-const updateData = false;
 let UDADebug = false; //this variable exists in links.js file also
-const apiHost = (UDADebug) ? "http://localhost:11080/voiceapi" : "https://udan.nistapp.ai/voiceapi"; //this variable exists in links.js file also
+const apiHost = process.env.baseURL;
 const cookieName = "uda-sessiondata";
 const CSPStorageName = "uda-csp-storage";
 const activeTabs = [];
@@ -14,7 +13,6 @@ let sessionData = {
 	authdata: {},
 	csp: {cspenabled: false, udanallowed: true, domain: ''}
 };
-const apikey = 'AIzaSyBeCZ1su0BYG5uGTHqqdg1bczlsubDuDrU';
 
 let currentTab = [];
 
@@ -308,6 +306,7 @@ let onHeadersReceived = function (details) {
 
 let onHeaderFilter = {urls: ['*://*/*'], types: ['main_frame']};
 
+// commented the CSP checking code functionality
 /*chrome.declarativeNetRequest.onHeadersReceived.addListener(
 	onHeadersReceived, onHeaderFilter, ['blocking', 'responseHeaders']
 );*/

@@ -14,6 +14,10 @@ const webpack = require('webpack')
 const CopyPlugin = require("copy-webpack-plugin");
 const transform = require("typescript-json/lib/transform").default;
 const Dotenv = require('dotenv-webpack');
+const CompressionPlugin = require('compression-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (env, argv) => {
 
@@ -21,8 +25,7 @@ module.exports = (env, argv) => {
 
     const envFile = './environments/'+((env.build) ? `${env.build}.env` : 'local.env');
 
-    const buildPath = (env.build && env.build == 'production') ? 'dist' : 'build';
-    console.log(buildPath);
+    const buildPath = (env.build && env.build === 'production') ? 'dist' : 'build';
 
     const webpackConfig = {
 
@@ -33,20 +36,10 @@ module.exports = (env, argv) => {
             // and webpack starts bundling
             'UdanHeaders': './src/Headers.js',
             'UdanSDK': './src/index.tsx',
+            'background': './src/background.js',
         },
         mode: 'development',// "production" | "development" | "none"
         devtool: 'cheap-module-source-map',// enum
-        // mode: 'production',
-
-        // enhance debugging by adding meta info for the browser devtools
-        // source-map most detailed at the expense of build speed.
-        /*devtool: 'source-map',
-        devServer: {
-            watchContentBase: true,
-            contentBase: path.resolve(__dirname, 'dist'),
-            port: 9000
-        },*/
-
         watch: false,
 
         watchOptions: {
@@ -107,7 +100,7 @@ module.exports = (env, argv) => {
                         loader: 'file-loader',
                         options: {
                             name: '[name].[ext]',
-                            outputPath: 'images/'
+                            outputPath: '/images/'
                         }
                     }]
                 },
@@ -128,12 +121,10 @@ module.exports = (env, argv) => {
                 process: 'process/browser',
                 Buffer: ['buffer', 'Buffer']
             }),
-            /*new webpack.ProvidePlugin({
-                'utils': 'utils'
-            }),*/
             new CopyPlugin({
                 patterns: [
-                    {from: 'src/logo.*', to: "../[name][ext]"},
+                    {from: 'src/logo.*', to: "../logos/[name][ext]"},
+                    {from: 'public/', to: "../"}
                 ],
             }),
             new webpack.DefinePlugin({
@@ -148,6 +139,13 @@ module.exports = (env, argv) => {
                 defaults: false,
                 ignoreStub: true,
             }),
+            // new BundleAnalyzerPlugin(),
+            // gzip
+            /*new CompressionPlugin({
+                algorithm: 'gzip',
+                threshold: 10240,
+                minRatio: 0.8
+            })*/
         ],
         resolve: {
             // options for resolving module requests
@@ -172,6 +170,18 @@ module.exports = (env, argv) => {
                 "assert": require.resolve("assert/")
             }
         },
+        optimization: {
+            minimizer: [
+                new CssMinimizerPlugin(),
+                new TerserPlugin({
+                    terserOptions: {
+                        compress: {
+                            drop_console: true, // remove console statement
+                        },
+                    },
+                }),
+            ],
+        },
         output: {
             // options related to how webpack emits results
             publicPath: '',
@@ -183,6 +193,12 @@ module.exports = (env, argv) => {
             clean: true
         },
     };
+
+    if(env.build && env.build === 'production') {
+        webpackConfig.mode = 'production';
+        // webpackConfig.devtool = 'nosources-source-map';
+        delete webpackConfig.devtool;
+    }
 
     return webpackConfig;
 }
