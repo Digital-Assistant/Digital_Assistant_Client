@@ -4,6 +4,7 @@ import { CONFIG } from "../../config";
 interface ILanguageSelect {
   onLanguageChange: (event: any) => void;
   selectedLang: string;
+  config: any;
 }
 
 interface ILanguageOption {
@@ -14,6 +15,7 @@ interface ILanguageOption {
 const LanguageSelect = ({
   onLanguageChange,
   selectedLang,
+  config
 }: ILanguageSelect) => {
   const [langOptions, setLangOptions] = useState<ILanguageOption[]>([]);
 
@@ -21,7 +23,7 @@ const LanguageSelect = ({
     /**
      * To generate language options list
      */
-    if (CONFIG.multilingual.enabled) {
+    if (config.enableMultilingual) {
       const tempLangOptions = [];
       CONFIG.bcpLang.forEach((langcode) => {
         if (langcode.length > 2) {

@@ -404,6 +404,7 @@ function App() {
                               searchKeyword={searchKeyword}
                               toggleFlag={hide}
                               toggleHandler={toggleHandler}
+                              config={global.UDAGlobalConfig}
                           />
                           <Body
                               content={

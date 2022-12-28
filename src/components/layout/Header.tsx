@@ -18,10 +18,7 @@ const Header = (props: HeaderProps) => {
   const {
     selectedLang: selectedLanguage,
     searchInLang,
-    // enabled: multiLingualEnabled,
   } = CONFIG.multilingual;
-
-  const multiLingualEnabled = props?.config?.enableMultilingual;
 
   const [hide, setHide] = useState<boolean>(props?.toggleFlag);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
@@ -117,11 +114,12 @@ const Header = (props: HeaderProps) => {
               onClick={() => multiLangSearch(searchKeyword)}
             />
           </div>
-          {multiLingualEnabled && (
-            <LanguageSelect
-              onLanguageChange={setSelectedLang}
-              selectedLang={selectedLang}
-            />
+          {props?.config?.enableMultilingual && (
+              <LanguageSelect
+                onLanguageChange={setSelectedLang}
+                selectedLang={selectedLang}
+                config={props?.config}
+              />
           )}
         </div>
       </div>
