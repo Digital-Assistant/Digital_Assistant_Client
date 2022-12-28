@@ -1,6 +1,6 @@
 import Keycloak from "keycloak-js";
 const keycloak = new Keycloak({
-    url: "https://keycloaktest.nistapp.ai/",
+    url: process.env.keyCloakUrl,
     realm: "UDAN",
     clientId: "react-app"
 });
