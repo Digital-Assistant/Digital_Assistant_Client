@@ -5,7 +5,6 @@
  */
 
 import React, {useState, useEffect, useCallback, useRef} from "react";
-// import 'antd/dist/reset.css';
 import './css/antd.css';
 import "./css/UDAN.scss";
 
@@ -253,10 +252,6 @@ function App() {
    * @param _page
    */
   const getSearchResults = async (_page = 1) => {
-    /*if(isRecording || !_.isEmpty(selectedRecordingDetails)){
-      offSearch();
-      return;
-    }*/
     setShowLoader(true);
     const _searchResults = await fetchSearchResults({
       keyword: searchKeyword,

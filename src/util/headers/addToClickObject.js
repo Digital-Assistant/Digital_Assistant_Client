@@ -1,5 +1,3 @@
-// import {addClickToNode} from "../addClickToNode";
-
 export const ignoreTags = ["body", "document", "window", "html", "script", "style", "iframe", "doctype", "link", "svg", "path", "meta", "circle", "rect", "stop", "defs", "linearGradient", "g"];
 
 export const AddToClickObjects = (node) => {
@@ -30,8 +28,6 @@ export const AddToClickObjects = (node) => {
 
     clickObject.id = UDAClickObjects.length;
     UDAClickObjects.push(clickObject);
-
-    // addClickToNode(node);
   } catch (e) {
     console.log('Unable to process clickable object - '+node, e);
   }

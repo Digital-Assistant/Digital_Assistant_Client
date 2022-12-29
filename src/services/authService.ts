@@ -1,6 +1,5 @@
 import { ENDPOINT } from "../config/endpoints";
 import { REST } from ".";
-// import { getFromStore } from "../util";
 
 /**
  * To get the session
