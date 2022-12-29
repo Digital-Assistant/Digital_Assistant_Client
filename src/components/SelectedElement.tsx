@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { CONFIG } from "../config";
+import { CustomConfig } from "../config/CustomConfig";
 import { updateRecordClicks } from "../services/recordService";
 import fetchHtmlFormElements from "../util/recording-utils/fetchHtmlFormElements";
 
@@ -22,7 +22,7 @@ const SelectedElement = ({ data }) => {
   const [defaultSelectedValue, setDefaultSelectedValue] = useState(
     JSON.stringify(selectedElement)
   );
-  const { enableNodeTypeChangeSelection } = CONFIG;
+  const { enableNodeTypeSelection } = CustomConfig;
 
   useEffect(() => {
     /**
@@ -62,7 +62,7 @@ const SelectedElement = ({ data }) => {
     updateRecordClicks(data);
   };
 
-  return enableNodeTypeChangeSelection ? (
+  return enableNodeTypeSelection ? (
     <>
       <span style={{ marginRight: "4px" }}>Clicked on </span>
       {optionsArray.length > 0 && (
