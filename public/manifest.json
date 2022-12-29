@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "UDAN-React-Library",
+  "name": "Universal Digital Assistant (UDA)",
   "version": "0.9.0",
   "content_scripts": [
     {
