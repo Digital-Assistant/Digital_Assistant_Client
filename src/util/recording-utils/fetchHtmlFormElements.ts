@@ -96,7 +96,7 @@ const fetchHtmlFormElements = () => {
     // {inputElement: 'output', inputType: 'output', displayName: 'Output Field'},
     // {inputElement: 'datalist ', inputType: 'datalist', displayName: 'Datalist Field'},
     {
-      inputElement: "a ",
+      inputElement: "a",
       inputType: "href",
       displayName: "Link",
       systemTag: "link",

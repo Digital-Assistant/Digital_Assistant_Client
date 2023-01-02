@@ -427,12 +427,9 @@ export const RecordedData = (props: MProps) => {
                             onChange={handlePersonal(index)}
                         />
                         <label className="uda-checkbox-label">{translate('personalInfoLabel')}</label>
-                        <span
-                            className="info-icon"
-                            title={translate('personalInfoTooltip')}
-                        >
-                        <InfoCircleOutlined/>
-                      </span>
+                        <span className="info-icon" title={translate('personalInfoTooltip')}>
+                          <InfoCircleOutlined/>
+                        </span>
                       </div>
                     </>
                     {(props.config.enableTooltip === true && isInputNode(objectData.node)) &&
@@ -443,7 +440,6 @@ export const RecordedData = (props: MProps) => {
                                        style={{width: "68% !important"}} onChange={onChangeTooltip} value={(tooltip)? tooltip: (objectData.meta?.tooltipInfo)} />
                               {inputError.tooltip && <span className={`uda-alert`}> {translate('inputError')}</span>}
                               <div style={{display:"flex"}}>
-                              <SelectedElement data={item}/>
                               </div>
                                 <span>
                                   <button className={`uda-tutorial-btn uda_exclude ${(disableTooltipSubmitBtn) ? "disabled" : ""}`} style={{color: "#fff", marginTop:"10px"}}
@@ -456,6 +452,7 @@ export const RecordedData = (props: MProps) => {
                             </div>
                         </>
                     }
+                    <SelectedElement data={item} index={index} recordData={recordData} config={props.config} storeRecording={storeRecording} />
                   </>
               )}
             </li>

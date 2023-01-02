@@ -4,6 +4,8 @@ import {UDAErrorLogger} from "../config/error-log";
 import {clickableElementExists, getFromStore, setToStore} from "./index";
 import {postClickData} from "../services";
 import {checkNodeValues} from "./checkNodeValues";
+import mapClickedElementToHtmlFormElement from "./recording-utils/mapClickedElementToHtmlFormElement";
+declare const UDAGlobalConfig;
 
 /**
  *
@@ -82,6 +84,14 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
 
   if(addIsPersonal) {
     meta.isPersonal = true;
+  }
+
+  // adding default system detected html element type in metadata
+  if(UDAGlobalConfig.enableNodeTypeSelection) {
+    meta.systemDetected = mapClickedElementToHtmlFormElement(node);
+    if (meta.systemDetected.inputElement !== 'others') {
+      meta.selectedElement = meta.systemDetected;
+    }
   }
 
 

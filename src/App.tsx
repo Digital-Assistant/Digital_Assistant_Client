@@ -60,7 +60,7 @@ function App() {
   const [searchKeyword, setSearchKeyword] = useState<string>('');
   const [searchResults, setSearchResults] = useState<any>([]);
   const [page, setPage] = useState<number>(1);
-  const [refetchSearch, setRefetchSearch] = useState<string>("off");
+  const [reFetchSearch, setReFetchSearch] = useState<string>("off");
   const [recSequenceData, setRecSequenceData] = useState<any>([]);
   const [recordSequenceDetailsVisibility, setRecordSequenceDetailsVisibility] = useState<boolean>(false);
   const [selectedRecordingDetails, setSelectedRecordingDetails] = useState<any>(getFromStore(CONFIG.SELECTED_RECORDING, false) || false);
@@ -221,11 +221,11 @@ function App() {
       getSearchResults();
     }
 
-    if (refetchSearch === "on") {
+    if (reFetchSearch === "on") {
       getSearchResults();
-      setRefetchSearch("off");
+      setReFetchSearch("off");
     }
-  }, [searchKeyword, refetchSearch]);
+  }, [searchKeyword, reFetchSearch]);
 
   /**
    * Sync data with storage
@@ -243,7 +243,7 @@ function App() {
   };
 
   const offSearch = () => {
-    setRefetchSearch('off');
+    setReFetchSearch('off');
     setShowSearch(false);
     setShowLoader(false);
   };
@@ -274,7 +274,7 @@ function App() {
     playHandler("off");
     setIsRecording(true);
     setShowRecord(false);
-    setRefetchSearch('');
+    setReFetchSearch('');
     setShowSearch(false);
     await addBodyEvents();
   };
@@ -290,7 +290,7 @@ function App() {
     setToStore([], CONFIG.RECORDING_SEQUENCE, false);
     setToStore({}, CONFIG.SELECTED_RECORDING, false);
     setSelectedRecordingDetails({});
-    setRefetchSearch('on');
+    setReFetchSearch('on');
     setShowSearch(true);
     if (window.udanSelectedNodes) window.udanSelectedNodes = [];
   };
@@ -311,7 +311,7 @@ function App() {
         await setSearchKeyword("");
         break;
     }
-    setRefetchSearch('on');
+    setReFetchSearch('on');
     setShowSearch(true);
     cancel();
   };
@@ -323,7 +323,7 @@ function App() {
    */
   const toggleHandler = (hideFlag: boolean, type: string) => {
     if (type == "footer") {
-      setRefetchSearch('off');
+      setReFetchSearch('off');
       setShowSearch(false);
       setToStore([], CONFIG.RECORDING_SEQUENCE, false);
       setShowRecord(hideFlag);
@@ -335,7 +335,7 @@ function App() {
    * @param flag
    */
   const showRecordHandler = (flag: boolean) => {
-    setRefetchSearch('');
+    setReFetchSearch('');
     setShowSearch(false);
     setManualPlay("off");
     setToStore("off", CONFIG.RECORDING_MANUAL_PLAY, true);
@@ -374,7 +374,7 @@ function App() {
    */
   const showRecordingDetails = (data: any) => {
     playHandler("off")
-    setRefetchSearch('');
+    setReFetchSearch('');
     setShowSearch(false);
     setSelectedRecordingDetails({...data});
     setRecordSequenceDetailsVisibility(true);
@@ -443,7 +443,7 @@ function App() {
                                       isShown={toggleContainer("recorded-data")}
                                       data={recSequenceData}
                                       recordHandler={recordHandler}
-                                      refetchSearch={setRefetchSearch}
+                                      refetchSearch={setReFetchSearch}
                                       showLoader={setShowLoader}
                                       config={global.UDAGlobalConfig}
                                   />

@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { CustomConfig } from "../config/CustomConfig";
 import { updateRecordClicks } from "../services/recordService";
 import fetchHtmlFormElements from "../util/recording-utils/fetchHtmlFormElements";
+import TSON from "typescript-json";
 
-const SelectedElement = ({ data }) => {
+const SelectedElement = ({ data, recordData, index, config, storeRecording }) => {
   let nodeData = JSON.parse(data.objectdata);
   let selectedElement = {
     inputElement: "",
@@ -22,7 +22,7 @@ const SelectedElement = ({ data }) => {
   const [defaultSelectedValue, setDefaultSelectedValue] = useState(
     JSON.stringify(selectedElement)
   );
-  const { enableNodeTypeSelection } = CustomConfig;
+  const { enableNodeTypeSelection } = config;
 
   useEffect(() => {
     /**
@@ -46,7 +46,7 @@ const SelectedElement = ({ data }) => {
     setOptionsArray(tempOptionsArray);
   }, []);
 
-  const editAndSaveSelectedHtmlElement = (event) => {
+  const editAndSaveSelectedHtmlElement = async (event) => {
     const valueSelected = JSON.parse(event.target.value);
     let nodeData = JSON.parse(data.objectdata);
     if (valueSelected.inputElement === "") {
@@ -59,7 +59,9 @@ const SelectedElement = ({ data }) => {
       nodeData.meta.selectedElement = valueSelected;
     }
     data.objectdata = JSON.stringify(nodeData);
-    updateRecordClicks(data);
+    recordData[index].objectdata = data.objectdata;
+    storeRecording(recordData);
+    await updateRecordClicks(data);
   };
 
   return enableNodeTypeSelection ? (
