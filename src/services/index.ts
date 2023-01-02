@@ -5,8 +5,6 @@ import TSON from "typescript-json";
  * @options : object (properties needed for REST call)
  */
 export const apiCal = (options: any) => {
-  // const validate = checkValidUser()
-  // if(!validate) return
   const requestOptions = {
     method: options.method,
     headers: options?.headers ? options?.headers : getHTTPHeaders("json"),
@@ -37,8 +35,6 @@ export const apiCal = (options: any) => {
  * @options : object (properties needed for REST call)
  */
 export const syncApiCal = async (options: any) => {
-  // const validate = checkValidUser()
-  // if(!validate) return
   const requestOptions = {
     method: options.method,
     headers: getHTTPHeaders("json"),

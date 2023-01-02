@@ -39,10 +39,6 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
     console.log(node);
   }
 
-  /*if (!node.isSameNode(event.target) || clickableElementExists(event.target)) {
-    return;
-  }*/
-
   // node = event.target;
   let recordingNode = node;
 

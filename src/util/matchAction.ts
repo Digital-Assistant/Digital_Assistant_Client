@@ -17,10 +17,6 @@ export const matchAction = (node, selectedNode) => {
 
   let timeToInvoke = CONFIG.invokeTime;
 
-  /*if (!CONFIG.playNextAction) {
-    return;
-  }*/
-
   // remove added tooltips before invoking
   removeToolTip();
 
@@ -147,15 +143,7 @@ export const matchAction = (node, selectedNode) => {
         invokeNextNode(node, timeToInvoke);
       }
       break;
-    /*case 'div':
-      if (node.classList && (node.classList.contains('mat-form-field-flex') || node.classList.contains('mat-select-trigger'))) {
-        addToolTip(node, node.parentNode.parentNode, selectedNode, navigationData, true, false);
-      } else {
-        node.click();
-        invokeNextNode(node, timeToInvoke);
-      }
-      break;*/
-      //	fix for text editor during playback
+    //	fix for text editor during playback
     case 'ckeditor':
       addToolTip(node, node, selectedNode, navigationData, true, false);
       break;
