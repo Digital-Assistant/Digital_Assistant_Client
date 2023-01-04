@@ -6,6 +6,7 @@ import {getNodeInfo} from "../util/nodeInfo";
 import TSON from "typescript-json";
 import {getAbsoluteOffsets, getFromStore, inArray} from "../util";
 import domJSON from "domjson";
+import mapClickedElementToHtmlFormElement from "../util/recording-utils/mapClickedElementToHtmlFormElement";
 
 /**
  * To record each action/event
@@ -155,6 +156,15 @@ export const postClickData = async (node: HTMLElement, text: string, meta: any) 
 
   objectData.offset = getAbsoluteOffsets(node);
   objectData.node.nodeInfo = getNodeInfo(node);
+
+  const {enableNodeTypeChangeSelection} = CONFIG;
+
+  if(enableNodeTypeChangeSelection) {
+    objectData.meta.systemDetected = mapClickedElementToHtmlFormElement(node);
+    if (objectData.meta.systemDetected.inputElement !== 'others') {
+      objectData.meta.selectedElement = objectData.meta.systemDetected;
+    }
+  }
 
   const payload = {
     domain: window.location.host,

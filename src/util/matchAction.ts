@@ -7,6 +7,7 @@ import {addToolTip, removeToolTip} from "./addToolTip";
 import {invokeNextNode} from "./invokeNextNode";
 import {getSelectedRecordFromStore} from "./invokeNode";
 import {checkNodeValues} from "./checkNodeValues";
+declare const UDAGlobalConfig;
 
 export const matchAction = (node, selectedNode) => {
 
@@ -24,11 +25,13 @@ export const matchAction = (node, selectedNode) => {
   const navigationData = getSelectedRecordFromStore();
 
   // perform click action based on the input given
-  const recordedNodeData = selectedNode.objectdata;
-  if (recordedNodeData.meta && recordedNodeData.meta.hasOwnProperty('selectedElement') && recordedNodeData.meta.selectedElement && recordedNodeData.meta.selectedElement.systemTag.trim() != 'others') {
-    let performedAction = mapSelectedElementAction(node, selectedNode, navigationData, recordedNodeData);
-    if (performedAction) {
-      return;
+  if(UDAGlobalConfig.enableNodeTypeSelection) {
+    const recordedNodeData = JSON.parse(selectedNode.objectdata);
+    if (recordedNodeData.meta && recordedNodeData.meta.hasOwnProperty('selectedElement') && recordedNodeData.meta.selectedElement && recordedNodeData.meta.selectedElement.systemTag.trim() != 'others') {
+      let performedAction = mapSelectedElementAction(node, selectedNode, navigationData, recordedNodeData);
+      if (performedAction) {
+        return;
+      }
     }
   }
 

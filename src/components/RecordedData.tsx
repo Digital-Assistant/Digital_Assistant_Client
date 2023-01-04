@@ -11,6 +11,7 @@ import _ from "lodash";
 import {getObjData, setToStore} from "../util";
 import {postRecordSequenceData, profanityCheck, updateRecordClicks} from "../services/recordService";
 import {CONFIG} from "../config";
+import SelectedElement from "./SelectedElement";
 
 import TSON from "typescript-json";
 import {translate} from "../util/translation";
@@ -426,12 +427,9 @@ export const RecordedData = (props: MProps) => {
                             onChange={handlePersonal(index)}
                         />
                         <label className="uda-checkbox-label">{translate('personalInfoLabel')}</label>
-                        <span
-                            className="info-icon"
-                            title={translate('personalInfoTooltip')}
-                        >
-                        <InfoCircleOutlined/>
-                      </span>
+                        <span className="info-icon" title={translate('personalInfoTooltip')}>
+                          <InfoCircleOutlined/>
+                        </span>
                       </div>
                     </>
                     {(props.config.enableTooltip === true && isInputNode(objectData.node)) &&
@@ -441,6 +439,8 @@ export const RecordedData = (props: MProps) => {
                                        className="uda-form-input uda_exclude" placeholder={translate('toolTipPlaceHolder')}
                                        style={{width: "68% !important"}} onChange={onChangeTooltip} value={(tooltip)? tooltip: (objectData.meta?.tooltipInfo)} />
                               {inputError.tooltip && <span className={`uda-alert`}> {translate('inputError')}</span>}
+                              <div style={{display:"flex"}}>
+                              </div>
                                 <span>
                                   <button className={`uda-tutorial-btn uda_exclude ${(disableTooltipSubmitBtn) ? "disabled" : ""}`} style={{color: "#fff", marginTop:"10px"}}
                                           id="uda-tooltip-save"
@@ -452,6 +452,7 @@ export const RecordedData = (props: MProps) => {
                             </div>
                         </>
                     }
+                    <SelectedElement data={item} index={index} recordData={recordData} config={props.config} storeRecording={storeRecording} />
                   </>
               )}
             </li>
