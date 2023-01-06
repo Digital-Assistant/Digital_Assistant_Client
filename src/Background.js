@@ -1,5 +1,8 @@
 'use strict';
 
+import {UDADigestMessage} from "./util/UDADigestMessage";
+import {invokeApi} from "./util/invokeApi";
+
 let UDADebug = false; //this variable exists in links.js file also
 const apiHost = process.env.baseURL;
 const cookieName = "uda-sessiondata";
@@ -26,26 +29,6 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 	activeTabId = activeInfo.tabId;
 });
 
-/**
- *
- * @param textmessage
- * @param algorithm
- * @returns {Promise<ArrayBuffer>}
- * @constructor
- *
- * This is used for encrypting text messages as specified in the docs
- * https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest
- *
- */
-async function UDAdigestMessage(textmessage, algorithm) {
-	const encoder = new TextEncoder();
-	const data = encoder.encode(textmessage);
-	const hash = await crypto.subtle.digest(algorithm, data);
-	const hashArray = Array.from(new Uint8Array(hash));                     // convert buffer to byte array
-	const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
-	return hashHex;
-}
-
 //login with chrome identity functionality
 async function loginWithChrome() {
 	sessionData.authenticationsource = "google";
@@ -53,9 +36,9 @@ async function loginWithChrome() {
 		if (data.id !== '' && data.email !== "") {
 			sessionData.authenticated = true;
 			sessionData.authdata = data;
-			UDAdigestMessage(sessionData.authdata.id, "SHA-512").then(async (encryptedid) => {
+			UDADigestMessage(sessionData.authdata.id, "SHA-512").then(async (encryptedid) => {
 				sessionData.authdata.id = encryptedid;
-				UDAdigestMessage(sessionData.authdata.email, "SHA-512").then(async (encryptedemail) => {
+				UDADigestMessage(sessionData.authdata.email, "SHA-512").then(async (encryptedemail) => {
 					sessionData.authdata.email = encryptedemail;
 					await bindAuthenticatedAccount();
 				});
@@ -76,25 +59,25 @@ async function sendSessionData(sendaction = "UDAUserSessionData", message = '') 
 	} else {
 		let url = new URL(tab.url);
 		let domain = url.protocol + '//' + url.hostname;
-		let csprecord = {cspenabled: false, udanallowed: true, domain: ''};
-		let cspdata = getstoragedata(CSPStorageName);
-		let recordexists = false;
-		if (cspdata) {
-			let csprecords = cspdata;
-			if (csprecords.length > 0) {
-				for (let i = 0; i < csprecords.length; i++) {
-					if (csprecords[i].domain === domain) {
-						recordexists = true;
-						csprecord = csprecords[i];
+		let cspRecord = {cspenabled: false, udanallowed: true, domain: ''};
+		let cspData = getstoragedata(CSPStorageName);
+		let recordExists = false;
+		if (cspData) {
+			let cspRecords = cspData;
+			if (cspRecords.length > 0) {
+				for (let i = 0; i < cspRecords.length; i++) {
+					if (cspRecords[i].domain === domain) {
+						recordExists = true;
+						cspRecord = cspRecords[i];
 						break;
 					}
 				}
-				if (recordexists) {
-					sessionData.csp = csprecord;
+				if (recordExists) {
+					sessionData.csp = cspRecord;
 				}
 			}
 		}
-		sessionData.csp = csprecord;
+		sessionData.csp = cspRecord;
 		console.log(sessionData);
 		await chrome.tabs.sendMessage(tab.id, {action: sendaction, data: JSON.stringify(sessionData)});
 		return true;
@@ -310,39 +293,6 @@ let onHeaderFilter = {urls: ['*://*/*'], types: ['main_frame']};
 /*chrome.declarativeNetRequest.onHeadersReceived.addListener(
 	onHeadersReceived, onHeaderFilter, ['blocking', 'responseHeaders']
 );*/
-
-
-/**
- * Common API call functionality
- */
-async function invokeApi(url, method, data, parseJson = true) {
-	try {
-		const config = {
-			method: method,
-			headers: {
-				'Content-Type': 'application/json',
-				'charset': 'UTF-8'
-			}
-		};
-		if (data) {
-			config.body = JSON.stringify(data);
-		}
-		let response = await fetch(url, config);
-		console.log(response);
-		if (response.ok) {
-			if (parseJson) {
-				return response.json();
-			} else {
-				return response.text();
-			}
-		} else {
-			return false;
-		}
-	} catch (e) {
-		console.log(e);
-		return false;
-	}
-}
 
 /**
  * Store keycloak data in chrome extension storage for retrival for other sites

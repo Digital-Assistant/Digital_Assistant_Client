@@ -34,9 +34,10 @@ module.exports = (env, argv) => {
             // defaults to ./src
             // Here the application starts executing
             // and webpack starts bundling
-            'UdanHeaders': './src/Headers.js',
-            'UdanSDK': './src/index.tsx',
-            'background': './src/background.js',
+            'UDAHeaders': './src/Headers.js',
+            'UDASdk': './src/index.tsx',
+            'UDABackground': './src/Background.js',
+            'UDALoad': './src/InjectSDK.js'
         },
         mode: 'development',// "production" | "development" | "none"
         devtool: 'cheap-module-source-map',// enum

@@ -17,7 +17,7 @@ import mapClickedElementToHtmlFormElement from "../util/recording-utils/mapClick
 export const recordClicks = async (request?: any) => {
   request.sessionid = await getSessionKey();
   const parameters = {
-    url: ENDPOINT.RECORD,
+    url: ENDPOINT.Record,
     method: "POST",
     body: request,
   };
@@ -33,7 +33,7 @@ export const recordClicks = async (request?: any) => {
 export const updateRecordClicks = async (request?: any) => {
   request.sessionid = await getSessionKey();
   const parameters = {
-    url: ENDPOINT.UPDATE_RECORD,
+    url: ENDPOINT.UpdateRecord,
     method: "POST",
     body: request,
   };
@@ -49,7 +49,7 @@ export const updateRecordClicks = async (request?: any) => {
 export const recordSequence = async (request?: any) => {
   request.usersessionid = await getUserId();
   const parameters = {
-    url: ENDPOINT.RECORD_SEQUENCE,
+    url: ENDPOINT.RecordSequence,
     method: "POST",
     body: request,
   };
@@ -66,7 +66,7 @@ export const userClick = async (request?: any) => {
   request.usersessionid = await getUserId();
   request.clickedname = window.location.host;
   const parameters = {
-    url: ENDPOINT.USER_CLICK,
+    url: ENDPOINT.UserClick,
     method: "PUT",
     body: request,
   };
@@ -76,7 +76,7 @@ export const userClick = async (request?: any) => {
 export const deleteRecording = async (request?: any) => {
   request.usersessionid = await getUserId();
   const parameters = {
-    url: ENDPOINT.DELETE_SEQUENCE,
+    url: ENDPOINT.DeleteSequence,
     method: "POST",
     body: request,
   };
@@ -100,7 +100,7 @@ export const vote = async (request?: any, type?: string) => {
   };
 
   const parameters = {
-    url: ENDPOINT.VOTE_RECORD,
+    url: ENDPOINT.VoteRecord,
     method: "POST",
     body: payload,
   };
@@ -118,7 +118,7 @@ export const profanityCheck = async (request?: any) => {
   headers.append("Content-Type", "text/plain");
   headers.append("Ocp-Apim-Subscription-Key", CONFIG.profanity.config.key1);
   const parameters = {
-    url: ENDPOINT.PROFANITY_CHECK,
+    url: ENDPOINT.ProfanityCheck,
     method: "POST",
     body: request,
     headers,
@@ -130,6 +130,7 @@ export const profanityCheck = async (request?: any) => {
  * To post click data to REST
  * @param node HTMLElement
  * @param text
+ * @param meta
  * @returns promise
  */
 export const postClickData = async (node: HTMLElement, text: string, meta: any) => {

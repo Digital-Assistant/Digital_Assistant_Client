@@ -10,12 +10,11 @@ import "./css/UDAN.scss";
 
 import {Button, Spin} from "antd";
 import {fetchSearchResults} from "./services/searchService";
-import {login} from "./services/authService";
 import _ from "lodash";
 import {
   squeezeBody,
   setToStore,
-  getFromStore,
+  getFromStore, removeFromStore,
 } from "./util";
 import {CONFIG} from "./config";
 import UdanMain from "./components/UdanMain";
@@ -68,6 +67,7 @@ function App() {
    * keycloak integration
    */
   const [authenticated, setAuthenticated] = useState(false);
+  const [keycloakSessionData, setKeycloakSessionData] = useState(null);
   const [userSessionData, setUserSessionData] = useState(null);
   const [invokeKeycloak, setInvokeKeycloak] = useState(false);
 
@@ -82,51 +82,76 @@ function App() {
 
   useEffect(() => {
     if (invokeKeycloak) {
-      let userSessionData = getFromStore(CONFIG.UDAKeyCloakKey, false);
-      if (userSessionData) {
-        setUserSessionData(userSessionData);
+      let keycloakData = getFromStore(CONFIG.UDAKeyCloakKey, false);
+      if (keycloakData) {
+        setKeycloakSessionData(keycloakData);
         setAuthenticated(true);
       } else {
-        console.log('token not found');
+        initKeycloak();
       }
     }
   }, [invokeKeycloak, userSessionData]);
 
   useEffect(() => {
     if (invokeKeycloak) {
-      if (!keycloak.authenticated && !userSessionData && !authenticated) {
-        keycloak.init({}).then(auth => {
-          setAuthenticated(auth);
-          if (keycloak.authenticated) {
-            let userData: any = {
-              token: keycloak.token,
-              refreshToken: keycloak.refreshToken,
-              id: keycloak.subject,
-              authenticated: auth,
-              idToken: keycloak.idToken
-            };
-            setToStore(userData, CONFIG.UDAKeyCloakKey, false);
-            setUserSessionData(userData);
-            trigger("CreateUDASessionData", {
-              detail: {action: 'createSession', data: userData},
-              bubbles: false,
-              cancelable: false
-            });
-          }
-        }).catch((e) => {
-          console.log(e);
-        });
-      } else {
-        keycloak.init({
-          token: userSessionData.authdata.token,
-          refreshToken: userSessionData.authdata.refreshToken,
-          idToken: userSessionData.authdata.idToken
-        }).then(auth => {
-          setAuthenticated(auth);
-        });
-      }
+      initKeycloak();
     }
-  }, [keycloak, userSessionData, invokeKeycloak]);
+  }, [keycloak, keycloakSessionData]);
+
+  const initKeycloak = () => {
+    if (!keycloak.authenticated && !keycloakSessionData && !userSessionData && !authenticated) {
+      keycloak.init({}).then(auth => {
+        setAuthenticated(auth);
+        if (keycloak.authenticated) {
+          let userData: any = {
+            token: keycloak.token,
+            refreshToken: keycloak.refreshToken,
+            id: keycloak.subject,
+            email: keycloak.idTokenParsed.email,
+            authenticated: auth,
+            idToken: keycloak.idToken
+          };
+          setToStore(userData, CONFIG.UDAKeyCloakKey, false);
+          setKeycloakSessionData(userData);
+          trigger("CreateUDASessionData", {
+            detail: {action: 'createSession', data: userData},
+            bubbles: false,
+            cancelable: false
+          });
+        }
+      }).catch((e) => {
+        console.log(e);
+      });
+    } else if(keycloakSessionData) {
+      keycloak.init({
+        token: keycloakSessionData.token,
+        refreshToken: keycloakSessionData.refreshToken,
+        idToken: keycloakSessionData.idToken
+      }).then(auth => {
+        setAuthenticated(auth);
+        if(!userSessionData) {
+          let userData: any = {
+            token: keycloakSessionData.token,
+            refreshToken: keycloakSessionData.refreshToken,
+            id: keycloakSessionData.id,
+            email: keycloak.idTokenParsed.email,
+            authenticated: auth,
+            idToken: keycloakSessionData.idToken
+          };
+          trigger("CreateUDASessionData", {
+            detail: {action: 'createSession', data: userData},
+            bubbles: false,
+            cancelable: false
+          });
+        }
+      }).catch(error => {
+        console.log(error);
+        if(error){
+          clearSession();
+        }
+      });
+    }
+  }
 
   /**
    * User authentication implementation
@@ -163,7 +188,23 @@ function App() {
     }
   }, []);
 
+  const clearSession = useCallback(()=>{
+    removeFromStore(CONFIG.USER_AUTH_DATA_KEY);
+    removeFromStore(CONFIG.UDAKeyCloakKey);
+    setAuthenticated(false);
+    setInvokeKeycloak(true);
+    setKeycloakSessionData(null);
+    setUserSessionData(null);
+    trigger("RequestUDASessionData", {detail: {data: "getusersessiondata"}, bubbles: false, cancelable: false});
+  },[]);
+
   useEffect(() => {
+
+    on("UDAUserSessionData", createSession);
+    on("UDAAuthenticatedUserSessionData", createSession);
+    on("UDAAlertMessageData", authenticationError);
+    on("UDAClearSessionData", clearSession);
+
     let userSessionData = getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
     if (!userSessionData) {
       trigger("RequestUDASessionData", {detail: {data: "getusersessiondata"}, bubbles: false, cancelable: false});
@@ -177,10 +218,6 @@ function App() {
         setAuthenticated(true);
       }
     }
-
-    on("UDAUserSessionData", createSession);
-    on("UDAAuthenticatedUserSessionData", createSession);
-    on("UDAAlertMessageData", authenticationError);
 
     //adding class to body tag
     let documentBody = document.body;
@@ -472,9 +509,11 @@ function App() {
                   }
 
                   {!authenticated && <>
+                      <div style={{margin:'auto', display: 'inline-block', width: '100% !important'}}>
                       <Button type="primary" className="uda_exclude" onClick={() => {
                         keycloak.login();
                       }}>Login</Button>
+                      </div>
                   </>}
                 </div>
               </div>

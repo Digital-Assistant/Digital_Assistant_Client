@@ -20,12 +20,12 @@ export const fetchSearchResults = (request?: {
   let parameters: any;
   if (request.additionalParams != null) {
     parameters = {
-      url: REST.processArgs(ENDPOINT.SEARCH_WITH_PERMISSIONS, request),
+      url: REST.processArgs(ENDPOINT.SearchWithPermissions, request),
       method: "GET",
     };
   } else {
     parameters = {
-      url: REST.processArgs(ENDPOINT.SEARCH, request),
+      url: REST.processArgs(ENDPOINT.Search, request),
       method: "GET",
     };
   }
@@ -39,7 +39,7 @@ export const fetchSearchResults = (request?: {
  */
 export const fetchSpecialNodes = async (request?: any) => {
   const parameters = {
-    url: REST.processArgs(ENDPOINT.SPECIAL_NODES, request),
+    url: REST.processArgs(ENDPOINT.SpecialNodes, request),
     method: "GET",
   };
   // return REST.apiCal(parameters);
