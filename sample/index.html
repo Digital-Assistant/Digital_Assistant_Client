@@ -186,27 +186,24 @@
       });
     </script>
 	    <script type="text/javascript">
-		    /*(function(){
-	            UDAUserAuthData.id='123456789';
-			    UDAUserAuthData.email='dummy@dummy.com';
-			    var uda = document.createElement('script'); uda.type = 'text/javascript'; uda.src = 'https://kcramakrishna.github.io/Digital_Assistant_Client/lib/include.js';
-			    document.body.appendChild(uda);
-		    })();*/
-
 			(function(){
 				var uda = document.createElement('script'); uda.type = 'text/javascript'; uda.src = '/build/assets/UDALoad.js';
 				uda.onload = () => {
 					if(typeof UDAAuthDataConfig !== 'undefined') {
-						// UDAAuthDataConfig({id : '123456789', email : 'dummy@dummy.com'});
+						UDAAuthDataConfig({id : '123456789', email : 'dummy@dummy.com'});
+						UDAPluginSDK({
+							enableOverlay: true,
+						});
 					}
 				}
 				document.body.appendChild(uda);
 			})();
 			function changeUserId(){
-				udaauthdata.id = Date.now();
+				UDAAuthDataConfig({id : Date.now().toString(), email : Date.now().toString()+'dummy@dummy.com'});
 			}
 			function logout(){
-				udaauthdata.id = null;
+				console.log('here');
+				UDAAuthDataConfig({id : '', email : ''});
 			}
 	    </script>
   </body>
