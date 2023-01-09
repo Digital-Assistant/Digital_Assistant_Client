@@ -118,6 +118,7 @@ function App() {
             bubbles: false,
             cancelable: false
           });
+          togglePanel();
         }
       }).catch((e) => {
         console.log(e);
@@ -143,6 +144,7 @@ function App() {
             bubbles: false,
             cancelable: false
           });
+          togglePanel();
         }
       }).catch(error => {
         console.log(error);

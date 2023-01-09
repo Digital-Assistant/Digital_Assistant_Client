@@ -5,7 +5,7 @@
   "content_scripts": [
     {
       "js": [
-        "headers.js"
+        "InjectHeaders.js"
       ],
       "run_at": "document_start",
       "matches": [
@@ -18,7 +18,7 @@
       ],
       "run_at": "document_end",
       "js": [
-        "index.js"
+        "InjectSDK.js"
       ],
       "css": [
 
@@ -27,7 +27,7 @@
     }
   ],
   "background": {
-    "service_worker": "./assets/background.js"
+    "service_worker": "./assets/UDABackground.js"
   },
   "permissions": [
     "identity",
