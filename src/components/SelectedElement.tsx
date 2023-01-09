@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
-import { updateRecordClicks } from "../services/recordService";
+import React, {useEffect, useState} from "react";
+import {updateRecordClicks} from "../services/recordService";
 import fetchHtmlFormElements from "../util/recording-utils/fetchHtmlFormElements";
-import TSON from "typescript-json";
 
-const SelectedElement = ({ data, recordData, index, config, storeRecording }) => {
+const SelectedElement = ({data, recordData, index, config, storeRecording}) => {
   let nodeData = JSON.parse(data.objectdata);
   let selectedElement = {
     inputElement: "",
@@ -12,17 +11,17 @@ const SelectedElement = ({ data, recordData, index, config, storeRecording }) =>
     systemTag: "",
   };
   if (
-    nodeData.meta.hasOwnProperty("selectedElement") &&
-    nodeData.meta.selectedElement
+      nodeData.meta.hasOwnProperty("selectedElement") &&
+      nodeData.meta.selectedElement
   ) {
     selectedElement = nodeData.meta.selectedElement;
   }
 
   const [optionsArray, setOptionsArray] = useState([]);
   const [defaultSelectedValue, setDefaultSelectedValue] = useState(
-    JSON.stringify(selectedElement)
+      JSON.stringify(selectedElement)
   );
-  const { enableNodeTypeSelection } = config;
+  const {enableNodeTypeSelection} = config;
 
   useEffect(() => {
     /**
@@ -65,25 +64,29 @@ const SelectedElement = ({ data, recordData, index, config, storeRecording }) =>
   };
 
   return enableNodeTypeSelection ? (
-    <>
-      <span style={{ marginRight: "4px" }}>Clicked on </span>
-      {optionsArray.length > 0 && (
-        <select
-          name="UDASelectedElement"
-          id="UDASelectedElement"
-          onChange={editAndSaveSelectedHtmlElement}
-          defaultValue={defaultSelectedValue}
-        >
-          {optionsArray.map((eachOption) => {
-            return (
-              <option key={eachOption.text} value={eachOption.value}>
-                {eachOption.text}
-              </option>
-            );
-          })}
-        </select>
-      )}
-    </>
+      <>
+        <div className="flex-card flex-vcenter selectedElement">
+          <span style={{marginRight: "4px"}} className="col-3">Clicked on </span>
+          {optionsArray.length > 0 && (
+              <select
+                  name="UDASelectedElement"
+                  id="UDASelectedElement"
+                  onChange={editAndSaveSelectedHtmlElement}
+                  defaultValue={defaultSelectedValue}
+                  className="col-9"
+              >
+                {optionsArray.map((eachOption) => {
+                  return (
+                      <option key={eachOption.text} value={eachOption.value}>
+                        {eachOption.text}
+                      </option>
+                  );
+                })}
+              </select>
+          )}
+          <div className="clearfix"></div>
+        </div>
+      </>
   ) : null;
 };
 

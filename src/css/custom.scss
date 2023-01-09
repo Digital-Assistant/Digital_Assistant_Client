@@ -329,6 +329,18 @@
         left: 2px !important;
       }
 
+      .selectedElement {
+        span {
+          width: 30% !important;
+          float: left !important;
+        }
+        select {
+          width: 70% !important;
+          display: inline-block !important;
+          float: right !important;
+        }
+      }
+
     }
 
     #uda-lang-select {
@@ -342,7 +354,9 @@
         margin-left: 5px !important;
       }
     }
-
+    .clearfix {
+      clear: both;
+    }
   }
 }
 
