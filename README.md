@@ -47,7 +47,7 @@ We solicit and welcome comments, help, documentation in improving the client.
 
 1. Add the below Script in head as first script tag
     ```
-    <script src="https://cdn.nistapp.ai/dist/assets/UDAHeaders.js"></script>
+    <script src="https://udan-sdk.nistapp.ai/dist/assets/UDAHeaders.js"></script>
     ```
 2. Add the below script to the bottom of the page to load the SDK
     ```
@@ -56,7 +56,7 @@ We solicit and welcome comments, help, documentation in improving the client.
          {
              var uda = document.createElement('script');
              uda.type = 'text/javascript';
-             uda.src = 'https://cdn.nistapp.ai/dist/assets/UDALoad.js';
+             uda.src = 'https://udan-sdk.nistapp.ai/dist/assets/UDALoad.js';
              uda.onload = () =>
              {
                  if (typeof UDAAuthDataConfig !== 'undefined')
