@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <!--	  <script src="https://kcramakrishna.github.io/Digital_Assistant_Client/chrome-plugin/js/links.js"></script>-->
-  	<script src="/build/assets/UDAHeaders.js"></script>
+  	<script src="https://cdn.nistapp.ai/dist/assets/UDAHeaders.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     <!-- Bootstrap CSS -->
@@ -15,7 +15,7 @@
   </head>
   <body>
     <div class="container">
-    <h1>Voice Plugin</h1>
+    <h1>UDA Plugin Integration Sample</h1>
       <a href="/demo1.html">Demo1</a>
       <a href="/demo1.html">Demo2</a>
       <button type="button" class="btn btn-primary" id="demo3">Demo3</button>
@@ -173,21 +173,21 @@
         });
       }
       $(document).ready(function() {
-        $("#demo3").click(function() {
-          alert("Hello, world!");
-        });
-	      $('#modalexample').on('shown.bs.modal', function () {
-		      introJs().addStep({
-			      element: document.getElementById("#exampleInputEmail3"),
-			      intro: "Please input in the field and then continue."
-		      }).goToStepNumber(1).start();
-	      });
-	      $("#modalexample").modal('show');
+		/*$("#demo3").click(function() {
+		  alert("Hello, world!");
+		});*/
+		$('#modalexample').on('shown.bs.modal', function () {
+		  introJs().addStep({
+			  element: document.getElementById("#exampleInputEmail3"),
+			  intro: "Please input in the field and then continue."
+		  }).goToStepNumber(1).start();
+		});
+		// $("#modalexample").modal('show');
       });
     </script>
 	    <script type="text/javascript">
 			(function(){
-				var uda = document.createElement('script'); uda.type = 'text/javascript'; uda.src = '/build/assets/UDALoad.js';
+				var uda = document.createElement('script'); uda.type = 'text/javascript'; uda.src = 'https://cdn.nistapp.ai/dist/assets/UDALoad.js';
 				uda.onload = () => {
 					if(typeof UDAAuthDataConfig !== 'undefined') {
 						UDAAuthDataConfig({id : '123456789', email : 'dummy@dummy.com'});
