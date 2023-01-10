@@ -11,7 +11,6 @@ import {on} from "./util/events";
 global.UDAAuthDataConfig = AuthDataConfig;
 global.UDAAuthConfig = AuthConfig;
 
-export const UDAUserAuthData = global.UDAAuthConfig;
 export const UDAApiHost=CONFIG.UDA_DOMAIN;
 export const UDASessionName=CONFIG.USER_AUTH_DATA_KEY+'-web';
 export let UDASessionData: any = {sessionkey:"", authenticated:false, authenticationsource:"", authdata:{}};
@@ -39,27 +38,26 @@ on('CreateUDASessionData',async (data) => {
 export const UDACheckUserSessionData = async (storedSessionData, getSession=true) => {
   storedSessionData=JSON.parse(storedSessionData);
   if(storedSessionData !== null && storedSessionData.hasOwnProperty("sessionkey") && storedSessionData.sessionkey && storedSessionData.authdata){
-    if(typeof UDAUserAuthData!='undefined' && UDAUserAuthData.id && (storedSessionData.authdata.hasOwnProperty('id') && storedSessionData.authdata.id === UDAUserAuthData.id)){
-      console.log(storedSessionData);
+    if(typeof global.UDAAuthConfig!='undefined' && global.UDAAuthConfig.id && (storedSessionData.authdata.hasOwnProperty('id') && storedSessionData.authdata.id === global.UDAAuthConfig.id)){
       UDASessionData=storedSessionData;
       UDASendSessionData(UDASessionData);
-    } else if(getSession && typeof UDAUserAuthData!='undefined' && UDAUserAuthData.id){
+    } else if(getSession && typeof global.UDAAuthConfig!=='undefined' && global.UDAAuthConfig.id){
       window.localStorage.removeItem(UDASessionName);
       UDASessionData = await UDAGetSessionKey(UDASessionData);
-      UDASessionData.authdata = UDAUserAuthData;
+      UDASessionData.authdata = global.UDAAuthConfig;
       UDASessionData.authenticated=true;
       UDASessionData.authenticationsource=window.location.hostname;
       await UDABindAuthenticatedAccount(UDASessionData);
     } else {
       UDASendSessionData(UDASessionData, "UDAAlertMessageData", "login")
     }
-  } else if(typeof UDAUserAuthData!='undefined' && UDAUserAuthData.id) {
+  } else if(typeof global.UDAAuthConfig !== 'undefined' && global.UDAAuthConfig.id) {
     UDASessionData = await UDAGetSessionKey(UDASessionData);
-    UDASessionData.authdata = UDAUserAuthData;
+    UDASessionData.authdata = global.UDAAuthConfig;
     UDASessionData.authenticated=true;
     UDASessionData.authenticationsource=window.location.hostname;
     await UDABindAuthenticatedAccount(UDASessionData);
-  } else if (UDAUserAuthData.id === '') {
+  } else if (global.UDAAuthConfig.id === '') {
     UDASendSessionData(UDASessionData, "UDAAlertMessageData", "login")
   }
 }
