@@ -128,14 +128,14 @@ module.exports = (env, argv) => {
                     {from: 'public/', to: "../"}
                 ],
             }),
-            new webpack.DefinePlugin({
+            /*new webpack.DefinePlugin({
                 "process.env": JSON.stringify(process.env)
-            }),
+            }),*/
             new Dotenv({
                 path: `${envFile}`,
                 safe: true,
                 allowEmptyValues: true, // allow empty variables (e.g. `FOO=`) (treat it as empty string, rather than missing)
-                systemvars: true, // load all the predefined 'process.env' variables which will trump anything local per dotenv specs.
+                systemvars: false, // load all the predefined 'process.env' variables which will trump anything local per dotenv specs.
                 silent: true, // hide any errors
                 defaults: false,
                 ignoreStub: true,
@@ -172,6 +172,7 @@ module.exports = (env, argv) => {
             }
         },
         optimization: {
+            nodeEnv: 'production',
             minimizer: [
                 new CssMinimizerPlugin(),
                 new TerserPlugin({
