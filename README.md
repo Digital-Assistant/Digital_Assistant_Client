@@ -73,8 +73,6 @@ We solicit and welcome comments, help, documentation in improving the client.
                          enableSkipDuringPlay: true, // Flag for enabling skip functionality
                          enableTooltip: true, // Flag for adding custom tooltip information
                          enableNodeTypeSelection: true, // Flag for enabling node type selection
-                         enablePermissions: false, // Flag for enabling permissions addition
-                         permissions: {}, // Object where the permissions can be passed
                          enableProfanity: true, // Flag for enabling profanity check
                          enableRecording: true, // Flag for enabling recording functionality
                          enableOverlay: true // Flag for enabling overlay functionality or enabling squeeze functionality
