@@ -72,7 +72,6 @@ We solicit and welcome comments, help, documentation in improving the client.
                          enableEditClickedName: true, // Flag for editing the clicked element
                          enableSkipDuringPlay: true, // Flag for enabling skip functionality
                          enableTooltip: true, // Flag for adding custom tooltip information
-                         enableMultilingual: false, // Flag for enabling multilingual search with speech
                          enableNodeTypeSelection: true, // Flag for enabling node type selection
                          enablePermissions: false, // Flag for enabling permissions addition
                          permissions: {}, // Object where the permissions can be passed
