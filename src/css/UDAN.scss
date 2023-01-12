@@ -9,7 +9,6 @@
   --uda-tooltip-bg: #f2f4fe;
 }
 
-body.uda-body {
   .uda-original-content {
     max-width: 77%;
     min-width: 77%;
@@ -23,7 +22,7 @@ body.uda-body {
 
   #uda-lang-select {
     width: 70%;
-    background-color: var(--uda-footer-srchbtn-bgcolor);
+    background-color: #303f9f;
     margin-top: 10px;
     border: none;
     padding: 8px;
@@ -34,14 +33,14 @@ body.uda-body {
     cursor: pointer;
     min-width: 75px;
     height: 80px !important;
-    background-color: var(--uda-text-color-bg-white);
+    background-color: #fff;
     position: fixed;
     top: 40% !important;
     right: 0;
     padding: 1px;
-    -webkit-box-shadow: 0 1px 4px var(--uda-boxshodow-color), 0 0 40px var(--uda-boxshodow-color) inset;
-    -moz-box-shadow: 0 1px 4px var(--uda-boxshodow-color), 0 0 40px var(--uda-boxshodow-color) inset;
-    box-shadow: 0 1px 4px var(--uda-boxshodow-color), 0 0 40px var(--uda-boxshodow-color) inset;
+    -webkit-box-shadow: 0 1px 4px #e0e0e0, 0 0 40px #e0e0e0 inset;
+    -moz-box-shadow: 0 1px 4px #e0e0e0, 0 0 40px #e0e0e0 inset;
+    box-shadow: 0 1px 4px #e0e0e0, 0 0 40px #e0e0e0 inset;
     z-index: 9999;
   }
 
@@ -84,8 +83,8 @@ body.uda-body {
     right: 0;
     top: 0;
     bottom: 0;
-    background-color: var(--uda-text-color-bg-white);
-    box-shadow: 0 -5px 5px 5px var(--uda-boxshodow-color);
+    background-color: #fff;
+    box-shadow: 0 -5px 5px 5px #e0e0e0;
     z-index: 9999;
     height: 100%;
     display: flex;
@@ -99,7 +98,7 @@ body.uda-body {
       position: absolute;
       top: 1%;
       left: -2%;
-      box-shadow: 0px 1px 7px 2px var(--uda-boxshodow-color);
+      box-shadow: 0px 1px 7px 2px #e0e0e0;
       text-align: center;
       cursor: pointer;
       margin-left: 6px;
@@ -133,9 +132,9 @@ body.uda-body {
       }
 
       .uda-help-bg-tooltip {
-        background-color: var(--uda-secondary-color);
+        background-color: #ff5722;
         padding: 5px 22px;
-        color: var(--uda-text-color-bg-white);
+        color: #fff;
         font-weight: 500;
         border-radius: 5px;
         position: relative;
@@ -153,7 +152,7 @@ body.uda-body {
           width: 0;
           height: 0;
           border-top: 5px solid transparent;
-          border-right: 16px solid var(--uda-secondary-color);
+          border-right: 16px solid #ff5722;
           border-bottom: 5px solid transparent;
         }
       }
@@ -167,7 +166,7 @@ body.uda-body {
         display: flex;
 
         .uda-mic-btn {
-          background-color: var(--uda-footer-srchbtn-bgcolor);
+          background-color: #303f9f;
           border-radius: 0px 5px 5px 0px;
           border: none;
           width: 15%;
@@ -180,7 +179,7 @@ body.uda-body {
         }
 
         .uda-stop-btn-bg {
-          background-color: var(--uda-footer-srchbtn-bgcolor);
+          background-color: #303f9f;
           border-radius: 0px 5px 5px 0px;
           border: none;
           width: 15%;
@@ -208,7 +207,7 @@ body.uda-body {
 
         .uda-search-btn {
           /*padding: 8px 10px;*/
-          background-color: var(--uda-footer-srchbtn-bgcolor);
+          background-color: #303f9f;
           border-radius: 5px 0px 0px 5px;
           border: none;
           width: 15%;
@@ -228,7 +227,7 @@ body.uda-body {
 
       .uda-card {
         padding: 20px;
-        background-color: var(--uda-card-bgcolor);
+        background-color: #f2f4fe;
         border-radius: 5px;
         background-image: url("data:image/svg+xml,%3Csvg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 512 512' style='enable-background:new 0 0 512 512;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23303F9F;%7D%0A%3C/style%3E%3Cg%3E%3Cg%3E%3Cpath class='st0' d='M497.1,241.8C497.1,241.8,497.1,241.8,497.1,241.8l-104.5-104c-7.8-7.8-20.5-7.8-28.3,0.1 c-7.8,7.8-7.8,20.5,0.1,28.3l70.2,69.8H31c-11,0-20,9-20,20c0,11,9,20,20,20h403.6l-70.2,69.8c-7.8,7.8-7.9,20.5-0.1,28.3 c7.8,7.8,20.5,7.9,28.3,0.1l104.5-104c0,0,0,0,0,0C505,262.3,504.9,249.6,497.1,241.8z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         background-size: 24px 20px;
@@ -236,10 +235,10 @@ body.uda-body {
         background-position: bottom 5px right 5px;
         margin-bottom: 15px;
         margin-right: 5px;
-        box-shadow: 2px 1px 6px 1px var(--uda-boxshodow-color);
+        box-shadow: 2px 1px 6px 1px #e0e0e0;
 
         &:hover {
-          background-color: var(--uda-footer-srchbtn-bgcolor);
+          background-color: #303f9f;
           background-image: url("data:image/svg+xml,%3Csvg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 512 512' style='enable-background:new 0 0 512 512;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23ff5722;%7D%0A%3C/style%3E%3Cg%3E%3Cg%3E%3Cpath class='st0' d='M497.1,241.8C497.1,241.8,497.1,241.8,497.1,241.8l-104.5-104c-7.8-7.8-20.5-7.8-28.3,0.1 c-7.8,7.8-7.8,20.5,0.1,28.3l70.2,69.8H31c-11,0-20,9-20,20c0,11,9,20,20,20h403.6l-70.2,69.8c-7.8,7.8-7.9,20.5-0.1,28.3 c7.8,7.8,20.5,7.9,28.3,0.1l104.5-104c0,0,0,0,0,0C505,262.3,504.9,249.6,497.1,241.8z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
           background-size: 24px 20px;
           cursor: pointer;
@@ -278,7 +277,7 @@ body.uda-body {
         border-radius: 5px;
         margin-top: 2%;
         text-align: center;
-        box-shadow: 2px 1px 6px 1px var(--uda-boxshodow-color);
+        box-shadow: 2px 1px 6px 1px #e0e0e0;
 
         .uda-card-btns {
           display: block;
@@ -369,12 +368,12 @@ body.uda-body {
           font-size: 14px;
           font-weight: 500;
           cursor: pointer;
-          color: var(--uda-text-color-bg-white);
+          color: #fff;
           display: block;
         }
 
         .uda-stop-btn {
-          background-color: var(--uda-secondary-color);
+          background-color: #ff5722;
           outline: none;
           border-radius: 5px;
           border: none;
@@ -439,10 +438,10 @@ body.uda-body {
         }
 
         .uda-record-btn {
-          background-color: var(--uda-secondary-color);
+          background-color: #ff5722;
           border: none;
           outline: none;
-          color: var(--uda-text-color-bg-white);
+          color: #fff;
           border-radius: 5px;
           //padding: 5px 12px;
           align-items: center;
@@ -484,7 +483,7 @@ body.uda-body {
         }
 
         .uda-form-input {
-          background-color: var(--uda-footer-srchbtn-bgcolor);
+          background-color: #303f9f;
           border: none;
           border-radius: 5px;
           /*padding: 10px 20px;*/
@@ -536,7 +535,7 @@ body.uda-body {
           background-color: var(--uda-primary-color);
           border: none;
           outline: none;
-          color: var(--uda-text-color-bg-white);
+          color: #fff;
           border-radius: 5px;
           padding: 5px 12px;
           font-size: 14px;
@@ -554,7 +553,7 @@ body.uda-body {
           }
 
           &:hover {
-            background-color: var(--uda-secondary-color);
+            background-color: #ff5722;
 
           }
         }
@@ -578,11 +577,11 @@ body.uda-body {
           width: 40px;
           display: inline-block;
           height: 40px;
-          border-right: 1px solid var(--uda-footer-srchbtn-bgcolor);
+          border-right: 1px solid #303f9f;
           cursor: pointer;
 
           &:hover {
-            background-color: var(--uda-footer-srchbtn-bgcolor);
+            background-color: #303f9f;
           }
 
         }
@@ -591,11 +590,11 @@ body.uda-body {
           width: 40px;
           display: inline-block;
           height: 40px;
-          border-right: 1px solid var(--uda-footer-srchbtn-bgcolor);
+          border-right: 1px solid #303f9f;
           cursor: pointer;
 
           &:hover {
-            background-color: var(--uda-footer-srchbtn-bgcolor);
+            background-color: #303f9f;
           }
         }
 
@@ -603,11 +602,11 @@ body.uda-body {
           width: 40px;
           display: inline-block;
           height: 40px;
-          border-right: 1px solid var(--uda-footer-srchbtn-bgcolor);
+          border-right: 1px solid #303f9f;
           cursor: pointer;
 
           &:hover {
-            background-color: var(--uda-footer-srchbtn-bgcolor);
+            background-color: #303f9f;
           }
         }
 
@@ -650,7 +649,7 @@ body.uda-body {
     }
 
     .uda-footer-bar {
-      background-color: var(--uda-text-color-bg-white);
+      background-color: #fff;
       position: fixed;
       bottom: 0;
       max-width: 23%;
@@ -674,7 +673,7 @@ body.uda-body {
           }
 
           .uda-advanced-btn {
-            background-color: var(--uda-text-color-bg-white);
+            background-color: #fff;
             border: 1px solid var(--uda-primary-color);
             border-radius: 5px;
             color: var(--uda-primary-color);
@@ -686,7 +685,7 @@ body.uda-body {
             padding: 5px 15px;
 
             &:hover {
-              background-color: var(--uda-footer-srchbtn-bgcolor);
+              background-color: #303f9f;
               cursor: pointer;
             }
 
@@ -703,7 +702,7 @@ body.uda-body {
             display: none;
             position: absolute;
             padding: 5px;
-            color: var(--uda-text-color-bg-white);
+            color: #fff;
             z-index: 1;
             min-width: 160px;
             bottom: 25px;
@@ -714,8 +713,8 @@ body.uda-body {
               /*justify-content: center;
               padding: 5px;*/
               color: #fff;
-              border-top: 1px solid var(--uda-text-color-bg-white);
-              background-color: var(--uda-secondary-color);
+              border-top: 1px solid #fff;
+              background-color: #ff5722;
               font-size: 14px;
               align-items: center;
               background-repeat: no-repeat;
@@ -850,12 +849,12 @@ Progress animation
     margin: 30px 0px;
     padding: 20px;
     background-color: #f2f4fe;
-    box-shadow: 2px 1px 6px 1px var(--uda-boxshodow-color);
+    box-shadow: 2px 1px 6px 1px #e0e0e0;
 
     p {
       font-weight: 500;
       font-size: 18px;
-      color: var(--uda-secondary-color);
+      color: #ff5722;
       margin: 5px;
     }
   }
@@ -879,8 +878,8 @@ Progress animation
     border-radius: 8px;
     border-color: #333;
     transition: opacity .6s;
-    background-color: var(--uda-tooltip-bg);
-    box-shadow: 0 1px 16px var(--uda-boxshodow-color);
+    background-color: #f2f4fe;
+    box-shadow: 0 1px 16px #e0e0e0;
     z-index: 9999999;
     border: 1px solid var(--uda-primary-color);
 
@@ -891,7 +890,7 @@ Progress animation
         background-color: var(--uda-primary-color);
         border: none;
         outline: none;
-        color: var(--uda-text-color-bg-white);
+        color: #fff;
         border-radius: 5px;
         padding: 5px 12px;
         font-size: 14px;
@@ -899,15 +898,15 @@ Progress animation
         height: 30px;
 
         &:hover {
-          background-color: var(--uda-secondary-color);
+          background-color: #ff5722;
         }
       }
 
       .uda-tutorial-exit-btn {
-        background-color: var(--uda-secondary-color);
+        background-color: #ff5722;
         border: none;
         outline: none;
-        color: var(--uda-text-color-bg-white);
+        color: #fff;
         border-radius: 5px;
         padding: 5px 12px;
         font-size: 14px;
@@ -925,8 +924,8 @@ Progress animation
       width: 20px;
       height: 20px;
       /*   background: inherit; */
-      background-color: var(--uda-tooltip-bg);
-      box-shadow: 16px var(--uda-boxshodow-color);
+      background-color: #f2f4fe;
+      box-shadow: 16px #e0e0e0;
     }
 
     .uda-arrow {
@@ -937,8 +936,8 @@ Progress animation
         width: 20px;
         height: 20px;
         /*   background: inherit; */
-        background-color: var(--uda-tooltip-bg);
-        box-shadow: 16px var(--uda-boxshodow-color);
+        background-color: #f2f4fe;
+        box-shadow: 16px #e0e0e0;
         visibility: visible;
         content: '';
         transform: rotate(45deg);
@@ -1230,7 +1229,7 @@ Progress animation
 
   @import "custom";
 
-}
+
 
 .info-icon {
   width: 16px !important;
