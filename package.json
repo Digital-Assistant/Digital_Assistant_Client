@@ -6,7 +6,7 @@
   "dependencies": {
     "@popperjs/core": "^2.11.6",
     "@types/styled-components": "^5.1.26",
-    "antd": "^4.23.4",
+    "antd": "^4.24.7",
     "assert": "^2.0.0",
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",

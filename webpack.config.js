@@ -18,8 +18,21 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+// const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
+
+const customStyleLoader = {
+        loader: require.resolve('style-loader'),
+        options: {
+            insert: function (linkTag) {
+                setTimeout(()=>{
+                    const parent = document.querySelector('#udan-react-root').shadowRoot;
+                    parent.prepend(linkTag);
+                },100);
+            },
+            // injectType: "linkTag"
+        }
+    }
 
 module.exports = (env, argv) => {
 
@@ -69,10 +82,19 @@ module.exports = (env, argv) => {
                         }),
                     },
                 },
-                {
+                /*{
                     // Conditions:
                     test: /\.css$/,
                     use: ["style-loader", "css-loader"], // When multiple loader configuration needed
+                },*/
+                {
+                    test: /\.css$/,
+                    exclude: /node_modules/,
+                    use: [
+                        customStyleLoader,
+                        // MiniCssExtractPlugin.loader,
+                        "css-loader"
+                    ],
                 },
                 {
                     // Conditions:
@@ -80,23 +102,8 @@ module.exports = (env, argv) => {
                     exclude: /node_modules/,
                     use: [
                         // When multiple loader configuration needed
-                        /* {
-                             loader: 'file-loader',
-                             options: {name: '[name].min.css'}
-                         },*/
-                        "style-loader",
-                        "css-loader",
-                        "sass-loader",
-                    ],
-                },
-                {
-                    test: /\.css$/,
-                    use: [MiniCssExtractPlugin.loader, "css-loader"],
-                },
-                {
-                    test: /\.scss$/,
-                    use: [
-                        MiniCssExtractPlugin.loader,
+                        // "style-loader",
+                        customStyleLoader,
                         "css-loader",
                         "sass-loader",
                     ],
@@ -155,9 +162,9 @@ module.exports = (env, argv) => {
                 defaults: false,
                 ignoreStub: true,
             }),
-            new MiniCssExtractPlugin({
+            /*new MiniCssExtractPlugin({
                 filename: "styles.css",
-            }),
+            }),*/
             // new BundleAnalyzerPlugin(),
             // gzip
             /*new CompressionPlugin({

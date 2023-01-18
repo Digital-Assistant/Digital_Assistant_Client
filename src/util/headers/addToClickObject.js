@@ -10,7 +10,11 @@ export const AddToClickObjects = (node) => {
       return;
     }
 
-    let tag = clickObject.element.tagName;
+    if(typeof clickObject?.element?.tagName === 'undefined') {
+      return;
+    }
+
+    let tag = clickObject?.element?.tagName;
     if (tag && ignoreTags.indexOf(tag.toLowerCase()) !== -1) {
       return;
     }

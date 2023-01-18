@@ -4,7 +4,7 @@
  * Objective: To render content script
  */
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import "./css/antd.css";
+// import "./css/antd.css";
 import "./css/UDAN.scss";
 
 
@@ -452,10 +452,6 @@ function App() {
 
     return (
       <UserDataContext.Provider value={userSessionData}>
-            <link
-                rel="stylesheet"
-                href="chrome-extension://gdjhdojfbbhbpfknfcmecldnlfpfhlmd/assets/styles.css"
-            />
             <div
                 className="udan-main-panel"
                 style={{
