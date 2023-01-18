@@ -11,16 +11,15 @@ import App from "./App";
 const html = document.querySelector("html"); // render element inside the html
 
 // const app = document.createElement("div");
-const udanRoot = document.createElement("div"); // create root element 
+const udanRoot = document.createElement("div"); // create root element
 
 // app.id = "udan-react-root";
 // app.classList.add('uda_exclude');
 udanRoot.id = "udan-react-root"; // set id on react mount point
-udanRoot.classList.add("uda_exclude"); // set class on react mount point 
+udanRoot.classList.add("uda_exclude"); // set class on react mount point
 
 // custom udan tag
-const customUdanTag = document.createElement("udan"); 
-
+const customUdanTag = document.createElement("udan");
 
 // enable shadow
 const udanRootShadow = udanRoot.attachShadow({ mode: "open" });
