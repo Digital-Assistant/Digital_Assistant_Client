@@ -9,15 +9,15 @@
  * one or more bundles, which are static assets to serve your content from.
  */
 
-const path = require('path');
-const webpack = require('webpack')
+const path = require("path");
+const webpack = require("webpack");
 const CopyPlugin = require("copy-webpack-plugin");
 const transform = require("typescript-json/lib/transform").default;
-const Dotenv = require('dotenv-webpack');
-const CompressionPlugin = require('compression-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
+const Dotenv = require("dotenv-webpack");
+const CompressionPlugin = require("compression-webpack-plugin");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 // const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 
@@ -35,12 +35,13 @@ const customStyleLoader = {
     }
 
 module.exports = (env, argv) => {
-
     // reduce it to a nice object, the same as before
 
-    const envFile = './environments/'+((env.build) ? `${env.build}.env` : 'local.env');
+    const envFile =
+        "./environments/" + (env.build ? `${env.build}.env` : "local.env");
 
-    const buildPath = (env.build && env.build === 'production') ? 'dist' : 'build';
+    const buildPath =
+        env.build && env.build === "production" ? "dist" : "build";
 
     const webpackConfig = {
         entry: {
@@ -222,11 +223,11 @@ module.exports = (env, argv) => {
         },
     };
 
-    if(env.build && env.build === 'production') {
-        webpackConfig.mode = 'production';
+    if (env.build && env.build === "production") {
+        webpackConfig.mode = "production";
         // webpackConfig.devtool = 'nosources-source-map';
         delete webpackConfig.devtool;
     }
 
     return webpackConfig;
-}
+};
