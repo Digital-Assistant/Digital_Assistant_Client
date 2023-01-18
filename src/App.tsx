@@ -452,10 +452,6 @@ function App() {
 
     return (
       <UserDataContext.Provider value={userSessionData}>
-            <link
-                rel="stylesheet"
-                href="chrome-extension://gdjhdojfbbhbpfknfcmecldnlfpfhlmd/assets/styles.css"
-            />
             <div
                 className="udan-main-panel"
                 style={{

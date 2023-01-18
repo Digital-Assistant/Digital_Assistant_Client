@@ -75,9 +75,9 @@ module.exports = (env, argv) => {
                         {
                             loader: "style-loader",
                             options: {
-                                injectType: "singletonStyleTag",
-                                insert: "body",
-                                attributes: { id: "udan-style" },
+                                injectType: "singletonStyleTag", // merge all the css inside one style tag
+                                insert: "body", // push the css inside body tag
+                                attributes: { id: "udan-style" }, // set the style emement udan style tag
                             },
                         },
                         { loader: "css-loader" },
@@ -96,9 +96,9 @@ module.exports = (env, argv) => {
                         {
                             loader: "style-loader",
                             options: {
-                                injectType: "singletonStyleTag",
-                                insert: "body",
-                                attributes: { id: "udan-style" },
+                                injectType: "singletonStyleTag", // merge all the css inside one style tag
+                                insert: "body", // push the css inside body tag
+                                attributes: { id: "udan-style" }, // set the style emement udan style tag
                             },
                         },
                         "css-loader",
