@@ -9,25 +9,24 @@
  * one or more bundles, which are static assets to serve your content from.
  */
 
-const path = require('path');
-const webpack = require('webpack')
+const path = require("path");
+const webpack = require("webpack");
 const CopyPlugin = require("copy-webpack-plugin");
 const transform = require("typescript-json/lib/transform").default;
-const Dotenv = require('dotenv-webpack');
-const CompressionPlugin = require('compression-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
+const Dotenv = require("dotenv-webpack");
+const CompressionPlugin = require("compression-webpack-plugin");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = (env, argv) => {
-
     // reduce it to a nice object, the same as before
 
-    const envFile = './environments/'+((env.build) ? `${env.build}.env` : 'local.env');
+    const envFile =
+        "./environments/" + (env.build ? `${env.build}.env` : "local.env");
 
-    const buildPath = (env.build && env.build === 'production') ? 'dist' : 'build';
+    const buildPath =
+        env.build && env.build === "production" ? "dist" : "build";
 
     const webpackConfig = {
         entry: {
@@ -72,7 +71,17 @@ module.exports = (env, argv) => {
                 {
                     // Conditions:
                     test: /\.css$/,
-                    use: ["style-loader", "css-loader"], // When multiple loader configuration needed
+                    use: [
+                        {
+                            loader: "style-loader",
+                            options: {
+                                injectType: "singletonStyleTag",
+                                insert: "body",
+                                attributes: { id: "udan-style" },
+                            },
+                        },
+                        { loader: "css-loader" },
+                    ], // When multiple loader configuration needed
                 },
                 {
                     // Conditions:
@@ -84,19 +93,14 @@ module.exports = (env, argv) => {
                              loader: 'file-loader',
                              options: {name: '[name].min.css'}
                          },*/
-                        "style-loader",
-                        "css-loader",
-                        "sass-loader",
-                    ],
-                },
-                {
-                    test: /\.css$/,
-                    use: [MiniCssExtractPlugin.loader, "css-loader"],
-                },
-                {
-                    test: /\.scss$/,
-                    use: [
-                        MiniCssExtractPlugin.loader,
+                        {
+                            loader: "style-loader",
+                            options: {
+                                injectType: "singletonStyleTag",
+                                insert: "body",
+                                attributes: { id: "udan-style" },
+                            },
+                        },
                         "css-loader",
                         "sass-loader",
                     ],
@@ -143,20 +147,17 @@ module.exports = (env, argv) => {
                     { from: "public/", to: "../" },
                 ],
             }),
-            new webpack.DefinePlugin({
-                "process.env": JSON.stringify(process.env),
-            }),
+            /*new webpack.DefinePlugin({
+                "process.env": JSON.stringify(process.env)
+            }),*/
             new Dotenv({
                 path: `${envFile}`,
                 safe: true,
                 allowEmptyValues: true, // allow empty variables (e.g. `FOO=`) (treat it as empty string, rather than missing)
-                systemvars: true, // load all the predefined 'process.env' variables which will trump anything local per dotenv specs.
+                systemvars: false, // load all the predefined 'process.env' variables which will trump anything local per dotenv specs.
                 silent: true, // hide any errors
                 defaults: false,
                 ignoreStub: true,
-            }),
-            new MiniCssExtractPlugin({
-                filename: "styles.css",
             }),
             // new BundleAnalyzerPlugin(),
             // gzip
@@ -191,6 +192,7 @@ module.exports = (env, argv) => {
             },
         },
         optimization: {
+            nodeEnv: "production",
             minimizer: [
                 new CssMinimizerPlugin(),
                 new TerserPlugin({
@@ -214,11 +216,11 @@ module.exports = (env, argv) => {
         },
     };
 
-    if(env.build && env.build === 'production') {
-        webpackConfig.mode = 'production';
+    if (env.build && env.build === "production") {
+        webpackConfig.mode = "production";
         // webpackConfig.devtool = 'nosources-source-map';
         delete webpackConfig.devtool;
     }
 
     return webpackConfig;
-}
+};

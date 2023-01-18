@@ -7,32 +7,39 @@ import { createRoot } from "react-dom/client";
 import "./util/i18n";
 import App from "./App";
 
-// get html
-const htmlTag = document.querySelector("html");
+// const body = document.querySelector("body");
+const html = document.querySelector("html"); // render element inside the html
 
-// create udan custom container and push udan shadow
-const udanContainer = document.createElement("udan");
-// react mounter
-const rootDiv = document.createElement("div");
-rootDiv.id = "udan-react-root";
-rootDiv.classList.add("uda_exclude");
-const rootShadow = rootDiv.attachShadow({ mode: "open" });
-udanContainer.appendChild(rootDiv);
+// const app = document.createElement("div");
+const udanRoot = document.createElement("div");
 
-// render react
-const reactRoot = createRoot(rootShadow);
-reactRoot.render(<App />);
+// app.id = "udan-react-root";
+// app.classList.add('uda_exclude');
+udanRoot.id = "udan-react-root";
+udanRoot.classList.add("uda_exclude");
 
-// check if html available
-if (htmlTag) {
-    htmlTag.appendChild(udanContainer);
+// custom udan tag
+const customUdanTag = document.createElement("udan");
+
+// if (body) {
+//   body.appendChild(app);
+// }
+if (html) {
+    customUdanTag.appendChild(udanRoot);
+    html.appendChild(customUdanTag);
 }
 
-// const div = document.createElement("div");
-// div.id = "udan-react-root";
-// div.classList.add("uda_exclude");
-// const reactRoot = createRoot(div);
-// reactRoot.render(<App />);
+// enable shadow
+const udanRootShadow = udanRoot.attachShadow({ mode: "open" });
 
-// push custom tag serially udan-shadow > udan-container > html-tag
-// udanContainer.appendChild(udanShadow);
+// attached style
+const style = document.querySelector("#udan-style");
+udanRootShadow.appendChild(style);
+
+// const container = document.getElementById("udan-react-root");
+// const root = createRoot(container!);
+// create root
+const reactRoot = createRoot(udanRootShadow);
+
+// root.render(<App />);
+reactRoot.render(<App />);
