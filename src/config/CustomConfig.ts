@@ -28,5 +28,5 @@ export const CustomConfig: CustomConfigPropTypes = {
   permissions: {}, // Object where the permissions can be passed
   enableProfanity: true, // Flag for enabling profanity check
   enableRecording: true, // Flag for enabling recording functionality
-  enableOverlay: true // Flag for enabling overlay functionality or enabling squeeze functionality
+  enableOverlay: false // Flag for enabling overlay functionality or enabling squeeze functionality
 };
