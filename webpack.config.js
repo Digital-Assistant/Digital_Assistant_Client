@@ -20,15 +20,16 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 // const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-
+// adding custom styleloader functionality to inject css styles into shadow dom
 const customStyleLoader = {
         loader: require.resolve('style-loader'),
         options: {
             insert: function (linkTag) {
                 setTimeout(()=>{
                     const parent = document.querySelector('#udan-react-root').shadowRoot;
-                    parent.prepend(linkTag);
-                },100);
+                    // parent.prepend(linkTag);
+                    parent.appendChild(linkTag);
+                },10);
             },
             // injectType: "linkTag"
         }
