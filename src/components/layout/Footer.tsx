@@ -41,7 +41,7 @@ const Footer = (props: MProps) => {
           <div className="uda-footer-left">Copyrights Reserved {printYear()}.</div>
           <div
             className="uda-footer-right"
-            style={{ paddingTop: 5, textAlign: "right" }}
+            style={{ textAlign: "right" }}
           >
             <a
               href="https://udan.nistapp.ai"

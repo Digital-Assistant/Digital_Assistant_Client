@@ -49,8 +49,11 @@
     box-sizing: border-box;
   }
 
-  ::-webkit-scrollbar {
-    display: none;
+  // ::-webkit-scrollbar {
+  //   display: none;
+  // }
+  ::-webkit-scrollbar-button {
+    background-color: green;
   }
 
   .icon-wrapper {
@@ -193,6 +196,7 @@
       cursor: pointer;
       position: fixed;
       bottom: 40px;
+      background-color: #f0f0f0;
       // z-index: 30000000000000000 !important;
       margin-bottom: 5px;
     }
