@@ -1,0 +1,45 @@
+
+@media screen and (max-width: 1920px), screen and (max-height: 1080px) {
+    .uda-help-bg-tooltip {
+        &:after {
+            top: 8px;
+        }
+    }
+}
+
+@media screen and (max-width: 1600px), screen and (max-height: 900px) {
+    .uda-help-bg-tooltip {
+        &:after {
+            top: 9px;
+        }
+    }
+}
+
+@media screen and (max-width: 1536px), screen and (max-height: 864px) {
+    .uda-help-bg-tooltip {
+        &:after {
+            top: 9px;
+        }
+    }
+}
+
+@media screen and (max-width: 1440px), screen and (max-height: 900px) {
+    .uda-help-bg-tooltip {
+        &:after {
+            top: 10px;
+        }
+    }
+}
+
+@media screen and (max-width: 1280px), screen and (max-height: 768px) {
+    .uda-help-bg-tooltip {
+        &:after {
+            top: 11px;
+        }
+    }
+}
+@media screen and (max-width: 1026px), screen and (max-height: 600px) {
+    .uda-cards-scroller {
+        min-height: 150px !important;
+    }
+}

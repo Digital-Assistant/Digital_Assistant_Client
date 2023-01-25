@@ -128,13 +128,13 @@
 
     .arrow {
       svg {
-        fill: var(--uda-secondary-color);
+        fill: $uda-secondary-color;
       }
     }
   }
 
   .ant-btn-primary {
-    background-color: var(--uda-primary-color) !important;
+    background-color: $uda-primary-color !important;
   }
 
   .anticon {
@@ -161,13 +161,13 @@
 
     &.primary {
       svg {
-        fill: var(--uda-primary-color) !important;
+        fill: $uda-primary-color !important;
       }
     }
 
     &.secondary {
       svg {
-        fill: var(--uda-secondary-color) !important;
+        fill: $uda-secondary-color !important;
       }
     }
   }
@@ -205,11 +205,11 @@
     .uda-container {
       .uda-card-details {
         padding: 20px;
-        background-color: var(--uda-card-bgcolor);
+        background-color: $uda-card-bgcolor;
         border-radius: 5px;
         margin-top: 5%;
         text-align: center;
-        // box-shadow: 2px 1px 6px 1px var(--uda-boxshodow-color);
+        // box-shadow: 2px 1px 6px 1px $uda-boxshodow-color;
 
         h5 {
           font-size: 15px !important;
@@ -219,7 +219,7 @@
       }
 
       .uda-record-round-btn {
-        background-color: var(--uda-secondary-color);
+        background-color: $uda-secondary-color;
         color: white;
         width: 60px;
         height: 60px;
@@ -329,18 +329,6 @@
         left: 2px !important;
       }
 
-      .selectedElement {
-        span {
-          width: 30% !important;
-          float: left !important;
-        }
-        select {
-          width: 70% !important;
-          display: inline-block !important;
-          float: right !important;
-        }
-      }
-
     }
 
     #uda-lang-select {
@@ -354,9 +342,7 @@
         margin-left: 5px !important;
       }
     }
-    .clearfix {
-      clear: both;
-    }
+
   }
 }
 

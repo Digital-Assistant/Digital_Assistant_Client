@@ -47,45 +47,42 @@ We solicit and welcome comments, help, documentation in improving the client.
 
 1. Add the below Script in head as first script tag
     ```
-    <script src="https://digital-assistant.github.io/Digital_Assistant_Client/dist/assets/UDAHeaders.js"></script>
+    <script src="https://udan-sdk.nistapp.ai/dist/assets/UDAHeaders.js"></script>
     ```
-   1. Add the below script to the bottom of the page to load the SDK
-       ```
-       <script type="text/javascript">
-           (function ()
-            {
-                var uda = document.createElement('script');
-                uda.type = 'text/javascript';
-                uda.src = 'https://digital-assistant.github.io/Digital_Assistant_Client/dist/assets/UDALoad.js';
-                uda.onload = () =>
-                {
-                    if (typeof UDAAuthDataConfig !== 'undefined')
-                    {
-                        UDAAuthDataConfig(
-                        {
-                            id: '123456789', // Pass the unique reference id of the user
-                            email: 'dummy@dummy.com' // optional pass the email address of the user
-                        });
-                        // Additional parameters that can be passed.
-                        UDAPluginSDK(
-                        {
-                            enableEditClickedName: true, // Flag for editing the clicked element
-                            enableSkipDuringPlay: true, // Flag for enabling skip functionality
-                            enableTooltip: true, // Flag for adding custom tooltip information
-                            enableMultilingual: false, // Flag for enabling multilingual search with speech
-                            enableNodeTypeSelection: true, // Flag for enabling node type selection
-                            enablePermissions: false, // Flag for enabling permissions addition
-                            permissions: {}, // Object where the permissions can be passed
-                            enableProfanity: true, // Flag for enabling profanity check
-                            enableRecording: true, // Flag for enabling recording functionality
-                            enableOverlay: true // Flag for enabling overlay functionality or enabling squeeze functionality
-                        });
-                    }
-                }
-                document.body.appendChild(uda);
-            })();
-       </script>
-       ```
+2. Add the below script to the bottom of the page to load the SDK
+    ```
+    <script type="text/javascript">
+        (function ()
+         {
+             var uda = document.createElement('script');
+             uda.type = 'text/javascript';
+             uda.src = 'https://udan-sdk.nistapp.ai/dist/assets/UDALoad.js';
+             uda.onload = () =>
+             {
+                 if (typeof UDAAuthDataConfig !== 'undefined')
+                 {
+                     UDAAuthDataConfig(
+                     {
+                         id: '123456789', // Pass the unique reference id of the user
+                         email: 'dummy@dummy.com' // optional pass the email address of the user
+                     });
+                     // Additional parameters that can be passed.
+                     UDAPluginSDK(
+                     {
+                         enableEditClickedName: true, // Flag for editing the clicked element
+                         enableSkipDuringPlay: true, // Flag for enabling skip functionality
+                         enableTooltip: true, // Flag for adding custom tooltip information
+                         enableNodeTypeSelection: true, // Flag for enabling node type selection
+                         enableProfanity: true, // Flag for enabling profanity check
+                         enableRecording: true, // Flag for enabling recording functionality
+                         enableOverlay: true // Flag for enabling overlay functionality or enabling squeeze functionality
+                     });
+                 }
+             }
+             document.body.appendChild(uda);
+         })();
+    </script>
+    ```
 
 ## Installation instructions for developers
 
