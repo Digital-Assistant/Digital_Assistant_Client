@@ -387,7 +387,7 @@ header.uda-original-content {
         column-gap: 5px;
     }
     .selectedElement {
-        margin-top: 10px;
+        margin-top: 20px;
         display: grid;
         grid-template-columns: 85px 1fr;
         @media only screen and (max-width: 1200px) {
@@ -397,9 +397,8 @@ header.uda-original-content {
 
         select {
             width: 100%;
-            padding: 3px;
-            border-radius: 5px;
-            background: #eceffd;
+            border: 1px solid rgb(150, 150, 150);
+            margin-top: 0px;
         }
     }
 }

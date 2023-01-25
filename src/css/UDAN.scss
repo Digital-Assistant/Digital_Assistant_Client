@@ -30,13 +30,14 @@ $uda-tooltip-bg: #f2f4fe;
     max-width: 77%;
 }
 
-#uda-lang-select {
+#uda-lang-select, select {
     width: 70%;
     background-color: $uda-footer-srchbtn-bgcolor;
     margin-top: 10px;
     border: none;
     padding: 8px;
     border-radius: 3px;
+    color: $uda-text-color;
 }
 
 .uda-nistapp-logo {
