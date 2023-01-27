@@ -4,6 +4,7 @@ export interface MProps {
   addRecordBtnStatus?: boolean;
   i18?: any;
   config?: any;
+  isRecording?: any;
 }
 
 export interface HeaderProps extends MProps {

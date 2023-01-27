@@ -135,7 +135,6 @@ $uda-tooltip-bg: #f2f4fe;
         text-align: center;
 
         img {
-            // cursor: pointer;
             width: 45px;
             vertical-align: middle;
 
@@ -454,12 +453,10 @@ $uda-tooltip-bg: #f2f4fe;
                 outline: none;
                 color: $uda-text-color-bg-white;
                 border-radius: 5px;
-                //padding: 5px 12px;
                 align-items: center;
                 font-size: 14px;
                 cursor: pointer;
                 height: 30px;
-                // font-weight: bold !important;
 
                 img {
                     width: 30px !important;
@@ -471,7 +468,6 @@ $uda-tooltip-bg: #f2f4fe;
                 }
 
                 span {
-                    //padding-left: 20px;
                 }
 
                 &:hover {
@@ -626,7 +622,6 @@ $uda-tooltip-bg: #f2f4fe;
             }
 
             .uda-recorded-label-editable {
-                //border: 2px dotted #969696 !important;
                 padding: 5px !important;
                 opacity: 1 !important;
                 cursor: default !important;
@@ -1188,7 +1183,6 @@ Progress animation
 
 .info-icon {
     width: 16px !important;
-    // height: 16px !important;
     img {
         &:hover {
             width: 16px !important;

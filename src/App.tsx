@@ -1,13 +1,10 @@
 /**
- * Author: Lakshman Veti
+ * Author: Yureswar Ravuri
  * Type: App Component
  * Objective: To render content script
  */
 import React, { useState, useEffect, useCallback, useRef } from "react";
-// import "./css/antd.css";
 import "./css/UDAN.scss";
-
-
 import { Button, Spin } from "antd";
 import { fetchSearchResults } from "./services/searchService";
 import _ from "lodash";
@@ -594,6 +591,7 @@ function App() {
                                             addRecordBtnStatus={showRecord}
                                             toggleHandler={toggleHandler}
                                             config={global.UDAGlobalConfig}
+                                            isRecording={isRecording}
                                         />
                                     </>
                                 )}

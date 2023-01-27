@@ -24,8 +24,8 @@ const Footer = (props: MProps) => {
   return (
     <div>
       <div className="uda-footer-bar">
-        {props.config.enableRecording &&
-            <div className="uda-container">
+        {(props.config.enableRecording && !props.isRecording) &&
+          <div className="uda-container">
                 <button
                     className="uda-new-seq uda-exclude"
                     onClick={() => setShowRecord(true)}
@@ -50,7 +50,7 @@ const Footer = (props: MProps) => {
             >
               Know More
             </a>
-            <img src={getLogo()} width="15px" height="15px;" />
+            <img src={getLogo()} width="15px" height="15px;" alt="UDAN-Logo" />
           </div>
         </div>
       </div>
