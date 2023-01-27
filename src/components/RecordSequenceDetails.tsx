@@ -5,8 +5,8 @@
  * Associated Route/Usage: *
  */
 
-import React, {useEffect, useState} from "react";
-import {Row, Col, Button, List, Popconfirm} from "antd";
+import React, {useEffect, useRef, useState} from "react";
+import {Row, Col, Button, List, Popover, Popconfirm} from "antd";
 import {
   LeftOutlined,
   DeleteOutlined,
@@ -193,6 +193,8 @@ export const RecordSequenceDetails = (props: MProps) => {
     return item.status + ' uda_exclude';
   }
 
+  const ref = useRef();
+
   return props?.recordSequenceDetailsVisibility ? (
       <>
         <div
@@ -200,7 +202,7 @@ export const RecordSequenceDetails = (props: MProps) => {
             style={{
               borderBottomLeftRadius: "0px",
               borderBottomRightRadius: "0px",
-            }}
+            }} ref={ref}
         >
           <div className="uda-card-btns">
             <Button

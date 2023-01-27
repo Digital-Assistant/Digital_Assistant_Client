@@ -24,8 +24,8 @@ const Footer = (props: MProps) => {
   return (
     <div>
       <div className="uda-footer-bar">
-        {props.config.enableRecording &&
-            <div className="uda-container">
+        {(props.config.enableRecording && !props.isRecording) &&
+          <div className="uda-container">
                 <button
                     className="uda-new-seq uda-exclude"
                     onClick={() => setShowRecord(true)}
@@ -41,7 +41,7 @@ const Footer = (props: MProps) => {
           <div className="uda-footer-left">Copyrights Reserved {printYear()}.</div>
           <div
             className="uda-footer-right"
-            style={{ paddingTop: 5, textAlign: "right" }}
+            style={{ textAlign: "right" }}
           >
             <a
               href="https://udan.nistapp.ai"
@@ -50,7 +50,7 @@ const Footer = (props: MProps) => {
             >
               Know More
             </a>
-            <img src={getLogo()} width="15px" height="15px;" />
+            <img src={getLogo()} width="15px" height="15px;" alt="UDAN-Logo" />
           </div>
         </div>
       </div>

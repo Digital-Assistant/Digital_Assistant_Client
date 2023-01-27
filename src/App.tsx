@@ -1,13 +1,10 @@
 /**
- * Author: Lakshman Veti
+ * Author: Yureswar Ravuri
  * Type: App Component
  * Objective: To render content script
  */
 import React, { useState, useEffect, useCallback, useRef } from "react";
-// import "./css/antd.css";
 import "./css/UDAN.scss";
-
-
 import { Button, Spin } from "antd";
 import { fetchSearchResults } from "./services/searchService";
 import _ from "lodash";
@@ -39,7 +36,7 @@ declare global {
     }
 }
 
-function App() {
+function App(props) {
     const [isRecording, setIsRecording] = useState<boolean>(
         getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true" || false
     );
@@ -565,25 +562,12 @@ function App() {
                                                                     "record-button"
                                                                 )
                                                             }
-                                                            cancelHandler={
-                                                                cancel
-                                                            }
-                                                            playHandler={
-                                                                playHandler
-                                                            }
-                                                            isPlaying={
-                                                                playDelay
-                                                            }
-                                                            key={
-                                                                "rSD" +
-                                                                recordSequenceDetailsVisibility
-                                                            }
-                                                            config={
-                                                                global.UDAGlobalConfig
-                                                            }
-                                                            showLoader={
-                                                                setShowLoader
-                                                            }
+                                                            cancelHandler={cancel}
+                                                            playHandler={playHandler}
+                                                            isPlaying={playDelay}
+                                                            key={"rSD" + recordSequenceDetailsVisibility}
+                                                            config={global.UDAGlobalConfig}
+                                                            showLoader={setShowLoader}
                                                         />
                                                     )}
                                                 </>
@@ -594,22 +578,20 @@ function App() {
                                             addRecordBtnStatus={showRecord}
                                             toggleHandler={toggleHandler}
                                             config={global.UDAGlobalConfig}
+                                            isRecording={isRecording}
                                         />
                                     </>
                                 )}
 
                                 {!authenticated && (
                                     <>
-                                        <div
-                                            style={{
+                                        <div style={{
                                                 margin: "auto",
                                                 display: "inline-block",
                                                 width: "100% !important",
                                             }}
                                         >
-                                            <Button
-                                                type="primary"
-                                                className="uda_exclude"
+                                            <Button type="primary" className="uda_exclude"
                                                 onClick={() => {
                                                     keycloak.login();
                                                 }}
