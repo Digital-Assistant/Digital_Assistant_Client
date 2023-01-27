@@ -26,6 +26,13 @@
       "media": []
     }
   ],
+  "declarative_net_request": {
+    "rule_resources": [{
+      "id": "csp_rules",
+      "enabled": true,
+      "path": "cspRules.json"
+    }]
+  },
   "background": {
     "service_worker": "./assets/UDABackground.js"
   },
@@ -34,7 +41,10 @@
     "identity.email",
     "storage",
     "tabs",
-    "activeTab"
+    "activeTab",
+    "declarativeNetRequestWithHostAccess",
+    "declarativeNetRequest",
+    "declarativeNetRequestFeedback"
   ],
   "web_accessible_resources": [
     {
