@@ -14,11 +14,8 @@ const webpack = require("webpack");
 const CopyPlugin = require("copy-webpack-plugin");
 const transform = require("typescript-json/lib/transform").default;
 const Dotenv = require("dotenv-webpack");
-const CompressionPlugin = require("compression-webpack-plugin");
-const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
-// const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 // adding custom styleloader functionality to inject css styles into shadow dom
 const customStyleLoader = {
@@ -27,7 +24,6 @@ const customStyleLoader = {
             insert: function (linkTag) {
                 setTimeout(()=>{
                     const parent = document.querySelector('#udan-react-root').shadowRoot;
-                    // parent.prepend(linkTag);
                     parent.appendChild(linkTag);
                 },10);
             },
@@ -84,17 +80,11 @@ module.exports = (env, argv) => {
                         }),
                     },
                 },
-                /*{
-                    // Conditions:
-                    test: /\.css$/,
-                    use: ["style-loader", "css-loader"], // When multiple loader configuration needed
-                },*/
                 {
                     test: /\.css$/,
                     exclude: /node_modules/,
                     use: [
                         customStyleLoader,
-                        // MiniCssExtractPlugin.loader,
                         "css-loader"
                     ],
                 },
@@ -104,7 +94,6 @@ module.exports = (env, argv) => {
                     exclude: /node_modules/,
                     use: [
                         // When multiple loader configuration needed
-                        // "style-loader",
                         customStyleLoader,
                         "css-loader",
                         "sass-loader",
@@ -152,9 +141,6 @@ module.exports = (env, argv) => {
                     { from: "public/", to: "../" },
                 ],
             }),
-            /*new webpack.DefinePlugin({
-                "process.env": JSON.stringify(process.env)
-            }),*/
             new Dotenv({
                 path: `${envFile}`,
                 safe: true,
@@ -163,17 +149,7 @@ module.exports = (env, argv) => {
                 silent: true, // hide any errors
                 defaults: false,
                 ignoreStub: true,
-            }),
-            /*new MiniCssExtractPlugin({
-                filename: "styles.css",
-            }),*/
-            // new BundleAnalyzerPlugin(),
-            // gzip
-            /*new CompressionPlugin({
-                algorithm: 'gzip',
-                threshold: 10240,
-                minRatio: 0.8
-            })*/
+            })
         ],
         resolve: {
             // options for resolving module requests

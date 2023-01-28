@@ -31,6 +31,22 @@
     }
 }
 
+@media screen and (max-width: 1366px), screen and (max-height: 768px) {
+    .uda-help-bg-tooltip {
+        &:after {
+            top: 11px;
+        }
+    }
+    .udan-main-panel {
+        .uda-page-right-bar {
+            .uda-container {
+                padding-top: 10px;
+            }
+        }
+    }
+}
+
+
 @media screen and (max-width: 1280px), screen and (max-height: 768px) {
     .uda-help-bg-tooltip {
         &:after {

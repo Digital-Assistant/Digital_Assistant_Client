@@ -30,13 +30,14 @@ $uda-tooltip-bg: #f2f4fe;
     max-width: 77%;
 }
 
-#uda-lang-select {
+#uda-lang-select, select {
     width: 70%;
     background-color: $uda-footer-srchbtn-bgcolor;
     margin-top: 10px;
     border: none;
     padding: 8px;
     border-radius: 3px;
+    color: $uda-text-color;
 }
 
 .uda-nistapp-logo {
@@ -134,7 +135,6 @@ $uda-tooltip-bg: #f2f4fe;
         text-align: center;
 
         img {
-            // cursor: pointer;
             width: 45px;
             vertical-align: middle;
 
@@ -453,12 +453,10 @@ $uda-tooltip-bg: #f2f4fe;
                 outline: none;
                 color: $uda-text-color-bg-white;
                 border-radius: 5px;
-                //padding: 5px 12px;
                 align-items: center;
                 font-size: 14px;
                 cursor: pointer;
                 height: 30px;
-                // font-weight: bold !important;
 
                 img {
                     width: 30px !important;
@@ -470,7 +468,6 @@ $uda-tooltip-bg: #f2f4fe;
                 }
 
                 span {
-                    //padding-left: 20px;
                 }
 
                 &:hover {
@@ -625,7 +622,6 @@ $uda-tooltip-bg: #f2f4fe;
             }
 
             .uda-recorded-label-editable {
-                //border: 2px dotted #969696 !important;
                 padding: 5px !important;
                 opacity: 1 !important;
                 cursor: default !important;
@@ -749,8 +745,7 @@ $uda-tooltip-bg: #f2f4fe;
             .uda-footer-right {
                 width: 50%;
                 float: right;
-                margin-top: 5px;
-
+                padding-top: 3px;
                 a {
                     font-size: 10px;
                     color: $uda-primary-color !important;
@@ -1188,7 +1183,6 @@ Progress animation
 
 .info-icon {
     width: 16px !important;
-    // height: 16px !important;
     img {
         &:hover {
             width: 16px !important;

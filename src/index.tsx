@@ -2,30 +2,12 @@
  * React app bootstrap & Page Injection
  */
 import React from "react";
-import ReactDOM from "react-dom";
 
-import { createRoot } from "react-dom/client";
+import {createRoot} from "react-dom/client";
 
 import "./util/i18n";
-
-
-/*
-const body = document.querySelector("body");
-
-const app = document.createElement("udan");
-
-app.id = "udan-react-root";
-app.classList.add('uda_exclude');
-
-if (body) {
-    body.appendChild(app);
-}
-
-const container = document.getElementById("udan-react-root");
-
-const root = createRoot(container!);
-
-root.render(<App />);*/
+import App from "./App";
+import {ConfigProvider} from "antd";
 
 /**
  * creating shadow root element for UDAN plugin
@@ -46,14 +28,12 @@ udanContainer.appendChild(rootDiv);
 
 // check if html available
 if (htmlTag) {
-    htmlTag.appendChild(udanContainer);
+  htmlTag.appendChild(udanContainer);
 }
 
 // attach shadow to the container
 export const shadowHost = document.getElementById('udan-react-root');
-shadowHost.attachShadow({ mode: 'open' });
-
-import App from "./App";
+shadowHost.attachShadow({mode: 'open'});
 
 // adding react application into shadow dom
 
@@ -68,4 +48,9 @@ reactDiv.setAttribute('id', 'udan-react-app-root');
 shadowRoot.appendChild(reactDiv);
 
 const reactRoot = createRoot(shadowRoot);
-reactRoot.render(<App />);
+reactRoot.render(<ConfigProvider getPopupContainer = { (node: any) => {
+  if (node) {
+    return node.parentNode;
+  }
+  return shadowRoot;
+}}><App /> </ConfigProvider>);

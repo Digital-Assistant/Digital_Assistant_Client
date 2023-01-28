@@ -408,7 +408,7 @@ export const RecordedData = (props: MProps) => {
                                 />
                                 <label className="uda-checkbox-label">Skip during play</label>
                                 <span
-                                    className="info-icon"
+                                    className="info-icon ms-1 "
                                     title={translate('skipInfo')}
                                 >
                                   <InfoCircleOutlined/>
@@ -516,7 +516,6 @@ export const RecordedData = (props: MProps) => {
                       />
                       <button
                           className="delete-btn uda-remove-row uda_exclude"
-                          style={{color: "white", width: 40, marginLeft: 16}}
                           onClick={() => removeLabel(index)}
                       >
                         <DeleteOutlined/>
@@ -531,7 +530,7 @@ export const RecordedData = (props: MProps) => {
             })}
           </div>
 
-          <div style={{marginBottom: "10px", padding: "20px 0"}}>
+          <div className=" add_lebel_btn_wrap">
             <button className="add-btn uda_exclude" onClick={() => addLabel()}>
               + Add Label
             </button>
