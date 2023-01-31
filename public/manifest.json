@@ -26,13 +26,6 @@
       "media": []
     }
   ],
-  "declarative_net_request": {
-    "rule_resources": [{
-      "id": "csp_rules",
-      "enabled": true,
-      "path": "cspRules.json"
-    }]
-  },
   "background": {
     "service_worker": "./assets/UDABackground.js"
   },
@@ -42,10 +35,20 @@
     "storage",
     "tabs",
     "activeTab",
-    "declarativeNetRequestWithHostAccess",
     "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess",
     "declarativeNetRequestFeedback"
   ],
+  "host_permissions": [
+    "*://*/*"
+  ],
+  "declarative_net_request": {
+    "rule_resources": [{
+      "id": "csp_rules",
+      "enabled": true,
+      "path": "cspRules.json"
+    }]
+  },
   "web_accessible_resources": [
     {
       "resources": [
