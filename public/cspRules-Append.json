@@ -6,12 +6,8 @@
       "responseHeaders": [
         {
           "header": "content-security-policy",
-          "operation": "remove"
-        },
-        {
-          "header": "yuresh",
-          "operation": "set",
-          "value": "yuresh"
+          "operation": "append",
+          "value": "connect-src udan.nistapp.ai udantest.nistapp.ai"
         }
       ]
     },
