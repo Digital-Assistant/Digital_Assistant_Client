@@ -76,36 +76,13 @@ export const squeezeBody = async (hide: boolean) => {
     let documentBody = document.body;
     let bodyChildren: any = documentBody.childNodes;
     if (!hide) {
-      console.log('squeezed container');
       documentBody.style.maxWidth = '77%';
       documentBody.style.minWidth = '77%';
       documentBody.style.float = 'left';
-      /*if (bodyChildren.length > 0) {
-        bodyChildren.forEach(function (childNode, childNodeIndex) {
-          if (childNode.classList && childNode.classList.contains("container")) {
-            childNode.classList.remove("container");
-          }
-          if (childNode.nodeType === Node.ELEMENT_NODE && (childNode.id !== 'uda-btn' && childNode.id !== 'uda-html-container') && udaSpecialNodes.exclude.tags.indexOf(childNode.nodeName.toLowerCase()) === -1) {
-            if (childNode.classList && !childNode.classList.contains("uda-original-content")) {
-              childNode.classList.add("uda-original-content");
-            }
-          }
-        });
-      }*/
     } else {
-      console.log('full container');
       documentBody.style.maxWidth = '100%';
       documentBody.style.minWidth = '100%';
       documentBody.style.float = 'none';
-      /*if (bodyChildren.length > 0) {
-        bodyChildren.forEach(function (childNode, childNodeIndex) {
-          if (childNode.nodeType === Node.ELEMENT_NODE && (childNode.id !== 'uda-btn' && childNode.id !== 'uda-html-container') && udaSpecialNodes.exclude.tags.indexOf(childNode.nodeName.toLowerCase()) === -1) {
-            if (childNode.classList && childNode.classList.contains("uda-original-content")) {
-              childNode.classList.remove("uda-original-content");
-            }
-          }
-        });
-      }*/
     }
   }
 };
