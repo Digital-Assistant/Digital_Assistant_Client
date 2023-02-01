@@ -19,7 +19,6 @@ let sessionData = {
 
 let currentTab = [];
 
-
 let activeTabId;
 
 /**
@@ -306,3 +305,18 @@ async function keycloakStore(data){
 	await bindAuthenticatedAccount();
 }
 
+/**
+ * CSP detection using manifest v3 of declarativenetrequest api
+ */
+
+chrome.declarativeNetRequest.getSessionRules(
+	previousRules => {console.log(previousRules);}
+);
+
+
+
+/*chrome.webRequest.onHeadersReceived.addListener(
+	details=> {console.log(details)},             // function
+	(filter)=>{console.log(filter)},               //  object
+	['blocking', 'responseHeaders', 'extraHeaders']         //  optional array of strings
+);*/
