@@ -54,7 +54,8 @@ export const matchNode = (recordedNode: any) => {
 
   let clickObjects: any = [];
   let originalElement = originalNode?.node;
-  if(CONFIG.commonTags.includes(originalElement.nodeName.toLowerCase())){
+
+  if(CONFIG.commonTags.includes(originalElement.nodeName.toLowerCase()) && originalElement?.className){
     let querySelector = '';
     const classList = originalElement.className.split(" ");
     for(const className of classList){
