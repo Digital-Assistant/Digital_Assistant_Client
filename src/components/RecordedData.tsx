@@ -296,6 +296,9 @@ export const RecordedData = (props: MProps) => {
    * @param value
    */
   const validateInput = (value) => {
+    if(value.length > 100){
+      return false;
+    }
     let validateCondition = new RegExp("^[0-9A-Za-z _.-]+$");
     return (validateCondition.test(value));
   }
@@ -343,6 +346,7 @@ export const RecordedData = (props: MProps) => {
       recordData[index].objectdata = TSON.stringify(_objData);
       storeRecording(recordData);
       await updateRecordClicks(recordData[index]);
+      setToolTip('');
     }
     setDisableTooltipSubmitBtn( false);
     props.showLoader(false);
@@ -435,9 +439,24 @@ export const RecordedData = (props: MProps) => {
                     {(props.config.enableTooltip === true && isInputNode(objectData.node)) &&
                         <>
                             <div className="uda-recording uda_exclude" style={{textAlign: "center"}}>
-                                <input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip"
-                                       className="uda-form-input uda_exclude" placeholder={translate('toolTipPlaceHolder')}
-                                       style={{width: "68% !important"}} onChange={onChangeTooltip} value={(tooltip)? tooltip: (objectData.meta?.tooltipInfo)} />
+                              {(objectData.meta?.tooltipInfo && !tooltip) &&
+                                  <>
+                                      <input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip"
+                                             className="uda-form-input uda_exclude"
+                                             placeholder={translate('toolTipPlaceHolder')}
+                                             style={{width: "68% !important"}} onChange={onChangeTooltip}
+                                             value={objectData.meta?.tooltipInfo}/>
+                                  </>
+                              }
+                              {(!objectData.meta?.tooltipInfo || tooltip) &&
+                                  <>
+                                      <input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip"
+                                             className="uda-form-input uda_exclude"
+                                             placeholder={translate('toolTipPlaceHolder')}
+                                             style={{width: "68% !important"}} onChange={onChangeTooltip}
+                                             value={tooltip}/>
+                                  </>
+                              }
                               {inputError.tooltip && <span className={`uda-alert`}> {translate('inputError')}</span>}
                               <div style={{display:"flex"}}>
                               </div>

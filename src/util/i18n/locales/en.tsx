@@ -5,14 +5,16 @@ export const TRANSLATIONS_EN = {
   searchPlaceHolder: "Search recorded sequences",
   playBackError: "Nistapp UDA ran into a problem and will exit",
   tooltipMessage: "Please input the value and then click on",
-  inputError: 'Please input proper name. Allowed character are [0-9][A-Z][a-z][ _.-]',
+  inputError: 'Please input proper name. Allowed character are [0-9][A-Z][a-z][ _.-] and maximum length is 100',
   inputMandatory: "Please input value",
   cancelRecording: "Cancel and Exit",
   submitButton: "Submit",
   skipInfo: "Select this box if this field / text is not required to navigate while processing.",
   personalInfoLabel: "Personal Information",
-  personalInfoTooltip: "select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing.",
+  personalInfoTooltip: "Select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing.",
   submitTooltip: "Save Tooltip",
   toolTipPlaceHolder: "Custom Tooltip (Optional)",
-  deleteRecording: "Are you sure?"
+  deleteRecording: "Are you sure?",
+  continue: "Continue",
+  exit: "Exit"
 };

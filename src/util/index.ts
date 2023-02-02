@@ -104,6 +104,9 @@ export const getRowObject = (data: any) => {
   } catch (e) {
     sequenceName = data.name.toString();
   }
+  if(sequenceName.length > 50) {
+    sequenceName = sequenceName.substring(0, 50);
+  }
   return {sequenceName, path};
 };
 

@@ -24,6 +24,7 @@ import {matchNode} from "../util/invokeNode";
 import {CONFIG} from "../config";
 import {off, on} from "../util/events";
 import {translate} from "../util/translation";
+import {removeToolTip} from "../util/addToolTip";
 
 
 interface MProps {
@@ -111,7 +112,9 @@ export const RecordSequenceDetails = (props: MProps) => {
     let name = "";
     if (props.data) {
       try {
-        name = JSON.parse(props?.data?.name)?.join(",");
+        // name = JSON.parse(props?.data?.name)?.join(",");
+        let names = JSON.parse(props?.data?.name);
+        name = names[0]?names[0]:'NA';
       } catch (e) {
       }
     }
@@ -138,6 +141,7 @@ export const RecordSequenceDetails = (props: MProps) => {
    */
   const backNav = () => {
     resetStatus();
+    removeToolTip();
     if (props.cancelHandler) props.cancelHandler();
   };
 
