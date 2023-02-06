@@ -313,10 +313,12 @@ chrome.declarativeNetRequest.getSessionRules(
 	previousRules => {console.log(previousRules);}
 );
 
+chrome.declarativeNetRequest.getAvailableStaticRuleCount((data)=> {
+	console.log(data);
+});
 
-
-/*chrome.webRequest.onHeadersReceived.addListener(
-	details=> {console.log(details)},             // function
-	(filter)=>{console.log(filter)},               //  object
-	['blocking', 'responseHeaders', 'extraHeaders']         //  optional array of strings
-);*/
+chrome.declarativeNetRequest.onRuleMatchedDebug.addListener(
+	(data)=> {
+		console.log(data);
+	}
+)
