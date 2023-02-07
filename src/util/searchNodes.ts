@@ -29,7 +29,7 @@ export const searchNodes = (recordedNode, compareElements) => {
     let match = compareNodes(compareNode.node, originalNode.node, isPersonalNode);
 
     // uncomment for debugging
-    /*if(match.matched+10 >= match.count){
+    /*if(match.matched+3 >= match.count){
       console.log(searchNode.node);
       console.log(compareNode);
       console.log(match);

@@ -17,7 +17,6 @@ import TSON from "typescript-json";
 import {translate} from "../util/translation";
 import {isInputNode} from "../util/checkNode";
 import { left } from "@popperjs/core";
-
 export interface MProps {
   sequenceName?: string;
   isShown?: boolean;
@@ -156,10 +155,20 @@ export const RecordedData = (props: MProps) => {
     setLabels([...labels]);
   };
 
+  const resetForm = () => {
+    setDisableForm(false);
+    setName("");
+    setLabels([]);
+    setToolTip('');
+    global.udanSelectedNodes=[];
+    global.clickedNode = null;
+  }
+
   /**
    * cancel recording
    */
   const cancelRecording = () => {
+    resetForm();
     if (props.recordHandler) {
       props.recordHandler("cancel");
     }
@@ -215,6 +224,7 @@ export const RecordedData = (props: MProps) => {
     if (!_.isEmpty(tmpPermissionsObj)) _payload.additionalParams = tmpPermissionsObj;
 
     const instance = await postRecordSequenceData(_payload);
+    resetForm();
     if (instance && props?.refetchSearch) {
       setTimeout(()=>{
         props.refetchSearch("on");
