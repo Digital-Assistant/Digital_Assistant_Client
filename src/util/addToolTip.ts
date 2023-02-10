@@ -20,7 +20,7 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
   }
 
   //add scrolltop functionality
-  tooltipNode.scrollIntoView({behavior: 'smooth', block: "start", inline: "center"});
+  tooltipNode.scrollIntoView({behavior: 'smooth', block: "center", inline: "center"});
 
   const tooltipDivElement = getToolTipElement(message, showButtons);
 
