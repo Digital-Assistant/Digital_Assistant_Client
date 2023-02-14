@@ -5,18 +5,10 @@ import {getFromStore} from "./index";
 export let timer: any = null;
 
 const observer = new MutationObserver(async () => {
-  if (timer) {
-    clearTimeout(timer);
+  const isRecording = getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true";
+
+  if (isRecording) {
+    await addBodyEvents();
   }
-  timer = setTimeout(async () => {
-    const isRecording = getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true";
-
-    // CONFIG.isRecording = isRecording;
-
-    if (isRecording) {
-      await addBodyEvents();
-    }
-  }, CONFIG.indexInterval);
-
 });
-observer.observe(document.body, {attributes: true, childList: true, subtree: true});
+observer.observe(document.body, {attributes: false, childList: true, subtree: true});
