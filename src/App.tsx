@@ -319,7 +319,11 @@ function App(props) {
         });
         setPage(_page);
         setTimeout(() => setShowLoader(false), 500);
-        setSearchResults([..._searchResults]);
+        if(_searchResults.length){
+            setSearchResults([..._searchResults]);
+        } else {
+            setSearchResults([]);
+        }
     };
 
     /**to enable record sequence card/container */

@@ -14,7 +14,8 @@ export interface CustomConfigPropTypes {
   enableProfanity: boolean,
   enableNodeTypeSelection: boolean
   enableRecording: boolean,
-  enableOverlay: boolean
+  enableOverlay: boolean,
+  environment: string
 }
 
 // assigning default values to the default configuration
@@ -28,5 +29,6 @@ export const CustomConfig: CustomConfigPropTypes = {
   permissions: {}, // Object where the permissions can be passed
   enableProfanity: true, // Flag for enabling profanity check
   enableRecording: true, // Flag for enabling recording functionality
-  enableOverlay: true // Flag for enabling overlay functionality or enabling squeeze functionality
+  enableOverlay: true, // Flag for enabling overlay functionality or enabling squeeze functionality
+  environment: 'TEST'
 };
