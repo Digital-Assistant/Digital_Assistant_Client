@@ -30,5 +30,5 @@ export const CustomConfig: CustomConfigPropTypes = {
   enableProfanity: true, // Flag for enabling profanity check
   enableRecording: true, // Flag for enabling recording functionality
   enableOverlay: true, // Flag for enabling overlay functionality or enabling squeeze functionality
-  environment: 'TEST'
+  environment: 'PROD'
 };
