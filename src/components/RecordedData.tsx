@@ -567,6 +567,7 @@ export const RecordedData = (props: MProps) => {
 
           {props?.config?.enablePermissions && (
               <div id="uda-permissions-section" style={{padding: "30px 0px"}}>
+                <br />
                 <div>
                   <button
                       className="add-btn uda_exclude"

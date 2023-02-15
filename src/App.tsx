@@ -76,8 +76,10 @@ function App(props) {
     const config = global.UDAGlobalConfig;
 
     useEffect(() => {
-        // getSearchResults();
-    }, [config]);
+        if(global.UDAGlobalConfig.enablePermissions) {
+            getSearchResults();
+        }
+    }, [global.UDAGlobalConfig.enablePermissions]);
 
     useEffect(() => {
         if (invokeKeycloak) {
@@ -307,23 +309,35 @@ function App(props) {
      * HTTP search results service call
      * @param _page
      */
+    const [timer, setTimer] = useState(null);
     const getSearchResults = async (_page = 1) => {
-        setShowLoader(true);
-        const _searchResults = await fetchSearchResults({
-            keyword: searchKeyword,
-            page,
-            domain: encodeURI(window.location.host),
-            additionalParams: CustomConfig.enablePermissions
-                ? encodeURI(JSON.stringify(CustomConfig.permissions))
-                : null,
-        });
-        setPage(_page);
-        setTimeout(() => setShowLoader(false), 500);
-        if(_searchResults.length){
-            setSearchResults([..._searchResults]);
-        } else {
-            setSearchResults([]);
+        if (timer) {
+            clearTimeout(timer);
+            setTimer(null);
         }
+        setTimer(
+            setTimeout(async () => {
+                if(isRecording){
+                    return;
+                }
+                setShowLoader(true);
+                const _searchResults = await fetchSearchResults({
+                    keyword: searchKeyword,
+                    page,
+                    domain: encodeURI(window.location.host),
+                    additionalParams: global.UDAGlobalConfig.enablePermissions
+                        ? encodeURI(JSON.stringify(global.UDAGlobalConfig.permissions))
+                        : null,
+                });
+                setPage(_page);
+                setTimeout(() => setShowLoader(false), 500);
+                if (_searchResults.length) {
+                    setSearchResults([..._searchResults]);
+                } else {
+                    setSearchResults([]);
+                }
+            }, CONFIG.DEBOUNCE_INTERVAL)
+        );
     };
 
     /**to enable record sequence card/container */
