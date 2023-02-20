@@ -247,6 +247,7 @@ function App(props) {
         }
 
         const init = async () => {
+            setShowLoader(true);
             await initSpecialNodes();
             await getSearchResults();
             if (hide) {
@@ -320,6 +321,9 @@ function App(props) {
                 if(isRecording){
                     return;
                 }
+                /*if(selectedRecordingDetails){
+                    return;
+                }*/
                 setShowLoader(true);
                 const _searchResults = await fetchSearchResults({
                     keyword: searchKeyword,
