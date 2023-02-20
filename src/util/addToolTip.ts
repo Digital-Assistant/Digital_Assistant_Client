@@ -20,7 +20,7 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
   }
 
   //add scrolltop functionality
-  tooltipNode.scrollIntoView({behavior: 'smooth', block: "start", inline: "center"});
+  tooltipNode.scrollIntoView({behavior: 'smooth', block: "center", inline: "center"});
 
   const tooltipDivElement = getToolTipElement(message, showButtons);
 
@@ -44,8 +44,9 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
   });
 
 
+  const shadowRoot = document.getElementById('udan-react-root').shadowRoot;
   //attach event to continue button in tooltip
-  document
+  shadowRoot
       .getElementById("uda-autoplay-continue")
       ?.addEventListener("click", () => {
         removeToolTip();
@@ -53,7 +54,7 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
       });
 
   //attach event to close tooltip
-  document
+  shadowRoot
       .getElementById("uda-autoplay-exit")
       ?.addEventListener("click", () => {
         removeToolTip();
@@ -76,8 +77,9 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
  * Void()
  */
 export const removeToolTip = () => {
-  const toolTipExists = document.getElementById("uda-tooltip");
+  const shadowRoot = document.getElementById('udan-react-root').shadowRoot;
+  const toolTipExists = shadowRoot.getElementById("uda-tooltip");
   if (toolTipExists) {
-    document.body.removeChild(toolTipExists);
+    shadowRoot.removeChild(toolTipExists);
   }
 };

@@ -17,7 +17,6 @@ import TSON from "typescript-json";
 import {translate} from "../util/translation";
 import {isInputNode} from "../util/checkNode";
 import { left } from "@popperjs/core";
-
 export interface MProps {
   sequenceName?: string;
   isShown?: boolean;
@@ -156,10 +155,20 @@ export const RecordedData = (props: MProps) => {
     setLabels([...labels]);
   };
 
+  const resetForm = () => {
+    setDisableForm(false);
+    setName("");
+    setLabels([]);
+    setToolTip('');
+    global.udanSelectedNodes=[];
+    global.clickedNode = null;
+  }
+
   /**
    * cancel recording
    */
   const cancelRecording = () => {
+    resetForm();
     if (props.recordHandler) {
       props.recordHandler("cancel");
     }
@@ -215,6 +224,7 @@ export const RecordedData = (props: MProps) => {
     if (!_.isEmpty(tmpPermissionsObj)) _payload.additionalParams = tmpPermissionsObj;
 
     const instance = await postRecordSequenceData(_payload);
+    resetForm();
     if (instance && props?.refetchSearch) {
       setTimeout(()=>{
         props.refetchSearch("on");
@@ -296,6 +306,9 @@ export const RecordedData = (props: MProps) => {
    * @param value
    */
   const validateInput = (value) => {
+    if(value.length > 100){
+      return false;
+    }
     let validateCondition = new RegExp("^[0-9A-Za-z _.-]+$");
     return (validateCondition.test(value));
   }
@@ -343,6 +356,7 @@ export const RecordedData = (props: MProps) => {
       recordData[index].objectdata = TSON.stringify(_objData);
       storeRecording(recordData);
       await updateRecordClicks(recordData[index]);
+      setToolTip('');
     }
     setDisableTooltipSubmitBtn( false);
     props.showLoader(false);
@@ -432,12 +446,27 @@ export const RecordedData = (props: MProps) => {
                         </span>
                       </div>
                     </>
-                    {(props.config.enableTooltip === true && isInputNode(objectData.node)) &&
+                    {(props.config.enableTooltipAddition === true && isInputNode(objectData.node)) &&
                         <>
                             <div className="uda-recording uda_exclude" style={{textAlign: "center"}}>
-                                <input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip"
-                                       className="uda-form-input uda_exclude" placeholder={translate('toolTipPlaceHolder')}
-                                       style={{width: "68% !important"}} onChange={onChangeTooltip} value={(tooltip)? tooltip: (objectData.meta?.tooltipInfo)} />
+                              {(objectData.meta?.tooltipInfo && !tooltip) &&
+                                  <>
+                                      <input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip"
+                                             className="uda-form-input uda_exclude"
+                                             placeholder={translate('toolTipPlaceHolder')}
+                                             style={{width: "68% !important"}} onChange={onChangeTooltip}
+                                             value={objectData.meta?.tooltipInfo}/>
+                                  </>
+                              }
+                              {(!objectData.meta?.tooltipInfo || tooltip) &&
+                                  <>
+                                      <input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip"
+                                             className="uda-form-input uda_exclude"
+                                             placeholder={translate('toolTipPlaceHolder')}
+                                             style={{width: "68% !important"}} onChange={onChangeTooltip}
+                                             value={tooltip}/>
+                                  </>
+                              }
                               {inputError.tooltip && <span className={`uda-alert`}> {translate('inputError')}</span>}
                               <div style={{display:"flex"}}>
                               </div>
@@ -538,6 +567,7 @@ export const RecordedData = (props: MProps) => {
 
           {props?.config?.enablePermissions && (
               <div id="uda-permissions-section" style={{padding: "30px 0px"}}>
+                <br />
                 <div>
                   <button
                       className="add-btn uda_exclude"

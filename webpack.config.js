@@ -1,5 +1,5 @@
 /**
- * Author: Lakshman Veti
+ * Author: Yureswar Ravuri
  * Webpack configuration
  */
 

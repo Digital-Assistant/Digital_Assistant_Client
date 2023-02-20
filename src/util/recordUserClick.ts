@@ -7,6 +7,8 @@ import {checkNodeValues} from "./checkNodeValues";
 import mapClickedElementToHtmlFormElement from "./recording-utils/mapClickedElementToHtmlFormElement";
 declare const UDAGlobalConfig;
 
+global.udanSelectedNodes = [];
+global.clickedNode = null;
 /**
  *
  * @param node
@@ -52,6 +54,10 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
   }
 
 
+  if (recordingNode.isSameNode(window.clickedNode)) {
+    return;
+  }
+
   // ignore click on unwanted node
   if(recordingNode.hasAttribute('udaIgnoreClick')){
     return ;
@@ -64,8 +70,6 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
     event.stopPropagation();
   }
 
-  window.clickedNode = event.target;
-
   if(checkNodeValues(recordingNode, 'exclude')){
     return ;
   }
@@ -73,6 +77,8 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
   if (clickableElementExists(recordingNode) || clickableElementExists(node)) {
     return;
   }
+
+  global.clickedNode = recordingNode;
 
   let meta: any = {};
 
@@ -117,12 +123,13 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
 
   const resp: any = await postClickData(recordingNode, _text, meta);
   if (resp && resp.id) {
-    if (!window.udanSelectedNodes){
-      window.udanSelectedNodes = [];
+    if (!global.udanSelectedNodes){
+      global.udanSelectedNodes = [];
     }
 
-    window.udanSelectedNodes.push(recordingNode);
-    window.udanSelectedNodes.push(node);
+    global.udanSelectedNodes.push(recordingNode);
+    if(!recordingNode.isSameNode(node))
+      global.udanSelectedNodes.push(node);
 
     CONFIG.lastClickedTime=Date.now();
 
@@ -137,9 +144,9 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
     UDAErrorLogger.error("Unable save record click " + node.outerHTML);
   }
 
-  event.target.click();
+  event?.target?.click();
   // do not remove the below click it was added for performing the click as the clicks are getting stopped in between
-  event.target.click();
+  event?.target?.click();
 
   return;
 };

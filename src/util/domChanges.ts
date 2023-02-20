@@ -11,8 +11,6 @@ const observer = new MutationObserver(async () => {
   timer = setTimeout(async () => {
     const isRecording = getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true";
 
-    // CONFIG.isRecording = isRecording;
-
     if (isRecording) {
       await addBodyEvents();
     }
