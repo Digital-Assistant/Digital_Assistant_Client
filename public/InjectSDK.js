@@ -13,6 +13,14 @@ document.addEventListener("UDADebugSetEvent", function(data) {
     chrome.runtime.sendMessage({action:data.detail.data.action,data:data.detail.data.value});
 });
 
+document.addEventListener("UDARemoveCSP", function(data) {
+    chrome.runtime.sendMessage({action:data.detail.action, data:data.detail.data});
+});
+
+document.addEventListener("UDACSPInfo", function(data) {
+    chrome.runtime.sendMessage({action:data.detail.action, data:data.detail.data});
+});
+
 /**
  * create keycloak storage to chrome
  */
@@ -27,5 +35,7 @@ chrome.runtime.onMessage.addListener(function(request) {
         document.dispatchEvent(new CustomEvent("UDAAuthenticatedUserSessionData", {detail: {data: request.data}, bubbles: false, cancelable: false}));
     } else if(request.action==="UDAAlertMessageData"){
         document.dispatchEvent(new CustomEvent("UDAAlertMessageData", {detail: {data: request.data}, bubbles: false, cancelable: false}));
+    } else if(request.action==="UDACSPInfo"){
+        document.dispatchEvent(new CustomEvent("UDACSPInfo", {detail: {data: request.data}, bubbles: false, cancelable: false}));
     }
 });

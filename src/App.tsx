@@ -5,7 +5,7 @@
  */
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import "./css/UDAN.scss";
-import { Button, Spin } from "antd";
+import {Button, Spin, Switch} from "antd";
 import { fetchSearchResults } from "./services/searchService";
 import _ from "lodash";
 import { squeezeBody, setToStore, getFromStore, removeFromStore } from "./util";
@@ -70,6 +70,8 @@ function App(props) {
     const [keycloakSessionData, setKeycloakSessionData] = useState(null);
     const [userSessionData, setUserSessionData] = useState(null);
     const [invokeKeycloak, setInvokeKeycloak] = useState(false);
+
+    const [CSPEnabled, setCSPEnabled] = useState(false);
 
     const previousSearchKeyword = useRef("");
 
@@ -221,6 +223,7 @@ function App(props) {
         on("UDAAuthenticatedUserSessionData", createSession);
         on("UDAAlertMessageData", authenticationError);
         on("UDAClearSessionData", clearSession);
+        on("UDACSPInfo", cspHandler);
 
         let userSessionData = getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
         if (!userSessionData) {
@@ -253,9 +256,18 @@ function App(props) {
             if (hide) {
                 squeezeBody(true);
             }
+            setShowLoader(false);
         };
 
         init();
+
+        if(!CSPEnabled){
+            trigger("UDACSPInfo", {
+                detail: {action: "UDACSPInfo", data: true},
+                bubbles: false,
+                cancelable: false,
+            });
+        }
 
         return () => {
             off("UDAUserSessionData", createSession);
@@ -469,6 +481,29 @@ function App(props) {
         setToStore(status, CONFIG.RECORDING_IS_PLAYING, true);
     };
 
+    /**
+     * removing content security policy
+     */
+    const removeCSP = () => {
+        if(CSPEnabled){
+            trigger("UDARemoveCSP", {
+                detail: {action: "UDARemoveCSP", data: false},
+                bubbles: false,
+                cancelable: false,
+            });
+        } else {
+            trigger("UDARemoveCSP", {
+                detail: {action: "UDARemoveCSP", data: true},
+                bubbles: false,
+                cancelable: false,
+            });
+        }
+    }
+
+    const cspHandler = (data) => {
+        setCSPEnabled(JSON.parse(data.detail.data));
+    }
+
     return (
       <UserDataContext.Provider value={userSessionData}>
             <div
@@ -491,6 +526,13 @@ function App(props) {
                                             toggleHandler={toggleHandler}
                                             config={global.UDAGlobalConfig}
                                         />
+                                        <>
+                                            <div style={{width: "100%", alignContent: "center", textAlign: "center"}}>
+                                                <span style={{alignContent: 'left'}}>Secure mode</span>
+                                                <Switch defaultChecked onChange={removeCSP} checked={CSPEnabled} />
+                                                <span style={{alignContent: 'right'}}>Compatability mode</span>
+                                            </div>
+                                        </>
                                         <Body
                                             content={
                                                 <>
