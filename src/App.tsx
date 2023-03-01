@@ -77,7 +77,7 @@ function App(props) {
 
     useEffect(() => {
         if(global.UDAGlobalConfig.enablePermissions) {
-            getSearchResults();
+            getSearchResults(1,true);
         }
     }, [global.UDAGlobalConfig.enablePermissions]);
 
@@ -248,7 +248,7 @@ function App(props) {
 
         const init = async () => {
             await initSpecialNodes();
-            await getSearchResults();
+            await getSearchResults(1, true);
             if (hide) {
                 squeezeBody(true);
             }
@@ -275,7 +275,7 @@ function App(props) {
     useEffect(() => {
         if (searchKeyword !== previousSearchKeyword.current) {
             previousSearchKeyword.current = searchKeyword;
-            getSearchResults();
+            getSearchResults(1, true);
         }
 
         if (reFetchSearch === "on") {
@@ -310,7 +310,7 @@ function App(props) {
      * @param _page
      */
     const [timer, setTimer] = useState(null);
-    const getSearchResults = async (_page = 1) => {
+    const getSearchResults = async (_page = 1, refetch=false) => {
         if (timer) {
             clearTimeout(timer);
             setTimer(null);
@@ -318,15 +318,15 @@ function App(props) {
         setTimer(
             setTimeout(async () => {
                 if(isRecording){
-                    return;
                     setShowLoader(false);
+                    return;
                 }
-                if(searchResults.length > 0){
-                    return;
+                if(searchResults.length > 0 && !refetch){
                     setShowLoader(false);
+                    return;
                 } else if (!_.isEmpty(selectedRecordingDetails)) {
-                    return;
                     setShowLoader(false);
+                    return;
                 }
                 setShowLoader(true);
                 const _searchResults = await fetchSearchResults({
@@ -344,7 +344,7 @@ function App(props) {
                 } else {
                     setSearchResults([]);
                 }
-            }, CONFIG.DEBOUNCE_INTERVAL)
+            }, CONFIG.apiInvokeTime)
         );
     };
 

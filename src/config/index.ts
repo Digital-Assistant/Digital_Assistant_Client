@@ -54,6 +54,7 @@ export const CONFIG = {
   isRecording: false,
   htmlIndex: [],
   invokeTime: 1000,
+  apiInvokeTime: 300,
   maxStringLength: 40,
   playNextAction: true,
   navigatedToNextPage: {check: false, url: ''},

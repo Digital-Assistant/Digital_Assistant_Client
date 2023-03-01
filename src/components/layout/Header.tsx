@@ -55,7 +55,7 @@ const Header = (props: HeaderProps) => {
   }
 
   const submitSearch = (event) => {
-    if(event.keyCode == 13){
+    if(event.keyCode === 13 || event.key === 'Enter'){
       props.setSearchKeyword(searchKeyword);
     }
   }
