@@ -319,6 +319,14 @@ function App(props) {
             setTimeout(async () => {
                 if(isRecording){
                     return;
+                    setShowLoader(false);
+                }
+                if(searchResults.length > 0){
+                    return;
+                    setShowLoader(false);
+                } else if (!_.isEmpty(selectedRecordingDetails)) {
+                    return;
+                    setShowLoader(false);
                 }
                 setShowLoader(true);
                 const _searchResults = await fetchSearchResults({
@@ -352,6 +360,7 @@ function App(props) {
 
     /**common cancel button handler */
     const cancel = () => {
+        setShowLoader(true);
         setIsRecording(false);
         setShowRecord(false);
         setRecordSequenceDetailsVisibility(false);
@@ -530,6 +539,7 @@ function App(props) {
                                                                 showDetails={
                                                                     showRecordingDetails
                                                                 }
+                                                                playHandler={playHandler}
                                                                 visibility={toggleContainer(
                                                                     "search-results"
                                                                 )}

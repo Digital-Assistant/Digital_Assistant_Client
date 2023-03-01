@@ -16,5 +16,6 @@ export const TRANSLATIONS_EN = {
   toolTipPlaceHolder: "Custom Tooltip (Optional)",
   deleteRecording: "Are you sure?",
   continue: "Continue",
-  exit: "Exit"
+  exit: "Exit",
+  clearSearch: "Clear"
 };

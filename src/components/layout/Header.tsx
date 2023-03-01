@@ -8,6 +8,7 @@ import { CONFIG } from "../../config";
 import LanguageSelect from "./LanguageSelect";
 import { translateText } from "../../services/translateService";
 import {translate} from "../../util/translation";
+import {CloseCircleOutlined} from "@ant-design/icons";
 
 /**
  * To render search result elements
@@ -43,6 +44,15 @@ const Header = (props: HeaderProps) => {
     }
     props.setSearchKeyword(searchText);
   };
+
+  /**
+   * clear search function
+   * @param event
+   */
+  const clearSearch = () => {
+    props.setSearchKeyword('');
+    setSearchKeyword('');
+  }
 
   const submitSearch = (event) => {
     if(event.keyCode == 13){
@@ -107,12 +117,24 @@ const Header = (props: HeaderProps) => {
               }}
               onKeyDown={submitSearch}
             />
-            <button
-              className="uda-search-btn uda_exclude"
-              id="uda-search-btn"
-              style={{ borderRadius: "0px 5px 5px 0px" }}
-              onClick={() => multiLangSearch(searchKeyword)}
-            />
+            {(!searchKeyword) &&
+                <button
+                    className="uda-search-btn uda_exclude"
+                    id="uda-search-btn"
+                    style={{borderRadius: "0px 5px 5px 0px"}}
+                    onClick={() => multiLangSearch(searchKeyword)}
+                />
+            }
+            {(searchKeyword) &&
+                <button
+                    className="uda-btn uda_exclude"
+                    id="uda-clear-btn"
+                    style={{borderRadius: "0px 5px 5px 0px"}}
+                    onClick={() => clearSearch()}
+                >
+                    <CloseCircleOutlined />
+                </button>
+            }
           </div>
           {props?.config?.enableMultilingual && (
               <LanguageSelect

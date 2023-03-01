@@ -92,11 +92,13 @@ export const squeezeBody = async (hide: boolean) => {
  */
 export const getRowObject = (data: any) => {
   let path = "";
-  for (let row of data.userclicknodesSet) {
-    if (path !== "") {
-      path += " >> ";
+  for (let [index, row] of data.userclicknodesSet.entries()) {
+    if(index < 5) {
+      if (path !== "") {
+        path += " >> ";
+      }
+      path += row.clickednodename;
     }
-    path += row.clickednodename;
   }
   let sequenceName: string;
   try {
