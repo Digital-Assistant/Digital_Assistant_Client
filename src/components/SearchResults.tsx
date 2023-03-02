@@ -8,9 +8,10 @@
 import React, {useEffect, useState} from "react";
 import {Button, Empty, List} from "antd";
 import {DoubleRightOutlined, PlayCircleOutlined, EyeOutlined} from "@ant-design/icons";
-import { getRowObject, setToStore } from "../util";
+import { setToStore } from "../util";
 import InfiniteScroll from "react-infinite-scroller";
 import {CONFIG} from "../config";
+import {getRowObject} from "../util/getRowObject";
 
 export interface MProps {
   visibility?: boolean;
