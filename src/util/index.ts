@@ -88,31 +88,6 @@ export const squeezeBody = async (hide: boolean) => {
 };
 
 /**
- * to render search result rows
- */
-export const getRowObject = (data: any) => {
-  let path = "";
-  for (let [index, row] of data.userclicknodesSet.entries()) {
-    if(index < 5) {
-      if (path !== "") {
-        path += " >> ";
-      }
-      path += row.clickednodename;
-    }
-  }
-  let sequenceName: string;
-  try {
-    sequenceName = JSON.parse(data.name)[0];
-  } catch (e) {
-    sequenceName = data.name.toString();
-  }
-  if(sequenceName.length > 50) {
-    sequenceName = sequenceName.substring(0, 50);
-  }
-  return {sequenceName, path};
-};
-
-/**
  * Returns index if an element in given array found
  * @param elem
  * @param array
