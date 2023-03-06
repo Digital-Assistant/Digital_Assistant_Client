@@ -125,10 +125,10 @@ export const RecordSequenceDetails = (props: MProps) => {
   /**
    * Navigates back to search results card
    */
-  const backNav = () => {
+  const backNav = (forceRefresh=false) => {
     resetStatus();
     removeToolTip();
-    if (props.cancelHandler) props.cancelHandler();
+    if (props.cancelHandler) props.cancelHandler(forceRefresh);
   };
 
   /**
@@ -156,7 +156,7 @@ export const RecordSequenceDetails = (props: MProps) => {
     props.showLoader(true);
     await deleteRecording({id: selectedRecordingDetails.id});
     setTimeout(()=>{
-      backNav();
+      backNav(true);
     }, CONFIG.indexInterval);
   };
 
@@ -201,7 +201,7 @@ export const RecordSequenceDetails = (props: MProps) => {
                 size="small"
                 style={{position: "absolute", top: 12, left: 0}}
                 className="uda_exclude"
-                onClick={() => backNav()}
+                onClick={() => backNav(false)}
             >
               <LeftOutlined/>
             </Button>

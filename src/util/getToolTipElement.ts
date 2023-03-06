@@ -5,12 +5,22 @@
 import {translate} from "./translation";
 
 export const getToolTipElement = (message = 'Please input the value and then click on', showButtons = true) => {
-  let toolTipContentSection = message
+
+  let toolTipContentSection = '';
+
+  if(!showButtons){
+    toolTipContentSection += '<br />';
+  }
+
+  toolTipContentSection += message
       + '<br/>';
+
   if (showButtons) {
     toolTipContentSection +=
         '<button class="uda-tutorial-btn" style="margin-top:10px; margin-right: 5px;" type="button" uda-added="true" id="uda-autoplay-continue">'+translate('continue')+'</button>' +
         '<button class="uda-tutorial-exit-btn" style="margin-top:10px;" type="button" uda-added="true" id="uda-autoplay-exit">'+translate('exit')+'</button>';
+  } else {
+    toolTipContentSection += '<br />';
   }
 
   let toolTipContentElement = document.createElement("div");

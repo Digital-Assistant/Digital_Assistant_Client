@@ -279,7 +279,7 @@ function App(props) {
         }
 
         if (reFetchSearch === "on") {
-            getSearchResults();
+            getSearchResults(1,true);
             setReFetchSearch("off");
         }
     }, [searchKeyword, reFetchSearch]);
@@ -359,8 +359,7 @@ function App(props) {
     };
 
     /**common cancel button handler */
-    const cancel = () => {
-        setShowLoader(true);
+    const cancel = (forceRefresh=false) => {
         setIsRecording(false);
         setShowRecord(false);
         setRecordSequenceDetailsVisibility(false);
@@ -370,7 +369,9 @@ function App(props) {
         setToStore([], CONFIG.RECORDING_SEQUENCE, false);
         setToStore({}, CONFIG.SELECTED_RECORDING, false);
         setSelectedRecordingDetails({});
-        setReFetchSearch("on");
+        if(forceRefresh) {
+            setReFetchSearch("on");
+        }
         setShowSearch(true);
         if (window.udanSelectedNodes) window.udanSelectedNodes = [];
     };

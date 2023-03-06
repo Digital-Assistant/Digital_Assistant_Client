@@ -43,33 +43,33 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
     ],
   });
 
+  if(showButtons) {
+    const shadowRoot = document.getElementById('udan-react-root').shadowRoot;
+    //attach event to continue button in tooltip
+    shadowRoot
+        .getElementById("uda-autoplay-continue")
+        ?.addEventListener("click", () => {
+          removeToolTip();
+          trigger("ContinuePlay", {action: 'ContinuePlay'});
+        });
 
-  const shadowRoot = document.getElementById('udan-react-root').shadowRoot;
-  //attach event to continue button in tooltip
-  shadowRoot
-      .getElementById("uda-autoplay-continue")
-      ?.addEventListener("click", () => {
-        removeToolTip();
-        trigger("ContinuePlay", {action: 'ContinuePlay'});
-      });
+    //attach event to close tooltip
+    shadowRoot
+        .getElementById("uda-autoplay-exit")
+        ?.addEventListener("click", () => {
+          removeToolTip();
+          trigger("BackToSearchResults", {action: 'BackToSearchResults'});
+        });
 
-  //attach event to close tooltip
-  shadowRoot
-      .getElementById("uda-autoplay-exit")
-      ?.addEventListener("click", () => {
-        removeToolTip();
-        trigger("BackToSearchResults", {action: 'BackToSearchResults'});
-      });
-
-  setTimeout(function () {
-    if (enableFocus) {
-      invokingNode.focus();
-    }
-    if (enableClick) {
-      invokingNode.click();
-    }
-  }, CONFIG.DEBOUNCE_INTERVAL);
-
+    setTimeout(function () {
+      if (enableFocus) {
+        invokingNode.focus();
+      }
+      if (enableClick) {
+        invokingNode.click();
+      }
+    }, CONFIG.DEBOUNCE_INTERVAL);
+  }
 }
 
 /**
