@@ -446,7 +446,7 @@ export const RecordedData = (props: MProps) => {
                         </span>
                       </div>
                     </>
-                    {(props.config.enableTooltip === true && isInputNode(objectData.node)) &&
+                    {(props.config.enableTooltipAddition === true && isInputNode(objectData.node)) &&
                         <>
                             <div className="uda-recording uda_exclude" style={{textAlign: "center"}}>
                               {(objectData.meta?.tooltipInfo && !tooltip) &&
