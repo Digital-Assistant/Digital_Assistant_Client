@@ -59,6 +59,9 @@ export const matchNode = (recordedNode: any) => {
     let querySelector = '';
     const classList = originalElement.className.split(" ");
     for(const className of classList){
+      if(className.trim() === ''){
+        continue;
+      }
       if(querySelector!==''){
         querySelector +=', ';
       }
