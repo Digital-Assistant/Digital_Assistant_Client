@@ -10,7 +10,7 @@ import {getTooltipPositionClass} from "./getTooltipPositionClass";
  */
 
 //add tooltip display
-export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navigationCookieData, enableClick = false, enableFocus = false, enableAnimate = false, message = translate('tooltipMessage'), showButtons = true) => {
+export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navigationCookieData, enableClick = false, enableFocus = false, enableAnimate = false, message = translate('tooltipMessage'), showButtons = true, isNavigating=false) => {
 
   if (recordedData !== null) {
     let recordedNodeData = JSON.parse(recordedData.objectdata);
@@ -28,6 +28,13 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
    * calculating node position from here
    */
   let toolTipPositionClass: any = getTooltipPositionClass(tooltipNode, tooltipDivElement);
+
+  if(isNavigating){
+    setTimeout(function () {
+      invokingNode.click();
+      removeToolTip();
+    }, 500);
+  }
 
   let popperInstance = createPopper(tooltipNode, tooltipDivElement, {
     placement: toolTipPositionClass,

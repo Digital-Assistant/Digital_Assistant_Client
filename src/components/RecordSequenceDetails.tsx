@@ -16,7 +16,7 @@ import {
 } from "@ant-design/icons";
 import {
   setToStore,
-  getCurrentPlayItem, getObjData,
+  getCurrentPlayItem, getObjData, getFromStore,
 } from "../util";
 import {deleteRecording, vote} from "../services/recordService";
 import {getUserId} from "../services/userService";
@@ -76,11 +76,15 @@ export const RecordSequenceDetails = (props: MProps) => {
    * Record player(auto play)
    */
   const autoPlay = (data = null) => {
+    if (getFromStore(CONFIG.RECORDING_IS_PLAYING, true) !== "on") {
+      return;
+    }
     const playItem = getCurrentPlayItem();
     if (playItem.node && matchNode(playItem)) {
       updateStatus(playItem.index);
     } else {
       pause();
+      removeToolTip();
     }
   };
 

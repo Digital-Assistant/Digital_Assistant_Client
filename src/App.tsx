@@ -373,7 +373,7 @@ function App(props) {
         setToStore([], CONFIG.RECORDING_SEQUENCE, false);
         setToStore({}, CONFIG.SELECTED_RECORDING, false);
         setSelectedRecordingDetails({});
-        if(forceRefresh) {
+        if(forceRefresh || searchResults.length === 0) {
             setReFetchSearch("on");
         }
         setShowSearch(true);

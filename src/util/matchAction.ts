@@ -86,7 +86,8 @@ export const matchAction = (node, selectedNode) => {
             }
             break;
           case 'submit':
-            node.click();
+            addToolTip(node, node, selectedNode, navigationData, false, false, false, translate('highLightText'), false, true);
+            // node.click();
             invokeNextNode(node, timeToInvoke);
             break;
           case 'text':
@@ -127,12 +128,12 @@ export const matchAction = (node, selectedNode) => {
       if (node.hasAttribute('aria-label') && node.getAttribute('aria-label').toLowerCase() === 'open calendar') {
         addToolTip(node, node.parentNode, selectedNode, navigationData, true, false);
       } else if (node.classList && node.classList.contains('btn-pill')) {
-        addToolTip(node, node, selectedNode, navigationData, false, false, false, translate('highLightText'), false);
-        node.click();
+        addToolTip(node, node, selectedNode, navigationData, false, false, false, translate('highLightText'), false, true);
+        // node.click();
         invokeNextNode(node, timeToInvoke);
       } else {
-        addToolTip(node, node, selectedNode, navigationData, false, false, false, translate('highLightText'), false);
-        node.click();
+        addToolTip(node, node, selectedNode, navigationData, false, false, false, translate('highLightText'), false, true);
+        // node.click();
         invokeNextNode(node, timeToInvoke);
       }
       break;
@@ -142,8 +143,8 @@ export const matchAction = (node, selectedNode) => {
       } else if (node.classList.contains("radio") && node.classList.contains("replacement")) {
         addToolTip(node, node.parentNode.parentNode, selectedNode, navigationData, false, false, true);
       } else {
-        addToolTip(node, node, selectedNode, navigationData, false, false, false, translate('highLightText'), false);
-        node.click();
+        addToolTip(node, node, selectedNode, navigationData, false, false, false, translate('highLightText'), false, true);
+        // node.click();
         invokeNextNode(node, timeToInvoke);
       }
       break;
@@ -171,8 +172,8 @@ export const matchAction = (node, selectedNode) => {
       if (specialInputNode) {
         addToolTip(node, node, selectedNode, navigationData, true, false);
       } else {
-        addToolTip(node, node, selectedNode, navigationData, false, false, false, translate('highLightText'), false);
-        node.click();
+        addToolTip(node, node, selectedNode, navigationData, false, false, false, translate('highLightText'), false, true);
+        // node.click();
       }
       invokeNextNode(node, timeToInvoke);
       break;
