@@ -1,6 +1,7 @@
 //perform action based on selected node type
 import {addToolTip} from "./addToolTip";
 import {invokeNextNode} from "./invokeNextNode";
+import {translate} from "./translation";
 
 export const mapSelectedElementAction = (node, recordedNode, navigationCookieData, recordedNodeData) => {
   // addToolTip(node, node.parentNode, selectednode, navigationcookiedata, false, false, false);
@@ -26,7 +27,8 @@ export const mapSelectedElementAction = (node, recordedNode, navigationCookieDat
       performedAction = true;
       break;
     case 'button':
-      node.click();
+      addToolTip(node, node, recordedNode, navigationCookieData, false, false, false, translate('highLightText'), false, true);
+      // node.click();
       invokeNextNode(node, 1000);
       // showselectedrow(navigationCookieData.data, navigationCookieData.data.id, true, navigationCookieData);
       performedAction = true;

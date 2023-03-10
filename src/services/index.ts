@@ -1,5 +1,7 @@
 import TSON from "typescript-json";
 
+declare const UDAGlobalConfig;
+
 /**
  * common REST call
  * @options : object (properties needed for REST call)
@@ -11,7 +13,22 @@ export const apiCal = (options: any) => {
     body: options.body ? TSON.stringify(options.body) : null,
   };
 
-  return fetch(options.url, requestOptions)
+  const baseProdURL = process.env.baseProdURL;
+  const baseTestURL = process.env.baseTestURL;
+
+  let baseURL = baseProdURL;
+  let url;
+
+  if(options.url.indexOf("http") === -1){
+    if(UDAGlobalConfig.environment === 'TEST'){
+      baseURL = baseTestURL;
+    }
+    url = baseURL+options.url;
+  } else {
+    url = options.url;
+  }
+
+  return fetch(url, requestOptions)
     .then((response) => {
       //throw route to login if unauthorized response received
       if (response?.status == 401) {

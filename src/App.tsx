@@ -247,6 +247,7 @@ function App(props) {
         }
 
         const init = async () => {
+            setShowLoader(true);
             await initSpecialNodes();
             await getSearchResults(1, true);
             if (hide) {
@@ -279,7 +280,7 @@ function App(props) {
         }
 
         if (reFetchSearch === "on") {
-            getSearchResults();
+            getSearchResults(1,true);
             setReFetchSearch("off");
         }
     }, [searchKeyword, reFetchSearch]);
@@ -328,6 +329,9 @@ function App(props) {
                     setShowLoader(false);
                     return;
                 }
+                /*if(selectedRecordingDetails){
+                    return;
+                }*/
                 setShowLoader(true);
                 const _searchResults = await fetchSearchResults({
                     keyword: searchKeyword,
@@ -359,8 +363,7 @@ function App(props) {
     };
 
     /**common cancel button handler */
-    const cancel = () => {
-        setShowLoader(true);
+    const cancel = (forceRefresh=false) => {
         setIsRecording(false);
         setShowRecord(false);
         setRecordSequenceDetailsVisibility(false);
@@ -370,7 +373,9 @@ function App(props) {
         setToStore([], CONFIG.RECORDING_SEQUENCE, false);
         setToStore({}, CONFIG.SELECTED_RECORDING, false);
         setSelectedRecordingDetails({});
-        setReFetchSearch("on");
+        if(forceRefresh || searchResults.length === 0) {
+            setReFetchSearch("on");
+        }
         setShowSearch(true);
         if (window.udanSelectedNodes) window.udanSelectedNodes = [];
     };

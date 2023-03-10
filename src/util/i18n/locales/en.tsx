@@ -17,5 +17,6 @@ export const TRANSLATIONS_EN = {
   deleteRecording: "Are you sure?",
   continue: "Continue",
   exit: "Exit",
-  clearSearch: "Clear"
+  clearSearch: "Clear",
+  highLightText: "Navigating here",
 };
