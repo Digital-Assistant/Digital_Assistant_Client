@@ -1,6 +1,9 @@
 /**
  * Common API call functionality
  */
+
+declare const UDAGlobalConfig;
+
 export const invokeApi = async (url, method, data, parseJson = true) => {
     try {
         const config: any = {
@@ -13,6 +16,19 @@ export const invokeApi = async (url, method, data, parseJson = true) => {
         if (data) {
             config.body = JSON.stringify(data);
         }
+
+        const baseProdURL = process.env.baseProdURL;
+        const baseTestURL = process.env.baseTestURL;
+
+        let baseURL = baseProdURL;
+
+        if(url.indexOf("http") === -1){
+            if(UDAGlobalConfig.environment === 'TEST'){
+                baseURL = baseTestURL;
+            }
+            url = baseURL+url;
+        }
+
         let response = await fetch(url, config);
         if (response.ok) {
             if (parseJson) {
