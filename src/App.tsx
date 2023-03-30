@@ -4,9 +4,10 @@
  * Objective: To render content script
  */
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import {useSearchParams} from 'react-router-dom';
 import "./css/UDAN.scss";
 import { Button, Spin } from "antd";
-import { fetchSearchResults } from "./services/searchService";
+import {fetchRecord, fetchSearchResults} from "./services/searchService";
 import _ from "lodash";
 import { squeezeBody, setToStore, getFromStore, removeFromStore } from "./util";
 import { CONFIG } from "./config";
@@ -24,6 +25,7 @@ import { CustomConfig } from "./config/CustomConfig";
 import { postRecordSequenceData } from "./services";
 import { addBodyEvents } from "./util/addBodyEvents";
 import { initSpecialNodes } from "./util/initSpecialNodes";
+import {delay} from "./util/delay";
 
 // adding global variable declaration for exposing react custom configuration
 global.UDAPluginSDK = AppConfig;
@@ -71,12 +73,15 @@ function App(props) {
     const [userSessionData, setUserSessionData] = useState(null);
     const [invokeKeycloak, setInvokeKeycloak] = useState(false);
 
+    // const [searchParams, setSearchParams] = useSearchParams();
+
     const previousSearchKeyword = useRef("");
 
     const config = global.UDAGlobalConfig;
 
     useEffect(() => {
         if(global.UDAGlobalConfig.enablePermissions) {
+            init();
             getSearchResults(1,true);
         }
     }, [global.UDAGlobalConfig.enablePermissions]);
@@ -216,6 +221,38 @@ function App(props) {
         });
     }, []);
 
+    const init = async () => {
+        const searchParams = new URLSearchParams(window.location.search);
+        setShowLoader(true);
+        await initSpecialNodes();
+        if(searchParams.get(CONFIG.UDA_URL_Param)){
+            let recordDetails = await fetchRecord({
+                id: searchParams.get(CONFIG.UDA_URL_Param),
+                domain: encodeURI(window.location.host),
+                additionalParams: global.UDAGlobalConfig.enablePermissions
+                    ? encodeURI(JSON.stringify(global.UDAGlobalConfig.permissions))
+                    : null,
+            });
+            if(recordDetails && recordDetails !== null){
+                setToStore(recordDetails, CONFIG.SELECTED_RECORDING, false);
+                await showRecordingDetails(recordDetails);
+                togglePanel();
+                offSearch();
+                setRecordSequenceDetailsVisibility(true);
+            } else {
+                togglePanel();
+                offSearch();
+                setRecordSequenceDetailsVisibility(true);
+                cancel();
+            }
+        } else {
+            await getSearchResults(1, true);
+        }
+        if (hide) {
+            squeezeBody(true);
+        }
+    };
+
     useEffect(() => {
         on("UDAUserSessionData", createSession);
         on("UDAAuthenticatedUserSessionData", createSession);
@@ -245,15 +282,6 @@ function App(props) {
         if (!documentBody.classList.contains("uda-body")) {
             documentBody.classList.add("uda-body");
         }
-
-        const init = async () => {
-            setShowLoader(true);
-            await initSpecialNodes();
-            await getSearchResults(1, true);
-            if (hide) {
-                squeezeBody(true);
-            }
-        };
 
         init();
 

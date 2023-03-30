@@ -35,6 +35,7 @@ export const CONFIG = {
   specialNodeKey: "UDASpecialNodes",
   enableInfiniteScroll: false,
   enableInfiniteScrollPageLength: 10,
+  UDA_URL_Param: 'UDA_Sequence_id',
   set Environment(value) {
     this.current = value.toString().toUpperCase();
     if (this.current === "PROD") {
