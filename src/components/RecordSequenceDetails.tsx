@@ -189,6 +189,21 @@ export const RecordSequenceDetails = (props: MProps) => {
 
   const ref = useRef();
 
+  const [copied, setCopied] = useState(false);
+
+  function copy() {
+    const el = document.createElement("input");
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set(CONFIG.UDA_URL_Param, selectedRecordingDetails.id);
+    let path = window.location.href.split('?')[0]
+    el.value = path+'?'+searchParams.toString();
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand("copy");
+    document.body.removeChild(el);
+    setCopied(true);
+  }
+
   return props?.recordSequenceDetailsVisibility ? (
       <>
         <div
@@ -252,6 +267,9 @@ export const RecordSequenceDetails = (props: MProps) => {
                         </Button>
                     </Popconfirm>
                 </Col>
+            }
+            {
+              <Button onClick={copy}>{!copied ? "Copy link" : "Copied!"}</Button>
             }
             {
               /*<Col span={12} style={{textAlign: "center"}}>
