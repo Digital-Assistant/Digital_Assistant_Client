@@ -15,6 +15,27 @@ export const compareNodes = (compareNode, originalNode, isPersonalNode = false, 
     match.innerChildNodes = match.innerChildNodes + compareNode.childNodes.length;
   }
   for (let key in originalNode) {
+
+    /**
+    * Angular provides Shadow_Dom like functionality called "Vliew Encapsulation".
+    * https://angular.io/guide/view-encapsulation,
+    * https://javascript.plainenglish.io/angular-how-i-finally-understood-the-emulated-and-none-viewencapsulation-9c483e7e8d6b
+    * Unfortunately, this functionality generates dynamic html attributes prefaced
+    *  by "_ng". For our purpose, we will have to ignore all attributes starting
+    *  with "_ng" while pattern matching during replay.
+    * We may have to have similar solutions in the future for other frameworks like vue etc.
+    */
+    let ignoreAttribute = false;
+    for(let ignoreText in CONFIG.ignoreDynamicAttributeText){
+      if(key.indexOf(ignoreText)){
+        ignoreAttribute = true;
+      }
+    }
+
+    if(ignoreAttribute){
+      continue;
+    }
+
     if (CONFIG.ignoreAttributes.indexOf(key) !== -1) {
       continue;
     } else if (key.indexOf('_ngcontent') !== -1 || key.indexOf('jQuery') !== -1 || key.indexOf('__zone_symbol__') !== -1) {

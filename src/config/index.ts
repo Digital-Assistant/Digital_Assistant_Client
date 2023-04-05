@@ -251,5 +251,6 @@ export const CONFIG = {
   screenAcceptance: {
     storageName: "uda-user-screen-consent",
     data: {proceed: true},
-  }
+  },
+  ignoreDynamicAttributeText: ['_ng']
 };
