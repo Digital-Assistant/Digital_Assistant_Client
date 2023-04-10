@@ -4,6 +4,7 @@ import {CONFIG} from "../config";
 import {getClickedInputLabels} from "./getClickedInputLabels";
 import {processDistanceOfNodes} from "./processDistanceOfNodes";
 import * as domJSON from "domjson";
+import {UDAConsoleLogger} from "../config/error-log";
 
 /**
  * Old logic for searching elements
@@ -29,11 +30,11 @@ export const searchNodes = (recordedNode, compareElements) => {
     let match = compareNodes(compareNode.node, originalNode.node, isPersonalNode);
 
     // uncomment for debugging
-    /*if(match.matched+3 >= match.count){
-      console.log(searchNode.node);
-      console.log(compareNode);
-      console.log(match);
-    }*/
+    if(match.matched+3 >= match.count){
+      UDAConsoleLogger.info(searchNode.node, 3);
+      UDAConsoleLogger.info(compareNode, 3);
+      UDAConsoleLogger.info(match, 3);
+    }
 
     // we are incrementing 'matched' by 'innerTextWeight' for 'this' node and every child node and we are matching innerchildcounts that were returned from comparenodes
     if (compareNode.node.nodeName === originalNode.node.nodeName) {

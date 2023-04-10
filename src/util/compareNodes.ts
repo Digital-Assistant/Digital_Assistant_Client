@@ -25,14 +25,15 @@ export const compareNodes = (compareNode, originalNode, isPersonalNode = false, 
     *  with "_ng" while pattern matching during replay.
     * We may have to have similar solutions in the future for other frameworks like vue etc.
     */
-    let ignoreAttribute = false;
+    let ignoreAttribute: boolean = false;
     for(let ignoreText in CONFIG.ignoreDynamicAttributeText){
-      if(key.indexOf(ignoreText)){
+      // comparing the value whether it has the defined dynamicvalue position
+      if(key.indexOf(ignoreText) !== -1){
         ignoreAttribute = true;
       }
     }
 
-    if(ignoreAttribute){
+    if(ignoreAttribute === true){
       continue;
     }
 
@@ -75,7 +76,7 @@ export const compareNodes = (compareNode, originalNode, isPersonalNode = false, 
           });
         }
       }
-    } else if (key === 'innerText' && originalNode.hasOwnProperty(key) && compareNode.hasOwnProperty(key) && (compareNode[key].trim() === originalNode[key].trim())) {
+    } else if (key === 'innerText' && originalNode.hasOwnProperty(key) && compareNode.hasOwnProperty(key) && (compareNode[key].trim().toLowerCase() === originalNode[key].trim().toLowerCase())) {
       // matching inner text should be weighted more. We will add an arbitrarily large number - innerTextWeight.
       // since this will match for every child node, we need to accommodate this logic whenever 'comparenodes' is called
       UDAConsoleLogger.info(compareNode[key].trim());

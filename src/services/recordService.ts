@@ -7,6 +7,7 @@ import TSON from "typescript-json";
 import {getAbsoluteOffsets, getFromStore, inArray} from "../util";
 import domJSON from "domjson";
 import mapClickedElementToHtmlFormElement from "../util/recording-utils/mapClickedElementToHtmlFormElement";
+import {UDAConsoleLogger} from "../config/error-log";
 
 /**
  * To record each action/event
@@ -166,6 +167,8 @@ export const postClickData = async (node: HTMLElement, text: string, meta: any) 
       objectData.meta.selectedElement = objectData.meta.systemDetected;
     }
   }
+
+  UDAConsoleLogger.info(objectData, 3);
 
   const payload = {
     domain: window.location.host,
