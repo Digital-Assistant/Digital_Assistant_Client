@@ -348,6 +348,7 @@ function App(props) {
             setTimeout(async () => {
                 if(isRecording){
                     setShowLoader(false);
+                    await addBodyEvents();
                     return;
                 }
                 if(searchResults.length > 0 && !refetch){
