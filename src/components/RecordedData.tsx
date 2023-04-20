@@ -16,7 +16,7 @@ import SelectedElement from "./SelectedElement";
 import TSON from "typescript-json";
 import {translate} from "../util/translation";
 import {isInputNode} from "../util/checkNode";
-import { left } from "@popperjs/core";
+
 export interface MProps {
   sequenceName?: string;
   isShown?: boolean;
@@ -82,20 +82,26 @@ export const RecordedData = (props: MProps) => {
   };
 
   /**check profanity for input text */
-  const checkProfanityForGivenLabel = async (index: number, inputValue: string) => {
+  const validateClickedInputName = (index: number, inputValue: string) => {
     if (!validateInput(inputValue)) {
       setInputError({...inputError, clickedNodeName: true});
-      return;
     } else {
       setInputError({...inputError, clickedNodeName: false});
     }
 
     const _objData: any = getObjData(recordData[index]?.objectdata);
+    /*if(inputValue !== '') {
+      _objData.meta.displayText = inputValue;
+    } else if(_objData.meta.hasOwnProperty('displayText')){
+      delete _objData.meta.displayText;
+    }*/
     _objData.meta.displayText = inputValue;
     recordData[index].objectdata = TSON.stringify(_objData);
     storeRecording(recordData);
     setRecordData([...recordData]);
+  }
 
+  const checkProfanityForGivenLabel = async (index: number, inputValue: string) => {
     if (timer) {
       clearTimeout(timer);
       setTimer(null);
@@ -103,14 +109,21 @@ export const RecordedData = (props: MProps) => {
     setTimer(
         setTimeout(async () => {
           let changedName: any = await checkProfanity(inputValue);
-          delete recordData[index].profanity;
-          setDisableForm(false);
-          if (!_.isEmpty(_objData)) {
-            _objData.meta.displayText = changedName.trim();
+          changedName = changedName.trim();
+          validateClickedInputName(index, changedName);
+          if(changedName !== '') {
+            delete recordData[index].profanity;
+            setDisableForm(false);
+            const _objData: any = getObjData(recordData[index]?.objectdata);
+            _objData.meta.displayText = inputValue;
             recordData[index].objectdata = TSON.stringify(_objData);
-            await updateRecordClicks(recordData[index]);
-            storeRecording(recordData);
-            setRecordData([...recordData]);
+            if (!_.isEmpty(_objData)) {
+              _objData.meta.displayText = changedName.trim();
+              recordData[index].objectdata = TSON.stringify(_objData);
+              await updateRecordClicks(recordData[index]);
+              storeRecording(recordData);
+              setRecordData([...recordData]);
+            }
           }
         }, CONFIG.DEBOUNCE_INTERVAL)
     );
@@ -194,6 +207,10 @@ export const RecordedData = (props: MProps) => {
       }
     }
 
+    if(inputError.clickedNodeName){
+      return false;
+    }
+
     setDisableForm(true);
     props.showLoader(true);
 
@@ -242,15 +259,24 @@ export const RecordedData = (props: MProps) => {
    * validate and update of first label
    * @param e
    */
-  const onChange = async (e: any) => {
-    setName(e.target.value);
-    if (!validateInput(e.target.value)) {
-      setInputError({...inputError, name: true})
-      return;
+  const validateChange = async (value: string) => {
+    setDisableForm(true);
+    setName(value);
+    if (!validateInput(value)) {
+      setInputError({...inputError, name: true});
+      return false;
     } else {
       setInputAlert({...inputAlert, name: false});
-      setInputError({...inputError, name: false})
+      setInputError({...inputError, name: false});
+      return true;
     }
+  };
+
+  /**
+   * validate for profanity words and remove them
+   * @param e
+   */
+  const checkMainLabelProfanity = async (e: any) => {
     if (timer) {
       clearTimeout(timer);
       setTimer(null);
@@ -258,10 +284,16 @@ export const RecordedData = (props: MProps) => {
     setTimer(
         setTimeout(async () => {
           let changedName: any = await checkProfanity(e.target.value);
+          changedName = changedName.trim();
           setName(changedName);
+          if(!await validateChange(changedName)){
+            setDisableForm(true);
+          } else {
+            setDisableForm(false);
+          }
         }, CONFIG.DEBOUNCE_INTERVAL)
     );
-  };
+  }
 
   /**
    * Validate and check profanity of label input
@@ -279,16 +311,27 @@ export const RecordedData = (props: MProps) => {
 
     labels[index].label = e.target.value;
     setLabels([...labels]);
+    setDisableForm(true);
+
     if (!validateInput(e.target.value)) {
       label.error = true;
       inputError['label' + index] = label;
-      setInputError({...inputError})
-      return;
+      setInputError({...inputError});
+      return false;
     } else {
       label.error = false;
       inputError['label' + index] = label;
       setInputError({...inputError});
+      return true;
     }
+
+  };
+
+  /**
+   * validate for profanity words and remove them
+   * @param index
+   */
+  const checkLabelProfanity = (index: number) => (e: any) => {
     if (timer) {
       clearTimeout(timer);
       setTimer(null);
@@ -296,10 +339,16 @@ export const RecordedData = (props: MProps) => {
     setTimer(
         setTimeout(async () => {
           labels[index].label = await checkProfanity(e.target.value);
+          labels[index].label = labels[index].label.trim();
           setLabels([...labels]);
+          if(onExtraLabelChange(index)){
+           setDisableForm(false);
+          } else {
+            setDisableForm(true);
+          }
         }, CONFIG.DEBOUNCE_INTERVAL)
     );
-  };
+  }
 
   /**
    * Validate input of given string
@@ -317,14 +366,24 @@ export const RecordedData = (props: MProps) => {
    * validate input change of tooltip
    * @param e
    */
-  const onChangeTooltip = async (e: any) => {
-    setToolTip(e.target.value);
-    if (!validateInput(e.target.value)) {
-      setInputError({...inputError, tooltip: true})
-      return;
+  const validateTooltip = (value: string) => {
+    setDisableForm(true);
+    setToolTip(value);
+    if (!validateInput(value)) {
+      setInputError({...inputError, tooltip: true});
+      return false;
     } else {
-      setInputError({...inputError, tooltip: false})
+      setInputError({...inputError, tooltip: false});
+      return true;
     }
+  }
+
+  /**
+   *
+   * @param e
+   * checking profanity words and removing them.
+   */
+  const onChangeTooltip = async (e: any) => {
     if (timer) {
       clearTimeout(timer);
       setTimer(null);
@@ -332,7 +391,13 @@ export const RecordedData = (props: MProps) => {
     setTimer(
         setTimeout(async () => {
           let changedName: any = await checkProfanity(e.target.value);
+          changedName = changedName.trim();
           setToolTip(changedName);
+          if(validateTooltip(changedName)){
+            setDisableForm(false);
+          } else {
+            setDisableForm(true);
+          }
         }, CONFIG.DEBOUNCE_INTERVAL)
     );
   };
@@ -344,7 +409,8 @@ export const RecordedData = (props: MProps) => {
    */
   const updateTooltip = async (key: string, index: number) => {
     if(!validateInput(tooltip)){
-      setInputError({...inputError, tooltip: true})
+      setInputError({...inputError, tooltip: true});
+      setDisableForm(true);
       return;
     }
     props.showLoader(true);
@@ -367,6 +433,10 @@ export const RecordedData = (props: MProps) => {
     else
       return recordData?.map((item: any, index: number) => {
         let objectData = getObjData(item?.objectdata);
+        let clickedName = (objectData.meta.hasOwnProperty('displayText'))?objectData.meta.displayText:item.clickednodename;
+        if(recordData?.length - 1 === index) {
+          // validateClickedInputName(index, clickedName);
+        }
         return (
             <li
                 className="uda-recorded-label-editable completed"
@@ -392,7 +462,9 @@ export const RecordedData = (props: MProps) => {
                         } ${item.profanity ? "profanity" : ""}`}
                         placeholder="Enter Name"
                         // onChange={onLabelChange(index)}
-                        onChange={handleChange(index)}
+                        onChange={(e)=>{validateClickedInputName(index, e.target.value)}}
+                        // onChange={updateInput(index)}
+                        onBlur={handleChange(index)}
                         readOnly={!item.editable}
                         style={{width: "85%! important"}}
                         // onKeyDown={handleLabelChange(index)}
@@ -401,7 +473,8 @@ export const RecordedData = (props: MProps) => {
                         }}
                         value={(objectData.meta.hasOwnProperty('displayText'))?objectData.meta.displayText:item.clickednodename}
                     />
-                    {inputError.clickednodename && <span className={`uda-alert`}> {translate('inputError')}</span>}
+
+                    {inputError.clickedNodeName && <span className={`uda-alert`}> {translate('inputError')}</span>}
                   </span>
                 )}
                 <br/>
@@ -454,7 +527,9 @@ export const RecordedData = (props: MProps) => {
                                       <input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip"
                                              className="uda-form-input uda_exclude"
                                              placeholder={translate('toolTipPlaceHolder')}
-                                             style={{width: "68% !important"}} onChange={onChangeTooltip}
+                                             style={{width: "68% !important"}}
+                                             onChange={(e: any)=>{validateTooltip(e.target.value);}}
+                                             onBlur={onChangeTooltip}
                                              value={objectData.meta?.tooltipInfo}/>
                                   </>
                               }
@@ -463,7 +538,9 @@ export const RecordedData = (props: MProps) => {
                                       <input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip"
                                              className="uda-form-input uda_exclude"
                                              placeholder={translate('toolTipPlaceHolder')}
-                                             style={{width: "68% !important"}} onChange={onChangeTooltip}
+                                             style={{width: "68% !important"}}
+                                             onChange={(e: any)=>{validateTooltip(e.target.value);}}
+                                             onBlur={onChangeTooltip}
                                              value={tooltip}/>
                                   </>
                               }
@@ -522,7 +599,8 @@ export const RecordedData = (props: MProps) => {
               name="uda-save-recorded[]"
               className={`uda-form-input uda_exclude`}
               placeholder="Enter Label"
-              onChange={onChange}
+              onChange={async (e)=>{await validateChange(e.target.value)}}
+              onBlur={checkMainLabelProfanity}
               value={name}
           />
           {inputAlert.name && <span className={`uda-alert`}> {translate('inputMandatory')}</span>}
@@ -541,6 +619,7 @@ export const RecordedData = (props: MProps) => {
                           }`}
                           placeholder="Enter Label"
                           onChange={onExtraLabelChange(index)}
+                          onBlur={checkLabelProfanity(index)}
                           value={item.label}
                       />
                       <button
