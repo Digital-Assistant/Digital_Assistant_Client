@@ -1,13 +1,7 @@
 import React from "react";
+import {ParentCompProps} from "../../interfaces/ParentCompProps";
+import {ChatBot} from "../ChatBot";
 
-/**
- *
- * @param props
- * @returns content for the body
- */
-interface ParentCompProps {
-  content?: React.ReactNode;
-}
 const Body: React.FC<ParentCompProps> = (props) => {
   const { content } = props;
   return (
@@ -16,6 +10,7 @@ const Body: React.FC<ParentCompProps> = (props) => {
       id="uda-content-container"
     >
       {content}
+      <ChatBot></ChatBot>
     </div>
   );
 };
