@@ -146,7 +146,7 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
 
   event?.target?.click();
   // do not remove the below click it was added for performing the click as the clicks are getting stopped in between
-  event?.target?.click();
+  // event?.target?.click();
 
   return;
 };
