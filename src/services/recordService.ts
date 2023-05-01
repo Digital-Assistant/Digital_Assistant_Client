@@ -169,17 +169,23 @@ export const postClickData = async (node: HTMLElement, text: string, meta: any) 
   }
 
   UDAConsoleLogger.info(objectData, 3);
+  let payload: any = {};
 
-  const payload = {
-    domain: window.location.host,
-    urlpath: window.location.pathname,
-    clickednodename: text,
-    html5: 0,
-    clickedpath: "",
-    objectdata: TSON.stringify(objectData),
-  };
+  try {
+    payload = {
+      domain: window.location.host,
+      urlpath: window.location.pathname,
+      clickednodename: text,
+      html5: 0,
+      clickedpath: "",
+      objectdata: TSON.stringify(objectData),
+    };
 
-  return await recordClicks(payload);
+    return await recordClicks(payload);
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
 };
 
 /**

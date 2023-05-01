@@ -14,10 +14,11 @@ export const addBodyEvents = async () => {
     try {
       /**exclude event attachment for selective elements  */
       if (els[i] && isClickableNode(els[i])) {
-        addClickToNode(els[i]);
+        await addClickToNode(els[i]);
       }
     } catch (e) {
 
     }
   }
+  return true;
 };

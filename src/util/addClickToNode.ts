@@ -2,15 +2,15 @@ import {UDAErrorLogger} from "../config/error-log";
 import {recordUserClick} from "./recordUserClick";
 import {addEvent} from "./addEvent";
 
-export const addClickToNode = (node: any) => {
+export const addClickToNode = async (node: any) => {
   try {
 
     if (node.classList && node.classList.contains('uda_exclude')) {
-      return;
+      return true;
     }
 
     if (node.hasOwnProperty("addedClickRecord") && node.addedClickRecord === true) {
-      return;
+      return true;
     }
 
     let clickableNode = node;
@@ -24,7 +24,7 @@ export const addClickToNode = (node: any) => {
         recordUserClick(recordNode, false, false, event);
       });
       node.addedClickRecord = true;
-      return ;
+      return true;
     }
 
     switch (nodeName) {
@@ -105,5 +105,6 @@ export const addClickToNode = (node: any) => {
     UDAErrorLogger.error(
         "Unable to add click to node " + node.outerHTML + " " + e
     );
+    return false;
   }
 };

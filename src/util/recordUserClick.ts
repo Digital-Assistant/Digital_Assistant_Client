@@ -7,6 +7,8 @@ import {checkNodeValues} from "./checkNodeValues";
 import mapClickedElementToHtmlFormElement from "./recording-utils/mapClickedElementToHtmlFormElement";
 declare const UDAGlobalConfig;
 
+import $ from "jquery";
+
 global.udanSelectedNodes = [];
 global.clickedNode = null;
 /**
@@ -24,15 +26,15 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
   const isRecording = getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true";
 
   if (!isRecording) {
-    return;
+    return true;
   }
 
   if (node.isSameNode(window.clickedNode)) {
-    return;
+    return true;
   }
 
   if(CONFIG.lastClickedTime && (CONFIG.lastClickedTime === Date.now() || ((CONFIG.lastClickedTime + 300) >= Date.now()))){
-    return ;
+    return true;
   }
 
   //should not record untrusted clicks
@@ -55,12 +57,12 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
 
 
   if (recordingNode.isSameNode(window.clickedNode)) {
-    return;
+    return true;
   }
 
   // ignore click on unwanted node
   if(recordingNode.hasAttribute('udaIgnoreClick')){
-    return ;
+    return true;
   }
 
   //ToDo improve stop propagation by checking only for elements that needs to be stopped
@@ -70,12 +72,18 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
     event.stopPropagation();
   }
 
+  let {target, currentTarget, nativeEvent} = event;
+
+  console.log({'target': target});
+  console.log(currentTarget);
+  console.log(nativeEvent);
+
   if(checkNodeValues(recordingNode, 'exclude')){
-    return ;
+    return true;
   }
 
   if (clickableElementExists(recordingNode) || clickableElementExists(node)) {
-    return;
+    return true;
   }
 
   global.clickedNode = recordingNode;
@@ -144,9 +152,7 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
     UDAErrorLogger.error("Unable save record click " + node.outerHTML);
   }
 
-  event?.target?.click();
-  // do not remove the below click it was added for performing the click as the clicks are getting stopped in between
-  // event?.target?.click();
+  $(node).trigger('click');
 
-  return;
+  return true;
 };

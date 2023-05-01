@@ -4,10 +4,12 @@ import {getFromStore} from "./index";
 
 export let timer: any = null;
 
-const observer = new MutationObserver(async () => {
+const observer = new MutationObserver(async (mutations: any) => {
+
   if (timer) {
     clearTimeout(timer);
   }
+
   timer = setTimeout(async () => {
     const isRecording = getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true";
 
@@ -15,6 +17,6 @@ const observer = new MutationObserver(async () => {
       await addBodyEvents();
     }
   }, CONFIG.indexInterval);
-
 });
-observer.observe(document.body, {attributes: true, childList: true, subtree: true});
+
+observer.observe(document.body, {attributes: false, childList: true, subtree: true});
