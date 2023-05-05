@@ -658,12 +658,12 @@ $uda-tooltip-bg: #f2f4fe;
     }
 
     .uda-cards-scroller {
-        min-height: 320px;
+        min-height: 50%;
         overflow-y: auto;
-        max-height: 78%;
+        max-height: 100%;
         flex: 1;
         overflow: auto;
-        margin-bottom: 80px;
+        margin-bottom: 20px;
     }
 
     .uda-footer-bar {

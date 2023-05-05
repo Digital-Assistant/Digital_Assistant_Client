@@ -10,19 +10,6 @@ const Body: React.FC<ParentCompProps> = (props) => {
     return React.createElement('chat-bot-root', {id:"chat-bot-root", class:"chat-bot-root"}, <ChatBot></ChatBot>);
   }
 
-  const items: TabsProps['items'] = [
-    {
-      key: '1',
-      label: `UDAN`,
-      children: content,
-    },
-    {
-      key: '2',
-      label: `SMARTBOT`,
-      children: chatBotDiv() ,
-    }
-  ];
-
   const onChange = (key: string) => {
     console.log(key);
   };
@@ -32,9 +19,7 @@ const Body: React.FC<ParentCompProps> = (props) => {
       className="uda-container uda-clear uda-cards-scroller uda_exclude"
       id="uda-content-container"
     >
-      {/*{content}*/}
-      {/*<ChatBot></ChatBot>*/}
-      <Tabs defaultActiveKey="1" centered size={`large`} items={items} onChange={onChange} />
+      {content}
     </div>
   );
 };
