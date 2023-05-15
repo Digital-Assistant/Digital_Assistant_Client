@@ -18,6 +18,7 @@ export const ENDPOINT = {
   RecordSequence: `/clickevents/recordsequencedata`,
   UserClick: `/clickevents/userclick`,
   DeleteSequence: `/clickevents/sequence/delete`,
-  VoteRecord: `/clickevents/sequence/addvote`,
   fetchRecord: '/search',
+  VoteRecord: `/votes/addVote`,
+  fetchVoteRecord: `/votes/`,
 };

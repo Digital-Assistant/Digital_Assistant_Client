@@ -85,30 +85,6 @@ export const deleteRecording = async (request?: any) => {
 };
 
 /**
- * To vote/de-vote the recording
- * @param request
- * @param type
- * @returns promise
- */
-
-export const vote = async (request?: any, type?: string) => {
-  let usersessionid = await getUserId();
-  const payload = {
-    usersessionid: usersessionid,
-    sequenceid: request.id,
-    upvote: type == "up" ? 1 : 0,
-    downvote: type == "down" ? 1 : 0,
-  };
-
-  const parameters = {
-    url: ENDPOINT.VoteRecord,
-    method: "POST",
-    body: payload,
-  };
-  return REST.apiCal(parameters);
-};
-
-/**
  * To check profanity validation/filters for sequence name/labels
  * @param request
  * @returns promise

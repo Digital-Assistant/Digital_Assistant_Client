@@ -38,7 +38,7 @@ module.exports = (env, argv) => {
         "./environments/" + (env.build ? `${env.build}.env` : "local.env");
 
     const buildPath =
-        env.build && env.build === "production" ? "dist" : "build";
+        (env.build && (env.build === "production" || env.build === "development")) ? "dist" : "build";
 
     const webpackConfig = {
         entry: {
