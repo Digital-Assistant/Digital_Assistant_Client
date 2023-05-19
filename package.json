@@ -38,7 +38,7 @@
   },
   "scripts": {
     "start": "webpack --watch",
-    "dev": "webpack --env build=development --watch",
+    "build:dev": "webpack --env build=development",
     "build": "webpack",
     "build:prod": "webpack --env build=production",
     "test": "jest",

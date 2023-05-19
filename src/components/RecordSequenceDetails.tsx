@@ -6,19 +6,19 @@
  */
 
 import React, {useEffect, useRef, useState} from "react";
-import {Row, Col, Button, List, Popover, Popconfirm} from "antd";
+import {Badge, Button, Col, List, Popconfirm, Row} from "antd";
 import {
-  LeftOutlined,
   DeleteOutlined,
+  DislikeFilled,
+  DislikeOutlined,
+  LeftOutlined,
+  LikeFilled,
   LikeOutlined,
-  PlayCircleOutlined,
   PauseCircleOutlined,
+  PlayCircleOutlined,
 } from "@ant-design/icons";
-import {
-  setToStore,
-  getCurrentPlayItem, getObjData, getFromStore,
-} from "../util";
-import {deleteRecording, vote} from "../services/recordService";
+import {getCurrentPlayItem, getFromStore, getObjData, setToStore,} from "../util";
+import {deleteRecording} from "../services/recordService";
 import {getUserId} from "../services/userService";
 import {matchNode} from "../util/invokeNode";
 import {CONFIG} from "../config";
@@ -26,6 +26,7 @@ import {off, on} from "../util/events";
 import {translate} from "../util/translation";
 import {removeToolTip} from "../util/addToolTip";
 import {getClickedNodeLabel} from "../util/getClickedNodeLabel";
+import {getVoteRecord, vote} from "../services/userVote";
 
 
 interface MProps {
@@ -107,6 +108,7 @@ export const RecordSequenceDetails = (props: MProps) => {
     });
     setToStore(selectedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
     setSelectedRecordingDetails({...selectedRecordingDetails});
+    setUserVote({upvote: 0, downvote: 0});
   };
 
   /**
@@ -119,7 +121,7 @@ export const RecordSequenceDetails = (props: MProps) => {
       try {
         // name = JSON.parse(props?.data?.name)?.join(",");
         let names = JSON.parse(props?.data?.name);
-        name = names[0]?names[0]:'NA';
+        name = names[0] ? names[0] : 'NA';
       } catch (e) {
       }
     }
@@ -129,7 +131,7 @@ export const RecordSequenceDetails = (props: MProps) => {
   /**
    * Navigates back to search results card
    */
-  const backNav = (forceRefresh=false) => {
+  const backNav = (forceRefresh = false) => {
     resetStatus();
     removeToolTip();
     if (props.cancelHandler) props.cancelHandler(forceRefresh);
@@ -159,29 +161,52 @@ export const RecordSequenceDetails = (props: MProps) => {
   const removeRecording = async () => {
     props.showLoader(true);
     await deleteRecording({id: selectedRecordingDetails.id});
-    setTimeout(()=>{
+    setTimeout(() => {
       backNav(true);
     }, CONFIG.indexInterval);
   };
 
-  const manageVote = async () => {
-    await vote({id: selectedRecordingDetails.id}, "up");
+  const manageVote = async (type: string = 'up') => {
+    let record = await vote({id: selectedRecordingDetails.id}, type);
+    selectedRecordingDetails.upVoteCount = record.upVoteCount;
+    selectedRecordingDetails.downVoteCount = record.downVoteCount;
+    setSelectedRecordingDetails({...selectedRecordingDetails});
+    if (type === 'up') {
+      setUserVote({upvote: 1, downvote: 0});
+    } else {
+      setUserVote({upvote: 0, downvote: 1});
+    }
   };
 
   const [userId, setUserId] = useState<string>(null);
 
+  /**
+   * setting the user vote record
+   */
+  const [userVote, setUserVote] = useState<any>({upvote: 0, downvote: 0});
+
+  const fetchUserVote = async () => {
+    let userRecord = await getVoteRecord({id: selectedRecordingDetails.id});
+    if (userRecord) {
+      setUserVote(userRecord);
+    } else {
+      console.log('empty');
+    }
+  }
+
   useEffect(() => {
     (async () => {
       setUserId(await getUserId());
+      await fetchUserVote();
     })();
   }, []);
 
   const addSkipClass = (item) => {
-    if(item.status !== 'completed'){
+    if (item.status !== 'completed') {
       return 'uda_exclude';
     }
     let nodeData = getObjData(item.objectdata);
-    if(nodeData.meta.hasOwnProperty('skipDuringPlay') && nodeData.meta.skipDuringPlay){
+    if (nodeData.meta.hasOwnProperty('skipDuringPlay') && nodeData.meta.skipDuringPlay) {
       return 'skipped uda_exclude';
     }
     return item.status + ' uda_exclude';
@@ -196,7 +221,7 @@ export const RecordSequenceDetails = (props: MProps) => {
     const searchParams = new URLSearchParams(window.location.search);
     searchParams.set(CONFIG.UDA_URL_Param, selectedRecordingDetails.id);
     let path = window.location.href.split('?')[0]
-    el.value = path+'?'+searchParams.toString();
+    el.value = path + '?' + searchParams.toString();
     document.body.appendChild(el);
     el.select();
     document.execCommand("copy");
@@ -258,26 +283,50 @@ export const RecordSequenceDetails = (props: MProps) => {
           </ul>
         </div>
         <div className="uda-details-footer">
-          <Row>
-            {(selectedRecordingDetails.usersessionid === userId) &&
-                <Col span={12} style={{textAlign: "center"}}>
-                    <Popconfirm title={translate('deleteRecording')} onConfirm={removeRecording} className="uda_exclude">
-                        <Button className="uda_exclude">
-                            <DeleteOutlined width={33} className="secondary uda_exclude"/>
-                        </Button>
-                    </Popconfirm>
-                </Col>
-            }
-            {
+          <Row style={{textAlign: "center"}}>
+
+            <Col span={8}>
+              <Button onClick={() => manageVote("up")} className="uda_exclude">
+                {(userVote && userVote?.upvote === 1) &&
+                    <LikeFilled width={33} className="secondary"/>
+                }
+                {((userVote && userVote?.upvote === 0) || !userVote) &&
+                    <LikeOutlined width={33} className="secondary"/>
+                }
+                <br/>
+                <Badge
+                    className="site-badge-count-109"
+                    count={selectedRecordingDetails.upVoteCount}
+                    style={{ backgroundColor: '#52c41a' }}
+                />
+              </Button>
+            </Col>
+            <Col span={8}>
               <Button onClick={copy}>{!copied ? "Copy link" : "Copied!"}</Button>
-            }
-            {
-              /*<Col span={12} style={{textAlign: "center"}}>
-                <Button onClick={() => manageVote()} className="uda_exclude">
-                  <LikeOutlined width={33} className="secondary"/>
-                </Button>
-              </Col>*/
-            }
+            </Col>
+            <Col span={8}>
+              {(selectedRecordingDetails.usersessionid === userId) &&
+                  <Popconfirm title={translate('deleteRecording')} onConfirm={removeRecording} className="uda_exclude">
+                      <Button className="uda_exclude">
+                          <DeleteOutlined width={33} className="secondary uda_exclude"/>
+                      </Button>
+                  </Popconfirm>
+              }
+              <Button onClick={() => manageVote("down")} className="uda_exclude">
+                {(userVote && userVote?.downvote === 1) &&
+                    <DislikeFilled width={33} className="secondary"/>
+                }
+                {((userVote && userVote?.downvote === 0) || (!userVote)) &&
+                    <DislikeOutlined width={33} className="secondary"/>
+                }
+                <br/>
+                <Badge
+                    className="site-badge-count-109"
+                    count={selectedRecordingDetails.downVoteCount}
+                    style={{ backgroundColor: '#faad14' }}
+                />
+              </Button>
+            </Col>
           </Row>
         </div>
       </>
