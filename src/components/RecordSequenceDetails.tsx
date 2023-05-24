@@ -286,7 +286,6 @@ export const RecordSequenceDetails = (props: MProps) => {
         </div>
         <div className="uda-details-footer">
           <Row style={{textAlign: "center"}}>
-
             <Col span={8}>
               <Button onClick={() => manageVote("up")} className="uda_exclude">
                 {(userVote && userVote?.upvote === 1) &&
