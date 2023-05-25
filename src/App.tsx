@@ -511,148 +511,148 @@ function App(props) {
 
     const userContent = () => {
         return <>
-            {authenticated && (
-                <>
-                    <Header
-                        setSearchKeyword={setSearchKeyword}
-                        searchKeyword={searchKeyword}
-                        toggleFlag={hide}
-                        toggleHandler={toggleHandler}
-                        config={global.UDAGlobalConfig}
-                    />
-                    <Body
-                        content={
-                            <>
-                                {showLoader && (
-                                    <Spin tip="Loading..." />
-                                )}
+          {authenticated && (
+              <>
+                  <Header
+                      setSearchKeyword={setSearchKeyword}
+                      searchKeyword={searchKeyword}
+                      toggleFlag={hide}
+                      toggleHandler={toggleHandler}
+                      config={global.UDAGlobalConfig}
+                  />
+                  <Body
+                      content={
+                          <>
+                              {showLoader && (
+                                  <Spin tip="Loading..." />
+                              )}
 
-                                <UdanMain.RecordButton
-                                    recordHandler={
-                                        showRecordHandler
-                                    }
-                                    cancelHandler={cancel}
-                                    recordSeqHandler={
-                                        recordSequence
-                                    }
-                                    recordButtonVisibility={toggleContainer(
-                                        "record-button"
-                                    )}
-                                    config={
-                                        global.UDAGlobalConfig
-                                    }
-                                />
-                                {toggleContainer(
-                                    "record-seq"
-                                ) && (
-                                    <UdanMain.RecordSequence
-                                        cancelHandler={
-                                            cancel
-                                        }
-                                        recordSequenceVisibility={toggleContainer(
-                                            "record-seq"
-                                        )}
-                                    />
-                                )}
-                                {!showLoader &&
-                                    showSearch && (
-                                        <UdanMain.SearchResults
-                                            data={
-                                                searchResults
-                                            }
-                                            showDetails={
-                                                showRecordingDetails
-                                            }
-                                            playHandler={playHandler}
-                                            visibility={toggleContainer(
-                                                "search-results"
-                                            )}
-                                            addRecordHandler={
-                                                setShowRecord
-                                            }
-                                            searchKeyword={
-                                                searchKeyword
-                                            }
-                                            searchHandler={
-                                                getSearchResults
-                                            }
-                                            page={page}
-                                            config={
-                                                global.UDAGlobalConfig
-                                            }
-                                        />
-                                    )}
+                              <UdanMain.RecordButton
+                                  recordHandler={
+                                      showRecordHandler
+                                  }
+                                  cancelHandler={cancel}
+                                  recordSeqHandler={
+                                      recordSequence
+                                  }
+                                  recordButtonVisibility={toggleContainer(
+                                      "record-button"
+                                  )}
+                                  config={
+                                      global.UDAGlobalConfig
+                                  }
+                              />
+                              {toggleContainer(
+                                  "record-seq"
+                              ) && (
+                                  <UdanMain.RecordSequence
+                                      cancelHandler={
+                                          cancel
+                                      }
+                                      recordSequenceVisibility={toggleContainer(
+                                          "record-seq"
+                                      )}
+                                  />
+                              )}
+                              {!showLoader &&
+                                  showSearch && (
+                                      <UdanMain.SearchResults
+                                          data={
+                                              searchResults
+                                          }
+                                          showDetails={
+                                              showRecordingDetails
+                                          }
+                                          playHandler={playHandler}
+                                          visibility={toggleContainer(
+                                              "search-results"
+                                          )}
+                                          addRecordHandler={
+                                              setShowRecord
+                                          }
+                                          searchKeyword={
+                                              searchKeyword
+                                          }
+                                          searchHandler={
+                                              getSearchResults
+                                          }
+                                          page={page}
+                                          config={
+                                              global.UDAGlobalConfig
+                                          }
+                                      />
+                                  )}
 
-                                <UdanMain.RecordedData
-                                    isShown={toggleContainer(
-                                        "recorded-data"
-                                    )}
-                                    data={recSequenceData}
-                                    recordHandler={
-                                        recordHandler
-                                    }
-                                    refetchSearch={
-                                        setReFetchSearch
-                                    }
-                                    showLoader={
-                                        setShowLoader
-                                    }
-                                    config={
-                                        global.UDAGlobalConfig
-                                    }
-                                />
+                              <UdanMain.RecordedData
+                                  isShown={toggleContainer(
+                                      "recorded-data"
+                                  )}
+                                  data={recSequenceData}
+                                  recordHandler={
+                                      recordHandler
+                                  }
+                                  refetchSearch={
+                                      setReFetchSearch
+                                  }
+                                  showLoader={
+                                      setShowLoader
+                                  }
+                                  config={
+                                      global.UDAGlobalConfig
+                                  }
+                              />
 
-                                {recordSequenceDetailsVisibility && (
-                                    <UdanMain.RecordSequenceDetails
-                                        data={
-                                            selectedRecordingDetails
-                                        }
-                                        recordSequenceDetailsVisibility={
-                                            recordSequenceDetailsVisibility &&
-                                            !isRecording &&
-                                            !toggleContainer(
-                                                "record-button"
-                                            )
-                                        }
-                                        cancelHandler={cancel}
-                                        playHandler={playHandler}
-                                        isPlaying={playDelay}
-                                        key={"rSD" + recordSequenceDetailsVisibility}
-                                        config={global.UDAGlobalConfig}
-                                        showLoader={setShowLoader}
-                                    />
-                                )}
-                            </>
-                        }
-                    />
-                    <Footer
-                        toggleFlag={hide}
-                        addRecordBtnStatus={showRecord}
-                        toggleHandler={toggleHandler}
-                        config={global.UDAGlobalConfig}
-                        isRecording={isRecording}
-                    />
-                </>
-            )}
+                              {recordSequenceDetailsVisibility && (
+                                  <UdanMain.RecordSequenceDetails
+                                      data={
+                                          selectedRecordingDetails
+                                      }
+                                      recordSequenceDetailsVisibility={
+                                          recordSequenceDetailsVisibility &&
+                                          !isRecording &&
+                                          !toggleContainer(
+                                              "record-button"
+                                          )
+                                      }
+                                      cancelHandler={cancel}
+                                      playHandler={playHandler}
+                                      isPlaying={playDelay}
+                                      key={"rSD" + recordSequenceDetailsVisibility}
+                                      config={global.UDAGlobalConfig}
+                                      showLoader={setShowLoader}
+                                  />
+                              )}
+                          </>
+                      }
+                  />
+                  <Footer
+                      toggleFlag={hide}
+                      addRecordBtnStatus={showRecord}
+                      toggleHandler={toggleHandler}
+                      config={global.UDAGlobalConfig}
+                      isRecording={isRecording}
+                  />
+              </>
+          )}
 
-            {!authenticated && (
-                <>
-                    <div style={{
-                        margin: "auto",
-                        display: "inline-block",
-                        width: "100% !important",
-                    }}
-                    >
-                        <Button type="primary" className="uda_exclude"
-                                onClick={() => {
-                                    keycloak.login();
-                                }}
-                        >
-                            Login
-                        </Button>
-                    </div>
-                </>
-            )}
+          {!authenticated && (
+              <>
+                  <div style={{
+                      margin: "auto",
+                      display: "inline-block",
+                      width: "100% !important",
+                  }}
+                  >
+                      <Button type="primary" className="uda_exclude"
+                              onClick={() => {
+                                  keycloak.login();
+                              }}
+                      >
+                          Login
+                      </Button>
+                  </div>
+              </>
+          )}
         </>
     }
 

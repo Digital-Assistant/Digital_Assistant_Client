@@ -16,6 +16,8 @@ import {
   LikeOutlined,
   PauseCircleOutlined,
   PlayCircleOutlined,
+  ShareAltOutlined,
+  CopyFilled
 } from "@ant-design/icons";
 import {getCurrentPlayItem, getFromStore, getObjData, setToStore,} from "../util";
 import {deleteRecording} from "../services/recordService";
@@ -284,7 +286,6 @@ export const RecordSequenceDetails = (props: MProps) => {
         </div>
         <div className="uda-details-footer">
           <Row style={{textAlign: "center"}}>
-
             <Col span={8}>
               <Button onClick={() => manageVote("up")} className="uda_exclude">
                 {(userVote && userVote?.upvote === 1) &&
@@ -293,16 +294,32 @@ export const RecordSequenceDetails = (props: MProps) => {
                 {((userVote && userVote?.upvote === 0) || !userVote) &&
                     <LikeOutlined width={33} className="secondary"/>
                 }
-                <br/>
+                {/*<br/>
                 <Badge
                     className="site-badge-count-109"
                     count={selectedRecordingDetails.upVoteCount}
                     style={{ backgroundColor: '#52c41a' }}
-                />
+                />*/}
+              </Button>
+              <Button onClick={() => manageVote("down")} className="uda_exclude">
+                {(userVote && userVote?.downvote === 1) &&
+                    <DislikeFilled width={33} className="secondary"/>
+                }
+                {((userVote && userVote?.downvote === 0) || (!userVote)) &&
+                    <DislikeOutlined width={33} className="secondary"/>
+                }
+                {/*<br/>
+                <Badge
+                    className="site-badge-count-109"
+                    count={selectedRecordingDetails.downVoteCount}
+                    style={{ backgroundColor: '#faad14' }}
+                />*/}
               </Button>
             </Col>
             <Col span={8}>
-              <Button onClick={copy}>{!copied ? "Copy link" : "Copied!"}</Button>
+              <Button onClick={copy}>
+                {!copied && <><ShareAltOutlined /> Share link</>} : {copied && <> <CopyFilled /> Copied!</>}
+              </Button>
             </Col>
             <Col span={8}>
               {(selectedRecordingDetails.usersessionid === userId) &&
@@ -312,20 +329,6 @@ export const RecordSequenceDetails = (props: MProps) => {
                       </Button>
                   </Popconfirm>
               }
-              <Button onClick={() => manageVote("down")} className="uda_exclude">
-                {(userVote && userVote?.downvote === 1) &&
-                    <DislikeFilled width={33} className="secondary"/>
-                }
-                {((userVote && userVote?.downvote === 0) || (!userVote)) &&
-                    <DislikeOutlined width={33} className="secondary"/>
-                }
-                <br/>
-                <Badge
-                    className="site-badge-count-109"
-                    count={selectedRecordingDetails.downVoteCount}
-                    style={{ backgroundColor: '#faad14' }}
-                />
-              </Button>
             </Col>
           </Row>
         </div>
