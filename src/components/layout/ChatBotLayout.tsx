@@ -1,12 +1,12 @@
-import React, {useState} from "react";
-import {Card, Col, Row, Tabs, TabsProps} from "antd";
+import React, {useEffect, useState} from "react";
+import {Button, Card, Col, Row, Tabs} from "antd";
 import {ChatBot} from "../ChatBot";
 import Title from "antd/es/typography/Title";
 import Meta from "antd/lib/card/Meta";
 
 
 export const ChatBotLayout = (props) => {
-  const {content} = props;
+  const {content, recordSequenceDetailsVisibility} = props;
 
   const [hide, setHide] = useState<boolean>(props?.toggleFlag);
 
@@ -28,26 +28,50 @@ export const ChatBotLayout = (props) => {
     setActiveTab(Number(key));
   };
 
+
+  useEffect(() => {
+    if (recordSequenceDetailsVisibility) {
+      setActiveTab(3)
+    }
+  }, [recordSequenceDetailsVisibility]);
+
   const home = () => {
 
-    return tabs.map((tab) => {
-      return (
-          <>
-            <Row align="middle">
-              <Col span={24} onClick={() => {
-                onChange(tab.key.toString());
-              }}>
-                <Title>{tab.title}</Title>
-                <Card
-                    hoverable
-                    style={{width: 240, backgroundColor: 'rgb(231,230,230)'}}
-                >
-                  <Meta description={tab.description} />
-                </Card>
-              </Col>
-            </Row>
-          </>
-      )
+    return tabs.map((tab, index) => {
+      if (index === 0) {
+        return (
+            <>
+              <Row align="middle" style={{textAlign: 'center'}}>
+                <Col span={24}>
+                  <Title>{tab.title}</Title>
+                  <Meta description={tab.description}/>
+                </Col>
+              </Row>
+              <br/>
+              <br/>
+            </>
+        )
+      } else {
+        return (
+            <>
+              <Row align="middle" style={{textAlign: 'center'}}>
+                <Col span={24} onClick={() => {
+                  onChange(tab.key.toString());
+                }}>
+                  <Title>{tab.title}</Title>
+                  <Card
+                      hoverable
+                      style={{backgroundColor: 'rgb(231,230,230)', textAlign: 'center'}}
+                  >
+                      <Meta description={tab.description}/>
+                  </Card>
+                </Col>
+              </Row>
+              <br/>
+              <br/>
+            </>
+        )
+      }
     });
   };
 
@@ -61,7 +85,7 @@ export const ChatBotLayout = (props) => {
   const renderTitle = () => {
     let title = ''
     tabs.map((tab) => {
-      if(Number(tab.key) === Number(activeTab)) {
+      if (Number(tab.key) === Number(activeTab)) {
         title = tab.title;
       }
     });
