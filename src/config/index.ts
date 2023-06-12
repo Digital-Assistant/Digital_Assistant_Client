@@ -54,7 +54,7 @@ export const CONFIG = {
   nodeId: 0,
   isRecording: false,
   htmlIndex: [],
-  invokeTime: 1000,
+  invokeTime: 2000,
   apiInvokeTime: 300,
   maxStringLength: 40,
   playNextAction: true,
