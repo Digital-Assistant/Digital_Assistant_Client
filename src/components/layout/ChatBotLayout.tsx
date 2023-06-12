@@ -15,7 +15,7 @@ export const ChatBotLayout = (props) => {
   const tabs = [
     {key: '1', label: 'Home', title: 'Virtual CSM', description: 'I am your virtual Assistant'},
     {key: '2', label: 'Ask AI', title: 'Ask AI', description: 'Knowledge Base FAQs'},
-    {key: '3', label: 'Navigate AI', title: 'Digital Adoption', description: 'Digital Adoption'},
+    {key: '3', label: 'Navigate AI', title: 'Navigate AI', description: 'Navigate AI'},
     {key: '4', label: 'Query AI', title: 'Query AI', description: 'Data & Insights'}
   ];
 
