@@ -1,3 +1,4 @@
+
 .banner-style{
    background:#a0afb6;
    // height:150px;
@@ -50,4 +51,7 @@
 }
 .ant-tabs-tab.ant-tabs-tab-active{
    border-bottom: 1px solid #313e9c !important;
+}
+.ant-tabs > .ant-tabs-nav, .ant-tabs > div > .ant-tabs-nav{
+   background:#f3f3f3 !important;
 }
