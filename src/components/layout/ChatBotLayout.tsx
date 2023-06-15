@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Card, Col, Row, Tabs, TabsProps, Button, Space} from "antd";
 import {ChatBot} from "../ChatBot";
 import Title from "antd/es/typography/Title";
@@ -7,7 +7,7 @@ import './Additional.scss';
 
 
 export const ChatBotLayout = (props) => {
-  const {content} = props;
+  const {content, recordSequenceDetailsVisibility} = props;
 
   const [hide, setHide] = useState<boolean>(props?.toggleFlag);
 
@@ -28,6 +28,13 @@ export const ChatBotLayout = (props) => {
   const onChange = (key: string) => {
     setActiveTab(Number(key));
   };
+
+
+  useEffect(() => {
+    if (recordSequenceDetailsVisibility) {
+      setActiveTab(3)
+    }
+  }, [recordSequenceDetailsVisibility]);
 
   const home = () => {
     return(
@@ -105,7 +112,7 @@ export const ChatBotLayout = (props) => {
   const renderTitle = () => {
     let title = ''
     tabs.map((tab) => {
-      if(Number(tab.key) === Number(activeTab)) {
+      if (Number(tab.key) === Number(activeTab)) {
         title = tab.title;
       }
     });

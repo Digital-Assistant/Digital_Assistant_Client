@@ -299,6 +299,7 @@ function App(props) {
         setToStore(isRecording, CONFIG.RECORDING_SWITCH_KEY, true);
         if (isRecording) {
             setHide(false);
+            setRecordSequenceDetailsVisibility(true);
         }
     }, [isRecording]);
 
@@ -669,7 +670,7 @@ function App(props) {
                     <div id="uda-html-content" className="uda_exclude">
                         <div>
                             <div className="uda-page-right-bar uda_exclude">
-                                <ChatBotLayout toggleHandler={toggleHandler} content={userContent()} />
+                                <ChatBotLayout toggleHandler={toggleHandler} content={userContent()} recordSequenceDetailsVisibility={recordSequenceDetailsVisibility} />
                             </div>
                         </div>
                     </div>
