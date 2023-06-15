@@ -16,7 +16,7 @@ export const ChatBotLayout = (props) => {
   const tabs = [
     {key: '1', label: 'Home', title: 'Virtual CSM', description: 'I am your virtual Assistant'},
     {key: '2', label: 'Ask AI', title: 'Ask AI', description: 'Knowledge Base FAQs'},
-    {key: '3', label: 'Navigate AI', title: 'Digital Adoption', description: 'Digital Adoption'},
+    {key: '3', label: 'Navigate AI', title: 'Navigate AI', description: 'Navigate AI'},
     {key: '4', label: 'Query AI', title: 'Query AI', description: 'Data & Insights'}
   ];
 
@@ -32,14 +32,13 @@ export const ChatBotLayout = (props) => {
   const home = () => {
     return(
       <>
-      
+
         <Row className="banner-style">
-        <video controls width="100%">
-          <source src="/https://drive.google.com/file/d/1qJdOaJGQro3hsegMd768AdkQnZsMlUSE/view?ts=64883a77.mp4" type="video/mp4" />
-          Sorry, your browser doesn't support videos.
-        </video>
+            <iframe height="280" style={{width: '100%'}} src="https://drive.google.com/file/d/1qJdOaJGQro3hsegMd768AdkQnZsMlUSE/preview" allow="autoplay"></iframe>
         </Row>
-          <Row className="cards-style orange-border"> 
+          <Row className="cards-style orange-border" onClick={() => {
+              onChange('2');
+          }}>
             <Col span={6} className="card-inner orange-linear">
             <img src='data:image/svg+xml;base64,PCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4KDTwhLS0gVXBsb2FkZWQgdG86IFNWRyBSZXBvLCB3d3cuc3ZncmVwby5jb20sIFRyYW5zZm9ybWVkIGJ5OiBTVkcgUmVwbyBNaXhlciBUb29scyAtLT4KPHN2ZyB3aWR0aD0iODAwcHgiIGhlaWdodD0iODAwcHgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBzdHJva2U9IiNmZmZmZmYiPgoNPGcgaWQ9IlNWR1JlcG9fYmdDYXJyaWVyIiBzdHJva2Utd2lkdGg9IjAiLz4KDTxnIGlkPSJTVkdSZXBvX3RyYWNlckNhcnJpZXIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgoNPGcgaWQ9IlNWR1JlcG9faWNvbkNhcnJpZXIiPiA8cGF0aCBkPSJNMTcgMTguNDMwMkgxM0w4LjU0OTk5IDIxLjM5MDJDNy44ODk5OSAyMS44MzAyIDcgMjEuMzYwMiA3IDIwLjU2MDJWMTguNDMwMkM0IDE4LjQzMDIgMiAxNi40MzAyIDIgMTMuNDMwMlY3LjQzMDE4QzIgNC40MzAxOCA0IDIuNDMwMTggNyAyLjQzMDE4SDE3QzIwIDIuNDMwMTggMjIgNC40MzAxOCAyMiA3LjQzMDE4VjEzLjQzMDJDMjIgMTYuNDMwMiAyMCAxOC40MzAyIDE3IDE4LjQzMDJaIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPiA8cGF0aCBvcGFjaXR5PSIwLjQiIGQ9Ik0xMS45OTk4IDExLjM1OTlWMTEuMTQ5OUMxMS45OTk4IDEwLjQ2OTkgMTIuNDE5OCAxMC4xMDk5IDEyLjgzOTggOS44MTk4OUMxMy4yNDk4IDkuNTM5ODkgMTMuNjU5OCA5LjE3OTkgMTMuNjU5OCA4LjUxOTlDMTMuNjU5OCA3LjU5OTkgMTIuOTE5OCA2Ljg1OTg2IDExLjk5OTggNi44NTk4NkMxMS4wNzk4IDYuODU5ODYgMTAuMzM5OCA3LjU5OTkgMTAuMzM5OCA4LjUxOTkiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPiA8cGF0aCBvcGFjaXR5PSIwLjQiIGQ9Ik0xMS45OTU1IDEzLjc1SDEyLjAwNDUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPiA8L2c+Cg08L3N2Zz4=' width={42} height={42}/>
             </Col>
@@ -48,18 +47,22 @@ export const ChatBotLayout = (props) => {
               <p>Knowledge Base FAQs</p>
             </Col>
           </Row>
-        
-          <Row className="cards-style blue-border">
-          <Col span={6} className="card-inner blue-linear">
-            <img src='data:image/svg+xml;base64,PCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4KDTwhLS0gVXBsb2FkZWQgdG86IFNWRyBSZXBvLCB3d3cuc3ZncmVwby5jb20sIFRyYW5zZm9ybWVkIGJ5OiBTVkcgUmVwbyBNaXhlciBUb29scyAtLT4KPHN2ZyB3aWR0aD0iODAwcHgiIGhlaWdodD0iODAwcHgiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIGZpbGw9IiNkNjFmMWYiIHN0cm9rZT0iI2Q2MWYxZiI+Cg08ZyBpZD0iU1ZHUmVwb19iZ0NhcnJpZXIiIHN0cm9rZS13aWR0aD0iMCIvPgoNPGcgaWQ9IlNWR1JlcG9fdHJhY2VyQ2FycmllciIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cg08ZyBpZD0iU1ZHUmVwb19pY29uQ2FycmllciI+IDx0aXRsZT5haTwvdGl0bGU+IDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPiA8ZyBpZD0iaWNvbiIgZmlsbD0iI2ZmZmZmZiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNjQuMDAwMDAwLCA2NC4wMDAwMDApIj4gPHBhdGggZD0iTTMyMCw2NCBMMzIwLDMyMCBMNjQsMzIwIEw2NCw2NCBMMzIwLDY0IFogTTE3MS43NDkzODgsMTI4IEwxNDYuODE3ODQyLDEyOCBMOTkuNDg0MDM4NywyNTYgTDEyMS45NzY2MjksMjU2IEwxMzAuOTEzMDM5LDIzMC45NzcgTDE4Ny41NzUwMzksMjMwLjk3NyBMMTk2LjMxOTYwNywyNTYgTDIyMC4xNjcxNzIsMjU2IEwxNzEuNzQ5Mzg4LDEyOCBaIE0yNjAuMDkzNzc4LDEyOCBMMjM3LjY5MTUxOSwxMjggTDIzNy42OTE1MTksMjU2IEwyNjAuMDkzNzc4LDI1NiBMMjYwLjA5Mzc3OCwxMjggWiBNMTU5LjA5NDcyNywxNDkuNDc1MjYgTDE4MS40MDkwMzksMjEzLjMzMyBMMTM3LjEzNTAzOSwyMTMuMzMzIEwxNTkuMDk0NzI3LDE0OS40NzUyNiBaIE0zNDEuMzMzMzMzLDI1NiBMMzg0LDI1NiBMMzg0LDI5OC42NjY2NjcgTDM0MS4zMzMzMzMsMjk4LjY2NjY2NyBMMzQxLjMzMzMzMywyNTYgWiBNODUuMzMzMzMzMywzNDEuMzMzMzMzIEwxMjgsMzQxLjMzMzMzMyBMMTI4LDM4NCBMODUuMzMzMzMzMywzODQgTDg1LjMzMzMzMzMsMzQxLjMzMzMzMyBaIE0xNzAuNjY2NjY3LDM0MS4zMzMzMzMgTDIxMy4zMzMzMzMsMzQxLjMzMzMzMyBMMjEzLjMzMzMzMywzODQgTDE3MC42NjY2NjcsMzg0IEwxNzAuNjY2NjY3LDM0MS4zMzMzMzMgWiBNODUuMzMzMzMzMywwIEwxMjgsMCBMMTI4LDQyLjY2NjY2NjcgTDg1LjMzMzMzMzMsNDIuNjY2NjY2NyBMODUuMzMzMzMzMywwIFogTTI1NiwzNDEuMzMzMzMzIEwyOTguNjY2NjY3LDM0MS4zMzMzMzMgTDI5OC42NjY2NjcsMzg0IEwyNTYsMzg0IEwyNTYsMzQxLjMzMzMzMyBaIE0xNzAuNjY2NjY3LDAgTDIxMy4zMzMzMzMsMCBMMjEzLjMzMzMzMyw0Mi42NjY2NjY3IEwxNzAuNjY2NjY3LDQyLjY2NjY2NjcgTDE3MC42NjY2NjcsMCBaIE0yNTYsMCBMMjk4LjY2NjY2NywwIEwyOTguNjY2NjY3LDQyLjY2NjY2NjcgTDI1Niw0Mi42NjY2NjY3IEwyNTYsMCBaIE0zNDEuMzMzMzMzLDE3MC42NjY2NjcgTDM4NCwxNzAuNjY2NjY3IEwzODQsMjEzLjMzMzMzMyBMMzQxLjMzMzMzMywyMTMuMzMzMzMzIEwzNDEuMzMzMzMzLDE3MC42NjY2NjcgWiBNMCwyNTYgTDQyLjY2NjY2NjcsMjU2IEw0Mi42NjY2NjY3LDI5OC42NjY2NjcgTDAsMjk4LjY2NjY2NyBMMCwyNTYgWiBNMzQxLjMzMzMzMyw4NS4zMzMzMzMzIEwzODQsODUuMzMzMzMzMyBMMzg0LDEyOCBMMzQxLjMzMzMzMywxMjggTDM0MS4zMzMzMzMsODUuMzMzMzMzMyBaIE0wLDE3MC42NjY2NjcgTDQyLjY2NjY2NjcsMTcwLjY2NjY2NyBMNDIuNjY2NjY2NywyMTMuMzMzMzMzIEwwLDIxMy4zMzMzMzMgTDAsMTcwLjY2NjY2NyBaIE0wLDg1LjMzMzMzMzMgTDQyLjY2NjY2NjcsODUuMzMzMzMzMyBMNDIuNjY2NjY2NywxMjggTDAsMTI4IEwwLDg1LjMzMzMzMzMgWiIgaWQ9IkNvbWJpbmVkLVNoYXBlIj4gPC9wYXRoPiA8L2c+IDwvZz4gPC9nPgoNPC9zdmc+' width={42} height={42}/>
-          </Col>
-          <Col span={18} style={{padding:"10px"}}>
-              <h3 className="blue">Navigate AI</h3>
-              <p>Navigation AI</p>
-            </Col>
+
+          <Row className="cards-style blue-border" onClick={() => {
+              onChange('3');
+          }}>
+              <Col span={6} className="card-inner blue-linear">
+                  <img src='data:image/svg+xml;base64,PCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4KDTwhLS0gVXBsb2FkZWQgdG86IFNWRyBSZXBvLCB3d3cuc3ZncmVwby5jb20sIFRyYW5zZm9ybWVkIGJ5OiBTVkcgUmVwbyBNaXhlciBUb29scyAtLT4KPHN2ZyB3aWR0aD0iODAwcHgiIGhlaWdodD0iODAwcHgiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIGZpbGw9IiNkNjFmMWYiIHN0cm9rZT0iI2Q2MWYxZiI+Cg08ZyBpZD0iU1ZHUmVwb19iZ0NhcnJpZXIiIHN0cm9rZS13aWR0aD0iMCIvPgoNPGcgaWQ9IlNWR1JlcG9fdHJhY2VyQ2FycmllciIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cg08ZyBpZD0iU1ZHUmVwb19pY29uQ2FycmllciI+IDx0aXRsZT5haTwvdGl0bGU+IDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPiA8ZyBpZD0iaWNvbiIgZmlsbD0iI2ZmZmZmZiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNjQuMDAwMDAwLCA2NC4wMDAwMDApIj4gPHBhdGggZD0iTTMyMCw2NCBMMzIwLDMyMCBMNjQsMzIwIEw2NCw2NCBMMzIwLDY0IFogTTE3MS43NDkzODgsMTI4IEwxNDYuODE3ODQyLDEyOCBMOTkuNDg0MDM4NywyNTYgTDEyMS45NzY2MjksMjU2IEwxMzAuOTEzMDM5LDIzMC45NzcgTDE4Ny41NzUwMzksMjMwLjk3NyBMMTk2LjMxOTYwNywyNTYgTDIyMC4xNjcxNzIsMjU2IEwxNzEuNzQ5Mzg4LDEyOCBaIE0yNjAuMDkzNzc4LDEyOCBMMjM3LjY5MTUxOSwxMjggTDIzNy42OTE1MTksMjU2IEwyNjAuMDkzNzc4LDI1NiBMMjYwLjA5Mzc3OCwxMjggWiBNMTU5LjA5NDcyNywxNDkuNDc1MjYgTDE4MS40MDkwMzksMjEzLjMzMyBMMTM3LjEzNTAzOSwyMTMuMzMzIEwxNTkuMDk0NzI3LDE0OS40NzUyNiBaIE0zNDEuMzMzMzMzLDI1NiBMMzg0LDI1NiBMMzg0LDI5OC42NjY2NjcgTDM0MS4zMzMzMzMsMjk4LjY2NjY2NyBMMzQxLjMzMzMzMywyNTYgWiBNODUuMzMzMzMzMywzNDEuMzMzMzMzIEwxMjgsMzQxLjMzMzMzMyBMMTI4LDM4NCBMODUuMzMzMzMzMywzODQgTDg1LjMzMzMzMzMsMzQxLjMzMzMzMyBaIE0xNzAuNjY2NjY3LDM0MS4zMzMzMzMgTDIxMy4zMzMzMzMsMzQxLjMzMzMzMyBMMjEzLjMzMzMzMywzODQgTDE3MC42NjY2NjcsMzg0IEwxNzAuNjY2NjY3LDM0MS4zMzMzMzMgWiBNODUuMzMzMzMzMywwIEwxMjgsMCBMMTI4LDQyLjY2NjY2NjcgTDg1LjMzMzMzMzMsNDIuNjY2NjY2NyBMODUuMzMzMzMzMywwIFogTTI1NiwzNDEuMzMzMzMzIEwyOTguNjY2NjY3LDM0MS4zMzMzMzMgTDI5OC42NjY2NjcsMzg0IEwyNTYsMzg0IEwyNTYsMzQxLjMzMzMzMyBaIE0xNzAuNjY2NjY3LDAgTDIxMy4zMzMzMzMsMCBMMjEzLjMzMzMzMyw0Mi42NjY2NjY3IEwxNzAuNjY2NjY3LDQyLjY2NjY2NjcgTDE3MC42NjY2NjcsMCBaIE0yNTYsMCBMMjk4LjY2NjY2NywwIEwyOTguNjY2NjY3LDQyLjY2NjY2NjcgTDI1Niw0Mi42NjY2NjY3IEwyNTYsMCBaIE0zNDEuMzMzMzMzLDE3MC42NjY2NjcgTDM4NCwxNzAuNjY2NjY3IEwzODQsMjEzLjMzMzMzMyBMMzQxLjMzMzMzMywyMTMuMzMzMzMzIEwzNDEuMzMzMzMzLDE3MC42NjY2NjcgWiBNMCwyNTYgTDQyLjY2NjY2NjcsMjU2IEw0Mi42NjY2NjY3LDI5OC42NjY2NjcgTDAsMjk4LjY2NjY2NyBMMCwyNTYgWiBNMzQxLjMzMzMzMyw4NS4zMzMzMzMzIEwzODQsODUuMzMzMzMzMyBMMzg0LDEyOCBMMzQxLjMzMzMzMywxMjggTDM0MS4zMzMzMzMsODUuMzMzMzMzMyBaIE0wLDE3MC42NjY2NjcgTDQyLjY2NjY2NjcsMTcwLjY2NjY2NyBMNDIuNjY2NjY2NywyMTMuMzMzMzMzIEwwLDIxMy4zMzMzMzMgTDAsMTcwLjY2NjY2NyBaIE0wLDg1LjMzMzMzMzMgTDQyLjY2NjY2NjcsODUuMzMzMzMzMyBMNDIuNjY2NjY2NywxMjggTDAsMTI4IEwwLDg1LjMzMzMzMzMgWiIgaWQ9IkNvbWJpbmVkLVNoYXBlIj4gPC9wYXRoPiA8L2c+IDwvZz4gPC9nPgoNPC9zdmc+' width={42} height={42}/>
+              </Col>
+              <Col span={18} style={{padding:"10px"}}>
+                  <h3 className="blue">Navigate AI</h3>
+                  <p>Navigation AI</p>
+              </Col>
           </Row>
 
-          <Row className="cards-style orange-border"> 
+          <Row className="cards-style orange-border" onClick={() => {
+              onChange('4');
+          }}>
           <Col span={6} className="card-inner orange-linear">
             <img src='data:image/svg+xml;base64,PCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4KDTwhLS0gVXBsb2FkZWQgdG86IFNWRyBSZXBvLCB3d3cuc3ZncmVwby5jb20sIFRyYW5zZm9ybWVkIGJ5OiBTVkcgUmVwbyBNaXhlciBUb29scyAtLT4KPHN2ZyBmaWxsPSIjZmZmZmZmIiB3aWR0aD0iODAwcHgiIGhlaWdodD0iODAwcHgiIHZpZXdCb3g9IjAgMCAzMiAzMiIgaWQ9IkxheWVyXzEiIGRhdGEtbmFtZT0iTGF5ZXIgMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBzdHJva2U9IiNmZmZmZmYiPgoNPGcgaWQ9IlNWR1JlcG9fYmdDYXJyaWVyIiBzdHJva2Utd2lkdGg9IjAiLz4KDTxnIGlkPSJTVkdSZXBvX3RyYWNlckNhcnJpZXIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgoNPGcgaWQ9IlNWR1JlcG9faWNvbkNhcnJpZXIiPiA8ZGVmcz4gPHN0eWxlPiAuY2xzLTEgeyBmaWxsOiBub25lOyB9IDwvc3R5bGU+IDwvZGVmcz4gPGNpcmNsZSBjeD0iMTEiIGN5PSIxNS41IiByPSIxLjUiLz4gPHBhdGggZD0iTTEyLDEySDEwVjhoMmEyLDIsMCwwLDAsMC00SDEwQTIuMDAyMywyLjAwMjMsMCwwLDAsOCw2di41SDZWNmE0LjAwNDUsNC4wMDQ1LDAsMCwxLDQtNGgyYTQsNCwwLDAsMSwwLDhaIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwIDApIi8+IDxwYXRoIGQ9Ik0yMi40NDc5LDIxLjAzMzdBMTAuOTcxLDEwLjk3MSwwLDAsMCwxOS45MjExLDQuNzQ0NmwtLjk5OSwxLjczQTguOTk2Nyw4Ljk5NjcsMCwxLDEsNSwxNEgzYTEwLjk5MTYsMTAuOTkxNiwwLDAsMCwxOC4wMzM4LDguNDQ3OEwyOC41ODU5LDMwLDMwLDI4LjU4NTlaIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwIDApIi8+IDxyZWN0IGlkPSJfVHJhbnNwYXJlbnRfUmVjdGFuZ2xlXyIgZGF0YS1uYW1lPSImbHQ7VHJhbnNwYXJlbnQgUmVjdGFuZ2xlJmd0OyIgY2xhc3M9ImNscy0xIiB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDMyIDMyKSByb3RhdGUoLTE4MCkiLz4gPC9nPgoNPC9zdmc+' width={42} height={42}/>
           </Col>
@@ -73,7 +76,7 @@ export const ChatBotLayout = (props) => {
     return tabs.map((tab) => {
       return (
           <>
-        
+
             <Row align="middle">
               <Col span={24} onClick={() => {
                 onChange(tab.key.toString());
