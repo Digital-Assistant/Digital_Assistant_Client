@@ -1,0 +1,57 @@
+.banner-style{
+   background:#a0afb6;
+   // height:150px;
+}
+.cards-style{
+   padding:0px !important;
+   border:1px solid #f9ac7e;
+   border-radius:5px;
+   width: 100%;
+   margin-bottom:10px;
+   margin-top:10px;
+   cursor: pointer;
+   .card-inner{
+      border-radius:5px 0px 0px 5px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+   }
+   h3{
+      margin: 0px;
+   }
+   p{
+      margin: 0px;
+   }
+}
+.orange-linear{
+   background: linear-gradient(#f9ac7e, #f5762f);
+}
+.blue-linear{
+   background: linear-gradient(#6f7ed1, #2d40a7);
+}
+.orange{
+   color: #f5762f;
+}
+.orange-border{
+   border: 1px solid #f5762f;
+}
+.blue{
+   color: #313e9c;
+}
+.blue-border{
+   border: 1px solid #313e9c;
+}
+
+/*tabs css*/
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn{
+   color:#313e9c !important;
+}
+.ant-tabs-tab:hover{
+   color:#313e9c !important;
+}
+.ant-tabs-tab.ant-tabs-tab-active{
+   border-bottom: 1px solid #313e9c !important;
+}
+.ant-tabs > .ant-tabs-nav, .ant-tabs > div > .ant-tabs-nav{
+   background:#f3f3f3 !important;
+}
