@@ -38,7 +38,8 @@ export const updateRecordClicks = async (request?: any) => {
     method: "POST",
     body: request,
   };
-  return REST.apiCal(parameters);
+  return true;
+  // return REST.apiCal(parameters);
 };
 
 /**
@@ -155,7 +156,8 @@ export const postClickData = async (node: HTMLElement, text: string, meta: any) 
     objectdata: TSON.stringify(objectData),
   };
 
-  return await recordClicks(payload);
+  return payload;
+  // return await recordClicks(payload);
 };
 
 /**

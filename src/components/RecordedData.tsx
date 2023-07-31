@@ -9,14 +9,16 @@ import React, {useEffect, useState} from "react";
 import {DeleteOutlined, InfoCircleOutlined,} from "@ant-design/icons";
 import _ from "lodash";
 import {getObjData, setToStore} from "../util";
-import {postRecordSequenceData, profanityCheck, updateRecordClicks} from "../services/recordService";
+import {postRecordSequenceData, profanityCheck, recordClicks, updateRecordClicks} from "../services/recordService";
 import {CONFIG} from "../config";
 import SelectedElement from "./SelectedElement";
 
 import TSON from "typescript-json";
 import {translate} from "../util/translation";
 import {isInputNode} from "../util/checkNode";
-import { left } from "@popperjs/core";
+import {Progress, Space} from "antd";
+import {UDAErrorLogger} from "../config/error-log";
+
 export interface MProps {
   sequenceName?: string;
   isShown?: boolean;
@@ -44,6 +46,9 @@ export const RecordedData = (props: MProps) => {
   const [inputError, setInputError] = useState<any>({});
   const [tooltip, setToolTip] = useState<string>("");
   const [disableTooltipSubmitBtn, setDisableTooltipSubmitBtn] = useState<boolean>(false);
+  // variable for uploading percentage data
+  const [savedClickedDataPercent, setSavedClickedDataPercent] = useState<number>(0);
+  const [savingError, setSavingError] = useState<boolean>(false);
 
   useEffect(() => {
     setRecordData([...(props.data || [])]);
@@ -162,6 +167,8 @@ export const RecordedData = (props: MProps) => {
     setToolTip('');
     global.udanSelectedNodes=[];
     global.clickedNode = null;
+    setSavedClickedDataPercent(0);
+    setSavingError(false);
   }
 
   /**
@@ -195,7 +202,7 @@ export const RecordedData = (props: MProps) => {
     }
 
     setDisableForm(true);
-    props.showLoader(true);
+    // props.showLoader(true);
 
     let validInput = true;
 
@@ -223,9 +230,44 @@ export const RecordedData = (props: MProps) => {
     //if additional params available send them part of payload
     if (!_.isEmpty(tmpPermissionsObj)) _payload.additionalParams = tmpPermissionsObj;
 
+    let totalClicks = recordData.length + 1;
+    let savedClicks = 0;
+
+    for (const [index, clickData] of Object.entries(recordData)) {
+        if(clickData.hasOwnProperty('id')){
+          savedClicks++;
+          setSavedClickedDataPercent((prevState)=> {
+            return Math.ceil((savedClicks/totalClicks) * 100);
+          });
+          continue;
+        }
+        let resp = await recordClicks(clickData);
+        if(resp && resp.id) {
+          recordData[index] = resp;
+          savedClicks++;
+          setSavedClickedDataPercent((prevState)=> {
+            return Math.ceil((savedClicks/totalClicks) * 100);
+          });
+        } else {
+          UDAErrorLogger.error('Failed to record the data.' + clickData);
+          setSavingError(true);
+        }
+    }
+
+    storeRecording(recordData);
+
+    // return true;
+    if(savingError){
+      setDisableForm(false);
+      return ;
+    }
+
     const instance = await postRecordSequenceData(_payload);
-    resetForm();
+    setSavedClickedDataPercent((prevState)=> {
+      return Math.ceil(((savedClicks+1)/totalClicks) * 100);
+    });
     if (instance && props?.refetchSearch) {
+      resetForm();
       setTimeout(()=>{
         props.refetchSearch("on");
       }, CONFIG.indexInterval);
@@ -507,126 +549,137 @@ export const RecordedData = (props: MProps) => {
     return <span>{key}:{value}</span>
   };
 
-  return props?.isShown ? (
-      <div className="uda-card-details">
-        <h5>Recorded Sequence</h5>
-        <hr style={{border: "1px solid #969696", width: "100%"}}/>
-        <ul className="uda-recording" id="uda-recorded-results">
-          {renderData()}
-        </ul>
-        <hr style={{border: "1px solid #969696", width: "100%"}}/>
-        <div style={{textAlign: "left"}}>
-          <input
-              type="text"
-              id="uda-recorded-name"
-              name="uda-save-recorded[]"
-              className={`uda-form-input uda_exclude`}
-              placeholder="Enter Label"
-              onChange={onChange}
-              value={name}
-          />
-          {inputAlert.name && <span className={`uda-alert`}> {translate('inputMandatory')}</span>}
-          {inputError.name && <span className={`uda-alert`}> {translate('inputError')}</span>}
-          <div id="uda-sequence-names">
-            {labels?.map((item: any, index: number) => {
-              return (
-                  <div key={`label-${index}`}>
-                    <div className="flex-card flex-center">
-                      <input
-                          type="text"
-                          id="uda-recorded-name"
-                          name="uda-save-recorded[]"
-                          className={`uda-form-input uda-form-input-reduced uda_exclude ${
-                              item.profanity ? "profanity" : ""
-                          }`}
-                          placeholder="Enter Label"
-                          onChange={onExtraLabelChange(index)}
-                          value={item.label}
-                      />
+  return props?.isShown ? (<>
+      {disableForm && <>
+        <div className="uda-card-details">
+            <Space wrap>
+              <Progress type="circle" percent={savedClickedDataPercent} status={savingError?'exception':'normal'} />
+            </Space>
+        </div>
+      </>
+      }
+    {!disableForm &&
+      <>
+          <div className="uda-card-details">
+            <h5>Recorded Sequence</h5>
+            <hr style={{border: "1px solid #969696", width: "100%"}}/>
+            <ul className="uda-recording" id="uda-recorded-results">
+              {renderData()}
+            </ul>
+            <hr style={{border: "1px solid #969696", width: "100%"}}/>
+            <div style={{textAlign: "left"}}>
+              <input
+                  type="text"
+                  id="uda-recorded-name"
+                  name="uda-save-recorded[]"
+                  className={`uda-form-input uda_exclude`}
+                  placeholder="Enter Label"
+                  onChange={onChange}
+                  value={name}
+              />
+              {inputAlert.name && <span className={`uda-alert`}> {translate('inputMandatory')}</span>}
+              {inputError.name && <span className={`uda-alert`}> {translate('inputError')}</span>}
+              <div id="uda-sequence-names">
+                {labels?.map((item: any, index: number) => {
+                  return (
+                      <div key={`label-${index}`}>
+                        <div className="flex-card flex-center">
+                          <input
+                              type="text"
+                              id="uda-recorded-name"
+                              name="uda-save-recorded[]"
+                              className={`uda-form-input uda-form-input-reduced uda_exclude ${
+                                  item.profanity ? "profanity" : ""
+                              }`}
+                              placeholder="Enter Label"
+                              onChange={onExtraLabelChange(index)}
+                              value={item.label}
+                          />
+                          <button
+                              className="delete-btn uda-remove-row uda_exclude"
+                              onClick={() => removeLabel(index)}
+                          >
+                            <DeleteOutlined/>
+                          </button>
+                        </div>
+                        <div className="flex-card flex-center">
+                          {(inputError['label' + index] && inputError['label' + index].error) &&
+                              <span className={`uda-alert`}> {translate('inputError')}</span>}
+                        </div>
+                      </div>
+                  );
+                })}
+              </div>
+
+              <div className=" add_lebel_btn_wrap">
+                <button className="add-btn uda_exclude" onClick={() => addLabel()}>
+                  + Add Label
+                </button>
+              </div>
+
+              {props?.config?.enablePermissions && (
+                  <div id="uda-permissions-section" style={{padding: "30px 0px"}}>
+                    <br />
+                    <div>
                       <button
-                          className="delete-btn uda-remove-row uda_exclude"
-                          onClick={() => removeLabel(index)}
+                          className="add-btn uda_exclude"
+                          onClick={() => toggleAdvanced()}
                       >
-                        <DeleteOutlined/>
+                        {advBtnShow ? "Hide Permissions" : "Show Permissions"}
                       </button>
                     </div>
-                    <div className="flex-card flex-center">
-                      {(inputError['label' + index] && inputError['label' + index].error) &&
-                          <span className={`uda-alert`}> {translate('inputError')}</span>}
-                    </div>
+
+                    {
+                        advBtnShow &&
+                        <div>
+                          {Object.entries(props?.config?.permissions).map(([key, value]) => {
+                            return <div key={key}>
+                              <input
+                                  type="checkbox"
+                                  id="uda-recorded-name"
+                                  className="uda_exclude"
+                                  checked={tmpPermissionsObj[key] !== undefined}
+                                  onChange={handlePermissions({[key]: value, key})}
+                              />
+                              {displayKeyValue(key, value)}
+                            </div>
+                          })
+                          }
+                        </div>
+                    }
                   </div>
-              );
-            })}
-          </div>
+              )}
 
-          <div className=" add_lebel_btn_wrap">
-            <button className="add-btn uda_exclude" onClick={() => addLabel()}>
-              + Add Label
-            </button>
-          </div>
-
-          {props?.config?.enablePermissions && (
-              <div id="uda-permissions-section" style={{padding: "30px 0px"}}>
-                <br />
-                <div>
+              <div
+                  className="flex-card flex-center"
+                  style={{clear: "both", marginTop: 50}}
+              >
+                <div className="flex-card flex-start" style={{flex: 1}}>
                   <button
-                      className="add-btn uda_exclude"
-                      onClick={() => toggleAdvanced()}
+                      className="uda-record-btn uda_exclude"
+                      onClick={()=>{cancelRecording()}}
+                      style={{flex: 1}}
+                      disabled={disableForm}
                   >
-                    {advBtnShow ? "Hide Permissions" : "Show Permissions"}
+                    <span className="uda_exclude">{translate('cancelRecording')}</span>
                   </button>
                 </div>
+                <div className="flex-card flex-end" style={{flex: 1}}>
+                  <button
+                      className={`uda-tutorial-btn uda_exclude ${
+                          disableForm ? "disabled" : ""
+                      }`}
+                      onClick={() => submitRecording()}
+                      disabled={disableForm}
 
-                {
-                    advBtnShow &&
-                    <div>
-                      {Object.entries(props?.config?.permissions).map(([key, value]) => {
-                        return <div key={key}>
-                          <input
-                              type="checkbox"
-                              id="uda-recorded-name"
-                              className="uda_exclude"
-                              checked={tmpPermissionsObj[key] !== undefined}
-                              onChange={handlePermissions({[key]: value, key})}
-                          />
-                          {displayKeyValue(key, value)}
-                        </div>
-                      })
-                      }
-                    </div>
-                }
+                      style={{ flex: 1, marginLeft: "5px" }}
+                  >
+                    {translate('submitButton')}
+                  </button>
+                </div>
               </div>
-          )}
-
-          <div
-              className="flex-card flex-center"
-              style={{clear: "both", marginTop: 50}}
-          >
-            <div className="flex-card flex-start" style={{flex: 1}}>
-              <button
-                  className="uda-record-btn uda_exclude"
-                  onClick={()=>{cancelRecording()}}
-                  style={{flex: 1}}
-                  disabled={disableForm}
-              >
-                <span className="uda_exclude">{translate('cancelRecording')}</span>
-              </button>
-            </div>
-            <div className="flex-card flex-end" style={{flex: 1}}>
-              <button
-                  className={`uda-tutorial-btn uda_exclude ${
-                      disableForm ? "disabled" : ""
-                  }`}
-                  onClick={() => submitRecording()}
-                  disabled={disableForm}
-
-                  style={{ flex: 1, marginLeft: "5px" }}
-              >
-                {translate('submitButton')}
-              </button>
             </div>
           </div>
-        </div>
-      </div>
-  ) : null;
+      </> }
+  </>): null;
 };
