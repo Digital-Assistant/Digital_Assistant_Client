@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { updateRecordClicks } from "../services/recordService";
 import fetchHtmlFormElements from "../util/recording-utils/fetchHtmlFormElements";
 
 const SelectedElement = ({
@@ -66,7 +65,6 @@ const SelectedElement = ({
         data.objectdata = JSON.stringify(nodeData);
         recordData[index].objectdata = data.objectdata;
         storeRecording(recordData);
-        await updateRecordClicks(data);
     };
 
     return enableNodeTypeSelection ? (

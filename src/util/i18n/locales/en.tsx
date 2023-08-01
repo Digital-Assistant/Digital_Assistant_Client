@@ -22,4 +22,5 @@ export const TRANSLATIONS_EN = {
   hidePermissions: "Hide Permissions",
   showPermissions: "Show Permissions",
   profanityDetected: "Profanity detected",
+  savingError: "Unable to save please try submitting again."
 };

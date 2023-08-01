@@ -2,7 +2,7 @@ import {CONFIG} from "../config";
 import {getClickedInputLabels} from "./getClickedInputLabels";
 import {UDAErrorLogger} from "../config/error-log";
 import {clickableElementExists, getFromStore, setToStore} from "./index";
-import {postClickData} from "../services";
+import {saveClickData} from "../services";
 import {checkNodeValues} from "./checkNodeValues";
 import mapClickedElementToHtmlFormElement from "./recording-utils/mapClickedElementToHtmlFormElement";
 declare const UDAGlobalConfig;
@@ -63,13 +63,6 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
     return ;
   }
 
-  //ToDo improve stop propagation by checking only for elements that needs to be stopped
-  if (typeof event.cancelable !== 'boolean' || event.cancelable) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    event.stopPropagation();
-  }
-
   if(checkNodeValues(recordingNode, 'exclude')){
     return ;
   }
@@ -121,8 +114,8 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
     meta.displayText = 'Date Selector';
   }
 
-  const resp: any = await postClickData(recordingNode, _text, meta);
-  if (resp && resp.id) {
+  const resp: any = await saveClickData(recordingNode, _text, meta);
+  if (resp) {
     if (!global.udanSelectedNodes){
       global.udanSelectedNodes = [];
     }
@@ -143,10 +136,6 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
   } else {
     UDAErrorLogger.error("Unable save record click " + node.outerHTML);
   }
-
-  event?.target?.click();
-  // do not remove the below click it was added for performing the click as the clicks are getting stopped in between
-  event?.target?.click();
 
   return;
 };
