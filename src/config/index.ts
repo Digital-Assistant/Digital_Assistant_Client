@@ -48,7 +48,7 @@ export const CONFIG = {
   get Environment() {
     return this.current;
   },
-  DEBOUNCE_INTERVAL: 2000,
+  DEBOUNCE_INTERVAL: 1000,
   indexInterval: 1000,
   clickObjects: [],
   nodeId: 0,

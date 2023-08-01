@@ -19,5 +19,8 @@ export const TRANSLATIONS_EN = {
   exit: "Exit",
   clearSearch: "Clear",
   highLightText: "Navigating here",
+  hidePermissions: "Hide Permissions",
+  showPermissions: "Show Permissions",
+  profanityDetected: "Profanity detected",
   savingError: "Unable to save please try submitting again."
 };
