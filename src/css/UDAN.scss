@@ -584,8 +584,10 @@ $uda-tooltip-bg: #f2f4fe;
 
         .uda-details-footer {
             background-color: #e5eafe;
-            height: 40px;
+            //height: 40px;
+            height: auto !important;
             border-radius: 0px 0px 5px 5px;
+            margin-bottom: 10px;
 
             .uda-details-footer-left {
                 width: 30%;

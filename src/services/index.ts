@@ -31,13 +31,27 @@ export const apiCal = (options: any) => {
   return fetch(url, requestOptions)
     .then((response) => {
       //throw route to login if unauthorized response received
-      if (response?.status == 401) {
-        localStorage.clear();
-        // window.location.href = '/'
+      switch (response?.status) {
+        case 401:
+          localStorage.clear();
+          break;
+        case 200:
+          return options?.responseType == "text" ? response.text() : response.json();
+          break;
+        case 204:
+          return null;
+          break;
       }
-      return options?.responseType == "text"
-        ? response.text()
-        : response.json();
+      /*if (response?.status == 401) {
+        localStorage.clear();
+      }
+      if(response?.status == 200) {
+        return options?.responseType == "text"
+            ? response.text()
+            : response.json();
+      } else {
+        return response;
+      }*/
     })
     .then((json) => {
       return json;

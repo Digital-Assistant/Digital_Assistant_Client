@@ -1,6 +1,7 @@
 import {ENDPOINT} from "../config/endpoints";
 import {REST} from ".";
 import {specialNodes} from "../util/specialNodes";
+import {getUserId} from "./userService";
 
 /**
  * To serve search results
@@ -8,12 +9,14 @@ import {specialNodes} from "../util/specialNodes";
  * @returns promise
  */
 
-export const fetchSearchResults = (request?: {
+export const fetchSearchResults = async (request?: {
   keyword?: string,
   page?: number,
   domain?: string,
   additionalParams?: any
+  userSessionId?: any
 }) => {
+  request.userSessionId = await getUserId();
   if (request.additionalParams === null) {
     delete request.additionalParams;
   }
@@ -39,13 +42,16 @@ export const fetchSearchResults = (request?: {
  * @returns promise
  */
 
-export const fetchRecord = (request?: {
+export const fetchRecord = async (request?: {
   id?: string,
   domain?: string,
   additionalParams?: any
+  userSessionId?: string
 }) => {
   if (request.additionalParams === null) {
     delete request.additionalParams;
+  } else {
+    request.userSessionId = await getUserId();
   }
   let parameters: any;
   let url = ENDPOINT.fetchRecord;
@@ -57,7 +63,7 @@ export const fetchRecord = (request?: {
   url += '/'+request.id+'?domain='+request.domain;
 
   if (request.additionalParams != null) {
-    url += '&additionalParams='+request.additionalParams;
+    url += '&additionalParams='+request.additionalParams+'&userSessionId='+request.userSessionId;
   }
 
   parameters = {
