@@ -104,21 +104,21 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
 
     _text = recordingNode.nodeName;
 
-    // adding text editor name for the recording
-    if (checkNodeValues(recordingNode, 'textEditors')) {
-      meta.displayText = 'Text Editor';
-    }
+  }
 
-    // adding drop down name for the recording
-    if (checkNodeValues(recordingNode, 'dropDowns')) {
-      meta.displayText = 'Drop Down';
-    }
+  // adding text editor name for the recording
+  if (checkNodeValues(recordingNode, 'textEditors')) {
+    meta.displayText = 'Text Editor';
+  }
 
-    // adding Date selector for the recording
-    if (checkNodeValues(recordingNode, 'datePicker')) {
-      meta.displayText = 'Date Selector';
-    }
+  // adding drop down name for the recording
+  if (checkNodeValues(recordingNode, 'dropDowns')) {
+    meta.displayText = 'Drop Down';
+  }
 
+  // adding Date selector for the recording
+  if (checkNodeValues(recordingNode, 'datePicker')) {
+    meta.displayText = 'Date Selector';
   }
 
   const resp: any = await postClickData(recordingNode, _text, meta);
