@@ -9,7 +9,7 @@ import React, {useEffect, useState} from "react";
 import {DeleteOutlined, InfoCircleOutlined,} from "@ant-design/icons";
 import _ from "lodash";
 import {getObjData, setToStore} from "../util";
-import {postRecordSequenceData, profanityCheck, recordClicks, updateRecordClicks} from "../services/recordService";
+import {postRecordSequenceData, profanityCheck, recordClicks} from "../services/recordService";
 import {CONFIG} from "../config";
 import SelectedElement from "./SelectedElement";
 
@@ -113,7 +113,6 @@ export const RecordedData = (props: MProps) => {
           if (!_.isEmpty(_objData)) {
             _objData.meta.displayText = changedName.trim();
             recordData[index].objectdata = TSON.stringify(_objData);
-            await updateRecordClicks(recordData[index]);
             storeRecording(recordData);
             setRecordData([...recordData]);
           }
@@ -143,7 +142,6 @@ export const RecordedData = (props: MProps) => {
       _objData.meta[key] = !_objData.meta[key];
       recordData[index].objectdata = TSON.stringify(_objData);
       storeRecording(recordData);
-      await updateRecordClicks(recordData[index]);
     }
   };
 
@@ -230,6 +228,10 @@ export const RecordedData = (props: MProps) => {
     //if additional params available send them part of payload
     if (!_.isEmpty(tmpPermissionsObj)) _payload.additionalParams = tmpPermissionsObj;
 
+    /**
+     * code for saving all the clicks from local storage to server. Looping all the clicked elements and sending to
+     * server and
+     */
     let totalClicks = recordData.length + 1;
     let savedClicks = 0;
 
@@ -256,7 +258,6 @@ export const RecordedData = (props: MProps) => {
 
     storeRecording(recordData);
 
-    // return true;
     if(savingError){
       setDisableForm(false);
       return ;
@@ -397,7 +398,6 @@ export const RecordedData = (props: MProps) => {
       _objData.meta[key] = tooltip
       recordData[index].objectdata = TSON.stringify(_objData);
       storeRecording(recordData);
-      await updateRecordClicks(recordData[index]);
       setToolTip('');
     }
     setDisableTooltipSubmitBtn( false);

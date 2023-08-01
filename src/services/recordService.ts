@@ -38,8 +38,8 @@ export const updateRecordClicks = async (request?: any) => {
     method: "POST",
     body: request,
   };
-  return true;
-  // return REST.apiCal(parameters);
+
+  return REST.apiCal(parameters);
 };
 
 /**
@@ -105,13 +105,13 @@ export const profanityCheck = async (request?: any) => {
 };
 
 /**
- * To post click data to REST
+ * To save click data to REST
  * @param node HTMLElement
  * @param text
  * @param meta
  * @returns promise
  */
-export const postClickData = async (node: HTMLElement, text: string, meta: any) => {
+export const saveClickData = async (node: HTMLElement, text: string, meta: any) => {
   let objectData: any = domJSON.toJSON(node, {serialProperties: true});
   if (objectData.meta) {
     objectData.meta = meta;
@@ -147,7 +147,7 @@ export const postClickData = async (node: HTMLElement, text: string, meta: any) 
 
   UDAConsoleLogger.info(objectData, 3);
 
-  const payload = {
+  return {
     domain: window.location.host,
     urlpath: window.location.pathname,
     clickednodename: text,
@@ -155,9 +155,6 @@ export const postClickData = async (node: HTMLElement, text: string, meta: any) 
     clickedpath: "",
     objectdata: TSON.stringify(objectData),
   };
-
-  return payload;
-  // return await recordClicks(payload);
 };
 
 /**
