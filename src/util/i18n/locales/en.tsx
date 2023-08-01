@@ -19,4 +19,5 @@ export const TRANSLATIONS_EN = {
   exit: "Exit",
   clearSearch: "Clear",
   highLightText: "Navigating here",
+  savingError: "Unable to save please try submitting again."
 };

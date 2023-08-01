@@ -16,7 +16,7 @@ import SelectedElement from "./SelectedElement";
 import TSON from "typescript-json";
 import {translate} from "../util/translation";
 import {isInputNode} from "../util/checkNode";
-import {Progress, Space} from "antd";
+import {Alert, Progress, Space} from "antd";
 import {UDAErrorLogger} from "../config/error-log";
 
 export interface MProps {
@@ -234,6 +234,7 @@ export const RecordedData = (props: MProps) => {
      */
     let totalClicks = recordData.length + 1;
     let savedClicks = 0;
+    let failed = false;
 
     for (const [index, clickData] of Object.entries(recordData)) {
         if(clickData.hasOwnProperty('id')){
@@ -253,12 +254,13 @@ export const RecordedData = (props: MProps) => {
         } else {
           UDAErrorLogger.error('Failed to record the data.' + clickData);
           setSavingError(true);
+          failed = true;
         }
     }
 
     storeRecording(recordData);
 
-    if(savingError){
+    if(failed){
       setDisableForm(false);
       return ;
     }
@@ -561,6 +563,7 @@ export const RecordedData = (props: MProps) => {
     {!disableForm &&
       <>
           <div className="uda-card-details">
+            {savingError && <Alert message={translate('savingError')} type="error" />}
             <h5>Recorded Sequence</h5>
             <hr style={{border: "1px solid #969696", width: "100%"}}/>
             <ul className="uda-recording" id="uda-recorded-results">
