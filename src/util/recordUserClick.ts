@@ -134,7 +134,7 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
       setToStore([resp], CONFIG.RECORDING_SEQUENCE, false);
     }
   } else {
-    UDAErrorLogger.error("Unable save record click " + node.outerHTML);
+    // UDAErrorLogger.error("Unable save record click " + node.outerHTML);
   }
 
   return;

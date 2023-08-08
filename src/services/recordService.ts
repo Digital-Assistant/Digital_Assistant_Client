@@ -8,6 +8,10 @@ import {getAbsoluteOffsets, getFromStore, inArray} from "../util";
 import domJSON from "domjson";
 import mapClickedElementToHtmlFormElement from "../util/recording-utils/mapClickedElementToHtmlFormElement";
 import {UDAConsoleLogger} from "../config/error-log";
+import {parse, stringify, toJSON, fromJSON} from 'flatted';
+import {removeCircularReference} from "../util/removeCircularReference";
+import CircularJSON from "circular-to-json";
+import {serialize, deserialize} from '@ungap/structured-clone';
 
 /**
  * To record each action/event
@@ -111,7 +115,7 @@ export const profanityCheck = async (request?: any) => {
  * @param meta
  * @returns promise
  */
-export const saveClickData = async (node: HTMLElement, text: string, meta: any) => {
+export const saveClickData = async (node: any, text: string, meta: any) => {
   let objectData: any = domJSON.toJSON(node, {serialProperties: true});
   if (objectData.meta) {
     objectData.meta = meta;
@@ -147,13 +151,26 @@ export const saveClickData = async (node: HTMLElement, text: string, meta: any) 
 
   UDAConsoleLogger.info(objectData, 3);
 
+  // Removing circular reference before converting to string
+
+  console.log(node);
+  console.log({...objectData});
+  // objectData.node = CircularJSON.stringifyAndParse(objectData.node);
+  // const flattedToJson = toJSON(node);
+  // console.log(flattedToJson);
+  // const serialized = serialize(objectData);
+  // console.log(serialized);
+  window.dispatchEvent(new MouseEvent('foo', {relatedTarget: node}));
+  return false;
+  const jsonString = TSON.stringify(objectData);
+  console.log(jsonString);
   return {
     domain: window.location.host,
     urlpath: window.location.pathname,
     clickednodename: text,
     html5: 0,
     clickedpath: "",
-    objectdata: TSON.stringify(objectData),
+    objectdata: jsonString,
   };
 };
 
