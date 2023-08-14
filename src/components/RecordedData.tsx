@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect, useState} from "react";
-import {DeleteOutlined, InfoCircleOutlined,} from "@ant-design/icons";
+import {DeleteOutlined, InfoCircleOutlined, PauseCircleFilled} from "@ant-design/icons";
 import _ from "lodash";
 import {getObjData, setToStore} from "../util";
 import {postRecordSequenceData, profanityCheck, recordClicks} from "../services/recordService";
@@ -16,8 +16,9 @@ import SelectedElement from "./SelectedElement";
 import TSON from "typescript-json";
 import {translate} from "../util/translation";
 import {isInputNode} from "../util/checkNode";
-import {Alert, Progress, Space} from "antd";
+import {Alert, notification, Progress, Space} from "antd";
 import {UDAErrorLogger} from "../config/error-log";
+import {addNotification} from "../util/addNotification";
 
 export interface MProps {
     sequenceName?: string;
@@ -328,10 +329,14 @@ export const RecordedData = (props: MProps) => {
         setSavedClickedDataPercent((prevState) => {
             return Math.ceil(((savedClicks + 1) / totalClicks) * 100);
         });
+
         if (instance && props?.refetchSearch) {
+            addNotification(translate('savedSequence'), translate('savedSequenceDescription'), 'success');
             setTimeout(() => {
                 props.refetchSearch("on");
             }, CONFIG.indexInterval);
+        } else {
+            addNotification(translate('savedSequenceError'), translate('savedSequenceErrorDescription'), 'error');
         }
 
         if (props.recordHandler) props.recordHandler("cancel");
@@ -684,7 +689,10 @@ export const RecordedData = (props: MProps) => {
             <>
                 <div className="uda-card-details">
                     {savingError && <Alert message={translate('savingError')} type="error"/>}
-                    <h5>Recorded Sequence</h5>
+                    <h5>
+                        <Space><span className="pulse"><InfoCircleOutlined /></span></Space>
+                        {translate('recordSequenceHeading')}
+                    </h5>
                     <hr style={{border: "1px solid #969696", width: "100%"}}/>
                     <ul className="uda-recording" id="uda-recorded-results">
                         {renderData()}
@@ -754,7 +762,7 @@ export const RecordedData = (props: MProps) => {
 
                         <div className=" add_lebel_btn_wrap">
                             <button className="add-btn uda_exclude" onClick={() => addLabel()}>
-                                + Add Label
+                                + {translate('addLabel')}
                             </button>
                         </div>
 
