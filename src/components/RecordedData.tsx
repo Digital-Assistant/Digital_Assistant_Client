@@ -451,7 +451,6 @@ export const RecordedData = (props: MProps) => {
      * @param value string
      */
     const validateTooltip = async (value: string) => {
-        await setDisableForm(true);
         await setToolTip(value);
         if (!validateInput(value)) {
             await setInputError({...inputError, tooltip: true});
