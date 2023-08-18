@@ -20,8 +20,8 @@ export const specialNodes = {
   },
   // ignore clicks on special nodes
   "ignoreClicksOnNodes": {
-    "tags": ['ngx-daterangepicker-material', 'i'],
-    "classes": ['drdn-content', 'datepicker-modal', 'parallel', 'tabs', 'dropdown-content', 'select2-container--open'],
+    "tags": ['ngx-daterangepicker-material'],
+    "classes": ['drdn-content', 'datepicker-modal', 'parallel', 'tabs', 'dropdown-content', 'select2-container--open', 'modal-overlay'],
     "attributes": ['uib-datepicker-popup-wrap'],
     "ids": ['content']
   },

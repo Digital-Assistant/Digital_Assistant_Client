@@ -8,6 +8,7 @@ import {invokeNextNode} from "./invokeNextNode";
 import {getSelectedRecordFromStore} from "./invokeNode";
 import {checkNodeValues} from "./checkNodeValues";
 import {translate} from "./translation";
+import {simulateMouseLeave} from "./simulateMouseLeave";
 declare const UDAGlobalConfig;
 
 export const matchAction = (node, selectedNode) => {
@@ -22,6 +23,7 @@ export const matchAction = (node, selectedNode) => {
   removeToolTip();
 
   simulateHover(node);
+  simulateMouseLeave(node);
 
   const navigationData = getSelectedRecordFromStore();
 

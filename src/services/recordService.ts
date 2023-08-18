@@ -38,6 +38,7 @@ export const updateRecordClicks = async (request?: any) => {
     method: "POST",
     body: request,
   };
+
   return REST.apiCal(parameters);
 };
 
@@ -85,30 +86,6 @@ export const deleteRecording = async (request?: any) => {
 };
 
 /**
- * To vote/de-vote the recording
- * @param request
- * @param type
- * @returns promise
- */
-
-export const vote = async (request?: any, type?: string) => {
-  let usersessionid = await getUserId();
-  const payload = {
-    usersessionid: usersessionid,
-    sequenceid: request.id,
-    upvote: type == "up" ? 1 : 0,
-    downvote: type == "down" ? 1 : 0,
-  };
-
-  const parameters = {
-    url: ENDPOINT.VoteRecord,
-    method: "POST",
-    body: payload,
-  };
-  return REST.apiCal(parameters);
-};
-
-/**
  * To check profanity validation/filters for sequence name/labels
  * @param request
  * @returns promise
@@ -128,13 +105,13 @@ export const profanityCheck = async (request?: any) => {
 };
 
 /**
- * To post click data to REST
+ * To save click data to REST
  * @param node HTMLElement
  * @param text
  * @param meta
  * @returns promise
  */
-export const postClickData = async (node: HTMLElement, text: string, meta: any) => {
+export const saveClickData = async (node: HTMLElement, text: string, meta: any) => {
   let objectData: any = domJSON.toJSON(node, {serialProperties: true});
   if (objectData.meta) {
     objectData.meta = meta;
@@ -170,7 +147,7 @@ export const postClickData = async (node: HTMLElement, text: string, meta: any) 
 
   UDAConsoleLogger.info(objectData, 3);
 
-  const payload = {
+  return {
     domain: window.location.host,
     urlpath: window.location.pathname,
     clickednodename: text,
@@ -178,8 +155,6 @@ export const postClickData = async (node: HTMLElement, text: string, meta: any) 
     clickedpath: "",
     objectdata: TSON.stringify(objectData),
   };
-
-  return await recordClicks(payload);
 };
 
 /**
@@ -199,7 +174,7 @@ export const postRecordSequenceData = async (request: any) => {
     userclicknodelist: ids.join(","),
     userclicknodesSet,
   };
-  return recordSequence(payload);
+  return await recordSequence(payload);
 };
 
 /**

@@ -71,7 +71,7 @@ We solicit and welcome comments, help, documentation in improving the client.
                      {
                          enableEditClickedName: true, // Flag for editing the clicked element
                          enableSkipDuringPlay: true, // Flag for enabling skip functionality
-                         enableTooltip: true, // Flag for adding custom tooltip information
+                         enableTooltipAddition: true, // Flag for adding custom tooltip information
                          enableNodeTypeSelection: true, // Flag for enabling node type selection
                          enableProfanity: true, // Flag for enabling profanity check
                          enableRecording: true, // Flag for enabling recording functionality
