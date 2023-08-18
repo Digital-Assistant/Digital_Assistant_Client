@@ -104,7 +104,7 @@ export const processArgs1 = (url: string, val: any) => {
 
 export {putUserClickData} from "./recordService";
 export {postRecordSequenceData} from "./recordService";
-export {postClickData} from "./recordService";
+export {saveClickData} from "./recordService";
 
 export const REST = {
   apiCal,
