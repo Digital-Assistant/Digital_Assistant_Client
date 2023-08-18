@@ -41,6 +41,7 @@ module.exports = (env, argv) => {
         (env.build && (env.build === "production" || env.build === "development")) ? "dist" : "build";
 
     const webpackConfig = {
+        cache: { type: 'filesystem' },
         entry: {
             // string | object | array
             // defaults to ./src

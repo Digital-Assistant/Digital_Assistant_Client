@@ -174,7 +174,7 @@ export const postRecordSequenceData = async (request: any) => {
     userclicknodelist: ids.join(","),
     userclicknodesSet,
   };
-  return recordSequence(payload);
+  return await recordSequence(payload);
 };
 
 /**
