@@ -113,7 +113,7 @@ function App(props) {
         ) {
             keycloak
                 .init({})
-                .then((auth) => {
+                .then(async (auth) => {
                     setAuthenticated(auth);
                     if (keycloak.authenticated) {
                         let userData: any = {
@@ -131,7 +131,7 @@ function App(props) {
                             bubbles: false,
                             cancelable: false,
                         });
-                        togglePanel();
+                        await togglePanel();
                     }
                 })
                 .catch((e) => {
@@ -144,7 +144,7 @@ function App(props) {
                     refreshToken: keycloakSessionData.refreshToken,
                     idToken: keycloakSessionData.idToken,
                 })
-                .then((auth) => {
+                .then(async (auth) => {
                     setAuthenticated(auth);
                     if (!userSessionData) {
                         let userData: any = {
@@ -160,7 +160,7 @@ function App(props) {
                             bubbles: false,
                             cancelable: false,
                         });
-                        togglePanel();
+                        await togglePanel();
                     }
                 })
                 .catch((error) => {
@@ -176,18 +176,20 @@ function App(props) {
      * User authentication implementation
      *
      */
-    const openUDAPanel = () => {
+    const openUDAPanel = async () => {
         if (!_.isEmpty(selectedRecordingDetails)) {
             if (isPlaying == "on") {
                 setTimeout(() => {
                     setPlayDelay("on");
                 }, 2000);
             }
-            togglePanel();
+            // togglePanel();
+            await openPanel();
             offSearch();
             setRecordSequenceDetailsVisibility(true);
         } else if (isRecording) {
-            togglePanel();
+            // togglePanel();
+            await openPanel();
             offSearch();
         } else {
             setShowSearch(true);
@@ -236,11 +238,11 @@ function App(props) {
             if(recordDetails && recordDetails !== null){
                 setToStore(recordDetails, CONFIG.SELECTED_RECORDING, false);
                 await showRecordingDetails(recordDetails);
-                togglePanel();
+                await togglePanel();
                 offSearch();
                 setRecordSequenceDetailsVisibility(true);
             } else {
-                togglePanel();
+                await togglePanel();
                 offSearch();
                 setRecordSequenceDetailsVisibility(true);
                 cancel();
@@ -249,7 +251,7 @@ function App(props) {
             await getSearchResults(1, true);
         }
         if (hide) {
-            squeezeBody(true);
+            await squeezeBody(true);
         }
     };
 
@@ -323,9 +325,19 @@ function App(props) {
     /**
      * Toggle right side panel visibility
      */
-    const togglePanel = () => {
+    const togglePanel = async () => {
         setHide(!hide);
-        squeezeBody(!hide);
+        await squeezeBody(!hide);
+    };
+
+    const openPanel = async () => {
+        setHide(false);
+        await squeezeBody(true);
+    };
+
+    const closePanel = async () => {
+        setHide(true);
+        await squeezeBody(false);
     };
 
     const offSearch = () => {
@@ -435,13 +447,15 @@ function App(props) {
      * @param hideFlag
      * @param type
      */
-    const toggleHandler = (hideFlag: boolean, type: string) => {
+    const toggleHandler = async (hideFlag: boolean, type: string) => {
         if (type == "footer") {
             setReFetchSearch("off");
             setShowSearch(false);
             setToStore([], CONFIG.RECORDING_SEQUENCE, false);
             setShowRecord(hideFlag);
-        } else togglePanel();
+        } else {
+            await togglePanel();
+        }
     };
 
     /**

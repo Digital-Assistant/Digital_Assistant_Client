@@ -6,6 +6,7 @@ services:
     volumes:
       - ./localhost.conf:/etc/nginx/conf.d/localhost.conf
       - ../build/:/usr/share/nginx/html/dist/
+      - ../certs/:/etc/nginx/certs/
     ports:
       - "80:80"
       - "443:443"
