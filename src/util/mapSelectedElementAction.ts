@@ -15,11 +15,11 @@ export const mapSelectedElementAction = (node, recordedNode, navigationCookieDat
     case 'email':
     case 'number':
     case 'password':
-      addToolTip(node, node.parentNode, recordedNode, navigationCookieData, false, true, true);
+      addToolTip(node, node, recordedNode, navigationCookieData, false, true, true);
       performedAction = true;
       break;
     case 'singleChoice':
-      addToolTip(node, node.parentNode, recordedNode, navigationCookieData, false, false, true);
+      addToolTip(node, node, recordedNode, navigationCookieData, false, false, true);
       performedAction = true;
       break;
     case 'multipleChoice':

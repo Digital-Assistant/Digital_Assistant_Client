@@ -5,6 +5,9 @@ import {clickableElementExists, getFromStore, setToStore} from "./index";
 import {saveClickData} from "../services";
 import {checkNodeValues} from "./checkNodeValues";
 import mapClickedElementToHtmlFormElement from "./recording-utils/mapClickedElementToHtmlFormElement";
+import {notification} from "antd";
+import {addNotification} from "./addNotification";
+import {translate} from "./translation";
 declare const UDAGlobalConfig;
 
 global.udanSelectedNodes = [];
@@ -133,8 +136,10 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
     } else {
       setToStore([resp], CONFIG.RECORDING_SEQUENCE, false);
     }
+    addNotification(translate('clickAdded'), translate('clickAddedDescription'), 'success');
   } else {
-    // UDAErrorLogger.error("Unable save record click " + node.outerHTML);
+    addNotification(translate('clickAddError'), translate('clickAddErrorDescription'), 'error');
+    UDAErrorLogger.error("Unable save record click " + node.outerHTML);
   }
 
   return;
