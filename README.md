@@ -43,56 +43,67 @@ UDA-client currently works only with the chrome browser but we will be extending
 
 We solicit and welcome comments, help, documentation in improving the client.
 
-# Steps for installation
-
-### Chrome Plugin
-
-```
-1. Download the git repo into local folder or install it from chrome store(coming soon..)
-2. Under chrome -> Extensions (enable developer mode) 
-3. Click on Load unpacked and select the chrome-plugin folder
-4. Ensure that profile sync is on in order to access the user information.
-```
-
 ### Integrate as sdk into applications
 
 1. Add the below Script in head as first script tag
     ```
-    <script src="https://digital-assistant.github.io/Digital_Assistant_Client/chrome-plugin/js/links.js"></script>
+    <script src="https://udan-sdk.nistapp.ai/dist/assets/UDAHeaders.js"></script>
     ```
 2. Add the below script to the bottom of the page to load the SDK
     ```
     <script type="text/javascript">
-        (function(){
-            var uda = document.createElement('script'); uda.type = 'text/javascript'; uda.src = 'https://digital-assistant.github.io/Digital_Assistant_Client/lib/include.js';
-            document.body.appendChild(uda);
-            // unique reference for identifying the user these can be declared post login also.
-            udaauthdata.id='123456789';
-            // user emailid or name can be passed.
-            udaauthdata.email='dummy@dummy.com';
-        })();
+        (function ()
+         {
+             var uda = document.createElement('script');
+             uda.type = 'text/javascript';
+             uda.src = 'https://udan-sdk.nistapp.ai/dist/assets/UDALoad.js';
+             uda.onload = () =>
+             {
+                 if (typeof UDAAuthDataConfig !== 'undefined')
+                 {
+                     UDAAuthDataConfig(
+                     {
+                         id: '123456789', // Pass the unique reference id of the user
+                         email: 'dummy@dummy.com' // optional pass the email address of the user
+                     });
+                     // Additional parameters that can be passed.
+                     UDAPluginSDK(
+                     {
+                         enableEditClickedName: true, // Flag for editing the clicked element
+                         enableSkipDuringPlay: true, // Flag for enabling skip functionality
+                         enableTooltipAddition: true, // Flag for adding custom tooltip information
+                         enableNodeTypeSelection: true, // Flag for enabling node type selection
+                         enableProfanity: true, // Flag for enabling profanity check
+                         enableRecording: true, // Flag for enabling recording functionality
+                         enableOverlay: true // Flag for enabling overlay functionality or enabling squeeze functionality
+                     });
+                 }
+             }
+             document.body.appendChild(uda);
+         })();
     </script>
     ```
-3. For disabling the recording sequence functionality for unwanted users you can just make the below attribute true post
-   loading of the scripts
-    ```
-    udaauthdata.restrict_add_delete=true;
-    ```
-4. For adding custom colors you can create your own theme from below base theme url and you can put the css file in your
-   server and can pass it to the plugin as given below
 
-   ### Base Theme URL
-    ```
-    https://digital-assistant.github.io/Digital_Assistant_Client/chrome-plugin/themes/base.css 
-    ```
+## Installation instructions for developers
 
-   ### Variable
-   ```
-   UDACustomCss.url = "path/to/your/css/file";
-   ```
-   
-   Example:
-    ```
-    UDACustomCss.url = "https://digital-assistant.github.io/Digital_Assistant_Client/chrome-plugin/themes/base.css";
-    ```
+## Install dependencies
 
+```bash
+  npm install
+```
+
+## Build
+
+To build chrome extension (to build folder)
+
+```bash
+  npm run build
+```
+
+
+## Installing to Chrome as Plugin
+
+```
+1. Under chrome -> Extensions (enable developer mode) 
+2. Click on Load unpacked and select the build folder
+3. Now open new tab and enter the url that you want to use for
