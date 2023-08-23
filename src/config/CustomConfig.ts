@@ -15,7 +15,9 @@ export interface CustomConfigPropTypes {
   enableNodeTypeSelection: boolean
   enableRecording: boolean,
   enableOverlay: boolean,
-  environment: string
+  environment: string,
+  enableUdaIcon: boolean,
+  udaDivId: string
 }
 
 // assigning default values to the default configuration
@@ -30,5 +32,7 @@ export const CustomConfig: CustomConfigPropTypes = {
   enableProfanity: true, // Flag for enabling profanity check
   enableRecording: true, // Flag for enabling recording functionality
   enableOverlay: true, // Flag for enabling overlay functionality or enabling squeeze functionality
-  environment: 'PROD'
+  environment: 'PROD',
+  enableUdaIcon: true,
+  udaDivId: 'uda-nistapp-logo'
 };

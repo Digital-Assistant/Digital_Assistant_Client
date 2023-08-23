@@ -5,6 +5,8 @@ export interface MProps {
   i18?: any;
   config?: any;
   isRecording?: any;
+  udaDivId?: string;
+  enableUdaIcon?: boolean;
 }
 
 export interface HeaderProps extends MProps {
