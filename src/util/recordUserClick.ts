@@ -8,19 +8,30 @@ import mapClickedElementToHtmlFormElement from "./recording-utils/mapClickedElem
 import {notification} from "antd";
 import {addNotification} from "./addNotification";
 import {translate} from "./translation";
+import {trigger} from "./events";
 declare const UDAGlobalConfig;
 
 global.udanSelectedNodes = [];
 global.clickedNode = null;
+
 /**
  *
  * @param node
  * @param fromDocument
  * @param selectChange
  * @param event
+ */
+export const recordUserClick = async (node: HTMLElement, event: any) => {
+  document.dispatchEvent(new MouseEvent('UDANodeData', {relatedTarget: node}));
+}
+
+/**
+ *
+ * @param node
+ * @param event
  * @returns
  */
-export const recordUserClick = async (node: HTMLElement, fromDocument: boolean = false, selectChange: boolean = false, event: any) => {
+export const saveUserClick = async (node: HTMLElement, event: any) => {
 
   if (!node) return false;
 

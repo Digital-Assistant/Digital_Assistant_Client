@@ -107,24 +107,23 @@ async function getTab() {
 
 // listen for the requests made from webpage for accessing userdata
 chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
-	console.log(request);
 	if (request.action === "getusersessiondata") {
-		chrome.storage.local.get([cookieName], async function (storedsessiondata) {
+		chrome.storage.local.get([cookieName], async function (storedSessionData) {
 			if (chrome.runtime.lastError) {
 				console.log('failed to read stored session data');
 			} else {
 				// looks like chrome storage might have changed so changing the reading the data has been changed. For to work with old version have added the new code to else if statement
-				if (storedsessiondata.hasOwnProperty("sessionkey") && storedsessiondata["sessionKey"] && typeof storedsessiondata["sessionKey"] != 'object') {
-					sessionData = storedsessiondata;
-					if(storedsessiondata.hasOwnProperty('authenticated') && storedsessiondata.authenticated) {
+				if (storedSessionData.hasOwnProperty("sessionkey") && storedSessionData["sessionKey"] && typeof storedSessionData["sessionKey"] != 'object') {
+					sessionData = storedSessionData;
+					if(storedSessionData.hasOwnProperty('authenticated') && storedSessionData.authenticated) {
 						await sendSessionData();
 					} else {
 						await loginWithChrome();
 					}
-				} else if (storedsessiondata.hasOwnProperty(cookieName) && storedsessiondata[cookieName].hasOwnProperty("sessionkey") && storedsessiondata[cookieName]["sessionKey"] && typeof storedsessiondata[cookieName]["sessionKey"] != 'object') {
-					sessionData = storedsessiondata[cookieName];
+				} else if (storedSessionData.hasOwnProperty(cookieName) && storedSessionData[cookieName].hasOwnProperty("sessionkey") && storedSessionData[cookieName]["sessionKey"] && typeof storedSessionData[cookieName]["sessionKey"] != 'object') {
+					sessionData = storedSessionData[cookieName];
 					// await sendSessionData();
-					if(storedsessiondata.hasOwnProperty('authenticated') && storedsessiondata.authenticated) {
+					if(storedSessionData.hasOwnProperty('authenticated') && storedSessionData.authenticated) {
 						await sendSessionData();
 					} else {
 						await loginWithChrome();

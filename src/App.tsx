@@ -22,7 +22,7 @@ import { off, on, trigger } from "./util/events";
 import { UserDataContext } from "./providers/UserDataContext";
 import { AppConfig } from "./config/AppConfig";
 import { CustomConfig } from "./config/CustomConfig";
-import { postRecordSequenceData } from "./services";
+import {postRecordSequenceData, saveClickData} from "./services";
 import { addBodyEvents } from "./util/addBodyEvents";
 import { initSpecialNodes } from "./util/initSpecialNodes";
 import {delay} from "./util/delay";
@@ -260,6 +260,11 @@ function App(props) {
         on("UDAAuthenticatedUserSessionData", createSession);
         on("UDAAlertMessageData", authenticationError);
         on("UDAClearSessionData", clearSession);
+        on("UDANodeData", async (data: any)=>{
+            console.log(data);
+           let response = await saveClickData(data.detail.relatedTarget, data.detail._text, data.detail.meta);
+           console.log(response);
+        });
 
         let userSessionData = getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
         if (!userSessionData) {

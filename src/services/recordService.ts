@@ -12,6 +12,7 @@ import {parse, stringify, toJSON, fromJSON} from 'flatted';
 import {removeCircularReference} from "../util/removeCircularReference";
 import CircularJSON from "circular-to-json";
 import {serialize, deserialize} from '@ungap/structured-clone';
+import {trigger} from "../util/events";
 
 /**
  * To record each action/event
@@ -153,15 +154,21 @@ export const saveClickData = async (node: any, text: string, meta: any) => {
 
   // Removing circular reference before converting to string
 
-  console.log(node);
-  console.log({...objectData});
+  // console.log(node);
+  // console.log({...objectData});
   // objectData.node = CircularJSON.stringifyAndParse(objectData.node);
   // const flattedToJson = toJSON(node);
   // console.log(flattedToJson);
   // const serialized = serialize(objectData);
   // console.log(serialized);
-  window.dispatchEvent(new MouseEvent('foo', {relatedTarget: node}));
-  return false;
+  // window.dispatchEvent(new MouseEvent('UDANodeData', {relatedTarget: node}));
+  /*document.addEventListener("UDANodeData", function(data: any) {
+    console.log('nodedata listener');
+    // console.log({node: data.relatedTarget});
+    console.log(data);
+  });*/
+  // trigger('UDANodeData', {relatedTarget: node});
+  // return false;
   const jsonString = TSON.stringify(objectData);
   console.log(jsonString);
   return {
