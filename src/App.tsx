@@ -4,7 +4,6 @@
  * Objective: To render content script
  */
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import {useSearchParams} from 'react-router-dom';
 import "./css/UDAN.scss";
 import { Button, Spin } from "antd";
 import {fetchRecord, fetchSearchResults} from "./services/searchService";
@@ -22,10 +21,9 @@ import { off, on, trigger } from "./util/events";
 import { UserDataContext } from "./providers/UserDataContext";
 import { AppConfig } from "./config/AppConfig";
 import { CustomConfig } from "./config/CustomConfig";
-import {postRecordSequenceData, saveClickData} from "./services";
+import {postRecordSequenceData} from "./services";
 import { addBodyEvents } from "./util/addBodyEvents";
 import { initSpecialNodes } from "./util/initSpecialNodes";
-import {delay} from "./util/delay";
 
 // adding global variable declaration for exposing react custom configuration
 global.UDAPluginSDK = AppConfig;
@@ -260,11 +258,6 @@ function App(props) {
         on("UDAAuthenticatedUserSessionData", createSession);
         on("UDAAlertMessageData", authenticationError);
         on("UDAClearSessionData", clearSession);
-        on("UDANodeData", async (data: any)=>{
-            console.log(data);
-           let response = await saveClickData(data.detail.relatedTarget, data.detail._text, data.detail.meta);
-           console.log(response);
-        });
 
         let userSessionData = getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
         if (!userSessionData) {
