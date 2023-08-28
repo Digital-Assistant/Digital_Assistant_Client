@@ -689,7 +689,7 @@ function App(props) {
                 </div>
             </div>
 
-            <Toggler toggleFlag={hide} toggleHandler={togglePanel} />
+            <Toggler toggleFlag={hide} toggleHandler={togglePanel} udaDivId={global.UDAGlobalConfig.udaDivId} enableUdaIcon={global.UDAGlobalConfig.enableUdaIcon} />
         </UserDataContext.Provider>
     );
 }
