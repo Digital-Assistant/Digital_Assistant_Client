@@ -155,8 +155,9 @@ export const saveClickData = async (node: any, text: string, meta: any) => {
   // Removing circular reference before converting to string
 
   // console.log(node);
-  // console.log({...objectData});
+  console.log({...objectData});
   // objectData.node = CircularJSON.stringifyAndParse(objectData.node);
+  // console.log(objectData);
   // const flattedToJson = toJSON(node);
   // console.log(flattedToJson);
   // const serialized = serialize(objectData);

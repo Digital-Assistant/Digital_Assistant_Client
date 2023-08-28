@@ -18,7 +18,7 @@
       ],
       "run_at": "document_end",
       "js": [
-        "InjectSDK.js"
+        "assets/UDAPluginSDK.js"
       ],
       "css": [
 

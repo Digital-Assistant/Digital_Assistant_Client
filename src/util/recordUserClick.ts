@@ -22,16 +22,6 @@ global.clickedNode = null;
  * @param event
  */
 export const recordUserClick = async (node: HTMLElement, event: any) => {
-  document.dispatchEvent(new MouseEvent('UDANodeData', {relatedTarget: node}));
-}
-
-/**
- *
- * @param node
- * @param event
- * @returns
- */
-export const saveUserClick = async (node: HTMLElement, event: any) => {
 
   if (!node) return false;
 
@@ -58,15 +48,11 @@ export const saveUserClick = async (node: HTMLElement, event: any) => {
   // node = event.target;
   let recordingNode = node;
 
-  let addIsPersonal = false;
-
   //add the record click for parent element and ignore the children
   const closestParent: any = node.closest('[udaIgnoreChildren]');
   if (closestParent) {
     recordingNode = closestParent;
-    addIsPersonal =  true;
   }
-
 
   if (recordingNode.isSameNode(window.clickedNode)) {
     return;
@@ -86,6 +72,33 @@ export const saveUserClick = async (node: HTMLElement, event: any) => {
   }
 
   global.clickedNode = recordingNode;
+
+  CONFIG.lastClickedTime=Date.now();
+
+  document.dispatchEvent(new MouseEvent('UDANodeData', {relatedTarget: recordingNode}));
+}
+
+/**
+ *
+ * @param node
+ * @param event
+ * @returns
+ */
+export const saveUserClick = async (jsonData: any, node: HTMLElement, event: any) => {
+
+  console.log({node});
+  return;
+
+  let recordingNode = node;
+
+  let addIsPersonal = false;
+
+  //add the record click for parent element and ignore the children
+  const closestParent: any = node.closest('[udaIgnoreChildren]');
+  if (closestParent) {
+    recordingNode = closestParent;
+    addIsPersonal =  true;
+  }
 
   let meta: any = {};
 
@@ -138,8 +151,6 @@ export const saveUserClick = async (node: HTMLElement, event: any) => {
     if(!recordingNode.isSameNode(node))
       global.udanSelectedNodes.push(node);
 
-    CONFIG.lastClickedTime=Date.now();
-
     const activeRecordingData: any = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
     if (activeRecordingData) {
       activeRecordingData.push(resp);
@@ -150,7 +161,7 @@ export const saveUserClick = async (node: HTMLElement, event: any) => {
     addNotification(translate('clickAdded'), translate('clickAddedDescription'), 'success');
   } else {
     addNotification(translate('clickAddError'), translate('clickAddErrorDescription'), 'error');
-    UDAErrorLogger.error("Unable save record click " + node.outerHTML);
+    // UDAErrorLogger.error("Unable save record click " + node.outerHTML);
   }
 
   return;

@@ -3,6 +3,7 @@ import {CONFIG} from "../config";
 import {getFromStore} from "./index";
 import {on} from "./events";
 import {saveClickData} from "../services";
+import {saveUserClick} from "./recordUserClick";
 
 export let timer: any = null;
 
@@ -21,8 +22,8 @@ const observer = new MutationObserver(async () => {
 });
 observer.observe(document.body, {attributes: true, childList: true, subtree: true});
 
-on("UDANodeData", async (data: any)=>{
+on("UDASaveNodeData", async (data: any)=>{
   console.log(data);
-  let response = await saveClickData(data.detail.relatedTarget, data.detail._text, data.detail.meta);
-  console.log(response);
+  console.log({node: data.detail.data.jsonData});
+  await saveUserClick(data.detail.data.jsonData, data.detail.data.originalNode, data);
 });
