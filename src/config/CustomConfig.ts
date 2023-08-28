@@ -17,7 +17,8 @@ export interface CustomConfigPropTypes {
   enableOverlay: boolean,
   environment: string,
   enableUdaIcon: boolean,
-  udaDivId: string
+  udaDivId: string,
+  enableForAllDomains: boolean,
 }
 
 // assigning default values to the default configuration
@@ -34,5 +35,6 @@ export const CustomConfig: CustomConfigPropTypes = {
   enableOverlay: true, // Flag for enabling overlay functionality or enabling squeeze functionality
   environment: 'PROD',
   enableUdaIcon: true,
-  udaDivId: 'uda-nistapp-logo'
+  udaDivId: 'uda-nistapp-logo',
+  enableForAllDomains: false
 };
