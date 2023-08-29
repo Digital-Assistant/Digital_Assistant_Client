@@ -36,5 +36,5 @@ export const CustomConfig: CustomConfigPropTypes = {
   environment: 'PROD',
   enableUdaIcon: true,
   udaDivId: 'uda-nistapp-logo',
-  enableForAllDomains: false
+  enableForAllDomains: false // Flag to enable all the recording to be visible across all domains
 };
