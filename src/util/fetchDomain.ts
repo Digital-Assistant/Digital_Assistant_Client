@@ -1,6 +1,7 @@
 import { parseDomain, ParseResultType } from "parse-domain";
 export const fetchDomain = () => {
     let finalDomain = window.location.host;
+    // fetching top level domain based on the flag provided.
     if(global.UDAGlobalConfig.enableForAllDomains){
         const parseResult = parseDomain(finalDomain);
         switch (parseResult.type) {

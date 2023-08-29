@@ -159,8 +159,8 @@ export const saveClickData = async (node: HTMLElement, text: string, meta: any) 
   }
 
   UDAConsoleLogger.info(objectData, 3);
-  let domain = fetchDomain();
-
+  // let domain = fetchDomain();
+  let domain = window.location.host;
   return {
     domain: domain,
     urlpath: window.location.pathname,
@@ -180,9 +180,10 @@ export const postRecordSequenceData = async (request: any) => {
   window.udanSelectedNodes = [];
   const userclicknodesSet = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
   const ids = userclicknodesSet.map((item: any) => item.id);
+  let domain = fetchDomain();
   const payload = {
     ...request,
-    domain: window.location.host,
+    domain: domain,
     isIgnored: 0,
     isValid: 1,
     userclicknodelist: ids.join(","),
