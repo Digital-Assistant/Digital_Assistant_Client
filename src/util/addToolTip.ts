@@ -16,6 +16,8 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
     let recordedNodeData = JSON.parse(recordedData.objectdata);
     if (recordedNodeData.hasOwnProperty('meta') && recordedNodeData.meta.hasOwnProperty('tooltipInfo') && recordedNodeData.meta.tooltipInfo != '') {
       message = recordedNodeData.meta.tooltipInfo;
+    } else if(recordedNodeData.hasOwnProperty('meta') && recordedNodeData.meta.hasOwnProperty('selectedElement') && recordedNodeData.meta.selectedElement && recordedNodeData.meta.selectedElement==='highlight'){
+      message = translate('highLightTextElement');
     }
   }
 

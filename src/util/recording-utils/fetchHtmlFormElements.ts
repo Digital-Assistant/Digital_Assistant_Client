@@ -107,6 +107,13 @@ const fetchHtmlFormElements = () => {
       displayName: "Unrecognized",
       systemTag: "others",
     },
+    {
+      inputElement: "highlight",
+      inputType: "highlight",
+      displayName: "Highlight",
+      systemTag: "highlight",
+    }
+
   ];
 };
 

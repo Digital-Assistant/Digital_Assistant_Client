@@ -15,7 +15,7 @@ import SelectedElement from "./SelectedElement";
 
 import TSON from "typescript-json";
 import {translate} from "../util/translation";
-import {isInputNode} from "../util/checkNode";
+import {isHighlightNode} from "../util/checkNode";
 import {Alert, notification, Progress, Space} from "antd";
 import {UDAErrorLogger} from "../config/error-log";
 import {addNotification} from "../util/addNotification";
@@ -595,7 +595,7 @@ export const RecordedData = (props: MProps) => {
                         </span>
                                     </div>
                                 </>
-                                {(props.config.enableTooltipAddition === true && isInputNode(objectData.node)) &&
+                                {(props.config.enableTooltipAddition === true && isHighlightNode(objectData)) &&
                                     <>
                                         <div className="uda-recording uda_exclude" style={{textAlign: "center"}}>
                                             {(objectData.meta?.tooltipInfo && !tooltip) &&
