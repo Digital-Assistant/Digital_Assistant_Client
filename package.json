@@ -1,8 +1,10 @@
 {
-  "name": "udan",
+  "name": "Universal Digital Assistant (UDA) Beta",
   "author": "Yureswar Ravuri <yureshwar@gmail.com>",
+  "version": "1.0.4.1",
   "private": true,
   "dependencies": {
+    "@ant-design/compatible": "^5.1.2",
     "@popperjs/core": "^2.11.6",
     "@types/styled-components": "^5.1.26",
     "antd": "^5.8.4",

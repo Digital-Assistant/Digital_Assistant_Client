@@ -4,7 +4,8 @@
  * Objective: To render content script
  */
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import {useSearchParams} from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+// import "antd/dist/reset.css"
 import "./css/UDAN.scss";
 import { Button, Spin } from "antd";
 import {fetchRecord, fetchSearchResults} from "./services/searchService";

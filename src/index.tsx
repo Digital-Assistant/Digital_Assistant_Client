@@ -7,6 +7,10 @@ import {createRoot} from "react-dom/client";
 
 import "./util/i18n";
 import App from "./App";
+import {
+  defaultTheme, 
+  darkTheme, 
+} from "@ant-design/compatible";
 import {ConfigProvider} from "antd";
 
 /**
@@ -48,9 +52,16 @@ reactDiv.setAttribute('id', 'udan-react-app-root');
 shadowRoot.appendChild(reactDiv);
 
 const reactRoot = createRoot(shadowRoot);
-reactRoot.render(<ConfigProvider getPopupContainer = { (node: any) => {
-  if (node) {
-    return node.parentNode;
-  }
-  return shadowRoot;
-}}><App /> </ConfigProvider>);
+reactRoot.render(
+  <ConfigProvider
+    // theme={defaultTheme}
+    getPopupContainer={(node: any) => {
+      if (node) {
+        return node.parentNode;
+      }
+      return shadowRoot;
+    }}
+  >
+    <App />{" "}
+  </ConfigProvider>
+);
