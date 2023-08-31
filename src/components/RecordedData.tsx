@@ -284,7 +284,25 @@ export const RecordedData = (props: MProps) => {
         };
 
         //if additional params available send them part of payload
-        if (!_.isEmpty(tmpPermissionsObj)) _payload.additionalParams = tmpPermissionsObj;
+        if (!_.isEmpty(tmpPermissionsObj)) {
+            _payload.additionalParams = tmpPermissionsObj;
+        }
+
+        // Save the original domain in which the recording has happened if enableForAllDomains flag is true
+        if(global.UDAGlobalConfig.enableForAllDomains){
+            console.log('parsing');
+            if(_payload.hasOwnProperty('additionalParams')) {
+                _payload.additionalParams = {
+                    enableForAllDomains: true,
+                    recordedDomain: window.location.host, ..._payload.additionalParams
+                };
+            } else {
+                _payload.additionalParams = {
+                    enableForAllDomains: true,
+                    recordedDomain: window.location.host
+                };
+            }
+        }
 
         /**
          * code for saving all the clicks from local storage to server. Looping all the clicked elements and sending to
