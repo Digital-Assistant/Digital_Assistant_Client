@@ -41,6 +41,10 @@ export const mapSelectedElementAction = (node, recordedNode, navigationCookieDat
       addToolTip(node, node.parentNode, recordedNode, navigationCookieData, false, false, true);
       performedAction = true;
       break;
+    case "highlight":
+      addToolTip(node, node.parentNode, recordedNode, navigationCookieData, false, false, true);
+      performedAction = true;
+      break;
   }
   return performedAction;
 }
