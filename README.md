@@ -2,7 +2,11 @@
 
 Client for Universal Digital Assistant
 
-Video: https://youtu.be/Iz2WgKY0fhc
+World's first and only Open Source Digital Adoption Platform !!
+Concept video: https://youtu.be/yEPGWexvpL8 
+
+Assistant in Action: https://youtu.be/Iz2WgKY0fhc
+
 (You will need the server too: https://github.com/Digital-Assistant/digital-assistant-server)
 
 Telegram: https://t.me/UniDigitalAssistant
