@@ -17,14 +17,15 @@ export interface CustomConfigPropTypes {
   enableOverlay: boolean,
   environment: string,
   enableUdaIcon: boolean,
-  udaDivId: string
+  udaDivId: string,
+  enableForAllDomains: boolean,
 }
 
 // assigning default values to the default configuration
 export const CustomConfig: CustomConfigPropTypes = {
   enableEditClickedName: true, // Flag for editing the clicked element
   enableSkipDuringPlay: false, // Flag for enabling skip functionality
-  enableTooltipAddition: false, // Flag for adding custom tooltip information
+  enableTooltipAddition: true, // Flag for adding custom tooltip information
   enableMultilingual: false, // Flag for enabling multilingual search with speech
   enableNodeTypeSelection: true, // Flag for enabling node type selection
   enablePermissions: false, // Flag for enabling permissions addition
@@ -34,5 +35,6 @@ export const CustomConfig: CustomConfigPropTypes = {
   enableOverlay: true, // Flag for enabling overlay functionality or enabling squeeze functionality
   environment: 'PROD',
   enableUdaIcon: true,
-  udaDivId: 'uda-nistapp-logo'
+  udaDivId: 'uda-nistapp-logo',
+  enableForAllDomains: false // Flag to enable all the recording to be visible across all domains
 };

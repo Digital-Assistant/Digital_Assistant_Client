@@ -21,6 +21,7 @@ export const TRANSLATIONS_EN = {
   exit: "Exit",
   clearSearch: "Clear",
   highLightText: "Navigating here",
+  highLightTextElement: "Click here to continue",
   hidePermissions: "Hide Permissions",
   showPermissions: "Show Permissions",
   profanityDetected: "Profanity detected",
