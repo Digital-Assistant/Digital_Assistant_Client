@@ -1,5 +1,3 @@
-import domJSON from "domjson";
-
 let s1 = document.createElement('script');
 let scriptPath = chrome?.runtime?.getURL("assets/UDASdk.js");
 s1.src = scriptPath;
@@ -26,11 +24,8 @@ document.addEventListener("CreateUDASessionData", function(data) {
  * listener for removed additional data that was added by the frameworks
  */
 document.addEventListener("UDANodeData", function(data) {
-    console.log('nodedata listener');
-    console.log(data);
-    // console.log({node: data.detail.data.relatedTarget});
-    // document.dispatchEvent(new MouseEvent("UDASaveNodeData", {relatedTarget: data.relatedTarget}));
-    document.dispatchEvent(new CustomEvent("UDASaveNodeData",{detail: {jsonData: domJSON.toJSON(data.relatedTarget)}}));
+    console.log('nodedata listener at content script');
+    console.log({node: data.relatedTarget});
 });
 
 chrome.runtime.onMessage.addListener(function(request) {
