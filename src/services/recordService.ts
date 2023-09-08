@@ -150,28 +150,12 @@ export const saveClickData = async (node: any, text: string, meta: any) => {
     }
   }
 
-  UDAConsoleLogger.info(objectData, 3);
+  UDAConsoleLogger.info(objectData, 1);
 
-  // Removing circular reference before converting to string
-
-  // console.log(node);
-  console.log({...objectData});
-  // objectData.node = CircularJSON.stringifyAndParse(objectData.node);
-  // console.log(objectData);
-  // const flattedToJson = toJSON(node);
-  // console.log(flattedToJson);
-  // const serialized = serialize(objectData);
-  // console.log(serialized);
-  // window.dispatchEvent(new MouseEvent('UDANodeData', {relatedTarget: node}));
-  /*document.addEventListener("UDANodeData", function(data: any) {
-    console.log('nodedata listener');
-    // console.log({node: data.relatedTarget});
-    console.log(data);
-  });*/
-  // trigger('UDANodeData', {relatedTarget: node});
-  // return false;
   const jsonString = TSON.stringify(objectData);
-  console.log(jsonString);
+
+  UDAConsoleLogger.info(jsonString, 1);
+
   return {
     domain: window.location.host,
     urlpath: window.location.pathname,

@@ -9,6 +9,7 @@ import {notification} from "antd";
 import {addNotification} from "./addNotification";
 import {translate} from "./translation";
 import {trigger} from "./events";
+import {removeFrameWorkAttributes} from "./removeFrameWorkAttributes";
 declare const UDAGlobalConfig;
 
 global.udanSelectedNodes = [];
@@ -75,7 +76,9 @@ export const recordUserClick = async (node: HTMLElement, event: any) => {
 
   CONFIG.lastClickedTime=Date.now();
 
-  document.dispatchEvent(new MouseEvent('UDANodeData', {relatedTarget: recordingNode}));
+  // document.dispatchEvent(new MouseEvent('UDANodeData', {relatedTarget: recordingNode}));
+
+  await saveUserClick(recordingNode, event);
 }
 
 /**
@@ -84,10 +87,8 @@ export const recordUserClick = async (node: HTMLElement, event: any) => {
  * @param event
  * @returns
  */
-export const saveUserClick = async (jsonData: any, node: HTMLElement, event: any) => {
-
-  console.log({node});
-  return;
+// export const saveUserClick = async (jsonData: any, node: HTMLElement, event: any) => {
+export const saveUserClick = async (node: HTMLElement, event: any) => {
 
   let recordingNode = node;
 
@@ -141,7 +142,11 @@ export const saveUserClick = async (jsonData: any, node: HTMLElement, event: any
     meta.displayText = 'Date Selector';
   }
 
-  const resp: any = await saveClickData(recordingNode, _text, meta);
+  // removing circular reference before converting to json.
+
+  const processedNode = await removeFrameWorkAttributes(recordingNode);
+
+  const resp: any = await saveClickData(processedNode, _text, meta);
   if (resp) {
     if (!global.udanSelectedNodes){
       global.udanSelectedNodes = [];

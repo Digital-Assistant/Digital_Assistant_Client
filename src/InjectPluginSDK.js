@@ -20,14 +20,6 @@ document.addEventListener("CreateUDASessionData", function(data) {
     chrome.runtime.sendMessage({action:data.detail.action,data:data.detail.data});
 });
 
-/**
- * listener for removed additional data that was added by the frameworks
- */
-document.addEventListener("UDANodeData", function(data) {
-    console.log('nodedata listener at content script');
-    console.log({node: data.relatedTarget});
-});
-
 chrome.runtime.onMessage.addListener(function(request) {
     if(request.action==="UDAUserSessionData"){
         document.dispatchEvent(new CustomEvent("UDAUserSessionData", {detail: {data: request.data}, bubbles: false, cancelable: false}));
@@ -36,4 +28,12 @@ chrome.runtime.onMessage.addListener(function(request) {
     } else if(request.action==="UDAAlertMessageData"){
         document.dispatchEvent(new CustomEvent("UDAAlertMessageData", {detail: {data: request.data}, bubbles: false, cancelable: false}));
     }
+});
+
+/**
+ * listener for removed additional data that was added by the frameworks
+ */
+document.addEventListener("UDANodeData", function(data) {
+    console.log('nodedata listener at content script');
+    console.log({node: data.relatedTarget});
 });

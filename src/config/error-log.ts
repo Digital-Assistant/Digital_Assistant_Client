@@ -5,7 +5,7 @@ const { combine, label, json } = format;
 import { CONFIG } from "./index";
 import { getFromStore } from "../util";
 
-export const UDALogLevel = 0;
+export const UDALogLevel = 1;
 
 const UDA_LOG_URL = "udantest.nistapp.ai";
 
