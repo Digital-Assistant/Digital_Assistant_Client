@@ -8,12 +8,7 @@ import {getAbsoluteOffsets, getFromStore, inArray} from "../util";
 import domJSON from "domjson";
 import mapClickedElementToHtmlFormElement from "../util/recording-utils/mapClickedElementToHtmlFormElement";
 import {UDAConsoleLogger} from "../config/error-log";
-import { CustomConfig } from "../config/CustomConfig";
-import {AppConfig} from "../config/AppConfig";
 import {fetchDomain} from "../util/fetchDomain";
-
-// adding global variable declaration for exposing react custom configuration
-// global.UDAPluginSDK = AppConfig;
 
 declare global {
   interface Window {
@@ -124,7 +119,7 @@ export const profanityCheck = async (request?: any) => {
  * @param meta
  * @returns promise
  */
-export const saveClickData = async (node: HTMLElement, text: string, meta: any) => {
+export const saveClickData = async (node: any, text: string, meta: any) => {
   let objectData: any = domJSON.toJSON(node, {serialProperties: true});
   if (objectData.meta) {
     objectData.meta = meta;
@@ -159,15 +154,20 @@ export const saveClickData = async (node: HTMLElement, text: string, meta: any) 
   }
 
   UDAConsoleLogger.info(objectData, 3);
+
   // let domain = fetchDomain();
   let domain = window.location.host;
+  const jsonString = TSON.stringify(objectData);
+
+  UDAConsoleLogger.info(jsonString, 1);
+
   return {
     domain: domain,
     urlpath: window.location.pathname,
     clickednodename: text,
     html5: 0,
     clickedpath: "",
-    objectdata: TSON.stringify(objectData),
+    objectdata: jsonString,
   };
 };
 

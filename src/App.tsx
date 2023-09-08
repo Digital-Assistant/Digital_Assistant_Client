@@ -4,7 +4,6 @@
  * Objective: To render content script
  */
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import {useSearchParams} from 'react-router-dom';
 import "./css/UDAN.scss";
 import { Button, Spin } from "antd";
 import {fetchRecord, fetchSearchResults} from "./services/searchService";
@@ -22,7 +21,7 @@ import { off, on, trigger } from "./util/events";
 import { UserDataContext } from "./providers/UserDataContext";
 import { AppConfig } from "./config/AppConfig";
 import { CustomConfig } from "./config/CustomConfig";
-import { postRecordSequenceData } from "./services";
+import {postRecordSequenceData} from "./services";
 import { addBodyEvents } from "./util/addBodyEvents";
 import { initSpecialNodes } from "./util/initSpecialNodes";
 import {delay} from "./util/delay";

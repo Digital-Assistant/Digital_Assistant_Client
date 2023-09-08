@@ -1,26 +1,26 @@
 import {CONFIG} from "../config";
 import {getClickedInputLabels} from "./getClickedInputLabels";
-import {UDAErrorLogger} from "../config/error-log";
 import {clickableElementExists, getFromStore, setToStore} from "./index";
 import {saveClickData} from "../services";
 import {checkNodeValues} from "./checkNodeValues";
 import mapClickedElementToHtmlFormElement from "./recording-utils/mapClickedElementToHtmlFormElement";
-import {notification} from "antd";
 import {addNotification} from "./addNotification";
 import {translate} from "./translation";
+import {UDAConsoleLogger} from "../config/error-log";
+
 declare const UDAGlobalConfig;
 
 global.udanSelectedNodes = [];
 global.clickedNode = null;
+
 /**
  *
  * @param node
  * @param fromDocument
  * @param selectChange
  * @param event
- * @returns
  */
-export const recordUserClick = async (node: HTMLElement, fromDocument: boolean = false, selectChange: boolean = false, event: any) => {
+export const recordUserClick = async (node: HTMLElement, event: any) => {
 
   if (!node) return false;
 
@@ -40,22 +40,18 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
 
   //should not record untrusted clicks
   if(!event.isTrusted){
-    console.log('untrusted click on : ')
-    console.log(node);
+    UDAConsoleLogger.info('untrusted click on : ', 1)
+    UDAConsoleLogger.info(node, 1);
   }
 
   // node = event.target;
   let recordingNode = node;
 
-  let addIsPersonal = false;
-
   //add the record click for parent element and ignore the children
   const closestParent: any = node.closest('[udaIgnoreChildren]');
   if (closestParent) {
     recordingNode = closestParent;
-    addIsPersonal =  true;
   }
-
 
   if (recordingNode.isSameNode(window.clickedNode)) {
     return;
@@ -75,6 +71,31 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
   }
 
   global.clickedNode = recordingNode;
+
+  CONFIG.lastClickedTime=Date.now();
+
+  await saveUserClick(recordingNode, event);
+}
+
+/**
+ *
+ * @param node
+ * @param event
+ * @returns
+ */
+// export const saveUserClick = async (jsonData: any, node: HTMLElement, event: any) => {
+export const saveUserClick = async (node: HTMLElement, event: any) => {
+
+  let recordingNode = node;
+
+  let addIsPersonal = false;
+
+  //add the record click for parent element and ignore the children
+  const closestParent: any = node.closest('[udaIgnoreChildren]');
+  if (closestParent) {
+    recordingNode = closestParent;
+    addIsPersonal =  true;
+  }
 
   let meta: any = {};
 
@@ -117,7 +138,10 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
     meta.displayText = 'Date Selector';
   }
 
-  const resp: any = await saveClickData(recordingNode, _text, meta);
+  // removing circular reference before converting to json with deep clone.
+  const processedNode = await recordingNode.cloneNode(true);
+
+  const resp: any = await saveClickData(processedNode, _text, meta);
   if (resp) {
     if (!global.udanSelectedNodes){
       global.udanSelectedNodes = [];
@@ -126,8 +150,6 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
     global.udanSelectedNodes.push(recordingNode);
     if(!recordingNode.isSameNode(node))
       global.udanSelectedNodes.push(node);
-
-    CONFIG.lastClickedTime=Date.now();
 
     const activeRecordingData: any = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
     if (activeRecordingData) {
@@ -139,7 +161,7 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
     addNotification(translate('clickAdded'), translate('clickAddedDescription'), 'success');
   } else {
     addNotification(translate('clickAddError'), translate('clickAddErrorDescription'), 'error');
-    UDAErrorLogger.error("Unable save record click " + node.outerHTML);
+    // UDAErrorLogger.error("Unable save record click " + node.outerHTML);
   }
 
   return;

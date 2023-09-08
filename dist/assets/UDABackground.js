@@ -438,13 +438,12 @@ chrome.runtime.onMessage.addListener( /*#__PURE__*/function () {
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
-          console.log(request);
           if (!(request.action === "getusersessiondata")) {
-            _context2.next = 5;
+            _context2.next = 4;
             break;
           }
           chrome.storage.local.get([cookieName], /*#__PURE__*/function () {
-            var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(storedsessiondata) {
+            var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(storedSessionData) {
               return _regeneratorRuntime().wrap(function _callee$(_context) {
                 while (1) switch (_context.prev = _context.next) {
                   case 0:
@@ -456,12 +455,12 @@ chrome.runtime.onMessage.addListener( /*#__PURE__*/function () {
                     _context.next = 30;
                     break;
                   case 4:
-                    if (!(storedsessiondata.hasOwnProperty("sessionkey") && storedsessiondata["sessionKey"] && _typeof(storedsessiondata["sessionKey"]) != 'object')) {
+                    if (!(storedSessionData.hasOwnProperty("sessionkey") && storedSessionData["sessionKey"] && _typeof(storedSessionData["sessionKey"]) != 'object')) {
                       _context.next = 15;
                       break;
                     }
-                    sessionData = storedsessiondata;
-                    if (!(storedsessiondata.hasOwnProperty('authenticated') && storedsessiondata.authenticated)) {
+                    sessionData = storedSessionData;
+                    if (!(storedSessionData.hasOwnProperty('authenticated') && storedSessionData.authenticated)) {
                       _context.next = 11;
                       break;
                     }
@@ -477,13 +476,13 @@ chrome.runtime.onMessage.addListener( /*#__PURE__*/function () {
                     _context.next = 30;
                     break;
                   case 15:
-                    if (!(storedsessiondata.hasOwnProperty(cookieName) && storedsessiondata[cookieName].hasOwnProperty("sessionkey") && storedsessiondata[cookieName]["sessionKey"] && _typeof(storedsessiondata[cookieName]["sessionKey"]) != 'object')) {
+                    if (!(storedSessionData.hasOwnProperty(cookieName) && storedSessionData[cookieName].hasOwnProperty("sessionkey") && storedSessionData[cookieName]["sessionKey"] && _typeof(storedSessionData[cookieName]["sessionKey"]) != 'object')) {
                       _context.next = 26;
                       break;
                     }
-                    sessionData = storedsessiondata[cookieName];
+                    sessionData = storedSessionData[cookieName];
                     // await sendSessionData();
-                    if (!(storedsessiondata.hasOwnProperty('authenticated') && storedsessiondata.authenticated)) {
+                    if (!(storedSessionData.hasOwnProperty('authenticated') && storedSessionData.authenticated)) {
                       _context.next = 22;
                       break;
                     }
@@ -514,34 +513,34 @@ chrome.runtime.onMessage.addListener( /*#__PURE__*/function () {
               return _ref2.apply(this, arguments);
             };
           }());
-          _context2.next = 17;
+          _context2.next = 16;
           break;
-        case 5:
+        case 4:
           if (!(request.action === "authtenicate")) {
-            _context2.next = 10;
+            _context2.next = 9;
             break;
           }
-          _context2.next = 8;
+          _context2.next = 7;
           return loginWithChrome();
-        case 8:
-          _context2.next = 17;
+        case 7:
+          _context2.next = 16;
           break;
-        case 10:
+        case 9:
           if (!(request.action === "Debugvalueset")) {
-            _context2.next = 14;
+            _context2.next = 13;
             break;
           }
           UDADebug = request.data;
-          _context2.next = 17;
+          _context2.next = 16;
           break;
-        case 14:
+        case 13:
           if (!(request.action === "createSession")) {
-            _context2.next = 17;
+            _context2.next = 16;
             break;
           }
-          _context2.next = 17;
+          _context2.next = 16;
           return keycloakStore(request.data);
-        case 17:
+        case 16:
         case "end":
           return _context2.stop();
       }

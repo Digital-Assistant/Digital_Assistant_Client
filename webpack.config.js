@@ -51,6 +51,7 @@ module.exports = (env, argv) => {
             UDASdk: "./src/index.tsx",
             UDABackground: "./src/Background.js",
             UDALoad: "./src/InjectSDK.js",
+            UDAPluginSDK: "./src/injectPluginSDK.js"
         },
         mode: "development", // "production" | "development" | "none"
         devtool: "cheap-module-source-map", // enum
