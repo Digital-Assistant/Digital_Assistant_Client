@@ -8,12 +8,7 @@ import {getAbsoluteOffsets, getFromStore, inArray} from "../util";
 import domJSON from "domjson";
 import mapClickedElementToHtmlFormElement from "../util/recording-utils/mapClickedElementToHtmlFormElement";
 import {UDAConsoleLogger} from "../config/error-log";
-import { CustomConfig } from "../config/CustomConfig";
-import {AppConfig} from "../config/AppConfig";
 import {fetchDomain} from "../util/fetchDomain";
-
-// adding global variable declaration for exposing react custom configuration
-// global.UDAPluginSDK = AppConfig;
 
 declare global {
   interface Window {
