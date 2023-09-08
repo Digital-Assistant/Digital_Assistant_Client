@@ -1,15 +1,13 @@
 import {CONFIG} from "../config";
 import {getClickedInputLabels} from "./getClickedInputLabels";
-import {UDAErrorLogger} from "../config/error-log";
 import {clickableElementExists, getFromStore, setToStore} from "./index";
 import {saveClickData} from "../services";
 import {checkNodeValues} from "./checkNodeValues";
 import mapClickedElementToHtmlFormElement from "./recording-utils/mapClickedElementToHtmlFormElement";
-import {notification} from "antd";
 import {addNotification} from "./addNotification";
 import {translate} from "./translation";
-import {trigger} from "./events";
-import {removeFrameWorkAttributes} from "./removeFrameWorkAttributes";
+import {UDAConsoleLogger} from "../config/error-log";
+
 declare const UDAGlobalConfig;
 
 global.udanSelectedNodes = [];
@@ -42,8 +40,8 @@ export const recordUserClick = async (node: HTMLElement, event: any) => {
 
   //should not record untrusted clicks
   if(!event.isTrusted){
-    console.log('untrusted click on : ')
-    console.log(node);
+    UDAConsoleLogger.info('untrusted click on : ', 1)
+    UDAConsoleLogger.info(node, 1);
   }
 
   // node = event.target;
@@ -75,8 +73,6 @@ export const recordUserClick = async (node: HTMLElement, event: any) => {
   global.clickedNode = recordingNode;
 
   CONFIG.lastClickedTime=Date.now();
-
-  // document.dispatchEvent(new MouseEvent('UDANodeData', {relatedTarget: recordingNode}));
 
   await saveUserClick(recordingNode, event);
 }
@@ -142,9 +138,8 @@ export const saveUserClick = async (node: HTMLElement, event: any) => {
     meta.displayText = 'Date Selector';
   }
 
-  // removing circular reference before converting to json.
-
-  const processedNode = await removeFrameWorkAttributes(recordingNode);
+  // removing circular reference before converting to json with deep clone.
+  const processedNode = await recordingNode.cloneNode(true);
 
   const resp: any = await saveClickData(processedNode, _text, meta);
   if (resp) {

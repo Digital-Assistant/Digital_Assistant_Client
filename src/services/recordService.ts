@@ -8,11 +8,6 @@ import {getAbsoluteOffsets, getFromStore, inArray} from "../util";
 import domJSON from "domjson";
 import mapClickedElementToHtmlFormElement from "../util/recording-utils/mapClickedElementToHtmlFormElement";
 import {UDAConsoleLogger} from "../config/error-log";
-import {parse, stringify, toJSON, fromJSON} from 'flatted';
-import {removeCircularReference} from "../util/removeCircularReference";
-import CircularJSON from "circular-to-json";
-import {serialize, deserialize} from '@ungap/structured-clone';
-import {trigger} from "../util/events";
 
 /**
  * To record each action/event
