@@ -24,6 +24,8 @@ import { CustomConfig } from "./config/CustomConfig";
 import {postRecordSequenceData} from "./services";
 import { addBodyEvents } from "./util/addBodyEvents";
 import { initSpecialNodes } from "./util/initSpecialNodes";
+import {delay} from "./util/delay";
+import {fetchDomain} from "./util/fetchDomain";
 
 // adding global variable declaration for exposing react custom configuration
 global.UDAPluginSDK = AppConfig;
@@ -41,7 +43,7 @@ function App(props) {
         getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true" || false
     );
     const [hide, setHide] = useState<boolean>(!isRecording);
-    const [showLoader, setShowLoader] = useState<boolean>(true);
+    const [showLoader, setShowLoader] = useState<boolean>(false);
     const [showSearch, setShowSearch] = useState<boolean>(true);
     const [showRecord, setShowRecord] = useState<boolean>(false);
     const [playDelay, setPlayDelay] = useState<string>("off");
@@ -78,11 +80,11 @@ function App(props) {
     const config = global.UDAGlobalConfig;
 
     useEffect(() => {
-        if(global.UDAGlobalConfig.enablePermissions) {
-            init();
+        if(!showLoader && (global.UDAGlobalConfig.enablePermissions || global.UDAGlobalConfig.enableForAllDomains)) {
+            // init();
             getSearchResults(1,true);
         }
-    }, [global.UDAGlobalConfig.enablePermissions]);
+    }, [global.UDAGlobalConfig.enablePermissions, global.UDAGlobalConfig.enableForAllDomains]);
 
     useEffect(() => {
         if (invokeKeycloak) {
@@ -228,7 +230,7 @@ function App(props) {
         if(searchParams.get(CONFIG.UDA_URL_Param)){
             let recordDetails = await fetchRecord({
                 id: searchParams.get(CONFIG.UDA_URL_Param),
-                domain: encodeURI(window.location.host),
+                domain: encodeURI(fetchDomain()),
                 additionalParams: global.UDAGlobalConfig.enablePermissions
                     ? encodeURI(JSON.stringify(global.UDAGlobalConfig.permissions))
                     : null,
@@ -372,10 +374,11 @@ function App(props) {
                     return;
                 }*/
                 setShowLoader(true);
+                let domain = fetchDomain();
                 const _searchResults = await fetchSearchResults({
                     keyword: searchKeyword,
                     page,
-                    domain: encodeURI(window.location.host),
+                    domain: encodeURI(domain),
                     additionalParams: global.UDAGlobalConfig.enablePermissions
                         ? encodeURI(JSON.stringify(global.UDAGlobalConfig.permissions))
                         : null,
@@ -687,7 +690,7 @@ function App(props) {
                 </div>
             </div>
 
-            <Toggler toggleFlag={hide} toggleHandler={togglePanel} />
+            <Toggler toggleFlag={hide} toggleHandler={togglePanel} udaDivId={global.UDAGlobalConfig.udaDivId} enableUdaIcon={global.UDAGlobalConfig.enableUdaIcon} />
         </UserDataContext.Provider>
     );
 }

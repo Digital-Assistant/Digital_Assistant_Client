@@ -15,7 +15,7 @@ import SelectedElement from "./SelectedElement";
 
 import TSON from "typescript-json";
 import {translate} from "../util/translation";
-import {isInputNode} from "../util/checkNode";
+import {isHighlightNode} from "../util/checkNode";
 import {Alert, notification, Progress, Space} from "antd";
 import {UDAErrorLogger} from "../config/error-log";
 import {addNotification} from "../util/addNotification";
@@ -284,7 +284,25 @@ export const RecordedData = (props: MProps) => {
         };
 
         //if additional params available send them part of payload
-        if (!_.isEmpty(tmpPermissionsObj)) _payload.additionalParams = tmpPermissionsObj;
+        if (!_.isEmpty(tmpPermissionsObj)) {
+            _payload.additionalParams = tmpPermissionsObj;
+        }
+
+        // Save the original domain in which the recording has happened if enableForAllDomains flag is true
+        if(global.UDAGlobalConfig.enableForAllDomains){
+            console.log('parsing');
+            if(_payload.hasOwnProperty('additionalParams')) {
+                _payload.additionalParams = {
+                    enableForAllDomains: true,
+                    recordedDomain: window.location.host, ..._payload.additionalParams
+                };
+            } else {
+                _payload.additionalParams = {
+                    enableForAllDomains: true,
+                    recordedDomain: window.location.host
+                };
+            }
+        }
 
         /**
          * code for saving all the clicks from local storage to server. Looping all the clicked elements and sending to
@@ -595,7 +613,7 @@ export const RecordedData = (props: MProps) => {
                         </span>
                                     </div>
                                 </>
-                                {(props.config.enableTooltipAddition === true && isInputNode(objectData.node)) &&
+                                {(props.config.enableTooltipAddition === true && isHighlightNode(objectData)) &&
                                     <>
                                         <div className="uda-recording uda_exclude" style={{textAlign: "center"}}>
                                             {(objectData.meta?.tooltipInfo && !tooltip) &&
