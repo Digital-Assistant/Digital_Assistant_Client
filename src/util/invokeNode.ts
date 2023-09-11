@@ -7,6 +7,7 @@ import {processDistanceOfNodes} from "./processDistanceOfNodes";
 import {matchAction} from "./matchAction";
 import {removeToolTip} from "./addToolTip";
 import {searchNodes} from "./searchNodes";
+import {UDAConsoleLogger} from "../config/error-log";
 
 /**
  * Get selected record from storage
@@ -54,6 +55,8 @@ export const matchNode = (recordedNode: any) => {
 
   let clickObjects: any = [];
   let originalElement = originalNode?.node;
+
+  let startTime = performance.now();
 
   if(CONFIG.commonTags.includes(originalElement.nodeName.toLowerCase()) && originalElement?.className){
     let querySelector = '';
@@ -131,6 +134,14 @@ export const matchNode = (recordedNode: any) => {
       finalMatchElement = searchNodes(recordedNode, compareElements);
     }
   }
+
+  let endTime = performance.now();
+
+  let difference = endTime - startTime;
+
+  UDAConsoleLogger.info('StartTime: '+ startTime, 1);
+  UDAConsoleLogger.info('EndTime: '+ endTime, 1);
+  UDAConsoleLogger.info('Difference: '+ difference, 1);
 
   if (finalMatchElement !== null) {
     matchAction(finalMatchElement, recordedNode.node)
