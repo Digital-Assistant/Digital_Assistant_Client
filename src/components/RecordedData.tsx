@@ -16,7 +16,7 @@ import SelectedElement from "./SelectedElement";
 import TSON from "typescript-json";
 import {translate} from "../util/translation";
 import {isHighlightNode} from "../util/checkNode";
-import {Alert, notification, Progress, Space} from "antd";
+import {Alert, notification, Progress, Space, Switch} from "antd";
 import {UDAErrorLogger} from "../config/error-log";
 import {addNotification} from "../util/addNotification";
 
@@ -53,6 +53,8 @@ export const RecordedData = (props: MProps) => {
     // variable for uploading percentage data
     const [savedClickedDataPercent, setSavedClickedDataPercent] = useState<number>(0);
     const [savingError, setSavingError] = useState<boolean>(false);
+    const [slowPlayback, setSlowPlayback] = useState<boolean>(false);
+    const [delayPlaybackTime, setDelayPlaybackTime] = useState<number>(1);
 
     useEffect(() => {
         setRecordData([...(props.data || [])]);
@@ -304,6 +306,15 @@ export const RecordedData = (props: MProps) => {
             }
         }
 
+        // save delay playback time
+        if(slowPlayback){
+            if(_payload.hasOwnProperty('additionalParams')) {
+                _payload.additionalParams = {..._payload.additionalParams, slowPlaybackTime: delayPlaybackTime};
+            } else {
+                _payload.additionalParams = {slowPlaybackTime: delayPlaybackTime};
+            }
+        }
+
         /**
          * code for saving all the clicks from local storage to server. Looping all the clicked elements and sending to
          * server and
@@ -479,6 +490,12 @@ export const RecordedData = (props: MProps) => {
         }
     }
 
+    const validateDelayTime = async(value: number) => {
+        if(!isNaN(value)){
+            setDelayPlaybackTime(value);
+        }
+    }
+
     /**
      *
      * @param value string
@@ -646,25 +663,21 @@ export const RecordedData = (props: MProps) => {
                                                            value={tooltip}/>
                                                 </>
                                             }
-                                            {inputError.tooltip &&
-                                                <span className={`uda-alert`}> {translate('inputError')}</span>}
-                                            <div style={{display: "flex"}}>
-                                            </div>
+                                            {inputError.tooltip && <span className={`uda-alert`}> {translate('inputError')}</span>}
                                             <span>
-                                  <button
-                                      className={`uda-tutorial-btn uda_exclude ${(disableTooltipSubmitBtn) ? "disabled" : ""}`}
-                                      style={{color: "#fff", marginTop: "10px"}}
-                                      id="uda-tooltip-save"
-                                      disabled={disableTooltipSubmitBtn}
-                                      onClick={async () => {
-                                          await updateTooltip('tooltipInfo', index)
-                                      }}>{translate('submitTooltip')}</button>
-                                </span>
+                                              <button
+                                                  className={`uda-tutorial-btn uda_exclude ${(disableTooltipSubmitBtn) ? "disabled" : ""}`}
+                                                  style={{color: "#fff", marginTop: "10px"}}
+                                                  id="uda-tooltip-save"
+                                                  disabled={disableTooltipSubmitBtn}
+                                                  onClick={async () => {
+                                                      await updateTooltip('tooltipInfo', index)
+                                                  }}>{(!objectData.meta?.tooltipInfo)?translate('submitTooltip'):translate('updateTooltip')}</button>
+                                            </span>
                                         </div>
                                     </>
                                 }
-                                <SelectedElement data={item} index={index} recordData={recordData} config={props.config}
-                                                 storeRecording={storeRecording}/>
+                                <SelectedElement data={item} index={index} recordData={recordData} config={props.config} storeRecording={storeRecording}/>
                             </>
                         )}
                     </li>
@@ -815,6 +828,25 @@ export const RecordedData = (props: MProps) => {
                                 }
                             </div>
                         )}
+
+                        <div id="uda-play-slow-section" style={{padding: "30px 0px"}}>
+                            <Switch defaultChecked={slowPlayback} onChange={()=> {setSlowPlayback(true);}} />
+                            { slowPlayback &&
+                                <>
+                                    <input type="text" id="uda-add-slowplay" name="uda-edited-tooltip"
+                                           className="uda-form-input uda_exclude"
+                                           placeholder={translate('toolTipPlaceHolder')}
+                                           style={{width: "68% !important"}}
+                                           onChange={async (e: any) => {
+                                               await validateDelayTime(e.target.value);
+                                           }}
+                                           onBlur={async (e: any) => {
+                                               await validateDelayTime(e.target.value);
+                                           }}
+                                           value={delayPlaybackTime}/>
+                                </>
+                            }
+                        </div>
 
                         <div
                             className="flex-card flex-center"

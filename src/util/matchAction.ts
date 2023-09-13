@@ -11,13 +11,15 @@ import {translate} from "./translation";
 import {simulateMouseLeave} from "./simulateMouseLeave";
 declare const UDAGlobalConfig;
 
-export const matchAction = (node, selectedNode) => {
+export const matchAction = (node, selectedNode, toolTipVisibleTIme = 1) => {
 
   if (!node) {
     return;
   }
 
-  let timeToInvoke = CONFIG.invokeTime;
+  // let timeToInvoke = CONFIG.invokeTime;
+
+  let timeToInvoke = toolTipVisibleTIme*1000;
 
   // remove added tooltips before invoking
   removeToolTip();
