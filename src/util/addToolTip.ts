@@ -31,12 +31,12 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
    */
   let toolTipPositionClass: any = getTooltipPositionClass(tooltipNode, tooltipDivElement);
 
-  if(isNavigating){
+  /*if(isNavigating){
     setTimeout(function () {
       invokingNode.click();
       removeToolTip();
     }, 500);
-  }
+  }*/
 
   let popperInstance = createPopper(tooltipNode, tooltipDivElement, {
     placement: toolTipPositionClass,

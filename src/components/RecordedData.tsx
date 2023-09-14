@@ -91,6 +91,9 @@ export const RecordedData = (props: MProps) => {
             });
         }
         await setCheckingProfanity(false);
+        if(formSubmit === true){
+            submitRecording();
+        }
         return keyword.trim();
     };
 
@@ -728,6 +731,36 @@ export const RecordedData = (props: MProps) => {
                         {renderData()}
                     </ul>
                     <hr style={{border: "1px solid #969696", width: "100%"}}/>
+
+                    <div id="uda-play-slow-section">
+                        <div className="flex-card flex-vcenter selectedElement">
+                                <span className="col-6">
+                                   Enable slow replay
+                                </span>
+                            <span className="uda_exclude col-6">
+                                    <Switch defaultChecked={slowPlayback} onChange={()=> {setSlowPlayback(!slowPlayback);}} />
+                                </span>
+                        </div>
+                        { (slowPlayback === true) &&
+                            <div className="flex-card flex-vcenter selectedElement">
+                                     <span style={{ marginRight: "4px" }} className="col-6">
+                                        Number of seconds to delay{" "}
+                                    </span>
+                                <input type="text" id="uda-add-slowplay" name="uda-edited-tooltip"
+                                       className="uda-form-input uda_exclude col-6"
+                                       placeholder={translate('delayTimePlaceHolder')}
+                                       style={{width: "68% !important"}}
+                                       onChange={async (e: any) => {
+                                           await validateDelayTime(e.target.value);
+                                       }}
+                                       onBlur={async (e: any) => {
+                                           await validateDelayTime(e.target.value);
+                                       }}
+                                       value={delayPlaybackTime}/>
+                            </div>
+                        }
+                    </div>
+
                     <div style={{textAlign: "left"}}>
                         <input
                             type="text"
@@ -828,25 +861,6 @@ export const RecordedData = (props: MProps) => {
                                 }
                             </div>
                         )}
-
-                        <div id="uda-play-slow-section" style={{padding: "30px 0px"}}>
-                            <Switch defaultChecked={slowPlayback} onChange={()=> {setSlowPlayback(true);}} />
-                            { slowPlayback &&
-                                <>
-                                    <input type="text" id="uda-add-slowplay" name="uda-edited-tooltip"
-                                           className="uda-form-input uda_exclude"
-                                           placeholder={translate('toolTipPlaceHolder')}
-                                           style={{width: "68% !important"}}
-                                           onChange={async (e: any) => {
-                                               await validateDelayTime(e.target.value);
-                                           }}
-                                           onBlur={async (e: any) => {
-                                               await validateDelayTime(e.target.value);
-                                           }}
-                                           value={delayPlaybackTime}/>
-                                </>
-                            }
-                        </div>
 
                         <div
                             className="flex-card flex-center"

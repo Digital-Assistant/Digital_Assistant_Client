@@ -35,4 +35,5 @@ export const TRANSLATIONS_EN = {
   savedSequenceDescription: "Your sequence has been saved successfully",
   savedSequenceError: "Unable to save the recorded sequence",
   savedSequenceErrorDescription: "Unable to save the recorded sequence please try again",
+  delayTimePlaceHolder: "Number of seconds to delay"
 };

@@ -3,7 +3,7 @@ import {CONFIG} from "../config";
 import {jaroWinkler} from "jaro-winkler-typescript";
 import {UDAConsoleLogger} from "../config/error-log";
 
-export const compareNodes = (compareNode, originalNode, isPersonalNode = false, match = {
+export const compareNodes = (compareNode, recordedNode, isPersonalNode = false, match = {
   count: 0,
   matched: 0,
   unmatched: [],
@@ -14,7 +14,7 @@ export const compareNodes = (compareNode, originalNode, isPersonalNode = false, 
   if (compareNode.hasOwnProperty('childNodes')) {
     match.innerChildNodes = match.innerChildNodes + compareNode.childNodes.length;
   }
-  for (let key in originalNode) {
+  for (let key in recordedNode) {
 
     /**
     * Angular provides Shadow_Dom like functionality called "Vliew Encapsulation".
@@ -44,52 +44,52 @@ export const compareNodes = (compareNode, originalNode, isPersonalNode = false, 
     } else {
       match.count++;
     }
-    if (compareNode.hasOwnProperty(key) && (typeof originalNode[key] === 'object') && (typeof compareNode[key] === 'object')) {
+    if (compareNode.hasOwnProperty(key) && (typeof recordedNode[key] === 'object') && (typeof compareNode[key] === 'object')) {
       match.matched++;
-      match = compareNodes(compareNode[key], originalNode[key], isPersonalNode, match);
-    } else if (compareNode.hasOwnProperty(key) && Array.isArray(originalNode[key]) && originalNode[key].length > 0 && Array.isArray(compareNode[key]) && compareNode[key].length > 0) {
+      match = compareNodes(compareNode[key], recordedNode[key], isPersonalNode, match);
+    } else if (compareNode.hasOwnProperty(key) && Array.isArray(recordedNode[key]) && recordedNode[key].length > 0 && Array.isArray(compareNode[key]) && compareNode[key].length > 0) {
       match.matched++;
       if (compareNode.nodeName === 'select' && key === 'childNodes') {
         continue;
-      } else if (compareNode[key].length === originalNode[key].length) {
+      } else if (compareNode[key].length === recordedNode[key].length) {
         match.matched++;
-        for (let i = 0; i < originalNode[key].length; i++) {
-          match = compareNodes(compareNode[key][i], originalNode[key][i], isPersonalNode, match);
+        for (let i = 0; i < recordedNode[key].length; i++) {
+          match = compareNodes(compareNode[key][i], recordedNode[key][i], isPersonalNode, match);
         }
       }
-    } else if ((key === 'class' || key === 'className') && originalNode.hasOwnProperty(key) && compareNode.hasOwnProperty(key)) {
+    } else if ((key === 'class' || key === 'className') && recordedNode.hasOwnProperty(key) && compareNode.hasOwnProperty(key)) {
       // fix for calendar issue
       compareNode[key] = compareNode[key].replace(' ng-star-inserted', '');
-      originalNode[key] = originalNode[key].replace(' ng-star-inserted', '');
-      if (compareNode[key] === originalNode[key]) {
+      recordedNode[key] = recordedNode[key].replace(' ng-star-inserted', '');
+      if (compareNode[key] === recordedNode[key]) {
         match.matched++;
       } else {
         // jaro wrinker comparision for classname
-        let weight = jaroWinkler(originalNode[key], compareNode[key]);
+        let weight = jaroWinkler(recordedNode[key], compareNode[key]);
         if (weight > CONFIG.JARO_WEIGHT_PERSONAL) {
           match.matched++;
         } else {
           match.unmatched.push({
             key: key,
             compareNodeValues: compareNode[key],
-            recordedNodeValues: originalNode[key]
+            recordedNodeValues: recordedNode[key]
           });
         }
       }
-    } else if (key === 'innerText' && originalNode.hasOwnProperty(key) && compareNode.hasOwnProperty(key) && (compareNode[key].trim().toLowerCase() === originalNode[key].trim().toLowerCase())) {
+    } else if (key === 'innerText' && recordedNode.hasOwnProperty(key) && compareNode.hasOwnProperty(key) && (compareNode[key].trim().toLowerCase() === recordedNode[key].trim().toLowerCase())) {
       // matching inner text should be weighted more. We will add an arbitrarily large number - innerTextWeight.
       // since this will match for every child node, we need to accommodate this logic whenever 'comparenodes' is called
       UDAConsoleLogger.info(compareNode[key].trim());
-      UDAConsoleLogger.info(originalNode[key].trim());
+      UDAConsoleLogger.info(recordedNode[key].trim());
       match.innerTextFlag = true;
       match.matched = match.matched + CONFIG.innerTextWeight;
       // match.matched++;
-    } else if (compareNode.hasOwnProperty(key) && compareNode[key] === originalNode[key]) {
+    } else if (compareNode.hasOwnProperty(key) && compareNode[key] === recordedNode[key]) {
       match.matched++;
-    } else if (compareNode.hasOwnProperty(key) && compareNode[key] !== originalNode[key] && key === 'href' && originalNode[key].indexOf(compareNode[key]) !== -1) {
+    } else if (compareNode.hasOwnProperty(key) && compareNode[key] !== recordedNode[key] && key === 'href' && recordedNode[key].indexOf(compareNode[key]) !== -1) {
       match.matched++;
-    } else if (compareNode.hasOwnProperty(key) && (key === 'id' || key === 'name') && compareNode[key] !== originalNode[key]) {
-      let weight = jaroWinkler(originalNode[key], compareNode[key]);
+    } else if (compareNode.hasOwnProperty(key) && (key === 'id' || key === 'name' || key === 'src' || key === "currentSrc") && compareNode[key] !== recordedNode[key]) {
+      let weight = jaroWinkler(recordedNode[key], compareNode[key]);
       if (weight > 0.90) {
         match.matched++;
       }
@@ -104,7 +104,7 @@ export const compareNodes = (compareNode, originalNode, isPersonalNode = false, 
         match.matched++;
       }
     } else {
-      match.unmatched.push({key: key, compareNodeValues: compareNode[key], recordedNodeValues: originalNode[key]});
+      match.unmatched.push({key: key, compareNodeValues: compareNode[key], recordedNodeValues: recordedNode[key]});
     }
   }
   return match;
