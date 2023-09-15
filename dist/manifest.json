@@ -5,7 +5,7 @@
   "content_scripts": [
     {
       "js": [
-        "InjectHeaders.js"
+        "./assets/UDAInjectHeaders.js"
       ],
       "run_at": "document_start",
       "matches": [
@@ -18,7 +18,7 @@
       ],
       "run_at": "document_end",
       "js": [
-        "InjectSDK.js"
+        "./assets/UDAPluginSDK.js"
       ],
       "css": [
 

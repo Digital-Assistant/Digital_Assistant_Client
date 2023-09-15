@@ -117,7 +117,6 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util_headers_addToClickObject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util/headers/addToClickObject */ "./src/util/headers/addToClickObject.js");
 // adding the click object that is registered via javascript
-
 window.UDAClickObjects = [];
 window.UDARemovedClickObjects = [];
 
