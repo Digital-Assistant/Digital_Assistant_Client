@@ -4,9 +4,10 @@
   "version": "1.0.4.1",
   "private": true,
   "dependencies": {
+    "@ant-design/compatible": "^5.1.2",
     "@popperjs/core": "^2.11.6",
     "@types/styled-components": "^5.1.26",
-    "antd": "^4.24.7",
+    "antd": "^5.8.4",
     "assert": "^2.0.0",
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
