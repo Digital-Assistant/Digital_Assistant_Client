@@ -31,7 +31,7 @@ export const CustomConfig: CustomConfigPropTypes = {
   enablePermissions: false, // Flag for enabling permissions addition
   permissions: {}, // Object where the permissions can be passed
   enableProfanity: true, // Flag for enabling profanity check
-  enableRecording: true, // Flag for enabling recording functionality
+  enableRecording: false, // Flag for enabling recording functionality
   enableOverlay: true, // Flag for enabling overlay functionality or enabling squeeze functionality
   environment: 'PROD',
   enableUdaIcon: true,
