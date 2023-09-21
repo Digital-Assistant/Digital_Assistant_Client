@@ -2,10 +2,11 @@
 import {CONFIG} from "../config";
 import {UDAConsoleLogger} from "../config/error-log";
 import {trigger} from "./events";
+import {removeToolTip} from "./addToolTip";
 
 export const invokeNextNode = (node, timeToInvoke) => {
   let link = false;
-  timeToInvoke = timeToInvoke + 2000;
+  // timeToInvoke = timeToInvoke + 2000;
   if (typeof node.href !== 'undefined' && node.href !== '') {
     if (typeof node.target !== 'undefined' && node.target === '_blank') {
       // toggleautoplay(navigationCookieData);
@@ -19,6 +20,14 @@ export const invokeNextNode = (node, timeToInvoke) => {
       }
     }
   }
+
+
+  setTimeout(function () {
+    node.click();
+    removeToolTip();
+  }, timeToInvoke);
+
+  timeToInvoke +=timeToInvoke;
 
   if (!link) {
     UDAConsoleLogger.info(node, 2);

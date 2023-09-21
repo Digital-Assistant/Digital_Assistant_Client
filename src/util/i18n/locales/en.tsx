@@ -15,6 +15,7 @@ export const TRANSLATIONS_EN = {
   personalInfoLabel: "Personal Information",
   personalInfoTooltip: "Select this box if this field / text contains personal information like name / username. We need to ignore personal information while processing.",
   submitTooltip: "Save Tooltip",
+  updateTooltip: "Update Tooltip",
   toolTipPlaceHolder: "Custom Tooltip (Optional)",
   deleteRecording: "Are you sure?",
   continue: "Continue",
@@ -34,4 +35,5 @@ export const TRANSLATIONS_EN = {
   savedSequenceDescription: "Your sequence has been saved successfully",
   savedSequenceError: "Unable to save the recorded sequence",
   savedSequenceErrorDescription: "Unable to save the recorded sequence please try again",
+  delayTimePlaceHolder: "Number of seconds to delay"
 };

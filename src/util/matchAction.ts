@@ -11,13 +11,15 @@ import {translate} from "./translation";
 import {simulateMouseLeave} from "./simulateMouseLeave";
 declare const UDAGlobalConfig;
 
-export const matchAction = (node, selectedNode) => {
+export const matchAction = (node, selectedNode, toolTipVisibleTIme = 1) => {
 
   if (!node) {
     return;
   }
 
-  let timeToInvoke = CONFIG.invokeTime;
+  // let timeToInvoke = CONFIG.invokeTime;
+
+  let timeToInvoke = toolTipVisibleTIme*1000;
 
   // remove added tooltips before invoking
   removeToolTip();
@@ -31,7 +33,7 @@ export const matchAction = (node, selectedNode) => {
   if(UDAGlobalConfig.enableNodeTypeSelection) {
     const recordedNodeData = JSON.parse(selectedNode.objectdata);
     if (recordedNodeData.meta && recordedNodeData.meta.hasOwnProperty('selectedElement') && recordedNodeData.meta.selectedElement && recordedNodeData.meta.selectedElement.systemTag.trim() != 'others') {
-      let performedAction = mapSelectedElementAction(node, selectedNode, navigationData, recordedNodeData);
+      let performedAction = mapSelectedElementAction(node, selectedNode, navigationData, recordedNodeData, timeToInvoke);
       if (performedAction) {
         return;
       }

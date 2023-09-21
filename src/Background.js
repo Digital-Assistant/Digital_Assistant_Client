@@ -3,6 +3,29 @@
 import {UDADigestMessage} from "./util/UDADigestMessage";
 import {invokeApi} from "./util/invokeApi";
 
+const { detect } = require('detect-browser');
+const browser = detect();
+
+let enablePlugin = false;
+
+let browserVar;
+
+console.log(browser.name);
+
+switch (browser && browser.name) {
+	case 'edge-chromium':
+	case 'edge':
+	case 'edge-ios':
+	case 'chrome':
+		enablePlugin = true;
+		browserVar = chrome;
+		break;
+	default:
+		browserVar = browser;
+		break;
+}
+
+
 let UDADebug = false; //this variable exists in links.js file also
 const apiHost = process.env.baseURL;
 const cookieName = "uda-sessiondata";
@@ -25,14 +48,14 @@ let activeTabId;
 /**
  * Storing the active tab id to fetch for further data.
  */
-chrome.tabs.onActivated.addListener(function (activeInfo) {
+browserVar.tabs.onActivated.addListener(function (activeInfo) {
 	activeTabId = activeInfo.tabId;
 });
 
-//login with chrome identity functionality
-async function loginWithChrome() {
+//login with browser identity functionality
+async function loginWithBrowser() {
 	sessionData.authenticationsource = "google";
-	chrome.identity.getProfileUserInfo({accountStatus: 'ANY'}, async function (data) {
+	browserVar.identity.getProfileUserInfo({accountStatus: 'ANY'}, async function (data) {
 		if (data.id !== '' && data.email !== "") {
 			sessionData.authenticated = true;
 			sessionData.authdata = data;
@@ -54,7 +77,7 @@ async function loginWithChrome() {
 async function sendSessionData(sendaction = "UDAUserSessionData", message = '') {
 	let tab = await getTab();
 	if (sendaction === "UDAAlertMessageData") {
-		await chrome.tabs.sendMessage(tab.id, {action: sendaction, data: message});
+		await browserVar.tabs.sendMessage(tab.id, {action: sendaction, data: message});
 		return true;
 	} else {
 		let url = new URL(tab.url);
@@ -79,7 +102,7 @@ async function sendSessionData(sendaction = "UDAUserSessionData", message = '') 
 		}
 		sessionData.csp = cspRecord;
 		console.log(sessionData);
-		await chrome.tabs.sendMessage(tab.id, {action: sendaction, data: JSON.stringify(sessionData)});
+		await browserVar.tabs.sendMessage(tab.id, {action: sendaction, data: JSON.stringify(sessionData)});
 		return true;
 	}
 }
@@ -90,12 +113,12 @@ async function sendSessionData(sendaction = "UDAUserSessionData", message = '') 
  */
 async function getTab() {
 	let queryOptions = {active: true, currentWindow: true};
-	let tab = (await chrome.tabs.query(queryOptions))[0];
-	// let tab = await chrome.tabs.getCurrent();
+	let tab = (await browserVar.tabs.query(queryOptions))[0];
+	// let tab = await browserVar.tabs.getCurrent();
 	if (tab) {
 		return tab;
 	} else {
-		tab = await chrome.tabs.get(activeTabId);
+		tab = await browserVar.tabs.get(activeTabId);
 		if (tab) {
 			return tab;
 		} else {
@@ -106,19 +129,20 @@ async function getTab() {
 }
 
 // listen for the requests made from webpage for accessing userdata
-chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
+browserVar.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
+	console.log(request);
 	if (request.action === "getusersessiondata") {
-		chrome.storage.local.get([cookieName], async function (storedSessionData) {
-			if (chrome.runtime.lastError) {
+		browserVar.storage.local.get([cookieName], async function (storedsessiondata) {
+			if (browserVar.runtime.lastError) {
 				console.log('failed to read stored session data');
 			} else {
-				// looks like chrome storage might have changed so changing the reading the data has been changed. For to work with old version have added the new code to else if statement
-				if (storedSessionData.hasOwnProperty("sessionkey") && storedSessionData["sessionKey"] && typeof storedSessionData["sessionKey"] != 'object') {
-					sessionData = storedSessionData;
-					if(storedSessionData.hasOwnProperty('authenticated') && storedSessionData.authenticated) {
+				// looks like browser storage might have changed so changing the reading the data has been changed. For to work with old version have added the new code to else if statement
+				if (storedsessiondata.hasOwnProperty("sessionkey") && storedsessiondata["sessionKey"] && typeof storedsessiondata["sessionKey"] != 'object') {
+					sessionData = storedsessiondata;
+					if(storedsessiondata.hasOwnProperty('authenticated') && storedsessiondata.authenticated) {
 						await sendSessionData();
 					} else {
-						await loginWithChrome();
+						await loginWithBrowser();
 					}
 				} else if (storedSessionData.hasOwnProperty(cookieName) && storedSessionData[cookieName].hasOwnProperty("sessionkey") && storedSessionData[cookieName]["sessionKey"] && typeof storedSessionData[cookieName]["sessionKey"] != 'object') {
 					sessionData = storedSessionData[cookieName];
@@ -126,17 +150,17 @@ chrome.runtime.onMessage.addListener(async function (request, sender, sendRespon
 					if(storedSessionData.hasOwnProperty('authenticated') && storedSessionData.authenticated) {
 						await sendSessionData();
 					} else {
-						await loginWithChrome();
+						await loginWithBrowser();
 					}
 				} else {
 					await getSessionKey(false);
-					await loginWithChrome();
+					await loginWithBrowser();
 				}
 			}
 		});
 
 	} else if (request.action === "authtenicate") {
-		await loginWithChrome();
+		await loginWithBrowser();
 	} else if (request.action === "Debugvalueset") {
 		UDADebug = request.data;
 	} else if (request.action === "createSession") {
@@ -144,11 +168,11 @@ chrome.runtime.onMessage.addListener(async function (request, sender, sendRespon
 	}
 });
 
-//storing the data to the chrome storage
+//storing the data to the browser storage
 async function storeSessionData() {
 	let storageData = {};
 	storageData[cookieName] = sessionData;
-	await chrome.storage.local.set(storageData);
+	await browserVar.storage.local.set(storageData);
 	return true;
 }
 
@@ -167,7 +191,7 @@ async function getSessionKey(senddata = true) {
 
 }
 
-//binding the sessionkey and chrome identity id
+//binding the sessionkey and browser identity id
 async function bindAuthenticatedAccount() {
 	let authdata = {
 		authid: sessionData.authdata.id,
@@ -289,12 +313,12 @@ let onHeadersReceived = function (details) {
 let onHeaderFilter = {urls: ['*://*/*'], types: ['main_frame']};
 
 // commented the CSP checking code functionality
-/*chrome.declarativeNetRequest.onHeadersReceived.addListener(
+/*browserVar.declarativeNetRequest.onHeadersReceived.addListener(
 	onHeadersReceived, onHeaderFilter, ['blocking', 'responseHeaders']
 );*/
 
 /**
- * Store keycloak data in chrome extension storage for retrival for other sites
+ * Store keycloak data in browser extension storage for retrival for other sites
  */
 async function keycloakStore(data){
 	console.log('creating session at extension');
