@@ -38,7 +38,7 @@ export const getScreenSize = () => {
   }
   resolution.height = window.screen.height;
   resolution.width = window.screen.width;
-  let windowProperties = {
+  const windowProperties = {
     page: page,
     screen: screen,
     scrollInfo: {scrollTop: scrollTop, scrollLeft: scrollLeft},

@@ -24,6 +24,7 @@ export const CONFIG = {
   RECORDING_SEQUENCE: "UDAActiveRecordingData",
   SELECTED_RECORDING: "UDASelectedRecordedItem",
   USER_AUTH_DATA_KEY: "udaUserData",
+  UserScreenAcceptance: "udaUserScreenAcceptance",
   USER_SESSION_KEY: "UDASessionKey",
   UDAKeyCloakKey: "UDAKeyCloak",
   USER_SESSION_ID: "UDASessionId",
