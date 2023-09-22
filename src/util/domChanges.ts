@@ -4,9 +4,10 @@ import {getFromStore} from "./index";
 
 export let timer: any = null;
 
-const observer = new MutationObserver(async () => {
+const observer = new MutationObserver(async (mutationList, observer) => {
   if (timer) {
     clearTimeout(timer);
+    // console.log(mutationList);
   }
   timer = setTimeout(async () => {
     const isRecording = getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true";

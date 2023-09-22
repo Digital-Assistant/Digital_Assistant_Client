@@ -930,13 +930,13 @@ browserVar.runtime.onMessage.addListener( /*#__PURE__*/function () {
                     _context.next = 30;
                     break;
                   case 15:
-                    if (!(storedsessiondata.hasOwnProperty(cookieName) && storedsessiondata[cookieName].hasOwnProperty("sessionkey") && storedsessiondata[cookieName]["sessionKey"] && _typeof(storedsessiondata[cookieName]["sessionKey"]) != 'object')) {
+                    if (!(storedSessionData.hasOwnProperty(cookieName) && storedSessionData[cookieName].hasOwnProperty("sessionkey") && storedSessionData[cookieName]["sessionKey"] && _typeof(storedSessionData[cookieName]["sessionKey"]) != 'object')) {
                       _context.next = 26;
                       break;
                     }
-                    sessionData = storedsessiondata[cookieName];
+                    sessionData = storedSessionData[cookieName];
                     // await sendSessionData();
-                    if (!(storedsessiondata.hasOwnProperty('authenticated') && storedsessiondata.authenticated)) {
+                    if (!(storedSessionData.hasOwnProperty('authenticated') && storedSessionData.authenticated)) {
                       _context.next = 22;
                       break;
                     }
