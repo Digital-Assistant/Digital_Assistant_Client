@@ -120,7 +120,12 @@ export const profanityCheck = async (request?: any) => {
  * @returns promise
  */
 export const saveClickData = async (node: any, text: string, meta: any) => {
-  let objectData: any = domJSON.toJSON(node, {serialProperties: true});
+  // removing circular reference before converting to json with deep clone.
+  const processedNode = await node.cloneNode(true);
+
+  console.log(getAbsoluteOffsets(processedNode));
+
+  let objectData: any = domJSON.toJSON(processedNode, {serialProperties: true});
   if (objectData.meta) {
     objectData.meta = meta;
   } else {
@@ -142,6 +147,7 @@ export const saveClickData = async (node: any, text: string, meta: any) => {
   }
 
   objectData.offset = getAbsoluteOffsets(node);
+  console.log(objectData.offset);
   objectData.node.nodeInfo = getNodeInfo(node);
 
   const {enableNodeTypeChangeSelection} = CONFIG;
