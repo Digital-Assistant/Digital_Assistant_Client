@@ -11,8 +11,8 @@ var UdanLibrary;
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "AddToClickObjects": function() { return /* binding */ AddToClickObjects; },
-/* harmony export */   "ignoreTags": function() { return /* binding */ ignoreTags; }
+/* harmony export */   AddToClickObjects: function() { return /* binding */ AddToClickObjects; },
+/* harmony export */   ignoreTags: function() { return /* binding */ ignoreTags; }
 /* harmony export */ });
 var ignoreTags = ["body", "document", "window", "html", "script", "style", "iframe", "doctype", "link", "svg", "path", "meta", "circle", "rect", "stop", "defs", "linearGradient", "g"];
 var AddToClickObjects = function AddToClickObjects(node) {
@@ -27,10 +27,10 @@ var AddToClickObjects = function AddToClickObjects(node) {
     if (clickObject.element === window) {
       return;
     }
-    if (typeof (clickObject === null || clickObject === void 0 ? void 0 : (_clickObject$element = clickObject.element) === null || _clickObject$element === void 0 ? void 0 : _clickObject$element.tagName) === 'undefined') {
+    if (typeof (clickObject === null || clickObject === void 0 || (_clickObject$element = clickObject.element) === null || _clickObject$element === void 0 ? void 0 : _clickObject$element.tagName) === 'undefined') {
       return;
     }
-    var tag = clickObject === null || clickObject === void 0 ? void 0 : (_clickObject$element2 = clickObject.element) === null || _clickObject$element2 === void 0 ? void 0 : _clickObject$element2.tagName;
+    var tag = clickObject === null || clickObject === void 0 || (_clickObject$element2 = clickObject.element) === null || _clickObject$element2 === void 0 ? void 0 : _clickObject$element2.tagName;
     if (tag && ignoreTags.indexOf(tag.toLowerCase()) !== -1) {
       return;
     }
@@ -117,7 +117,6 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util_headers_addToClickObject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util/headers/addToClickObject */ "./src/util/headers/addToClickObject.js");
 // adding the click object that is registered via javascript
-
 window.UDAClickObjects = [];
 window.UDARemovedClickObjects = [];
 
