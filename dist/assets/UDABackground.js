@@ -897,7 +897,7 @@ browserVar.runtime.onMessage.addListener( /*#__PURE__*/function () {
             break;
           }
           browserVar.storage.local.get([cookieName], /*#__PURE__*/function () {
-            var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(storedsessiondata) {
+            var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(storedSessionData) {
               return _regeneratorRuntime().wrap(function _callee$(_context) {
                 while (1) switch (_context.prev = _context.next) {
                   case 0:
@@ -909,12 +909,12 @@ browserVar.runtime.onMessage.addListener( /*#__PURE__*/function () {
                     _context.next = 30;
                     break;
                   case 4:
-                    if (!(storedsessiondata.hasOwnProperty("sessionkey") && storedsessiondata["sessionKey"] && _typeof(storedsessiondata["sessionKey"]) != 'object')) {
+                    if (!(storedSessionData.hasOwnProperty("sessionkey") && storedSessionData["sessionKey"] && _typeof(storedSessionData["sessionKey"]) != 'object')) {
                       _context.next = 15;
                       break;
                     }
-                    sessionData = storedsessiondata;
-                    if (!(storedsessiondata.hasOwnProperty('authenticated') && storedsessiondata.authenticated)) {
+                    sessionData = storedSessionData;
+                    if (!(storedSessionData.hasOwnProperty('authenticated') && storedSessionData.authenticated)) {
                       _context.next = 11;
                       break;
                     }
