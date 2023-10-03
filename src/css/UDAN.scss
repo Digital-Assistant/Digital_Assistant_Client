@@ -514,9 +514,10 @@ $uda-tooltip-bg: #f2f4fe;
                 width: 100% !important;
                 margin: 10px 0px;
                 /*height: 18px !important;
-          box-sizing: unset !important;*/
+                box-sizing: unset !important;*/
                 height: 40px;
                 padding-left: 10px;
+                z-index: 10000000000000000;
 
                 &:focus {
                     outline: none;
@@ -1203,6 +1204,9 @@ Reference: https://codepen.io/peeke/pen/BjxXZa
  */
 
 .udan-main-panel {
+
+    z-index: 10000000000;
+
     .pulse {
         //animation: pulse-animation 2s infinite;
         transform: translateX(-50%) translateY(-50%);

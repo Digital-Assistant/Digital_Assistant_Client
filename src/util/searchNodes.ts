@@ -14,20 +14,20 @@ import {UDAConsoleLogger} from "../config/error-log";
 export const searchNodes = (recordedNode, compareElements) => {
 
   //  fall back old logic
-  const originalNode = getObjData(recordedNode?.node?.objectdata);
+  const recordedNodeData = getObjData(recordedNode?.node?.objectdata);
 
   let finalMatchElement = null;
   // personal tag check
   let isPersonalNode = false;
   const matchNodes = [];
-  if (originalNode.meta.hasOwnProperty('isPersonal') && originalNode.meta.isPersonal) {
+  if (recordedNodeData.meta.hasOwnProperty('isPersonal') && recordedNodeData.meta.isPersonal) {
     isPersonalNode = true;
   }
   for (let searchNode of compareElements) {
     let searchLabelExists = false;
     let compareNode = domJSON.toJSON(searchNode.node, {serialProperties: true});
     // compare recorded node with personal node tag or not
-    let match = compareNodes(compareNode.node, originalNode.node, isPersonalNode);
+    let match = compareNodes(compareNode.node, recordedNodeData.node, isPersonalNode);
 
     // uncomment for debugging
     if(match.matched+3 >= match.count){
@@ -37,12 +37,12 @@ export const searchNodes = (recordedNode, compareElements) => {
     }
 
     // we are incrementing 'matched' by 'innerTextWeight' for 'this' node and every child node and we are matching innerchildcounts that were returned from comparenodes
-    if (compareNode.node.nodeName === originalNode.node.nodeName) {
+    if (compareNode.node.nodeName === recordedNodeData.node.nodeName) {
       if (match.innerTextFlag && Math.abs((match.matched) - match.count) <= (match.innerChildNodes * CONFIG.innerTextWeight)) {
         searchLabelExists = true;
       } else if (match.matched === match.count) {
         searchLabelExists = true;
-      } else if (originalNode.node.nodeName === 'CKEDITOR' && (match.matched + 1) >= match.count) {
+      } else if (recordedNodeData.node.nodeName === 'CKEDITOR' && (match.matched + 1) >= match.count) {
         // fix for editor playback
         searchLabelExists = true;
       }
@@ -95,7 +95,7 @@ export const searchNodes = (recordedNode, compareElements) => {
       finalMatchNode = finalMatchNodes[0];
     } else if (finalMatchNodes.length > 1) {
       // compare element positions as there are multiple matching nodes with same labels
-      finalMatchNode = processDistanceOfNodes(finalMatchNodes, originalNode.node);
+      finalMatchNode = processDistanceOfNodes(finalMatchNodes, recordedNodeData.node);
     }
 
     if (finalMatchNode) {
