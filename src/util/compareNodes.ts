@@ -93,7 +93,9 @@ export const compareNodes = (compareNode, recordedNode, isPersonalNode = false, 
       if (weight > 0.90) {
         match.matched++;
       }
-    }
+    }/* else if (compareNode.hasOwnProperty(key) && (key === 'innerText' || key === 'outerText') && compareNode[key] !== recordedNode[key]) {
+
+    }*/
     // matching personal node key value pairs for personal tag true
     else if (isPersonalNode && CONFIG.personalNodeIgnoreAttributes.indexOf(key) !== -1) {
       // make inner text flag to true if personal tag is true

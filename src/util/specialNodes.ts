@@ -15,7 +15,7 @@ export const specialNodes = {
   // ignore clickable nodes while attaching event listeners
   "ignoreChildren": {
     "tags": ['ng-select', 'ngb-datepicker', 'ng-dropdown-panel', 'ckeditor', 'fusioncharts', 'ngb-datepicker', 'ngx-daterangepicker-material', 'mat-datepicker-content'],
-    "classes": ['cke_dialog_container', 'cke_notifications_area', 'gldp-default', 'ajs-layer', 'aui-list', 'herknl', 'uda_exclude', 'jstBlock', 'datepicker', 'fa-calendar', 'drdn-content', 'dropdown-button', 'dropdown-trigger1', 'select2-selection', 'select2-container--open', 'module-item', 'css-atn8fj-control', 'e-multiselect', 'e-popup'],
+    "classes": ['cke_dialog_container', 'cke_notifications_area', 'gldp-default', 'ajs-layer', 'aui-list', 'herknl', 'uda_exclude', 'jstBlock', 'datepicker', 'fa-calendar', 'drdn-content', 'dropdown-button', 'dropdown-trigger1', 'select2-selection', 'select2-container--open', 'module-item', 'css-atn8fj-control', 'e-multiselect'], //, 'e-popup'
     "attributes": ['uib-datepicker-popup-wrap']
   },
   // ignore clicks on special nodes
