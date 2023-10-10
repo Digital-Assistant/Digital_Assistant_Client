@@ -21,7 +21,7 @@ import { off, on, trigger } from "./util/events";
 import { UserDataContext } from "./providers/UserDataContext";
 import { AppConfig } from "./config/AppConfig";
 import { CustomConfig } from "./config/CustomConfig";
-import {postRecordSequenceData} from "./services";
+import {postRecordSequenceData, recordUserClickData} from "./services";
 import { addBodyEvents } from "./util/addBodyEvents";
 import { initSpecialNodes } from "./util/initSpecialNodes";
 import {delay} from "./util/delay";
@@ -228,6 +228,8 @@ function App(props) {
         setShowLoader(true);
         await initSpecialNodes();
         if(searchParams.get(CONFIG.UDA_URL_Param)){
+            let searchId = searchParams.get(CONFIG.UDA_URL_Param);
+            await recordUserClickData('searchRecordingId', window.location.host, parseInt(searchId));
             let recordDetails = await fetchRecord({
                 id: searchParams.get(CONFIG.UDA_URL_Param),
                 domain: encodeURI(fetchDomain()),
@@ -401,6 +403,7 @@ function App(props) {
         setShowRecord(false);
         setReFetchSearch("");
         setShowSearch(false);
+        await recordUserClickData('recordingStart', window.location.host);
         await addBodyEvents();
     };
 
@@ -430,10 +433,12 @@ function App(props) {
     const recordHandler = async (type: string, data?: any) => {
         switch (type) {
             case "submit":
+                await recordUserClickData('recordingSubmit', window.location.host);
                 await postRecordSequenceData({ ...data });
                 await setSearchKeyword("");
                 break;
             case "cancel":
+                await recordUserClickData('recordingStop', window.location.host);
                 setIsRecording(false);
                 await setSearchKeyword("");
                 break;

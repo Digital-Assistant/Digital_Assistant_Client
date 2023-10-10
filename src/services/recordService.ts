@@ -203,12 +203,12 @@ export const postRecordSequenceData = async (request: any) => {
  * @returns  promise
  * @param request
  */
-export const putUserClickData = async (request: any) => {
+export const recordUserClickData = async (clickType='sequencerecord', clickedName='', recordId: number = 0) => {
   const payload = {
-    ...request,
-    clickedname: '["Test"]',
-    clicktype: "sequencerecord",
-    recordid: 1375,
+    usersessionid: await getSessionKey(),
+    clickedname: clickedName,
+    clicktype: clickType,
+    recordid: recordId,
   };
-  return userClick(payload);
+  return await userClick(payload);
 };

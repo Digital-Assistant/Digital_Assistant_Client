@@ -902,7 +902,7 @@ Progress animation
     transition: opacity 0.6s;
     background-color: $uda-tooltip-bg;
     box-shadow: 0 1px 16px $uda-boxshodow-color;
-    z-index: 9999999;
+    z-index: 10000000000000000;
     border: 1px solid $uda-primary-color;
 
     .uda-tooltip-text-content {

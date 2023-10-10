@@ -39,8 +39,7 @@ export const recordUserClick = async (node: HTMLElement, event: any) => {
 
   //should not record untrusted clicks
   if(!event.isTrusted){
-    console.log('untrusted click on : ')
-    console.log(node);
+    return;
   }
 
   // node = event.target;
