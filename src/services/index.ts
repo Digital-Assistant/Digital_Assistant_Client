@@ -102,7 +102,7 @@ export const processArgs1 = (url: string, val: any) => {
   return url?.replace(/#([^#]+)#/g, (_, key) => (val[key] || "") && val[key]);
 }
 
-export {putUserClickData} from "./recordService";
+export {recordUserClickData} from "./recordService";
 export {postRecordSequenceData} from "./recordService";
 export {saveClickData} from "./recordService";
 
