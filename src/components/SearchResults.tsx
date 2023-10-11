@@ -12,6 +12,7 @@ import { setToStore } from "../util";
 import InfiniteScroll from "react-infinite-scroller";
 import {CONFIG} from "../config";
 import {getRowObject} from "../util/getRowObject";
+import {recordUserClickData} from "../services";
 
 export interface MProps {
   visibility?: boolean;
@@ -40,7 +41,8 @@ export const SearchResults = (props: MProps) => {
     setSearchResults([...globalSearchResults]);
   }, [props?.data]);
 
-  const selectItem = (item: any, play=false) => {
+  const selectItem = async (item: any, play=false) => {
+    await recordUserClickData('viewRecording', '', item.id);
     setToStore(item, CONFIG.SELECTED_RECORDING, false);
     if (props?.showDetails) props.showDetails(item);
 
