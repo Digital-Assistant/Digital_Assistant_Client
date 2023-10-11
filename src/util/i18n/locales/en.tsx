@@ -35,5 +35,6 @@ export const TRANSLATIONS_EN = {
   savedSequenceDescription: "Your sequence has been saved successfully",
   savedSequenceError: "Unable to save the recorded sequence",
   savedSequenceErrorDescription: "Unable to save the recorded sequence please try again",
-  delayTimePlaceHolder: "Number of seconds to delay"
+  delayTimePlaceHolder: "Number of seconds to delay",
+  confirmScreenResolution: "Current version of UDAN supports only FHD (1920x1080) resolution. Future versions will support more resolutions. \n Do you want to continue?"
 };

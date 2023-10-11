@@ -24,6 +24,7 @@ export const CONFIG = {
   RECORDING_SEQUENCE: "UDAActiveRecordingData",
   SELECTED_RECORDING: "UDASelectedRecordedItem",
   USER_AUTH_DATA_KEY: "udaUserData",
+  UserScreenAcceptance: "udaUserScreenAcceptance",
   USER_SESSION_KEY: "UDASessionKey",
   UDAKeyCloakKey: "UDAKeyCloak",
   USER_SESSION_ID: "UDASessionId",
@@ -252,5 +253,5 @@ export const CONFIG = {
     storageName: "uda-user-screen-consent",
     data: {proceed: true},
   },
-  ignoreDynamicAttributeText: ['_ng']
+  ignoreDynamicAttributeText: ['_ng','__context', '__zone_symbol']
 };

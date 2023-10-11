@@ -1,5 +1,5 @@
 import {ENDPOINT} from "../config/endpoints";
-import {REST} from ".";
+import {recordUserClickData, REST} from ".";
 import {specialNodes} from "../util/specialNodes";
 import {getUserId} from "./userService";
 
@@ -16,6 +16,11 @@ export const fetchSearchResults = async (request?: {
   additionalParams?: any
   userSessionId?: any
 }) => {
+
+  if(request?.keyword) {
+    await recordUserClickData('search', request?.keyword);
+  }
+
   request.userSessionId = await getUserId();
   if (request.additionalParams === null) {
     delete request.additionalParams;

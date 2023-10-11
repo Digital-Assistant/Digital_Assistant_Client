@@ -5,7 +5,6 @@ import {clickableElementExists, getFromStore, setToStore} from "./index";
 import {saveClickData} from "../services";
 import {checkNodeValues} from "./checkNodeValues";
 import mapClickedElementToHtmlFormElement from "./recording-utils/mapClickedElementToHtmlFormElement";
-import {notification} from "antd";
 import {addNotification} from "./addNotification";
 import {translate} from "./translation";
 declare const UDAGlobalConfig;
@@ -20,7 +19,7 @@ global.clickedNode = null;
  * @param event
  * @returns
  */
-export const recordUserClick = async (node: HTMLElement, fromDocument: boolean = false, selectChange: boolean = false, event: any) => {
+export const recordUserClick = async (node: HTMLElement, event: any) => {
 
   if (!node) return false;
 
@@ -40,8 +39,7 @@ export const recordUserClick = async (node: HTMLElement, fromDocument: boolean =
 
   //should not record untrusted clicks
   if(!event.isTrusted){
-    console.log('untrusted click on : ')
-    console.log(node);
+    return;
   }
 
   // node = event.target;

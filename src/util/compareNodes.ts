@@ -93,6 +93,14 @@ export const compareNodes = (compareNode, recordedNode, isPersonalNode = false, 
       if (weight > 0.90) {
         match.matched++;
       }
+    } else if ((key === 'innerText' || key === 'outerText') && typeof compareNode[key] === 'undefined') {
+      // fix for element innerText or OuterText if empty got recorded.
+      let trimmedRecordedNode = recordedNode[key].trim();
+      if(trimmedRecordedNode === null || trimmedRecordedNode === '' || trimmedRecordedNode === 'null') {
+        match.matched++;
+      } else {
+        match.unmatched.push({key: key, compareNodeValues: compareNode[key], recordedNodeValues: recordedNode[key]});
+      }
     }
     // matching personal node key value pairs for personal tag true
     else if (isPersonalNode && CONFIG.personalNodeIgnoreAttributes.indexOf(key) !== -1) {

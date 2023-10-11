@@ -20,7 +20,7 @@ import {
   CopyFilled
 } from "@ant-design/icons";
 import {getCurrentPlayItem, getFromStore, getObjData, setToStore,} from "../util";
-import {deleteRecording} from "../services/recordService";
+import {deleteRecording, recordUserClickData} from "../services/recordService";
 import {getUserId} from "../services/userService";
 import {matchNode} from "../util/invokeNode";
 import {CONFIG} from "../config";
@@ -78,7 +78,7 @@ export const RecordSequenceDetails = (props: MProps) => {
   /**
    * Record player(auto play)
    */
-  const autoPlay = (data = null) => {
+  const autoPlay = async (data = null) => {
     if (getFromStore(CONFIG.RECORDING_IS_PLAYING, true) !== "on") {
       return;
     }
@@ -86,6 +86,7 @@ export const RecordSequenceDetails = (props: MProps) => {
     if (playItem.node && matchNode(playItem)) {
       updateStatus(playItem.index);
     } else {
+      await recordUserClickData('playCompleted', getName(), selectedRecordingDetails.id);
       pause();
       removeToolTip();
     }
@@ -133,7 +134,8 @@ export const RecordSequenceDetails = (props: MProps) => {
   /**
    * Navigates back to search results card
    */
-  const backNav = (forceRefresh = false) => {
+  const backNav = async (forceRefresh = false) => {
+    await recordUserClickData('backToSearchResults', getName(), selectedRecordingDetails.id);
     resetStatus();
     removeToolTip();
     if (props.cancelHandler) props.cancelHandler(forceRefresh);
@@ -142,7 +144,8 @@ export const RecordSequenceDetails = (props: MProps) => {
   /**
    * Auto play button handler
    */
-  const play = () => {
+  const play = async () => {
+    await recordUserClickData('play', getName(), selectedRecordingDetails.id);
     if (props.playHandler) props.playHandler("on");
     // autoPlay();
   };
@@ -161,6 +164,7 @@ export const RecordSequenceDetails = (props: MProps) => {
   }
 
   const removeRecording = async () => {
+    await recordUserClickData('delete', getName(), selectedRecordingDetails.id);
     props.showLoader(true);
     await deleteRecording({id: selectedRecordingDetails.id});
     setTimeout(() => {
@@ -254,13 +258,18 @@ export const RecordSequenceDetails = (props: MProps) => {
             {props?.isPlaying == "off" && (
                 <PlayCircleOutlined
                     className="large secondary uda_exclude"
-                    onClick={() => play()}
+                    onClick={async () => {
+                      await play();
+                    }}
                 />
             )}
             {props?.isPlaying == "on" && (
                 <PauseCircleOutlined
                     className="large secondary uda_exclude"
-                    onClick={() => pause()}
+                    onClick={async () => {
+                      await recordUserClickData('stopPlay', getName(), selectedRecordingDetails.id);
+                      pause();
+                    }}
                 />
             )}
           </div>

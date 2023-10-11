@@ -8,12 +8,7 @@ import {getAbsoluteOffsets, getFromStore, inArray} from "../util";
 import domJSON from "domjson";
 import mapClickedElementToHtmlFormElement from "../util/recording-utils/mapClickedElementToHtmlFormElement";
 import {UDAConsoleLogger} from "../config/error-log";
-import { CustomConfig } from "../config/CustomConfig";
-import {AppConfig} from "../config/AppConfig";
 import {fetchDomain} from "../util/fetchDomain";
-
-// adding global variable declaration for exposing react custom configuration
-// global.UDAPluginSDK = AppConfig;
 
 declare global {
   interface Window {
@@ -124,8 +119,13 @@ export const profanityCheck = async (request?: any) => {
  * @param meta
  * @returns promise
  */
-export const saveClickData = async (node: HTMLElement, text: string, meta: any) => {
-  let objectData: any = domJSON.toJSON(node, {serialProperties: true});
+export const saveClickData = async (node: any, text: string, meta: any) => {
+  // removing circular reference before converting to json with deep clone.
+  const processedNode = await node.cloneNode(true);
+
+  console.log(getAbsoluteOffsets(processedNode));
+
+  let objectData: any = domJSON.toJSON(processedNode, {serialProperties: true});
   if (objectData.meta) {
     objectData.meta = meta;
   } else {
@@ -147,6 +147,7 @@ export const saveClickData = async (node: HTMLElement, text: string, meta: any) 
   }
 
   objectData.offset = getAbsoluteOffsets(node);
+  console.log(objectData.offset);
   objectData.node.nodeInfo = getNodeInfo(node);
 
   const {enableNodeTypeChangeSelection} = CONFIG;
@@ -159,15 +160,20 @@ export const saveClickData = async (node: HTMLElement, text: string, meta: any) 
   }
 
   UDAConsoleLogger.info(objectData, 3);
+
   // let domain = fetchDomain();
   let domain = window.location.host;
+  const jsonString = TSON.stringify(objectData);
+
+  UDAConsoleLogger.info(jsonString, 1);
+
   return {
     domain: domain,
     urlpath: window.location.pathname,
     clickednodename: text,
     html5: 0,
     clickedpath: "",
-    objectdata: TSON.stringify(objectData),
+    objectdata: jsonString,
   };
 };
 
@@ -197,12 +203,12 @@ export const postRecordSequenceData = async (request: any) => {
  * @returns  promise
  * @param request
  */
-export const putUserClickData = async (request: any) => {
+export const recordUserClickData = async (clickType='sequencerecord', clickedName='', recordId: number = 0) => {
   const payload = {
-    ...request,
-    clickedname: '["Test"]',
-    clicktype: "sequencerecord",
-    recordid: 1375,
+    usersessionid: await getSessionKey(),
+    clickedname: clickedName,
+    clicktype: clickType,
+    recordid: recordId,
   };
-  return userClick(payload);
+  return await userClick(payload);
 };
