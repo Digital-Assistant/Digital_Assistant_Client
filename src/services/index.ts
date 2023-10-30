@@ -1,6 +1,7 @@
 import TSON from "typescript-json";
+import {CustomConfig} from "../config/CustomConfig";
 
-declare const UDAGlobalConfig;
+global.UDAGlobalConfig = CustomConfig;
 
 /**
  * common REST call
@@ -20,7 +21,7 @@ export const apiCal = (options: any) => {
   let url;
 
   if(options.url.indexOf("http") === -1){
-    if(UDAGlobalConfig.environment === 'TEST'){
+    if(global.UDAGlobalConfig.environment === 'TEST'){
       baseURL = baseTestURL;
     }
     url = baseURL+options.url;
