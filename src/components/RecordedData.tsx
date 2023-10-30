@@ -82,8 +82,10 @@ export const RecordedData = (props: MProps) => {
     };
 
     const checkProfanity = async (keyword: any) => {
-        await setCheckingProfanity(true);
+
         if (!props.config.enableProfanity) return keyword.trim();
+
+        await setCheckingProfanity(true);
         const response: any = await profanityCheck(keyword);
         if (response.Terms && response.Terms.length > 0) {
             response.Terms.forEach(function (term) {

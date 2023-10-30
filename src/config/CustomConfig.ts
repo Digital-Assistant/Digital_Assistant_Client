@@ -19,6 +19,7 @@ export interface CustomConfigPropTypes {
   enableUdaIcon: boolean,
   udaDivId: string,
   enableForAllDomains: boolean,
+  enableSpeechToText: boolean
 }
 
 // assigning default values to the default configuration
@@ -30,11 +31,12 @@ export const CustomConfig: CustomConfigPropTypes = {
   enableNodeTypeSelection: true, // Flag for enabling node type selection
   enablePermissions: false, // Flag for enabling permissions addition
   permissions: {}, // Object where the permissions can be passed
-  enableProfanity: true, // Flag for enabling profanity check
+  enableProfanity: false, // Flag for enabling profanity check
   enableRecording: true, // Flag for enabling recording functionality
   enableOverlay: true, // Flag for enabling overlay functionality or enabling squeeze functionality
-  environment: 'PROD',
+  environment: 'TEST',
   enableUdaIcon: true,
   udaDivId: 'uda-nistapp-logo',
-  enableForAllDomains: false // Flag to enable all the recording to be visible across all domains
+  enableForAllDomains: false, // Flag to enable all the recording to be visible across all domains
+  enableSpeechToText: true // Flag to enable speech to text
 };

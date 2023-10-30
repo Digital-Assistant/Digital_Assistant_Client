@@ -77,12 +77,13 @@ We solicit and welcome comments, help, documentation in improving the client.
                          enableSkipDuringPlay: true, // Flag for enabling skip functionality
                          enableTooltipAddition: true, // Flag for adding custom tooltip information
                          enableNodeTypeSelection: true, // Flag for enabling node type selection
-                         enableProfanity: true, // Flag for enabling profanity check
+                         enableProfanity: false, // Flag for enabling profanity check
                          enableRecording: true, // Flag for enabling recording functionality
                          enableOverlay: true, // Flag for enabling overlay functionality or enabling squeeze functionality
                          enableUdaIcon: true, // Flag for enabling UdaIcon to appear on the screen
                          udaDivId: 'id of the document element', // Flag for attaching click event to open uda panel
-                         enableForAllDomains: false // Flag to enable all the recording to be visible across all domains
+                         enableForAllDomains: false, // Flag to enable all the recording to be visible across all domains
+                         enableSpeechToText: false // Flag to enable speech to text on the search bar.
                      });
                  }
              }
