@@ -312,7 +312,7 @@ export const RecordedData = (props: MProps) => {
         }
 
         // save delay playback time
-        if(slowPlayback){
+        if(props.config.enableSlowReplay && slowPlayback){
             if(_payload.hasOwnProperty('additionalParams')) {
                 _payload.additionalParams = {..._payload.additionalParams, slowPlaybackTime: delayPlaybackTime};
             } else {
@@ -732,7 +732,10 @@ export const RecordedData = (props: MProps) => {
                     <ul className="uda-recording" id="uda-recorded-results">
                         {renderData()}
                     </ul>
+
                     <hr style={{border: "1px solid #969696", width: "100%"}}/>
+
+                    {props.config.enableSlowReplay && <>
 
                     <div id="uda-play-slow-section">
                         <div className="flex-card flex-vcenter selectedElement">
@@ -762,6 +765,7 @@ export const RecordedData = (props: MProps) => {
                             </div>
                         }
                     </div>
+                    </> }
 
                     <div style={{textAlign: "left"}}>
                         <input
