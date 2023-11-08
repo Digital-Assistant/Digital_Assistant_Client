@@ -96,6 +96,7 @@ const Header = (props: HeaderProps) => {
           style={{ textAlign: "center", marginTop: 10 }}
         >
           <div className="uda-search-div">
+            {(props.config.enableSpeechToText) &&
             <MicButton
               onSpeech={(text: string) => {
                 setSearchKeyword(text);
@@ -103,6 +104,7 @@ const Header = (props: HeaderProps) => {
               }}
               selectedLang={selectedLang}
             />
+            }
             <input
               type="text"
               name="uda-search-input"

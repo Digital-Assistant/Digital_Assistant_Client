@@ -19,22 +19,26 @@ export interface CustomConfigPropTypes {
   enableUdaIcon: boolean,
   udaDivId: string,
   enableForAllDomains: boolean,
+  enableSpeechToText: boolean,
+  enableSlowReplay: boolean
 }
 
 // assigning default values to the default configuration
 export const CustomConfig: CustomConfigPropTypes = {
-  enableEditClickedName: true, // Flag for editing the clicked element
+  enableEditClickedName: false, // Flag for editing the clicked element
   enableSkipDuringPlay: false, // Flag for enabling skip functionality
-  enableTooltipAddition: true, // Flag for adding custom tooltip information
+  enableTooltipAddition: false, // Flag for adding custom tooltip information
   enableMultilingual: false, // Flag for enabling multilingual search with speech
-  enableNodeTypeSelection: true, // Flag for enabling node type selection
+  enableNodeTypeSelection: false, // Flag for enabling node type selection
   enablePermissions: false, // Flag for enabling permissions addition
   permissions: {}, // Object where the permissions can be passed
-  enableProfanity: true, // Flag for enabling profanity check
-  enableRecording: false, // Flag for enabling recording functionality
+  enableProfanity: false, // Flag for enabling profanity check
+  enableRecording: true, // Flag for enabling recording functionality
   enableOverlay: true, // Flag for enabling overlay functionality or enabling squeeze functionality
-  environment: 'PROD',
+  environment: 'TEST',
   enableUdaIcon: true,
   udaDivId: 'uda-nistapp-logo',
-  enableForAllDomains: false // Flag to enable all the recording to be visible across all domains
+  enableForAllDomains: false, // Flag to enable all the recording to be visible across all domains
+  enableSpeechToText: false, // Flag to enable speech to text
+  enableSlowReplay: false // Flag to enable slow playback
 };
