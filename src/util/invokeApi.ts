@@ -2,7 +2,9 @@
  * Common API call functionality
  */
 
-declare const UDAGlobalConfig;
+import {CustomConfig} from "../config/CustomConfig";
+
+global.UDAGlobalConfig = CustomConfig;
 
 export const invokeApi = async (url, method, data, parseJson = true) => {
     try {
@@ -23,7 +25,7 @@ export const invokeApi = async (url, method, data, parseJson = true) => {
         let baseURL = baseProdURL;
 
         if(url.indexOf("http") === -1){
-            if(UDAGlobalConfig.environment === 'TEST'){
+            if(global.UDAGlobalConfig.environment === 'TEST'){
                 baseURL = baseTestURL;
             }
             url = baseURL+url;
