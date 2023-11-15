@@ -20,7 +20,9 @@ export interface CustomConfigPropTypes {
   udaDivId: string,
   enableForAllDomains: boolean,
   enableSpeechToText: boolean,
-  enableSlowReplay: boolean
+  enableSlowReplay: boolean,
+  enableCustomIcon: boolean,
+  customIcon: string
 }
 
 // assigning default values to the default configuration
@@ -40,5 +42,7 @@ export const CustomConfig: CustomConfigPropTypes = {
   udaDivId: 'uda-nistapp-logo',
   enableForAllDomains: false, // Flag to enable all the recording to be visible across all domains
   enableSpeechToText: false, // Flag to enable speech to text
-  enableSlowReplay: false // Flag to enable slow playback
+  enableSlowReplay: false, // Flag to enable slow playback
+  enableCustomIcon: false, // Flag to enable custom icon
+  customIcon: 'https://udan.nistapp.com/uda-logo.jpg'
 };
