@@ -29,7 +29,7 @@ export const CustomConfig: CustomConfigPropTypes = {
   enableSkipDuringPlay: false, // Flag for enabling skip functionality
   enableTooltipAddition: false, // Flag for adding custom tooltip information
   enableMultilingual: false, // Flag for enabling multilingual search with speech
-  enableNodeTypeSelection: false, // Flag for enabling node type selection
+  enableNodeTypeSelection: true, // Flag for enabling node type selection
   enablePermissions: false, // Flag for enabling permissions addition
   permissions: {}, // Object where the permissions can be passed
   enableProfanity: false, // Flag for enabling profanity check
