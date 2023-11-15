@@ -24,11 +24,12 @@ import {deleteRecording, recordUserClickData} from "../services/recordService";
 import {getUserId} from "../services/userService";
 import {matchNode} from "../util/invokeNode";
 import {CONFIG} from "../config";
-import {off, on} from "../util/events";
+import {off, on, trigger} from "../util/events";
 import {translate} from "../util/translation";
 import {removeToolTip} from "../util/addToolTip";
 import {getClickedNodeLabel} from "../util/getClickedNodeLabel";
 import {getVoteRecord, vote} from "../services/userVote";
+
 
 
 interface MProps {
@@ -89,6 +90,7 @@ export const RecordSequenceDetails = (props: MProps) => {
       await recordUserClickData('playCompleted', getName(), selectedRecordingDetails.id);
       pause();
       removeToolTip();
+      trigger("openPanel", {action: 'openPanel'});
     }
   };
 
@@ -136,6 +138,7 @@ export const RecordSequenceDetails = (props: MProps) => {
    */
   const backNav = async (forceRefresh = false) => {
     await recordUserClickData('backToSearchResults', getName(), selectedRecordingDetails.id);
+    trigger("openPanel", {action: 'openPanel'});
     resetStatus();
     removeToolTip();
     if (props.cancelHandler) props.cancelHandler(forceRefresh);
@@ -146,6 +149,7 @@ export const RecordSequenceDetails = (props: MProps) => {
    */
   const play = async () => {
     await recordUserClickData('play', getName(), selectedRecordingDetails.id);
+    trigger("closePanel", {action: 'closePanel'});
     if (props.playHandler) props.playHandler("on");
     // autoPlay();
   };

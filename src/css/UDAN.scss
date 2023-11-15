@@ -59,7 +59,10 @@ $uda-tooltip-bg: #f2f4fe;
 }
 
 .uda-icon {
-    text-align: center;
+    // display: flex; // make us of Flexbox
+    align-items: center; // does vertically center the desired content
+    justify-content: center; // horizontally centers single line items
+    text-align: center; // optional, but helps horizontally center text that breaks into multiple lines
 
     & > img {
         width: auto !important;
@@ -67,6 +70,16 @@ $uda-tooltip-bg: #f2f4fe;
         &:hover {
             width: inherit !important;
             height: inherit !important;
+        }
+    }
+
+    & > img.custom-icon {
+        width: 75px !important;
+        height: 80px !important;
+
+        &:hover {
+            width: 75px !important;
+            height: 80px !important;
         }
     }
 
@@ -141,6 +154,17 @@ $uda-tooltip-bg: #f2f4fe;
             &:hover {
                 width: 45px !important;
                 height: 45px !important;
+            }
+        }
+
+        img.custom-icon {
+            width: 75px !important;
+            height: 80px !important;
+            vertical-align: middle;
+
+            &:hover {
+                width: 75px !important;
+                height: 80px !important;
             }
         }
 

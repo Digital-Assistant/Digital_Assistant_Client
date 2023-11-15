@@ -184,7 +184,9 @@ function App(props) {
                 }, 2000);
             }
             // togglePanel();
-            await openPanel();
+            if (isPlaying !== "on") {
+                await openPanel();
+            }
             offSearch();
             setRecordSequenceDetailsVisibility(true);
         } else if (isRecording) {
@@ -262,6 +264,8 @@ function App(props) {
         on("UDAAuthenticatedUserSessionData", createSession);
         on("UDAAlertMessageData", authenticationError);
         on("UDAClearSessionData", clearSession);
+        on("openPanel", openPanel);
+        on("closePanel", closePanel);
 
         let userSessionData = getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
         if (!userSessionData) {
@@ -293,6 +297,8 @@ function App(props) {
             off("UDAUserSessionData", createSession);
             off("UDAAuthenticatedUserSessionData", createSession);
             off("UDAAlertMessageData", authenticationError);
+            off("openPanel", openPanel);
+            off("closePanel", closePanel);
         };
     }, []);
 
@@ -695,7 +701,7 @@ function App(props) {
                 </div>
             </div>
 
-            <Toggler toggleFlag={hide} toggleHandler={togglePanel} udaDivId={global.UDAGlobalConfig.udaDivId} enableUdaIcon={global.UDAGlobalConfig.enableUdaIcon} />
+            <Toggler toggleFlag={hide} toggleHandler={togglePanel} udaDivId={global.UDAGlobalConfig.udaDivId} enableUdaIcon={global.UDAGlobalConfig.enableUdaIcon} config={global.UDAGlobalConfig} />
         </UserDataContext.Provider>
     );
 }

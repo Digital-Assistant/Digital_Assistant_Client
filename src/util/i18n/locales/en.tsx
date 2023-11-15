@@ -5,6 +5,7 @@ export const TRANSLATIONS_EN = {
   recordSequenceHeading: "Recorded Sequence",
   recordSequenceDescription:"Please navigate in the page to record.",
   searchPlaceHolder: "Search recorded sequences",
+  playBackTittle: "Playback Error",
   playBackError: "Nistapp UDA ran into a problem and will exit",
   tooltipMessage: "Please input the value and then click on",
   inputError: 'Please input proper name. Allowed character are [0-9][A-Z][a-z][ _.-] and maximum length is 100',

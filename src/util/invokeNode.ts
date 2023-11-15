@@ -8,6 +8,7 @@ import {matchAction} from "./matchAction";
 import {removeToolTip} from "./addToolTip";
 import {searchNodes} from "./searchNodes";
 import {UDAConsoleLogger} from "../config/error-log";
+import {addNotification} from "./addNotification";
 
 /**
  * Get selected record from storage
@@ -127,7 +128,8 @@ export const matchNode = (recordedNode: any) => {
     return true;
   } else {
     // show alert to the user as we didnt found the recorded element on the page.
-    alert(translate('playBackError'));
+    // alert(translate('playBackError'));
+    addNotification(translate('playBackTittle'), translate('playBackError'), 'error');
     return false;
   }
 }
