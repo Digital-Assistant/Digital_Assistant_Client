@@ -147,8 +147,12 @@ export const saveClickData = async (node: any, text: string, meta: any) => {
   }
 
   objectData.offset = getAbsoluteOffsets(node);
-  console.log(objectData.offset);
   objectData.node.nodeInfo = getNodeInfo(node);
+
+  // Added to handle the case where screen size is not available
+  if(objectData.node.nodeInfo && (!objectData.node.nodeInfo.screenSize.screen.width || !objectData.node.nodeInfo.screenSize.screen.height)){
+    return false;
+  }
 
   const {enableNodeTypeChangeSelection} = CONFIG;
 
