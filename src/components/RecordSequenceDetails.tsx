@@ -75,6 +75,12 @@ export const RecordSequenceDetails = (props: MProps) => {
     };
   }, []);
 
+  useEffect(()=>{
+    if(props.data){
+      setSelectedRecordingDetails(props.data);
+    }
+  },[props.data])
+
 
   /**
    * Record player(auto play)
@@ -199,8 +205,6 @@ export const RecordSequenceDetails = (props: MProps) => {
     let userRecord = await getVoteRecord({id: selectedRecordingDetails.id});
     if (userRecord) {
       setUserVote(userRecord);
-    } else {
-      console.log('empty');
     }
   }
 

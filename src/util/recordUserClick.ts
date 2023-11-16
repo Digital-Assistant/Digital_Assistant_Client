@@ -1,3 +1,4 @@
+// add jsdocs
 import {CONFIG} from "../config";
 import {getClickedInputLabels} from "./getClickedInputLabels";
 import {UDAErrorLogger} from "../config/error-log";
