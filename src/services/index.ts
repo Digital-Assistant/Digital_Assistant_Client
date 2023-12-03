@@ -1,5 +1,7 @@
 import TSON from "typescript-json";
 import {CustomConfig} from "../config/CustomConfig";
+import {getFromStore} from "../util";
+import {CONFIG} from "../config";
 
 global.UDAGlobalConfig = CustomConfig;
 
@@ -10,7 +12,7 @@ global.UDAGlobalConfig = CustomConfig;
 export const apiCal = (options: any) => {
   const requestOptions = {
     method: options.method,
-    headers: options?.headers ? options?.headers : getHTTPHeaders("json"),
+    headers: getHTTPHeaders("json", options?.headers),
     body: options.body ? TSON.stringify(options.body) : null,
   };
 
@@ -34,7 +36,7 @@ export const apiCal = (options: any) => {
       //throw route to login if unauthorized response received
       switch (response?.status) {
         case 401:
-          localStorage.clear();
+          // localStorage.clear();
           break;
         case 200:
           return options?.responseType == "text" ? response.text() : response.json();
@@ -83,12 +85,24 @@ export const syncApiCal = async (options: any) => {
 /**
  * @objective To set autherization token for all outgoing REST calls
  * @param contentType
+ * @param additionalHeaders
  * @returns HTTP headers
  */
-export const getHTTPHeaders = (contentType: string) => {
+export const getHTTPHeaders = (contentType: string, additionalHeaders: any = null) => {
+
+  let keycloakData = getFromStore(CONFIG.UDAKeyCloakKey, false);
+
   const headers = new Headers();
   if (contentType === "json")
     headers.append("Content-Type", "application/json");
+
+  if(keycloakData){
+    headers.append("Authorization", `Bearer ${keycloakData.token}`);
+  }
+
+  if(additionalHeaders){
+    return additionalHeaders;
+  }
 
   return headers;
 }

@@ -10,8 +10,6 @@ let enablePlugin = false;
 
 let browserVar;
 
-console.log(browser.name);
-
 switch (browser && browser.name) {
 	case 'edge-chromium':
 	case 'edge':
@@ -52,10 +50,14 @@ browserVar.tabs.onActivated.addListener(function (activeInfo) {
 	activeTabId = activeInfo.tabId;
 });
 
-//login with browser identity functionality
+/**
+ * Asynchronously log the user in using a browser.
+ *
+ * @return {boolean} Whether the login was successful.
+ */
 async function loginWithBrowser() {
 	sessionData.authenticationsource = "google";
-	browserVar.identity.getProfileUserInfo({accountStatus: 'ANY'}, async function (data) {
+	/*browserVar.identity.getProfileUserInfo({accountStatus: 'ANY'}, async function (data) {
 		if (data.id !== '' && data.email !== "") {
 			sessionData.authenticated = true;
 			sessionData.authdata = data;
@@ -69,11 +71,18 @@ async function loginWithBrowser() {
 		} else {
 			await sendSessionData("UDAAlertMessageData", "login")
 		}
-	});
+	});*/
+	await sendSessionData("UDAAlertMessageData", "login");
 	return true;
 }
 
-//send the sessiondata to the webpage functionality
+/**
+ * Sends session data to the server.
+ *
+ * @param {string} sendaction - The action to be performed during the sending of the session data. Defaults to "UDAUserSessionData".
+ * @param {string} message - The message to be included in the session data. Defaults to an empty string.
+ * @return {boolean} Returns true if the session data was successfully sent.
+ */
 async function sendSessionData(sendaction = "UDAUserSessionData", message = '') {
 	let tab = await getTab();
 	if (sendaction === "UDAAlertMessageData") {
@@ -83,7 +92,7 @@ async function sendSessionData(sendaction = "UDAUserSessionData", message = '') 
 		let url = new URL(tab.url);
 		let domain = url.protocol + '//' + url.hostname;
 		let cspRecord = {cspenabled: false, udanallowed: true, domain: ''};
-		let cspData = getstoragedata(CSPStorageName);
+		let cspData = getStorageData(CSPStorageName);
 		let recordExists = false;
 		if (cspData) {
 			let cspRecords = cspData;
@@ -108,8 +117,9 @@ async function sendSessionData(sendaction = "UDAUserSessionData", message = '') 
 }
 
 /**
+ * Retrieves the active tab from the browser.
  *
- * @returns {currentTab}
+ * @return {Promise<Object>} The active tab object.
  */
 async function getTab() {
 	let queryOptions = {active: true, currentWindow: true};
@@ -168,7 +178,11 @@ browserVar.runtime.onMessage.addListener(async function (request, sender, sendRe
 	}
 });
 
-//storing the data to the browser storage
+/**
+ * Stores session data in local storage.
+ *
+ * @return {boolean} true if the session data was successfully stored, false otherwise.
+ */
 async function storeSessionData() {
 	let storageData = {};
 	storageData[cookieName] = sessionData;
@@ -176,8 +190,13 @@ async function storeSessionData() {
 	return true;
 }
 
-//getting the sessionkey from backend server
-async function getSessionKey(senddata = true) {
+/**
+ * Asynchronously retrieves the session key.
+ *
+ * @param {boolean} sendData - Determines whether to send session data.
+ * @return {Promise<void>} - A promise that resolves with the retrieved session key.
+ */
+async function getSessionKey(sendData = true) {
 	let response = await invokeApi(apiHost + "/user/getsessionkey", "GET", null, false);
 	console.log(response);
 	if(!response){
@@ -185,13 +204,17 @@ async function getSessionKey(senddata = true) {
 	}
 	sessionData.sessionkey = response;
 	await storeSessionData();
-	if(senddata){
+	if(sendData){
 		await sendSessionData();
 	}
 
 }
 
-//binding the sessionkey and browser identity id
+/**
+ * Binds the authenticated account.
+ *
+ * @return {boolean} Returns true if the account is successfully bound, otherwise returns the response.
+ */
 async function bindAuthenticatedAccount() {
 	let authdata = {
 		authid: sessionData.authdata.id,
@@ -207,46 +230,66 @@ async function bindAuthenticatedAccount() {
 	}
 }
 
-//binding the session to the authid
-async function bindAccount(userauthdata) {
-	const usersessiondata = {userauthid: userauthdata.id, usersessionid: sessionData.sessionkey};
-	let response = await invokeApi(apiHost + "/user/checkusersession", "POST", usersessiondata);
+/**
+ * Binds the user's account.
+ *
+ * @param {object} userAuthData - The user's authentication data.
+ * @return {boolean} Returns true if the account was successfully bound.
+ */
+async function bindAccount(userAuthData) {
+	const userSessionData = {userauthid: userAuthData.id, usersessionid: sessionData.sessionkey};
+	let response = await invokeApi(apiHost + "/user/checkusersession", "POST", userSessionData);
 	await storeSessionData();
 	await sendSessionData("UDAAuthenticatedUserSessionData");
 	return true;
 }
 
+/**
+ * Checks the CSP storage for a specific domain and updates the record if it exists,
+ * otherwise adds a new record for the domain.
+ *
+ * @param {boolean} cspenabled - Indicates if CSP is enabled.
+ * @param {boolean} udanallowed - Indicates if UDAN is allowed.
+ * @param {string} domain - The domain to check or add the record for.
+ */
 function CheckCSPStorage(cspenabled = false, udanallowed = false, domain) {
-	const csprecord = {cspenabled, udanallowed, domain};
-	let cspdata = getstoragedata(CSPStorageName);
-	if (cspdata) {
-		let csprecords = cspdata;
-		if (csprecords.length > 0) {
-			let recordexists = false;
-			for (let i = 0; i < csprecords.length; i++) {
-				let record = csprecords[i];
+	const cspRecord = {cspenabled, udanallowed, domain};
+	let cspData = getStorageData(CSPStorageName);
+	if (cspData) {
+		let cspRecords = cspData;
+		if (cspRecords.length > 0) {
+			let recordExists = false;
+			for (let i = 0; i < cspRecords.length; i++) {
+				let record = cspRecords[i];
 				if (record.domain === domain) {
-					recordexists = true;
-					csprecords[i] = csprecord;
-					createstoragedata(CSPStorageName, csprecords);
+					recordExists = true;
+					cspRecords[i] = cspRecord;
+					createStorageData(CSPStorageName, cspRecords);
 				}
 			}
-			if (!recordexists) {
-				csprecords.push(csprecord);
-				createstoragedata(CSPStorageName, csprecords);
+			if (!recordExists) {
+				cspRecords.push(cspRecord);
+				createStorageData(CSPStorageName, cspRecords);
 			}
 		} else {
-			csprecords.push(csprecord);
-			createstoragedata(CSPStorageName, csprecords);
+			cspRecords.push(cspRecord);
+			createStorageData(CSPStorageName, cspRecords);
 		}
 	} else {
-		var csprecords = [];
-		csprecords.push(csprecord);
-		createstoragedata(CSPStorageName, csprecords);
+		var cspRecords = [];
+		cspRecords.push(cspRecord);
+		createStorageData(CSPStorageName, cspRecords);
 	}
 }
 
-function createstoragedata(key, value) {
+/**
+ * Creates storage data by storing the provided key-value pair in the local storage.
+ *
+ * @param {string} key - The key to use for storing the data in local storage.
+ * @param {any} value - The value to be stored in local storage.
+ * @return {boolean} Returns true if the data was successfully stored, false otherwise.
+ */
+function createStorageData(key, value) {
 	try {
 		localStorage.setItem(key, JSON.stringify(value));
 		return true;
@@ -255,7 +298,13 @@ function createstoragedata(key, value) {
 	}
 }
 
-function getstoragedata(key) {
+/**
+ * Retrieves data from localStorage using the specified key.
+ *
+ * @param {string} key - The key used to retrieve the data.
+ * @return {any} The parsed data retrieved from localStorage, or false if an error occurred.
+ */
+function getStorageData(key) {
 	try {
 		const result = localStorage.getItem(key);
 		return JSON.parse(result);
@@ -265,8 +314,8 @@ function getstoragedata(key) {
 }
 
 function ProcessCSPValues(value = '', domain) {
-	let udanallowed = false;
-	let cspenabled = true;
+	let udanAllowed = false;
+	let cspEnabled = true;
 	if (value) {
 		let allowedSrcs = value.split(";");
 		if (allowedSrcs.length > 0) {
@@ -282,22 +331,22 @@ function ProcessCSPValues(value = '', domain) {
 						switch (allowedDomain.toLowerCase()) {
 							case '*':
 							case 'https:':
-								udanallowed = true;
-								cspenabled = true;
+								udanAllowed = true;
+								cspEnabled = true;
 								break;
 						}
 					}
 				} else if (allowedDomains.length > 0 && allowedDomains[0].toLowerCase() === 'default-src') {
-					udanallowed = true;
-					cspenabled = true;
+					udanAllowed = true;
+					cspEnabled = true;
 				}
 			}
 		}
 	} else {
-		udanallowed = true;
-		cspenabled = true;
+		udanAllowed = true;
+		cspEnabled = true;
 	}
-	CheckCSPStorage(cspenabled, udanallowed, domain);
+	CheckCSPStorage(cspEnabled, udanAllowed, domain);
 }
 
 let onHeadersReceived = function (details) {
