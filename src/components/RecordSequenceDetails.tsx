@@ -250,15 +250,26 @@ export const RecordSequenceDetails = (props: MProps) => {
     setCopied(true);
   }
 
+  /**
+   * Toggles the advanced mode.
+   *
+   * @return {Promise<void>} A promise that resolves when the advanced mode is toggled.
+   */
   const toggleAdvanced = async () => {
     if(advBtnShow) {
       // props.showLoader(true);
       // await updateRecording({id: selectedRecordingDetails.id, permissions});
     }
-    
+
     await setAdvBtnShow(!advBtnShow);
   };
 
+  /**
+   * Updates the permissions object based on the checkbox state.
+   *
+   * @param {string} id - The ID of the checkbox.
+   * @return {void} This function does not return a value.
+   */
   const handleCheckboxChange = (id) => {
     if (!permissions[id]) {
       permissions[id] = true;
@@ -373,7 +384,8 @@ export const RecordSequenceDetails = (props: MProps) => {
               }
             </Col>
           </Row>
-          {props?.config?.enablePermissions && (
+          {/* enabling update permissions*/}
+          {(props?.config?.enablePermissions && (selectedRecordingDetails.usersessionid === userId)) && (
               <div id="uda-permissions-section" style={{padding: "25px", display:'flex'}}>
                           <div>
                               <button
@@ -385,7 +397,7 @@ export const RecordSequenceDetails = (props: MProps) => {
                               </button>
                           </div>
                           <div>
-                            
+
                           { advBtnShow && Object.entries(props?.config?.permissions).map(([key, value]) => {
                               return <div key={key} style={{marginLeft:30}}>
                                   <Checkbox id="uda-recorded-name" className="uda_exclude" onChange={()=>handleCheckboxChange(key)} />
@@ -394,7 +406,7 @@ export const RecordSequenceDetails = (props: MProps) => {
                           })
                           }
                       </div>
-                  
+
               </div>
           )}
         </div>

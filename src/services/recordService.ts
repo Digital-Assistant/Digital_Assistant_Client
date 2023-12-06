@@ -34,9 +34,10 @@ export const recordClicks = async (request?: any) => {
 };
 
 /**
- * To record each action/event
- * @param request
- * @returns promise
+ * Updates the record clicks.
+ *
+ * @param {any} request - The request object.
+ * @return {Promise<any>} A promise that resolves with the result of the API call.
  */
 
 export const updateRecordClicks = async (request?: any) => {
