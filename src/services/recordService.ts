@@ -93,6 +93,16 @@ export const deleteRecording = async (request?: any) => {
   return REST.apiCal(parameters);
 };
 
+export const updateRecording = async (request?: any) => {
+  request.usersessionid = await getUserId();
+  const parameters = {
+    url: ENDPOINT.DeleteSequence,
+    method: "POST",
+    body: request,
+  };
+  return REST.apiCal(parameters);
+};
+
 /**
  * To check profanity validation/filters for sequence name/labels
  * @param request

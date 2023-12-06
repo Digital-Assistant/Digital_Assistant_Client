@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect, useRef, useState} from "react";
-import {Badge, Button, Col, List, Popconfirm, Row} from "antd";
+import {Badge, Button, Col, List, Popconfirm, Row, Checkbox} from "antd";
 import {
   DeleteOutlined,
   DislikeFilled,
@@ -17,10 +17,11 @@ import {
   PauseCircleOutlined,
   PlayCircleOutlined,
   ShareAltOutlined,
-  CopyFilled
+  CopyFilled,
+  EditFilled
 } from "@ant-design/icons";
 import {getCurrentPlayItem, getFromStore, getObjData, setToStore,} from "../util";
-import {deleteRecording, recordUserClickData} from "../services/recordService";
+import {deleteRecording, recordUserClickData, updateRecording} from "../services/recordService";
 import {getUserId} from "../services/userService";
 import {matchNode} from "../util/invokeNode";
 import {CONFIG} from "../config";
@@ -49,6 +50,8 @@ interface MProps {
  */
 
 export const RecordSequenceDetails = (props: MProps) => {
+  const [advBtnShow, setAdvBtnShow] = useState<boolean>(false);
+  const [permissions, setPermissions] = useState<any>({});
   const [selectedRecordingDetails, setSelectedRecordingDetails] =
       React.useState<any>(props.data);
 
@@ -230,6 +233,10 @@ export const RecordSequenceDetails = (props: MProps) => {
 
   const [copied, setCopied] = useState(false);
 
+  const displayKeyValue = (key: string, value: any) => {
+    return <span>{key} {value}</span>
+  };
+
   function copy() {
     const el = document.createElement("input");
     const searchParams = new URLSearchParams(window.location.search);
@@ -242,6 +249,24 @@ export const RecordSequenceDetails = (props: MProps) => {
     document.body.removeChild(el);
     setCopied(true);
   }
+
+  const toggleAdvanced = async () => {
+    if(advBtnShow) {
+      // props.showLoader(true);
+      // await updateRecording({id: selectedRecordingDetails.id, permissions});
+    }
+    
+    await setAdvBtnShow(!advBtnShow);
+  };
+
+  const handleCheckboxChange = (id) => {
+    if (!permissions[id]) {
+      permissions[id] = true;
+    }else{
+      permissions[id] = !permissions[id];
+    }
+    setPermissions({...permissions});
+  };
 
   return props?.recordSequenceDetailsVisibility ? (
       <>
@@ -348,6 +373,30 @@ export const RecordSequenceDetails = (props: MProps) => {
               }
             </Col>
           </Row>
+          {props?.config?.enablePermissions && (
+              <div id="uda-permissions-section" style={{padding: "25px", display:'flex'}}>
+                          <div>
+                              <button
+                                  className="add-btn uda_exclude"
+                                  style={{color:'white'}}
+                                  onClick={() => toggleAdvanced()}
+                              >
+                                  {advBtnShow ? 'Update Permissions' : 'Edit Permissions'}
+                              </button>
+                          </div>
+                          <div>
+                            
+                          { advBtnShow && Object.entries(props?.config?.permissions).map(([key, value]) => {
+                              return <div key={key} style={{marginLeft:30}}>
+                                  <Checkbox id="uda-recorded-name" className="uda_exclude" onChange={()=>handleCheckboxChange(key)} />
+                                  {displayKeyValue(key, value)}
+                              </div>
+                          })
+                          }
+                      </div>
+                  
+              </div>
+          )}
         </div>
       </>
   ) : null;
