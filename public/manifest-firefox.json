@@ -27,7 +27,7 @@
     }
   ],
   "background": {
-    "service_worker": "./assets/UDABackground.js"
+    "scripts": ["./assets/UDABackground.js"]
   },
   "permissions": [
     "identity",

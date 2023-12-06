@@ -165,6 +165,7 @@ export const getCurrentPlayItem = () => {
     if (elementsFromStore?.userclicknodesSet[i].status != "completed") {
       retObj.index = i;
       retObj.node = elementsFromStore?.userclicknodesSet[i];
+      retObj.additionalParams = elementsFromStore?.additionalParams;
       break;
     }
   }

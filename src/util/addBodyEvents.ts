@@ -1,6 +1,5 @@
 import {addClickToNode} from "./addClickToNode";
 import {isClickableNode} from "./isClickableNode";
-import {initSpecialNodes} from "./initSpecialNodes";
 
 /**
  * Add events to body elements

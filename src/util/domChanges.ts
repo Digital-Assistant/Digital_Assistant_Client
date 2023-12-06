@@ -4,7 +4,7 @@ import {getFromStore} from "./index";
 
 export let timer: any = null;
 
-const observer = new MutationObserver(async () => {
+const observer = new MutationObserver(async (mutationList, observer) => {
   if (timer) {
     clearTimeout(timer);
   }

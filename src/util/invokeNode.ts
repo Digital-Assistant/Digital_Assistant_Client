@@ -7,6 +7,8 @@ import {processDistanceOfNodes} from "./processDistanceOfNodes";
 import {matchAction} from "./matchAction";
 import {removeToolTip} from "./addToolTip";
 import {searchNodes} from "./searchNodes";
+import {UDAConsoleLogger} from "../config/error-log";
+import {addNotification} from "./addNotification";
 
 /**
  * Get selected record from storage
@@ -55,6 +57,8 @@ export const matchNode = (recordedNode: any) => {
   let clickObjects: any = [];
   let originalElement = originalNode?.node;
 
+  let startTime = performance.now();
+
   if(CONFIG.commonTags.includes(originalElement.nodeName.toLowerCase()) && originalElement?.className){
     let querySelector = '';
     const classList = originalElement.className.split(" ");
@@ -79,20 +83,11 @@ export const matchNode = (recordedNode: any) => {
 
   let compareElements: any = []
   let matchedElements: any = [];
-  let leastWeight = -1;
-  let leastNode = null;
   let finalMatchElement: any = null;
 
   for (let i = 0; i < clickObjects.length; i++) {
     let compareElement = clickObjects[i];
     if (compareElement.nodeName.toLowerCase() === originalElement.nodeName.toLowerCase()) {
-      let textWeight = 0;
-      if(originalElement.outerHTML && compareElement.outerHTML){
-        jaroWinkler(
-            originalElement.outerHTML,
-            compareElement.outerHTML
-        );
-      }
       if (originalElement.offset) {
         const _offsets = getAbsoluteOffsets(compareElement);
         if (
@@ -104,18 +99,6 @@ export const matchNode = (recordedNode: any) => {
         }
       }
       compareElements.push({nodeName: compareElement.nodeName, node: compareElement});
-      if (leastWeight > -1 && textWeight > leastWeight) {
-        leastWeight = textWeight;
-        leastNode = compareElement;
-      } else if (leastWeight == -1) {
-        leastWeight = textWeight;
-        leastNode = compareElement;
-      }
-      if (originalNode.meta.hasOwnProperty('isPersonal') && originalNode.meta.isPersonal && textWeight >= CONFIG.JARO_WEIGHT_PERSONAL) {
-        matchedElements.push(compareElement);
-      } else if (textWeight >= CONFIG.JARO_WEIGHT) {
-        matchedElements.push(compareElement);
-      }
     }
   }
 
@@ -132,12 +115,21 @@ export const matchNode = (recordedNode: any) => {
     }
   }
 
+  let endTime = performance.now();
+
+  let difference = endTime - startTime;
+
+  UDAConsoleLogger.info('StartTime: '+ startTime, 1);
+  UDAConsoleLogger.info('EndTime: '+ endTime, 1);
+  UDAConsoleLogger.info('Difference: '+ difference, 1);
+
   if (finalMatchElement !== null) {
-    matchAction(finalMatchElement, recordedNode.node)
+    matchAction(finalMatchElement, recordedNode.node, recordedNode?.additionalParams?.slowPlaybackTime)
     return true;
   } else {
     // show alert to the user as we didnt found the recorded element on the page.
-    alert(translate('playBackError'));
+    // alert(translate('playBackError'));
+    addNotification(translate('playBackTittle'), translate('playBackError'), 'error');
     return false;
   }
 }

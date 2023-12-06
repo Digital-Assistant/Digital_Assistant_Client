@@ -48,9 +48,11 @@ module.exports = (env, argv) => {
             // Here the application starts executing
             // and webpack starts bundling
             UDAHeaders: "./src/Headers.js",
+            UDAInjectHeaders: "./src/InjectHeaders.js",
             UDASdk: "./src/index.tsx",
             UDABackground: "./src/Background.js",
             UDALoad: "./src/InjectSDK.js",
+            UDAPluginSDK: "./src/ExtensionSDK.js",
         },
         mode: "development", // "production" | "development" | "none"
         devtool: "cheap-module-source-map", // enum

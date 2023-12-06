@@ -8,6 +8,14 @@ import {getAbsoluteOffsets, getFromStore, inArray} from "../util";
 import domJSON from "domjson";
 import mapClickedElementToHtmlFormElement from "../util/recording-utils/mapClickedElementToHtmlFormElement";
 import {UDAConsoleLogger} from "../config/error-log";
+import {fetchDomain} from "../util/fetchDomain";
+
+declare global {
+  interface Window {
+    isRecording: boolean;
+    domJSON: any;
+  }
+}
 
 /**
  * To record each action/event
@@ -111,8 +119,13 @@ export const profanityCheck = async (request?: any) => {
  * @param meta
  * @returns promise
  */
-export const saveClickData = async (node: HTMLElement, text: string, meta: any) => {
-  let objectData: any = domJSON.toJSON(node, {serialProperties: true});
+export const saveClickData = async (node: any, text: string, meta: any) => {
+  // removing circular reference before converting to json with deep clone.
+  const processedNode = await node.cloneNode(true);
+
+  console.log(getAbsoluteOffsets(processedNode));
+
+  let objectData: any = domJSON.toJSON(processedNode, {serialProperties: true});
   if (objectData.meta) {
     objectData.meta = meta;
   } else {
@@ -136,6 +149,11 @@ export const saveClickData = async (node: HTMLElement, text: string, meta: any) 
   objectData.offset = getAbsoluteOffsets(node);
   objectData.node.nodeInfo = getNodeInfo(node);
 
+  // Added to handle the case where screen size is not available
+  if(objectData.node.nodeInfo && (!objectData.node.nodeInfo.screenSize.screen.width || !objectData.node.nodeInfo.screenSize.screen.height)){
+    return false;
+  }
+
   const {enableNodeTypeChangeSelection} = CONFIG;
 
   if(enableNodeTypeChangeSelection) {
@@ -147,13 +165,19 @@ export const saveClickData = async (node: HTMLElement, text: string, meta: any) 
 
   UDAConsoleLogger.info(objectData, 3);
 
+  // let domain = fetchDomain();
+  let domain = window.location.host;
+  const jsonString = TSON.stringify(objectData);
+
+  UDAConsoleLogger.info(jsonString, 1);
+
   return {
-    domain: window.location.host,
+    domain: domain,
     urlpath: window.location.pathname,
     clickednodename: text,
     html5: 0,
     clickedpath: "",
-    objectdata: TSON.stringify(objectData),
+    objectdata: jsonString,
   };
 };
 
@@ -166,9 +190,10 @@ export const postRecordSequenceData = async (request: any) => {
   window.udanSelectedNodes = [];
   const userclicknodesSet = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
   const ids = userclicknodesSet.map((item: any) => item.id);
+  let domain = fetchDomain();
   const payload = {
     ...request,
-    domain: window.location.host,
+    domain: domain,
     isIgnored: 0,
     isValid: 1,
     userclicknodelist: ids.join(","),
@@ -182,12 +207,12 @@ export const postRecordSequenceData = async (request: any) => {
  * @returns  promise
  * @param request
  */
-export const putUserClickData = async (request: any) => {
+export const recordUserClickData = async (clickType='sequencerecord', clickedName='', recordId: number = 0) => {
   const payload = {
-    ...request,
-    clickedname: '["Test"]',
-    clicktype: "sequencerecord",
-    recordid: 1375,
+    usersessionid: await getSessionKey(),
+    clickedname: clickedName,
+    clicktype: clickType,
+    recordid: recordId,
   };
-  return userClick(payload);
+  return await userClick(payload);
 };

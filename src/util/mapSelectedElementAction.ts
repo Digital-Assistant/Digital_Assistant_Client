@@ -3,7 +3,7 @@ import {addToolTip} from "./addToolTip";
 import {invokeNextNode} from "./invokeNextNode";
 import {translate} from "./translation";
 
-export const mapSelectedElementAction = (node, recordedNode, navigationCookieData, recordedNodeData) => {
+export const mapSelectedElementAction = (node, recordedNode, navigationCookieData, recordedNodeData, timeToInvoke) => {
   // addToolTip(node, node.parentNode, selectednode, navigationcookiedata, false, false, false);
   let performedAction = false;
   switch (recordedNodeData.meta.selectedElement.systemTag) {
@@ -29,7 +29,7 @@ export const mapSelectedElementAction = (node, recordedNode, navigationCookieDat
     case 'button':
       addToolTip(node, node, recordedNode, navigationCookieData, false, false, false, translate('highLightText'), false, true);
       // node.click();
-      invokeNextNode(node, 1000);
+      invokeNextNode(node, timeToInvoke);
       // showselectedrow(navigationCookieData.data, navigationCookieData.data.id, true, navigationCookieData);
       performedAction = true;
       break;
@@ -38,6 +38,10 @@ export const mapSelectedElementAction = (node, recordedNode, navigationCookieDat
       performedAction = true;
       break;
     case "textArea":
+      addToolTip(node, node.parentNode, recordedNode, navigationCookieData, false, false, true);
+      performedAction = true;
+      break;
+    case "highlight":
       addToolTip(node, node.parentNode, recordedNode, navigationCookieData, false, false, true);
       performedAction = true;
       break;

@@ -1,5 +1,4 @@
 import {UDAErrorLogger} from "../config/error-log";
-import {recordUserClick} from "./recordUserClick";
 import {addEvent} from "./addEvent";
 
 export const addClickToNode = (node: any) => {
@@ -20,29 +19,21 @@ export const addClickToNode = (node: any) => {
 
     // fix for select2 library
     if(node.classList && node.classList.contains('select2-selection')){
-      addEvent(node, 'focus', function(event: any){
-        recordUserClick(recordNode, false, false, event);
-      });
+      addEvent(node, 'focus');
       node.addedClickRecord = true;
       return ;
     }
 
     switch (nodeName) {
       case "a":
-        addEvent(clickableNode, "click", function (event: any) {
-          recordUserClick(recordNode, false, false, event);
-        });
+        addEvent(clickableNode, 'click');
         break;
       case "select":
-        addEvent(clickableNode, "focus", function (event: any) {
-          recordUserClick(recordNode, false, false, event);
-        });
+        addEvent(clickableNode, 'click');
         break;
       case "input":
         if (!clickableNode.hasAttribute("type")) {
-          addEvent(clickableNode, "click", function (event: any) {
-            recordUserClick(recordNode, false, false, event);
-          });
+          addEvent(clickableNode, 'click');
           return node;
         }
         const inputType = clickableNode.getAttribute("type").toLowerCase();
@@ -68,20 +59,14 @@ export const addClickToNode = (node: any) => {
           case "url":
           case "textarea":
           case "week":
-            addEvent(clickableNode, "click", function (event: any) {
-              recordUserClick(recordNode, false, false, event);
-            });
+            addEvent(clickableNode, 'click');
             break;
           case "checkbox":
           case "radio":
-            addEvent(clickableNode, "change", function (event: any) {
-              recordUserClick(recordNode, false, false, event);
-            });
+            addEvent(clickableNode, 'click');
             break;
           default:
-            addEvent(clickableNode, "click", function (event: any) {
-              recordUserClick(recordNode, false, false, event);
-            });
+            addEvent(clickableNode, 'click');
             break;
         }
         break;
@@ -89,14 +74,10 @@ export const addClickToNode = (node: any) => {
       case "textarea":
       case "button":
       case "tr":
-        addEvent(clickableNode, "click", function (event: any) {
-          recordUserClick(recordNode, false, false, event);
-        });
+        addEvent(clickableNode, 'click');
         break;
       default:
-        addEvent(clickableNode, "click", function (event: any) {
-          recordUserClick(recordNode, false, false, event);
-        });
+        addEvent(clickableNode, 'click');
         break;
     }
     clickableNode.addedClickRecord = true;
