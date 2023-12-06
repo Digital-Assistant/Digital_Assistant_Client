@@ -164,6 +164,8 @@ module.exports = (env, argv) => {
                 // aliases are imported relative to the current context
                 process: "process/browser",
                 utils: path.resolve(__dirname, "./src/config/index"),
+                // alias for antd
+                antd: path.resolve(__dirname, 'node_modules/antd'),
             },
             fallback: {
                 //fallback module dependencies
