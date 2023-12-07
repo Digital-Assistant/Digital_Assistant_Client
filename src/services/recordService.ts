@@ -97,11 +97,11 @@ export const deleteRecording = async (request?: any) => {
 export const updateRecording = async (request?: any) => {
   request.usersessionid = await getUserId();
   const parameters = {
-    url: ENDPOINT.DeleteSequence,
+    url: ENDPOINT.updateRecordSequence,
     method: "POST",
     body: request,
   };
-  return REST.apiCal(parameters);
+  return await REST.apiCal(parameters);
 };
 
 /**

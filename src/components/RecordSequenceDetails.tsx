@@ -81,6 +81,7 @@ export const RecordSequenceDetails = (props: MProps) => {
   useEffect(()=>{
     if(props.data){
       setSelectedRecordingDetails(props.data);
+      setTmpPermissionsObj(props.data.additionalParams);
     }
   },[props.data])
 
@@ -257,26 +258,33 @@ export const RecordSequenceDetails = (props: MProps) => {
    */
   const toggleAdvanced = async () => {
     if(advBtnShow) {
-      // props.showLoader(true);
-      // await updateRecording({id: selectedRecordingDetails.id, permissions});
+      props.showLoader(true);
+      await updateRecording({id: selectedRecordingDetails.id, additionalParams: tmpPermissionsObj});
+      selectedRecordingDetails.additionalParams = tmpPermissionsObj;
+      setToStore(selectedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
+      await setAdvBtnShow(!advBtnShow);
+      props.showLoader(false);
+    } else {
+      await setAdvBtnShow(!advBtnShow);
     }
-
-    await setAdvBtnShow(!advBtnShow);
   };
 
+  const [tmpPermissionsObj, setTmpPermissionsObj] = useState<any>({});
+
   /**
-   * Updates the permissions object based on the checkbox state.
+   * Generates a function comment for the given function body in a markdown code block with the correct language syntax.
    *
-   * @param {string} id - The ID of the checkbox.
-   * @return {void} This function does not return a value.
+   * @param {any} obj - The object parameter used in the function.
+   * @return {Promise<void>} A promise that resolves to nothing.
    */
-  const handleCheckboxChange = (id) => {
-    if (!permissions[id]) {
-      permissions[id] = true;
-    }else{
-      permissions[id] = !permissions[id];
+  const handlePermissions = (obj: any) => async () => {
+    let permissions = {...tmpPermissionsObj};
+    if (permissions[obj.key]) {
+      delete permissions[obj.key];
+    } else {
+      permissions[obj.key] = obj[obj.key];
     }
-    setPermissions({...permissions});
+    await setTmpPermissionsObj({...permissions});
   };
 
   return props?.recordSequenceDetailsVisibility ? (
@@ -387,26 +395,36 @@ export const RecordSequenceDetails = (props: MProps) => {
           {/* enabling update permissions*/}
           {(props?.config?.enablePermissions && (selectedRecordingDetails.usersessionid === userId)) && (
               <div id="uda-permissions-section" style={{padding: "25px", display:'flex'}}>
-                          <div>
-                              <button
-                                  className="add-btn uda_exclude"
-                                  style={{color:'white'}}
-                                  onClick={() => toggleAdvanced()}
-                              >
-                                  {advBtnShow ? 'Update Permissions' : 'Edit Permissions'}
-                              </button>
+                <div>
+                    <button
+                        className="add-btn uda_exclude"
+                        style={{color:'white'}}
+                        onClick={() => toggleAdvanced()}
+                    >
+                        {advBtnShow ? 'Update Permissions' : 'Edit Permissions'}
+                    </button>
+                </div>
+                <div>
+
+                    { advBtnShow && Object.entries(props?.config?.permissions).map(([key, value]) => {
+                        if(tmpPermissionsObj[key] !== undefined) {
+                          return <div key={key} style={{marginLeft: 30}}>
+                            <Checkbox id="uda-recorded-name" className="uda_exclude" checked={true}
+                                      onChange={handlePermissions({[key]: value, key})}
+                            />
+                            {displayKeyValue(key, value)}
                           </div>
-                          <div>
-
-                          { advBtnShow && Object.entries(props?.config?.permissions).map(([key, value]) => {
-                              return <div key={key} style={{marginLeft:30}}>
-                                  <Checkbox id="uda-recorded-name" className="uda_exclude" onChange={()=>handleCheckboxChange(key)} />
-                                  {displayKeyValue(key, value)}
-                              </div>
-                          })
-                          }
-                      </div>
-
+                        } else {
+                          return <div key={key} style={{marginLeft: 30}}>
+                            <Checkbox id="uda-recorded-name" className="uda_exclude"
+                                      onChange={handlePermissions({[key]: value, key})}
+                            />
+                            {displayKeyValue(key, value)}
+                          </div>
+                        }
+                    })
+                    }
+                </div>
               </div>
           )}
         </div>
