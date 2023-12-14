@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import RecordSequenceDetails from './RecordSequenceDetails';
+import {RecordSequenceDetails} from "../components/RecordSequenceDetails";
 
 describe('RecordSequenceDetails', () => {
     test('addSkipClass should return correct class', () => {

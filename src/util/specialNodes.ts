@@ -1,3 +1,8 @@
+/**
+ * Special nodes identifications for recording.
+ * These will be used for identification of node elements during recording and will resolve the bugs for unwanted clicks.
+ * @returns specialNodes
+ */
 export const specialNodes = {
   // list of including nodes for attaching events
   "include": {
@@ -15,13 +20,13 @@ export const specialNodes = {
   // ignore clickable nodes while attaching event listeners
   "ignoreChildren": {
     "tags": ['ng-select', 'ngb-datepicker', 'ng-dropdown-panel', 'ckeditor', 'fusioncharts', 'ngb-datepicker', 'ngx-daterangepicker-material', 'mat-datepicker-content'],
-    "classes": ['cke_dialog_container', 'cke_notifications_area', 'gldp-default', 'ajs-layer', 'aui-list', 'herknl', 'uda_exclude', 'jstBlock', 'datepicker', 'fa-calendar', 'drdn-content', 'dropdown-button', 'dropdown-trigger1', 'select2-selection', 'select2-container--open', 'module-item', 'css-atn8fj-control', 'e-multiselect'], //, 'e-popup'
+    "classes": ['cke_dialog_container', 'cke_notifications_area', 'gldp-default', 'ajs-layer', 'aui-list', 'herknl', 'uda_exclude', 'jstBlock', 'datepicker', 'fa-calendar', 'drdn-content', 'dropdown-button', 'dropdown-trigger1', 'select2-selection', 'select2-container--open', 'module-item', 'css-atn8fj-control', 'e-multiselect', 'e-input-group', 'e-popup'], //, 'e-popup'
     "attributes": ['uib-datepicker-popup-wrap']
   },
   // ignore clicks on special nodes
   "ignoreClicksOnNodes": {
     "tags": ['ngx-daterangepicker-material'],
-    "classes": ['drdn-content', 'datepicker-modal', 'parallel', 'tabs', 'dropdown-content', 'select2-container--open', 'modal-overlay', 'e-popup'],
+    "classes": ['drdn-content', 'datepicker-modal', 'parallel', 'tabs', 'dropdown-content', 'select2-container--open', 'modal-overlay', 'e-popup', 'e-query-builder'],
     "attributes": ['uib-datepicker-popup-wrap'],
     "ids": ['content']
   },
@@ -34,7 +39,7 @@ export const specialNodes = {
   // list of dropdown identifications
   "dropDowns": {
     "tags": ['ng-select', 'ng-dropdown-panel'],
-    "classes": ['cke_notifications_area', 'aui-list', 'herknl', 'ghx-dropdown-trigger', 'select-wrapper', 'select2', 'select-dropdown', 'drdn-trigger', 'css-atn8fj-control', 'e-multiselect'],
+    "classes": ['cke_notifications_area', 'aui-list', 'herknl', 'ghx-dropdown-trigger', 'select-wrapper', 'select2', 'select-dropdown', 'drdn-trigger', 'css-atn8fj-control', 'e-multiselect', 'e-ddl'],
     "attributes": []
   },
   // list of datepicker identifications
