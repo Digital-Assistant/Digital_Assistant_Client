@@ -37,7 +37,7 @@ export const CustomConfig: CustomConfigPropTypes = {
   enableProfanity: false, // Flag for enabling profanity check
   enableRecording: true, // Flag for enabling recording functionality
   enableOverlay: true, // Flag for enabling overlay functionality or enabling squeeze functionality
-  environment: 'TEST',
+  environment: 'TEST', // Environment variable
   enableUdaIcon: true,
   udaDivId: 'uda-nistapp-logo',
   enableForAllDomains: false, // Flag to enable all the recording to be visible across all domains

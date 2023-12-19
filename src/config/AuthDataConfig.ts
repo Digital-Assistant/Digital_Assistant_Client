@@ -17,7 +17,7 @@ export const AuthDataConfig  = async (data: AuthConfigPropTypes) => {
       }
     }
   }
-  console.log(oldData);
+
   if(AuthConfig.id === '' || (oldData.id !== '' && oldData.id !== AuthConfig.id)){
     trigger('UDAClearSessionData', {});
   } else if(AuthConfig.id !== ''){

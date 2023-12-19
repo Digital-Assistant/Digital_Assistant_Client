@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect, useRef, useState} from "react";
-import {Badge, Button, Col, List, Popconfirm, Row} from "antd";
+import {Badge, Button, Col, List, Popconfirm, Row, Checkbox} from "antd";
 import {
   DeleteOutlined,
   DislikeFilled,
@@ -17,10 +17,11 @@ import {
   PauseCircleOutlined,
   PlayCircleOutlined,
   ShareAltOutlined,
-  CopyFilled
+  CopyFilled,
+  EditFilled
 } from "@ant-design/icons";
 import {getCurrentPlayItem, getFromStore, getObjData, setToStore,} from "../util";
-import {deleteRecording, recordUserClickData} from "../services/recordService";
+import {deleteRecording, recordUserClickData, updateRecording} from "../services/recordService";
 import {getUserId} from "../services/userService";
 import {matchNode} from "../util/invokeNode";
 import {CONFIG} from "../config";
@@ -49,6 +50,8 @@ interface MProps {
  */
 
 export const RecordSequenceDetails = (props: MProps) => {
+  const [advBtnShow, setAdvBtnShow] = useState<boolean>(false);
+  const [permissions, setPermissions] = useState<any>({});
   const [selectedRecordingDetails, setSelectedRecordingDetails] =
       React.useState<any>(props.data);
 
@@ -78,6 +81,7 @@ export const RecordSequenceDetails = (props: MProps) => {
   useEffect(()=>{
     if(props.data){
       setSelectedRecordingDetails(props.data);
+      setTmpPermissionsObj(props.data.additionalParams);
     }
   },[props.data])
 
@@ -230,6 +234,10 @@ export const RecordSequenceDetails = (props: MProps) => {
 
   const [copied, setCopied] = useState(false);
 
+  const displayKeyValue = (key: string, value: any) => {
+    return <span>{key} {value}</span>
+  };
+
   function copy() {
     const el = document.createElement("input");
     const searchParams = new URLSearchParams(window.location.search);
@@ -242,6 +250,42 @@ export const RecordSequenceDetails = (props: MProps) => {
     document.body.removeChild(el);
     setCopied(true);
   }
+
+  /**
+   * Toggles the advanced mode.
+   *
+   * @return {Promise<void>} A promise that resolves when the advanced mode is toggled.
+   */
+  const toggleAdvanced = async () => {
+    if(advBtnShow) {
+      props.showLoader(true);
+      await updateRecording({id: selectedRecordingDetails.id, additionalParams: tmpPermissionsObj});
+      selectedRecordingDetails.additionalParams = tmpPermissionsObj;
+      setToStore(selectedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
+      await setAdvBtnShow(!advBtnShow);
+      props.showLoader(false);
+    } else {
+      await setAdvBtnShow(!advBtnShow);
+    }
+  };
+
+  const [tmpPermissionsObj, setTmpPermissionsObj] = useState<any>({});
+
+  /**
+   * Generates a function comment for the given function body in a markdown code block with the correct language syntax.
+   *
+   * @param {any} obj - The object parameter used in the function.
+   * @return {Promise<void>} A promise that resolves to nothing.
+   */
+  const handlePermissions = (obj: any) => async () => {
+    let permissions = {...tmpPermissionsObj};
+    if (permissions[obj.key]) {
+      delete permissions[obj.key];
+    } else {
+      permissions[obj.key] = obj[obj.key];
+    }
+    await setTmpPermissionsObj({...permissions});
+  };
 
   return props?.recordSequenceDetailsVisibility ? (
       <>
@@ -348,6 +392,41 @@ export const RecordSequenceDetails = (props: MProps) => {
               }
             </Col>
           </Row>
+          {/* enabling update permissions*/}
+          {(props?.config?.enablePermissions && (selectedRecordingDetails.usersessionid === userId)) && (
+              <div id="uda-permissions-section" style={{padding: "25px", display:'flex'}}>
+                <div>
+                    <button
+                        className="add-btn uda_exclude"
+                        style={{color:'white'}}
+                        onClick={() => toggleAdvanced()}
+                    >
+                        {advBtnShow ? 'Update Permissions' : 'Edit Permissions'}
+                    </button>
+                </div>
+                <div>
+
+                    { advBtnShow && Object.entries(props?.config?.permissions).map(([key, value]) => {
+                        if(tmpPermissionsObj[key] !== undefined) {
+                          return <div key={key} style={{marginLeft: 30}}>
+                            <Checkbox id="uda-recorded-name" className="uda_exclude" checked={true}
+                                      onChange={handlePermissions({[key]: value, key})}
+                            />
+                            {displayKeyValue(key, value)}
+                          </div>
+                        } else {
+                          return <div key={key} style={{marginLeft: 30}}>
+                            <Checkbox id="uda-recorded-name" className="uda_exclude"
+                                      onChange={handlePermissions({[key]: value, key})}
+                            />
+                            {displayKeyValue(key, value)}
+                          </div>
+                        }
+                    })
+                    }
+                </div>
+              </div>
+          )}
         </div>
       </>
   ) : null;

@@ -98,6 +98,8 @@ export const compareNodes = (compareNode, recordedNode, isPersonalNode = false, 
       let trimmedRecordedNode = recordedNode[key].trim();
       if(trimmedRecordedNode === null || trimmedRecordedNode === '' || trimmedRecordedNode === 'null') {
         match.matched++;
+      } else if(isPersonalNode && (trimmedRecordedNode === null || trimmedRecordedNode === '' || trimmedRecordedNode === 'null' || compareNode[key] === undefined)) {
+        match.matched++;
       } else {
         match.unmatched.push({key: key, compareNodeValues: compareNode[key], recordedNodeValues: recordedNode[key]});
       }
