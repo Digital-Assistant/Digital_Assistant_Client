@@ -96,6 +96,7 @@ export const searchNodes = (recordedNode, compareElements) => {
     } else if (finalMatchNodes.length > 1) {
       // compare element positions as there are multiple matching nodes with same labels
       finalMatchNode = processDistanceOfNodes(finalMatchNodes, recordedNodeData.node);
+      UDAConsoleLogger.info(finalMatchNode, 3);
     }
 
     if (finalMatchNode) {

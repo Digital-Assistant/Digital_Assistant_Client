@@ -2,9 +2,11 @@
 import {getAbsoluteOffsets} from "./index";
 import {getNodeInfo} from "./nodeInfo";
 import {getDistance} from "./getDistance";
+import {UDAConsoleLogger} from "../config/error-log";
 
 export const processDistanceOfNodes = (matchingNodes, selectedNode) => {
   if (selectedNode.hasOwnProperty('nodeInfo') && matchingNodes.length > 1) {
+    UDAConsoleLogger.info(selectedNode, 3);
     let leastDistanceNode = null;
     let leastDistance = -1;
     for (let node of matchingNodes) {
@@ -18,6 +20,9 @@ export const processDistanceOfNodes = (matchingNodes, selectedNode) => {
         break;
       } else {
         let nodeInfo = getNodeInfo(node);
+        UDAConsoleLogger.info("---------------------------------------", 3);
+        UDAConsoleLogger.info("Processing distance", 3);
+        UDAConsoleLogger.info(node, 3);
         let dist = getDistance(selectedNode.nodeInfo, nodeInfo);
         // default adding first element as least distance and then comparing with last distance calculated
         if (leastDistance === -1) {
@@ -27,6 +32,11 @@ export const processDistanceOfNodes = (matchingNodes, selectedNode) => {
           leastDistance = dist;
           leastDistanceNode = node;
         }
+        UDAConsoleLogger.info(selectedNode.nodeInfo, 3);
+        UDAConsoleLogger.info(nodeInfo, 3);
+        UDAConsoleLogger.info("Distance", 3);
+        UDAConsoleLogger.info(dist, 3);
+        UDAConsoleLogger.info("---------------------------------------", 3);
       }
     }
     return leastDistanceNode;
