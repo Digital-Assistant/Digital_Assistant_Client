@@ -2,6 +2,7 @@ import TSON from "typescript-json";
 import {CustomConfig} from "../config/CustomConfig";
 import {getFromStore} from "../util";
 import {CONFIG} from "../config";
+import {trigger} from "../util/events";
 
 global.UDAGlobalConfig = CustomConfig;
 
@@ -37,6 +38,7 @@ export const apiCal = (options: any) => {
       switch (response?.status) {
         case 401:
           // localStorage.clear();
+            trigger('UDAGetNewToken', {detail: {data: "UDAGetNewToken"}});
           break;
         case 200:
           return options?.responseType == "text" ? response.text() : response.json();
@@ -90,14 +92,14 @@ export const syncApiCal = async (options: any) => {
  */
 export const getHTTPHeaders = (contentType: string, additionalHeaders: any = null) => {
 
-  let keycloakData = getFromStore(CONFIG.UDAKeyCloakKey, false);
+  let userAuthData = getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
 
   const headers = new Headers();
   if (contentType === "json")
     headers.append("Content-Type", "application/json");
 
-  if(keycloakData){
-    headers.append("Authorization", `Bearer ${keycloakData.token}`);
+  if(userAuthData && userAuthData.authdata.token){
+    headers.append("Authorization", `Bearer ${userAuthData.authdata.token}`);
   }
 
   if(additionalHeaders){

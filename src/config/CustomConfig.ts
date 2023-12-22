@@ -22,7 +22,10 @@ export interface CustomConfigPropTypes {
   enableSpeechToText: boolean,
   enableSlowReplay: boolean,
   enableCustomIcon: boolean,
-  customIcon: string
+  customIcon: string,
+  realm: string,
+  clientId: string,
+  clientSecret: string
 }
 
 // assigning default values to the default configuration
@@ -44,5 +47,8 @@ export const CustomConfig: CustomConfigPropTypes = {
   enableSpeechToText: false, // Flag to enable speech to text
   enableSlowReplay: false, // Flag to enable slow playback
   enableCustomIcon: false, // Flag to enable custom icon
-  customIcon: 'https://udan.nistapp.com/uda-logo.jpg'
+  customIcon: 'https://udan.nistapp.com/uda-logo.jpg',
+  realm: process.env.keycloakRealm,
+  clientId: process.env.keycloakClientId,
+  clientSecret: process.env.keycloakClientSecret
 };
