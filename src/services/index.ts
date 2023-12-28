@@ -98,8 +98,8 @@ export const getHTTPHeaders = (contentType: string, additionalHeaders: any = nul
   if (contentType === "json")
     headers.append("Content-Type", "application/json");
 
-  if(userAuthData && userAuthData.authdata.token){
-    headers.append("Authorization", `Bearer ${userAuthData.authdata.token}`);
+  if(userAuthData && userAuthData.authData.token){
+    headers.append("Authorization", `Bearer ${userAuthData.authData.token}`);
   }
 
   if(additionalHeaders){

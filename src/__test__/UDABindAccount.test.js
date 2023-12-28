@@ -2,7 +2,7 @@
 
 
 // Mock dependencies if needed
-import {UDABindAccount} from "../util/UserAuthData";
+import {UDABindAccount} from "../util/UDABindAccount";
 
 jest.mock('../AuthService', () => ({
     UDAStoreSessionData: jest.fn(),

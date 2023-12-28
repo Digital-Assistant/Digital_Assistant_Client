@@ -79,12 +79,21 @@ function App(props) {
 
     const config = global.UDAGlobalConfig;
 
+    // fetch search results based on the permissions
     useEffect(() => {
         if(!showLoader && (global.UDAGlobalConfig.enablePermissions || global.UDAGlobalConfig.enableForAllDomains)) {
             // init();
             getSearchResults(1,true);
         }
     }, [global.UDAGlobalConfig.enablePermissions, global.UDAGlobalConfig.enableForAllDomains]);
+
+    useEffect(()=>{
+        trigger("RequestUDASessionData", {
+            detail: { data: "getusersessiondata" },
+            bubbles: false,
+            cancelable: false,
+        });
+    },[global.UDAGlobalConfig.realm,global.UDAGlobalConfig.clientId,global.UDAGlobalConfig.clientSecret])
 
     useEffect(() => {
         if (invokeKeycloak) {
@@ -110,6 +119,7 @@ function App(props) {
      * @returns {void} This function does not return anything.
      */
     const initKeycloak = () => {
+        console.log('initKeycloak called');
         // If keycloak is not already authenticated and there is no session or user data
         if (!keycloak.authenticated && !keycloakSessionData && !userSessionData && !authenticated) {
             // Initialize keycloak
@@ -395,6 +405,9 @@ function App(props) {
      */
     const [timer, setTimer] = useState(null);
     const getSearchResults = async (_page = 1, refetch=false) => {
+        if (!authenticated) {
+            return;
+        }
         if (timer) {
             clearTimeout(timer);
             setTimer(null);
