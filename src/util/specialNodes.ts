@@ -30,6 +30,36 @@ export const specialNodes = {
     "attributes": ['uib-datepicker-popup-wrap'],
     "ids": ['content']
   },
+  // list of attributes to ignore while comparing
+  "ignoreDuringCompare": {
+    "tags": [],
+    "classes": [],
+    "attributes": [
+      'translate', 'draggable', 'spellcheck', 'tabindex', 'clientHeight', 'clientLeft', 'clientTop', 'clientWidth',
+      'offsetHeight', 'offsetLeft', 'offsetTop', 'offsetWidth', 'scrollHeight', 'scrollLeft', 'scrollTop', 'scrollWidth',
+      'baseURI', 'isConnected', 'ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
+      'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
+      'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y', 'selectionStart', 'selectionEnd',
+      'required', 'validationMessage', 'selectionDirection', 'naturalWidth', 'naturalHeight', 'complete', '_indexOf',
+      'value', 'defaultValue', 'min', 'max', 'nodeInfo', 'data-tooltip-id', 'addedclickrecord', 'checked', 'data-tribute',
+      'hasclick', 'addedClickRecord', 'hasClick', 'valueAsNumber', 'udaIgnoreChildren', 'udaIgnoreClick', 'udaignorechildren',
+      'udaignoreclick', 'fdprocessedid', '__ngContext__', 'd', 'text', 'textContent', 'cdk-describedby-host', 'inert', 'fill', 'disabled', 'hidden',
+      'aria-autocomplete', 'ariaAutoComplete'
+    ],
+    "ids": []
+  },
+  // personal node ignore attributes
+  personalNodeIgnoreAttributes: [
+    "innerText",
+    "innerHTML",
+    "outerText",
+    "outerHTML",
+    "nodeValue",
+    "src",
+    "naturalWidth",
+    "naturalHeight",
+    "currentSrc",
+  ],
   // list of text editor identifications
   "textEditors": {
     "tags": ['ckeditor'],
