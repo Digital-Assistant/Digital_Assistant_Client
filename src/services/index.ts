@@ -100,7 +100,7 @@ export const getHTTPHeaders = (contentType: string) => {
  * @returns reconstructed url
  */
 export const processArgs1 = (url: string, val: any) => {
-  return url?.replace(/#([^#]+)#/g, (_, key) => (val[key] || "") && val[key]);
+  return url?.replace(/#([^#]+)#/g, (_, key) => val[key] !== undefined ? val[key] : "");
 }
 
 export {recordUserClickData} from "./recordService";
