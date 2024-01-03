@@ -55,7 +55,8 @@ function App(props) {
     );
     const [searchKeyword, setSearchKeyword] = useState<string>("");
     const [searchResults, setSearchResults] = useState<any>([]);
-    const [page, setPage] = useState<number>(1);
+    const [page, setPage] = useState<number>(0);
+    const [hasMorePages, setHasMorePages] = useState<boolean>(true);
     const [reFetchSearch, setReFetchSearch] = useState<string>("off");
     const [recSequenceData, setRecSequenceData] = useState<any>([]);
     const [
@@ -82,7 +83,7 @@ function App(props) {
     useEffect(() => {
         if(!showLoader && (global.UDAGlobalConfig.enablePermissions || global.UDAGlobalConfig.enableForAllDomains)) {
             // init();
-            getSearchResults(1,true);
+            getSearchResults(0,true);
         }
     }, [global.UDAGlobalConfig.enablePermissions, global.UDAGlobalConfig.enableForAllDomains]);
 
@@ -252,7 +253,7 @@ function App(props) {
                 cancel();
             }
         } else {
-            await getSearchResults(1, true);
+            await getSearchResults(0, true);
         }
         if (hide) {
             await squeezeBody(true);
@@ -313,12 +314,13 @@ function App(props) {
 
     useEffect(() => {
         if (searchKeyword !== previousSearchKeyword.current) {
+            cancel(true);
             previousSearchKeyword.current = searchKeyword;
-            getSearchResults(1, true);
+            getSearchResults(0, true);
         }
 
         if (reFetchSearch === "on") {
-            getSearchResults(1,true);
+            getSearchResults(0,true);
             setReFetchSearch("off");
         }
     }, [searchKeyword, reFetchSearch]);
@@ -359,7 +361,7 @@ function App(props) {
      * @param _page
      */
     const [timer, setTimer] = useState(null);
-    const getSearchResults = async (_page = 1, refetch=false) => {
+    const getSearchResults = async (_page: number = 0, refetch=false) => {
         if (timer) {
             clearTimeout(timer);
             setTimer(null);
@@ -371,7 +373,7 @@ function App(props) {
                     await addBodyEvents();
                     return;
                 }
-                if(searchResults.length > 0 && !refetch){
+                if(_page===0 &&searchResults.length > 0 && !refetch) {
                     setShowLoader(false);
                     return;
                 } else if (!_.isEmpty(selectedRecordingDetails)) {
@@ -381,21 +383,33 @@ function App(props) {
                 /*if(selectedRecordingDetails){
                     return;
                 }*/
-                setShowLoader(true);
+                if(_page===0 && refetch) {
+                    setShowLoader(true);
+                }
                 let domain = fetchDomain();
                 const _searchResults = await fetchSearchResults({
                     keyword: searchKeyword,
-                    page,
+                    page: _page,
                     domain: encodeURI(domain),
                     additionalParams: global.UDAGlobalConfig.enablePermissions
                         ? encodeURI(JSON.stringify(global.UDAGlobalConfig.permissions))
                         : null,
                 });
-                setPage(_page);
                 setTimeout(() => setShowLoader(false), 500);
                 if (_searchResults.length) {
-                    setSearchResults([..._searchResults]);
+                    setPage(_page);
+                    if(_searchResults.length===10){
+                        setHasMorePages(true);
+                    } else {
+                        setHasMorePages(false);
+                    }
+                    if(_page===0){
+                        setSearchResults(_searchResults);
+                    } else {
+                        setSearchResults(searchResults.concat(_searchResults));
+                    }
                 } else {
+                    setHasMorePages(false);
                     setSearchResults([]);
                 }
             }, CONFIG.apiInvokeTime)
@@ -601,6 +615,7 @@ function App(props) {
                                           searchHandler={
                                               getSearchResults
                                           }
+                                          hasMorePages={hasMorePages}
                                           page={page}
                                           config={
                                               global.UDAGlobalConfig

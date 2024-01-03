@@ -34,7 +34,7 @@ export const CONFIG = {
   JARO_WEIGHT_PERSONAL: 0.90,
   lastClickedTime: null,
   specialNodeKey: "UDASpecialNodes",
-  enableInfiniteScroll: false,
+  enableInfiniteScroll: true,
   enableInfiniteScrollPageLength: 10,
   UDA_URL_Param: 'UDA_Sequence_id',
   set Environment(value) {

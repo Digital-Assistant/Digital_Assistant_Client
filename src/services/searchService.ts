@@ -11,7 +11,7 @@ import {getUserId} from "./userService";
 
 export const fetchSearchResults = async (request?: {
   keyword?: string,
-  page?: number,
+  page: number,
   domain?: string,
   additionalParams?: any
   userSessionId?: any

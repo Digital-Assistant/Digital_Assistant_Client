@@ -24,6 +24,7 @@ export interface MProps {
   page?: number;
   config?: any;
   playHandler?: Function;
+  hasMorePages?: boolean;
 }
 
 let globalSearchResults: any = [];
@@ -34,12 +35,21 @@ let globalSearchResults: any = [];
 
 export const SearchResults = (props: MProps) => {
   const [searchResults, setSearchResults] = useState<any>([]);
+  const [fetchingInProgress, setFetchingInProgress] = useState<boolean>(false);
+  const [enableScroll, setEnableScroll] = useState<boolean>(false);
 
   useEffect(() => {
     if (props?.searchKeyword) globalSearchResults = [];
     globalSearchResults = [...globalSearchResults, ...props?.data];
     setSearchResults([...globalSearchResults]);
   }, [props?.data]);
+
+  useEffect(() => {
+    if (props.hasMorePages)
+      setEnableScroll(true);
+    else
+      setEnableScroll(false);
+  }, [props]);
 
   const selectItem = async (item: any, play=false) => {
     await recordUserClickData('viewRecording', '', item.id);
@@ -51,11 +61,13 @@ export const SearchResults = (props: MProps) => {
     }
   };
 
-  const loadSearchResults = () => {
-    if (props?.searchHandler)
-      props.searchHandler(
-        props?.page ? (props?.page === 1 ? 2 : props.page + 1) : 1
-      );
+  const loadSearchResults = async () => {
+    if (props.hasMorePages && props?.searchHandler && !fetchingInProgress) {
+      setEnableScroll(false);
+      setFetchingInProgress(true);
+      await props.searchHandler(((props.page===0)?1:props.page+1), true, true);
+      setFetchingInProgress(false);
+    }
   };
 
   const renderData = () => {
@@ -92,9 +104,11 @@ export const SearchResults = (props: MProps) => {
       )}
       {searchResults?.length > 0 && (
         <InfiniteScroll
+          initialLoad={false}
           pageStart={0}
+          threshold={250}
           loadMore={loadSearchResults}
-          hasMore={CONFIG.enableInfiniteScroll && searchResults.length > CONFIG.enableInfiniteScrollPageLength}
+          hasMore={enableScroll}
           useWindow={false}
         >
           {renderData()}
