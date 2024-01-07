@@ -77,6 +77,7 @@ function App(props) {
     // const [searchParams, setSearchParams] = useSearchParams();
 
     const previousSearchKeyword = useRef("");
+    const previousEnvironment = useRef(global.UDAGlobalConfig.environment);
 
     const config = global.UDAGlobalConfig;
 
@@ -86,6 +87,12 @@ function App(props) {
             getSearchResults(0,true);
         }
     }, [global.UDAGlobalConfig.enablePermissions, global.UDAGlobalConfig.enableForAllDomains]);
+
+    useEffect(() => {
+        if(global.UDAGlobalConfig.environment !== previousEnvironment.current) {
+            getSearchResults(0,true);
+        }
+    }, [global.UDAGlobalConfig.environment]);
 
     useEffect(() => {
         if (invokeKeycloak) {
