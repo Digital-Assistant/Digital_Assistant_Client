@@ -2,6 +2,9 @@
 import {CONFIG} from "../config";
 import {jaroWinkler} from "jaro-winkler-typescript";
 import {UDAConsoleLogger} from "../config/error-log";
+import {checkNodeValues} from "./checkNodeValues";
+
+declare let udaSpecialNodes;
 
 export const compareNodes = (compareNode, recordedNode, isPersonalNode = false, match = {
   count: 0,
@@ -37,7 +40,11 @@ export const compareNodes = (compareNode, recordedNode, isPersonalNode = false, 
       continue;
     }
 
-    if (CONFIG.ignoreAttributes.indexOf(key) !== -1) {
+    /*if (checkNodeValues(compareNode, 'ignoreDuringCompare')) {
+      continue;
+    }*/
+    // CONFIG.ignoreAttributes.indexOf(key) !== -1 ||
+    if (udaSpecialNodes.ignoreDuringCompare.attributes.indexOf(key) !== -1) {
       continue;
     } else if (key.indexOf('_ngcontent') !== -1 || key.indexOf('jQuery') !== -1 || key.indexOf('__zone_symbol__') !== -1) {
       continue;
