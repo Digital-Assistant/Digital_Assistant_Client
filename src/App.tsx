@@ -77,9 +77,11 @@ function App(props) {
     // const [searchParams, setSearchParams] = useSearchParams();
 
     const previousSearchKeyword = useRef("");
+    const previousEnvironment = useRef(global.UDAGlobalConfig.environment);
 
     const config = global.UDAGlobalConfig;
 
+    // fetch search results based on the permissions
     useEffect(() => {
         if(!showLoader && (global.UDAGlobalConfig.enablePermissions || global.UDAGlobalConfig.enableForAllDomains)) {
             // init();
@@ -87,12 +89,26 @@ function App(props) {
         }
     }, [global.UDAGlobalConfig.enablePermissions, global.UDAGlobalConfig.enableForAllDomains]);
 
+    useEffect(()=>{
+        trigger("RequestUDASessionData", {
+            detail: { data: "getusersessiondata" },
+            bubbles: false,
+            cancelable: false,
+        });
+    },[global.UDAGlobalConfig.realm,global.UDAGlobalConfig.clientId,global.UDAGlobalConfig.clientSecret])
+
+    useEffect(() => {
+        if(global.UDAGlobalConfig.environment !== previousEnvironment.current) {
+            getSearchResults(0,true);
+        }
+    }, [global.UDAGlobalConfig.environment]);
+
     useEffect(() => {
         if (invokeKeycloak) {
             let keycloakData = getFromStore(CONFIG.UDAKeyCloakKey, false);
             if (keycloakData) {
                 setKeycloakSessionData(keycloakData);
-                setAuthenticated(true);
+                // setAuthenticated(true);
             } else {
                 initKeycloak();
             }
@@ -105,18 +121,21 @@ function App(props) {
         }
     }, [keycloak, keycloakSessionData]);
 
+    /**
+     * Initializes the Keycloak authentication.
+     *
+     * @returns {void} This function does not return anything.
+     */
     const initKeycloak = () => {
-        if (
-            !keycloak.authenticated &&
-            !keycloakSessionData &&
-            !userSessionData &&
-            !authenticated
-        ) {
-            keycloak
-                .init({})
+        console.log('initKeycloak called');
+        // If keycloak is not already authenticated and there is no session or user data
+        if (!keycloak.authenticated && !keycloakSessionData && !userSessionData && !authenticated) {
+            // Initialize keycloak
+            keycloak.init({})
                 .then(async (auth) => {
-                    setAuthenticated(auth);
+                    // If keycloak is authenticated
                     if (keycloak.authenticated) {
+                        // Create user data object
                         let userData: any = {
                             token: keycloak.token,
                             refreshToken: keycloak.refreshToken,
@@ -125,49 +144,73 @@ function App(props) {
                             authenticated: auth,
                             idToken: keycloak.idToken,
                         };
+
+                        // Store user data
                         setToStore(userData, CONFIG.UDAKeyCloakKey, false);
+
+                        // Set keycloak session data
                         setKeycloakSessionData(userData);
+
+                        // set authenticated to true
+                        setAuthenticated(auth);
+
+                        // Trigger event to create user data session
                         trigger("CreateUDASessionData", {
                             detail: { action: "createSession", data: userData },
                             bubbles: false,
                             cancelable: false,
                         });
+
+                        // Toggle panel
                         await togglePanel();
                     }
                 })
                 .catch((e) => {
                     console.log(e);
                 });
-        } else if (keycloakSessionData) {
-            keycloak
-                .init({
-                    token: keycloakSessionData.token,
-                    refreshToken: keycloakSessionData.refreshToken,
-                    idToken: keycloakSessionData.idToken,
-                })
+        }
+        // If keycloak session data is available
+        else if (keycloakSessionData) {
+            // Initialize keycloak with session data
+            keycloak.init({
+                token: keycloakSessionData.token,
+                refreshToken: keycloakSessionData.refreshToken,
+                idToken: keycloakSessionData.idToken,
+            })
                 .then(async (auth) => {
                     setAuthenticated(auth);
+
+                    console.log({keycloak});
+
+                    // If user session data is not available
                     if (!userSessionData) {
+                        // Create user data object
                         let userData: any = {
-                            token: keycloakSessionData.token,
-                            refreshToken: keycloakSessionData.refreshToken,
-                            id: keycloakSessionData.id,
+                            token: keycloak.token,
+                            refreshToken: keycloak.refreshToken,
+                            id: keycloak.subject,
                             email: keycloak.idTokenParsed.email,
                             authenticated: auth,
-                            idToken: keycloakSessionData.idToken,
+                            idToken: keycloak.idToken,
                         };
+
+                        // Trigger event to create user data session
                         trigger("CreateUDASessionData", {
                             detail: { action: "createSession", data: userData },
                             bubbles: false,
                             cancelable: false,
                         });
+
+                        // Toggle panel
                         await togglePanel();
                     }
                 })
                 .catch((error) => {
                     console.log(error);
+
+                    // If there is an error, clear the session
                     if (error) {
-                        clearSession();
+                        // clearSession();
                     }
                 });
         }
@@ -226,8 +269,17 @@ function App(props) {
         });
     }, []);
 
+    useEffect(()=>{
+        if(authenticated){
+            init();
+        }
+    },[authenticated]);
+
     const init = async () => {
         const searchParams = new URLSearchParams(window.location.search);
+        if(!authenticated){
+            return;
+        }
         setShowLoader(true);
         await initSpecialNodes();
         if(searchParams.get(CONFIG.UDA_URL_Param)){
@@ -277,7 +329,7 @@ function App(props) {
             });
         } else {
             setUserSessionData(userSessionData);
-            setAuthenticated(true);
+            // setAuthenticated(true);
             openUDAPanel();
             if (userSessionData.authenticationsource === "keycloak") {
                 setInvokeKeycloak(true);
@@ -362,6 +414,9 @@ function App(props) {
      */
     const [timer, setTimer] = useState(null);
     const getSearchResults = async (_page: number = 0, refetch=false) => {
+        if (!authenticated) {
+            return;
+        }
         if (timer) {
             clearTimeout(timer);
             setTimer(null);

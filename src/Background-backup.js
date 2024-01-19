@@ -10,8 +10,6 @@ let enablePlugin = false;
 
 let browserVar;
 
-console.log(browser.name);
-
 switch (browser && browser.name) {
 	case 'edge-chromium':
 	case 'edge':
@@ -32,6 +30,12 @@ const cookieName = "uda-sessiondata";
 const CSPStorageName = "uda-csp-storage";
 const activeTabs = [];
 const sessionKey = "";
+const keycloak = {
+	realm: "UDAN",
+	clientId: "backend-service",
+	clientSecret: "1y5AAogxfCsB4WB6XTB8YOL6KnTplZhn",
+	accessToken: ""
+};
 let sessionData = {
 	sessionkey: "",
 	authenticated: false,
@@ -52,7 +56,11 @@ browserVar.tabs.onActivated.addListener(function (activeInfo) {
 	activeTabId = activeInfo.tabId;
 });
 
-//login with browser identity functionality
+/**
+ * Asynchronously log the user in using a browser.
+ *
+ * @return {boolean} Whether the login was successful.
+ */
 async function loginWithBrowser() {
 	sessionData.authenticationsource = "google";
 	browserVar.identity.getProfileUserInfo({accountStatus: 'ANY'}, async function (data) {
@@ -70,10 +78,17 @@ async function loginWithBrowser() {
 			await sendSessionData("UDAAlertMessageData", "login")
 		}
 	});
+	// await sendSessionData("UDAAlertMessageData", "login");
 	return true;
 }
 
-//send the sessiondata to the webpage functionality
+/**
+ * Sends session data to the server.
+ *
+ * @param {string} sendaction - The action to be performed during the sending of the session data. Defaults to "UDAUserSessionData".
+ * @param {string} message - The message to be included in the session data. Defaults to an empty string.
+ * @return {boolean} Returns true if the session data was successfully sent.
+ */
 async function sendSessionData(sendaction = "UDAUserSessionData", message = '') {
 	let tab = await getTab();
 	if (sendaction === "UDAAlertMessageData") {
@@ -83,7 +98,7 @@ async function sendSessionData(sendaction = "UDAUserSessionData", message = '') 
 		let url = new URL(tab.url);
 		let domain = url.protocol + '//' + url.hostname;
 		let cspRecord = {cspenabled: false, udanallowed: true, domain: ''};
-		let cspData = getstoragedata(CSPStorageName);
+		let cspData = getStorageData(CSPStorageName);
 		let recordExists = false;
 		if (cspData) {
 			let cspRecords = cspData;
@@ -101,15 +116,20 @@ async function sendSessionData(sendaction = "UDAUserSessionData", message = '') 
 			}
 		}
 		sessionData.csp = cspRecord;
-		console.log(sessionData);
-		await browserVar.tabs.sendMessage(tab.id, {action: sendaction, data: JSON.stringify(sessionData)});
+		// Logic to add the authtoken to the session data
+		if(!sessionData.authdata.hasOwnProperty('token')){
+			await bindAuthenticatedAccount();
+		} else {
+			await browserVar.tabs.sendMessage(tab.id, {action: sendaction, data: JSON.stringify(sessionData)});
+		}
 		return true;
 	}
 }
 
 /**
+ * Retrieves the active tab from the browser.
  *
- * @returns {currentTab}
+ * @return {Promise<Object>} The active tab object.
  */
 async function getTab() {
 	let queryOptions = {active: true, currentWindow: true};
@@ -130,8 +150,7 @@ async function getTab() {
 
 // listen for the requests made from webpage for accessing userdata
 browserVar.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
-	console.log(request);
-	if (request.action === "getusersessiondata") {
+	if (request.action === "getusersessiondata" || request.action === "UDAGetNewToken") {
 		browserVar.storage.local.get([cookieName], async function (storedSessionData) {
 			if (browserVar.runtime.lastError) {
 				console.log('failed to read stored session data');
@@ -139,7 +158,9 @@ browserVar.runtime.onMessage.addListener(async function (request, sender, sendRe
 				// looks like browser storage might have changed so changing the reading the data has been changed. For to work with old version have added the new code to else if statement
 				if (storedSessionData.hasOwnProperty("sessionkey") && storedSessionData["sessionKey"] && typeof storedSessionData["sessionKey"] != 'object') {
 					sessionData = storedSessionData;
-					if(storedSessionData.hasOwnProperty('authenticated') && storedSessionData.authenticated) {
+					if(request.action === "UDAGetNewToken"){
+						await generateNewToken();
+					} else if(storedSessionData.hasOwnProperty('authenticated') && storedSessionData.authenticated) {
 						await sendSessionData();
 					} else {
 						await loginWithBrowser();
@@ -168,7 +189,11 @@ browserVar.runtime.onMessage.addListener(async function (request, sender, sendRe
 	}
 });
 
-//storing the data to the browser storage
+/**
+ * Stores session data in local storage.
+ *
+ * @return {boolean} true if the session data was successfully stored, false otherwise.
+ */
 async function storeSessionData() {
 	let storageData = {};
 	storageData[cookieName] = sessionData;
@@ -176,8 +201,13 @@ async function storeSessionData() {
 	return true;
 }
 
-//getting the sessionkey from backend server
-async function getSessionKey(senddata = true) {
+/**
+ * Asynchronously retrieves the session key.
+ *
+ * @param {boolean} sendData - Determines whether to send session data.
+ * @return {Promise<void>} - A promise that resolves with the retrieved session key.
+ */
+async function getSessionKey(sendData = true) {
 	let response = await invokeApi(apiHost + "/user/getsessionkey", "GET", null, false);
 	console.log(response);
 	if(!response){
@@ -185,13 +215,17 @@ async function getSessionKey(senddata = true) {
 	}
 	sessionData.sessionkey = response;
 	await storeSessionData();
-	if(senddata){
+	if(sendData){
 		await sendSessionData();
 	}
 
 }
 
-//binding the sessionkey and browser identity id
+/**
+ * Binds the authenticated account.
+ *
+ * @return {boolean} Returns true if the account is successfully bound, otherwise returns the response.
+ */
 async function bindAuthenticatedAccount() {
 	let authdata = {
 		authid: sessionData.authdata.id,
@@ -207,46 +241,79 @@ async function bindAuthenticatedAccount() {
 	}
 }
 
-//binding the session to the authid
-async function bindAccount(userauthdata) {
-	const usersessiondata = {userauthid: userauthdata.id, usersessionid: sessionData.sessionkey};
-	let response = await invokeApi(apiHost + "/user/checkusersession", "POST", usersessiondata);
-	await storeSessionData();
-	await sendSessionData("UDAAuthenticatedUserSessionData");
-	return true;
-}
-
-function CheckCSPStorage(cspenabled = false, udanallowed = false, domain) {
-	const csprecord = {cspenabled, udanallowed, domain};
-	let cspdata = getstoragedata(CSPStorageName);
-	if (cspdata) {
-		let csprecords = cspdata;
-		if (csprecords.length > 0) {
-			let recordexists = false;
-			for (let i = 0; i < csprecords.length; i++) {
-				let record = csprecords[i];
-				if (record.domain === domain) {
-					recordexists = true;
-					csprecords[i] = csprecord;
-					createstoragedata(CSPStorageName, csprecords);
-				}
-			}
-			if (!recordexists) {
-				csprecords.push(csprecord);
-				createstoragedata(CSPStorageName, csprecords);
-			}
-		} else {
-			csprecords.push(csprecord);
-			createstoragedata(CSPStorageName, csprecords);
+/**
+ * Binds the user's account.
+ *
+ * @param {object} userAuthData - The user's authentication data.
+ * @return {boolean} Returns true if the account was successfully bound.
+ */
+async function bindAccount(userAuthData) {
+	try{
+		// payload
+		const payLoad = {uid: sessionData.authdata.id, email: sessionData.authdata.email, realm: keycloak.realm, clientId: keycloak.clientId, clientSecret: keycloak.clientSecret};
+		const authToken = await invokeApi(process.env.tokenUrl+"user/token","POST", payLoad);
+		console.log(authToken);
+		if(authToken && authToken?.token) {
+			sessionData.authdata.tokenUrl = authToken.token;
+			console.log(sessionData);
+			const userSessionData = {userauthid: userAuthData.id, usersessionid: sessionData.sessionkey};
+			let response = await invokeApi("/user/checkusersession", "POST", userSessionData);
+			await storeSessionData();
+			await sendSessionData("UDAAuthenticatedUserSessionData");
 		}
-	} else {
-		var csprecords = [];
-		csprecords.push(csprecord);
-		createstoragedata(CSPStorageName, csprecords);
+		return true;
+	}catch (e) {
+		console.log(e);
+		return false;
 	}
 }
 
-function createstoragedata(key, value) {
+/**
+ * Checks the CSP storage for a specific domain and updates the record if it exists,
+ * otherwise adds a new record for the domain.
+ *
+ * @param {boolean} cspenabled - Indicates if CSP is enabled.
+ * @param {boolean} udanallowed - Indicates if UDAN is allowed.
+ * @param {string} domain - The domain to check or add the record for.
+ */
+function CheckCSPStorage(cspenabled = false, udanallowed = false, domain) {
+	const cspRecord = {cspenabled, udanallowed, domain};
+	let cspData = getStorageData(CSPStorageName);
+	if (cspData) {
+		let cspRecords = cspData;
+		if (cspRecords.length > 0) {
+			let recordExists = false;
+			for (let i = 0; i < cspRecords.length; i++) {
+				let record = cspRecords[i];
+				if (record.domain === domain) {
+					recordExists = true;
+					cspRecords[i] = cspRecord;
+					createStorageData(CSPStorageName, cspRecords);
+				}
+			}
+			if (!recordExists) {
+				cspRecords.push(cspRecord);
+				createStorageData(CSPStorageName, cspRecords);
+			}
+		} else {
+			cspRecords.push(cspRecord);
+			createStorageData(CSPStorageName, cspRecords);
+		}
+	} else {
+		var cspRecords = [];
+		cspRecords.push(cspRecord);
+		createStorageData(CSPStorageName, cspRecords);
+	}
+}
+
+/**
+ * Creates storage data by storing the provided key-value pair in the local storage.
+ *
+ * @param {string} key - The key to use for storing the data in local storage.
+ * @param {any} value - The value to be stored in local storage.
+ * @return {boolean} Returns true if the data was successfully stored, false otherwise.
+ */
+function createStorageData(key, value) {
 	try {
 		localStorage.setItem(key, JSON.stringify(value));
 		return true;
@@ -255,7 +322,13 @@ function createstoragedata(key, value) {
 	}
 }
 
-function getstoragedata(key) {
+/**
+ * Retrieves data from localStorage using the specified key.
+ *
+ * @param {string} key - The key used to retrieve the data.
+ * @return {any} The parsed data retrieved from localStorage, or false if an error occurred.
+ */
+function getStorageData(key) {
 	try {
 		const result = localStorage.getItem(key);
 		return JSON.parse(result);
@@ -265,8 +338,8 @@ function getstoragedata(key) {
 }
 
 function ProcessCSPValues(value = '', domain) {
-	let udanallowed = false;
-	let cspenabled = true;
+	let udanAllowed = false;
+	let cspEnabled = true;
 	if (value) {
 		let allowedSrcs = value.split(";");
 		if (allowedSrcs.length > 0) {
@@ -282,22 +355,22 @@ function ProcessCSPValues(value = '', domain) {
 						switch (allowedDomain.toLowerCase()) {
 							case '*':
 							case 'https:':
-								udanallowed = true;
-								cspenabled = true;
+								udanAllowed = true;
+								cspEnabled = true;
 								break;
 						}
 					}
 				} else if (allowedDomains.length > 0 && allowedDomains[0].toLowerCase() === 'default-src') {
-					udanallowed = true;
-					cspenabled = true;
+					udanAllowed = true;
+					cspEnabled = true;
 				}
 			}
 		}
 	} else {
-		udanallowed = true;
-		cspenabled = true;
+		udanAllowed = true;
+		cspEnabled = true;
 	}
-	CheckCSPStorage(cspenabled, udanallowed, domain);
+	CheckCSPStorage(cspEnabled, udanAllowed, domain);
 }
 
 let onHeadersReceived = function (details) {
@@ -326,6 +399,11 @@ async function keycloakStore(data){
 	sessionData.authenticated = true;
 	sessionData.authdata = data;
 	await getSessionKey(false);
+	await bindAuthenticatedAccount();
+}
+
+async function generateNewToken() {
+	console.log(sessionData);
 	await bindAuthenticatedAccount();
 }
 

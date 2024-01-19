@@ -50,7 +50,7 @@ module.exports = (env, argv) => {
             UDAHeaders: "./src/Headers.js",
             UDAInjectHeaders: "./src/InjectHeaders.js",
             UDASdk: "./src/index.tsx",
-            UDABackground: "./src/Background.js",
+            UDABackground: "./src/Background.ts",
             UDALoad: "./src/InjectSDK.js",
             UDAPluginSDK: "./src/ExtensionSDK.js",
         },

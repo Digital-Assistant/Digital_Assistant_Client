@@ -22,4 +22,5 @@ export const ENDPOINT = {
   fetchRecord: '/search',
   VoteRecord: `/votes/addVote`,
   fetchVoteRecord: `/votes/`,
+  tokenUrl: 'user/token'
 };
