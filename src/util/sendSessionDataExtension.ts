@@ -5,6 +5,10 @@ declare const browserVar;
 
 export const sendSessionDataExtension = async (sendAction = "UDAUserSessionData", message = '', sessionData: UDASessionData) => {
     let tab = await getTab();
+    if(!tab){
+        console.log('No active tab identified.');
+        return false;
+    }
     if (sendAction === "UDAAlertMessageData") {
         await browserVar.tabs.sendMessage(tab.id, {action: sendAction, data: message});
         return true;
