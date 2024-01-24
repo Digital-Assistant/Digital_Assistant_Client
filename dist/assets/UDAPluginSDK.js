@@ -654,6 +654,12 @@ if (enableUDAPlugin === false) {
       data: data.detail.data.value
     });
   });
+  document.addEventListener("UDAGetNewToken", function (data) {
+    udaBrowserVar.runtime.sendMessage({
+      action: data.detail.data,
+      data: data.detail.data
+    });
+  });
 
   /**
    * create keycloak storage to browserVar

@@ -1,2 +1,1632 @@
-/*! For license information please see UDABackground.js.LICENSE.txt */
-var UdanLibrary;!function(){var t={3631:function(t,e,n){"use strict";n.r(e),n.d(e,{BotInfo:function(){return c},BrowserInfo:function(){return i},NodeInfo:function(){return a},ReactNativeInfo:function(){return s},SearchBotDeviceInfo:function(){return u},browserName:function(){return v},detect:function(){return d},detectOS:function(){return b},getNodeVersion:function(){return m},parseUserAgent:function(){return w}});var r=n(4155),o=function(t,e,n){if(n||2===arguments.length)for(var r,o=0,i=e.length;o<i;o++)!r&&o in e||(r||(r=Array.prototype.slice.call(e,0,o)),r[o]=e[o]);return t.concat(r||Array.prototype.slice.call(e))},i=function(t,e,n){this.name=t,this.version=e,this.os=n,this.type="browser"},a=function(t){this.version=t,this.type="node",this.name="node",this.os=r.platform},u=function(t,e,n,r){this.name=t,this.version=e,this.os=n,this.bot=r,this.type="bot-device"},c=function(){this.type="bot",this.bot=!0,this.name="bot",this.version=null,this.os=null},s=function(){this.type="react-native",this.name="react-native",this.version=null,this.os=null},f=/(nuhk|curl|Googlebot|Yammybot|Openbot|Slurp|MSNBot|Ask\ Jeeves\/Teoma|ia_archiver)/,l=3,h=[["aol",/AOLShield\/([0-9\._]+)/],["edge",/Edge\/([0-9\._]+)/],["edge-ios",/EdgiOS\/([0-9\._]+)/],["yandexbrowser",/YaBrowser\/([0-9\._]+)/],["kakaotalk",/KAKAOTALK\s([0-9\.]+)/],["samsung",/SamsungBrowser\/([0-9\.]+)/],["silk",/\bSilk\/([0-9._-]+)\b/],["miui",/MiuiBrowser\/([0-9\.]+)$/],["beaker",/BeakerBrowser\/([0-9\.]+)/],["edge-chromium",/EdgA?\/([0-9\.]+)/],["chromium-webview",/(?!Chrom.*OPR)wv\).*Chrom(?:e|ium)\/([0-9\.]+)(:?\s|$)/],["chrome",/(?!Chrom.*OPR)Chrom(?:e|ium)\/([0-9\.]+)(:?\s|$)/],["phantomjs",/PhantomJS\/([0-9\.]+)(:?\s|$)/],["crios",/CriOS\/([0-9\.]+)(:?\s|$)/],["firefox",/Firefox\/([0-9\.]+)(?:\s|$)/],["fxios",/FxiOS\/([0-9\.]+)/],["opera-mini",/Opera Mini.*Version\/([0-9\.]+)/],["opera",/Opera\/([0-9\.]+)(?:\s|$)/],["opera",/OPR\/([0-9\.]+)(:?\s|$)/],["pie",/^Microsoft Pocket Internet Explorer\/(\d+\.\d+)$/],["pie",/^Mozilla\/\d\.\d+\s\(compatible;\s(?:MSP?IE|MSInternet Explorer) (\d+\.\d+);.*Windows CE.*\)$/],["netfront",/^Mozilla\/\d\.\d+.*NetFront\/(\d.\d)/],["ie",/Trident\/7\.0.*rv\:([0-9\.]+).*\).*Gecko$/],["ie",/MSIE\s([0-9\.]+);.*Trident\/[4-7].0/],["ie",/MSIE\s(7\.0)/],["bb10",/BB10;\sTouch.*Version\/([0-9\.]+)/],["android",/Android\s([0-9\.]+)/],["ios",/Version\/([0-9\._]+).*Mobile.*Safari.*/],["safari",/Version\/([0-9\._]+).*Safari/],["facebook",/FB[AS]V\/([0-9\.]+)/],["instagram",/Instagram\s([0-9\.]+)/],["ios-webview",/AppleWebKit\/([0-9\.]+).*Mobile/],["ios-webview",/AppleWebKit\/([0-9\.]+).*Gecko\)$/],["curl",/^curl\/([0-9\.]+)$/],["searchbot",/alexa|bot|crawl(er|ing)|facebookexternalhit|feedburner|google web preview|nagios|postrank|pingdom|slurp|spider|yahoo!|yandex/]],p=[["iOS",/iP(hone|od|ad)/],["Android OS",/Android/],["BlackBerry OS",/BlackBerry|BB10/],["Windows Mobile",/IEMobile/],["Amazon OS",/Kindle/],["Windows 3.11",/Win16/],["Windows 95",/(Windows 95)|(Win95)|(Windows_95)/],["Windows 98",/(Windows 98)|(Win98)/],["Windows 2000",/(Windows NT 5.0)|(Windows 2000)/],["Windows XP",/(Windows NT 5.1)|(Windows XP)/],["Windows Server 2003",/(Windows NT 5.2)/],["Windows Vista",/(Windows NT 6.0)/],["Windows 7",/(Windows NT 6.1)/],["Windows 8",/(Windows NT 6.2)/],["Windows 8.1",/(Windows NT 6.3)/],["Windows 10",/(Windows NT 10.0)/],["Windows ME",/Windows ME/],["Windows CE",/Windows CE|WinCE|Microsoft Pocket Internet Explorer/],["Open BSD",/OpenBSD/],["Sun OS",/SunOS/],["Chrome OS",/CrOS/],["Linux",/(Linux)|(X11)/],["Mac OS",/(Mac_PowerPC)|(Macintosh)/],["QNX",/QNX/],["BeOS",/BeOS/],["OS/2",/OS\/2/]];function d(t){return t?w(t):"undefined"==typeof document&&"undefined"!=typeof navigator&&"ReactNative"===navigator.product?new s:"undefined"!=typeof navigator?w(navigator.userAgent):m()}function y(t){return""!==t&&h.reduce((function(e,n){var r=n[0],o=n[1];if(e)return e;var i=o.exec(t);return!!i&&[r,i]}),!1)}function v(t){var e=y(t);return e?e[0]:null}function w(t){var e=y(t);if(!e)return null;var n=e[0],r=e[1];if("searchbot"===n)return new c;var a=r[1]&&r[1].split(".").join("_").split("_").slice(0,3);a?a.length<l&&(a=o(o([],a,!0),function(t){for(var e=[],n=0;n<t;n++)e.push("0");return e}(l-a.length),!0)):a=[];var s=a.join("."),h=b(t),p=f.exec(t);return p&&p[1]?new u(n,s,h,p[1]):new i(n,s,h)}function b(t){for(var e=0,n=p.length;e<n;e++){var r=p[e],o=r[0];if(r[1].exec(t))return o}return null}function m(){return void 0!==r&&r.version?new a(r.version.slice(1)):null}},4155:function(t){var e,n,r=t.exports={};function o(){throw new Error("setTimeout has not been defined")}function i(){throw new Error("clearTimeout has not been defined")}function a(t){if(e===setTimeout)return setTimeout(t,0);if((e===o||!e)&&setTimeout)return e=setTimeout,setTimeout(t,0);try{return e(t,0)}catch(n){try{return e.call(null,t,0)}catch(n){return e.call(this,t,0)}}}!function(){try{e="function"==typeof setTimeout?setTimeout:o}catch(t){e=o}try{n="function"==typeof clearTimeout?clearTimeout:i}catch(t){n=i}}();var u,c=[],s=!1,f=-1;function l(){s&&u&&(s=!1,u.length?c=u.concat(c):f=-1,c.length&&h())}function h(){if(!s){var t=a(l);s=!0;for(var e=c.length;e;){for(u=c,c=[];++f<e;)u&&u[f].run();f=-1,e=c.length}u=null,s=!1,function(t){if(n===clearTimeout)return clearTimeout(t);if((n===i||!n)&&clearTimeout)return n=clearTimeout,clearTimeout(t);try{return n(t)}catch(e){try{return n.call(null,t)}catch(e){return n.call(this,t)}}}(t)}}function p(t,e){this.fun=t,this.array=e}function d(){}r.nextTick=function(t){var e=new Array(arguments.length-1);if(arguments.length>1)for(var n=1;n<arguments.length;n++)e[n-1]=arguments[n];c.push(new p(t,e)),1!==c.length||s||a(h)},p.prototype.run=function(){this.fun.apply(null,this.array)},r.title="browser",r.browser=!0,r.env={},r.argv=[],r.version="",r.versions={},r.on=d,r.addListener=d,r.once=d,r.off=d,r.removeListener=d,r.removeAllListeners=d,r.emit=d,r.prependListener=d,r.prependOnceListener=d,r.listeners=function(t){return[]},r.binding=function(t){throw new Error("process.binding is not supported")},r.cwd=function(){return"/"},r.chdir=function(t){throw new Error("process.chdir is not supported")},r.umask=function(){return 0}}},e={};function n(r){var o=e[r];if(void 0!==o)return o.exports;var i=e[r]={exports:{}};return t[r](i,i.exports,n),i.exports}n.d=function(t,e){for(var r in e)n.o(e,r)&&!n.o(t,r)&&Object.defineProperty(t,r,{enumerable:!0,get:e[r]})},n.g=function(){if("object"==typeof globalThis)return globalThis;try{return this||new Function("return this")()}catch(t){if("object"==typeof window)return window}}(),n.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},n.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})};var r={};!function(){"use strict";n.r(r);var t=function(t,e,n,r){return new(n||(n=Promise))((function(o,i){function a(t){try{c(r.next(t))}catch(t){i(t)}}function u(t){try{c(r.throw(t))}catch(t){i(t)}}function c(t){var e;t.done?o(t.value):(e=t.value,e instanceof n?e:new n((function(t){t(e)}))).then(a,u)}c((r=r.apply(t,e||[])).next())}))};const e=(e,n)=>t(void 0,void 0,void 0,(function*(){const t=(new TextEncoder).encode(e),r=yield crypto.subtle.digest(n,t);return Array.from(new Uint8Array(r)).map((t=>t.toString(16).padStart(2,"0"))).join("")}));var o=function(t,e,n,r){return new(n||(n=Promise))((function(o,i){function a(t){try{c(r.next(t))}catch(t){i(t)}}function u(t){try{c(r.throw(t))}catch(t){i(t)}}function c(t){var e;t.done?o(t.value):(e=t.value,e instanceof n?e:new n((function(t){t(e)}))).then(a,u)}c((r=r.apply(t,e||[])).next())}))};n.g.UDAGlobalConfig={enableEditClickedName:!1,enableSkipDuringPlay:!1,enableTooltipAddition:!0,enableMultilingual:!1,enableNodeTypeSelection:!0,enablePermissions:!1,permissions:{},enableProfanity:!1,enableRecording:!0,enableOverlay:!0,environment:"TEST",enableUdaIcon:!0,udaDivId:"uda-nistapp-logo",enableForAllDomains:!1,enableSpeechToText:!1,enableSlowReplay:!1,enableCustomIcon:!1,customIcon:"https://udan.nistapp.com/uda-logo.jpg"};const i=(t,e,r,i=!0)=>o(void 0,void 0,void 0,(function*(){try{const o={method:e,headers:{"Content-Type":"application/json",charset:"UTF-8"}};r&&(o.body=JSON.stringify(r));const a="https://udantest.nistapp.ai/api";let u="https://udan.nistapp.ai/api";-1===t.indexOf("http")&&("TEST"===n.g.UDAGlobalConfig.environment&&(u=a),t=u+t);let c=yield fetch(t,o);return!!c.ok&&(i?c.json():c.text())}catch(t){return!1}}));function a(){a=function(){return e};var t,e={},n=Object.prototype,r=n.hasOwnProperty,o=Object.defineProperty||function(t,e,n){t[e]=n.value},i="function"==typeof Symbol?Symbol:{},c=i.iterator||"@@iterator",s=i.asyncIterator||"@@asyncIterator",f=i.toStringTag||"@@toStringTag";function l(t,e,n){return Object.defineProperty(t,e,{value:n,enumerable:!0,configurable:!0,writable:!0}),t[e]}try{l({},"")}catch(t){l=function(t,e,n){return t[e]=n}}function h(t,e,n,r){var i=e&&e.prototype instanceof m?e:m,a=Object.create(i.prototype),u=new _(r||[]);return o(a,"_invoke",{value:A(t,n,u)}),a}function p(t,e,n){try{return{type:"normal",arg:t.call(e,n)}}catch(t){return{type:"throw",arg:t}}}e.wrap=h;var d="suspendedStart",y="suspendedYield",v="executing",w="completed",b={};function m(){}function g(){}function x(){}var k={};l(k,c,(function(){return this}));var S=Object.getPrototypeOf,O=S&&S(S(j([])));O&&O!==n&&r.call(O,c)&&(k=O);var T=x.prototype=m.prototype=Object.create(k);function E(t){["next","throw","return"].forEach((function(e){l(t,e,(function(t){return this._invoke(e,t)}))}))}function L(t,e){function n(o,i,a,c){var s=p(t[o],t,i);if("throw"!==s.type){var f=s.arg,l=f.value;return l&&"object"==u(l)&&r.call(l,"__await")?e.resolve(l.__await).then((function(t){n("next",t,a,c)}),(function(t){n("throw",t,a,c)})):e.resolve(l).then((function(t){f.value=t,a(f)}),(function(t){return n("throw",t,a,c)}))}c(s.arg)}var i;o(this,"_invoke",{value:function(t,r){function o(){return new e((function(e,o){n(t,r,e,o)}))}return i=i?i.then(o,o):o()}})}function A(e,n,r){var o=d;return function(i,a){if(o===v)throw new Error("Generator is already running");if(o===w){if("throw"===i)throw a;return{value:t,done:!0}}for(r.method=i,r.arg=a;;){var u=r.delegate;if(u){var c=P(u,r);if(c){if(c===b)continue;return c}}if("next"===r.method)r.sent=r._sent=r.arg;else if("throw"===r.method){if(o===d)throw o=w,r.arg;r.dispatchException(r.arg)}else"return"===r.method&&r.abrupt("return",r.arg);o=v;var s=p(e,n,r);if("normal"===s.type){if(o=r.done?w:y,s.arg===b)continue;return{value:s.arg,done:r.done}}"throw"===s.type&&(o=w,r.method="throw",r.arg=s.arg)}}}function P(e,n){var r=n.method,o=e.iterator[r];if(o===t)return n.delegate=null,"throw"===r&&e.iterator.return&&(n.method="return",n.arg=t,P(e,n),"throw"===n.method)||"return"!==r&&(n.method="throw",n.arg=new TypeError("The iterator does not provide a '"+r+"' method")),b;var i=p(o,e.iterator,n.arg);if("throw"===i.type)return n.method="throw",n.arg=i.arg,n.delegate=null,b;var a=i.arg;return a?a.done?(n[e.resultName]=a.value,n.next=e.nextLoc,"return"!==n.method&&(n.method="next",n.arg=t),n.delegate=null,b):a:(n.method="throw",n.arg=new TypeError("iterator result is not an object"),n.delegate=null,b)}function W(t){var e={tryLoc:t[0]};1 in t&&(e.catchLoc=t[1]),2 in t&&(e.finallyLoc=t[2],e.afterLoc=t[3]),this.tryEntries.push(e)}function N(t){var e=t.completion||{};e.type="normal",delete e.arg,t.completion=e}function _(t){this.tryEntries=[{tryLoc:"root"}],t.forEach(W,this),this.reset(!0)}function j(e){if(e||""===e){var n=e[c];if(n)return n.call(e);if("function"==typeof e.next)return e;if(!isNaN(e.length)){var o=-1,i=function n(){for(;++o<e.length;)if(r.call(e,o))return n.value=e[o],n.done=!1,n;return n.value=t,n.done=!0,n};return i.next=i}}throw new TypeError(u(e)+" is not iterable")}return g.prototype=x,o(T,"constructor",{value:x,configurable:!0}),o(x,"constructor",{value:g,configurable:!0}),g.displayName=l(x,f,"GeneratorFunction"),e.isGeneratorFunction=function(t){var e="function"==typeof t&&t.constructor;return!!e&&(e===g||"GeneratorFunction"===(e.displayName||e.name))},e.mark=function(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,x):(t.__proto__=x,l(t,f,"GeneratorFunction")),t.prototype=Object.create(T),t},e.awrap=function(t){return{__await:t}},E(L.prototype),l(L.prototype,s,(function(){return this})),e.AsyncIterator=L,e.async=function(t,n,r,o,i){void 0===i&&(i=Promise);var a=new L(h(t,n,r,o),i);return e.isGeneratorFunction(n)?a:a.next().then((function(t){return t.done?t.value:a.next()}))},E(T),l(T,f,"Generator"),l(T,c,(function(){return this})),l(T,"toString",(function(){return"[object Generator]"})),e.keys=function(t){var e=Object(t),n=[];for(var r in e)n.push(r);return n.reverse(),function t(){for(;n.length;){var r=n.pop();if(r in e)return t.value=r,t.done=!1,t}return t.done=!0,t}},e.values=j,_.prototype={constructor:_,reset:function(e){if(this.prev=0,this.next=0,this.sent=this._sent=t,this.done=!1,this.delegate=null,this.method="next",this.arg=t,this.tryEntries.forEach(N),!e)for(var n in this)"t"===n.charAt(0)&&r.call(this,n)&&!isNaN(+n.slice(1))&&(this[n]=t)},stop:function(){this.done=!0;var t=this.tryEntries[0].completion;if("throw"===t.type)throw t.arg;return this.rval},dispatchException:function(e){if(this.done)throw e;var n=this;function o(r,o){return u.type="throw",u.arg=e,n.next=r,o&&(n.method="next",n.arg=t),!!o}for(var i=this.tryEntries.length-1;i>=0;--i){var a=this.tryEntries[i],u=a.completion;if("root"===a.tryLoc)return o("end");if(a.tryLoc<=this.prev){var c=r.call(a,"catchLoc"),s=r.call(a,"finallyLoc");if(c&&s){if(this.prev<a.catchLoc)return o(a.catchLoc,!0);if(this.prev<a.finallyLoc)return o(a.finallyLoc)}else if(c){if(this.prev<a.catchLoc)return o(a.catchLoc,!0)}else{if(!s)throw new Error("try statement without catch or finally");if(this.prev<a.finallyLoc)return o(a.finallyLoc)}}}},abrupt:function(t,e){for(var n=this.tryEntries.length-1;n>=0;--n){var o=this.tryEntries[n];if(o.tryLoc<=this.prev&&r.call(o,"finallyLoc")&&this.prev<o.finallyLoc){var i=o;break}}i&&("break"===t||"continue"===t)&&i.tryLoc<=e&&e<=i.finallyLoc&&(i=null);var a=i?i.completion:{};return a.type=t,a.arg=e,i?(this.method="next",this.next=i.finallyLoc,b):this.complete(a)},complete:function(t,e){if("throw"===t.type)throw t.arg;return"break"===t.type||"continue"===t.type?this.next=t.arg:"return"===t.type?(this.rval=this.arg=t.arg,this.method="return",this.next="end"):"normal"===t.type&&e&&(this.next=e),b},finish:function(t){for(var e=this.tryEntries.length-1;e>=0;--e){var n=this.tryEntries[e];if(n.finallyLoc===t)return this.complete(n.completion,n.afterLoc),N(n),b}},catch:function(t){for(var e=this.tryEntries.length-1;e>=0;--e){var n=this.tryEntries[e];if(n.tryLoc===t){var r=n.completion;if("throw"===r.type){var o=r.arg;N(n)}return o}}throw new Error("illegal catch attempt")},delegateYield:function(e,n,r){return this.delegate={iterator:j(e),resultName:n,nextLoc:r},"next"===this.method&&(this.arg=t),b}},e}function u(t){return u="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},u(t)}function c(t,e,n,r,o,i,a){try{var u=t[i](a),c=u.value}catch(t){return void n(t)}u.done?e(c):Promise.resolve(c).then(r,o)}function s(t){return function(){var e=this,n=arguments;return new Promise((function(r,o){var i=t.apply(e,n);function a(t){c(i,r,o,a,u,"next",t)}function u(t){c(i,r,o,a,u,"throw",t)}a(void 0)}))}}var f,l=(0,n(3631).detect)();switch(l&&l.name){case"edge-chromium":case"edge":case"edge-ios":case"chrome":!0,f=chrome;break;default:f=l}var h,p="https://udan.nistapp.ai/api",d="uda-sessiondata",y="uda-csp-storage",v={sessionkey:"",authenticated:!1,authenticationsource:"",authdata:{},csp:{cspenabled:!1,udanallowed:!0,domain:""}};function w(){return b.apply(this,arguments)}function b(){return b=s(a().mark((function t(){return a().wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return v.authenticationsource="google",f.identity.getProfileUserInfo({accountStatus:"ANY"},function(){var t=s(a().mark((function t(n){return a().wrap((function(t){for(;;)switch(t.prev=t.next){case 0:if(""===n.id||""===n.email){t.next=6;break}v.authenticated=!0,v.authdata=n,e(v.authdata.id,"SHA-512").then(function(){var t=s(a().mark((function t(n){return a().wrap((function(t){for(;;)switch(t.prev=t.next){case 0:v.authdata.id=n,e(v.authdata.email,"SHA-512").then(function(){var t=s(a().mark((function t(e){return a().wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return v.authdata.email=e,t.next=3,L();case 3:case"end":return t.stop()}}),t)})));return function(e){return t.apply(this,arguments)}}());case 2:case"end":return t.stop()}}),t)})));return function(e){return t.apply(this,arguments)}}()),t.next=8;break;case 6:return t.next=8,m("UDAAlertMessageData","login");case 8:case"end":return t.stop()}}),t)})));return function(e){return t.apply(this,arguments)}}()),t.abrupt("return",!0);case 3:case"end":return t.stop()}}),t)}))),b.apply(this,arguments)}function m(){return g.apply(this,arguments)}function g(){return g=s(a().mark((function t(){var e,n,r,o,i,u,c,s,l,h,p=arguments;return a().wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return e=p.length>0&&void 0!==p[0]?p[0]:"UDAUserSessionData",n=p.length>1&&void 0!==p[1]?p[1]:"",t.next=4,x();case 4:if(r=t.sent,"UDAAlertMessageData"!==e){t.next=11;break}return t.next=8,f.tabs.sendMessage(r.id,{action:e,data:n});case 8:return t.abrupt("return",!0);case 11:if(o=new URL(r.url),i=o.protocol+"//"+o.hostname,u={cspenabled:!1,udanallowed:!0,domain:""},c=N(y),s=!1,!c){t.next=29;break}if(!((l=c).length>0)){t.next=29;break}h=0;case 20:if(!(h<l.length)){t.next=28;break}if(l[h].domain!==i){t.next=25;break}return s=!0,u=l[h],t.abrupt("break",28);case 25:h++,t.next=20;break;case 28:s&&(v.csp=u);case 29:return v.csp=u,t.next=33,f.tabs.sendMessage(r.id,{action:e,data:JSON.stringify(v)});case 33:return t.abrupt("return",!0);case 34:case"end":return t.stop()}}),t)}))),g.apply(this,arguments)}function x(){return k.apply(this,arguments)}function k(){return(k=s(a().mark((function t(){var e,n;return a().wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return e={active:!0,currentWindow:!0},t.next=3,f.tabs.query(e);case 3:if(!(n=t.sent[0])){t.next=8;break}return t.abrupt("return",n);case 8:return t.next=10,f.tabs.get(h);case 10:if(!(n=t.sent)){t.next=15;break}return t.abrupt("return",n);case 15:case 16:return t.abrupt("return",n);case 17:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function S(){return O.apply(this,arguments)}function O(){return(O=s(a().mark((function t(){var e;return a().wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return(e={})[d]=v,t.next=4,f.storage.local.set(e);case 4:return t.abrupt("return",!0);case 5:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function T(){return E.apply(this,arguments)}function E(){return E=s(a().mark((function t(){var e,n,r=arguments;return a().wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return e=!(r.length>0&&void 0!==r[0])||r[0],t.next=3,i(p+"/user/getsessionkey","GET",null,!1);case 3:if(n=t.sent){t.next=7;break}return t.abrupt("return",n);case 7:return v.sessionkey=n,t.next=10,S();case 10:if(!e){t.next=13;break}return t.next=13,m();case 13:case"end":return t.stop()}}),t)}))),E.apply(this,arguments)}function L(){return A.apply(this,arguments)}function A(){return(A=s(a().mark((function t(){var e,n;return a().wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return e={authid:v.authdata.id,emailid:v.authdata.email?v.authdata.email:"",authsource:v.authenticationsource},t.next=3,i(p+"/user/checkauthid","POST",e);case 3:if(!(n=t.sent)){t.next=10;break}return t.next=7,P(n);case 7:return t.abrupt("return",!0);case 10:return t.abrupt("return",n);case 11:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function P(t){return W.apply(this,arguments)}function W(){return(W=s(a().mark((function t(e){var n;return a().wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return n={userauthid:e.id,usersessionid:v.sessionkey},t.next=3,i(p+"/user/checkusersession","POST",n);case 3:return t.sent,t.next=6,S();case 6:return t.next=8,m("UDAAuthenticatedUserSessionData");case 8:return t.abrupt("return",!0);case 9:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function N(t){try{var e=localStorage.getItem(t);return JSON.parse(e)}catch(t){return!1}}f.tabs.onActivated.addListener((function(t){h=t.tabId})),f.runtime.onMessage.addListener(function(){var t=s(a().mark((function t(e,n,r){return a().wrap((function(t){for(;;)switch(t.prev=t.next){case 0:if("getusersessiondata"!==e.action){t.next=5;break}f.storage.local.get([d],function(){var t=s(a().mark((function t(e){return a().wrap((function(t){for(;;)switch(t.prev=t.next){case 0:if(!f.runtime.lastError){t.next=4;break}t.next=30;break;case 4:if(!e.hasOwnProperty("sessionkey")||!e.sessionKey||"object"==u(e.sessionKey)){t.next=15;break}if(v=e,!e.hasOwnProperty("authenticated")||!e.authenticated){t.next=11;break}return t.next=9,m();case 9:t.next=13;break;case 11:return t.next=13,w();case 13:case 24:t.next=30;break;case 15:if(!(e.hasOwnProperty(d)&&e[d].hasOwnProperty("sessionkey")&&e[d].sessionKey&&"object"!=u(e[d].sessionKey))){t.next=26;break}if(v=e[d],!e.hasOwnProperty("authenticated")||!e.authenticated){t.next=22;break}return t.next=20,m();case 20:t.next=24;break;case 22:return t.next=24,w();case 26:return t.next=28,T(!1);case 28:return t.next=30,w();case 30:case"end":return t.stop()}}),t)})));return function(e){return t.apply(this,arguments)}}()),t.next=17;break;case 5:if("authtenicate"!==e.action){t.next=10;break}return t.next=8,w();case 8:t.next=17;break;case 10:if("Debugvalueset"!==e.action){t.next=14;break}e.data,t.next=17;break;case 14:if("createSession"!==e.action){t.next=17;break}return t.next=17,_(e.data);case 17:case"end":return t.stop()}}),t)})));return function(e,n,r){return t.apply(this,arguments)}}());function _(t){return j.apply(this,arguments)}function j(){return(j=s(a().mark((function t(e){return a().wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return v.authenticationsource="keycloak",v.authenticated=!0,v.authdata=e,t.next=6,T(!1);case 6:return t.next=8,L();case 8:case"end":return t.stop()}}),t)})))).apply(this,arguments)}}(),UdanLibrary=r}();
+var UdanLibrary;
+/******/ (function() { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./node_modules/detect-browser/es/index.js":
+/*!*************************************************!*\
+  !*** ./node_modules/detect-browser/es/index.js ***!
+  \*************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   BotInfo: function() { return /* binding */ BotInfo; },
+/* harmony export */   BrowserInfo: function() { return /* binding */ BrowserInfo; },
+/* harmony export */   NodeInfo: function() { return /* binding */ NodeInfo; },
+/* harmony export */   ReactNativeInfo: function() { return /* binding */ ReactNativeInfo; },
+/* harmony export */   SearchBotDeviceInfo: function() { return /* binding */ SearchBotDeviceInfo; },
+/* harmony export */   browserName: function() { return /* binding */ browserName; },
+/* harmony export */   detect: function() { return /* binding */ detect; },
+/* harmony export */   detectOS: function() { return /* binding */ detectOS; },
+/* harmony export */   getNodeVersion: function() { return /* binding */ getNodeVersion; },
+/* harmony export */   parseUserAgent: function() { return /* binding */ parseUserAgent; }
+/* harmony export */ });
+/* provided dependency */ var process = __webpack_require__(/*! process/browser */ "./node_modules/process/browser.js");
+var __spreadArray = (undefined && undefined.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
+var BrowserInfo = /** @class */ (function () {
+    function BrowserInfo(name, version, os) {
+        this.name = name;
+        this.version = version;
+        this.os = os;
+        this.type = 'browser';
+    }
+    return BrowserInfo;
+}());
+
+var NodeInfo = /** @class */ (function () {
+    function NodeInfo(version) {
+        this.version = version;
+        this.type = 'node';
+        this.name = 'node';
+        this.os = process.platform;
+    }
+    return NodeInfo;
+}());
+
+var SearchBotDeviceInfo = /** @class */ (function () {
+    function SearchBotDeviceInfo(name, version, os, bot) {
+        this.name = name;
+        this.version = version;
+        this.os = os;
+        this.bot = bot;
+        this.type = 'bot-device';
+    }
+    return SearchBotDeviceInfo;
+}());
+
+var BotInfo = /** @class */ (function () {
+    function BotInfo() {
+        this.type = 'bot';
+        this.bot = true; // NOTE: deprecated test name instead
+        this.name = 'bot';
+        this.version = null;
+        this.os = null;
+    }
+    return BotInfo;
+}());
+
+var ReactNativeInfo = /** @class */ (function () {
+    function ReactNativeInfo() {
+        this.type = 'react-native';
+        this.name = 'react-native';
+        this.version = null;
+        this.os = null;
+    }
+    return ReactNativeInfo;
+}());
+
+// tslint:disable-next-line:max-line-length
+var SEARCHBOX_UA_REGEX = /alexa|bot|crawl(er|ing)|facebookexternalhit|feedburner|google web preview|nagios|postrank|pingdom|slurp|spider|yahoo!|yandex/;
+var SEARCHBOT_OS_REGEX = /(nuhk|curl|Googlebot|Yammybot|Openbot|Slurp|MSNBot|Ask\ Jeeves\/Teoma|ia_archiver)/;
+var REQUIRED_VERSION_PARTS = 3;
+var userAgentRules = [
+    ['aol', /AOLShield\/([0-9\._]+)/],
+    ['edge', /Edge\/([0-9\._]+)/],
+    ['edge-ios', /EdgiOS\/([0-9\._]+)/],
+    ['yandexbrowser', /YaBrowser\/([0-9\._]+)/],
+    ['kakaotalk', /KAKAOTALK\s([0-9\.]+)/],
+    ['samsung', /SamsungBrowser\/([0-9\.]+)/],
+    ['silk', /\bSilk\/([0-9._-]+)\b/],
+    ['miui', /MiuiBrowser\/([0-9\.]+)$/],
+    ['beaker', /BeakerBrowser\/([0-9\.]+)/],
+    ['edge-chromium', /EdgA?\/([0-9\.]+)/],
+    [
+        'chromium-webview',
+        /(?!Chrom.*OPR)wv\).*Chrom(?:e|ium)\/([0-9\.]+)(:?\s|$)/,
+    ],
+    ['chrome', /(?!Chrom.*OPR)Chrom(?:e|ium)\/([0-9\.]+)(:?\s|$)/],
+    ['phantomjs', /PhantomJS\/([0-9\.]+)(:?\s|$)/],
+    ['crios', /CriOS\/([0-9\.]+)(:?\s|$)/],
+    ['firefox', /Firefox\/([0-9\.]+)(?:\s|$)/],
+    ['fxios', /FxiOS\/([0-9\.]+)/],
+    ['opera-mini', /Opera Mini.*Version\/([0-9\.]+)/],
+    ['opera', /Opera\/([0-9\.]+)(?:\s|$)/],
+    ['opera', /OPR\/([0-9\.]+)(:?\s|$)/],
+    ['pie', /^Microsoft Pocket Internet Explorer\/(\d+\.\d+)$/],
+    ['pie', /^Mozilla\/\d\.\d+\s\(compatible;\s(?:MSP?IE|MSInternet Explorer) (\d+\.\d+);.*Windows CE.*\)$/],
+    ['netfront', /^Mozilla\/\d\.\d+.*NetFront\/(\d.\d)/],
+    ['ie', /Trident\/7\.0.*rv\:([0-9\.]+).*\).*Gecko$/],
+    ['ie', /MSIE\s([0-9\.]+);.*Trident\/[4-7].0/],
+    ['ie', /MSIE\s(7\.0)/],
+    ['bb10', /BB10;\sTouch.*Version\/([0-9\.]+)/],
+    ['android', /Android\s([0-9\.]+)/],
+    ['ios', /Version\/([0-9\._]+).*Mobile.*Safari.*/],
+    ['safari', /Version\/([0-9\._]+).*Safari/],
+    ['facebook', /FB[AS]V\/([0-9\.]+)/],
+    ['instagram', /Instagram\s([0-9\.]+)/],
+    ['ios-webview', /AppleWebKit\/([0-9\.]+).*Mobile/],
+    ['ios-webview', /AppleWebKit\/([0-9\.]+).*Gecko\)$/],
+    ['curl', /^curl\/([0-9\.]+)$/],
+    ['searchbot', SEARCHBOX_UA_REGEX],
+];
+var operatingSystemRules = [
+    ['iOS', /iP(hone|od|ad)/],
+    ['Android OS', /Android/],
+    ['BlackBerry OS', /BlackBerry|BB10/],
+    ['Windows Mobile', /IEMobile/],
+    ['Amazon OS', /Kindle/],
+    ['Windows 3.11', /Win16/],
+    ['Windows 95', /(Windows 95)|(Win95)|(Windows_95)/],
+    ['Windows 98', /(Windows 98)|(Win98)/],
+    ['Windows 2000', /(Windows NT 5.0)|(Windows 2000)/],
+    ['Windows XP', /(Windows NT 5.1)|(Windows XP)/],
+    ['Windows Server 2003', /(Windows NT 5.2)/],
+    ['Windows Vista', /(Windows NT 6.0)/],
+    ['Windows 7', /(Windows NT 6.1)/],
+    ['Windows 8', /(Windows NT 6.2)/],
+    ['Windows 8.1', /(Windows NT 6.3)/],
+    ['Windows 10', /(Windows NT 10.0)/],
+    ['Windows ME', /Windows ME/],
+    ['Windows CE', /Windows CE|WinCE|Microsoft Pocket Internet Explorer/],
+    ['Open BSD', /OpenBSD/],
+    ['Sun OS', /SunOS/],
+    ['Chrome OS', /CrOS/],
+    ['Linux', /(Linux)|(X11)/],
+    ['Mac OS', /(Mac_PowerPC)|(Macintosh)/],
+    ['QNX', /QNX/],
+    ['BeOS', /BeOS/],
+    ['OS/2', /OS\/2/],
+];
+function detect(userAgent) {
+    if (!!userAgent) {
+        return parseUserAgent(userAgent);
+    }
+    if (typeof document === 'undefined' &&
+        typeof navigator !== 'undefined' &&
+        navigator.product === 'ReactNative') {
+        return new ReactNativeInfo();
+    }
+    if (typeof navigator !== 'undefined') {
+        return parseUserAgent(navigator.userAgent);
+    }
+    return getNodeVersion();
+}
+function matchUserAgent(ua) {
+    // opted for using reduce here rather than Array#first with a regex.test call
+    // this is primarily because using the reduce we only perform the regex
+    // execution once rather than once for the test and for the exec again below
+    // probably something that needs to be benchmarked though
+    return (ua !== '' &&
+        userAgentRules.reduce(function (matched, _a) {
+            var browser = _a[0], regex = _a[1];
+            if (matched) {
+                return matched;
+            }
+            var uaMatch = regex.exec(ua);
+            return !!uaMatch && [browser, uaMatch];
+        }, false));
+}
+function browserName(ua) {
+    var data = matchUserAgent(ua);
+    return data ? data[0] : null;
+}
+function parseUserAgent(ua) {
+    var matchedRule = matchUserAgent(ua);
+    if (!matchedRule) {
+        return null;
+    }
+    var name = matchedRule[0], match = matchedRule[1];
+    if (name === 'searchbot') {
+        return new BotInfo();
+    }
+    // Do not use RegExp for split operation as some browser do not support it (See: http://blog.stevenlevithan.com/archives/cross-browser-split)
+    var versionParts = match[1] && match[1].split('.').join('_').split('_').slice(0, 3);
+    if (versionParts) {
+        if (versionParts.length < REQUIRED_VERSION_PARTS) {
+            versionParts = __spreadArray(__spreadArray([], versionParts, true), createVersionParts(REQUIRED_VERSION_PARTS - versionParts.length), true);
+        }
+    }
+    else {
+        versionParts = [];
+    }
+    var version = versionParts.join('.');
+    var os = detectOS(ua);
+    var searchBotMatch = SEARCHBOT_OS_REGEX.exec(ua);
+    if (searchBotMatch && searchBotMatch[1]) {
+        return new SearchBotDeviceInfo(name, version, os, searchBotMatch[1]);
+    }
+    return new BrowserInfo(name, version, os);
+}
+function detectOS(ua) {
+    for (var ii = 0, count = operatingSystemRules.length; ii < count; ii++) {
+        var _a = operatingSystemRules[ii], os = _a[0], regex = _a[1];
+        var match = regex.exec(ua);
+        if (match) {
+            return os;
+        }
+    }
+    return null;
+}
+function getNodeVersion() {
+    var isNode = typeof process !== 'undefined' && process.version;
+    return isNode ? new NodeInfo(process.version.slice(1)) : null;
+}
+function createVersionParts(count) {
+    var output = [];
+    for (var ii = 0; ii < count; ii++) {
+        output.push('0');
+    }
+    return output;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/process/browser.js":
+/*!*****************************************!*\
+  !*** ./node_modules/process/browser.js ***!
+  \*****************************************/
+/***/ (function(module) {
+
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+
+/***/ }),
+
+/***/ "./src/BrowserConstants.ts":
+/*!*********************************!*\
+  !*** ./src/BrowserConstants.ts ***!
+  \*********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UDABrowserPlugin: function() { return /* binding */ UDABrowserPlugin; },
+/* harmony export */   UDASessionName: function() { return /* binding */ UDASessionName; },
+/* harmony export */   browserVar: function() { return /* binding */ browserVar; },
+/* harmony export */   enablePlugin: function() { return /* binding */ enablePlugin; },
+/* harmony export */   updateBrowserPlugin: function() { return /* binding */ updateBrowserPlugin; },
+/* harmony export */   updateSessionName: function() { return /* binding */ updateSessionName; }
+/* harmony export */ });
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./config */ "./src/config/index.ts");
+
+let UDABrowserPlugin = false;
+let UDASessionName = _config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.USER_AUTH_DATA_KEY;
+let enablePlugin = false;
+let browserVar;
+const { detect } = __webpack_require__(/*! detect-browser */ "./node_modules/detect-browser/es/index.js");
+const browser = detect();
+switch (browser && browser.name) {
+    case 'edge-chromium':
+    case 'edge':
+    case 'edge-ios':
+    case 'chrome':
+        enablePlugin = true;
+        browserVar = chrome;
+        break;
+    default:
+        browserVar = browser;
+        break;
+}
+const updateBrowserPlugin = (plugin) => {
+    UDABrowserPlugin = plugin;
+};
+const updateSessionName = (sessionName) => {
+    UDASessionName = UDASessionName + "-" + sessionName;
+};
+
+
+/***/ }),
+
+/***/ "./src/config/CustomConfig.ts":
+/*!************************************!*\
+  !*** ./src/config/CustomConfig.ts ***!
+  \************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CustomConfig: function() { return /* binding */ CustomConfig; }
+/* harmony export */ });
+/**
+ * Author: Yureswar Ravuri
+ * Type: MAP
+ * Objective: Config Objects
+ */
+// assigning default values to the default configuration
+const CustomConfig = {
+    enableEditClickedName: false,
+    enableSkipDuringPlay: false,
+    enableTooltipAddition: true,
+    enableMultilingual: false,
+    enableNodeTypeSelection: true,
+    enablePermissions: false,
+    permissions: {},
+    enableProfanity: false,
+    enableRecording: true,
+    enableOverlay: true,
+    environment: 'TEST',
+    enableUdaIcon: true,
+    udaDivId: 'uda-nistapp-logo',
+    enableForAllDomains: false,
+    enableSpeechToText: false,
+    enableSlowReplay: false,
+    enableCustomIcon: false,
+    customIcon: 'https://udan.nistapp.com/uda-logo.jpg',
+    realm: "UDAN",
+    clientId: "backend-service",
+    clientSecret: "cXA2yFTq3ORQfrio2mGXttFaOTfvIC7N"
+};
+
+
+/***/ }),
+
+/***/ "./src/config/endpoints.ts":
+/*!*********************************!*\
+  !*** ./src/config/endpoints.ts ***!
+  \*********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ENDPOINT: function() { return /* binding */ ENDPOINT; }
+/* harmony export */ });
+/**
+ * Author: Lakshman Veti
+ * Type: MAP
+ * Objective: HTTP Endpoints
+ */
+const ENDPOINT = {
+    CheckUserId: `/user/checkauthid`,
+    GetSessionKey: `/user/getsessionkey`,
+    CheckUserSession: `/user/checkusersession`,
+    Search: `/search/all?query=#keyword#&domain=#domain#&page=#page#&userSessionId=#userSessionId#`,
+    SearchWithPermissionsOld: `/clickevents/sequence/search?query=#keyword#&domain=#domain#&page=#page#&additionalParams=#additionalParams#`,
+    SearchWithPermissions: `/search/withPermissions?query=#keyword#&domain=#domain#&page=#page#&additionalParams=#additionalParams#&userSessionId=#userSessionId#`,
+    ProfanityCheck: `https://nistapp-content-moderator.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessText/Screen`,
+    SpecialNodes: `/clickevents`,
+    Record: `/clickevents/clickednode`,
+    UpdateRecord: `/clickevents/updateclickednode`,
+    RecordSequence: `/clickevents/recordsequencedata`,
+    updateRecordSequence: `/clickevents/updatesequencedata`,
+    UserClick: `/clickevents/userclick`,
+    DeleteSequence: `/clickevents/sequence/delete`,
+    fetchRecord: '/search',
+    VoteRecord: `/votes/addVote`,
+    fetchVoteRecord: `/votes/`,
+    tokenUrl: 'user/token'
+};
+
+
+/***/ }),
+
+/***/ "./src/config/index.ts":
+/*!*****************************!*\
+  !*** ./src/config/index.ts ***!
+  \*****************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CONFIG: function() { return /* binding */ CONFIG; }
+/* harmony export */ });
+/**
+ * Author: Lakshman Veti
+ * Type: MAP
+ * Objective: Config Objects
+ */
+const CONFIG = {
+    current: "TEST",
+    UDADebug: false,
+    UDA_CONTAINER_CLASS: "udan-main-panel",
+    UDA_CLICK_IGNORE_CLASS: "uda_exclude",
+    UDA_DOMAIN: "https://udantest.nistapp.ai/api",
+    UDA_API_URL: "https://udantest.nistapp.ai/api" + "/voiceapi",
+    UDASessionID: (Math.random().toString(36).substring(2, 15) +
+        Math.random().toString(36).substring(2, 15)),
+    UDA_POST_INTERVAL: 1000,
+    UDALastMutationTime: 0,
+    UDALogLevel: 0,
+    RECORDING_IS_PLAYING: "UDAIsPlaying",
+    RECORDING_MANUAL_PLAY: "UDAManualPlay",
+    RECORDING_SWITCH_KEY: "UDARecordingSwitch",
+    RECORDING_SEQUENCE: "UDAActiveRecordingData",
+    SELECTED_RECORDING: "UDASelectedRecordedItem",
+    USER_AUTH_DATA_KEY: "udaUserData",
+    UserScreenAcceptance: "udaUserScreenAcceptance",
+    USER_SESSION_KEY: "UDASessionKey",
+    UDAKeyCloakKey: "UDAKeyCloak",
+    USER_SESSION_ID: "UDASessionId",
+    SYNC_INTERVAL: 1000,
+    AUTO_PLAY_SLEEP_TIME: 2000,
+    JARO_WEIGHT: 0.95,
+    JARO_WEIGHT_PERSONAL: 0.90,
+    lastClickedTime: null,
+    specialNodeKey: "UDASpecialNodes",
+    enableInfiniteScroll: true,
+    enableInfiniteScrollPageLength: 10,
+    UDA_URL_Param: 'UDA_Sequence_id',
+    set Environment(value) {
+        this.current = value.toString().toUpperCase();
+        if (this.current === "PROD") {
+            this.UDA_DOMAIN = "https://udan.nistapp.ai";
+        }
+        else {
+            this.UDA_DOMAIN = "https://udantest.nistapp.ai";
+        }
+        this.UDA_API_URL = this.UDA_DOMAIN + "/voiceapi";
+    },
+    get Environment() {
+        return this.current;
+    },
+    DEBOUNCE_INTERVAL: 1000,
+    indexInterval: 1000,
+    clickObjects: [],
+    nodeId: 0,
+    isRecording: false,
+    htmlIndex: [],
+    invokeTime: 2000,
+    apiInvokeTime: 300,
+    maxStringLength: 40,
+    playNextAction: true,
+    navigatedToNextPage: { check: false, url: '' },
+    ignoreElements: ["script", "h1", "h2", "h3", "link", "noscript", "style"],
+    ignoreAttributes: [
+        'translate', 'draggable', 'spellcheck', 'tabindex', 'clientHeight', 'clientLeft', 'clientTop', 'clientWidth',
+        'offsetHeight', 'offsetLeft', 'offsetTop', 'offsetWidth', 'scrollHeight', 'scrollLeft', 'scrollTop', 'scrollWidth',
+        'baseURI', 'isConnected', 'ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
+        'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
+        'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y', 'selectionStart', 'selectionEnd', 'required', 'validationMessage', 'selectionDirection',
+        'naturalWidth', 'naturalHeight', 'complete', '_indexOf', 'value', 'defaultValue', 'min', 'max', 'nodeInfo', 'data-tooltip-id', 'addedclickrecord', 'checked', 'data-tribute',
+        'hasclick', 'addedClickRecord', 'hasClick', 'valueAsNumber', 'udaIgnoreChildren', 'udaIgnoreClick', 'udaignorechildren', 'udaignoreclick', 'fdprocessedid', '__ngContext__', 'd', 'text', 'textContent', 'cdk-describedby-host', 'inert', 'fill', 'disabled', 'hidden'
+    ],
+    innerTextWeight: 5,
+    ignoreNodesFromIndexing: ['ng-dropdown-panel', 'ckeditor', 'fusioncharts', 'ngb-datepicker', 'ngx-daterangepicker-material', 'uda-panel', 'mat-datepicker-content', 'ng-select'],
+    ignoreNodesContainingClassNames: ['cke_dialog_container', 'cke_notifications_area', 'gldp-default', 'ajs-layer', 'aui-list', 'herknl', 'jstBlock'],
+    cancelRecordingDuringRecordingNodes: [],
+    addClickToSpecialNodes: ['ng-select', 'ngb-datepicker'],
+    ignoreClicksOnSpecialNodes: ['ngx-daterangepicker-material'],
+    customNameForSpecialNodes: {
+        'ngb-datepicker': 'Date selector',
+        'mat-datepicker-content': 'Date selector',
+        'ngx-daterangepicker-material': 'Date Range Selector'
+    },
+    specialInputClickClassNames: ['ghx-dropdown-trigger', 'aui-list', 'jstBlock', 'mat-form-field-flex', 'mat-select-trigger'],
+    commonTags: ['span', 'div'],
+    tooltipDisplayedNodes: [],
+    // replay variables
+    autoplayCompleted: false,
+    autoplayPaused: false,
+    // manual click variables
+    invokedActionManually: false,
+    // personal node ignore attributes
+    personalNodeIgnoreAttributes: [
+        "innerText",
+        "innerHTML",
+        "outerText",
+        "outerHTML",
+        "nodeValue",
+        "src",
+        "naturalWidth",
+        "naturalHeight",
+        "currentSrc",
+    ],
+    //Azure content moderator attributes
+    profanity: {
+        enabled: true,
+        provider: "azure",
+        config: {
+            key1: "bc015cc4090543d58c3056e8dc98cc9b",
+            key2: "bc015cc4090543d58c3056e8dc98cc9b",
+            endPoint: "https://nistapp-content-moderator.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessText/Screen",
+            region: "eastus",
+        },
+    },
+    multilingual: {
+        enabled: false,
+        searchInLang: "en-US",
+        selectedLang: "en-US",
+        displayText: "",
+        translatedText: "",
+        translate: {
+            provider: "google",
+            apikey: "AIzaSyD3XUOZEMz9Y_e5YpDWZEsQT_7zJPF0H4k",
+            translateTo: "en",
+            apiurl: "https://translation.googleapis.com/language/translate/v2",
+        },
+    },
+    // BCP list of languages
+    bcpLang: [
+        ["Afrikaans", ["af-ZA"]],
+        ["አማርኛ", ["am-ET"]],
+        ["Azərbaycanca", ["az-AZ"]],
+        ["বাংলা", ["bn-BD", "বাংলাদেশ"], ["bn-IN", "ভারত"]],
+        ["Bahasa Indonesia", ["id-ID"]],
+        ["Bahasa Melayu", ["ms-MY"]],
+        ["Català", ["ca-ES"]],
+        ["Čeština", ["cs-CZ"]],
+        ["Dansk", ["da-DK"]],
+        ["Deutsch", ["de-DE"]],
+        [
+            "English",
+            ["en-AU", "Australia"],
+            ["en-CA", "Canada"],
+            ["en-IN", "India"],
+            ["en-KE", "Kenya"],
+            ["en-TZ", "Tanzania"],
+            ["en-GH", "Ghana"],
+            ["en-NZ", "New Zealand"],
+            ["en-NG", "Nigeria"],
+            ["en-ZA", "South Africa"],
+            ["en-PH", "Philippines"],
+            ["en-GB", "United Kingdom"],
+            ["en-US", "United States"],
+        ],
+        [
+            "Español",
+            ["es-AR", "Argentina"],
+            ["es-BO", "Bolivia"],
+            ["es-CL", "Chile"],
+            ["es-CO", "Colombia"],
+            ["es-CR", "Costa Rica"],
+            ["es-EC", "Ecuador"],
+            ["es-SV", "El Salvador"],
+            ["es-ES", "España"],
+            ["es-US", "Estados Unidos"],
+            ["es-GT", "Guatemala"],
+            ["es-HN", "Honduras"],
+            ["es-MX", "México"],
+            ["es-NI", "Nicaragua"],
+            ["es-PA", "Panamá"],
+            ["es-PY", "Paraguay"],
+            ["es-PE", "Perú"],
+            ["es-PR", "Puerto Rico"],
+            ["es-DO", "República Dominicana"],
+            ["es-UY", "Uruguay"],
+            ["es-VE", "Venezuela"],
+        ],
+        ["Euskara", ["eu-ES"]],
+        ["Filipino", ["fil-PH"]],
+        ["Français", ["fr-FR"]],
+        ["Basa Jawa", ["jv-ID"]],
+        ["Galego", ["gl-ES"]],
+        ["ગુજરાતી", ["gu-IN"]],
+        ["Hrvatski", ["hr-HR"]],
+        ["IsiZulu", ["zu-ZA"]],
+        ["Íslenska", ["is-IS"]],
+        ["Italiano", ["it-IT", "Italia"], ["it-CH", "Svizzera"]],
+        ["ಕನ್ನಡ", ["kn-IN"]],
+        ["ភាសាខ្មែរ", ["km-KH"]],
+        ["Latviešu", ["lv-LV"]],
+        ["Lietuvių", ["lt-LT"]],
+        ["മലയാളം", ["ml-IN"]],
+        ["मराठी", ["mr-IN"]],
+        ["Magyar", ["hu-HU"]],
+        ["ລາວ", ["lo-LA"]],
+        ["Nederlands", ["nl-NL"]],
+        ["नेपाली भाषा", ["ne-NP"]],
+        ["Norsk bokmål", ["nb-NO"]],
+        ["Polski", ["pl-PL"]],
+        ["Português", ["pt-BR", "Brasil"], ["pt-PT", "Portugal"]],
+        ["Română", ["ro-RO"]],
+        ["සිංහල", ["si-LK"]],
+        ["Slovenščina", ["sl-SI"]],
+        ["Basa Sunda", ["su-ID"]],
+        ["Slovenčina", ["sk-SK"]],
+        ["Suomi", ["fi-FI"]],
+        ["Svenska", ["sv-SE"]],
+        ["Kiswahili", ["sw-TZ", "Tanzania"], ["sw-KE", "Kenya"]],
+        ["ქართული", ["ka-GE"]],
+        ["Հայերեն", ["hy-AM"]],
+        [
+            "தமிழ்",
+            ["ta-IN", "இந்தியா"],
+            ["ta-SG", "சிங்கப்பூர்"],
+            ["ta-LK", "இலங்கை"],
+            ["ta-MY", "மலேசியா"],
+        ],
+        ["తెలుగు", ["te-IN"]],
+        ["Tiếng Việt", ["vi-VN"]],
+        ["Türkçe", ["tr-TR"]],
+        ["اُردُو", ["ur-PK", "پاکستان"], ["ur-IN", "بھارت"]],
+        ["Ελληνικά", ["el-GR"]],
+        ["български", ["bg-BG"]],
+        ["Pусский", ["ru-RU"]],
+        ["Српски", ["sr-RS"]],
+        ["Українська", ["uk-UA"]],
+        ["한국어", ["ko-KR"]],
+        [
+            "中文",
+            ["cmn-Hans-CN", "普通话 (中国大陆)"],
+            ["cmn-Hans-HK", "普通话 (香港)"],
+            ["cmn-Hant-TW", "中文 (台灣)"],
+            ["yue-Hant-HK", "粵語 (香港)"],
+        ],
+        ["日本語", ["ja-JP"]],
+        ["हिन्दी", ["hi-IN"]],
+        ["ภาษาไทย", ["th-TH"]],
+    ],
+    // Flag to enable node type detection
+    enableNodeTypeChangeSelection: true,
+    set enableNodeTypeSelection(val) {
+        this.enableNodeTypeChangeSelection = val;
+        // this.showhtml();
+    },
+    get enableNodeTypeSelection() {
+        return CONFIG.multilingual.enabled;
+    },
+    cspUserAcceptance: {
+        storageName: "uda-csp-user-consent",
+        data: { proceed: true },
+    },
+    screenAcceptance: {
+        storageName: "uda-user-screen-consent",
+        data: { proceed: true },
+    },
+    ignoreDynamicAttributeText: ['_ng', '__context', '__zone_symbol']
+};
+
+
+/***/ }),
+
+/***/ "./src/models/AuthData.ts":
+/*!********************************!*\
+  !*** ./src/models/AuthData.ts ***!
+  \********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AuthData: function() { return /* binding */ AuthData; }
+/* harmony export */ });
+class AuthData {
+    constructor(id = null, email = null, token = null) {
+        this.id = id;
+        this.email = email;
+        this.token = token;
+    }
+}
+
+
+/***/ }),
+
+/***/ "./src/models/CSPData.ts":
+/*!*******************************!*\
+  !*** ./src/models/CSPData.ts ***!
+  \*******************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CSPData: function() { return /* binding */ CSPData; }
+/* harmony export */ });
+class CSPData {
+    constructor(cspEnabled = false, udaAllowed = true, domain = null) {
+        this.cspEnabled = cspEnabled;
+        this.udaAllowed = udaAllowed;
+        this.domain = domain;
+    }
+}
+
+
+/***/ }),
+
+/***/ "./src/models/UDASessionData.ts":
+/*!**************************************!*\
+  !*** ./src/models/UDASessionData.ts ***!
+  \**************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UDASessionData: function() { return /* binding */ UDASessionData; }
+/* harmony export */ });
+/* harmony import */ var _AuthData__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AuthData */ "./src/models/AuthData.ts");
+/* harmony import */ var _CSPData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CSPData */ "./src/models/CSPData.ts");
+
+
+class UDASessionData {
+    constructor(sessionKey = null, authenticated = false, authenticationSource = null, authData = new _AuthData__WEBPACK_IMPORTED_MODULE_0__.AuthData(), csp = new _CSPData__WEBPACK_IMPORTED_MODULE_1__.CSPData()) {
+        this.sessionKey = sessionKey;
+        this.authenticated = authenticated;
+        this.authenticationSource = authenticationSource;
+        this.authData = authData;
+        this.csp = csp;
+    }
+}
+
+
+/***/ }),
+
+/***/ "./src/services/UDAStorageService.ts":
+/*!*******************************************!*\
+  !*** ./src/services/UDAStorageService.ts ***!
+  \*******************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UDAStorageService: function() { return /* binding */ UDAStorageService; }
+/* harmony export */ });
+/* harmony import */ var _BrowserConstants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../BrowserConstants */ "./src/BrowserConstants.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+//storing the data to local storage
+
+const UDAStorageService = {
+    /**
+     * Adds data to the storage.
+     * @param {any} data - The data to be added.
+     * @param {string} key - The key to store the data under.
+     * @returns {Promise<void>} - A Promise that resolves when the data is added to the storage.
+     */
+    add: (data, key) => __awaiter(void 0, void 0, void 0, function* () {
+        if (_BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.UDABrowserPlugin === true) {
+            let storageData = {};
+            storageData[key] = data;
+            return yield _BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.browserVar.storage.local.set(storageData);
+        }
+        else {
+            const storageData = JSON.stringify(data);
+            return window.localStorage.setItem(key, storageData);
+        }
+    }),
+    /**
+     * Retrieves data from the storage.
+     *
+     * @param {string} key - The key associated with the data to be retrieved.
+     * @returns {Promise<any>} - A Promise that resolves with the retrieved data.
+     */
+    get: (key) => __awaiter(void 0, void 0, void 0, function* () {
+        if (_BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.UDABrowserPlugin === true) {
+            let result = yield _BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.browserVar.storage.local.get([key]);
+            return result[key];
+        }
+        else {
+            return window.localStorage.getItem(key);
+        }
+    }),
+    /**
+     * Removes data from the storage.
+     *
+     * @param {string} key - The key associated with the data to be removed.
+     * @returns {Promise<void>} - A Promise that resolves when the data is successfully removed from the storage.
+     */
+    remove: (key) => __awaiter(void 0, void 0, void 0, function* () {
+        if (_BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.UDABrowserPlugin === true) {
+            return yield _BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.browserVar.storage.local.remove([key]);
+        }
+        else {
+            return window.localStorage.removeItem(key);
+        }
+    })
+};
+
+
+/***/ }),
+
+/***/ "./src/util/KeycloakStore.ts":
+/*!***********************************!*\
+  !*** ./src/util/KeycloakStore.ts ***!
+  \***********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   keyCloakStore: function() { return /* binding */ keyCloakStore; }
+/* harmony export */ });
+/* harmony import */ var _UDAGetSessionKey__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UDAGetSessionKey */ "./src/util/UDAGetSessionKey.ts");
+/* harmony import */ var _UDABindAuthenticatedAccount__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UDABindAuthenticatedAccount */ "./src/util/UDABindAuthenticatedAccount.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+/**
+ * Store keycloak data in chrome extension storage for retrival for other sites
+ */
+const keyCloakStore = (sessionData, data) => __awaiter(void 0, void 0, void 0, function* () {
+    sessionData = yield (0,_UDAGetSessionKey__WEBPACK_IMPORTED_MODULE_0__.UDAGetSessionKey)(sessionData);
+    sessionData.authData = data;
+    sessionData.authenticated = true;
+    sessionData.authenticationSource = 'keycloak';
+    yield (0,_UDABindAuthenticatedAccount__WEBPACK_IMPORTED_MODULE_1__.UDABindAuthenticatedAccount)(sessionData);
+});
+
+
+/***/ }),
+
+/***/ "./src/util/LoginWithBrowser.ts":
+/*!**************************************!*\
+  !*** ./src/util/LoginWithBrowser.ts ***!
+  \**************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LoginWithBrowser: function() { return /* binding */ LoginWithBrowser; }
+/* harmony export */ });
+/* harmony import */ var _UDADigestMessage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UDADigestMessage */ "./src/util/UDADigestMessage.ts");
+/* harmony import */ var _UDABindAuthenticatedAccount__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UDABindAuthenticatedAccount */ "./src/util/UDABindAuthenticatedAccount.ts");
+/* harmony import */ var _UDASendSessionData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./UDASendSessionData */ "./src/util/UDASendSessionData.ts");
+/* harmony import */ var _BrowserConstants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../BrowserConstants */ "./src/BrowserConstants.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+
+const LoginWithBrowser = (sessionData, renewToken) => __awaiter(void 0, void 0, void 0, function* () {
+    sessionData.authenticationSource = "google";
+    const data = yield _BrowserConstants__WEBPACK_IMPORTED_MODULE_3__.browserVar.identity.getProfileUserInfo({ accountStatus: 'ANY' });
+    if (data.id !== '' && data.email !== "") {
+        sessionData.authenticated = true;
+        sessionData.authData = data;
+        (0,_UDADigestMessage__WEBPACK_IMPORTED_MODULE_0__.UDADigestMessage)(data.id, "SHA-512").then((encryptedId) => __awaiter(void 0, void 0, void 0, function* () {
+            sessionData.authData.id = encryptedId;
+            (0,_UDADigestMessage__WEBPACK_IMPORTED_MODULE_0__.UDADigestMessage)(data.email, "SHA-512").then((encryptedEmail) => __awaiter(void 0, void 0, void 0, function* () {
+                sessionData.authData.email = encryptedEmail;
+                yield (0,_UDABindAuthenticatedAccount__WEBPACK_IMPORTED_MODULE_1__.UDABindAuthenticatedAccount)(sessionData, renewToken);
+            }));
+        }));
+    }
+    else {
+        yield (0,_UDASendSessionData__WEBPACK_IMPORTED_MODULE_2__.UDASendSessionData)(sessionData, "UDAAlertMessageData", "login");
+    }
+    // await sendSessionData("UDAAlertMessageData", "login");
+    return true;
+});
+
+
+/***/ }),
+
+/***/ "./src/util/UDABindAccount.ts":
+/*!************************************!*\
+  !*** ./src/util/UDABindAccount.ts ***!
+  \************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UDABindAccount: function() { return /* binding */ UDABindAccount; }
+/* harmony export */ });
+/* harmony import */ var _UDASendSessionData__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UDASendSessionData */ "./src/util/UDASendSessionData.ts");
+/* harmony import */ var _invokeApi__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./invokeApi */ "./src/util/invokeApi.ts");
+/* harmony import */ var _config_endpoints__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config/endpoints */ "./src/config/endpoints.ts");
+/* harmony import */ var _config_CustomConfig__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config/CustomConfig */ "./src/config/CustomConfig.ts");
+/* harmony import */ var _services_UDAStorageService__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../services/UDAStorageService */ "./src/services/UDAStorageService.ts");
+/* harmony import */ var _BrowserConstants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../BrowserConstants */ "./src/BrowserConstants.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+//adding the sessionKey to the authid
+
+
+
+
+
+
+__webpack_require__.g.UDAGlobalConfig = _config_CustomConfig__WEBPACK_IMPORTED_MODULE_3__.CustomConfig;
+/**
+ * Binds the user account with UDASessionData.
+ * @param {Object} userAuthData - User authentication data.
+ * @param {Object} UDASessionData - UDA session data.
+ * @param {boolean} renewToken - Flag indicating whether to renew the token.
+ * @returns {Promise<void>} Promise that resolves when the binding is complete.
+ */
+const UDABindAccount = (userAuthData, UDASessionData, renewToken) => __awaiter(void 0, void 0, void 0, function* () {
+    const payLoad = { uid: UDASessionData.authData.id, email: UDASessionData.authData.email, realm: __webpack_require__.g.UDAGlobalConfig.realm, clientId: __webpack_require__.g.UDAGlobalConfig.clientId, clientSecret: __webpack_require__.g.UDAGlobalConfig.clientSecret };
+    const authToken = yield (0,_invokeApi__WEBPACK_IMPORTED_MODULE_1__.invokeApi)("https://authenticatetest.nistapp.ai/" + _config_endpoints__WEBPACK_IMPORTED_MODULE_2__.ENDPOINT.tokenUrl, "POST", payLoad);
+    if (authToken && (authToken === null || authToken === void 0 ? void 0 : authToken.token)) {
+        UDASessionData.authData.token = authToken.token;
+        let userSessionData = { userauthid: userAuthData.id, usersessionid: UDASessionData.sessionKey };
+        let response = yield (0,_invokeApi__WEBPACK_IMPORTED_MODULE_1__.invokeApi)(_config_endpoints__WEBPACK_IMPORTED_MODULE_2__.ENDPOINT.CheckUserSession, "POST", userSessionData);
+        if (response) {
+            yield _services_UDAStorageService__WEBPACK_IMPORTED_MODULE_4__.UDAStorageService.add(UDASessionData, _BrowserConstants__WEBPACK_IMPORTED_MODULE_5__.UDASessionName);
+            yield (0,_UDASendSessionData__WEBPACK_IMPORTED_MODULE_0__.UDASendSessionData)(UDASessionData, "UDAAuthenticatedUserSessionData");
+        }
+    }
+});
+
+
+/***/ }),
+
+/***/ "./src/util/UDABindAuthenticatedAccount.ts":
+/*!*************************************************!*\
+  !*** ./src/util/UDABindAuthenticatedAccount.ts ***!
+  \*************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UDABindAuthenticatedAccount: function() { return /* binding */ UDABindAuthenticatedAccount; }
+/* harmony export */ });
+/* harmony import */ var _UDABindAccount__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UDABindAccount */ "./src/util/UDABindAccount.ts");
+/* harmony import */ var _invokeApi__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./invokeApi */ "./src/util/invokeApi.ts");
+/* harmony import */ var _config_endpoints__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config/endpoints */ "./src/config/endpoints.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+//binding session key to the authenticated account
+
+
+
+/**
+ * Binds the authenticated account with UDASessionData.
+ * @param {any} sessionData - The UDA session data.
+ * @param {boolean} [renewToken=false] - Flag indicating whether to renew the token.
+ * @returns {Promise<void>} A Promise that resolves when the binding is complete.
+ */
+const UDABindAuthenticatedAccount = (sessionData, renewToken = false) => __awaiter(void 0, void 0, void 0, function* () {
+    let authData = {
+        authid: sessionData.authData.id,
+        emailid: sessionData.authData.email,
+        authsource: sessionData.authenticationSource
+    };
+    let response = yield (0,_invokeApi__WEBPACK_IMPORTED_MODULE_1__.invokeApi)(_config_endpoints__WEBPACK_IMPORTED_MODULE_2__.ENDPOINT.CheckUserId, "POST", authData);
+    if (response) {
+        if (sessionData.sessionKey !== null) {
+            yield (0,_UDABindAccount__WEBPACK_IMPORTED_MODULE_0__.UDABindAccount)(response, sessionData, renewToken);
+        }
+    }
+});
+
+
+/***/ }),
+
+/***/ "./src/util/UDADigestMessage.ts":
+/*!**************************************!*\
+  !*** ./src/util/UDADigestMessage.ts ***!
+  \**************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UDADigestMessage: function() { return /* binding */ UDADigestMessage; }
+/* harmony export */ });
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+/**
+ *
+ * @param textMessage
+ * @param algorithm
+ * @returns {Promise<ArrayBuffer>}
+ * @constructor
+ *
+ * This is used for encrypting text messages as specified in the docs
+ * https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest
+ *
+ */
+const UDADigestMessage = (textMessage, algorithm) => __awaiter(void 0, void 0, void 0, function* () {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(textMessage);
+    const hash = yield crypto.subtle.digest(algorithm, data);
+    const hashArray = Array.from(new Uint8Array(hash)); // convert buffer to byte array
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
+    return hashHex;
+});
+
+
+/***/ }),
+
+/***/ "./src/util/UDAGetSessionKey.ts":
+/*!**************************************!*\
+  !*** ./src/util/UDAGetSessionKey.ts ***!
+  \**************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UDAGetSessionKey: function() { return /* binding */ UDAGetSessionKey; }
+/* harmony export */ });
+/* harmony import */ var _invokeApi__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./invokeApi */ "./src/util/invokeApi.ts");
+/* harmony import */ var _config_endpoints__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config/endpoints */ "./src/config/endpoints.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+//getting session key from backend server
+
+
+const UDAGetSessionKey = (UDASessionData) => __awaiter(void 0, void 0, void 0, function* () {
+    let response = yield (0,_invokeApi__WEBPACK_IMPORTED_MODULE_0__.invokeApi)(_config_endpoints__WEBPACK_IMPORTED_MODULE_1__.ENDPOINT.GetSessionKey, "GET", null, false);
+    if (!response) {
+        return response;
+    }
+    UDASessionData.sessionKey = response;
+    return UDASessionData;
+});
+
+
+/***/ }),
+
+/***/ "./src/util/UDASendSessionData.ts":
+/*!****************************************!*\
+  !*** ./src/util/UDASendSessionData.ts ***!
+  \****************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UDASendSessionData: function() { return /* binding */ UDASendSessionData; },
+/* harmony export */   UDASendSessionDataToBackground: function() { return /* binding */ UDASendSessionDataToBackground; }
+/* harmony export */ });
+/* harmony import */ var _getTab__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getTab */ "./src/util/getTab.ts");
+/* harmony import */ var _BrowserConstants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../BrowserConstants */ "./src/BrowserConstants.ts");
+/* harmony import */ var _UDABindAuthenticatedAccount__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./UDABindAuthenticatedAccount */ "./src/util/UDABindAuthenticatedAccount.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+const UDASendSessionData = (udaSessionData, sendAction = "UDAUserSessionData", message = '') => __awaiter(void 0, void 0, void 0, function* () {
+    if (_BrowserConstants__WEBPACK_IMPORTED_MODULE_1__.UDABrowserPlugin === true) {
+        yield UDASendSessionDataToBackground(udaSessionData, sendAction, message);
+    }
+    else {
+        let sessionEvent = {};
+        switch (sendAction) {
+            case "UDAUserSessionData":
+                sessionEvent = new CustomEvent("UDAUserSessionData", {
+                    detail: { data: JSON.stringify(udaSessionData) },
+                    bubbles: false,
+                    cancelable: false
+                });
+                break;
+            case "UDAAuthenticatedUserSessionData":
+                sessionEvent = new CustomEvent("UDAAuthenticatedUserSessionData", {
+                    detail: { data: JSON.stringify(udaSessionData) },
+                    bubbles: false,
+                    cancelable: false
+                });
+                break;
+            case "UDAAlertMessageData":
+                sessionEvent = new CustomEvent("UDAAlertMessageData", {
+                    detail: { data: message },
+                    bubbles: false,
+                    cancelable: false
+                });
+                break;
+        }
+        document.dispatchEvent(sessionEvent);
+    }
+});
+const UDASendSessionDataToBackground = (udaSessionData, sendAction = "UDAUserSessionData", message = '') => __awaiter(void 0, void 0, void 0, function* () {
+    let tab = yield (0,_getTab__WEBPACK_IMPORTED_MODULE_0__.getTab)();
+    if (sendAction === "UDAAlertMessageData") {
+        yield _BrowserConstants__WEBPACK_IMPORTED_MODULE_1__.browserVar.tabs.sendMessage(tab.id, { action: sendAction, data: message });
+        return true;
+    }
+    else {
+        // Logic to add the authtoken to the session data
+        if (!udaSessionData.authData.hasOwnProperty('token')) {
+            yield (0,_UDABindAuthenticatedAccount__WEBPACK_IMPORTED_MODULE_2__.UDABindAuthenticatedAccount)(udaSessionData, false);
+        }
+        else {
+            yield _BrowserConstants__WEBPACK_IMPORTED_MODULE_1__.browserVar.tabs.sendMessage(tab.id, { action: sendAction, data: JSON.stringify(udaSessionData) });
+        }
+        return true;
+    }
+});
+
+
+/***/ }),
+
+/***/ "./src/util/getTab.ts":
+/*!****************************!*\
+  !*** ./src/util/getTab.ts ***!
+  \****************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   activeTabId: function() { return /* binding */ activeTabId; },
+/* harmony export */   getTab: function() { return /* binding */ getTab; }
+/* harmony export */ });
+/* harmony import */ var _BrowserConstants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../BrowserConstants */ "./src/BrowserConstants.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+let activeTabId;
+/**
+ * Storing the active tab id to fetch for further data.
+ */
+if (_BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.UDABrowserPlugin) {
+    _BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.browserVar.tabs.onActivated.addListener(function (activeInfo) {
+        activeTabId = activeInfo.tabId;
+    });
+}
+/**
+ * Retrieves the active tab from the browser.
+ *
+ * @return {Promise<Object>} The active tab object.
+ */
+const getTab = () => __awaiter(void 0, void 0, void 0, function* () {
+    let queryOptions = { active: true, currentWindow: true };
+    let tab = (yield _BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.browserVar.tabs.query(queryOptions))[0];
+    // let tab = await browserVar.tabs.getCurrent();
+    if (tab) {
+        return tab;
+    }
+    else {
+        tab = yield _BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.browserVar.tabs.get(activeTabId);
+        if (tab) {
+            return tab;
+        }
+        else {
+            console.log('No active tab identified.');
+        }
+    }
+    return tab;
+});
+
+
+/***/ }),
+
+/***/ "./src/util/invokeApi.ts":
+/*!*******************************!*\
+  !*** ./src/util/invokeApi.ts ***!
+  \*******************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   invokeApi: function() { return /* binding */ invokeApi; }
+/* harmony export */ });
+/* harmony import */ var _config_CustomConfig__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config/CustomConfig */ "./src/config/CustomConfig.ts");
+/**
+ * Common API call functionality
+ */
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+__webpack_require__.g.UDAGlobalConfig = _config_CustomConfig__WEBPACK_IMPORTED_MODULE_0__.CustomConfig;
+const invokeApi = (url, method, data, parseJson = true) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const config = {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'charset': 'UTF-8'
+            }
+        };
+        if (data) {
+            config.body = JSON.stringify(data);
+        }
+        const baseProdURL = "https://udantest.nistapp.ai/api";
+        const baseTestURL = "https://udantest.nistapp.ai/api";
+        let baseURL = baseProdURL;
+        if (url.indexOf("http") === -1) {
+            if (__webpack_require__.g.UDAGlobalConfig.environment === 'TEST') {
+                baseURL = baseTestURL;
+            }
+            url = baseURL + url;
+        }
+        let response = yield fetch(url, config);
+        if (response.ok) {
+            if (parseJson) {
+                return response.json();
+            }
+            else {
+                return response.text();
+            }
+        }
+        else {
+            return false;
+        }
+    }
+    catch (e) {
+        console.log(e);
+        return false;
+    }
+});
+
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	!function() {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = function(exports, definition) {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/global */
+/******/ 	!function() {
+/******/ 		__webpack_require__.g = (function() {
+/******/ 			if (typeof globalThis === 'object') return globalThis;
+/******/ 			try {
+/******/ 				return this || new Function('return this')();
+/******/ 			} catch (e) {
+/******/ 				if (typeof window === 'object') return window;
+/******/ 			}
+/******/ 		})();
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	!function() {
+/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	!function() {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = function(exports) {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+!function() {
+"use strict";
+/*!***************************!*\
+  !*** ./src/Background.ts ***!
+  \***************************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _BrowserConstants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BrowserConstants */ "./src/BrowserConstants.ts");
+/* harmony import */ var _util_LoginWithBrowser__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./util/LoginWithBrowser */ "./src/util/LoginWithBrowser.ts");
+/* harmony import */ var _util_UDASendSessionData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./util/UDASendSessionData */ "./src/util/UDASendSessionData.ts");
+/* harmony import */ var _models_UDASessionData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./models/UDASessionData */ "./src/models/UDASessionData.ts");
+/* harmony import */ var _util_UDAGetSessionKey__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./util/UDAGetSessionKey */ "./src/util/UDAGetSessionKey.ts");
+/* harmony import */ var _util_UDABindAuthenticatedAccount__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./util/UDABindAuthenticatedAccount */ "./src/util/UDABindAuthenticatedAccount.ts");
+/* harmony import */ var _services_UDAStorageService__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./services/UDAStorageService */ "./src/services/UDAStorageService.ts");
+/* harmony import */ var _util_KeycloakStore__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./util/KeycloakStore */ "./src/util/KeycloakStore.ts");
+
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+(0,_BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.updateBrowserPlugin)(true);
+
+
+
+
+
+
+
+let sessionData = new _models_UDASessionData__WEBPACK_IMPORTED_MODULE_3__.UDASessionData();
+// listen for the requests made from webpage for accessing userdata
+_BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.browserVar.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (request.action === "getusersessiondata" || request.action === "UDAGetNewToken") {
+            const storedSessionData = yield _services_UDAStorageService__WEBPACK_IMPORTED_MODULE_6__.UDAStorageService.get(_BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.UDASessionName);
+            console.log(storedSessionData);
+            if (!storedSessionData) {
+                console.log('failed to read stored session data');
+            }
+            else {
+                // looks like browser storage might have changed so changing the reading the data has been changed. For to work with old version have added the new code to else if statement
+                if (storedSessionData.hasOwnProperty("sessionKey") && storedSessionData["sessionKey"] && typeof storedSessionData["sessionKey"] != 'object') {
+                    sessionData = storedSessionData;
+                    if (request.action === "UDAGetNewToken") {
+                        yield generateNewToken();
+                    }
+                    else if (storedSessionData.hasOwnProperty('authenticated') && storedSessionData.authenticated) {
+                        yield (0,_util_UDASendSessionData__WEBPACK_IMPORTED_MODULE_2__.UDASendSessionData)(sessionData);
+                    }
+                    else {
+                        yield (0,_util_LoginWithBrowser__WEBPACK_IMPORTED_MODULE_1__.LoginWithBrowser)(sessionData, false);
+                    }
+                }
+                else if (storedSessionData.hasOwnProperty(_BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.UDASessionName) && storedSessionData[_BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.UDASessionName].hasOwnProperty("sessionKey") && storedSessionData[_BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.UDASessionName]["sessionKey"] && typeof storedSessionData[_BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.UDASessionName]["sessionKey"] != 'object') {
+                    sessionData = storedSessionData[_BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.UDASessionName];
+                    if (storedSessionData.hasOwnProperty('authenticated') && storedSessionData.authenticated) {
+                        yield (0,_util_UDASendSessionData__WEBPACK_IMPORTED_MODULE_2__.UDASendSessionData)(sessionData);
+                    }
+                    else {
+                        yield (0,_util_LoginWithBrowser__WEBPACK_IMPORTED_MODULE_1__.LoginWithBrowser)(sessionData, false);
+                    }
+                }
+                else {
+                    sessionData = yield (0,_util_UDAGetSessionKey__WEBPACK_IMPORTED_MODULE_4__.UDAGetSessionKey)(sessionData);
+                    yield (0,_util_LoginWithBrowser__WEBPACK_IMPORTED_MODULE_1__.LoginWithBrowser)(sessionData, false);
+                }
+            }
+        }
+        else if (request.action === "authtenicate") {
+            yield (0,_util_LoginWithBrowser__WEBPACK_IMPORTED_MODULE_1__.LoginWithBrowser)(sessionData, false);
+        }
+        else if (request.action === "createSession") {
+            yield (0,_util_KeycloakStore__WEBPACK_IMPORTED_MODULE_7__.keyCloakStore)(sessionData, request.data);
+        }
+    });
+});
+function generateNewToken() {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log(sessionData);
+        yield (0,_util_UDABindAuthenticatedAccount__WEBPACK_IMPORTED_MODULE_5__.UDABindAuthenticatedAccount)(sessionData, true);
+    });
+}
+
+}();
+UdanLibrary = __webpack_exports__;
+/******/ })()
+;
+//# sourceMappingURL=UDABackground.js.map
