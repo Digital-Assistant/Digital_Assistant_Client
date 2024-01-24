@@ -1,15 +1,4 @@
-import {browserVar, UDABrowserPlugin} from "../BrowserConstants";
-
-export let activeTabId: number;
-
-/**
- * Storing the active tab id to fetch for further data.
- */
-if(UDABrowserPlugin) {
-    browserVar.tabs.onActivated.addListener(function (activeInfo) {
-        activeTabId = activeInfo.tabId;
-    });
-}
+import {activeTabId, browserVar, UDABrowserPlugin} from "../BrowserConstants";
 
 /**
  * Retrieves the active tab from the browser.
@@ -19,16 +8,17 @@ if(UDABrowserPlugin) {
 export const getTab = async () => {
     let queryOptions = {active: true, currentWindow: true};
     let tab = (await browserVar.tabs.query(queryOptions))[0];
-    // let tab = await browserVar.tabs.getCurrent();
     if (tab) {
         return tab;
-    } else {
+    } else if(activeTabId !== -1){
         tab = await browserVar.tabs.get(activeTabId);
         if (tab) {
             return tab;
         } else {
             console.log('No active tab identified.');
+            return false;
         }
+    } else {
+        return false;
     }
-    return tab;
 }

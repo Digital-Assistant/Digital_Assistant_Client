@@ -1,8 +1,15 @@
 'use strict';
 
-import {browserVar, UDASessionName, updateBrowserPlugin} from "./BrowserConstants";
+import {browserVar, UDASessionName, updateActiveTabId, updateBrowserPlugin} from "./BrowserConstants";
 
 updateBrowserPlugin(true);
+
+/**
+ * Storing the active tab id to fetch for further data.
+ */
+browserVar.tabs.onActivated.addListener(function (activeInfo) {
+	updateActiveTabId(activeInfo.tabId);
+});
 
 import {LoginWithBrowser} from "./util/LoginWithBrowser";
 import {UDASendSessionData} from "./util/UDASendSessionData";
@@ -17,9 +24,9 @@ let sessionData: UDASessionData = new UDASessionData();
 browserVar.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
 	if (request.action === "getusersessiondata" || request.action === "UDAGetNewToken") {
 		const storedSessionData = await UDAStorageService.get(UDASessionName);
-		console.log(storedSessionData);
 		if (!storedSessionData) {
-			console.log('failed to read stored session data');
+			sessionData = await UDAGetSessionKey(sessionData);
+			await LoginWithBrowser(sessionData, false);
 		} else {
 			// looks like browser storage might have changed so changing the reading the data has been changed. For to work with old version have added the new code to else if statement
 			if (storedSessionData.hasOwnProperty("sessionKey") && storedSessionData["sessionKey"] && typeof storedSessionData["sessionKey"] != 'object') {

@@ -38,6 +38,10 @@ export const UDASendSessionData = async (udaSessionData: UDASessionData, sendAct
 
 export const UDASendSessionDataToBackground = async (udaSessionData: UDASessionData, sendAction = "UDAUserSessionData", message = '') => {
     let tab = await getTab();
+    if(!tab){
+      console.log('No active tab identified.');
+      return false;
+    }
     if (sendAction === "UDAAlertMessageData") {
       await browserVar.tabs.sendMessage(tab.id, {action: sendAction, data: message});
       return true;

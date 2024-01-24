@@ -4,6 +4,8 @@ export let UDABrowserPlugin: boolean=false;
 
 export let UDASessionName=CONFIG.USER_AUTH_DATA_KEY;
 
+export let activeTabId: number = -1;
+
 declare const chrome;
 
 export let enablePlugin = false;
@@ -32,4 +34,8 @@ export const updateBrowserPlugin = (plugin: boolean) => {
 
 export const updateSessionName = (sessionName: string) => {
     UDASessionName=UDASessionName+"-"+sessionName;
+}
+
+export const updateActiveTabId = (tabId) =>{
+    activeTabId=tabId;
 }
