@@ -446,8 +446,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   UDABrowserPlugin: function() { return /* binding */ UDABrowserPlugin; },
 /* harmony export */   UDASessionName: function() { return /* binding */ UDASessionName; },
+/* harmony export */   activeTabId: function() { return /* binding */ activeTabId; },
 /* harmony export */   browserVar: function() { return /* binding */ browserVar; },
 /* harmony export */   enablePlugin: function() { return /* binding */ enablePlugin; },
+/* harmony export */   updateActiveTabId: function() { return /* binding */ updateActiveTabId; },
 /* harmony export */   updateBrowserPlugin: function() { return /* binding */ updateBrowserPlugin; },
 /* harmony export */   updateSessionName: function() { return /* binding */ updateSessionName; }
 /* harmony export */ });
@@ -455,6 +457,7 @@ __webpack_require__.r(__webpack_exports__);
 
 let UDABrowserPlugin = false;
 let UDASessionName = _config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.USER_AUTH_DATA_KEY;
+let activeTabId = -1;
 let enablePlugin = false;
 let browserVar;
 const { detect } = __webpack_require__(/*! detect-browser */ "./node_modules/detect-browser/es/index.js");
@@ -476,6 +479,9 @@ const updateBrowserPlugin = (plugin) => {
 };
 const updateSessionName = (sessionName) => {
     UDASessionName = UDASessionName + "-" + sessionName;
+};
+const updateActiveTabId = (tabId) => {
+    activeTabId = tabId;
 };
 
 
@@ -1321,6 +1327,10 @@ const UDASendSessionData = (udaSessionData, sendAction = "UDAUserSessionData", m
 });
 const UDASendSessionDataToBackground = (udaSessionData, sendAction = "UDAUserSessionData", message = '') => __awaiter(void 0, void 0, void 0, function* () {
     let tab = yield (0,_getTab__WEBPACK_IMPORTED_MODULE_0__.getTab)();
+    if (!tab) {
+        console.log('No active tab identified.');
+        return false;
+    }
     if (sendAction === "UDAAlertMessageData") {
         yield _BrowserConstants__WEBPACK_IMPORTED_MODULE_1__.browserVar.tabs.sendMessage(tab.id, { action: sendAction, data: message });
         return true;
@@ -1349,7 +1359,6 @@ const UDASendSessionDataToBackground = (udaSessionData, sendAction = "UDAUserSes
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   activeTabId: function() { return /* binding */ activeTabId; },
 /* harmony export */   getTab: function() { return /* binding */ getTab; }
 /* harmony export */ });
 /* harmony import */ var _BrowserConstants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../BrowserConstants */ "./src/BrowserConstants.ts");
@@ -1363,15 +1372,6 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
     });
 };
 
-let activeTabId;
-/**
- * Storing the active tab id to fetch for further data.
- */
-if (_BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.UDABrowserPlugin) {
-    _BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.browserVar.tabs.onActivated.addListener(function (activeInfo) {
-        activeTabId = activeInfo.tabId;
-    });
-}
 /**
  * Retrieves the active tab from the browser.
  *
@@ -1380,20 +1380,22 @@ if (_BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.UDABrowserPlugin) {
 const getTab = () => __awaiter(void 0, void 0, void 0, function* () {
     let queryOptions = { active: true, currentWindow: true };
     let tab = (yield _BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.browserVar.tabs.query(queryOptions))[0];
-    // let tab = await browserVar.tabs.getCurrent();
     if (tab) {
         return tab;
     }
-    else {
-        tab = yield _BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.browserVar.tabs.get(activeTabId);
+    else if (_BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.activeTabId !== -1) {
+        tab = yield _BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.browserVar.tabs.get(_BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.activeTabId);
         if (tab) {
             return tab;
         }
         else {
             console.log('No active tab identified.');
+            return false;
         }
     }
-    return tab;
+    else {
+        return false;
+    }
 });
 
 
@@ -1564,6 +1566,12 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 };
 
 (0,_BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.updateBrowserPlugin)(true);
+/**
+ * Storing the active tab id to fetch for further data.
+ */
+_BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.browserVar.tabs.onActivated.addListener(function (activeInfo) {
+    (0,_BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.updateActiveTabId)(activeInfo.tabId);
+});
 
 
 
@@ -1577,9 +1585,9 @@ _BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.browserVar.runtime.onMessage.addL
     return __awaiter(this, void 0, void 0, function* () {
         if (request.action === "getusersessiondata" || request.action === "UDAGetNewToken") {
             const storedSessionData = yield _services_UDAStorageService__WEBPACK_IMPORTED_MODULE_6__.UDAStorageService.get(_BrowserConstants__WEBPACK_IMPORTED_MODULE_0__.UDASessionName);
-            console.log(storedSessionData);
             if (!storedSessionData) {
-                console.log('failed to read stored session data');
+                sessionData = yield (0,_util_UDAGetSessionKey__WEBPACK_IMPORTED_MODULE_4__.UDAGetSessionKey)(sessionData);
+                yield (0,_util_LoginWithBrowser__WEBPACK_IMPORTED_MODULE_1__.LoginWithBrowser)(sessionData, false);
             }
             else {
                 // looks like browser storage might have changed so changing the reading the data has been changed. For to work with old version have added the new code to else if statement
