@@ -102,6 +102,10 @@ export const getHTTPHeaders = (contentType: string, additionalHeaders: any = nul
     headers.append("Authorization", `Bearer ${userAuthData.authData.token}`);
   }
 
+  if(global.UDAGlobalConfig.realm !== 'UDAN'){
+    headers.append("UDAN-Realm", `${global.UDAGlobalConfig.realm}`);
+  }
+
   if(additionalHeaders){
     return additionalHeaders;
   }
