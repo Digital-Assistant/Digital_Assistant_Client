@@ -1,26 +1,26 @@
 var UdanLibrary;
-/******/ (function() { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./node_modules/detect-browser/es/index.js":
 /*!*************************************************!*\
   !*** ./node_modules/detect-browser/es/index.js ***!
   \*************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   BotInfo: function() { return /* binding */ BotInfo; },
-/* harmony export */   BrowserInfo: function() { return /* binding */ BrowserInfo; },
-/* harmony export */   NodeInfo: function() { return /* binding */ NodeInfo; },
-/* harmony export */   ReactNativeInfo: function() { return /* binding */ ReactNativeInfo; },
-/* harmony export */   SearchBotDeviceInfo: function() { return /* binding */ SearchBotDeviceInfo; },
-/* harmony export */   browserName: function() { return /* binding */ browserName; },
-/* harmony export */   detect: function() { return /* binding */ detect; },
-/* harmony export */   detectOS: function() { return /* binding */ detectOS; },
-/* harmony export */   getNodeVersion: function() { return /* binding */ getNodeVersion; },
-/* harmony export */   parseUserAgent: function() { return /* binding */ parseUserAgent; }
+/* harmony export */   BotInfo: () => (/* binding */ BotInfo),
+/* harmony export */   BrowserInfo: () => (/* binding */ BrowserInfo),
+/* harmony export */   NodeInfo: () => (/* binding */ NodeInfo),
+/* harmony export */   ReactNativeInfo: () => (/* binding */ ReactNativeInfo),
+/* harmony export */   SearchBotDeviceInfo: () => (/* binding */ SearchBotDeviceInfo),
+/* harmony export */   browserName: () => (/* binding */ browserName),
+/* harmony export */   detect: () => (/* binding */ detect),
+/* harmony export */   detectOS: () => (/* binding */ detectOS),
+/* harmony export */   getNodeVersion: () => (/* binding */ getNodeVersion),
+/* harmony export */   parseUserAgent: () => (/* binding */ parseUserAgent)
 /* harmony export */ });
 /* provided dependency */ var process = __webpack_require__(/*! process/browser */ "./node_modules/process/browser.js");
 var __spreadArray = (undefined && undefined.__spreadArray) || function (to, from, pack) {
@@ -245,7 +245,7 @@ function createVersionParts(count) {
 /*!*****************************************!*\
   !*** ./node_modules/process/browser.js ***!
   \*****************************************/
-/***/ (function(module) {
+/***/ ((module) => {
 
 // shim for using process in browser
 var process = module.exports = {};
@@ -439,12 +439,12 @@ process.umask = function() { return 0; };
 /*!**********************************!*\
   !*** ./src/util/checkBrowser.ts ***!
   \**********************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   checkBrowser: function() { return /* binding */ checkBrowser; }
+/* harmony export */   checkBrowser: () => (/* binding */ checkBrowser)
 /* harmony export */ });
 /* harmony import */ var detect_browser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! detect-browser */ "./node_modules/detect-browser/es/index.js");
 
@@ -476,12 +476,12 @@ const checkBrowser = () => {
 /*!*************************************!*\
   !*** ./src/util/checkScreenSize.ts ***!
   \*************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   checkScreenSize: function() { return /* binding */ checkScreenSize; }
+/* harmony export */   checkScreenSize: () => (/* binding */ checkScreenSize)
 /* harmony export */ });
 /* harmony import */ var _getScreenSize__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getScreenSize */ "./src/util/getScreenSize.ts");
 
@@ -511,12 +511,12 @@ const checkScreenSize = () => {
 /*!***********************************!*\
   !*** ./src/util/getScreenSize.ts ***!
   \***********************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   getScreenSize: function() { return /* binding */ getScreenSize; }
+/* harmony export */   getScreenSize: () => (/* binding */ getScreenSize)
 /* harmony export */ });
 /**
  * To get screen/window size
@@ -583,37 +583,37 @@ const getScreenSize = () => {
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = function(exports, definition) {
+/******/ 		__webpack_require__.d = (exports, definition) => {
 /******/ 			for(var key in definition) {
 /******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
 /******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 				}
 /******/ 			}
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	!function() {
-/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
-/******/ 	}();
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
+/******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
-!function() {
+(() => {
 "use strict";
 /*!*****************************!*\
   !*** ./src/ExtensionSDK.js ***!
@@ -623,13 +623,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util_checkScreenSize__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./util/checkScreenSize */ "./src/util/checkScreenSize.ts");
 
 
-var _checkBrowser = (0,_util_checkBrowser__WEBPACK_IMPORTED_MODULE_0__.checkBrowser)(),
-  enableUDAPlugin = _checkBrowser.enableUDAPlugin,
-  udaBrowserVar = _checkBrowser.udaBrowserVar,
-  udaIdentifiedBrowser = _checkBrowser.udaIdentifiedBrowser;
-var _checkScreenSize = (0,_util_checkScreenSize__WEBPACK_IMPORTED_MODULE_1__.checkScreenSize)(),
-  enablePluginForScreen = _checkScreenSize.enablePluginForScreen,
-  showScreenAlert = _checkScreenSize.showScreenAlert;
+let {
+  enableUDAPlugin,
+  udaBrowserVar,
+  udaIdentifiedBrowser
+} = (0,_util_checkBrowser__WEBPACK_IMPORTED_MODULE_0__.checkBrowser)();
+const {
+  enablePluginForScreen,
+  showScreenAlert
+} = (0,_util_checkScreenSize__WEBPACK_IMPORTED_MODULE_1__.checkScreenSize)();
 if (enableUDAPlugin === false) {
   console.log('Plugin disabled for browser: ' + udaIdentifiedBrowser.name);
 } else if (enablePluginForScreen === false) {
@@ -637,8 +639,8 @@ if (enableUDAPlugin === false) {
 } else {
   var _udaBrowserVar$runtim;
   console.log('Browser Enabled');
-  var s1 = document.createElement('script');
-  var scriptPath = udaBrowserVar === null || udaBrowserVar === void 0 || (_udaBrowserVar$runtim = udaBrowserVar.runtime) === null || _udaBrowserVar$runtim === void 0 ? void 0 : _udaBrowserVar$runtim.getURL("assets/UDASdk.js");
+  let s1 = document.createElement('script');
+  let scriptPath = udaBrowserVar === null || udaBrowserVar === void 0 || (_udaBrowserVar$runtim = udaBrowserVar.runtime) === null || _udaBrowserVar$runtim === void 0 ? void 0 : _udaBrowserVar$runtim.getURL("assets/UDASdk.js");
   s1.src = scriptPath;
   s1.onload = function () {};
   (document.body || document.documentElement).appendChild(s1);
@@ -698,7 +700,8 @@ if (enableUDAPlugin === false) {
     }
   });
 }
-}();
+})();
+
 UdanLibrary = __webpack_exports__;
 /******/ })()
 ;

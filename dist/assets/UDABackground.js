@@ -1,26 +1,26 @@
 var UdanLibrary;
-/******/ (function() { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./node_modules/detect-browser/es/index.js":
 /*!*************************************************!*\
   !*** ./node_modules/detect-browser/es/index.js ***!
   \*************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   BotInfo: function() { return /* binding */ BotInfo; },
-/* harmony export */   BrowserInfo: function() { return /* binding */ BrowserInfo; },
-/* harmony export */   NodeInfo: function() { return /* binding */ NodeInfo; },
-/* harmony export */   ReactNativeInfo: function() { return /* binding */ ReactNativeInfo; },
-/* harmony export */   SearchBotDeviceInfo: function() { return /* binding */ SearchBotDeviceInfo; },
-/* harmony export */   browserName: function() { return /* binding */ browserName; },
-/* harmony export */   detect: function() { return /* binding */ detect; },
-/* harmony export */   detectOS: function() { return /* binding */ detectOS; },
-/* harmony export */   getNodeVersion: function() { return /* binding */ getNodeVersion; },
-/* harmony export */   parseUserAgent: function() { return /* binding */ parseUserAgent; }
+/* harmony export */   BotInfo: () => (/* binding */ BotInfo),
+/* harmony export */   BrowserInfo: () => (/* binding */ BrowserInfo),
+/* harmony export */   NodeInfo: () => (/* binding */ NodeInfo),
+/* harmony export */   ReactNativeInfo: () => (/* binding */ ReactNativeInfo),
+/* harmony export */   SearchBotDeviceInfo: () => (/* binding */ SearchBotDeviceInfo),
+/* harmony export */   browserName: () => (/* binding */ browserName),
+/* harmony export */   detect: () => (/* binding */ detect),
+/* harmony export */   detectOS: () => (/* binding */ detectOS),
+/* harmony export */   getNodeVersion: () => (/* binding */ getNodeVersion),
+/* harmony export */   parseUserAgent: () => (/* binding */ parseUserAgent)
 /* harmony export */ });
 /* provided dependency */ var process = __webpack_require__(/*! process/browser */ "./node_modules/process/browser.js");
 var __spreadArray = (undefined && undefined.__spreadArray) || function (to, from, pack) {
@@ -245,7 +245,7 @@ function createVersionParts(count) {
 /*!*****************************************!*\
   !*** ./node_modules/process/browser.js ***!
   \*****************************************/
-/***/ (function(module) {
+/***/ ((module) => {
 
 // shim for using process in browser
 var process = module.exports = {};
@@ -439,19 +439,19 @@ process.umask = function() { return 0; };
 /*!*********************************!*\
   !*** ./src/BrowserConstants.ts ***!
   \*********************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   UDABrowserPlugin: function() { return /* binding */ UDABrowserPlugin; },
-/* harmony export */   UDASessionName: function() { return /* binding */ UDASessionName; },
-/* harmony export */   activeTabId: function() { return /* binding */ activeTabId; },
-/* harmony export */   browserVar: function() { return /* binding */ browserVar; },
-/* harmony export */   enablePlugin: function() { return /* binding */ enablePlugin; },
-/* harmony export */   updateActiveTabId: function() { return /* binding */ updateActiveTabId; },
-/* harmony export */   updateBrowserPlugin: function() { return /* binding */ updateBrowserPlugin; },
-/* harmony export */   updateSessionName: function() { return /* binding */ updateSessionName; }
+/* harmony export */   UDABrowserPlugin: () => (/* binding */ UDABrowserPlugin),
+/* harmony export */   UDASessionName: () => (/* binding */ UDASessionName),
+/* harmony export */   activeTabId: () => (/* binding */ activeTabId),
+/* harmony export */   browserVar: () => (/* binding */ browserVar),
+/* harmony export */   enablePlugin: () => (/* binding */ enablePlugin),
+/* harmony export */   updateActiveTabId: () => (/* binding */ updateActiveTabId),
+/* harmony export */   updateBrowserPlugin: () => (/* binding */ updateBrowserPlugin),
+/* harmony export */   updateSessionName: () => (/* binding */ updateSessionName)
 /* harmony export */ });
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./config */ "./src/config/index.ts");
 
@@ -491,12 +491,12 @@ const updateActiveTabId = (tabId) => {
 /*!************************************!*\
   !*** ./src/config/CustomConfig.ts ***!
   \************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   CustomConfig: function() { return /* binding */ CustomConfig; }
+/* harmony export */   CustomConfig: () => (/* binding */ CustomConfig)
 /* harmony export */ });
 /**
  * Author: Yureswar Ravuri
@@ -535,12 +535,12 @@ const CustomConfig = {
 /*!*********************************!*\
   !*** ./src/config/endpoints.ts ***!
   \*********************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   ENDPOINT: function() { return /* binding */ ENDPOINT; }
+/* harmony export */   ENDPOINT: () => (/* binding */ ENDPOINT)
 /* harmony export */ });
 /**
  * Author: Lakshman Veti
@@ -575,12 +575,12 @@ const ENDPOINT = {
 /*!*****************************!*\
   !*** ./src/config/index.ts ***!
   \*****************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   CONFIG: function() { return /* binding */ CONFIG; }
+/* harmony export */   CONFIG: () => (/* binding */ CONFIG)
 /* harmony export */ });
 /**
  * Author: Lakshman Veti
@@ -845,12 +845,12 @@ const CONFIG = {
 /*!********************************!*\
   !*** ./src/models/AuthData.ts ***!
   \********************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   AuthData: function() { return /* binding */ AuthData; }
+/* harmony export */   AuthData: () => (/* binding */ AuthData)
 /* harmony export */ });
 class AuthData {
     constructor(id = null, email = null, token = null) {
@@ -867,12 +867,12 @@ class AuthData {
 /*!*******************************!*\
   !*** ./src/models/CSPData.ts ***!
   \*******************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   CSPData: function() { return /* binding */ CSPData; }
+/* harmony export */   CSPData: () => (/* binding */ CSPData)
 /* harmony export */ });
 class CSPData {
     constructor(cspEnabled = false, udaAllowed = true, domain = null) {
@@ -889,12 +889,12 @@ class CSPData {
 /*!**************************************!*\
   !*** ./src/models/UDASessionData.ts ***!
   \**************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   UDASessionData: function() { return /* binding */ UDASessionData; }
+/* harmony export */   UDASessionData: () => (/* binding */ UDASessionData)
 /* harmony export */ });
 /* harmony import */ var _AuthData__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AuthData */ "./src/models/AuthData.ts");
 /* harmony import */ var _CSPData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CSPData */ "./src/models/CSPData.ts");
@@ -917,12 +917,12 @@ class UDASessionData {
 /*!*******************************************!*\
   !*** ./src/services/UDAStorageService.ts ***!
   \*******************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   UDAStorageService: function() { return /* binding */ UDAStorageService; }
+/* harmony export */   UDAStorageService: () => (/* binding */ UDAStorageService)
 /* harmony export */ });
 /* harmony import */ var _BrowserConstants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../BrowserConstants */ "./src/BrowserConstants.ts");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -992,12 +992,12 @@ const UDAStorageService = {
 /*!***********************************!*\
   !*** ./src/util/KeycloakStore.ts ***!
   \***********************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   keyCloakStore: function() { return /* binding */ keyCloakStore; }
+/* harmony export */   keyCloakStore: () => (/* binding */ keyCloakStore)
 /* harmony export */ });
 /* harmony import */ var _UDAGetSessionKey__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UDAGetSessionKey */ "./src/util/UDAGetSessionKey.ts");
 /* harmony import */ var _UDABindAuthenticatedAccount__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UDABindAuthenticatedAccount */ "./src/util/UDABindAuthenticatedAccount.ts");
@@ -1030,12 +1030,12 @@ const keyCloakStore = (sessionData, data) => __awaiter(void 0, void 0, void 0, f
 /*!**************************************!*\
   !*** ./src/util/LoginWithBrowser.ts ***!
   \**************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   LoginWithBrowser: function() { return /* binding */ LoginWithBrowser; }
+/* harmony export */   LoginWithBrowser: () => (/* binding */ LoginWithBrowser)
 /* harmony export */ });
 /* harmony import */ var _UDADigestMessage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UDADigestMessage */ "./src/util/UDADigestMessage.ts");
 /* harmony import */ var _UDABindAuthenticatedAccount__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UDABindAuthenticatedAccount */ "./src/util/UDABindAuthenticatedAccount.ts");
@@ -1082,12 +1082,12 @@ const LoginWithBrowser = (sessionData, renewToken) => __awaiter(void 0, void 0, 
 /*!************************************!*\
   !*** ./src/util/UDABindAccount.ts ***!
   \************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   UDABindAccount: function() { return /* binding */ UDABindAccount; }
+/* harmony export */   UDABindAccount: () => (/* binding */ UDABindAccount)
 /* harmony export */ });
 /* harmony import */ var _UDASendSessionData__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UDASendSessionData */ "./src/util/UDASendSessionData.ts");
 /* harmony import */ var _invokeApi__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./invokeApi */ "./src/util/invokeApi.ts");
@@ -1140,12 +1140,12 @@ const UDABindAccount = (userAuthData, UDASessionData, renewToken) => __awaiter(v
 /*!*************************************************!*\
   !*** ./src/util/UDABindAuthenticatedAccount.ts ***!
   \*************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   UDABindAuthenticatedAccount: function() { return /* binding */ UDABindAuthenticatedAccount; }
+/* harmony export */   UDABindAuthenticatedAccount: () => (/* binding */ UDABindAuthenticatedAccount)
 /* harmony export */ });
 /* harmony import */ var _UDABindAccount__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UDABindAccount */ "./src/util/UDABindAccount.ts");
 /* harmony import */ var _invokeApi__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./invokeApi */ "./src/util/invokeApi.ts");
@@ -1190,12 +1190,12 @@ const UDABindAuthenticatedAccount = (sessionData, renewToken = false) => __await
 /*!**************************************!*\
   !*** ./src/util/UDADigestMessage.ts ***!
   \**************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   UDADigestMessage: function() { return /* binding */ UDADigestMessage; }
+/* harmony export */   UDADigestMessage: () => (/* binding */ UDADigestMessage)
 /* harmony export */ });
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -1233,12 +1233,12 @@ const UDADigestMessage = (textMessage, algorithm) => __awaiter(void 0, void 0, v
 /*!**************************************!*\
   !*** ./src/util/UDAGetSessionKey.ts ***!
   \**************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   UDAGetSessionKey: function() { return /* binding */ UDAGetSessionKey; }
+/* harmony export */   UDAGetSessionKey: () => (/* binding */ UDAGetSessionKey)
 /* harmony export */ });
 /* harmony import */ var _invokeApi__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./invokeApi */ "./src/util/invokeApi.ts");
 /* harmony import */ var _config_endpoints__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config/endpoints */ "./src/config/endpoints.ts");
@@ -1270,13 +1270,13 @@ const UDAGetSessionKey = (UDASessionData) => __awaiter(void 0, void 0, void 0, f
 /*!****************************************!*\
   !*** ./src/util/UDASendSessionData.ts ***!
   \****************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   UDASendSessionData: function() { return /* binding */ UDASendSessionData; },
-/* harmony export */   UDASendSessionDataToBackground: function() { return /* binding */ UDASendSessionDataToBackground; }
+/* harmony export */   UDASendSessionData: () => (/* binding */ UDASendSessionData),
+/* harmony export */   UDASendSessionDataToBackground: () => (/* binding */ UDASendSessionDataToBackground)
 /* harmony export */ });
 /* harmony import */ var _getTab__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getTab */ "./src/util/getTab.ts");
 /* harmony import */ var _BrowserConstants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../BrowserConstants */ "./src/BrowserConstants.ts");
@@ -1354,12 +1354,12 @@ const UDASendSessionDataToBackground = (udaSessionData, sendAction = "UDAUserSes
 /*!****************************!*\
   !*** ./src/util/getTab.ts ***!
   \****************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   getTab: function() { return /* binding */ getTab; }
+/* harmony export */   getTab: () => (/* binding */ getTab)
 /* harmony export */ });
 /* harmony import */ var _BrowserConstants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../BrowserConstants */ "./src/BrowserConstants.ts");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -1405,12 +1405,12 @@ const getTab = () => __awaiter(void 0, void 0, void 0, function* () {
 /*!*******************************!*\
   !*** ./src/util/invokeApi.ts ***!
   \*******************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   invokeApi: function() { return /* binding */ invokeApi; }
+/* harmony export */   invokeApi: () => (/* binding */ invokeApi)
 /* harmony export */ });
 /* harmony import */ var _config_CustomConfig__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config/CustomConfig */ "./src/config/CustomConfig.ts");
 /**
@@ -1498,19 +1498,19 @@ const invokeApi = (url, method, data, parseJson = true) => __awaiter(void 0, voi
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = function(exports, definition) {
+/******/ 		__webpack_require__.d = (exports, definition) => {
 /******/ 			for(var key in definition) {
 /******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
 /******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 				}
 /******/ 			}
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		__webpack_require__.g = (function() {
 /******/ 			if (typeof globalThis === 'object') return globalThis;
 /******/ 			try {
@@ -1519,28 +1519,28 @@ const invokeApi = (url, method, data, parseJson = true) => __awaiter(void 0, voi
 /******/ 				if (typeof window === 'object') return window;
 /******/ 			}
 /******/ 		})();
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	!function() {
-/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
-/******/ 	}();
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
+/******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
-!function() {
+(() => {
 "use strict";
 /*!***************************!*\
   !*** ./src/Background.ts ***!
@@ -1633,7 +1633,8 @@ function generateNewToken() {
     });
 }
 
-}();
+})();
+
 UdanLibrary = __webpack_exports__;
 /******/ })()
 ;

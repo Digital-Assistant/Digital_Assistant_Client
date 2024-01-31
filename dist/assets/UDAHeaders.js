@@ -1,5 +1,5 @@
 var UdanLibrary;
-/******/ (function() { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
@@ -7,18 +7,18 @@ var UdanLibrary;
 /*!**********************************************!*\
   !*** ./src/util/headers/addToClickObject.js ***!
   \**********************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   AddToClickObjects: function() { return /* binding */ AddToClickObjects; },
-/* harmony export */   ignoreTags: function() { return /* binding */ ignoreTags; }
+/* harmony export */   AddToClickObjects: () => (/* binding */ AddToClickObjects),
+/* harmony export */   ignoreTags: () => (/* binding */ ignoreTags)
 /* harmony export */ });
-var ignoreTags = ["body", "document", "window", "html", "script", "style", "iframe", "doctype", "link", "svg", "path", "meta", "circle", "rect", "stop", "defs", "linearGradient", "g"];
-var AddToClickObjects = function AddToClickObjects(node) {
+const ignoreTags = ["body", "document", "window", "html", "script", "style", "iframe", "doctype", "link", "svg", "path", "meta", "circle", "rect", "stop", "defs", "linearGradient", "g"];
+const AddToClickObjects = node => {
   try {
     var _clickObject$element, _clickObject$element2;
-    var clickObject = {
+    let clickObject = {
       element: node,
       id: ''
     };
@@ -30,14 +30,14 @@ var AddToClickObjects = function AddToClickObjects(node) {
     if (typeof (clickObject === null || clickObject === void 0 || (_clickObject$element = clickObject.element) === null || _clickObject$element === void 0 ? void 0 : _clickObject$element.tagName) === 'undefined') {
       return;
     }
-    var tag = clickObject === null || clickObject === void 0 || (_clickObject$element2 = clickObject.element) === null || _clickObject$element2 === void 0 ? void 0 : _clickObject$element2.tagName;
+    let tag = clickObject === null || clickObject === void 0 || (_clickObject$element2 = clickObject.element) === null || _clickObject$element2 === void 0 ? void 0 : _clickObject$element2.tagName;
     if (tag && ignoreTags.indexOf(tag.toLowerCase()) !== -1) {
       return;
     }
     if (node.classList && node.classList.contains('uda_exclude')) {
       return;
     }
-    for (var i = 0; i < UDAClickObjects.length; i++) {
+    for (let i = 0; i < UDAClickObjects.length; i++) {
       if (UDAClickObjects[i].element.isSameNode(clickObject.element)) {
         //todo, discuss , how better to call actions, if multiple actions should be stored, or selector better.
         return;
@@ -80,37 +80,37 @@ var AddToClickObjects = function AddToClickObjects(node) {
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = function(exports, definition) {
+/******/ 		__webpack_require__.d = (exports, definition) => {
 /******/ 			for(var key in definition) {
 /******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
 /******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 				}
 /******/ 			}
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	!function() {
-/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
-/******/ 	}();
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
+/******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
-!function() {
+(() => {
 /*!************************!*\
   !*** ./src/Headers.js ***!
   \************************/
@@ -128,7 +128,8 @@ EventTarget.prototype.addEventListener = function (addEventListener) {
     addEventListener.call(this, arguments[0], arguments[1], arguments[2]);
   };
 }(EventTarget.prototype.addEventListener);
-}();
+})();
+
 UdanLibrary = __webpack_exports__;
 /******/ })()
 ;
