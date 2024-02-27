@@ -16,6 +16,7 @@
     "i18next": "^22.0.6",
     "jaro-winkler-typescript": "^1.0.1",
     "keycloak-js": "^20.0.0",
+    "link-exists": "^1.2.2",
     "lodash": "^4.17.21",
     "os-browserify": "^0.3.0",
     "parse-domain": "^7.0.1",

@@ -7,6 +7,8 @@ export interface MProps {
   isRecording?: any;
   udaDivId?: string;
   enableUdaIcon?: boolean;
+  userContent?: any;
+  hide?: boolean;
 }
 
 export interface HeaderProps extends MProps {
