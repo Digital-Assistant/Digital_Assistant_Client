@@ -24,7 +24,6 @@ import { CustomConfig } from "./config/CustomConfig";
 import {postRecordSequenceData, recordUserClickData} from "./services";
 import { addBodyEvents } from "./util/addBodyEvents";
 import { initSpecialNodes } from "./util/initSpecialNodes";
-import {delay} from "./util/delay";
 import {fetchDomain} from "./util/fetchDomain";
 
 // adding global variable declaration for exposing react custom configuration
@@ -127,7 +126,6 @@ function App(props) {
      * @returns {void} This function does not return anything.
      */
     const initKeycloak = () => {
-        console.log('initKeycloak called');
         // If keycloak is not already authenticated and there is no session or user data
         if (!keycloak.authenticated && !keycloakSessionData && !userSessionData && !authenticated) {
             // Initialize keycloak
@@ -179,9 +177,6 @@ function App(props) {
             })
                 .then(async (auth) => {
                     setAuthenticated(auth);
-
-                    console.log({keycloak});
-
                     // If user session data is not available
                     if (!userSessionData) {
                         // Create user data object
@@ -312,7 +307,12 @@ function App(props) {
         }
     };
 
+    /**
+     * Initializing functionality on start of the application
+     */
     useEffect(() => {
+
+        // Registering event handlers on startup of the application
         on("UDAUserSessionData", createSession);
         on("UDAAuthenticatedUserSessionData", createSession);
         on("UDAAlertMessageData", authenticationError);
@@ -320,32 +320,42 @@ function App(props) {
         on("openPanel", openPanel);
         on("closePanel", closePanel);
 
-        let userSessionData = getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
-        if (!userSessionData) {
-            trigger("RequestUDASessionData", {
-                detail: { data: "getusersessiondata" },
-                bubbles: false,
-                cancelable: false,
-            });
-        } else {
-            setUserSessionData(userSessionData);
-            // setAuthenticated(true);
-            openUDAPanel();
-            if (userSessionData.authenticationsource === "keycloak") {
-                setInvokeKeycloak(true);
+        /**
+         * Asynchronous function to be get called in the beginning
+         */
+        const initialInvoke = async ()=> {
+
+            let userSessionData = getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
+            if (!userSessionData) {
+                trigger("RequestUDASessionData", {
+                    detail: { data: "getusersessiondata" },
+                    bubbles: false,
+                    cancelable: false,
+                });
             } else {
-                setAuthenticated(true);
+                setUserSessionData(userSessionData);
+                // setAuthenticated(true);
+                openUDAPanel();
+                if (userSessionData.authenticationsource === "keycloak") {
+                    setInvokeKeycloak(true);
+                } else {
+                    setAuthenticated(true);
+                }
             }
+
+            //adding class to body tag
+            let documentBody = document.body;
+            if (!documentBody.classList.contains("uda-body")) {
+                documentBody.classList.add("uda-body");
+            }
+
+            console.log('rendering init');
+            init();
         }
 
-        //adding class to body tag
-        let documentBody = document.body;
-        if (!documentBody.classList.contains("uda-body")) {
-            documentBody.classList.add("uda-body");
-        }
+        initialInvoke();
 
-        init();
-
+        // Clearing event handlers on application close.
         return () => {
             off("UDAUserSessionData", createSession);
             off("UDAAuthenticatedUserSessionData", createSession);
@@ -752,7 +762,7 @@ function App(props) {
     }
 
     return (
-      <UserDataContext.Provider value={userSessionData}>
+        <UserDataContext.Provider value={userSessionData}>
             <div
                 className="udan-main-panel"
                 style={{
@@ -764,14 +774,15 @@ function App(props) {
                     <div id="uda-html-content" className="uda_exclude">
                         <div>
                             <div className="uda-page-right-bar uda_exclude">
-                              {userContent()}
+                                {userContent()}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <Toggler toggleFlag={hide} toggleHandler={togglePanel} udaDivId={global.UDAGlobalConfig.udaDivId} enableUdaIcon={global.UDAGlobalConfig.enableUdaIcon} config={global.UDAGlobalConfig} />
+            <Toggler toggleFlag={hide} userContent={userContent} toggleHandler={togglePanel}
+                     udaDivId={global.UDAGlobalConfig.udaDivId} enableUdaIcon={global.UDAGlobalConfig.enableUdaIcon}
+                     config={global.UDAGlobalConfig}/>
         </UserDataContext.Provider>
     );
 }

@@ -8,14 +8,13 @@
 import React, {useEffect, useState} from "react";
 
 import {MProps} from "./interfaces";
-import {getScreenSize} from "../../util/getScreenSize";
 import {UDAConsoleLogger} from "../../config/error-log";
 import {checkScreenSize} from "../../util/checkScreenSize";
-import {Button, Modal, Popconfirm} from "antd";
+import {Popconfirm} from "antd";
 import {translate} from "../../util/translation";
 import {getFromStore, setToStore} from "../../util";
 import {CONFIG} from "../../config";
-import {use} from "i18next";
+import {linkExists} from "link-exists";
 
 export const Toggler = (props: MProps) => {
 
@@ -23,6 +22,8 @@ export const Toggler = (props: MProps) => {
     const [hide, setHide] = useState<boolean>(false);
     // setting flag to show confirmation box for low resolutions
     const [showAlert, setShowAlert] = useState<boolean>(false);
+    const [showCspAlert, setCspShowAlert] = useState<boolean>(false);
+    const [showCspAlertPopup, setCspShowAlertPopup] = useState<boolean>(false);
     useEffect(() => {
         const {enablePluginForScreen, showScreenAlert} = checkScreenSize();
         if(enablePluginForScreen === false){
@@ -32,6 +33,72 @@ export const Toggler = (props: MProps) => {
             checkUserPreference();
         }
     }, []);
+
+
+    /**
+     * check for server online or not
+     */
+    const checkServerOnline = async ()=> {
+        // check for server is up or not
+        const isServerAlive = await linkExists(process.env.baseURL+'/domain/');
+        console.log(isServerAlive);
+        if(isServerAlive === false){
+            let cspEnabled = await getFromStore(CONFIG.cspUserAcceptance.storageName, true);
+            if(typeof cspEnabled !== "undefined" && JSON.parse(cspEnabled) === true){
+                setCspShowAlert(true);
+                setCspShowAlertPopup(true);
+                return false;
+            } else {
+                setToStore(JSON.stringify(true), CONFIG.cspUserAcceptance.storageName, true);
+                setCspShowAlert(true);
+                setCspShowAlertPopup(true);
+                return false;
+            }
+        } else {
+            setToStore(JSON.stringify(false), CONFIG.cspUserAcceptance.storageName, true);
+            setCspShowAlert(false);
+            setCspShowAlertPopup(false);
+            return true;
+        }
+    }
+
+    /**
+     * check for internet is up or not
+     */
+    const checkInternetUp = async ()=> {
+        const protocol = window.location.protocol;
+        const domain = window.location.hostname;
+        const port = window.location.port;
+
+        const fullDomain = `${protocol}//${domain}${port ? `:${port}` : ''}`;
+        console.log(fullDomain);
+        // check for server is up or not
+        console.log('internet up function call');
+        return await linkExists(fullDomain);
+    }
+
+
+    /**
+     * showing csp alert info to the user
+     */
+    useEffect(() => {
+        const checkCsp = async () => {
+            // check for internet is up or not
+            // const internetUp = await isOnline()
+            // console.log(internetUp);
+            const internetUp = await checkInternetUp();
+            if(internetUp === false){
+                console.log('Internet is down');
+                setHide(true);
+                return;
+            }
+
+            const isServerOnline = await checkServerOnline();
+        }
+
+        checkCsp();
+
+    }, [])
     const toggle = () => {
         if (props.toggleHandler) props.toggleHandler();
     };
@@ -56,7 +123,7 @@ export const Toggler = (props: MProps) => {
     }
 
     const getHtml = () => {
-        return <div className="uda-nistapp-logo uda_exclude" onClick={() => {if(showAlert === false){toggle()}}} style={{display: !props?.toggleFlag ? "none" : "block"}}>
+        return <div className="uda-nistapp-logo uda_exclude" onClick={() => {if(showAlert === false && showCspAlert === false){toggle()}}} style={{display: !props?.toggleFlag ? "none" : "block"}}>
                     <div className="uda-icon uda_exclude">
                         {props.config.enableCustomIcon && <><img className="custom-icon uda_exclude" src={props.config.customIcon} /></>}
                         {!props.config.enableCustomIcon && <>
@@ -97,12 +164,23 @@ export const Toggler = (props: MProps) => {
 
     return (
         <>
+            {showCspAlert === false && <>
+
+            </>}
             {showAlert === true && <>
-                <Popconfirm placement="left" title={translate('confirmScreenResolution')} onConfirm={()=> saveUserPreference(true)} onCancel={() => saveUserPreference(false)} className="uda_exclude">
+                <Popconfirm placement="left" title={translate('confirmScreenResolution')}
+                            onConfirm={() => saveUserPreference(true)} onCancel={() => saveUserPreference(false)}
+                            className="uda_exclude">
                     {getHtml()}
                 </Popconfirm>
             </>}
-            {showAlert === false && getHtml()}
+            {showCspAlert === true && <>
+                <Popconfirm placement="left" open={showCspAlertPopup} title={translate('cspAlertInfo')} className="uda_exclude" onConfirm={()=>{setCspShowAlertPopup(false);}}>
+                    {getHtml()}
+                </Popconfirm>
+            </>
+            }
+            {(showAlert === false && showCspAlert === false) && getHtml()}
         </>
     );
 
