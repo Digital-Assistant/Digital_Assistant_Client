@@ -36,7 +36,12 @@ declare global {
         domJSON: any;
     }
 }
-
+/**
+ * A functional component representing the main application.
+ *
+ * @param {object} props - the properties passed to the component
+ * @return {JSX.Element} the rendered component
+ */
 function App(props) {
     const [isRecording, setIsRecording] = useState<boolean>(
         getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true" || false

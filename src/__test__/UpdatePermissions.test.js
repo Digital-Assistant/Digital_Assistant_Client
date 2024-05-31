@@ -1,7 +1,10 @@
+window.dmoJSON = {};
+
 import { render, screen } from '@testing-library/react';
 import {RecordSequenceDetails} from "../components/RecordSequenceDetails";
 
-describe('RecordSequenceDetails', () => {
+describe('UpdatePermissionsTest', () => {
+
     test('addSkipClass should return correct class', () => {
         const item = { status: 'completed', objectdata: { meta: { skipDuringPlay: true } } };
         expect(RecordSequenceDetails.addSkipClass(item)).toBe('skipped uda_exclude');
