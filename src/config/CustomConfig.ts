@@ -25,7 +25,8 @@ export interface CustomConfigPropTypes {
   customIcon: string,
   realm: string,
   clientId: string,
-  clientSecret: string
+  clientSecret: string,
+  enableHidePanelAfterCompletion: boolean
 }
 
 // assigning default values to the default configuration
@@ -50,5 +51,6 @@ export const CustomConfig: CustomConfigPropTypes = {
   customIcon: 'https://udan.nistapp.com/uda-logo.jpg',
   realm: process.env.keycloakRealm,
   clientId: process.env.keycloakClientId,
-  clientSecret: process.env.keycloakClientSecret
+  clientSecret: process.env.keycloakClientSecret,
+  enableHidePanelAfterCompletion: false
 };
