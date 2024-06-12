@@ -112,7 +112,7 @@ export const RecordSequenceDetails = (props: MProps) => {
         trigger("openPanel", {action: 'openPanel'});
       } else {
         addNotification(translate('autoplayCompletedTitle'), translate('autoplayCompleted'), 'success');
-        // backNav(true);
+        backNav(true);
       }
     }
   };
