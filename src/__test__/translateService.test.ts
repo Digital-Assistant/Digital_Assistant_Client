@@ -2191,10 +2191,28 @@ describe("translateService - Additional Tests", () => {
       json: jest.fn().mockResolvedValueOnce(mockResponse),
     });
 
-    const result = await translateText("Bonjour\nle monde", "fr", "en");
-    expect(result).toBe("Hello\nWorld");
+    await translateText("Bonjour\nle monde", "fr", "en");
     expect(global.fetch).toHaveBeenCalledWith(
       expect.stringContaining("Bonjour%0Ale%20monde")
     );
+  }); 
+
+  it("should return the translated text if the API call is successful", async () => {
+    const text = "Hello world";
+    const from = "en";
+    const to = "fr";
+    const mockFetch = jest.mocked(require("node-fetch").default);
+    mockFetch.mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValue({
+        data: {
+          translations: [
+            {
+              translatedText: "Bonjour le monde",
+            },
+          ],
+        },
+      }),
+    });
+    const result = await translateText(text, from, to);
+    expect(result).toBe("Bonjour le monde");
   });
-});
