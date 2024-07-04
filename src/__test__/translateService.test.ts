@@ -2133,7 +2133,10 @@ describe("translateService - Additional Tests", () => {
     const result = await translateText("Bonjour 👋 le monde 🌍", "fr", "en");
     expect(result).toBe("Hello 👋 World 🌍");
   });
-
+  it("translateText should handle invalid input data", async () => {
+    // Test with invalid input data such as empty text or invalid language codes
+    // Add assertions for handling invalid input data
+  });
   it("should handle different API providers", async () => {
     jest.resetModules();
     jest.mock("../config", () => ({
