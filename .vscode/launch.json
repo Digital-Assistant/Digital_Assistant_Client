@@ -1,0 +1,22 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Jest Tests",
+      "program": "${workspaceRoot}/node_modules/jest/bin/jest.js",
+      "args": [
+        "${file}",
+        "--runInBand",
+        "--watch",
+        "--coverage=false",
+        "--no-cache"
+      ],
+
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+      //"outFiles": ["${fileDirname}/*.js"]
+    }
+  ]
+}
