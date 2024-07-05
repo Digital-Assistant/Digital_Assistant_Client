@@ -8,7 +8,7 @@ import {UDAConsoleLogger} from "../config/error-log";
 
 /**
  * Old logic for searching elements
- * @param recordedNode
+ * @param recordedNode          
  * @param compareElements
  */
 export const searchNodes = (recordedNode, compareElements) => {

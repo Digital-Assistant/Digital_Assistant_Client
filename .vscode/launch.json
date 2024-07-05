@@ -1,0 +1,29 @@
+{
+    "version": "1.0.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Jest: debug current file",
+            "args": [
+                "${file}",
+                "--watch",
+                "--coverage=false",
+                "--no-cache"
+            ],
+            "program": "${workspaceFolder}/node_modules/jest/bin/jest",
+            // "program": "${workspaceFolder}/node_modules/jest/bin/jest",
+            // "program": "${file}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            // "sourceMaps": true,
+            "windows": {
+                "program": "${workspaceFolder}/node_modules/jest/bin/jest"
+            },
+            "skipFiles": [
+                "<node_internals>/**",
+                "${workspaceFolder}/node_modules/**/*.js"
+            ]
+        }
+    ]
+}
