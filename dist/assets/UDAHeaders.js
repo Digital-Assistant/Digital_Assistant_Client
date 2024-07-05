@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 var UdanLibrary;
 /******/ (function() { // webpackBootstrap
 /******/ 	"use strict";
@@ -133,3 +134,6 @@ UdanLibrary = __webpack_exports__;
 /******/ })()
 ;
 //# sourceMappingURL=UDAHeaders.js.map
+=======
+var UdanLibrary;(()=>{"use strict";var e={r:e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})}},t={};e.r(t);const i=["body","document","window","html","script","style","iframe","doctype","link","svg","path","meta","circle","rect","stop","defs","linearGradient","g"];var n;window.UDAClickObjects=[],window.UDARemovedClickObjects=[],EventTarget.prototype.addEventListener=(n=EventTarget.prototype.addEventListener,function(){"click"===arguments[0]&&(e=>{try{var t,n;let l={element:e,id:""};if(l.element===window)return;if(void 0===(null==l||null===(t=l.element)||void 0===t?void 0:t.tagName))return;let r=null==l||null===(n=l.element)||void 0===n?void 0:n.tagName;if(r&&-1!==i.indexOf(r.toLowerCase()))return;if(e.classList&&e.classList.contains("uda_exclude"))return;for(let e=0;e<UDAClickObjects.length;e++)if(UDAClickObjects[e].element.isSameNode(l.element))return;l.id=UDAClickObjects.length,UDAClickObjects.push(l)}catch(e){}})(this),n.call(this,arguments[0],arguments[1],arguments[2])}),UdanLibrary=t})();
+>>>>>>> 26f4371d2009adedbcbf213c05d9245d994885b4
