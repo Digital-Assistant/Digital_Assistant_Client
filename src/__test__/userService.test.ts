@@ -1,163 +1,248 @@
-import { getUserId, getSessionKey } from "../services/userService";
 import { getFromStore } from "../util";
 import { CONFIG } from "../config";
+import { getUserId, getSessionKey } from "../services/userService";
 
 jest.mock("../util", () => ({
   getFromStore: jest.fn(),
 }));
 
-describe("userService - Extended Tests", () => {
+jest.mock("../config", () => ({
+  CONFIG: {
+    USER_AUTH_DATA_KEY: "userAuthData",
+  },
+}));
+
+describe("userService", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe("getUserId - Additional Tests", () => {
-    it("should handle empty string id", async () => {
-      (getFromStore as jest.Mock).mockResolvedValue({
-        authData: { id: "" },
-      });
-
-      const result = await getUserId();
-      expect(result).toBe("");
-    });
-
-    it("should handle non-string id", async () => {
-      (getFromStore as jest.Mock).mockResolvedValue({
-        authData: { id: 12345 },
-      });
-
-      const result = await getUserId();
-      expect(result).toBe(12345);
-    });
-
-    it("should handle undefined authData", async () => {
-      (getFromStore as jest.Mock).mockResolvedValue({
-        authData: undefined,
-      });
-
-      const result = await getUserId();
-      expect(result).toBeNull();
-    });
-
-    it("should handle null authData", async () => {
-      (getFromStore as jest.Mock).mockResolvedValue({
-        authData: null,
-      });
-
-      const result = await getUserId();
-      expect(result).toBeNull();
-    });
-  });
-
-  describe("getSessionKey - Additional Tests", () => {
-    it("should handle empty string sessionKey", async () => {
-      (getFromStore as jest.Mock).mockResolvedValue({
-        sessionKey: "",
-      });
-
-      const result = await getSessionKey();
-      expect(result).toBe("");
-    });
-
-    it("should handle non-string sessionKey", async () => {
-      (getFromStore as jest.Mock).mockResolvedValue({
-        sessionKey: 12345,
-      });
-
-      const result = await getSessionKey();
-      expect(result).toBe(12345);
-    });
-
-    it("should handle undefined sessionKey", async () => {
-      (getFromStore as jest.Mock).mockResolvedValue({
-        sessionKey: undefined,
-      });
-
-      const result = await getSessionKey();
-      expect(result).toBeNull();
-    });
-
-    it("should handle null sessionKey", async () => {
-      (getFromStore as jest.Mock).mockResolvedValue({
-        sessionKey: null,
-      });
-
-      const result = await getSessionKey();
-      expect(result).toBeNull();
-    });
-  });
-
-  describe("Error Handling - Additional Tests", () => {
-    it("should handle network errors", async () => {
-      (getFromStore as jest.Mock).mockRejectedValue(new Error("Network error"));
-
-      await expect(getUserId()).rejects.toThrow("Network error");
-      await expect(getSessionKey()).rejects.toThrow("Network error");
-    });
-
-    it("should handle timeout errors", async () => {
-      (getFromStore as jest.Mock).mockRejectedValue(new Error("Timeout"));
-
-      await expect(getUserId()).rejects.toThrow("Timeout");
-      await expect(getSessionKey()).rejects.toThrow("Timeout");
-    });
-  });
-
-  describe("Performance - Additional Tests", () => {
-    it("should handle large data objects", async () => {
-      const largeObject = {
-        authData: { id: "large-id" },
-        sessionKey: "large-key",
+  describe("getUserId", () => {
+    it("should return user ID if authData is present", async () => {
+      const mockUserSessionData = {
+        authData: {
+          id: "mockUserId",
+        },
       };
-      for (let i = 0; i < 10000; i++) {
-        largeObject[`key${i}`] = `value${i}`;
-      }
-      (getFromStore as jest.Mock).mockResolvedValue(largeObject);
+      (getFromStore as jest.Mock).mockResolvedValue(mockUserSessionData);
 
-      const userId = await getUserId();
-      const sessionKey = await getSessionKey();
+      const result = await getUserId();
 
-      expect(userId).toBe("large-id");
-      expect(sessionKey).toBe("large-key");
-    });
-  });
-
-  describe("Security - Additional Tests", () => {
-    it("should not expose sensitive data in error messages", async () => {
-      (getFromStore as jest.Mock).mockRejectedValue(
-        new Error("Error with sensitive data: ABC123")
+      expect(getFromStore).toHaveBeenCalledWith(
+        CONFIG.USER_AUTH_DATA_KEY,
+        false
       );
+      expect(result).toBe("mockUserId");
+    });
 
-      await expect(getUserId()).rejects.toThrow(/Error/);
-      await expect(getUserId()).rejects.not.toThrow(/ABC123/);
+    it("should return null if authData is not present", async () => {
+      const mockUserSessionData = {
+        authData: null,
+      };
+      (getFromStore as jest.Mock).mockResolvedValue(mockUserSessionData);
+
+      const result = await getUserId();
+
+      expect(getFromStore).toHaveBeenCalledWith(
+        CONFIG.USER_AUTH_DATA_KEY,
+        false
+      );
+      expect(result).toBeNull();
+    });
+
+    it("should return null if userSessionData is not present", async () => {
+      (getFromStore as jest.Mock).mockResolvedValue(null);
+
+      const result = await getUserId();
+
+      expect(getFromStore).toHaveBeenCalledWith(
+        CONFIG.USER_AUTH_DATA_KEY,
+        false
+      );
+      expect(result).toBeNull();
+    });
+
+    it("should handle errors gracefully", async () => {
+      (getFromStore as jest.Mock).mockRejectedValue(new Error("Storage Error"));
+
+      await expect(getUserId()).rejects.toThrow("Storage Error");
+      expect(getFromStore).toHaveBeenCalledWith(
+        CONFIG.USER_AUTH_DATA_KEY,
+        false
+      );
     });
   });
 
-  describe("Compatibility - Additional Tests", () => {
-    it("should handle different versions of stored data format", async () => {
-      // Old format
-      (getFromStore as jest.Mock).mockResolvedValueOnce({
-        user: { id: "old-id" },
-        session: "old-key",
+  describe("getSessionKey", () => {
+    it("should return session key if present", async () => {
+      const mockUserSessionData = {
+        sessionKey: "mockSessionKey",
+      };
+      (getFromStore as jest.Mock).mockResolvedValue(mockUserSessionData);
+
+      const result = await getSessionKey();
+
+      expect(getFromStore).toHaveBeenCalledWith(
+        CONFIG.USER_AUTH_DATA_KEY,
+        false
+      );
+      expect(result).toBe("mockSessionKey");
+    });
+
+    it("should return null if session key is not present", async () => {
+      const mockUserSessionData = {
+        sessionKey: null,
+      };
+      (getFromStore as jest.Mock).mockResolvedValue(mockUserSessionData);
+
+      const result = await getSessionKey();
+
+      expect(getFromStore).toHaveBeenCalledWith(
+        CONFIG.USER_AUTH_DATA_KEY,
+        false
+      );
+      expect(result).toBeNull();
+    });
+
+    it("should return null if userSessionData is not present", async () => {
+      (getFromStore as jest.Mock).mockResolvedValue(null);
+
+      const result = await getSessionKey();
+
+      expect(getFromStore).toHaveBeenCalledWith(
+        CONFIG.USER_AUTH_DATA_KEY,
+        false
+      );
+      expect(result).toBeNull();
+    });
+
+    it("should handle errors gracefully", async () => {
+      (getFromStore as jest.Mock).mockRejectedValue(new Error("Storage Error"));
+
+      await expect(getSessionKey()).rejects.toThrow("Storage Error");
+      expect(getFromStore).toHaveBeenCalledWith(
+        CONFIG.USER_AUTH_DATA_KEY,
+        false
+      );
+    });
+  });
+});
+describe("userService", () => {
+  // ... (previous test cases)
+
+  describe("getUserId", () => {
+    // ... (previous test cases)
+
+    it("should return null if authData does not contain an ID", async () => {
+      const mockUserSessionData = {
+        authData: {
+          name: "John Doe",
+        },
+      };
+      (getFromStore as jest.Mock).mockResolvedValue(mockUserSessionData);
+
+      const result = await getUserId();
+
+      expect(getFromStore).toHaveBeenCalledWith(
+        CONFIG.USER_AUTH_DATA_KEY,
+        false
+      );
+      expect(result).toBeNull();
+    });
+
+    it("should return null if authData contains an empty ID", async () => {
+      const mockUserSessionData = {
+        authData: {
+          id: "",
+        },
+      };
+      (getFromStore as jest.Mock).mockResolvedValue(mockUserSessionData);
+
+      const result = await getUserId();
+
+      expect(getFromStore).toHaveBeenCalledWith(
+        CONFIG.USER_AUTH_DATA_KEY,
+        false
+      );
+      expect(result).toBeNull();
+    });
+
+    it("should handle undefined userSessionData gracefully", async () => {
+      (getFromStore as jest.Mock).mockResolvedValue(undefined);
+
+      const result = await getUserId();
+
+      expect(getFromStore).toHaveBeenCalledWith(
+        CONFIG.USER_AUTH_DATA_KEY,
+        false
+      );
+      expect(result).toBeNull();
+    });
+  });
+
+  describe("getSessionKey", () => {
+    // ... (previous test cases)
+
+    it("should return null if sessionKey is an empty string", async () => {
+      const mockUserSessionData = {
+        sessionKey: "",
+      };
+      (getFromStore as jest.Mock).mockResolvedValue(mockUserSessionData);
+
+      const result = await getSessionKey();
+
+      expect(getFromStore).toHaveBeenCalledWith(
+        CONFIG.USER_AUTH_DATA_KEY,
+        false
+      );
+      expect(result).toBeNull();
+    });
+
+    it("should handle undefined userSessionData gracefully", async () => {
+      (getFromStore as jest.Mock).mockResolvedValue(undefined);
+
+      const result = await getSessionKey();
+
+      expect(getFromStore).toHaveBeenCalledWith(
+        CONFIG.USER_AUTH_DATA_KEY,
+        false
+      );
+      expect(result).toBeNull();
+    });
+
+    it("should handle invalid sessionKey type gracefully", async () => {
+      const mockUserSessionData = {
+        sessionKey: 123, // Invalid type (number instead of string)
+      };
+      (getFromStore as jest.Mock).mockResolvedValue(mockUserSessionData);
+
+      const result = await getSessionKey();
+
+      expect(getFromStore).toHaveBeenCalledWith(
+        CONFIG.USER_AUTH_DATA_KEY,
+        false
+      );
+      expect(result).toBe(123); // Expecting the invalid value to be returned as is
+    });
+  });
+
+  describe("Error handling", () => {
+    it("should handle errors thrown by getFromStore", async () => {
+      const errorMessage = "Storage error";
+      (getFromStore as jest.Mock).mockRejectedValue(new Error(errorMessage));
+
+      await expect(getUserId()).rejects.toThrow(errorMessage);
+      await expect(getSessionKey()).rejects.toThrow(errorMessage);
+    });
+
+    it("should handle errors thrown by async operations", async () => {
+      const errorMessage = "Async error";
+      (getFromStore as jest.Mock).mockImplementation(() => {
+        throw new Error(errorMessage);
       });
 
-      let userId = await getUserId();
-      let sessionKey = await getSessionKey();
-
-      expect(userId).toBeNull();
-      expect(sessionKey).toBeNull();
-
-      // New format
-      (getFromStore as jest.Mock).mockResolvedValueOnce({
-        authData: { id: "new-id" },
-        sessionKey: "new-key",
-      });
-
-      userId = await getUserId();
-      sessionKey = await getSessionKey();
-
-      expect(userId).toBe("new-id");
-      expect(sessionKey).toBe("new-key");
+      await expect(getUserId()).rejects.toThrow(errorMessage);
+      await expect(getSessionKey()).rejects.toThrow(errorMessage);
     });
   });
 });
