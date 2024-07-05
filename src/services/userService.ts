@@ -10,8 +10,8 @@ import {CONFIG} from "../config";
  */
 export const getUserId = async () => {
   let userSessionData = await getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
-  if(userSessionData && userSessionData.authdata){
-    return userSessionData.authdata.id;
+  if(userSessionData && userSessionData.authData){
+    return userSessionData.authData.id;
   } else {
     return null;
   }
@@ -22,8 +22,8 @@ export const getUserId = async () => {
  */
 export const getSessionKey = async () => {
   let userSessionData = await getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
-  if(userSessionData && userSessionData.sessionkey){
-    return userSessionData.sessionkey;
+  if(userSessionData && userSessionData.sessionKey){
+    return userSessionData.sessionKey;
   } else {
     return null;
   }

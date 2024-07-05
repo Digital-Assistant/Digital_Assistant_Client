@@ -30,6 +30,7 @@ import {translate} from "../util/translation";
 import {removeToolTip} from "../util/addToolTip";
 import {getClickedNodeLabel} from "../util/getClickedNodeLabel";
 import {getVoteRecord, vote} from "../services/userVote";
+import {addNotification} from "../util/addNotification";
 
 
 
@@ -94,13 +95,25 @@ export const RecordSequenceDetails = (props: MProps) => {
       return;
     }
     const playItem = getCurrentPlayItem();
-    if (playItem.node && matchNode(playItem)) {
-      updateStatus(playItem.index);
+    if (playItem.node) {
+      if(matchNode(playItem)) {
+        updateStatus(playItem.index);
+      } else {
+        await recordUserClickData('playBackError', getName(), selectedRecordingDetails.id);
+        pause();
+        removeToolTip();
+        trigger("openPanel", {action: 'openPanel'});
+      }
     } else {
       await recordUserClickData('playCompleted', getName(), selectedRecordingDetails.id);
       pause();
       removeToolTip();
-      trigger("openPanel", {action: 'openPanel'});
+      if(!props?.config?.enableHidePanelAfterCompletion) {
+        trigger("openPanel", {action: 'openPanel'});
+      } else {
+        addNotification(translate('autoplayCompletedTitle'), translate('autoplayCompleted'), 'success');
+        backNav(true, false);
+      }
     }
   };
 
@@ -146,9 +159,11 @@ export const RecordSequenceDetails = (props: MProps) => {
   /**
    * Navigates back to search results card
    */
-  const backNav = async (forceRefresh = false) => {
+  const backNav = async (forceRefresh = false, openPanel = true) => {
     await recordUserClickData('backToSearchResults', getName(), selectedRecordingDetails.id);
-    trigger("openPanel", {action: 'openPanel'});
+    if(openPanel) {
+      trigger("openPanel", {action: 'openPanel'});
+    }
     resetStatus();
     removeToolTip();
     if (props.cancelHandler) props.cancelHandler(forceRefresh);

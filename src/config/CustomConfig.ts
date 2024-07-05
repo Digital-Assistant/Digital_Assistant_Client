@@ -22,7 +22,11 @@ export interface CustomConfigPropTypes {
   enableSpeechToText: boolean,
   enableSlowReplay: boolean,
   enableCustomIcon: boolean,
-  customIcon: string
+  customIcon: string,
+  realm: string,
+  clientId: string,
+  clientSecret: string,
+  enableHidePanelAfterCompletion: boolean
 }
 
 // assigning default values to the default configuration
@@ -37,12 +41,16 @@ export const CustomConfig: CustomConfigPropTypes = {
   enableProfanity: false, // Flag for enabling profanity check
   enableRecording: true, // Flag for enabling recording functionality
   enableOverlay: true, // Flag for enabling overlay functionality or enabling squeeze functionality
-  environment: 'TEST',
+  environment: 'PROD', // Environment variable
   enableUdaIcon: true,
   udaDivId: 'uda-nistapp-logo',
   enableForAllDomains: false, // Flag to enable all the recording to be visible across all domains
   enableSpeechToText: false, // Flag to enable speech to text
   enableSlowReplay: false, // Flag to enable slow playback
   enableCustomIcon: false, // Flag to enable custom icon
-  customIcon: 'https://udan.nistapp.com/uda-logo.jpg'
+  customIcon: 'https://udan.nistapp.com/uda-logo.jpg',
+  realm: process.env.keycloakRealm,
+  clientId: process.env.keycloakClientId,
+  clientSecret: process.env.keycloakClientSecret,
+  enableHidePanelAfterCompletion: false
 };

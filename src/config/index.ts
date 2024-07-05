@@ -246,7 +246,7 @@ export const CONFIG = {
     return CONFIG.multilingual.enabled;
   },
   cspUserAcceptance: {
-    storageName: "uda-csp-user-consent",
+    storageName: "uda-csp-enabled",
     data: {proceed: true},
   },
   screenAcceptance: {
