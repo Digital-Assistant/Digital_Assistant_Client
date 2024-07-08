@@ -1,69 +1,189 @@
-import { getUserId, getSessionKey } from '../services/userService';
+import { recordClicks, updateRecordClicks, recordSequence, userClick, deleteRecording, updateRecording, profanityCheck, saveClickData, postRecordSequenceData, recordUserClickData } from './recordService';
+import { getSessionKey, getUserId } from './userService';
+import { ENDPOINT } from '../config/endpoints';
+import { REST } from '.';
 import { getFromStore } from '../util';
 import { CONFIG } from '../config';
 
-jest.mock('../util');
+jest.mock('./userService', () => ({
+  getSessionKey: jest.fn(),
+  getUserId: jest.fn(),
+}));
 
-describe('userService - Additional Tests', () => {
+jest.mock('.', () => ({
+  REST: {
+    apiCal: jest.fn(),
+  },
+}));
+
+jest.mock('../util', () => ({
+  getFromStore: jest.fn(),
+}));
+
+describe('recordService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('getUserId - Additional Tests', () => {
-    it('should handle non-object user session data', async () => {
-      (getFromStore as jest.Mock).mockResolvedValue('not an object');
-      const result = await getUserId();
-      expect(result).toBeNull();
-    });
+  describe('recordClicks', () => {
+    it('should call REST.apiCal with the correct parameters', async () => {
+      const mockRequest = { id: 'click123' };
+      const mockSessionKey = 'session123';
+      (getSessionKey as jest.Mock).mockResolvedValueOnce(mockSessionKey);
 
-    it('should handle user session data with null authdata', async () => {
-      (getFromStore as jest.Mock).mockResolvedValue({ authdata: null });
-      const result = await getUserId();
-      expect(result).toBeNull();
-    });
+      await recordClicks(mockRequest);
 
-    it('should handle user session data with undefined authdata', async () => {
-      (getFromStore as jest.Mock).mockResolvedValue({ authdata: undefined });
-      const result = await getUserId();
-      expect(result).toBeNull();
-    });
-
-    it('should handle user session data with non-object authdata', async () => {
-      (getFromStore as jest.Mock).mockResolvedValue({ authdata: 'not an object' });
-      const result = await getUserId();
-      expect(result).toBeNull();
+      expect(getSessionKey).toHaveBeenCalled();
+      expect(REST.apiCal).toHaveBeenCalledWith({
+        url: ENDPOINT.Record,
+        method: 'POST',
+        body: {
+          ...mockRequest,
+          sessionid: mockSessionKey,
+        },
+      });
     });
   });
 
-  describe('getSessionKey - Additional Tests', () => {
-    it('should handle non-object user session data', async () => {
-      (getFromStore as jest.Mock).mockResolvedValue('not an object');
-      const result = await getSessionKey();
-      expect(result).toBeNull();
-    });
+  describe('updateRecordClicks', () => {
+    it('should call REST.apiCal with the correct parameters', async () => {
+      const mockRequest = { id: 'click123' };
+      const mockSessionKey = 'session123';
+      (getSessionKey as jest.Mock).mockResolvedValueOnce(mockSessionKey);
 
-    it('should handle user session data with null sessionkey', async () => {
-      (getFromStore as jest.Mock).mockResolvedValue({ sessionkey: null });
-      const result = await getSessionKey();
-      expect(result).toBeNull();
-    });
+      await updateRecordClicks(mockRequest);
 
-    it('should handle user session data with undefined sessionkey', async () => {
-      (getFromStore as jest.Mock).mockResolvedValue({ sessionkey: undefined });
-      const result = await getSessionKey();
-      expect(result).toBeNull();
+      expect(getSessionKey).toHaveBeenCalled();
+      expect(REST.apiCal).toHaveBeenCalledWith({
+        url: ENDPOINT.UpdateRecord,
+        method: 'POST',
+        body: {
+          ...mockRequest,
+          sessionid: mockSessionKey,
+        },
+      });
     });
   });
 
-  describe('Error Handling - Additional Tests', () => {
-    it('should handle getFromStore throwing an error in getUserId', async () => {
-      (getFromStore as jest.Mock).mockRejectedValue(new Error('Storage error'));
-      await expect(getUserId()).rejects.toThrow('Storage error');
-    });
+  describe('recordSequence', () => {
+    it('should call REST.apiCal with the correct parameters', async () => {
+      const mockRequest = { id: 'sequence123' };
+      const mockUserId = 'user123';
+      (getUserId as jest.Mock).mockResolvedValueOnce(mockUserId);
 
-    it('should handle getFromStore throwing an error in getSessionKey', async () => {
-      (getFromStore as jest.Mock).mockRejectedValue(new Error('Storage error'));
-      await expect(getSessionKey()).rejects.toThrow('Storage error');
+      await recordSequence(mockRequest);
+
+      expect(getUserId).toHaveBeenCalled();
+      expect(REST.apiCal).toHaveBeenCalledWith({
+        url: ENDPOINT.RecordSequence,
+        method: 'POST',
+        body: {
+          ...mockRequest,
+          usersessionid: mockUserId,
+        },
+      });
+    });
+  });
+
+  describe('userClick', () => {
+    it('should call REST.apiCal with the correct parameters', async () => {
+      const mockRequest = { id: 'click123' };
+      const mockUserId = 'user123';
+      (getUserId as jest.Mock).mockResolvedValueOnce(mockUserId);
+
+      await userClick(mockRequest);
+
+      expect(getUserId).toHaveBeenCalled();
+      expect(REST.apiCal).toHaveBeenCalledWith({
+        url: ENDPOINT.UserClick,
+        method: 'PUT',
+        body: {
+          ...mockRequest,
+          usersessionid: mockUserId,
+          clickedname: window.location.host,
+        },
+      });
+    });
+  });
+
+  describe('deleteRecording', () => {
+    it('should call REST.apiCal with the correct parameters', async () => {
+      const mockRequest = { id: 'sequence123' };
+      const mockUserId = 'user123';
+      (getUserId as jest.Mock).mockResolvedValueOnce(mockUserId);
+
+      await deleteRecording(mockRequest);
+
+      expect(getUserId).toHaveBeenCalled();
+      expect(REST.apiCal).toHaveBeenCalledWith({
+        url: ENDPOINT.DeleteSequence,
+        method: 'POST',
+        body: {
+          ...mockRequest,
+          usersessionid: mockUserId,
+        },
+      });
+    });
+  });
+
+  describe('updateRecording', () => {
+    it('should call REST.apiCal with the correct parameters', async () => {
+      const mockRequest = { id: 'sequence123' };
+      const mockUserId = 'user123';
+      (getUserId as jest.Mock).mockResolvedValueOnce(mockUserId);
+
+      await updateRecording(mockRequest);
+
+      expect(getUserId).toHaveBeenCalled();
+      expect(REST.apiCal).toHaveBeenCalledWith({
+        url: ENDPOINT.updateRecordSequence,
+        method: 'POST',
+        body: {
+          ...mockRequest,
+          usersessionid: mockUserId,
+        },
+      });
+    });
+  });
+
+  describe('profanityCheck', () => {
+    it('should call REST.apiCal with the correct parameters', async () => {
+      const mockRequest = 'test text';
+
+      await profanityCheck(mockRequest);
+
+      expect(REST.apiCal).toHaveBeenCalledWith({
+        url: ENDPOINT.ProfanityCheck,
+        method: 'POST',
+        body: mockRequest,
+        headers: expect.any(Headers),
+      });
+    });
+  });
+
+  describe('saveClickData', () => {
+    it('should return false if screen size is not available', async () => {
+      const mockNode = document.createElement('div');
+      const mockText = 'test text';
+      const mockMeta = {};
+
+      const result = await saveClickData(mockNode, mockText, mockMeta);
+
+      expect(result).toBe(false);
+    });
+  });
+
+  describe('postRecordSequenceData', () => {
+    it('should call recordSequence with the correct parameters', async () => {
+      const mockRequest = { id: 'sequence123' };
+      const mockUserClickNodes = [{ id: 'click1' }, { id: 'click2' }];
+      (getFromStore as jest.Mock).mockReturnValueOnce(mockUserClickNodes);
+
+      await postRecordSequenceData(mockRequest);
+
+      expect(getFromStore).toHaveBeenCalled();
+      expect(recordSequence).toHaveBeenCalledWith(mockRequest);
     });
   });
 });
+

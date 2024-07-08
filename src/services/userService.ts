@@ -2,17 +2,25 @@
  * @author Yureswar Ravuri
  */
 
-import {getFromStore} from "../util";
-import {CONFIG} from "../config";
+import { getFromStore } from "../util";
+import { CONFIG } from "../config";
+import { UDAErrorLogger } from "../config/error-log";
 
 /**
  * For getting user id from the storage
  */
-export const getUserId = async () => {
-  let userSessionData = await getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
-  if(userSessionData && userSessionData.authData){
+export const getUserId = async (): Promise<string | null> => {
+  try {
+    const userSessionData = await getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
+    if (!userSessionData || typeof userSessionData !== 'object') {
+      throw new Error('User session data is missing or invalid');
+    }
+    if (!userSessionData.authData || typeof userSessionData.authData.id !== 'string') {
+      throw new Error('User ID is missing or invalid');
+    }
     return userSessionData.authData.id;
-  } else {
+  } catch (error) {
+    UDAErrorLogger.error('Error retrieving user ID', error);
     return null;
   }
 }
@@ -20,11 +28,18 @@ export const getUserId = async () => {
 /**
  * For getting session id from the storage
  */
-export const getSessionKey = async () => {
-  let userSessionData = await getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
-  if(userSessionData && userSessionData.sessionKey){
+export const getSessionKey = async (): Promise<string | null> => {
+  try {
+    const userSessionData = await getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
+    if (!userSessionData || typeof userSessionData !== 'object') {
+      throw new Error('User session data is missing or invalid');
+    }
+    if (typeof userSessionData.sessionKey !== 'string') {
+      throw new Error('Session key is missing or invalid');
+    }
     return userSessionData.sessionKey;
-  } else {
+  } catch (error) {
+    UDAErrorLogger.error('Error retrieving session key', error);
     return null;
   }
 }
