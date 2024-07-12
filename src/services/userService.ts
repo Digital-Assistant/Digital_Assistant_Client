@@ -1,14 +1,7 @@
-/**
- * @author Yureswar Ravuri
- */
-
 import { getFromStore } from "../util";
 import { CONFIG } from "../config";
 import { UDAErrorLogger } from "../config/error-log";
 
-/**
- * For getting user id from the storage
- */
 export const getUserId = async (): Promise<string | null> => {
   try {
     const userSessionData = await getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
@@ -25,9 +18,6 @@ export const getUserId = async (): Promise<string | null> => {
   }
 }
 
-/**
- * For getting session id from the storage
- */
 export const getSessionKey = async (): Promise<string | null> => {
   try {
     const userSessionData = await getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);

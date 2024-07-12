@@ -3,12 +3,6 @@ import { ENDPOINT } from "../config/endpoints";
 import { REST } from "./index";
 import { UDAErrorLogger } from "../config/error-log";
 
-/**
- * To vote/de-vote the recording
- * @param request
- * @param type
- * @returns promise
- */
 export const vote = async (request?: any, type?: string): Promise<any> => {
   try {
     if (!request || !request.id) {
