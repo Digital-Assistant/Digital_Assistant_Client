@@ -9,6 +9,7 @@ import domJSON from "domjson";
 import mapClickedElementToHtmlFormElement from "../util/recording-utils/mapClickedElementToHtmlFormElement";
 import {UDAConsoleLogger} from "../config/error-log";
 import {fetchDomain} from "../util/fetchDomain";
+import ReactGA from "react-ga4";
 
 declare global {
   interface Window {
@@ -225,5 +226,16 @@ export const recordUserClickData = async (clickType='sequencerecord', clickedNam
     clicktype: clickType,
     recordid: recordId,
   };
+
+  // Sending events to google analytics
+  ReactGA.event({
+    category: clickType,
+    action: clickType,
+    label: clickedName,
+    value: recordId,
+    nonInteraction: true,
+    transport: "xhr",
+  });
+
   return await userClick(payload);
 };

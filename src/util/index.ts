@@ -74,7 +74,6 @@ export const squeezeBody = async (hide: boolean) => {
   await initSpecialNodes();
   if(!global.UDAGlobalConfig.enableOverlay) {
     let documentBody = document.body;
-    let bodyChildren: any = documentBody.childNodes;
     if (!hide) {
       documentBody.style.maxWidth = '77%';
       documentBody.style.minWidth = '77%';
