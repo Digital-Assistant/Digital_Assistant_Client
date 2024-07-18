@@ -15,129 +15,170 @@ jest.mock('./index', () => ({
   }
 }));
 
+/**
+ * Clears all mocks after each test suite for the `searchService` module.
+ */
 describe('searchService', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
+});
 
-  describe('fetchSearchResults', () => {
-    it('should call REST.apiCal with the correct parameters', async () => {
-      const mockUserId = '123456789';
-      const mockRequest = {
-        keyword: 'test',
-        page: 1,
-        domain: 'example.com',
-        additionalParams: { foo: 'bar' }
-      };
+  // Test suite for the fetchSearchResults function
+describe('fetchSearchResults', () => {
+  // Test case to verify REST.apiCal is called with correct parameters including additionalParams
+  it('should call REST.apiCal with the correct parameters', async () => {
+    // Mock data setup
+    const mockUserId = '123456789';
+    const mockRequest = {
+      keyword: 'test',
+      page: 1,
+      domain: 'example.com',
+      additionalParams: { foo: 'bar' }
+    };
 
-      jest.spyOn(require('./userService'), 'getUserId').mockResolvedValue(mockUserId);
-      jest.spyOn(require('./index'), 'REST').mockReturnValue({
-        apiCal: jest.fn(),
-        processArgs: jest.fn().mockReturnValue(ENDPOINT.SearchWithPermissions)
-      });
-
-      await fetchSearchResults(mockRequest);
-
-      expect(REST.processArgs).toHaveBeenCalledWith(ENDPOINT.SearchWithPermissions, {
-        ...mockRequest,
-        userSessionId: mockUserId
-      });
-      expect(REST.apiCal).toHaveBeenCalledWith({
-        url: ENDPOINT.SearchWithPermissions,
-        method: 'GET'
-      });
+    // Mock dependencies
+    jest.spyOn(require('./userService'), 'getUserId').mockResolvedValue(mockUserId);
+    jest.spyOn(require('./index'), 'REST').mockReturnValue({
+      apiCal: jest.fn(),
+      processArgs: jest.fn().mockReturnValue(ENDPOINT.SearchWithPermissions)
     });
 
-    it('should call REST.apiCal with the correct parameters without additionalParams', async () => {
-      const mockUserId = '123456789';
-      const mockRequest = {
-        keyword: 'test',
-        page: 1,
-        domain: 'example.com'
-      };
+    // Call the function being tested
+    await fetchSearchResults(mockRequest);
 
-      jest.spyOn(require('./userService'), 'getUserId').mockResolvedValue(mockUserId);
-      jest.spyOn(require('./index'), 'REST').mockReturnValue({
-        apiCal: jest.fn(),
-        processArgs: jest.fn().mockReturnValue(ENDPOINT.Search)
-      });
-
-      await fetchSearchResults(mockRequest);
-
-      expect(REST.processArgs).toHaveBeenCalledWith(ENDPOINT.Search, {
-        ...mockRequest,
-        userSessionId: mockUserId
-      });
-      expect(REST.apiCal).toHaveBeenCalledWith({
-        url: ENDPOINT.Search,
-        method: 'GET'
-      });
+    // Assertions
+    expect(REST.processArgs).toHaveBeenCalledWith(ENDPOINT.SearchWithPermissions, {
+      ...mockRequest,
+      userSessionId: mockUserId
     });
-
-    it('should call recordUserClickData with the correct parameters', async () => {
-      const mockUserId = '123456789';
-      const mockRequest = {
-        keyword: 'test',
-        page: 1,
-        domain: 'example.com',
-        additionalParams: { foo: 'bar' }
-      };
-
-      jest.spyOn(require('./userService'), 'getUserId').mockResolvedValue(mockUserId);
-      jest.spyOn(require('./index'), 'REST').mockReturnValue({
-        apiCal: jest.fn(),
-        processArgs: jest.fn().mockReturnValue(ENDPOINT.SearchWithPermissions)
-      });
-      jest.spyOn(require('./recordService'), 'recordUserClickData').mockReturnValue(Promise.resolve());
-
-      await fetchSearchResults(mockRequest);
-
-      expect(recordUserClickData).toHaveBeenCalledWith('search', mockRequest.keyword);
+    expect(REST.apiCal).toHaveBeenCalledWith({
+      url: ENDPOINT.SearchWithPermissions,
+      method: 'GET'
     });
   });
 
-  describe('fetchRecord', () => {
-    it('should call REST.apiCal with the correct parameters', async () => {
-      const mockUserId = '123456789';
-      const mockRequest = {
-        id: 'abc123',
-        domain: 'example.com',
-        additionalParams: { foo: 'bar' }
-      };
+  // Test case to verify REST.apiCal is called with correct parameters without additionalParams
+  it('should call REST.apiCal with the correct parameters without additionalParams', async () => {
+    // Mock data setup
+    const mockUserId = '123456789';
+    const mockRequest = {
+      keyword: 'test',
+      page: 1,
+      domain: 'example.com'
+    };
 
-      jest.spyOn(require('./userService'), 'getUserId').mockResolvedValue(mockUserId);
-
-      await fetchRecord(mockRequest);
-
-      expect(REST.apiCal).toHaveBeenCalledWith({
-        url: `${ENDPOINT.fetchRecord}/withPermissions/${mockRequest.id}?domain=${mockRequest.domain}&additionalParams=${mockRequest.additionalParams}&userSessionId=${mockUserId}`,
-        method: 'GET'
-      });
+    // Mock dependencies
+    jest.spyOn(require('./userService'), 'getUserId').mockResolvedValue(mockUserId);
+    jest.spyOn(require('./index'), 'REST').mockReturnValue({
+      apiCal: jest.fn(),
+      processArgs: jest.fn().mockReturnValue(ENDPOINT.Search)
     });
 
-    it('should call REST.apiCal with the correct parameters without additionalParams', async () => {
-      const mockUserId = '123456789';
-      const mockRequest = {
-        id: 'abc123',
-        domain: 'example.com'
-      };
+    // Call the function being tested
+    await fetchSearchResults(mockRequest);
 
-      jest.spyOn(require('./userService'), 'getUserId').mockResolvedValue(mockUserId);
-
-      await fetchRecord(mockRequest);
-
-      expect(REST.apiCal).toHaveBeenCalledWith({
-        url: `${ENDPOINT.fetchRecord}/${mockRequest.id}?domain=${mockRequest.domain}`,
-        method: 'GET'
-      });
+    // Assertions
+    expect(REST.processArgs).toHaveBeenCalledWith(ENDPOINT.Search, {
+      ...mockRequest,
+      userSessionId: mockUserId
     });
-  });
-
-  describe('fetchSpecialNodes', () => {
-    it('should return the specialNodes object', async () => {
-      const result = await fetchSpecialNodes();
-
-      expect(result).toEqual(specialNodes);
+    expect(REST.apiCal).toHaveBeenCalledWith({
+      url: ENDPOINT.Search,
+      method: 'GET'
     });
   });
 });
+
+// Test suite for fetchSearchResults (continued)
+describe('fetchSearchResults', () => {
+  // Test case to verify recordUserClickData is called with correct parameters
+  it('should call recordUserClickData with the correct parameters', async () => {
+    // Mock data setup
+    const mockUserId = '123456789';
+    const mockRequest = {
+      keyword: 'test',
+      page: 1,
+      domain: 'example.com',
+      additionalParams: { foo: 'bar' }
+    };
+
+    // Mock dependencies
+    jest.spyOn(require('./userService'), 'getUserId').mockResolvedValue(mockUserId);
+    jest.spyOn(require('./index'), 'REST').mockReturnValue({
+      apiCal: jest.fn(),
+      processArgs: jest.fn().mockReturnValue(ENDPOINT.SearchWithPermissions)
+    });
+    jest.spyOn(require('./recordService'), 'recordUserClickData').mockReturnValue(Promise.resolve());
+
+    // Call the function being tested
+    await fetchSearchResults(mockRequest);
+
+    // Assertion
+    expect(recordUserClickData).toHaveBeenCalledWith('search', mockRequest.keyword);
+  });
+});
+
+// Test suite for fetchRecord function
+describe('fetchRecord', () => {
+  // Test case to verify REST.apiCal is called with correct parameters
+  it('should call REST.apiCal with the correct parameters', async () => {
+    // Mock data setup
+    const mockUserId = '123456789';
+    const mockRequest = {
+      id: 'abc123',
+      domain: 'example.com',
+      additionalParams: { foo: 'bar' }
+    };
+
+    // Mock dependency
+    jest.spyOn(require('./userService'), 'getUserId').mockResolvedValue(mockUserId);
+
+    // Call the function being tested
+    await fetchRecord(mockRequest);
+
+    // Assertion
+    expect(REST.apiCal).toHaveBeenCalledWith({
+      url: `${ENDPOINT.fetchRecord}/withPermissions/${mockRequest.id}?domain=${mockRequest.domain}&additionalParams=${mockRequest.additionalParams}&userSessionId=${mockUserId}`,
+      method: 'GET'
+    });
+  });
+});
+
+// Test suite for fetchRecord (continued)
+describe('fetchRecord', () => {
+  // Test case to verify REST.apiCal is called with correct parameters without additionalParams
+  it('should call REST.apiCal with the correct parameters without additionalParams', async () => {
+    // Mock data setup
+    const mockUserId = '123456789';
+    const mockRequest = {
+      id: 'abc123',
+      domain: 'example.com'
+    };
+
+    // Mock dependency
+    jest.spyOn(require('./userService'), 'getUserId').mockResolvedValue(mockUserId);
+
+    // Call the function being tested
+    await fetchRecord(mockRequest);
+
+    // Assertion
+    expect(REST.apiCal).toHaveBeenCalledWith({
+      url: `${ENDPOINT.fetchRecord}/${mockRequest.id}?domain=${mockRequest.domain}`,
+      method: 'GET'
+    });
+  });
+});
+
+// Test suite for fetchSpecialNodes function
+describe('fetchSpecialNodes', () => {
+  // Test case to verify fetchSpecialNodes returns the specialNodes object
+  it('should return the specialNodes object', async () => {
+    // Call the function being tested
+    const result = await fetchSpecialNodes();
+
+    // Assertion
+    expect(result).toEqual(specialNodes);
+  });
+});
+
