@@ -12,6 +12,11 @@ import {
   getTranslationResult,
 } from "./translateService";
 
+/**
+ * Sets up mocks for the `userService` and `REST` modules before each test in the `translateService` test suite.
+ *
+ * This code sets up mocks for the `getSessionKey` function from the `userService` module and the `apiCall` function from the `REST` module. The mocks are cleared before each test in the `translateService` test suite using the `jest.clearAllMocks()` function.
+ */
 jest.mock("../services/userService", () => ({
   getSessionKey: jest.fn(),
 }));

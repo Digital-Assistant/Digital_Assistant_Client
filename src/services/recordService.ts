@@ -10,6 +10,11 @@ import mapClickedElementToHtmlFormElement from "../util/recording-utils/mapClick
 import { UDAConsoleLogger, UDAErrorLogger } from "../config/error-log";
 import { fetchDomain } from "../util/fetchDomain";
 
+/**
+ * Extends the global `Window` interface to include two properties:
+ * - `isRecording`: a boolean indicating whether recording is currently in progress
+ * - `domJSON`: a reference to the `domjson` library, which is used for JSON serialization of DOM elements
+ */
 declare global {
   interface Window {
     isRecording: boolean;

@@ -10,6 +10,17 @@ import { UDAErrorLogger } from "../config/error-log";
  * @returns promise
  */
 
+/**
+ * Fetches search results based on the provided request parameters.
+ *
+ * @param request - An object containing the search parameters:
+ *   - keyword: The search keyword (optional)
+ *   - page: The page number of the search results
+ *   - domain: The domain to search within (optional)
+ *   - additionalParams: Additional parameters to include in the search request (optional)
+ *   - userSessionId: The user session ID (optional)
+ * @returns A promise that resolves to the search results.
+ */
 export const fetchSearchResults = async (request?: {
   keyword?: string;
   page: number;

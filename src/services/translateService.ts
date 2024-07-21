@@ -1,6 +1,15 @@
 import { CONFIG } from "../config";
 import { UDAErrorLogger } from "../config/error-log";
 
+/**
+ * Translates the given text from the specified source language to the target language.
+ *
+ * @param text - The text to be translated.
+ * @param sourceLang - The source language code.
+ * @param targetLang - The target language code (default is 'en').
+ * @returns A Promise that resolves to the translated text.
+ * @throws {Error} If required parameters are missing, the translation configuration is missing, or the translation API fails.
+ */
 export const translateText = async (
   text: string,
   sourceLang: string,
