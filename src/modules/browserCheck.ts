@@ -1,6 +1,13 @@
 export const UDABrowserCheck = {
+  /**
+   * Checks if the given user agent string belongs to the Chrome browser.
+   *
+   * @param {string} userAgent - The user agent string to be tested.
+   * @returns {boolean} `true` if the user agent belongs to Chrome, `false` otherwise.
+   */
   isChrome: function (userAgent: string): boolean {
     try {
+      // Exclude user agents that contain "Chrome" but are not the actual Chrome browser
       return (
         userAgent.includes("Chrome") &&
         !userAgent.includes("Chromium") &&

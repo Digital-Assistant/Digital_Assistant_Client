@@ -80,6 +80,13 @@ describe("UDABrowserCheck", () => {
     // Add test cases for other browsers
   });
 
+  /**
+   * Tests that the `retrieveVersion` method of the `UDABrowserCheck` class correctly retrieves the version number from a user agent string for the specified browser name.
+   *
+   * @param {string} name - The name of the browser to retrieve the version for.
+   * @param {string} str - The user agent string to extract the version from.
+   * @returns {void}
+   */
   describe("retrieveVersion", () => {
     it("should retrieve the correct version number", () => {
       const name = "Chrome";
