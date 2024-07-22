@@ -5,6 +5,16 @@ import { getFromStore } from '../util';
 import { ENDPOINT } from '../config/endpoints';
 
 // Mock dependencies
+/**
+ * Mocks dependencies for the userVote test suite.
+ * 
+ * This code sets up mocks for the following dependencies:
+ * - `userService.getUserId`
+ * - `services.REST.apiCal`
+ * - `config.CONFIG.UDA_DOMAIN`
+ * 
+ * These mocks are used in the tests for the `vote` function in the `userVote` test suite.
+ */
 jest.mock('../services/userService');
 jest.mock('../services');
 jest.mock('../config', () => ({
@@ -1708,6 +1718,9 @@ it('should upvote a recording', async () => {
   
     // Mock the REST.apiCal function
     const mockApiCal = jest.fn();
+    /**
+     * Mocks the `REST.apiCal` function from the `./index` module for testing purposes.
+     */
     jest.mock('./index', () => ({
       REST: { apiCal: mockApiCal }
     }));

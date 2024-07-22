@@ -1,17 +1,25 @@
 import { translateText } from './translateService';
 import { CONFIG } from '../config';
 
+// Mock the '../config' module
 jest.mock('../config', () => ({
+  // Define a mock CONFIG object
   CONFIG: {
+    // Set up the multilingual configuration
     multilingual: {
+      // Configure translation settings
       translate: {
+        // Specify the translation provider as 'google'
         provider: 'google',
+        // Set the API key for authentication (replace with actual key in production)
         apikey: 'YOUR_API_KEY',
+        // Define the URL for the Google Translate API
         apiurl: 'https://translation.googleapis.com/language/translate/v2'
       }
     }
   }
 }));
+
 
 /**
  * Tests the `translateText` function from the `translateService` module.
@@ -49,14 +57,20 @@ describe('translateText', () => {
     const targetLang = 'es';
 
     // Mock the fetch function to simulate an error response
-    jest.spyOn(global, 'fetch').mockResolvedValue({
-      json: jest.fn().mockResolvedValue({
-        error: {
-          code: 400,
-          message: 'Invalid API key'
-        }
-      })
-    });
+   // Create a spy on the global fetch function
+jest.spyOn(global, 'fetch').mockResolvedValue({
+  // Mock the json method of the fetch response
+  json: jest.fn().mockResolvedValue({
+    // Simulate an error response
+    error: {
+      // Set the error code to 400 (Bad Request)
+      code: 400,
+      // Provide an error message indicating an invalid API key
+      message: 'Invalid API key'
+    }
+  })
+});
+
 
     // Call the function being tested and check for error
     try {

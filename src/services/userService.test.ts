@@ -3,6 +3,11 @@ import { getFromStore } from '../util';
 import { CONFIG } from '../config';
 
 // Mock the getFromStore function
+/**
+ * Mocks the `getFromStore` function from the `../util` module for testing purposes.
+ * This allows the test suite to control the behavior of the `getFromStore` function
+ * and verify its usage in the `getUserId` and `getSessionKey` functions.
+ */
 jest.mock('../util', () => ({
   getFromStore: jest.fn(),
 }));

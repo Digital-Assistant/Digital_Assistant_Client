@@ -5,6 +5,10 @@ import { REST } from '.';
 import { getFromStore } from '../util';
 import { CONFIG } from '../config';
 
+/**
+ * Mocks the `userService` module, providing jest.fn() implementations for the `getSessionKey` and `getUserId` functions.
+ * This is used for testing purposes to isolate the `recordService` module from the actual implementation of the `userService` module.
+ */
 jest.mock('./userService', () => ({
   getSessionKey: jest.fn(),
   getUserId: jest.fn(),
@@ -19,6 +23,9 @@ jest.mock('.', () => ({
   },
 }));
 
+/**
+ * Mocks the `getFromStore` function from the `../util` module for testing purposes.
+ */
 jest.mock('../util', () => ({
   getFromStore: jest.fn(),
 }));

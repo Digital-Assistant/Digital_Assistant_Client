@@ -4,16 +4,22 @@ import { REST } from './index';
 import { getUserId } from './userService';
 import { specialNodes } from '../util/specialNodes';
 
-jest.mock('./userService', () => ({
-  getUserId: jest.fn()
-}));
 
-jest.mock('./index', () => ({
-  REST: {
-    apiCal: jest.fn(),
-    processArgs: jest.fn()
-  }
-}));
+// Mocking the userService module by replacing it with a mocked version
+jest.mock('./userService', () => ({
+   getUserId: jest.fn()
+  }));
+  
+  // Mocking the index module by replacing it with a mocked version
+  jest.mock('./index', () => ({
+   REST: {
+  // Mocking the apiCal function inside the REST object
+  apiCal: jest.fn(),
+   // Mocking the processArgs function inside the REST object
+   processArgs: jest.fn()
+   }
+  }));
+
 
 /**
  * Clears all mocks after each test suite for the `searchService` module.
@@ -38,10 +44,15 @@ describe('fetchSearchResults', () => {
     };
 
     // Mock dependencies
+    // Using jest.spyOn to spy on the getUserId function of the userService module and mock it to return a resolved value of mockUserId
     jest.spyOn(require('./userService'), 'getUserId').mockResolvedValue(mockUserId);
+    
+    // Using jest.spyOn to spy on the REST object of the index module and mock it to return an object with mocked functions
     jest.spyOn(require('./index'), 'REST').mockReturnValue({
-      apiCal: jest.fn(),
-      processArgs: jest.fn().mockReturnValue(ENDPOINT.SearchWithPermissions)
+   // Mocking the apiCal function inside the REST object
+    apiCal: jest.fn(),
+   // Mocking the processArgs function inside the REST object and setting it to return the value ENDPOINT.SearchWithPermissions
+   processArgs: jest.fn().mockReturnValue(ENDPOINT.SearchWithPermissions)
     });
 
     // Call the function being tested
@@ -69,10 +80,15 @@ describe('fetchSearchResults', () => {
     };
 
     // Mock dependencies
+    // Using jest.spyOn to spy on the getUserId function of the userService module and mock it to return a resolved value of mockUserId
     jest.spyOn(require('./userService'), 'getUserId').mockResolvedValue(mockUserId);
+    
+    // Using jest.spyOn to spy on the REST object of the index module and mock it to return an object with mocked functions
     jest.spyOn(require('./index'), 'REST').mockReturnValue({
-      apiCal: jest.fn(),
-      processArgs: jest.fn().mockReturnValue(ENDPOINT.Search)
+    // Mocking the apiCal function inside the REST object
+    apiCal: jest.fn(),
+    // Mocking the processArgs function inside the REST object and setting it to return the value ENDPOINT.Search
+     processArgs: jest.fn().mockReturnValue(ENDPOINT.Search)
     });
 
     // Call the function being tested
@@ -104,13 +120,19 @@ describe('fetchSearchResults', () => {
     };
 
     // Mock dependencies
-    jest.spyOn(require('./userService'), 'getUserId').mockResolvedValue(mockUserId);
-    jest.spyOn(require('./index'), 'REST').mockReturnValue({
-      apiCal: jest.fn(),
-      processArgs: jest.fn().mockReturnValue(ENDPOINT.SearchWithPermissions)
-    });
-    jest.spyOn(require('./recordService'), 'recordUserClickData').mockReturnValue(Promise.resolve());
-
+   // Using jest.spyOn to spy on the getUserId function of the userService module and mock it to return a resolved value of mockUserId
+   jest.spyOn(require('./userService'), 'getUserId').mockResolvedValue(mockUserId);
+   
+   // Using jest.spyOn to spy on the REST object of the index module and mock it to return an object with mocked functions
+   jest.spyOn(require('./index'), 'REST').mockReturnValue({
+   // Mocking the apiCal function inside the REST object
+   apiCal: jest.fn(),
+   // Mocking the processArgs function inside the REST object and setting it to return the value ENDPOINT.SearchWithPermissions
+   processArgs: jest.fn().mockReturnValue(ENDPOINT.SearchWithPermissions)
+   });
+   
+   // Using jest.spyOn to spy on the recordUserClickData function of the recordService module and mock it to return a resolved Promise
+   jest.spyOn(require('./recordService'), 'recordUserClickData').mockReturnValue(Promise.resolve());
     // Call the function being tested
     await fetchSearchResults(mockRequest);
 
