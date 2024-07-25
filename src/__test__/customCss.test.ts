@@ -91,7 +91,7 @@ test("setting url multiple times", () => {
 test("setting url to empty string", () => {
   UDACustomCss.url = "";
   expect(UDACustomCss.src).toBe("");
-  expect(UDACustomCss.loaded).toBe(true);
+  expect(UDACustomCss.loaded).toBe(false);
 });
 /**
  * Tests that setting the `url` property of the `UDACustomCss` object to `null` or `undefined` updates the `src` property to the corresponding value, while the `loaded` property remains `true`.
@@ -100,11 +100,11 @@ test("setting url to empty string", () => {
 test("setting url to null or undefined", () => {
   UDACustomCss.url = null as any;
   expect(UDACustomCss.src).toBe(null);
-  expect(UDACustomCss.loaded).toBe(true);
+  expect(UDACustomCss.loaded).toBe(false);
 
   UDACustomCss.url = undefined as any;
   expect(UDACustomCss.src).toBe(undefined);
-  expect(UDACustomCss.loaded).toBe(true);
+  expect(UDACustomCss.loaded).toBe(false);
 });
 
 /**
@@ -166,9 +166,9 @@ test("getting url after direct src modification", () => {
  * This ensures that the `loaded` property is not reset when the `src` property is updated directly.
  */
 test("loaded property remains false if url is not set", () => {
-  expect(UDACustomCss.loaded).toBe(true);
+  expect(UDACustomCss.loaded).toBe(false);
   UDACustomCss.src = "https://example.com/style.css";
-  expect(UDACustomCss.loaded).toBe(true);
+  expect(UDACustomCss.loaded).toBe(false);
 });
 
 /**
@@ -183,6 +183,10 @@ test("custom event detail structure", () => {
   const mockDispatchEvent = jest.spyOn(document, "dispatchEvent");
   UDACustomCss.url = "https://example.com/style.css";
 
+  /**
+   * Verifies that a custom event with the expected detail structure is dispatched when the `UDACustomCss.url` property is set.
+   * The event should have a `detail` property with an object containing a `data` property with the value `"UDALoadCustomCSS"`.
+   */
   expect(mockDispatchEvent).toHaveBeenCalledWith(
     expect.objectContaining({
       detail: expect.objectContaining({
@@ -194,32 +198,60 @@ test("custom event detail structure", () => {
   mockDispatchEvent.mockRestore();
 });
 
+/**
+ * Sets the initial state of the `UDACustomCss` object before each test.
+ * This ensures a consistent starting point for the tests by resetting the `url` and `loaded` properties.
+ */
 describe("UDACustomCss", () => {
   beforeEach(() => {
     UDACustomCss.url = "";
     UDACustomCss.loaded = false;
   });
 
+  /**
+   * Tests that setting a valid string URL to the `UDACustomCss.url` property updates the `url` property and sets the `loaded` property to `true`.
+   */
   test("should set valid string URL", () => {
+    /**
+     * Tests that setting a valid string URL to the `UDACustomCss.url` property updates the `url` property and sets the `loaded` property to `true`.
+     */
     const validUrl = "https://example.com/style.css";
     UDACustomCss.url = validUrl;
     expect(UDACustomCss.url).toBe(validUrl);
     expect(UDACustomCss.loaded).toBe(true);
   });
 
+  /**
+   * Tests that setting the `UDACustomCss.url` property to `null` updates the `url` property to `null` and sets the `loaded` property to `false`.
+   */
   test("should set URL to null", () => {
+    /**
+     * Tests that setting the `UDACustomCss.url` property to `null` updates the `url` property to `null` and sets the `loaded` property to `false`.
+     */
     UDACustomCss.url = null;
     expect(UDACustomCss.url).toBeNull();
     expect(UDACustomCss.loaded).toBe(false);
   });
 
+  /**
+   * Tests that setting the `UDACustomCss.url` property to `undefined` updates the `url` property to `undefined` and sets the `loaded` property to `false`.
+   */
   test("should set URL to undefined", () => {
+    /**
+     * Tests that setting the `UDACustomCss.url` property to `undefined` updates the `url` property to `undefined` and sets the `loaded` property to `false`.
+     */
     UDACustomCss.url = undefined;
     expect(UDACustomCss.url).toBeUndefined();
     expect(UDACustomCss.loaded).toBe(false);
   });
 
+  /**
+   * Tests that setting the `UDACustomCss.url` property to an invalid URL type (e.g. a number) throws an error and updates the `url` and `loaded` properties accordingly.
+   */
   test("should throw error for invalid URL type", () => {
+    /**
+     * Tests that setting the `UDACustomCss.url` property to an invalid URL type (e.g. a number) throws an error and updates the `url` and `loaded` properties accordingly.
+     */
     const invalidUrl = 123;
     expect(() => {
       UDACustomCss.url = invalidUrl as any;
@@ -228,7 +260,13 @@ describe("UDACustomCss", () => {
     expect(UDACustomCss.loaded).toBe(false);
   });
 
+  /**
+   * Tests that setting a valid string URL to the `UDACustomCss.url` property dispatches a custom "UDALoadCustomCSS" event with the detail data "UDALoadCustomCSS".
+   */
   test("should dispatch custom event when valid URL is set", () => {
+    /**
+     * Tests that setting a valid string URL to the `UDACustomCss.url` property dispatches a custom "UDALoadCustomCSS" event with the detail data "UDALoadCustomCSS".
+     */
     const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
     UDACustomCss.url = "https://example.com/style.css";
     expect(dispatchEventSpy).toHaveBeenCalledWith(
@@ -239,7 +277,16 @@ describe("UDACustomCss", () => {
     );
   });
 
+  /**
+   * Tests that setting the `UDACustomCss.url` property to `null` does not dispatch a custom "UDALoadCustomCSS" event.
+   */
   test("should not dispatch custom event when URL is set to null", () => {
+    /**
+     * Tests that setting the `UDACustomCss.url` property to `null` does not dispatch a custom "UDALoadCustomCSS" event.
+     */
+    /**
+     * Spy on the `dispatchEvent` method of the `document` object to track when custom events are dispatched.
+     */
     const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
     UDACustomCss.url = null;
     expect(dispatchEventSpy).not.toHaveBeenCalled();
