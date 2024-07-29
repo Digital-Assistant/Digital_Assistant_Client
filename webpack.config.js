@@ -38,7 +38,7 @@ module.exports = (env, argv) => {
         "./environments/" + (env.build ? `${env.build}.env` : "local.env");
 
     const buildPath =
-        (env.build && (env.build === "production" || env.build === "development")) ? "dist" : "build";
+        (env.build && (env.build === "production" || env.build === "qa")) ? "dist" : "build";
 
     const webpackConfig = {
         cache: { type: 'filesystem' },

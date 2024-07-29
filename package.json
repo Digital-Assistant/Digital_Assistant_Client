@@ -42,7 +42,7 @@
   },
   "scripts": {
     "start": "webpack --watch",
-    "build:dev": "webpack --env build=development",
+    "build:qa": "webpack --env build=qa",
     "build": "webpack",
     "build:prod": "webpack --env build=production",
     "test": "jest",
