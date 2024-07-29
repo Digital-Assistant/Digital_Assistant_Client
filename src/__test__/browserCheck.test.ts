@@ -7,6 +7,9 @@ import { UDABrowserCheck } from "../modules/browserCheck";
  * Defines a set of user agent strings for various web browsers, which are used in the tests for the `UDABrowserCheck` module.
  */
 describe("UDABrowserCheck", () => {
+  /**
+   * Defines a set of user agent strings for various web browsers, which are used in the tests for the `UDABrowserCheck` module.
+   */
   const chromeUA =
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3";
   const safariUA =
