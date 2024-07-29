@@ -21,6 +21,13 @@ jest.mock("../services", () => ({
   },
 }));
 
+/**
+ * Sets up mocks for the `recordUserClickData` function from the `../services/recordService` module and the `specialNodes` object from the `../util/specialNodes` module.
+ *
+ * This setup is likely used to isolate the tests in the `searchService` test suite from the actual implementation of these dependencies.
+ *
+ * The `jest.clearAllMocks()` call in the `beforeEach` hook ensures that the mocks are reset before each test, preventing any unintended state from leaking between tests.
+ */
 jest.mock("../services/recordService", () => ({
   recordUserClickData: jest.fn(),
 }));

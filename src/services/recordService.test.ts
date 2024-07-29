@@ -26,6 +26,22 @@ import {
   recordUserClickData,
 } from "./recordService";
 
+/**
+ * This code sets up mocks for various dependencies used in the `recordService.test.ts` file. The mocks are used to simulate the behavior of these dependencies during testing, allowing the tests to focus on the specific functionality being tested without relying on the actual implementation of the dependencies.
+ *
+ * The mocks are set up using the `jest.mock()` function, which allows you to override the implementation of a module or function with a mock implementation. The mocks are set up for the following dependencies:
+ *
+ * - `userService`: Mocks the `getSessionKey` and `getUserId` functions.
+ * - `services`: Mocks the `REST.apiCall` function.
+ * - `nodeInfo`: Mocks the `getNodeInfo` function.
+ * - `domjson`: Mocks the `toJSON` function.
+ * - `typescript-json`: Mocks the `stringify` function.
+ * - `error-log`: Mocks the `UDAConsoleLogger.info` and `UDAConsoleLogger.error` functions.
+ * - `fetchDomain`: Mocks the `fetchDomain` function.
+ * - `util`: Mocks the `getFromStore` function.
+ *
+ * These mocks are used to ensure that the tests in the `recordService.test.ts` file can run without relying on the actual implementation of these dependencies, which may not be available or may have side effects that could interfere with the tests.
+ */
 jest.mock("../services/userService", () => ({
   getSessionKey: jest.fn(),
   getUserId: jest.fn(),
@@ -137,6 +153,13 @@ test("recordSequence returns a promise that resolves with the expected response"
  * @returns {Promise<void>} - A promise that resolves when the test is complete.
  */
 it("should use default values when not provided", async () => {
+  /**
+   * Mocks the session key for testing purposes.
+   *
+   * This code sets up a mock session key that will be returned by the `getSessionKey` function when it is called. This is useful for testing code that relies on the session key, as it allows you to control the value of the session key in your tests.
+   *
+   * @param {string} mockSessionKey - The mock session key to be used in the tests.
+   */
   const mockSessionKey = "test-session-key";
   (getSessionKey as jest.Mock).mockResolvedValue(mockSessionKey);
 
@@ -211,6 +234,14 @@ describe("postRecordSequenceData", () => {
     (getFromStore as jest.Mock).mockReturnValue(mockUserClickNodesSet);
 
     await postRecordSequenceData(mockRequest);
+    /**
+     * Verifies that the `recordSequence` function is called with the expected parameters when a valid request is passed.
+     *
+     * @param {object} mockRequest - A mock request object to pass to the `recordSequence` function.
+     * @param {string} mockDomain - A mock domain value to use in the expected parameters.
+     * @param {array} mockUserClickNodesSet - A mock set of user click nodes to use in the expected parameters.
+     * @returns {Promise<void>} A promise that resolves when the test is complete.
+     */
 
     expect(recordSequence).toHaveBeenCalledWith({
       ...mockRequest,
@@ -744,6 +775,9 @@ describe("saveClickData", () => {
    * Sets up the test environment by clearing the mocks for the `getUserId` and `getSessionKey` functions before each test.
    */
   describe("recordService functions", () => {
+    /**
+     * Sets up the test environment by clearing the mocks for the `getUserId` and `getSessionKey` functions before each test.
+     */
     beforeEach(() => {
       (getUserId as jest.Mock).mockClear();
       (getSessionKey as jest.Mock).mockClear();
