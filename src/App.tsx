@@ -26,6 +26,8 @@ import { addBodyEvents } from "./util/addBodyEvents";
 import { initSpecialNodes } from "./util/initSpecialNodes";
 import {fetchDomain} from "./util/fetchDomain";
 
+import ReactGA from 'react-ga4';
+
 // adding global variable declaration for exposing react custom configuration
 global.UDAPluginSDK = AppConfig;
 global.UDAGlobalConfig = CustomConfig;
@@ -38,6 +40,7 @@ declare global {
 }
 
 function App(props) {
+
     const [isRecording, setIsRecording] = useState<boolean>(
         getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true" || false
     );
@@ -349,9 +352,15 @@ function App(props) {
                 documentBody.classList.add("uda-body");
             }
 
-            console.log('rendering init');
             init();
+
+            // Send pageview with a custom path
+            ReactGA.send({ hitType: "pageview", page: "/", title: "Loaded Plugin" });
+
         }
+
+        // Initializing google analytics
+        ReactGA.initialize(process.env.googleAnalyticsMeasurementId, {testMode: ((process.env.enableGoogleAnalytics === 'false') ? true : false)});
 
         initialInvoke();
 

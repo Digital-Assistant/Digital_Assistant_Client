@@ -13,6 +13,7 @@ import InfiniteScroll from "react-infinite-scroller";
 import {CONFIG} from "../config";
 import {getRowObject} from "../util/getRowObject";
 import {recordUserClickData} from "../services";
+import ReactGA from "react-ga4";
 
 export interface MProps {
   visibility?: boolean;
@@ -37,6 +38,11 @@ export const SearchResults = (props: MProps) => {
   const [searchResults, setSearchResults] = useState<any>([]);
   const [fetchingInProgress, setFetchingInProgress] = useState<boolean>(false);
   const [enableScroll, setEnableScroll] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Send pageview with a custom path
+    ReactGA.send({ hitType: "pageview", page: "/search", title: "Search page loaded" });
+  }, []);
 
   useEffect(() => {
     if (props?.searchKeyword) globalSearchResults = [];
@@ -93,6 +99,7 @@ export const SearchResults = (props: MProps) => {
       />
     );
   };
+
 
   // return renderData();
   return (
