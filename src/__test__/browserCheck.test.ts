@@ -870,3 +870,447 @@ describe("UDABrowserCheck", () => {
     expect(UDABrowserCheck.detectBrowserVersion(nav, "Edge")).toBe(null);
   });
 });
+
+/**
+ * Tests that the `isChrome` function correctly identifies Chrome user agents.
+ * This test case verifies that the function returns `true` when the user agent string
+ * corresponds to the Chrome browser.
+ */
+describe("UDABrowserCheck", () => {
+  describe("isChrome", () => {
+    it("should return true for Chrome user agent", () => {
+      const userAgent =
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
+      expect(UDABrowserCheck.isChrome(userAgent)).toBe(true);
+    });
+
+    /**
+     * Tests that the `isChrome` function correctly identifies non-Chrome user agents.
+     * This test case verifies that the function returns `false` when the user agent string
+     * does not correspond to the Chrome browser.
+     */
+    it("should return false for non-Chrome user agent", () => {
+      const userAgent =
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0";
+      expect(UDABrowserCheck.isChrome(userAgent)).toBe(false);
+    });
+  });
+
+  /**
+   * Tests that the `isSafari` function correctly identifies Safari user agents.
+   * This test case verifies that the function returns `true` when the user agent string
+   * corresponds to the Safari browser.
+   */
+  describe("isSafari", () => {
+    it("should return true for Safari user agent", () => {
+      const userAgent =
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.1 Safari/605.1.15";
+      expect(UDABrowserCheck.isSafari(userAgent)).toBe(true);
+    });
+
+    /**
+     * Tests that the `isSafari` function correctly identifies non-Safari user agents.
+     * This test case verifies that the function returns `false` when the user agent string
+     * does not correspond to the Safari browser.
+     */
+    it("should return false for non-Safari user agent", () => {
+      const userAgent =
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
+      expect(UDABrowserCheck.isSafari(userAgent)).toBe(false);
+    });
+  });
+
+  /**
+   * Tests that the `detectBrowserName` function correctly identifies the name of the Chrome browser.
+   * This test case verifies that the function returns "Chrome" when the user agent string
+   * corresponds to the Chrome browser.
+   */
+  describe("detectBrowserName", () => {
+    it("should detect Chrome", () => {
+      const userAgent =
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
+      expect(UDABrowserCheck.detectBrowserName(userAgent)).toBe("Chrome");
+    });
+
+    /**
+     * Tests that the `detectBrowserName` function correctly identifies the name of the Firefox browser.
+     * This test case verifies that the function returns "Firefox" when the user agent string
+     * corresponds to the Firefox browser.
+     */
+    it("should detect Firefox", () => {
+      const userAgent =
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0";
+      expect(UDABrowserCheck.detectBrowserName(userAgent)).toBe("Firefox");
+    });
+
+    /**
+     * Tests that the `detectBrowserName` function correctly returns `undefined` when the user agent string
+     * does not correspond to a recognized browser.
+     * This test case verifies that the function returns `undefined` when the user agent string
+     * is not recognized as a supported browser.
+     */
+    it("should return undefined for unknown browser", () => {
+      const userAgent = "Unknown Browser";
+      expect(UDABrowserCheck.detectBrowserName(userAgent)).toBeUndefined();
+    });
+  });
+
+  /**
+   * Tests that the `retrieveVersion` function correctly retrieves the version number from the user agent string.
+   * This test case verifies that the function returns the expected version number when the user agent string
+   * corresponds to Chrome.
+   */
+  describe("retrieveVersion", () => {
+    it("should retrieve correct version number", () => {
+      const name = "Chrome";
+      const str =
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
+      expect(UDABrowserCheck.retrieveVersion(name, str)).toBe(91);
+    });
+
+    /**
+     * Tests that the `retrieveVersion` function correctly returns `null` when the browser name is not recognized.
+     * This test case verifies that the function returns `null` when the browser name provided is not one of the
+     * supported browsers.
+     */
+    it("should return null for non-existent version", () => {
+      const name = "NonExistent";
+      const str =
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
+      expect(UDABrowserCheck.retrieveVersion(name, str)).toBeNull();
+    });
+  });
+
+  /**
+   * Tests that the `detectBrowserNameAndVersion` function correctly identifies the name and version of Chrome.
+   * This test case verifies that the function returns the expected name and version when the user agent string
+   * corresponds to Chrome.
+   */
+  describe("detectBrowserNameAndVersion", () => {
+    it("should detect Chrome name and version", () => {
+      const nav = {
+        userAgent:
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+      };
+      const result = UDABrowserCheck.detectBrowserNameAndVersion(nav);
+      expect(result.name).toBe("Chrome");
+      expect(result.version).toBe(91);
+    });
+
+    /**
+     * Tests that the `detectBrowserNameAndVersion` function correctly identifies an unknown browser.
+     * This test case verifies that the function returns `{ name: 'unknown', version: 'unknown' }` when
+     * the user agent string is not recognized.
+     */
+    it("should return unknown for unrecognized browser", () => {
+      const nav = {
+        userAgent: "Unknown Browser",
+      };
+      const result = UDABrowserCheck.detectBrowserNameAndVersion(nav);
+      expect(result.name).toBe("unknown");
+      expect(result.version).toBe("unknown");
+    });
+  });
+});
+/**
+ * Tests that the `isUCBrowser` function correctly identifies UC Browser user agents.
+ * This test case verifies that the function returns `true` when the user agent string
+ * corresponds to UC Browser.
+ */
+describe("UDABrowserCheck", () => {
+  // ... (previous test cases)
+
+  describe("isUCBrowser", () => {
+    it("should return true for UC Browser user agent", () => {
+      const userAgent =
+        "Mozilla/5.0 (Linux; U; Android 8.1.0; en-US; Redmi Note 5 Pro Build/OPM1.171019.011) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/57.0.2987.108 UCBrowser/12.10.0.1163 Mobile Safari/537.36";
+      expect(UDABrowserCheck.isUCBrowser(userAgent)).toBe(true);
+    });
+    /**
+     * Tests that the `isUCBrowser` function correctly identifies non-UC Browser user agents.
+     * This test case verifies that the function returns `false` when the user agent string
+     * does not correspond to UC Browser.
+     */
+
+    it("should return false for non-UC Browser user agent", () => {
+      const userAgent =
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
+      expect(UDABrowserCheck.isUCBrowser(userAgent)).toBe(false);
+    });
+  });
+
+  /**
+   * Tests that the `isFirefox` function correctly identifies Firefox user agents.
+   * This test case verifies that the function returns `true` when the user agent string
+   * corresponds to Firefox.
+   */
+  describe("isFirefox", () => {
+    it("should return true for Firefox user agent", () => {
+      const userAgent =
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0";
+      expect(UDABrowserCheck.isFirefox(userAgent)).toBe(true);
+    });
+
+    /**
+     * Tests that the `isFirefox` function correctly identifies non-Firefox user agents.
+     * This test case verifies that the function returns `false` when the user agent string
+     * corresponds to Seamonkey, which is not Firefox.
+     */
+    it("should return false for Seamonkey user agent", () => {
+      const userAgent =
+        "Mozilla/5.0 (Windows NT 6.1; rv:2.0.1) Gecko/20100101 Firefox/4.0.1 Seamonkey/2.1";
+      expect(UDABrowserCheck.isFirefox(userAgent)).toBe(false);
+    });
+  });
+
+  /**
+   * Tests that the `isIE` function correctly identifies Internet Explorer user agents.
+   * This test case verifies that the function returns `true` when the user agent string
+   * corresponds to Internet Explorer.
+   */
+  describe("isIE", () => {
+    it("should return true for IE user agent", () => {
+      const userAgent =
+        "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko";
+      expect(UDABrowserCheck.isIE(userAgent)).toBe(true);
+    });
+
+    /**
+     * Tests that the `isIE` function correctly identifies non-Internet Explorer user agents.
+     * This test case verifies that the function returns `false` when the user agent string
+     * does not correspond to Internet Explorer.
+     */
+    it("should return false for non-IE user agent", () => {
+      const userAgent =
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
+      expect(UDABrowserCheck.isIE(userAgent)).toBe(false);
+    });
+  });
+
+  /**
+   * Tests that the `isOpera` function correctly identifies Opera user agents.
+   * This test case verifies that the function returns `true` when the user agent string
+   * corresponds to Opera.
+   */
+  describe("isOpera", () => {
+    it("should return true for Opera user agent", () => {
+      const userAgent =
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 OPR/78.0.4093.153";
+      expect(UDABrowserCheck.isOpera(userAgent)).toBe(true);
+    });
+
+    /**
+     * Tests that the `isOpera` function correctly identifies non-Opera user agents.
+     * This test case verifies that the function returns `false` when the user agent string
+     * does not correspond to Opera.
+     */
+    it("should return false for non-Opera user agent", () => {
+      const userAgent =
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
+      expect(UDABrowserCheck.isOpera(userAgent)).toBe(false);
+    });
+  });
+
+  /**
+   * Tests that the `isSamsungInternet` function returns `true` for a Samsung Internet user agent.
+   */
+  describe("isSamsungInternet", () => {
+    it("should return true for Samsung Internet user agent", () => {
+      const userAgent =
+        "Mozilla/5.0 (Linux; Android 9; SAMSUNG SM-G960U) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/10.1 Chrome/71.0.3578.99 Mobile Safari/537.36";
+      expect(UDABrowserCheck.isSamsungInternet(userAgent)).toBe(true);
+    });
+
+    /**
+     * Tests that the `isSamsungInternet` function returns `false` for a non-Samsung Internet user agent.
+     */
+    it("should return false for non-Samsung Internet user agent", () => {
+      const userAgent =
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
+      expect(UDABrowserCheck.isSamsungInternet(userAgent)).toBe(false);
+    });
+  });
+
+  /**
+   * Tests that the `isAndroidBrowser` function returns `true` for an Android Browser user agent.
+   */
+  describe("isAndroidBrowser", () => {
+    it("should return true for Android Browser user agent", () => {
+      const userAgent =
+        "Mozilla/5.0 (Linux; U; Android 4.0.3; en-us; KFTT Build/IML74K) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Safari/534.30";
+      expect(UDABrowserCheck.isAndroidBrowser(userAgent)).toBe(true);
+    });
+
+    /**
+     * Tests that the `isAndroidBrowser` function returns `false` for a Chrome on Android user agent.
+     */
+    it("should return false for Chrome on Android user agent", () => {
+      const userAgent =
+        "Mozilla/5.0 (Linux; Android 10; SM-A505FN) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36";
+      expect(UDABrowserCheck.isAndroidBrowser(userAgent)).toBe(false);
+    });
+  });
+
+  /**
+   * Tests that the `isEdge` function returns `true` for an Edge user agent.
+   */
+  describe("isEdge", () => {
+    it("should return true for Edge user agent", () => {
+      const userAgent =
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.59";
+      expect(UDABrowserCheck.isEdge(userAgent)).toBe(true);
+    });
+
+    /**
+     * Tests that the `isEdge` function returns `false` for a non-Edge user agent.
+     */
+    it("should return false for non-Edge user agent", () => {
+      const userAgent =
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
+      expect(UDABrowserCheck.isEdge(userAgent)).toBe(false);
+    });
+  });
+
+  /**
+   * Tests that the `getBeautifulName` function returns `"OPR"` for the "Opera" browser name.
+   */
+  describe("getBeautifulName", () => {
+    it("should return OPR for Opera", () => {
+      expect(UDABrowserCheck.getBeautifulName("Opera")).toBe("OPR");
+    });
+
+    /**
+     * Tests that the `getBeautifulName` function returns `"UCBrowser"` for the "UC Browser" browser name.
+     */
+    it("should return UCBrowser for UC Browser", () => {
+      expect(UDABrowserCheck.getBeautifulName("UC Browser")).toBe("UCBrowser");
+    });
+
+    /**
+     * Tests that the `getBeautifulName` function returns `"SamsungBrowser"` for the "Samsung Internet" browser name.
+     */
+    it("should return SamsungBrowser for Samsung Internet", () => {
+      expect(UDABrowserCheck.getBeautifulName("Samsung Internet")).toBe(
+        "SamsungBrowser"
+      );
+    });
+
+    /**
+     * Tests that the `getBeautifulName` function returns `undefined` for browser names that are not recognized.
+     */
+    it("should return undefined for other browsers", () => {
+      expect(UDABrowserCheck.getBeautifulName("Chrome")).toBeUndefined();
+    });
+  });
+  describe("UDABrowserCheck", () => {
+    /**
+     * Tests that the `detectBrowserVersion` function correctly detects the version of Internet Explorer (IE) from the user agent string.
+     */
+    describe("detectBrowserVersion", () => {
+      it("should detect IE version", () => {
+        const nav = {
+          userAgent:
+            "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
+        };
+        expect(UDABrowserCheck.detectBrowserVersion(nav, "IE")).toBe(11);
+      });
+
+      /**
+       * Tests that the `detectBrowserVersion` function correctly detects the version of the Edge browser.
+       * This test creates a mock `nav` object with a user agent string that identifies the browser as Edge version 91.0.864.59, and then calls the `detectBrowserVersion` function with the "Edge" browser name.
+       * The test then asserts that the function returns the expected version number of 91.
+       */
+      it("should detect Edge version", () => {
+        const nav = {
+          userAgent:
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.59",
+        };
+        expect(UDABrowserCheck.detectBrowserVersion(nav, "Edge")).toBe(91);
+      });
+
+      /**
+       * Tests that the `detectBrowserVersion` function handles an unknown browser gracefully by returning the version number from the `appVersion` property of the `nav` object.
+       */
+      it("should handle unknown browser gracefully", () => {
+        const nav = {
+          userAgent: "Unknown Browser",
+          appName: "Netscape",
+          appVersion: "5.0",
+        };
+        expect(UDABrowserCheck.detectBrowserVersion(nav, "Unknown")).toBe(5);
+      });
+    });
+
+    /**
+     * Tests the behavior of the `isChrome` function when the user agent string is `null`.
+     * This test ensures that the function handles a `null` user agent string gracefully and returns `false`.
+     */
+    describe("error handling", () => {
+      it("should handle errors in isChrome", () => {
+        const userAgent = null;
+        expect(UDABrowserCheck.isChrome(userAgent)).toBe(false);
+      });
+
+      /**
+       * Tests the behavior of the `detectBrowserName` function when the user agent string is `null`.
+       * This test ensures that the function handles a `null` user agent string gracefully and returns `undefined`.
+       */
+      it("should handle errors in detectBrowserName", () => {
+        const userAgent = null;
+        expect(UDABrowserCheck.detectBrowserName(userAgent)).toBeUndefined();
+      });
+
+      /**
+       * Tests the behavior of the `retrieveVersion` function when the `name` and `str` parameters are `null`.
+       * This test ensures that the function handles `null` values for these parameters gracefully and returns `null`.
+       */
+      it("should handle errors in retrieveVersion", () => {
+        const name = null;
+        const str = null;
+        expect(UDABrowserCheck.retrieveVersion(name, str)).toBeNull();
+      });
+
+      /**
+       * Tests the behavior of the `detectBrowserNameAndVersion` function when the `nav` parameter is `null`.
+       * This test ensures that the function handles a `null` `nav` parameter gracefully and returns an object with "unknown" values for the browser name and version.
+       */
+      it("should handle errors in detectBrowserNameAndVersion", () => {
+        const nav = null;
+        const result = UDABrowserCheck.detectBrowserNameAndVersion(nav);
+        expect(result).toEqual({ name: "unknown", version: "unknown" });
+      });
+    });
+
+    /**
+     * Tests the behavior of the `detectBrowserName` function when the user agent string is empty.
+     * This test ensures that the function handles an empty user agent string gracefully.
+     */
+    describe("edge cases", () => {
+      it("should handle empty user agent string", () => {
+        const userAgent = "";
+        expect(UDABrowserCheck.detectBrowserName(userAgent)).toBeUndefined();
+      });
+
+      /**
+       * Tests the behavior of the `detectBrowserName` function when the user agent string contains multiple browser names.
+       * This test ensures that the function can correctly identify the primary browser name when the user agent string includes references to multiple browsers.
+       */
+      it("should handle user agent with multiple browser names", () => {
+        const userAgent =
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 OPR/78.0.4093.153";
+        expect(UDABrowserCheck.detectBrowserName(userAgent)).toBe("Opera");
+      });
+
+      /**
+       * Tests the behavior of the `retrieveVersion` function when the browser version is provided without dots in the user agent string.
+       * This test ensures that the function can correctly extract the version number from a user agent string that does not follow the typical format.
+       */
+      it("should handle version retrieval with no dots", () => {
+        const name = "Chrome";
+        const str =
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91 Safari/537.36";
+        expect(UDABrowserCheck.retrieveVersion(name, str)).toBe(91);
+      });
+    });
+  });
+});
