@@ -51,11 +51,7 @@
   },
   "jest": {
     "transform": {
-      "^.+\\.(ts|tsx|js|jsx)$": "ts-jest",
-      "testMatch": [
-        "**/__tests__/**/*.test.ts",
-        "**/?(*.)+(spec|test).ts"
-      ]
+      "^.+\\.(ts|tsx|js|jsx)$": "ts-jest"
     },
     "testEnvironment": "jsdom",
     "moduleNameMapper": {
