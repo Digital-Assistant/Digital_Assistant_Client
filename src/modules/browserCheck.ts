@@ -1,219 +1,220 @@
 export const UDABrowserCheck = {
   /**
-   * Checks if the given user agent string belongs to the Chrome browser.
-   *
-   * @param {string} userAgent - The user agent string to be tested.
-   * @returns {boolean} `true` if the user agent belongs to Chrome, `false` otherwise.
-   */
-  isChrome: function (userAgent: string): boolean {
-    try {
-      // Exclude user agents that contain "Chrome" but are not the actual Chrome browser
-      return (
-        userAgent.includes("Chrome") &&
-        !userAgent.includes("Chromium") &&
-        !userAgent.includes("OPR") &&
-        !userAgent.includes("Edge") &&
-        !userAgent.includes("Edg") &&
-        !userAgent.includes("SamsungBrowser")
-      );
-    } catch (error) {
-      console.error("Error in isChrome:", error);
-      return false;
-    }
+	 * Detects Chrome browser
+	 * @param {string} userAgent
+	 * @return {boolean}
+	 */
+  isChrome: function(userAgent: string) {
+    return (
+      userAgent.includes('Chrome') &&
+			!userAgent.includes('Chromium') &&
+			!userAgent.includes('OPR') &&
+			!userAgent.includes('Edge') &&
+			!userAgent.includes('Edg') &&
+			!userAgent.includes('SamsungBrowser')
+    );
   },
 
-  isSafari: function (userAgent: string): boolean {
-    try {
-      return (
-        userAgent.includes("Safari") &&
-        !userAgent.includes("Chrome") &&
-        !userAgent.includes("Chromium") &&
-        !userAgent.includes("Edg") &&
-        !userAgent.includes("Android")
-      );
-    } catch (error) {
-      console.error("Error in isSafari:", error);
-      return false;
-    }
+  /**
+	 * Detects Safari browser
+	 * @param {string} userAgent
+	 * @return {boolean}
+	 */
+  isSafari: function(userAgent: string) {
+    return (
+      userAgent.includes('Safari') &&
+			!userAgent.includes('Chrome') &&
+			!userAgent.includes('Chromium') &&
+			!userAgent.includes('Edg') &&
+			!userAgent.includes('Android')
+    );
   },
 
-  isUCBrowser: function (userAgent: string): boolean {
-    try {
-      return userAgent.includes("UCBrowser");
-    } catch (error) {
-      console.error("Error in isUCBrowser:", error);
-      return false;
-    }
+  /**
+	 * Detects UC browser
+	 * @param {string} userAgent
+	 * @return {boolean}
+	 */
+  isUCBrowser: function(userAgent: string) {
+    return userAgent.includes('UCBrowser');
   },
 
-  isFirefox: function (userAgent: string): boolean {
-    try {
-      return userAgent.includes("Firefox") && !userAgent.includes("Seamonkey");
-    } catch (error) {
-      console.error("Error in isFirefox:", error);
-      return false;
-    }
+  /**
+	 * Detects Firefox browser
+	 * @param {string} userAgent
+	 * @return {boolean}
+	 */
+  isFirefox: function(userAgent: string) {
+    return userAgent.includes('Firefox') && !userAgent.includes('Seamonkey');
   },
 
-  isIE: function (userAgent: string): boolean {
-    try {
-      return /trident/i.test(userAgent);
-    } catch (error) {
-      console.error("Error in isIE:", error);
-      return false;
-    }
+  /**
+	 * Detects IE browser
+	 * @param {string} userAgent
+	 * @return {boolean}
+	 */
+  isIE: function(userAgent: string) {
+    return /trident/i.test(userAgent);
   },
 
-  isOpera: function (userAgent: string): boolean {
-    try {
-      return userAgent.includes("OPR");
-    } catch (error) {
-      console.error("Error in isOpera:", error);
-      return false;
-    }
+  /**
+	 * Detects Opera browser
+	 * @param {string} userAgent
+	 * @return {boolean}
+	 */
+  isOpera: function(userAgent: string) {
+    return userAgent.includes('OPR');
   },
 
-  isSamsungInternet: function (userAgent: string): boolean {
-    try {
-      return userAgent.includes("SamsungBrowser");
-    } catch (error) {
-      console.error("Error in isSamsungInternet:", error);
-      return false;
-    }
+  /**
+	 * Detects Samsung browser
+	 * @param {string} userAgent
+	 * @return {boolean}
+	 */
+  isSamsungInternet: function(userAgent: string) {
+    return userAgent.includes('SamsungBrowser');
   },
 
-  isAndroidBrowser: function (userAgent: string): boolean {
-    try {
-      return (
-        userAgent.includes("Android") &&
-        !userAgent.includes("Chrome") &&
-        userAgent.includes("AppleWebKit")
-      );
-    } catch (error) {
-      console.error("Error in isAndroidBrowser:", error);
-      return false;
-    }
+  /**
+	 * Detects Android browser
+	 * @param {string} userAgent
+	 * @return {boolean}
+	 */
+  isAndroidBrowser: function(userAgent: string) {
+    return (
+      userAgent.includes('Android') &&
+			!userAgent.includes('Chrome') &&
+			userAgent.includes('AppleWebKit')
+    );
   },
 
-  isEdge: function (userAgent: string): boolean {
-    try {
-      return !!userAgent.match(/\b(Edge|Edgios|Edga|Edg)\/(\d+)/);
-    } catch (error) {
-      console.error("Error in isEdge:", error);
-      return false;
-    }
+  /**
+	 * Detects Edge browser
+	 * @param {string} userAgent
+	 * @return {boolean}
+	 */
+  isEdge: function(userAgent: string) {
+    return userAgent.match(/\b(Edge|Edgios|Edga|Edg)\/(\d+)/);
+    // return ((userAgent.includes('Edge') || userAgent.includes('Edgeios') || userAgent.includes('Edga') || userAgent.includes('Edg')) && userAgent.includes('Chrome'));
   },
 
-  detectBrowserName: function (userAgent: string): string | undefined {
-    try {
-      if (this.isChrome(userAgent)) return "Chrome";
-      if (this.isSafari(userAgent)) return "Safari";
-      if (this.isUCBrowser(userAgent)) return "UC Browser";
-      if (this.isFirefox(userAgent)) return "Firefox";
-      if (this.isIE(userAgent)) return "IE";
-      if (this.isOpera(userAgent)) return "Opera";
-      if (this.isSamsungInternet(userAgent)) return "Samsung Internet";
-      if (this.isAndroidBrowser(userAgent)) return "Android Browser";
-      if (this.isEdge(userAgent)) return "Edge";
-      return undefined;
-    } catch (error) {
-      console.error("Error in detectBrowserName:", error);
-      return undefined;
-    }
+  /**
+	 * Detects browser name
+	 * @param {string} userAgent - window.navigator
+	 * @return {string} browser name
+	 */
+  detectBrowserName: function(userAgent: string) {
+    if (this.isChrome(userAgent)) return 'Chrome';
+    if (this.isSafari(userAgent)) return 'Safari';
+    if (this.isUCBrowser(userAgent)) return 'UC Browser';
+    if (this.isFirefox(userAgent)) return 'Firefox';
+    if (this.isIE(userAgent)) return 'IE';
+    if (this.isOpera(userAgent)) return 'Opera';
+    if (this.isSamsungInternet(userAgent)) return 'Samsung Internet';
+    if (this.isAndroidBrowser(userAgent)) return 'Android Browser';
+    if (this.isEdge(userAgent)) return 'Edge';
   },
 
-  retrieveVersion: function (name: string, str: string): number | null {
-    try {
-      name = name + "/";
-      const start = str.indexOf(name);
-      if (start === -1) return null;
-      let preNum = str.substring(start + name.length);
-      const index = preNum.indexOf(" ");
-      if (index > 0) preNum = preNum.substring(0, index);
-      let end = preNum.indexOf(".", 2);
-      if (end === -1) end = preNum.indexOf(".", 1);
-      if (end === -1) return null;
-      const num = preNum.substring(0, end);
-      return Number(num);
-    } catch (error) {
-      console.error("Error in retrieveVersion:", error);
-      return null;
+  /**
+	 * Retrieve browser version
+	 * @param {string} name
+	 * @param {string} str
+	 * @return {number} browser version
+	 */
+  retrieveVersion: function(name: string, str: string) {
+    name = name + '/';
+    const start = str.indexOf(name);
+    let preNum = str.substring(start + name.length);
+    const index = preNum.indexOf(' ');
+    if (index > 0) preNum = preNum.substring(0, index);
+    let end;
+
+    if (preNum.indexOf('.', 2) > 0) {
+      end = preNum.indexOf('.', 2);
+    } else {
+      end = preNum.indexOf('.', 1);
     }
+
+    const num = preNum.substring(0, end);
+    return Number(num);
   },
 
-  getBeautifulName: function (name: string): string | undefined {
-    try {
-      switch (name) {
-        case "Opera":
-          return "OPR";
-        case "UC Browser":
-          return "UCBrowser";
-        case "Samsung Internet":
-          return "SamsungBrowser";
-        default:
-          return undefined;
-      }
-    } catch (error) {
-      console.error("Error in getBeautifulName:", error);
-      return undefined;
+  /**
+	 * Returns Association
+	 * @param {string} name
+	 * @return {string} browser name
+	 */
+  getBeautifulName: function(name: string) {
+    let browserName;
+    switch (name) {
+      case 'Opera':
+        browserName = 'OPR';
+        break;
+
+      case 'UC Browser':
+        browserName = 'UCBrowser';
+        break;
+
+      case 'Samsung Internet':
+        browserName = 'SamsungBrowser';
+        break;
     }
+    return browserName;
   },
 
-  detectBrowserVersion: function (nav: any, name: string): number | null {
-    try {
-      const { userAgent } = nav;
+  /**
+	 * Detects browser version
+	 * @param {object} nav
+	 * @param {string} name
+	 * @return {number} browser version
+	 */
+  detectBrowserVersion: function(nav: any, name: string) {
+    const {userAgent} = nav;
 
-      switch (name) {
-        case "IE": {
-          const _temp1: any = /\brv[ :]+(\d+)/g.exec(userAgent) || [];
-          return Number(_temp1[1]) || null;
-        }
-        case "Edge": {
-          const _temp2 = userAgent.match(/\b(Edge|Edgios|Edga|Edg)\/(\d+)/);
-          return _temp2 ? Number(_temp2[2]) : null;
-        }
-      }
-
-      const browserName = this.getBeautifulName(name);
-
-      if (browserName) return this.retrieveVersion(browserName, userAgent);
-
-      let found =
-        userAgent.match(
-          /(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i
-        ) || [];
-
-      found = found[2]
-        ? [found[1], found[2]]
-        : [nav.appName, nav.appVersion, "-?"];
-
-      let temp;
-      if ((temp = userAgent.match(/version\/(\d+)/i)) !== null) {
-        found.splice(1, 1, temp[1]);
+    switch (name) {
+      case 'IE': {
+        const _temp1: any = /\brv[ :]+(\d+)/g.exec(userAgent) || [];
+        return Number(_temp1[1]) || null;
       }
 
-      return Number(found[1]) || null;
-    } catch (error) {
-      console.error("Error in detectBrowserVersion:", error);
-      return null;
+      case 'Edge': {
+        const _temp2 = userAgent.match(/\b(Edge|Edgios|Edga|Edg)\/(\d+)/);
+        return Number(_temp2[2]);
+      }
     }
+
+    const browserName = this.getBeautifulName(name);
+
+    if (browserName) return this.retrieveVersion(browserName, userAgent);
+
+    let found =
+			userAgent.match(
+			    /(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i,
+			) || [];
+
+    found = found[2] ?
+			[found[1], found[2]] :
+			[nav.appName, nav.appVersion, '-?'];
+
+    let temp;
+    if ((temp = userAgent.match(/version\/(\d+)/i)) !== null) {
+      found.splice(1, 1, temp[1]);
+    }
+
+    return Number(found[1]);
   },
 
-  detectBrowserNameAndVersion: function (nav: any): {
-    name: string;
-    version: string | number;
-  } {
-    try {
-      const name = this.detectBrowserName(nav.userAgent);
-      if (!name) return { name: "unknown", version: "unknown" };
-      const version = this.detectBrowserVersion(nav, name);
-      return {
-        name: name,
-        version: version !== null ? version : "unknown",
-      };
-    } catch (error) {
-      console.error("Error in detectBrowserNameAndVersion:", error);
-      return { name: "unknown", version: "unknown" };
-    }
+  /**
+	 * Detects browser name & version
+	 * @param {object} nav
+	 * @return {object} browser name & version
+	 */
+  detectBrowserNameAndVersion: function(nav: any) {
+    const name = this.detectBrowserName(nav.userAgent);
+    if (!name) return {name: 'unknown', version: 'unknown'};
+    return {
+      name: name,
+      version: this.detectBrowserVersion(nav, name),
+    };
   },
 };
