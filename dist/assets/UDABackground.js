@@ -593,8 +593,8 @@ const CONFIG = {
     UDADebug: false,
     UDA_CONTAINER_CLASS: "udan-main-panel",
     UDA_CLICK_IGNORE_CLASS: "uda_exclude",
-    UDA_DOMAIN: "https://udantest.nistapp.ai/api",
-    UDA_API_URL: "https://udantest.nistapp.ai/api" + "/voiceapi",
+    UDA_DOMAIN: "https://udantest.nistapp.com/api",
+    UDA_API_URL: "https://udantest.nistapp.com/api" + "/voiceapi",
     UDASessionID: (Math.random().toString(36).substring(2, 15) +
         Math.random().toString(36).substring(2, 15)),
     UDA_POST_INTERVAL: 1000,
@@ -1122,7 +1122,7 @@ __webpack_require__.g.UDAGlobalConfig = _config_CustomConfig__WEBPACK_IMPORTED_M
  */
 const UDABindAccount = (userAuthData, UDASessionData, renewToken) => __awaiter(void 0, void 0, void 0, function* () {
     const payLoad = { uid: UDASessionData.authData.id, email: UDASessionData.authData.email, realm: __webpack_require__.g.UDAGlobalConfig.realm, clientId: __webpack_require__.g.UDAGlobalConfig.clientId, clientSecret: __webpack_require__.g.UDAGlobalConfig.clientSecret };
-    const authToken = yield (0,_invokeApi__WEBPACK_IMPORTED_MODULE_1__.invokeApi)("https://authenticatetest.nistapp.ai/" + _config_endpoints__WEBPACK_IMPORTED_MODULE_2__.ENDPOINT.tokenUrl, "POST", payLoad);
+    const authToken = yield (0,_invokeApi__WEBPACK_IMPORTED_MODULE_1__.invokeApi)("https://authenticatetest.nistapp.com/" + _config_endpoints__WEBPACK_IMPORTED_MODULE_2__.ENDPOINT.tokenUrl, "POST", payLoad);
     if (authToken && (authToken === null || authToken === void 0 ? void 0 : authToken.token)) {
         UDASessionData.authData.token = authToken.token;
         let userSessionData = { userauthid: userAuthData.id, usersessionid: UDASessionData.sessionKey };
@@ -1440,8 +1440,8 @@ const invokeApi = (url, method, data, parseJson = true) => __awaiter(void 0, voi
         if (data) {
             config.body = JSON.stringify(data);
         }
-        const baseProdURL = "https://udantest.nistapp.ai/api";
-        const baseTestURL = "https://udantest.nistapp.ai/api";
+        const baseProdURL = "https://udantest.nistapp.com/api";
+        const baseTestURL = "https://udantest.nistapp.com/api";
         let baseURL = baseProdURL;
         if (url.indexOf("http") === -1) {
             if (__webpack_require__.g.UDAGlobalConfig.environment === 'TEST') {
