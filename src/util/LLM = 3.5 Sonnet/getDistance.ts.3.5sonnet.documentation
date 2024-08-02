@@ -1,0 +1,48 @@
+/**
+ * Calculates the distance between two nodes based on their positions.
+ * 
+ * This function handles two types of node structures:
+ * 1. Nodes with screenSize and nodePagePosition properties
+ * 2. Nodes with nodePosition properties
+ * 
+ * For nodes with screenSize, it adjusts the calculation based on the relative screen sizes.
+ * 
+ * @param node1 - The first node object
+ * @param node2 - The second node object
+ * @returns The calculated distance between the two nodes
+ * @throws Will throw an error if the node structures are invalid or if calculations fail
+ */
+export const getDistance = (node1: any, node2: any): number => {
+  try {
+    let dist: number;
+    if ('screenSize' in node1 && 'screenSize' in node2) {
+      let x: number, y: number;
+      if (node1.screenSize?.screen?.width && node1.screenSize?.screen?.height) {
+        if (node1.screenSize.screen.width > node2.screenSize.screen.width) {
+          x = node1.nodePagePosition.left - (node2.nodePagePosition.left * (node2.screenSize.screen.width / node1.screenSize.screen.width));
+          y = node1.nodePagePosition.top - (node2.nodePagePosition.top * (node2.screenSize.screen.height / node1.screenSize.screen.height));
+        } else if (node1.screenSize.screen.width < node2.screenSize.screen.width) {
+          x = (node1.nodePagePosition.left * (node2.screenSize.screen.width / node1.screenSize.screen.width)) - node2.nodePagePosition.left;
+          y = (node1.nodePagePosition.top * (node2.screenSize.screen.height / node1.screenSize.screen.height)) - node2.nodePagePosition.top;
+        } else {
+          x = node1.nodePagePosition.left - node2.nodePagePosition.left;
+          y = node1.nodePagePosition.top - node2.nodePagePosition.top;
+        }
+      } else {
+        x = node1.nodePagePosition.left - node2.nodePagePosition.left;
+        y = node1.nodePagePosition.top - node2.nodePagePosition.top;
+      }
+      dist = Math.abs(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
+    } else if ('nodePosition' in node1 && 'nodePosition' in node2) {
+      const x = node1.nodePosition.x - node2.nodePosition.x;
+      const y = node1.nodePosition.y - node2.nodePosition.y;
+      dist = Math.abs(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
+    } else {
+      throw new Error('Invalid node structure: missing required properties');
+    }
+    return dist;
+  } catch (error) {
+    console.error('Error calculating distance:', error);
+    return Infinity; // Return a large value to indicate an error
+  }
+};
