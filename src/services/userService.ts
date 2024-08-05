@@ -8,6 +8,12 @@ import {CONFIG} from "../config";
 /**
  * For getting user id from the storage
  */
+/**
+ * Retrieves the user's ID from the application's storage.
+ * 
+ * @returns {Promise<string | null>} The user's ID, or `null` if it could not be retrieved.
+ * @throws {Error} If there was an error retrieving the user's ID.
+ */
 export const getUserId = async (): Promise<string | null> => {
   try {
     const userSessionData = await getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
@@ -23,6 +29,12 @@ export const getUserId = async (): Promise<string | null> => {
 
 /**
  * For getting session id from the storage
+ */
+/**
+ * Retrieves the user's session key from the application's storage.
+ * 
+ * @returns {Promise<string | null>} The user's session key, or `null` if it could not be retrieved.
+ * @throws {Error} If there was an error retrieving the user's session key.
  */
 export const getSessionKey = async (): Promise<string | null> => {
   try {
