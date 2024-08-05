@@ -1,0 +1,69 @@
+export const getDistance = (node1: any, node2: any): number => {
+  // Validate input parameters
+  if (!node1 || !node2) {
+    throw new Error('Both nodes must be provided');
+  }
+
+  if (typeof node1 !== 'object' || typeof node2 !== 'object') {
+    throw new Error('Nodes must be objects');
+  }
+
+  let dist: number;
+
+  if ('screenSize' in node1 && 'screenSize' in node2) {
+    // Validate screenSize properties
+    if (!node1.screenSize || !node2.screenSize || !node1.nodePagePosition || !node2.nodePagePosition) {
+      throw new Error('Invalid node structure: missing screenSize or nodePagePosition');
+    }
+
+    let x: number, y: number;
+
+    if (node1.screenSize.screen?.width && node1.screenSize.screen?.height) {
+      // Validate screen dimensions
+      if (typeof node1.screenSize.screen.width !== 'number' || typeof node1.screenSize.screen.height !== 'number' ||
+          typeof node2.screenSize.screen.width !== 'number' || typeof node2.screenSize.screen.height !== 'number') {
+        throw new Error('Screen dimensions must be numbers');
+      }
+
+      if (node1.screenSize.screen.width > node2.screenSize.screen.width) {
+        x = node1.nodePagePosition.left - (node2.nodePagePosition.left * (node2.screenSize.screen.width / node1.screenSize.screen.width));
+        y = node1.nodePagePosition.top - (node2.nodePagePosition.top * (node2.screenSize.screen.height / node1.screenSize.screen.height));
+      } else if (node1.screenSize.screen.width < node2.screenSize.screen.width) {
+        x = (node1.nodePagePosition.left * (node2.screenSize.screen.width / node1.screenSize.screen.width)) - node2.nodePagePosition.left;
+        y = (node1.nodePagePosition.top * (node2.screenSize.screen.height / node1.screenSize.screen.height)) - node2.nodePagePosition.top;
+      } else {
+        x = node1.nodePagePosition.left - node2.nodePagePosition.left;
+        y = node1.nodePagePosition.top - node2.nodePagePosition.top;
+      }
+    } else {
+      x = node1.nodePagePosition.left - node2.nodePagePosition.left;
+      y = node1.nodePagePosition.top - node2.nodePagePosition.top;
+    }
+
+    // Validate position values
+    if (typeof x !== 'number' || typeof y !== 'number') {
+      throw new Error('Invalid position values');
+    }
+
+    dist = Math.abs(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
+  } else if ('nodePosition' in node1 && 'nodePosition' in node2) {
+    // Validate nodePosition properties
+    if (!node1.nodePosition || !node2.nodePosition) {
+      throw new Error('Invalid node structure: missing nodePosition');
+    }
+
+    const x = node1.nodePosition.x - node2.nodePosition.x;
+    const y = node1.nodePosition.y - node2.nodePosition.y;
+
+    // Validate position values
+    if (typeof x !== 'number' || typeof y !== 'number') {
+      throw new Error('Invalid position values');
+    }
+
+    dist = Math.abs(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
+  } else {
+    throw new Error('Invalid node structure: missing required properties');
+  }
+
+  return dist;
+};

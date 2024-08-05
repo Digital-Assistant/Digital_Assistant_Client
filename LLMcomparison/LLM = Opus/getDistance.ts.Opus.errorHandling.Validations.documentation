@@ -1,0 +1,106 @@
+/**
+ * Calculates the distance between two nodes based on their positions and screen sizes.
+ *
+ * @param {Object} node1 - The first node object.
+ * @param {Object} node2 - The second node object.
+ * @returns {number} The calculated distance between the nodes.
+ * @throws {Error} If any required properties are missing or invalid in the input nodes.
+ */
+export const getDistance = (node1, node2) => {
+  /**
+   * Validates the presence of required properties in the input nodes.
+   *
+   * @throws {Error} If node1 or node2 is missing.
+   * @throws {Error} If nodePagePosition is missing in one or both nodes.
+   */
+  if (!node1 || !node2) {
+    throw new Error('Both node1 and node2 are required.');
+  }
+
+  if (!node1.nodePagePosition || !node2.nodePagePosition) {
+    throw new Error('nodePagePosition is missing in one or both nodes.');
+  }
+
+  /**
+   * Validates the presence of left and top properties in nodePagePosition.
+   *
+   * @throws {Error} If nodePagePosition.left or nodePagePosition.top is missing in one or both nodes.
+   */
+  if (!node1.nodePagePosition.hasOwnProperty('left') || !node1.nodePagePosition.hasOwnProperty('top') ||
+      !node2.nodePagePosition.hasOwnProperty('left') || !node2.nodePagePosition.hasOwnProperty('top')) {
+    throw new Error('nodePagePosition.left or nodePagePosition.top is missing in one or both nodes.');
+  }
+
+  let dist;
+  if (node1.hasOwnProperty('screenSize') && node2.hasOwnProperty('screenSize')) {
+    /**
+     * Validates the presence of screenSize in both nodes.
+     *
+     * @throws {Error} If screenSize is missing in one or both nodes.
+     */
+    if (!node1.screenSize || !node2.screenSize) {
+      throw new Error('screenSize is missing in one or both nodes.');
+    }
+
+    /**
+     * Validates the presence of screen property in screenSize.
+     *
+     * @throws {Error} If screenSize.screen is missing in one or both nodes.
+     */
+    if (!node1.screenSize.screen || !node2.screenSize.screen) {
+      throw new Error('screenSize.screen is missing in one or both nodes.');
+    }
+
+    let x, y;
+    // If screen size is available, calculate distance based on screen size
+    if (node1.screenSize.screen.width && node1.screenSize.screen.height) {
+      /**
+       * Validates the presence of screen width and height in node2 when available in node1.
+       *
+       * @throws {Error} If screenSize.screen.width or screenSize.screen.height is missing in node2.
+       */
+      if (!node2.screenSize.screen.width || !node2.screenSize.screen.height) {
+        throw new Error('screenSize.screen.width or screenSize.screen.height is missing in node2.');
+      }
+
+      if (node1.screenSize.screen.width > node2.screenSize.screen.width) {
+        x = node1.nodePagePosition.left - (node2.nodePagePosition.left * (node2.screenSize.screen.width / node1.screenSize.screen.width));
+        y = node1.nodePagePosition.top - (node2.nodePagePosition.top * (node2.screenSize.screen.height / node1.screenSize.screen.height));
+      } else if (node1.screenSize.screen.width < node2.screenSize.screen.width) {
+        x = (node1.nodePagePosition.left * (node2.screenSize.screen.width / node1.screenSize.screen.width)) - node2.nodePagePosition.left;
+        y = (node1.nodePagePosition.top * (node2.screenSize.screen.height / node1.screenSize.screen.height)) - node2.nodePagePosition.top;
+      } else {
+        x = node1.nodePagePosition.left - node2.nodePagePosition.left;
+        y = node1.nodePagePosition.top - node2.nodePagePosition.top;
+      }
+    } else {
+      x = node1.nodePagePosition.left - node2.nodePagePosition.left;
+      y = node1.nodePagePosition.top - node2.nodePagePosition.top;
+    }
+    dist = Math.abs(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
+  } else {
+    /**
+     * Validates the presence of nodePosition in both nodes when screenSize is not available.
+     *
+     * @throws {Error} If nodePosition is missing in one or both nodes.
+     */
+    if (!node1.nodePosition || !node2.nodePosition) {
+      throw new Error('nodePosition is missing in one or both nodes.');
+    }
+
+    /**
+     * Validates the presence of x and y properties in nodePosition.
+     *
+     * @throws {Error} If nodePosition.x or nodePosition.y is missing in one or both nodes.
+     */
+    if (!node1.nodePosition.hasOwnProperty('x') || !node1.nodePosition.hasOwnProperty('y') ||
+        !node2.nodePosition.hasOwnProperty('x') || !node2.nodePosition.hasOwnProperty('y')) {
+      throw new Error('nodePosition.x or nodePosition.y is missing in one or both nodes.');
+    }
+
+    const x = node1.nodePosition.x - node2.nodePosition.x;
+    const y = node1.nodePosition.y - node2.nodePosition.y;
+    dist = Math.abs(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
+  }
+  return dist;
+};
