@@ -1,6 +1,6 @@
-import {getUserId} from "./userService";
-import {ENDPOINT} from "../config/endpoints";
-import {REST} from "./index";
+import { getUserId } from "./userService";
+import { ENDPOINT } from "../config/endpoints";
+import { REST } from "./index";
 
 /**
  * To vote/de-vote the recording
@@ -18,15 +18,20 @@ import {REST} from "./index";
  */
 export const vote = async (request?: any, type?: string) => {
   try {
+    // Get the user session ID
     const usersessionid = await getUserId();
+
+    // Check if the user session ID is not found
     if (!usersessionid) {
       throw new Error("User session ID not found");
     }
 
+    // Check if the request object or the recording ID is missing
     if (!request || !request.id) {
       throw new Error("Invalid request: missing id");
     }
 
+    // Check if the vote type is invalid (not "up" or "down")
     if (type !== "up" && type !== "down") {
       throw new Error("Invalid vote type");
     }
@@ -39,10 +44,10 @@ export const vote = async (request?: any, type?: string) => {
      * @returns The payload object with the necessary vote information.
      */
     const payload = {
-      usersessionid: usersessionid,
-      sequenceid: request.id,
-      upvote: type === "up" ? 1 : 0,
-      downvote: type === "down" ? 1 : 0,
+      usersessionid: usersessionid, // User's session ID
+      sequenceid: request.id, // Recording ID
+      upvote: type === "up" ? 1 : 0, // Set upvote to 1 if type is "up", otherwise 0
+      downvote: type === "down" ? 1 : 0, // Set downvote to 1 if type is "down", otherwise 0
     };
 
     /**
@@ -53,18 +58,18 @@ export const vote = async (request?: any, type?: string) => {
      * @returns The parameters object with the URL, HTTP method, and payload for the vote request.
      */
     const parameters = {
-      url: ENDPOINT.VoteRecord,
-      method: "POST",
-      body: payload,
+      url: ENDPOINT.VoteRecord, // URL endpoint for voting
+      method: "POST", // HTTP method
+      body: payload, // Payload object
     };
-/**
- * Sends the vote request to the server and returns the result.
- * @param parameters - An object containing the URL, HTTP method, and payload for the vote request.
- * @returns A promise that resolves with the result of the vote operation.
- * @throws {Error} If an error occurs during the vote request.
- */
 
-    return await REST.apiCal(parameters);
+    /**
+     * Sends the vote request to the server and returns the result.
+     * @param parameters - An object containing the URL, HTTP method, and payload for the vote request.
+     * @returns A promise that resolves with the result of the vote operation.
+     * @throws {Error} If an error occurs during the vote request.
+     */
+    return await REST.apiCal(parameters); // Make the API call using the REST utility
   } catch (error) {
     console.error("Error in vote function:", error);
     throw error;
@@ -79,27 +84,32 @@ export const vote = async (request?: any, type?: string) => {
  */
 export const getVoteRecord = async (request?: any) => {
   try {
+    // Get the user session ID
     const userSessionId = await getUserId();
+
+    // Check if the user session ID is not found
     if (!userSessionId) {
       throw new Error("User session ID not found");
     }
 
+    // Check if the request object or the recording ID is missing
     if (!request || !request.id) {
       throw new Error("Invalid request: missing id");
     }
 
+    // Construct the parameters object for the vote record fetch request
     const parameters = {
-      url: `${ENDPOINT.fetchVoteRecord}${request.id}/${userSessionId}`,
-      method: "GET"
+      url: `${ENDPOINT.fetchVoteRecord}${request.id}/${userSessionId}`, // URL endpoint for fetching vote record
+      method: "GET", // HTTP method
     };
-/**
- * Sends the vote request to the server and returns the result.
- * @param parameters - An object containing the URL, HTTP method, and payload for the vote request.
- * @returns A promise that resolves with the result of the vote operation.
- * @throws {Error} If an error occurs during the vote request.
- */
 
-    return await REST.apiCal(parameters);
+    /**
+     * Sends the vote request to the server and returns the result.
+     * @param parameters - An object containing the URL, HTTP method, and payload for the vote request.
+     * @returns A promise that resolves with the result of the vote operation.
+     * @throws {Error} If an error occurs during the vote request.
+     */
+    return await REST.apiCal(parameters); // Make the API call using the REST utility
   } catch (error) {
     console.error("Error in getVoteRecord function:", error);
     throw error;
