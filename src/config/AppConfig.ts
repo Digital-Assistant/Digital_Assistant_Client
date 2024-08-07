@@ -9,6 +9,7 @@ import { CustomConfig, CustomConfigPropTypes } from "./CustomConfig";
  * @returns The updated `CustomConfigPropTypes` object.
  */
 export const AppConfig = (data: CustomConfigPropTypes): CustomConfigPropTypes => {
+  // Check if the provided data is not an object
   if (!data || typeof data !== 'object') {
     throw new Error('Invalid configuration data. Expected an object.');
   }
@@ -21,10 +22,14 @@ export const AppConfig = (data: CustomConfigPropTypes): CustomConfigPropTypes =>
    * @param data - An object containing the custom configuration properties to be applied to the `CustomConfig` object.
    */
   Object.keys(CustomConfig).forEach((key) => {
+    // Check if the property exists in the provided data
     if (data[key] !== undefined) {
+      // Check if the types of the property in CustomConfig and the provided data match
       if (typeof CustomConfig[key] === typeof data[key]) {
+        // If the types match, update the property in CustomConfig with the value from the provided data
         CustomConfig[key] = data[key];
       } else {
+        // If the types do not match, log a warning with the expected and received types
         const expectedType = typeof CustomConfig[key];
         const receivedType = typeof data[key];
         console.warn(`Type mismatch for ${key}. Expected ${expectedType}, received ${receivedType}. Using default value.`);
@@ -41,10 +46,13 @@ export const AppConfig = (data: CustomConfigPropTypes): CustomConfigPropTypes =>
    * @returns The updated `CustomConfig` object.
    */
   Object.keys(data).forEach((key) => {
+    // Check if the property does not exist in CustomConfig
     if (!CustomConfig.hasOwnProperty(key)) {
+      // Log a warning for the unknown property
       console.warn(`Unknown configuration property: ${key}. This property will be ignored.`);
     }
   });
 
+  // Return the updated CustomConfig object
   return CustomConfig;
 };
