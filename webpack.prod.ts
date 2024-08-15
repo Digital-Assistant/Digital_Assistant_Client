@@ -3,8 +3,6 @@ import Dotenv from 'dotenv-webpack';
 import TerserPlugin from 'terser-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-// import path from 'path';
 
 const prodConfig: Configuration = {
   mode: 'production',
@@ -43,11 +41,6 @@ const prodConfig: Configuration = {
     }),
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css',
-    }),
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      reportFilename: 'bundle-analysis_report.html',
-      openAnalyzer: false,
     }),
   ],
 };

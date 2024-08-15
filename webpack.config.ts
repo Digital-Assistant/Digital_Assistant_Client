@@ -32,7 +32,7 @@ const config = (env: EnvVariables, argv: any): Configuration => {
       },
     }
   );
-
+  
   return mergedConfig;
 };
 
