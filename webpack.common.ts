@@ -1,6 +1,6 @@
 import path from 'path';
 import webpack from 'webpack';
-// import CopyPlugin from 'copy-webpack-plugin';
+import CopyPlugin from 'copy-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import WebpackBar from 'webpackbar';
 
@@ -66,6 +66,12 @@ const commonConfig: webpack.Configuration = {
       Buffer: ['buffer', 'Buffer'],
     }),
     new ForkTsCheckerWebpackPlugin(),
+    new CopyPlugin({
+      patterns: [
+        { from: 'src/logo.*', to: '../logos/[name][ext]' },
+        { from: 'public/', to: '../' },
+      ],
+    }),
   ],
 };
 

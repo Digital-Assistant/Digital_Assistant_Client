@@ -1,13 +1,11 @@
 import { Configuration } from 'webpack';
 import Dotenv from 'dotenv-webpack';
-import path from 'path';
 
 const devConfig: Configuration = {
   mode: 'development',
   devtool: 'eval-cheap-module-source-map',
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, process.env.BUILD_PATH || 'build'),
     publicPath: '/build/',
   },
   cache: {

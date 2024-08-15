@@ -4,16 +4,12 @@ import TerserPlugin from 'terser-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import path from 'path';
+// import path from 'path';
 
 const prodConfig: Configuration = {
   mode: 'production',
   devtool: 'source-map',
-  output: {
-    path: path.resolve(__dirname, process.env.BUILD_PATH || 'dist', 'assets'),
-    filename: '[name].[contenthash].js',
-    clean: true,
-  },
+
   optimization: {
     minimize: true,
     minimizer: [
