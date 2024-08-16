@@ -46,9 +46,6 @@
     "build:dev": "ts-node -T --skip-project node_modules/.bin/webpack --config webpack.config.ts --env build=development",
     "build": "ts-node -T --skip-project node_modules/.bin/webpack --config webpack.config.ts",
     "build:prod": "ts-node -T --skip-project node_modules/.bin/webpack --config webpack.config.ts --env build=production",
-    "clean": "ts-node -T --skip-project node_modules/.bin/del build dist",
-    "clean:prod": "ts-node -T --skip-project node_modules/.bin/del dist",
-    "clean:dev": "ts-node -T --skip-project node_modules/del build",
     "test": "jest",
     "postinstall": "node ./scripts/postinstall.js"
   },
