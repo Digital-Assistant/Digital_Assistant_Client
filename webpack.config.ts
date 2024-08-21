@@ -1,8 +1,8 @@
 import { Configuration } from 'webpack';
 import { merge } from 'webpack-merge';
-import commonConfig from './webpack.common';
-import devConfig from './webpack.dev';
-import prodConfig from './webpack.prod';
+import commonConfig from './configs/webpack/webpack.common';
+import devConfig from './configs/webpack/webpack.dev';
+import prodConfig from './configs/webpack/webpack.prod';
 import path from 'path';
 
 interface EnvVariables {
