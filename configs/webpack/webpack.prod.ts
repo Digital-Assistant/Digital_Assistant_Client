@@ -35,7 +35,7 @@ const prodConfig: Configuration = {
   },
   plugins: [
     new Dotenv({
-      path: './environments/production.env',
+      path: '../environments/production.env',
       safe: true,
       systemvars: true,
     }),

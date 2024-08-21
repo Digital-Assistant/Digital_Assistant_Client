@@ -44,8 +44,8 @@ const commonConfig: webpack.Configuration = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.css', '.scss'],
     alias: {
-      utils: path.resolve(__dirname, './src/config/index'),
-      antd: path.resolve(__dirname, 'node_modules/antd'),
+      utils: path.resolve(__dirname, '../../src/config/index'),
+      antd: path.resolve(__dirname, '../../node_modules/antd'),
     },
     fallback: {
       fs: false,

@@ -17,7 +17,7 @@ const devConfig: Configuration = {
   },
   plugins: [
     new Dotenv({
-      path: './environments/development.env',
+      path: '../environments/development.env',
       safe: true,
       systemvars: true,
     }),
