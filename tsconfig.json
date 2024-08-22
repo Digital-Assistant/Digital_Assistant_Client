@@ -1,20 +1,32 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports":true,
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "outDir": "./dist/",
     "noImplicitAny": false,
+    "strict": false,
     "module": "es6",
-    "target": "es6", // change es5 to es6 to solve shadow dom "this" issue and shadow dom support 
-    "jsx": "react",
+    "target": "es6",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "jsx": "react-jsx",
     "allowJs": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": false,
+    "baseUrl": "src",
+    "sourceMap": true,
+    "paths": {
+      "@/*": ["*"]
+    },
     "plugins": [
       {
-        "transform": "typescript-json/lib/transform",
-        // "functional": true, // test function type
-        // "numeric": true, // test `isNaN()` and `isFinite()`
+        "transform": "typescript-json/lib/transform"
       }
     ]
-  }
+  },
+  "include": ["src/**/*", "webpack.config.ts", "webpack.common.ts", "webpack.dev.ts", "webpack.prod.ts"],
+  "exclude": ["node_modules", "dist"]
 }
