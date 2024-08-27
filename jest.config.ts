@@ -22,6 +22,9 @@ const config: Config = {
             tsconfig: '<rootDir>/tsconfig.json',
         },
     },
+    testPathIgnorePatterns: [
+        '<rootDir>/src/__test__/setupTests.ts',
+    ],
 };
 
 export default config;
