@@ -10,7 +10,7 @@ export const CONFIG = {
   UDA_CONTAINER_CLASS: "udan-main-panel",
   UDA_CLICK_IGNORE_CLASS: "uda_exclude",
   UDA_DOMAIN: process.env.baseURL,
-  UDA_API_URL: process.env.baseURL + "/voiceapi",
+  UDA_API_URL: process.env.baseURL + "/api",
   UDASessionID: (
       Math.random().toString(36).substring(2, 15) +
       Math.random().toString(36).substring(2, 15)
@@ -44,7 +44,7 @@ export const CONFIG = {
     } else {
       this.UDA_DOMAIN = "https://udantest.nistapp.ai";
     }
-    this.UDA_API_URL = this.UDA_DOMAIN + "/voiceapi";
+    this.UDA_API_URL = this.UDA_DOMAIN + "/api";
   },
   get Environment() {
     return this.current;
