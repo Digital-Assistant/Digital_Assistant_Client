@@ -3,7 +3,7 @@ import Dotenv from 'dotenv-webpack';
 
 const devConfig: Configuration = {
   mode: 'development',
-  devtool: 'eval-cheap-module-source-map',
+  devtool: 'cheap-module-source-map',
   output: {
     filename: '[name].js',
     publicPath: '/build/',

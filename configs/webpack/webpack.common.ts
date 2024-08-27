@@ -3,6 +3,21 @@ import webpack from 'webpack';
 import CopyPlugin from 'copy-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import WebpackBar from 'webpackbar';
+import {transform} from "@babel/core";
+
+
+const customStyleLoader = {
+  loader: require.resolve('style-loader'),
+  options: {
+    insert: function (linkTag) {
+      setTimeout(()=>{
+        const parent = document.querySelector('#udan-react-root').shadowRoot;
+        parent.appendChild(linkTag);
+      },10);
+    },
+    // injectType: "linkTag"
+  }
+}
 
 const commonConfig: webpack.Configuration = {
   entry: {
@@ -16,11 +31,23 @@ const commonConfig: webpack.Configuration = {
   module: {
     rules: [
       {
+        test: /\.(js|jsx)$/,
+        exclude: /(node_modules|bower_components)/,
+        loader: "babel-loader", // the loader which should be applied, it'll be resolved relative to the context
+        options: {
+          presets: ["@babel/env", "@babel/preset-react"],
+          plugins: ['@babel/plugin-transform-runtime'],
+        }, // options for the loader
+      },
+      {
         test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
         use: [
           {
             loader: 'thread-loader',
+          },
+          {
+            loader: 'ts-loader',
           },
           {
             loader: 'babel-loader',
@@ -29,11 +56,11 @@ const commonConfig: webpack.Configuration = {
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        use: [customStyleLoader, 'css-loader'],
       },
       {
         test: /\.s[ac]ss$/,
-        use: ['style-loader', 'css-loader', 'sass-loader'],
+        use: [customStyleLoader, 'css-loader', 'sass-loader'],
       },
       {
         test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
