@@ -49,12 +49,6 @@
     "test": "jest",
     "postinstall": "node ./scripts/postinstall.js"
   },
-  "jest": {
-    "transform": {
-      "^.+\\.(ts|tsx|js|jsx)$": "ts-jest"
-    },
-    "testEnvironment": "jsdom"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -75,13 +69,16 @@
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
-    "@babel/preset-env": "^7.19.3",
-    "@babel/preset-react": "^7.18.6",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-transform-runtime": "^7.24.7",
+    "@babel/preset-env": "^7.25.3",
+    "@babel/preset-react": "^7.24.7",
+    "@babel/preset-typescript": "^7.24.7",
     "@testing-library/react": "^13.4.0",
     "@types/jest": "^29.5.12",
     "@types/react": "^18.0.12",
     "@types/react-dom": "^18.0.5",
-    "babel-jest": "^29.1.2",
+    "babel-jest": "^29.7.0",
     "babel-loader": "^9.0.1",
     "compression-webpack-plugin": "^10.0.0",
     "copy-webpack-plugin": "^11.0.0",
@@ -90,7 +87,8 @@
     "dotenv": "^16.0.3",
     "dotenv-webpack": "^8.0.1",
     "file-loader": "^6.2.0",
-    "jest": "^29.1.2",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.1.2",
     "mini-css-extract-plugin": "^2.7.2",
     "process": "^0.11.10",
@@ -100,7 +98,7 @@
     "sass-loader": "^13.0.2",
     "style-loader": "^3.3.1",
     "terser-webpack-plugin": "^5.3.6",
-    "ts-jest": "^29.0.3",
+    "ts-jest": "^29.2.4",
     "ts-node": "^10.9.1",
     "ttypescript": "^1.5.13",
     "typescript": "^4.6.3",
