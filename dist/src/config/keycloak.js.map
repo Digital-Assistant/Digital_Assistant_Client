@@ -1,0 +1,1 @@
+{"version":3,"file":"keycloak.js","sourceRoot":"","sources":["../../../src/config/keycloak.js"],"names":[],"mappings":"AAAA,OAAO,QAAQ,MAAM,aAAa,CAAC;AACnC,MAAM,QAAQ,GAAG,IAAI,QAAQ,CAAC;IAC1B,GAAG,EAAE,OAAO,CAAC,GAAG,CAAC,WAAW;IAC5B,KAAK,EAAE,MAAM;IACb,QAAQ,EAAE,WAAW;CACxB,CAAC,CAAC;AAEH,eAAe,QAAQ,CAAC"}
