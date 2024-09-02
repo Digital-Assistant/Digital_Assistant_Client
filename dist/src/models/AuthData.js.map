@@ -1,0 +1,1 @@
+{"version":3,"file":"AuthData.js","sourceRoot":"","sources":["../../../src/models/AuthData.ts"],"names":[],"mappings":"AAAA,MAAM,OAAO,QAAQ;IAIjB,YAAY,KAAW,IAAI,EAAE,QAAc,IAAI,EAAE,QAAc,IAAI;QAC/D,IAAI,CAAC,EAAE,GAAG,EAAE,CAAC;QACb,IAAI,CAAC,KAAK,GAAG,KAAK,CAAC;QACnB,IAAI,CAAC,KAAK,GAAG,KAAK,CAAC;IACvB,CAAC;CACJ"}

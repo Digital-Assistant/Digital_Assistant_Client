@@ -422,10 +422,10 @@ header.uda-original-content {
 
 .add-btn {
   height: 38px !important;
-  background-color: #226600 !important;
+  background-color: $uda-green-bg !important;
 
   &:hover {
-    background-color: #174500 !important;
+    background-color: $uda-green-bg-hover !important;
   }
 }
 
@@ -436,25 +436,25 @@ header.uda-original-content {
 
 .uda-page-right-bar .uda-container .uda-card-details .uda-tutorial-btn {
   &:hover {
-    background-color: #4155d7 !important;
+    background-color: $uda-blue-bg-hover !important;
   }
 }
 
 .uda-page-right-bar .uda-container .uda-card-details .uda-record-btn {
-  background-color: #ff5722 !important;
+  background-color: $uda-orange-bg !important;
 
   &:hover {
-    background-color: #ff7421;
+    background-color: $uda-orange-bg-hover;
   }
 }
 
 #uda-sequence-names {
   .delete-btn.uda-remove-row {
-    background-color: #ff5722 !important;
+    background-color: $uda-orange-bg !important;
     height: 40px !important;
 
     &:hover {
-      background-color: #ff7421;
+      background-color: $uda-orange-bg-hover;
     }
   }
 }
