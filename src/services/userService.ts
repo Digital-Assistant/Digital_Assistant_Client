@@ -37,9 +37,6 @@ export const getUserId = async (): Promise<string | null> => {
 }
 
 /**
- * For getting session id from the storage
- */
-/**
  * Retrieves the user's session key from the application's storage.
  * 
  * @returns {Promise<string | null>} The user's session key, or `null` if it could not be retrieved.
