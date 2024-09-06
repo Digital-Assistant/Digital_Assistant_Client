@@ -28,6 +28,8 @@ import {fetchDomain} from "./util/fetchDomain";
 
 import ReactGA from 'react-ga4';
 
+import Udan from "installable-poc";
+
 // adding global variable declaration for exposing react custom configuration
 global.UDAPluginSDK = AppConfig;
 global.UDAGlobalConfig = CustomConfig;
@@ -461,14 +463,17 @@ function App(props) {
                     setShowLoader(true);
                 }
                 let domain = fetchDomain();
-                const _searchResults = await fetchSearchResults({
+                /*const _searchResults = await fetchSearchResults({
                     keyword: searchKeyword,
                     page: _page,
                     domain: encodeURI(domain),
                     additionalParams: global.UDAGlobalConfig.enablePermissions
                         ? encodeURI(JSON.stringify(global.UDAGlobalConfig.permissions))
                         : null,
-                });
+                });*/
+                const additionalParams = global.UDAGlobalConfig.enablePermissions ? encodeURI(JSON.stringify(global.UDAGlobalConfig.permissions)) : null;
+                const _searchResults = await Udan.searchResults(searchKeyword, _page, encodeURI(domain), additionalParams);
+
                 setTimeout(() => setShowLoader(false), 500);
                 if (_searchResults.length) {
                     setPage(_page);
