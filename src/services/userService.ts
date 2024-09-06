@@ -53,6 +53,13 @@ export const getSessionKey = async (): Promise<string | null> => {
       return userSessionData.sessionKey;
     }
 
+    /**
+     * Handles the case where the user's session key could not be retrieved from the application's storage.
+     * 
+     * @returns {Promise<string | null>} `null` if the session key could not be retrieved.
+     * @throws {Error} If there was an error retrieving the session key.
+     */
+    
     // If the user's session key could not be found, return null
     return null;
   } catch (error) {
