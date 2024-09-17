@@ -132,7 +132,6 @@ describe('vote function', () => {
     await expect(vote(request, 'invalid')).rejects.toThrow('Invalid vote type');
   });
 
-  // New test case for numeric id
   /**
    * Tests handling of a numeric 'id' property in the `vote` function.
    *

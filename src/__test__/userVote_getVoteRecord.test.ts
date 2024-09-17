@@ -326,15 +326,6 @@ describe('getVoteRecord', () => {
  * @returns {Promise<{ vote: string }>} - The response from the REST API call, containing the vote record.
  */
 describe('getVoteRecord', () => {
-
-    /**
-     * Tests the behavior of the `getVoteRecord` function when an invalid request object is provided.
-     *
-     * This test case ensures that the `getVoteRecord` function correctly handles a request object that does not contain the expected `id` property. It verifies that the function still makes the expected API call with the `undefined` value for the sequence ID, and that the returned result matches the expected value.
-     *
-     * @param {Object} request - The request object containing the sequence ID.
-     * @returns {Promise<{ vote: string }>} - The response from the REST API call, containing the vote record.
-     */
     it('should handle invalid request object', async () => {
       (getUserId as jest.Mock).mockResolvedValue('user123');
       (REST.apiCal as jest.Mock).mockResolvedValue({ vote: 'none' });

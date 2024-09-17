@@ -3,12 +3,11 @@ import { ENDPOINT } from "../config/endpoints";
 import { REST } from "./index";
 
 /**
- * Votes or de-votes a recording.
- * @param request - The request object containing the recording ID.
+ * Votes on a recording with the specified vote type.
+ * @param request - An object containing the recording ID.
  * @param type - The type of vote, either "up" or "down".
  * @returns A promise that resolves with the result of the vote operation.
- * @throws {Error} If the user session ID is not found or the request is invalid.
- * @throws {Error} If the vote type is invalid.
+ * @throws {Error} If the user session ID is not found, the request is invalid, or an error occurs during the vote request.
  */
 export const vote = async (request?: any, type?: string) => {
   try {
@@ -105,9 +104,12 @@ export const getVoteRecord = async (request?: any) => {
      */
     return await REST.apiCal(parameters); // Make the API call using the REST utility
   } catch (error) {
+    // Log the error to the console for debugging purposes
     console.error("Error in getVoteRecord function:", error);
+  
+    // Re-throw the error to allow calling code to handle it
     throw error;
   }
-};
+  
 
 
