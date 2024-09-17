@@ -30,6 +30,15 @@ describe('vote function', () => {
   });
 
 
+  /**
+   * Tests the 'vote' function with an 'up' vote.
+   *
+   * - Mocks the `getUserId` function to return a valid user session ID.
+   * - Mocks the `REST.apiCal` function to return a successful response.
+   * - Calls the `vote` function with a request object containing a 'recording-456' ID and an 'up' vote type.
+   * - Verifies that the `vote` function calls the `REST.apiCal` function with the correct parameters, including the 'sequenceid' property set to the 'recording-456' ID and the 'upvote' property set to 1.
+   * - Verifies that the `vote` function returns the expected successful response.
+   */
   it('should successfully vote up', async () => {
     // Mock the getUserId function
     (getUserId as jest.Mock).mockResolvedValue('user-123');
@@ -54,6 +63,15 @@ describe('vote function', () => {
     });
   });
 
+  /**
+   * Tests the 'vote' function with a 'down' vote.
+   *
+   * - Mocks the `getUserId` function to return a valid user session ID.
+   * - Mocks the `REST.apiCal` function to return a successful response.
+   * - Calls the `vote` function with a request object containing a 'recording-789' ID and a 'down' vote type.
+   * - Verifies that the `vote` function calls the `REST.apiCal` function with the correct parameters, including the 'sequenceid' property set to the 'recording-789' ID and the 'downvote' property set to 1.
+   * - Verifies that the `vote` function returns the expected successful response.
+   */
   it('should successfully vote down', async () => {
     (getUserId as jest.Mock).mockResolvedValue('user-123');
     (REST.apiCal as jest.Mock).mockResolvedValue({ success: true });
@@ -75,6 +93,13 @@ describe('vote function', () => {
     });
   });
 
+  /**
+   * Tests that the `vote` function throws an error when the user session ID is not found.
+   *
+   * - Mocks the `getUserId` function to return `null`, simulating a scenario where the user session ID is not found.
+   * - Calls the `vote` function with a request object containing a 'recording-123' ID and an 'up' vote type.
+   * - Verifies that the `vote` function rejects with an error message 'User session ID not found'.
+   */
   it('should throw an error if user session ID is not found', async () => {
     (getUserId as jest.Mock).mockResolvedValue(null);
 
@@ -82,6 +107,12 @@ describe('vote function', () => {
     await expect(vote(request, 'up')).rejects.toThrow('User session ID not found');
   });
 
+  /**
+   * Tests handling of invalid requests in the `vote` function.
+   *
+   * - Verifies that the `vote` function rejects with an error when the `request` parameter is `undefined`.
+   * - Verifies that the `vote` function rejects with an error when the `request` parameter is an empty object.
+   */
   it('should throw an error if request is invalid', async () => {
     (getUserId as jest.Mock).mockResolvedValue('user-123');
 
@@ -89,6 +120,11 @@ describe('vote function', () => {
     await expect(vote({}, 'up')).rejects.toThrow('Invalid request: missing id');
   });
 
+  /**
+   * Tests handling of an invalid vote type in the `vote` function.
+   *
+   * - Verifies that the `vote` function rejects with an error when the `voteType` parameter is not 'up' or 'down'.
+   */
   it('should throw an error if vote type is invalid', async () => {
     (getUserId as jest.Mock).mockResolvedValue('user-123');
 
@@ -124,15 +160,21 @@ describe('vote function', () => {
   });
 });
 
+/**
+ * Tests handling of a null request object in the `vote` function.
+ *
+ * - Verifies that the `vote` function rejects with an error when the request parameter is `null`.
+ */
 describe('vote - Additional Tests', () => {
     it('should handle vote with null request', async () => {
       await expect(vote(null, 'up')).rejects.toThrow();
     });
 
+    
     /**
-     * Tests handling of a non-object request in the `vote` function.
+     * Tests handling of a non-object request object in the `vote` function.
      *
-     * - Verifies that the `vote` function rejects with an error when the `request` parameter is not an object.
+     * - Verifies that the `vote` function rejects with an error when the request parameter is not an object.
      */
     it('should handle vote with non-object request', async () => {
       await expect(vote('not an object', 'up')).rejects.toThrow();
@@ -204,6 +246,13 @@ describe('vote - Additional Tests', () => {
   });
 
   describe('vote', () => {
+    /**
+     * Votes on a sequence with the given vote type.
+     *
+     * @param request - An object containing the sequence ID to vote on.
+     * @param voteType - The type of vote to cast, either 'up' or 'down'.
+     * @returns A promise that resolves with the success status of the vote.
+     */
     it('should call REST.apiCal with correct parameters for upvote', async () => {
       const mockUserId = 'user123';
       const mockRequest = { id: 'sequence456' };
@@ -251,11 +300,13 @@ describe('vote - Additional Tests', () => {
       });
     });
 
+    
     /**
-     * Tests error handling for the `vote` function.
+     * Tests error handling for the `vote` function when the `getUserId` function fails.
      *
      * - Verifies that the `vote` function rejects with the expected error when `getUserId` throws an error.
-     * - Verifies that the `vote` function rejects with the expected error when `REST.apiCal` throws an error.
+     *
+     * @param request - An object containing the sequence ID to vote on.
      */
     it('should handle errors from getUserId', async () => {
         (getUserId as jest.Mock).mockRejectedValue(new Error('User ID error'));
@@ -263,6 +314,13 @@ describe('vote - Additional Tests', () => {
         await expect(vote({ id: 'sequence123' }, 'up')).rejects.toThrow('User ID error');
       });
   
+      /**
+       * Tests error handling for the `vote` function when the API call fails.
+       *
+       * - Verifies that the `vote` function rejects with the expected error when `REST.apiCal` throws an error.
+       *
+       * @param request - An object containing the sequence ID to vote on.
+       */
       it('should handle errors from REST.apiCal', async () => {
         (getUserId as jest.Mock).mockResolvedValue('user123');
         (REST.apiCal as jest.Mock).mockRejectedValue(new Error('API error'));
@@ -314,6 +372,13 @@ describe('vote - Additional Tests', () => {
         await expect(vote(request, 'invalid')).rejects.toThrow();
       });
   
+      /**
+       * Votes on a sequence with the specified type (up).
+       *
+       * @param request - An object containing the sequence ID to vote on.
+       * @param type - The type of vote, 'up'.
+       * @returns A Promise that resolves with the result of the vote operation.
+       */
       describe('vote', () => {
         it('should call REST.apiCal with the correct parameters for upvote', async () => {
           const mockUserId = 'user123';
@@ -393,6 +458,12 @@ describe('vote - Additional Tests', () => {
       });
 
       describe('vote', () => {
+        /**
+         * Tests the `vote` function by calling it with a mock request and verifying that the REST API is called with the correct parameters for an upvote.
+         *
+         * @param mockRequest - An object containing the sequence ID to vote on.
+         * @returns A promise that resolves with the result of the vote operation.
+         */
         it('should call the REST API with the correct parameters for upvote', async () => {
           const mockUserId = 'user123';
           const mockRequest = { id: 'record456' };

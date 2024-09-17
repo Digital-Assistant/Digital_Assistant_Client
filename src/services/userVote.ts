@@ -3,12 +3,6 @@ import { ENDPOINT } from "../config/endpoints";
 import { REST } from "./index";
 
 /**
- * To vote/de-vote the recording
- * @param request
- * @param type
- * @returns promise
- */
-/**
  * Votes or de-votes a recording.
  * @param request - The request object containing the recording ID.
  * @param type - The type of vote, either "up" or "down".

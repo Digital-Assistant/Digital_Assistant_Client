@@ -26,6 +26,14 @@ jest.mock('../services/index');
 
 
 describe('getVoteRecord', () => {
+    /**
+     * Tests that the `getVoteRecord` function calls the `REST.apiCal` function with the correct parameters.
+     *
+     * - Mocks the `getUserId` function to return a mock user ID.
+     * - Mocks the `REST.apiCal` function to return a mock vote data object.
+     * - Calls the `getVoteRecord` function with a mock request object.
+     * - Verifies that the `REST.apiCal` function was called with the expected URL and method.
+     */
     it('should call REST.apiCal with correct parameters', async () => {
       const mockUserId = 'user456';
       const mockRequest = { id: 'sequence789' };
@@ -319,6 +327,14 @@ describe('getVoteRecord', () => {
  */
 describe('getVoteRecord', () => {
 
+    /**
+     * Tests the behavior of the `getVoteRecord` function when an invalid request object is provided.
+     *
+     * This test case ensures that the `getVoteRecord` function correctly handles a request object that does not contain the expected `id` property. It verifies that the function still makes the expected API call with the `undefined` value for the sequence ID, and that the returned result matches the expected value.
+     *
+     * @param {Object} request - The request object containing the sequence ID.
+     * @returns {Promise<{ vote: string }>} - The response from the REST API call, containing the vote record.
+     */
     it('should handle invalid request object', async () => {
       (getUserId as jest.Mock).mockResolvedValue('user123');
       (REST.apiCal as jest.Mock).mockResolvedValue({ vote: 'none' });
@@ -483,6 +499,15 @@ describe('getVoteRecord', () => {
     await expect(getVoteRecord({})).rejects.toThrow('Invalid request: missing id');
   });
 
+  /**
+   * Tests that the `getVoteRecord` function correctly throws an error when the API call fails.
+   *
+   * This test case verifies that the `getVoteRecord` function correctly throws an error when the `REST.apiCal` function rejects with a mock error. It mocks the `getUserId` function to return a mock user session ID, and mocks the `REST.apiCal` function to reject with a mock error. It then calls the `getVoteRecord` function with a mock vote record ID and asserts that the function rejects with the expected error message.
+   *
+   * @param {Object} request - The request object containing the vote record ID.
+   * @param {string} request.id - The ID of the vote record to fetch.
+   * @returns {Promise<void>} - A promise that resolves when the test case completes.
+   */
   it('should throw an error when the API call fails', async () => {
     const mockUserSessionId = 'mock-user-session-id';
     const mockVoteRecordId = 'mock-vote-record-id';
