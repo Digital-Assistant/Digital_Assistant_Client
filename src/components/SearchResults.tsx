@@ -14,6 +14,7 @@ import {CONFIG} from "../config";
 import {getRowObject} from "../util/getRowObject";
 import {recordUserClickData} from "../services";
 import ReactGA from "react-ga4";
+import {getRecordingName} from "../util/getRecordingName";
 
 export interface MProps {
   visibility?: boolean;
@@ -58,12 +59,15 @@ export const SearchResults = (props: MProps) => {
   }, [props]);
 
   const selectItem = async (item: any, play=false) => {
-    await recordUserClickData('viewRecording', '', item.id);
     setToStore(item, CONFIG.SELECTED_RECORDING, false);
-    if (props?.showDetails) props.showDetails(item);
+    if (props?.showDetails){
+      props.showDetails(item);
+      await recordUserClickData('viewRecording', getRecordingName(item), item.id);
+    }
 
     if(play){
       props.playHandler("on");
+      await recordUserClickData('play', getRecordingName(item), item.id);
     }
   };
 

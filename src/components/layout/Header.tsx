@@ -9,6 +9,7 @@ import LanguageSelect from "./LanguageSelect";
 import { translateText } from "../../services/translateService";
 import {translate} from "../../util/translation";
 import {CloseCircleOutlined} from "@ant-design/icons";
+import {recordUserClickData} from "../../services";
 
 /**
  * To render search result elements
@@ -28,8 +29,11 @@ const Header = (props: HeaderProps) => {
   /**
    * Toggle right side panel visibility
    */
-  const togglePanel = () => {
-    if (props.toggleHandler) props.toggleHandler(hide, "header");
+  const togglePanel = async () => {
+    if (props.toggleHandler){
+      props.toggleHandler(hide, "header");
+      await recordUserClickData('UDAPanelClosed', window.location.host);
+    }
   };
 
   /**
@@ -49,9 +53,10 @@ const Header = (props: HeaderProps) => {
    * clear search function
    * @param event
    */
-  const clearSearch = () => {
+  const clearSearch = async () => {
     props.setSearchKeyword('');
     setSearchKeyword('');
+    await recordUserClickData('clearSearch', window.location.host);
   }
 
   const submitSearch = (event) => {
