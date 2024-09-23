@@ -1,1 +1,0 @@
-{"version":3,"file":"resources.js","sourceRoot":"","sources":["../../../../src/util/i18n/resources.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,eAAe,EAAC,MAAM,cAAc,CAAC;AAE7C,MAAM,CAAC,MAAM,SAAS,GAAG;IACvB,mBAAmB;IACnB,SAAS,EAAE;QACT,EAAE,EAAE;YACF,WAAW,EAAE,eAAe;SAC7B;KACF;IACD,GAAG,EAAE,IAAI;IACT,WAAW,EAAE,IAAI;IACjB,aAAa,EAAE;QACb,WAAW,EAAE,KAAK,EAAE,sGAAsG;KAC3H;CACF,CAAC"}
