@@ -355,7 +355,7 @@ function App(props) {
             init();
 
             // Send pageview with a custom path
-            ReactGA.send({ hitType: "pageview", page: "/", title: "Loaded Plugin" });
+            ReactGA.send({ hitType: "pageView", page: "/", title: "Loaded Plugin" });
 
         }
 
