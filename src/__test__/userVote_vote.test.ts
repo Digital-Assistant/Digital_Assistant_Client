@@ -1,3 +1,14 @@
+/**
+ * This code imports various modules and functions that are used in the `userVote_vote.test.ts` file. The imported modules and functions are:
+ *
+ * - `vote` function from `../services/userVote`
+ * - `getUserId` function from `../services/userService`
+ * - `CONFIG` object from `../config`
+ * - `REST` object from `../services`
+ * - `ENDPOINT` object from `../config/endpoints`
+ * - `domJSON` module from `domjson`
+ * - `TSON` module from `typescript-json`
+ */
 import { vote } from '../services/userVote';
 import { getUserId } from '../services/userService';
 import { CONFIG } from '../config';

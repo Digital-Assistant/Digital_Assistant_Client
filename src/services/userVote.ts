@@ -104,10 +104,7 @@ export const getVoteRecord = async (request?: any) => {
      */
     return await REST.apiCal(parameters); // Make the API call using the REST utility
   } catch (error) {
-    // Log the error to the console for debugging purposes
     console.error("Error in getVoteRecord function:", error);
-  
-    // Re-throw the error to allow calling code to handle it
     throw error;
   }
   };

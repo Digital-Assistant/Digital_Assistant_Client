@@ -1,3 +1,13 @@
+/**
+ * Imports various modules and functions used in the `userVote_getVoteRecord.test.ts` file, including:
+ * - `vote` from `../services/userVote`
+ * - `CONFIG` from `../config`
+ * - `REST` from `../services`
+ * - `ENDPOINT` from `../config/endpoints`
+ * - `getVoteRecord` from `../services/userVote`
+ * - `domJSON` from "domjson"
+ * - `TSON` from "typescript-json"
+ */
 import { vote } from '../services/userVote';
 import { CONFIG } from '../config';
 import { REST } from '../services';
