@@ -1,1 +1,0 @@
-{"version":3,"file":"CSPData.js","sourceRoot":"","sources":["../../../src/models/CSPData.ts"],"names":[],"mappings":"AAAA,MAAM,OAAO,OAAO;IAIhB,YAAY,aAAoB,KAAK,EAAE,aAAoB,IAAI,EAAE,SAAe,IAAI;QAChF,IAAI,CAAC,UAAU,GAAG,UAAU,CAAC;QAC7B,IAAI,CAAC,UAAU,GAAG,UAAU,CAAC;QAC7B,IAAI,CAAC,MAAM,GAAG,MAAM,CAAC;IACzB,CAAC;CACJ"}
