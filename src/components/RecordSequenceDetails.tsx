@@ -31,6 +31,7 @@ import {removeToolTip} from "../util/addToolTip";
 import {getClickedNodeLabel} from "../util/getClickedNodeLabel";
 import {getVoteRecord, vote} from "../services/userVote";
 import {addNotification} from "../util/addNotification";
+import {getRecordingName} from "../util/getRecordingName";
 
 
 
@@ -182,8 +183,11 @@ export const RecordSequenceDetails = (props: MProps) => {
   /**
    * Pause the autoplay
    */
-  const pause = () => {
-    if (props.playHandler) props.playHandler("off");
+  const pause = async () => {
+    if (props.playHandler){
+      props.playHandler("off");
+      // await recordUserClickData('pause', getName(), selectedRecordingDetails.id);
+    }
   };
 
   const playNode = (item, index) => {
@@ -208,8 +212,10 @@ export const RecordSequenceDetails = (props: MProps) => {
     setSelectedRecordingDetails({...selectedRecordingDetails});
     if (type === 'up') {
       setUserVote({upvote: 1, downvote: 0});
+      await recordUserClickData('upVote', getRecordingName(selectedRecordingDetails), selectedRecordingDetails.id);
     } else {
       setUserVote({upvote: 0, downvote: 1});
+      await recordUserClickData('downVote', getRecordingName(selectedRecordingDetails), selectedRecordingDetails.id);
     }
   };
 
@@ -253,7 +259,7 @@ export const RecordSequenceDetails = (props: MProps) => {
     return <span>{key} {value}</span>
   };
 
-  function copy() {
+  const copy = async () => {
     const el = document.createElement("input");
     const searchParams = new URLSearchParams(window.location.search);
     searchParams.set(CONFIG.UDA_URL_Param, selectedRecordingDetails.id);
@@ -264,6 +270,7 @@ export const RecordSequenceDetails = (props: MProps) => {
     document.execCommand("copy");
     document.body.removeChild(el);
     setCopied(true);
+    await recordUserClickData('shareLink', getRecordingName(selectedRecordingDetails), selectedRecordingDetails.id);
   }
 
   /**
