@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Universal Digital Assistant (UDA) Beta",
-  "version": "1.0.8",
+  "version": "1.0.8.1",
   "content_scripts": [
     {
       "js": [
