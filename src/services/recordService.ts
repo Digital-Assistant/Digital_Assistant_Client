@@ -76,8 +76,8 @@ export const recordSequence = async (request?: any) => {
 
 export const userClick = async (request?: any) => {
   request.usersessionid = await getUserId();
-  if(!request.clickedname || request.clickedname === '') {
-    request.clickedname = window.location.host;
+  if(!request.domain || request.domain === '') {
+    request.domain = window.location.host;
   }
   const parameters = {
     url: ENDPOINT.UserClick,

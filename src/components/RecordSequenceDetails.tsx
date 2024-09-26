@@ -100,13 +100,13 @@ export const RecordSequenceDetails = (props: MProps) => {
       if(matchNode(playItem)) {
         updateStatus(playItem.index);
       } else {
-        await recordUserClickData('playBackError', getName(), selectedRecordingDetails.id);
+        await recordUserClickData('playBackError', '', selectedRecordingDetails.id);
         pause();
         removeToolTip();
         trigger("openPanel", {action: 'openPanel'});
       }
     } else {
-      await recordUserClickData('playCompleted', getName(), selectedRecordingDetails.id);
+      await recordUserClickData('playCompleted', '', selectedRecordingDetails.id);
       pause();
       removeToolTip();
       if(!props?.config?.enableHidePanelAfterCompletion) {
@@ -161,7 +161,7 @@ export const RecordSequenceDetails = (props: MProps) => {
    * Navigates back to search results card
    */
   const backNav = async (forceRefresh = false, openPanel = true) => {
-    await recordUserClickData('backToSearchResults', getName(), selectedRecordingDetails.id);
+    await recordUserClickData('backToSearchResults', '', selectedRecordingDetails.id);
     if(openPanel) {
       trigger("openPanel", {action: 'openPanel'});
     }
@@ -174,7 +174,7 @@ export const RecordSequenceDetails = (props: MProps) => {
    * Auto play button handler
    */
   const play = async () => {
-    await recordUserClickData('play', getName(), selectedRecordingDetails.id);
+    await recordUserClickData('play', '', selectedRecordingDetails.id);
     trigger("closePanel", {action: 'closePanel'});
     if (props.playHandler) props.playHandler("on");
     // autoPlay();
@@ -186,7 +186,7 @@ export const RecordSequenceDetails = (props: MProps) => {
   const pause = async () => {
     if (props.playHandler){
       props.playHandler("off");
-      // await recordUserClickData('pause', getName(), selectedRecordingDetails.id);
+      // await recordUserClickData('pause', '', selectedRecordingDetails.id);
     }
   };
 
@@ -197,7 +197,7 @@ export const RecordSequenceDetails = (props: MProps) => {
   }
 
   const removeRecording = async () => {
-    await recordUserClickData('delete', getName(), selectedRecordingDetails.id);
+    await recordUserClickData('delete', '', selectedRecordingDetails.id);
     props.showLoader(true);
     await deleteRecording({id: selectedRecordingDetails.id});
     setTimeout(() => {
@@ -212,10 +212,10 @@ export const RecordSequenceDetails = (props: MProps) => {
     setSelectedRecordingDetails({...selectedRecordingDetails});
     if (type === 'up') {
       setUserVote({upvote: 1, downvote: 0});
-      await recordUserClickData('upVote', getRecordingName(selectedRecordingDetails), selectedRecordingDetails.id);
+      await recordUserClickData('upVote', '', selectedRecordingDetails.id);
     } else {
       setUserVote({upvote: 0, downvote: 1});
-      await recordUserClickData('downVote', getRecordingName(selectedRecordingDetails), selectedRecordingDetails.id);
+      await recordUserClickData('downVote', '', selectedRecordingDetails.id);
     }
   };
 
@@ -270,7 +270,7 @@ export const RecordSequenceDetails = (props: MProps) => {
     document.execCommand("copy");
     document.body.removeChild(el);
     setCopied(true);
-    await recordUserClickData('shareLink', getRecordingName(selectedRecordingDetails), selectedRecordingDetails.id);
+    await recordUserClickData('shareLink', '', selectedRecordingDetails.id);
   }
 
   /**
@@ -341,7 +341,7 @@ export const RecordSequenceDetails = (props: MProps) => {
                 <PauseCircleOutlined
                     className="large secondary uda_exclude"
                     onClick={async () => {
-                      await recordUserClickData('stopPlay', getName(), selectedRecordingDetails.id);
+                      await recordUserClickData('stopPlay', '', selectedRecordingDetails.id);
                       pause();
                     }}
                 />
