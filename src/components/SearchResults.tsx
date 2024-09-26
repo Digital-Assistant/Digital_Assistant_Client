@@ -62,12 +62,12 @@ export const SearchResults = (props: MProps) => {
     setToStore(item, CONFIG.SELECTED_RECORDING, false);
     if (props?.showDetails){
       props.showDetails(item);
-      await recordUserClickData('viewRecording', getRecordingName(item), item.id);
+      await recordUserClickData('viewRecording', '', item.id);
     }
 
     if(play){
       props.playHandler("on");
-      await recordUserClickData('play', getRecordingName(item), item.id);
+      await recordUserClickData('play', '', item.id);
     }
   };
 
