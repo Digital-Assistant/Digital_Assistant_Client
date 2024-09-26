@@ -30,9 +30,9 @@ const Header = (props: HeaderProps) => {
    * Toggle right side panel visibility
    */
   const togglePanel = async () => {
+    await recordUserClickData('UDAPanelClosed');
     if (props.toggleHandler){
       props.toggleHandler(hide, "header");
-      await recordUserClickData('UDAPanelClosed', window.location.host);
     }
   };
 
@@ -56,7 +56,7 @@ const Header = (props: HeaderProps) => {
   const clearSearch = async () => {
     props.setSearchKeyword('');
     setSearchKeyword('');
-    await recordUserClickData('clearSearch', window.location.host);
+    await recordUserClickData('clearSearch');
   }
 
   const submitSearch = (event) => {
