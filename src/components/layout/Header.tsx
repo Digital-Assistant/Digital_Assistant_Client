@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 import { HeaderProps } from "./interfaces";
 import MicButton from "../MicButton";
-import { getLogo } from "./common";
 
 import { CONFIG } from "../../config";
 import LanguageSelect from "./LanguageSelect";
@@ -30,7 +29,7 @@ const Header = (props: HeaderProps) => {
    * Toggle right side panel visibility
    */
   const togglePanel = async () => {
-    await recordUserClickData('UDAPanelClosed');
+    recordUserClickData('UDAPanelClosed');
     if (props.toggleHandler){
       props.toggleHandler(hide, "header");
     }
@@ -56,7 +55,7 @@ const Header = (props: HeaderProps) => {
   const clearSearch = async () => {
     props.setSearchKeyword('');
     setSearchKeyword('');
-    await recordUserClickData('clearSearch');
+    recordUserClickData('clearSearch');
   }
 
   const submitSearch = (event) => {
