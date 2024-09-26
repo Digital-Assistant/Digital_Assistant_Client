@@ -98,9 +98,9 @@ export const Toggler = (props: MProps) => {
 
     }, [])
     const toggle = async () => {
+        await recordUserClickData('UDAPanelOpened');
         if (props.toggleHandler) {
             props.toggleHandler();
-            await recordUserClickData('UDAPanelOpened', window.location.host, 0);
         }
     };
 
