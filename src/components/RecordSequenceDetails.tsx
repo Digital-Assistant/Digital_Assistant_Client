@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect, useRef, useState} from "react";
-import {Badge, Button, Col, List, Popconfirm, Row, Checkbox} from "antd";
+import {Button, Col, List, Popconfirm, Row, Checkbox} from "antd";
 import {
   DeleteOutlined,
   DislikeFilled,
@@ -17,8 +17,7 @@ import {
   PauseCircleOutlined,
   PlayCircleOutlined,
   ShareAltOutlined,
-  CopyFilled,
-  EditFilled
+  CopyFilled
 } from "@ant-design/icons";
 import {getCurrentPlayItem, getFromStore, getObjData, setToStore,} from "../util";
 import {deleteRecording, recordUserClickData, updateRecording} from "../services/recordService";
@@ -31,8 +30,6 @@ import {removeToolTip} from "../util/addToolTip";
 import {getClickedNodeLabel} from "../util/getClickedNodeLabel";
 import {getVoteRecord, vote} from "../services/userVote";
 import {addNotification} from "../util/addNotification";
-import {getRecordingName} from "../util/getRecordingName";
-
 
 
 interface MProps {
@@ -100,13 +97,13 @@ export const RecordSequenceDetails = (props: MProps) => {
       if(matchNode(playItem)) {
         updateStatus(playItem.index);
       } else {
-        await recordUserClickData('playBackError', '', selectedRecordingDetails.id);
+        recordUserClickData('playBackError', '', selectedRecordingDetails.id);
         pause();
         removeToolTip();
         trigger("openPanel", {action: 'openPanel'});
       }
     } else {
-      await recordUserClickData('playCompleted', '', selectedRecordingDetails.id);
+      recordUserClickData('playCompleted', '', selectedRecordingDetails.id);
       pause();
       removeToolTip();
       if(!props?.config?.enableHidePanelAfterCompletion) {
@@ -161,7 +158,7 @@ export const RecordSequenceDetails = (props: MProps) => {
    * Navigates back to search results card
    */
   const backNav = async (forceRefresh = false, openPanel = true) => {
-    await recordUserClickData('backToSearchResults', '', selectedRecordingDetails.id);
+    recordUserClickData('backToSearchResults', '', selectedRecordingDetails.id);
     if(openPanel) {
       trigger("openPanel", {action: 'openPanel'});
     }
@@ -174,7 +171,7 @@ export const RecordSequenceDetails = (props: MProps) => {
    * Auto play button handler
    */
   const play = async () => {
-    await recordUserClickData('play', '', selectedRecordingDetails.id);
+    recordUserClickData('play', '', selectedRecordingDetails.id);
     trigger("closePanel", {action: 'closePanel'});
     if (props.playHandler) props.playHandler("on");
     // autoPlay();
@@ -186,7 +183,6 @@ export const RecordSequenceDetails = (props: MProps) => {
   const pause = async () => {
     if (props.playHandler){
       props.playHandler("off");
-      // await recordUserClickData('pause', '', selectedRecordingDetails.id);
     }
   };
 
@@ -197,7 +193,7 @@ export const RecordSequenceDetails = (props: MProps) => {
   }
 
   const removeRecording = async () => {
-    await recordUserClickData('delete', '', selectedRecordingDetails.id);
+    recordUserClickData('delete', '', selectedRecordingDetails.id);
     props.showLoader(true);
     await deleteRecording({id: selectedRecordingDetails.id});
     setTimeout(() => {
@@ -212,10 +208,10 @@ export const RecordSequenceDetails = (props: MProps) => {
     setSelectedRecordingDetails({...selectedRecordingDetails});
     if (type === 'up') {
       setUserVote({upvote: 1, downvote: 0});
-      await recordUserClickData('upVote', '', selectedRecordingDetails.id);
+      recordUserClickData('upVote', '', selectedRecordingDetails.id);
     } else {
       setUserVote({upvote: 0, downvote: 1});
-      await recordUserClickData('downVote', '', selectedRecordingDetails.id);
+      recordUserClickData('downVote', '', selectedRecordingDetails.id);
     }
   };
 
@@ -270,7 +266,7 @@ export const RecordSequenceDetails = (props: MProps) => {
     document.execCommand("copy");
     document.body.removeChild(el);
     setCopied(true);
-    await recordUserClickData('shareLink', '', selectedRecordingDetails.id);
+    recordUserClickData('shareLink', '', selectedRecordingDetails.id);
   }
 
   /**
@@ -341,7 +337,7 @@ export const RecordSequenceDetails = (props: MProps) => {
                 <PauseCircleOutlined
                     className="large secondary uda_exclude"
                     onClick={async () => {
-                      await recordUserClickData('stopPlay', '', selectedRecordingDetails.id);
+                      recordUserClickData('stopPlay', '', selectedRecordingDetails.id);
                       pause();
                     }}
                 />
