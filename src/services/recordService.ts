@@ -168,13 +168,10 @@ export const recordSequence = async (request?: any) => {
  */
 export const userClick = async (request?: any) => {
   request.usersessionid = await getUserId();
-<<<<<<< HEAD
   request.clickedname = window.location.host;
-=======
-  if(!request.domain || request.domain === '') {
+  if (!request.domain || request.domain === "") {
     request.domain = window.location.host;
   }
->>>>>>> upstream/dev
   const parameters = {
     url: ENDPOINT.UserClick,
     method: "PUT",
