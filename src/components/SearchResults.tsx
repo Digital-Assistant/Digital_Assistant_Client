@@ -7,14 +7,13 @@
 
 import React, {useEffect, useState} from "react";
 import {Button, Empty, List} from "antd";
-import {DoubleRightOutlined, PlayCircleOutlined, EyeOutlined} from "@ant-design/icons";
+import {PlayCircleOutlined, EyeOutlined} from "@ant-design/icons";
 import { setToStore } from "../util";
 import InfiniteScroll from "react-infinite-scroller";
 import {CONFIG} from "../config";
 import {getRowObject} from "../util/getRowObject";
 import {recordUserClickData} from "../services";
 import ReactGA from "react-ga4";
-import {getRecordingName} from "../util/getRecordingName";
 
 export interface MProps {
   visibility?: boolean;
@@ -62,12 +61,12 @@ export const SearchResults = (props: MProps) => {
     setToStore(item, CONFIG.SELECTED_RECORDING, false);
     if (props?.showDetails){
       props.showDetails(item);
-      await recordUserClickData('viewRecording', getRecordingName(item), item.id);
+      recordUserClickData('viewRecording', '', item.id);
     }
 
     if(play){
       props.playHandler("on");
-      await recordUserClickData('play', getRecordingName(item), item.id);
+      recordUserClickData('play', '', item.id);
     }
   };
 
