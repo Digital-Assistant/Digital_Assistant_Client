@@ -60,7 +60,7 @@ function App(props) {
     const [page, setPage] = useState<number>(0);
     const [hasMorePages, setHasMorePages] = useState<boolean>(true);
     const [reFetchSearch, setReFetchSearch] = useState<string>("off");
-    const [recSequenceData, setRecSequenceData] = useState<any>([]);
+    const [recSequenceData, setRecSequenceData] = useState<any>(getFromStore(CONFIG.RECORDING_SEQUENCE, false) || []);
     const [
         recordSequenceDetailsVisibility,
         setRecordSequenceDetailsVisibility,
@@ -310,6 +310,14 @@ function App(props) {
         }
     };
 
+    const updateRecordedData = async () => {
+        let recordingData = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
+        // console.log(recordingData);
+        if(recordingData.length > 0) {
+            setRecSequenceData(recordingData);
+        }
+    }
+
     /**
      * Initializing functionality on start of the application
      */
@@ -322,6 +330,7 @@ function App(props) {
         on("UDAClearSessionData", clearSession);
         on("openPanel", openPanel);
         on("closePanel", closePanel);
+        on("updateRecordedData", updateRecordedData);
 
         /**
          * Asynchronous function to be get called in the beginning
@@ -371,6 +380,7 @@ function App(props) {
             off("UDAAlertMessageData", authenticationError);
             off("openPanel", openPanel);
             off("closePanel", closePanel);
+            off("updateRecordedData", updateRecordedData);
         };
     }, []);
 
@@ -399,9 +409,13 @@ function App(props) {
     /**
      * Sync data with storage
      */
-    useInterval(() => {
-        setRecSequenceData(getFromStore(CONFIG.RECORDING_SEQUENCE, false));
-    }, CONFIG.SYNC_INTERVAL);
+    /*useInterval(() => {
+        let recordingData = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
+        // console.log(recordingData);
+        if(recordingData.length > 0) {
+            setRecSequenceData(recordingData);
+        }
+    }, CONFIG.SYNC_INTERVAL);*/
 
     /**
      * Toggle right side panel visibility
@@ -696,26 +710,27 @@ function App(props) {
                                           }
                                       />
                                   )}
-
-                              <UdanMain.RecordedData
-                                  isShown={toggleContainer(
-                                      "recorded-data"
-                                  )}
-                                  data={recSequenceData}
-                                  recordHandler={
-                                      recordHandler
-                                  }
-                                  refetchSearch={
-                                      setReFetchSearch
-                                  }
-                                  showLoader={
-                                      setShowLoader
-                                  }
-                                  config={
-                                      global.UDAGlobalConfig
-                                  }
-                              />
-
+                              {(recSequenceData?.length > 0) && <>
+                                  <UdanMain.RecordedData
+                                      isShown={toggleContainer(
+                                          "recorded-data"
+                                      )}
+                                      data={recSequenceData}
+                                      recordHandler={
+                                          recordHandler
+                                      }
+                                      refetchSearch={
+                                          setReFetchSearch
+                                      }
+                                      showLoader={
+                                          setShowLoader
+                                      }
+                                      config={
+                                          global.UDAGlobalConfig
+                                      }
+                                  />
+                                </>
+                              }
                               {recordSequenceDetailsVisibility && (
                                   <UdanMain.RecordSequenceDetails
                                       data={
@@ -734,6 +749,7 @@ function App(props) {
                                       key={"rSD" + recordSequenceDetailsVisibility}
                                       config={global.UDAGlobalConfig}
                                       showLoader={setShowLoader}
+                                      searchKeyword={searchKeyword}
                                   />
                               )}
                           </>

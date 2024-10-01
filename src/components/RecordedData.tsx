@@ -60,6 +60,10 @@ export const RecordedData = (props: MProps) => {
         setRecordData([...(props.data || [])]);
     }, [props.data]);
 
+    useEffect(() => {
+        setCustomMetdata(null);
+    }, [recordData]);
+
     /**
      * @param data
      */

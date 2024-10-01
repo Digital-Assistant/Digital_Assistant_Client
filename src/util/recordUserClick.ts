@@ -8,6 +8,7 @@ import {checkNodeValues} from "./checkNodeValues";
 import mapClickedElementToHtmlFormElement from "./recording-utils/mapClickedElementToHtmlFormElement";
 import {addNotification} from "./addNotification";
 import {translate} from "./translation";
+import {trigger} from "./events";
 declare const UDAGlobalConfig;
 
 global.udanSelectedNodes = [];
@@ -135,6 +136,7 @@ export const recordUserClick = async (node: HTMLElement, event: any) => {
     } else {
       setToStore([resp], CONFIG.RECORDING_SEQUENCE, false);
     }
+    trigger("updateRecordedData",{});
     addNotification(translate('clickAdded'), translate('clickAddedDescription'), 'success');
   } else {
     addNotification(translate('clickAddError'), translate('clickAddErrorDescription'), 'error');
