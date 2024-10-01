@@ -19,6 +19,7 @@ import {isHighlightNode} from "../util/checkNode";
 import {Alert, notification, Progress, Space, Switch} from "antd";
 import {UDAErrorLogger} from "../config/error-log";
 import {addNotification} from "../util/addNotification";
+import {trigger} from "../util/events";
 
 export interface MProps {
     sequenceName?: string;
@@ -214,6 +215,7 @@ export const RecordedData = (props: MProps) => {
             props.recordHandler("cancel");
         }
         setToStore([], CONFIG.RECORDING_SEQUENCE, false);
+        trigger("updateRecordedData",{});
     };
 
     /**
@@ -380,6 +382,7 @@ export const RecordedData = (props: MProps) => {
         if (props.recordHandler) props.recordHandler("cancel");
         setToStore(false, CONFIG.RECORDING_SWITCH_KEY, true);
         setToStore([], CONFIG.RECORDING_SEQUENCE, false);
+        trigger("updateRecordedData",{});
     };
 
     const [timer, setTimer] = useState(null);
