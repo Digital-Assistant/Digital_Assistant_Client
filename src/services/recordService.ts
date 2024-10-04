@@ -347,7 +347,10 @@ export const saveClickData = async (node: any, text: string, meta: any) => {
     const processedNode = await node.cloneNode(true);
 
     // Log the absolute offsets of the processed node.
-    console.log(getAbsoluteOffsets(processedNode));
+    const absoluteOffsets = getAbsoluteOffsets(processedNode);
+    if (absoluteOffsets) {
+      console.log(absoluteOffsets);
+    }
 
     // Convert the processed node to a JSON object using the `domJSON.toJSON` function, with the `serialProperties` option set to `true`.
     let objectData: any = domJSON.toJSON(processedNode, {
