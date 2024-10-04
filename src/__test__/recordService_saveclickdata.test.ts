@@ -17,6 +17,7 @@ import { fetchDomain } from "../util/fetchDomain";
 import { CONFIG } from "../config"; // Import CONFIG
 import { UDAErrorLogger } from "../config/error-log";
 import { updateRecordClicks, saveClickData } from "../services/recordService";
+import { getAbsoluteOffsets } from "@/util";
 
 // Mock the domjson function with an empty function
 /**
@@ -32,7 +33,10 @@ import { updateRecordClicks, saveClickData } from "../services/recordService";
 jest.mock("domjson", () => ({
   toJSON: jest.fn(),
 }));
-
+// Mock the getAbsoluteOffsets function with a jest mock
+jest.mock("@/util", () => ({
+  getAbsoluteOffsets: jest.fn(),
+}));
 // Mock the TSON.stringify function with a constant value
 jest.mock("typescript-json", () => ({
   stringify: (input: any) => '{"mocked":"json"}',
