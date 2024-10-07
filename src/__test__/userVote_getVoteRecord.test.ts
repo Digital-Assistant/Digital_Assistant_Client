@@ -45,15 +45,15 @@ describe('getVoteRecord', () => {
      * - Verifies that the `REST.apiCal` function was called with the expected URL and method.
      */
     it('should call REST.apiCal with correct parameters', async () => {
-      const mockUserId = 'user456';
-      const mockRequest = { id: 'sequence789' };
-      (getUserId as jest.Mock).mockResolvedValue(mockUserId);
-      (REST.apiCal as jest.Mock).mockResolvedValue({ voteData: 'someData' });
-
+      const mockUserId = 'user123';
+      const mockRequest = { id: 'sequence123' };
+      (getUserId as jest.Mock).mockResolvedValueOnce(mockUserId);
+      (REST.apiCal as jest.Mock).mockResolvedValueOnce({ voteData: 'someData' });
+    
       await getVoteRecord(mockRequest);
-
+    
       expect(REST.apiCal).toHaveBeenCalledWith({
-        url: `${CONFIG.UDA_DOMAIN}/voiceapi/vote/sequence789/user456`,
+        url: `${CONFIG.UDA_DOMAIN}/voiceapi/vote/sequence123/user123`,
         method: 'GET',
       });
     });
@@ -123,18 +123,23 @@ describe('getVoteRecord', () => {
      * - Verifies that the `REST.apiCal` function is called three times when multiple `getVoteRecord` function calls are made concurrently.
      */
   it('should handle multiple concurrent getVoteRecord calls', async () => {
-    (getUserId as jest.Mock).mockResolvedValue('user123');
+    const mockUserId = 'user456';
+    const mockRequest = { id: 'sequence789' };
+    (getUserId as jest.Mock).mockResolvedValue(mockUserId);
     (REST.apiCal as jest.Mock).mockResolvedValue({ voteData: 'someData' });
-
-    const promises = [
-      getVoteRecord({ id: 'sequence1' }),
-      getVoteRecord({ id: 'sequence2' }),
-      getVoteRecord({ id: 'sequence3' }),
-    ];
-
+  
+    const promises = [];
+    for (let i = 0; i < 5; i++) {
+      promises.push(getVoteRecord(mockRequest));
+    }
+  
     await Promise.all(promises);
-
-    expect(REST.apiCal).toHaveBeenCalledTimes(3);
+  
+    expect(REST.apiCal).toHaveBeenCalledTimes(5);
+    expect(REST.apiCal).toHaveBeenCalledWith({
+      url: `${CONFIG.UDA_DOMAIN}/voiceapi/vote/sequence789/user456`,
+      method: 'GET',
+    });
   });
 
   /**
@@ -144,18 +149,20 @@ describe('getVoteRecord', () => {
    * @returns The vote record for the current user, including the upvote and downvote counts.
    */
   describe('getVoteRecord', () => {
-    it('should call REST.apiCal with the correct parameters', async () => {
-      const mockUserId = 'user123';
-      const mockRequest = { id: 'sequence123' };
-      (getUserId as jest.Mock).mockResolvedValueOnce(mockUserId);
-
-      await getVoteRecord(mockRequest);
-
+    it('should handle missing user session id', async () => {
+      (getUserId as jest.Mock).mockResolvedValue(null);
+      (REST.apiCal as jest.Mock).mockResolvedValue({ vote: 'none' });
+    
+      const request = { id: 'sequence123' };
+    
+      const result = await getVoteRecord(request);
+    
       expect(getUserId).toHaveBeenCalled();
       expect(REST.apiCal).toHaveBeenCalledWith({
-        url: `${ENDPOINT.fetchVoteRecord}${mockRequest.id}/${mockUserId}`,
-        method: 'GET',
+        url: `${ENDPOINT.fetchVoteRecord}${request.id}/null`,
+        method: 'GET'
       });
+      expect(result).toEqual({ vote: 'none' });
     });
   });
 
@@ -166,18 +173,18 @@ describe('getVoteRecord', () => {
    * @returns The vote record for the current user, including the upvote and downvote counts.
    */
   describe('getVoteRecord', () => {
-    it('should call REST.apiCal with the correct parameters when request is not provided', async () => {
-      const mockUserId = 'user123';
-      (getUserId as jest.Mock).mockResolvedValueOnce(mockUserId);
-
-      await getVoteRecord();
-
-      expect(getUserId).toHaveBeenCalled();
-      expect(REST.apiCal).toHaveBeenCalledWith({
-        url: `${ENDPOINT.fetchVoteRecord}undefined/${mockUserId}`,
-        method: 'GET',
-      });
-    });
+   it('should call REST.apiCal with the correct parameters when request is not provided', async () => {
+     const mockUserId = 'user123';
+     (getUserId as jest.Mock).mockResolvedValueOnce(mockUserId);
+   
+     await getVoteRecord();
+   
+     expect(getUserId).toHaveBeenCalled();
+     expect(REST.apiCal).toHaveBeenCalledWith({
+       url: `${ENDPOINT.fetchVoteRecord}undefined/${mockUserId}`,
+       method: 'GET',
+     });
+   });
 
     /**
      * Tests the `getVoteRecord` function by calling it with a mock request and verifying that the result matches the expected mock result.
@@ -188,13 +195,12 @@ describe('getVoteRecord', () => {
     it('should return the result of REST.apiCal', async () => {
       const mockUserId = 'user123';
       const mockRequest = { id: 'sequence123' };
-      const mockResult = { upvote: 1, downvote: 0 };
       (getUserId as jest.Mock).mockResolvedValueOnce(mockUserId);
-      (REST.apiCal as jest.Mock).mockResolvedValueOnce(mockResult);
-
+      (REST.apiCal as jest.Mock).mockResolvedValueOnce({ voteData: 'someData' });
+    
       const result = await getVoteRecord(mockRequest);
-
-      expect(result).toEqual(mockResult);
+    
+      expect(result).toEqual({ voteData: 'someData' });
     });
   });
 
@@ -204,16 +210,14 @@ describe('getVoteRecord', () => {
    * @param mockRequest - An optional request object containing the sequence ID.
    */
   describe('getVoteRecord', () => {
-    it('should call the REST API with the correct parameters', async () => {
-      const mockUserId = 'user123';
-      const mockRequest = { id: 'record456' };
-      (getUserId as jest.Mock).mockResolvedValueOnce(mockUserId);
-
+    it('should call REST.apiCal with correct parameters', async () => {
+      const mockRequest = { id: 'sequence123' };
+      (REST.apiCal as jest.Mock).mockResolvedValueOnce({ voteData: 'someData' });
+  
       await getVoteRecord(mockRequest);
-
-      expect(getUserId).toHaveBeenCalled();
+  
       expect(REST.apiCal).toHaveBeenCalledWith({
-        url: `${ENDPOINT.fetchVoteRecord}${mockRequest.id}/${mockUserId}`,
+        url: `${CONFIG.UDA_DOMAIN}/voiceapi/vote/sequence123/user123`,
         method: 'GET',
       });
     });
@@ -412,10 +416,13 @@ describe('getVoteRecord', () => {
      */
     it('should handle errors from getUserId', async () => {
       (getUserId as jest.Mock).mockRejectedValue(new Error('Failed to get user ID'));
+    
+      await expect(getVoteRecord({ id: 'sequence123' })).rejects.toThrow(
+        new Error('Failed to get user ID')
+      );
+    
       expect(REST.apiCal).not.toHaveBeenCalled();
     });
-
-const getUserId = jest.fn().mockResolvedValue('mock-user-session-id');
 
 
 /**

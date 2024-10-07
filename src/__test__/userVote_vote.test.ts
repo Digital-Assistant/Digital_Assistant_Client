@@ -504,9 +504,10 @@ describe('vote - Additional Tests', () => {
           const mockUserId = 'user123';
           const mockRequest = { id: 'record456' };
           (getUserId as jest.Mock).mockResolvedValueOnce(mockUserId);
-    
+          (REST.apiCal as jest.Mock).mockResolvedValueOnce({});
+        
           await vote(mockRequest, 'down');
-    
+        
           expect(getUserId).toHaveBeenCalled();
           expect(REST.apiCal).toHaveBeenCalledWith({
             url: ENDPOINT.VoteRecord,
@@ -518,7 +519,7 @@ describe('vote - Additional Tests', () => {
               downvote: 1,
             },
           });
-        }); 
+        });
         
         /**
          * This block sets up the test environment for the `vote` function by mocking the `userService` and `index` modules, and resetting all mocks before each test.
