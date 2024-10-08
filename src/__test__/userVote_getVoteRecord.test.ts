@@ -13,6 +13,7 @@ import { CONFIG } from '../config';
 import { REST } from '../services';
 import { ENDPOINT } from '../config/endpoints';
 import { getVoteRecord } from '../services/userVote';
+import { getUserId } from '../services/userService';
 import domJSON from "domjson";
 import TSON from "typescript-json";
 
