@@ -478,9 +478,10 @@ describe('vote - Additional Tests', () => {
           const mockUserId = 'user123';
           const mockRequest = { id: 'record456' };
           (getUserId as jest.Mock).mockResolvedValueOnce(mockUserId);
-    
+          (REST.apiCal as jest.Mock).mockResolvedValueOnce({}); // Resolve with a successful response
+        
           await vote(mockRequest, 'up');
-    
+        
           expect(getUserId).toHaveBeenCalled();
           expect(REST.apiCal).toHaveBeenCalledWith({
             url: ENDPOINT.VoteRecord,
