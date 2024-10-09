@@ -315,6 +315,8 @@ function App(props) {
         // console.log(recordingData);
         if(recordingData.length > 0) {
             setRecSequenceData(recordingData);
+        } else {
+            setRecSequenceData([]);
         }
     }
 
