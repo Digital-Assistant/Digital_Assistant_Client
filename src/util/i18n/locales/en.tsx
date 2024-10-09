@@ -40,5 +40,9 @@ export const TRANSLATIONS_EN = {
   savedSequenceErrorDescription: "Unable to save the recorded sequence please try again",
   delayTimePlaceHolder: "Number of seconds to delay",
   confirmScreenResolution: "Current version of UDAN supports only FHD (1920x1080) resolution. Future versions will support more resolutions. \n Do you want to continue?",
-  cspAlertInfo: "UDAN will not work as our system has detected CSP has been enabled. Please whitelist our domains in order to continue."
+  cspAlertInfo: "UDAN will not work as our system has detected CSP has been enabled. Please whitelist our domains in order to continue.",
+  customMetadataPlaceHolder: "Custom Metadata",
+  customMetadataDescriptionPlaceHolder: "Custom Metadata Description",
+  submit: "Submit",
+  update: "Update"
 };
