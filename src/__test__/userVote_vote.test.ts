@@ -179,7 +179,7 @@ describe('vote - Additional Tests', () => {
     it('should handle vote with null request', async () => {
       await expect(vote(null, 'up')).rejects.toThrow();
     });
-
+  });
     
     /**
      * Tests handling of a non-object request object in the `vote` function.
@@ -189,22 +189,6 @@ describe('vote - Additional Tests', () => {
     it('should handle vote with non-object request', async () => {
       await expect(vote('not an object', 'up')).rejects.toThrow();
     });
-
-    /**
-     * Tests handling of a request object missing the 'id' property in the `vote` function.
-     *
-     * - Verifies that the `vote` function still calls the `REST.apiCal` function, but with the `sequenceid` property set to `undefined`.
-     */
-    it('should handle vote with request missing id', async () => {
-      const mockUserId = 'user123';
-      (getUserId as jest.Mock).mockResolvedValue(mockUserId);
-      await vote({ someOtherProp: 'value' }, 'up');
-      expect(REST.apiCal).toHaveBeenCalledWith(expect.objectContaining({
-        body: expect.objectContaining({
-          sequenceid: undefined,
-        }),
-      }));
-      });
 
     /**
      * Tests handling of a numeric 'id' property in the `vote` function.
@@ -222,95 +206,8 @@ describe('vote - Additional Tests', () => {
       }));
      });
 
-    /**
-     * Tests handling of a null vote type in the `vote` function.
-     *
-     * - Verifies that the `vote` function resolves with a defined value when the `voteType` parameter is `null`.
-     * - Ensures that the `REST.apiCal` function is called with the `upvote` and `downvote` properties in the request body set to 0.
-     */
-    it('should handle vote with null vote type', async () => {
-      await expect(vote({ id: 'sequence123' }, null)).resolves.toBeDefined();
-      expect(REST.apiCal).toHaveBeenCalledWith(expect.objectContaining({
-        body: expect.objectContaining({
-          upvote: 0,
-          downvote: 0,
-        }),
-      }));
-    });
 
-    /**
-     * Tests handling of an empty string vote type in the `vote` function.
-     *
-     * - Verifies that the `vote` function resolves with a defined value when the `voteType` parameter is an empty string.
-     * - Ensures that the `REST.apiCal` function is called with the `upvote` and `downvote` properties in the request body set to 0.
-     */
-    it('should handle vote with empty string vote type', async () => {
-      await expect(vote({ id: 'sequence123' }, '')).resolves.toBeDefined();
-      expect(REST.apiCal).toHaveBeenCalledWith(expect.objectContaining({
-        body: expect.objectContaining({
-          upvote: 0,
-          downvote: 0,
-        }),
-      }));
-    });
-  });
-
-  describe('vote', () => {
-    /**
-     * Votes on a sequence with the given vote type.
-     *
-     * @param request - An object containing the sequence ID to vote on.
-     * @param voteType - The type of vote to cast, either 'up' or 'down'.
-     * @returns A promise that resolves with the success status of the vote.
-     */
-    it('should call REST.apiCal with correct parameters for upvote', async () => {
-      const mockUserId = 'user123';
-      const mockRequest = { id: 'sequence456' };
-      (getUserId as jest.Mock).mockResolvedValue(mockUserId);
-      (REST.apiCal as jest.Mock).mockResolvedValue({ success: true });
-
-      await vote(mockRequest, 'up');
-
-      expect(REST.apiCal).toHaveBeenCalledWith({
-        url: `${CONFIG.UDA_DOMAIN}/voiceapi/vote`,
-        method: 'POST',
-        body: {
-          usersessionid: mockUserId,
-          sequenceid: 'sequence456',
-          upvote: 1,
-          downvote: 0,
-        },
-      });
-    });
-
-    /**
-     * Votes on a sequence with the given vote type.
-     *
-     * @param request - An object containing the sequence ID to vote on.
-     * @param voteType - The type of vote to cast, either 'up' or 'down'.
-     * @returns A promise that resolves with the success status of the vote.
-     */
-    it('should call REST.apiCal with correct parameters for downvote', async () => {
-      const mockUserId = 'user123';
-      const mockRequest = { id: 'sequence789' };
-      (getUserId as jest.Mock).mockResolvedValue(mockUserId);
-      (REST.apiCal as jest.Mock).mockResolvedValue({ success: true });
-
-      await vote(mockRequest, 'down');
-
-      expect(REST.apiCal).toHaveBeenCalledWith({
-        url: `${CONFIG.UDA_DOMAIN}/voiceapi/vote`,
-        method: 'POST',
-        body: {
-          usersessionid: mockUserId,
-          sequenceid: 'sequence789',
-          upvote: 0,
-          downvote: 1,
-        },
-      });
-    });
-
-    
+  describe('vote', () => {  
     /**
      * Tests error handling for the `vote` function when the `getUserId` function fails.
      *
@@ -338,40 +235,7 @@ describe('vote - Additional Tests', () => {
         await expect(vote({ id: 'sequence123' }, 'up')).rejects.toThrow('API error');
       });
     });
-
-    /**
-     * Tests error handling for the `vote` function when the API call fails.
-     *
-     * - Verifies that the `vote` function rejects with the expected error when `REST.apiCal` throws an error.
-     *
-     * @param request - An object containing the sequence ID to vote on.
-     */
-    it('should handle API call errors', async () => {
-        // Arrange
-        (getUserId as jest.Mock).mockResolvedValue('user-123');
-        const apiError = { message: 'API error' };
-        (REST.apiCal as jest.Mock).mockRejectedValue(apiError);
-      
-        const request = { id: 'recording-123' };
-      
-        // Act & Assert
-        await expect(vote(request, 'up')).rejects.toEqual(apiError);
-        
-        // Additional assertions
-        expect(getUserId).toHaveBeenCalledTimes(1);
-        expect(REST.apiCal).toHaveBeenCalledWith({
-          url: ENDPOINT.VoteRecord,
-          method: 'POST',
-          body: expect.objectContaining({
-            usersessionid: 'user-123',
-            sequenceid: 'recording-123',
-            upvote: 1,
-            downvote: 0,
-          }),
-        });
-      });
        
-
       /**
        * Tests that the `vote` function rejects with an error when an invalid vote type is provided.
        *
@@ -382,90 +246,6 @@ describe('vote - Additional Tests', () => {
         await expect(vote(request, 'invalid')).rejects.toThrow();
       });
   
-      /**
-       * Votes on a sequence with the specified type (up).
-       *
-       * @param request - An object containing the sequence ID to vote on.
-       * @param type - The type of vote, 'up'.
-       * @returns A Promise that resolves with the result of the vote operation.
-       */
-      describe('vote', () => {
-        it('should call REST.apiCal with the correct parameters for upvote', async () => {
-          const mockUserId = 'user123';
-          const mockRequest = { id: 'sequence123' };
-          const mockType = 'up';
-          (getUserId as jest.Mock).mockResolvedValueOnce(mockUserId);
-    
-          await vote(mockRequest, mockType);
-    
-          expect(getUserId).toHaveBeenCalled();
-          expect(REST.apiCal).toHaveBeenCalledWith({
-            url: ENDPOINT.VoteRecord,
-            method: 'POST',
-            body: {
-              usersessionid: mockUserId,
-              sequenceid: mockRequest.id,
-              upvote: 1,
-              downvote: 0,
-            },
-          });
-        });
-    
-        /**
-         * Votes on a sequence with the specified type (down).
-         *
-         * @param request - An object containing the sequence ID to vote on.
-         * @param type - The type of vote, 'down'.
-         * @returns A Promise that resolves with the result of the vote operation.
-         */
-        it('should call REST.apiCal with the correct parameters for downvote', async () => {
-          const mockUserId = 'user123';
-          const mockRequest = { id: 'sequence123' };
-          const mockType = 'down';
-          (getUserId as jest.Mock).mockResolvedValueOnce(mockUserId);
-    
-          await vote(mockRequest, mockType);
-    
-          expect(getUserId).toHaveBeenCalled();
-          expect(REST.apiCal).toHaveBeenCalledWith({
-            url: ENDPOINT.VoteRecord,
-            method: 'POST',
-            body: {
-              usersessionid: mockUserId,
-              sequenceid: mockRequest.id,
-              upvote: 0,
-              downvote: 1,
-            },
-          });
-        });
-    
-        /**
-         * Votes on a sequence with the specified type (up or down).
-         *
-         * @param request - An object containing the sequence ID to vote on. If not provided, the sequence ID will be set to `undefined`.
-         * @param type - The type of vote, 'up' or 'down'. If not provided, the vote will be set to 0 for both upvote and downvote.
-         * @returns A Promise that resolves with the result of the vote operation.
-         */
-        it('should call REST.apiCal with the correct parameters when type is not provided', async () => {
-          const mockUserId = 'user123';
-          const mockRequest = { id: 'sequence123' };
-          (getUserId as jest.Mock).mockResolvedValueOnce(mockUserId);
-    
-          await vote(mockRequest);
-    
-          expect(getUserId).toHaveBeenCalled();
-          expect(REST.apiCal).toHaveBeenCalledWith({
-            url: ENDPOINT.VoteRecord,
-            method: 'POST',
-            body: {
-              usersessionid: mockUserId,
-              sequenceid: mockRequest.id,
-              upvote: 0,
-              downvote: 0,
-            },
-          });
-        });
-      });
 
       describe('vote', () => {
         /**
@@ -531,126 +311,6 @@ describe('vote - Additional Tests', () => {
         describe('vote function', () => {
           beforeEach(() => {
             jest.resetAllMocks();
-          });
-        
-        
-          /**
-           * Tests that the `vote` function correctly handles a request with a boolean `id` property.
-           *
-           * @param request - An object with a `id` property of type boolean.
-           * @returns A promise that rejects with an error indicating that the `id` must be a string or number.
-           */
-          it('should handle vote with boolean id', async () => {
-            const request = { id: true };
-            await expect(vote(request, 'up')).rejects.toThrow('Invalid request: id must be a string or number');
-          });
-        
-          /**
-           * Tests that the `vote` function correctly handles a request with an array `id` property.
-           *
-           * @param request - An object with an `id` property of type array.
-           * @returns A promise that rejects with an error indicating that the `id` must be a string or number.
-           */
-          it('should handle vote with array id', async () => {
-            const request = { id: [1, 2, 3] };
-            await expect(vote(request, 'up')).rejects.toThrow('Invalid request: id must be a string or number');
-          });
-        
-          /**
-           * Tests that the `vote` function correctly handles a request with an object `id` property.
-           *
-           * @param request - An object with an `id` property of type object.
-           * @returns A promise that rejects with an error indicating that the `id` must be a string or number.
-           */
-          it('should handle vote with object id', async () => {
-            const request = { id: { nested: 'object' } };
-            await expect(vote(request, 'up')).rejects.toThrow('Invalid request: id must be a string or number');
-          });
-        
-          /**
-           * Tests that the `vote` function correctly handles a request with a function `id` property.
-           *
-           * @param request - An object with an `id` property of type function.
-           * @returns A promise that rejects with an error indicating that the `id` must be a string or number.
-           */
-          it('should handle vote with function id', async () => {
-            const request = { id: () => {} };
-            await expect(vote(request, 'up')).rejects.toThrow('Invalid request: id must be a string or number');
-          });
-        
-          /**
-           * Tests that the `vote` function correctly handles a request with a Symbol `id` property.
-           *
-           * @param request - An object with an `id` property of type Symbol.
-           * @returns A promise that rejects with an error indicating that the `id` must be a string or number.
-           */
-          it('should handle vote with Symbol id', async () => {
-            const request = { id: Symbol('id') };
-            await expect(vote(request, 'up')).rejects.toThrow('Invalid request: id must be a string or number');
-          });
-        
-          /**
-           * Tests that the `vote` function correctly handles a request with an empty object `id` property.
-           *
-           * @param request - An object with an empty `id` property.
-           * @returns A promise that rejects with an error indicating that the `id` is missing.
-           */
-          it('should handle vote with empty object request', async () => {
-            await expect(vote({}, 'up')).rejects.toThrow('Invalid request: missing id');
-          });
-        
-          /**
-           * Tests that the `vote` function correctly handles a request with a null value.
-           *
-           * @param request - A null value for the request object.
-           * @returns A promise that rejects with an error indicating that the `id` is missing.
-           */
-          it('should handle vote with null request', async () => {
-            await expect(vote(null, 'up')).rejects.toThrow('Invalid request: missing id');
-          });
-        
-          /**
-           * Tests that the `vote` function correctly handles a request with an undefined vote type.
-           *
-           * @param request - An object with an `id` property of type string.
-           * @returns A promise that rejects with an error indicating that the vote type is invalid.
-           */
-          it('should handle vote with undefined vote type', async () => {
-            const request = { id: 'recording-123' };
-            await expect(vote(request, undefined)).rejects.toThrow('Invalid vote type');
-          });
-        
-          /**
-           * Tests that the `vote` function correctly handles a request with a null vote type.
-           *
-           * @param request - An object with an `id` property of type string.
-           * @returns A promise that rejects with an error indicating that the vote type is invalid.
-           */
-          it('should handle vote with null vote type', async () => {
-            const request = { id: 'recording-123' };
-            await expect(vote(request, null)).rejects.toThrow('Invalid vote type');
-          });
-        
-          /**
-           * Tests that the `vote` function correctly handles a request with an empty string vote type.
-           *
-           * @param request - An object with an `id` property of type string.
-           * @returns A promise that rejects with an error indicating that the vote type is invalid.
-           */
-          it('should handle vote with empty string vote type', async () => {
-            const request = { id: 'recording-123' };
-            await expect(vote(request, '')).rejects.toThrow('Invalid vote type');
-          });
-        
-          /**
-           * Tests that the `vote` function correctly handles a request with a non-string vote type.
-           *
-           * @param request - An object with an `id` property of type string.
-           * @returns A promise that rejects with an error indicating that the vote type is invalid.
-           */
-          it('should handle vote with non-string vote type', async () => {
-            const request = { id: 'recording-123' };
-            await expect(vote(request, 123 as any)).rejects.toThrow('Invalid vote type');
           });
         
           /**
