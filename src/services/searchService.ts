@@ -26,14 +26,25 @@ export const fetchSearchResults = async (request?: {
     delete request.additionalParams;
   }
   let parameters: any;
+  let url=ENDPOINT.Search;
   if (request.additionalParams != null) {
+    if(global.UDAGlobalConfig.enableAISearch){
+      url = process.env.tokenUrl+ENDPOINT.AISearchWithPermissions;
+    } else {
+      url = ENDPOINT.SearchWithPermissions;
+    }
     parameters = {
-      url: REST.processArgs(ENDPOINT.SearchWithPermissions, request),
+      url: REST.processArgs(url, request),
       method: "GET",
     };
   } else {
+    if(global.UDAGlobalConfig.enableAISearch){
+      url = process.env.tokenUrl+ENDPOINT.AISearch;
+    } else {
+      url = ENDPOINT.Search;
+    }
     parameters = {
-      url: REST.processArgs(ENDPOINT.Search, request),
+      url: REST.processArgs(url, request),
       method: "GET",
     };
   }
