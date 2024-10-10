@@ -102,9 +102,14 @@ export const getVoteRecord = async (request?: any) => {
      * @returns A promise that resolves with the result of the vote operation.
      * @throws {Error} If an error occurs during the vote request.
      */
+    // Attempt to make the API call using the REST utility
     return await REST.apiCal(parameters); // Make the API call using the REST utility
-  } catch (error) {
-    console.error("Error in getVoteRecord function:", error);
-    throw error;
-  }
+    
+    // Catch any errors that occur during the API call
+    } catch (error) {
+      // Log the error to the console for debugging purposes
+      console.error("Error in getVoteRecord function:", error);
+      // Re-throw the error so that it can be handled by the caller
+      throw error;
+    }
   };
