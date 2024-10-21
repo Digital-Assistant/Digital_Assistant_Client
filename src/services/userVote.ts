@@ -109,7 +109,6 @@ export const getVoteRecord = async (request?: any) => {
     } catch (error) {
       // Log the error to the console for debugging purposes
       console.error("Error in getVoteRecord function:", error);
-      // Re-throw the error so that it can be handled by the caller
       throw error;
     }
   };
