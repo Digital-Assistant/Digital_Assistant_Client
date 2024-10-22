@@ -11,7 +11,7 @@ Assistant in Action: https://youtu.be/Iz2WgKY0fhc
 
 (You will need the server too: https://github.com/Digital-Assistant/digital-assistant-server)
 
-Telegram: https://t.me/UniDigitalAssistant
+~Telegram: https://t.me/UniDigitalAssistant~
 Discord: https://discord.gg/92NqDEUbxV
 
 Preamble: The explosion of web/browser (and digital) applications has come with the problem of users having to learn how
