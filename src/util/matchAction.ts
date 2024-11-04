@@ -1,6 +1,6 @@
 //matching the action of the node and invoking whether to click or focus
 import {CONFIG} from "../config";
-import {inArray} from "./index";
+import {getObjData, inArray} from "./index";
 import {simulateHover} from "./simulateHover";
 import {mapSelectedElementAction} from "./mapSelectedElementAction";
 import {addToolTip, removeToolTip} from "./addToolTip";
@@ -9,9 +9,17 @@ import {getSelectedRecordFromStore} from "./invokeNode";
 import {checkNodeValues} from "./checkNodeValues";
 import {translate} from "./translation";
 import {simulateMouseLeave} from "./simulateMouseLeave";
+import {matchLLMInputToNode} from "./matchLLMInputToNode";
 declare const UDAGlobalConfig;
 
-export const matchAction = (node, selectedNode, toolTipVisibleTIme = 1) => {
+export const matchAction = (node, selectedNode, selectedRecordingDetails) => {
+
+  const recordedNodeData = JSON.parse(selectedNode.objectdata);
+
+  let playBackDelayTime = 2;
+  if(selectedRecordingDetails?.additionalParams?.slowPlaybackTime){
+    playBackDelayTime = selectedRecordingDetails?.additionalParams?.slowPlaybackTime;
+  }
 
   if (!node) {
     return;
@@ -19,7 +27,7 @@ export const matchAction = (node, selectedNode, toolTipVisibleTIme = 1) => {
 
   // let timeToInvoke = CONFIG.invokeTime;
 
-  let timeToInvoke = toolTipVisibleTIme*1000;
+  let timeToInvoke: number = playBackDelayTime*1000;
 
   // remove added tooltips before invoking
   removeToolTip();
@@ -29,9 +37,21 @@ export const matchAction = (node, selectedNode, toolTipVisibleTIme = 1) => {
 
   const navigationData = getSelectedRecordFromStore();
 
+  // invoking the node based on the LLM api
+  if(UDAGlobalConfig.enableAISearch && recordedNodeData.meta?.inputType){
+    const invokedNodeFromLLM = matchLLMInputToNode(node, selectedNode, selectedRecordingDetails, timeToInvoke);
+    if(invokedNodeFromLLM) {
+        // invokeNextNode(node, timeToInvoke);
+        console.log('llm input processing success');
+        return;
+    } else {
+      console.log('llm input processing failed');
+      return;
+    }
+  }
+
   // perform click action based on the input given
   if(UDAGlobalConfig.enableNodeTypeSelection) {
-    const recordedNodeData = JSON.parse(selectedNode.objectdata);
     if (recordedNodeData.meta && recordedNodeData.meta.hasOwnProperty('selectedElement') && recordedNodeData.meta.selectedElement && recordedNodeData.meta.selectedElement.systemTag.trim() != 'others') {
       let performedAction = mapSelectedElementAction(node, selectedNode, navigationData, recordedNodeData, timeToInvoke);
       if (performedAction) {

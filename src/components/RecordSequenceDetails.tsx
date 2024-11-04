@@ -41,6 +41,7 @@ interface MProps {
   playHandler?: Function;
   isPlaying?: string;
   showLoader?: Function;
+  searchKeyword?: string;
 }
 
 /**
@@ -187,7 +188,7 @@ export const RecordSequenceDetails = (props: MProps) => {
   };
 
   const playNode = (item, index) => {
-    if (matchNode({node: item, index, additionalParams: selectedRecordingDetails?.additionalParams})) {
+    if (matchNode({node: item, index, selectedRecordingDetails})) {
       updateStatus(index);
     }
   }

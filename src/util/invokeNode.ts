@@ -124,7 +124,7 @@ export const matchNode = (recordedNode: any) => {
   UDAConsoleLogger.info('Difference: '+ difference, 1);
 
   if (finalMatchElement !== null) {
-    matchAction(finalMatchElement, recordedNode.node, recordedNode?.additionalParams?.slowPlaybackTime)
+    matchAction(finalMatchElement, recordedNode.node, recordedNode?.selectedRecordingDetails)
     return true;
   } else {
     // show alert to the user as we didnt found the recorded element on the page.
