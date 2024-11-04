@@ -10,6 +10,7 @@ import {checkNodeValues} from "./checkNodeValues";
 import {translate} from "./translation";
 import {simulateMouseLeave} from "./simulateMouseLeave";
 import {matchLLMInputToNode} from "./matchLLMInputToNode";
+import {UDAErrorLogger} from "../config/error-log";
 declare const UDAGlobalConfig;
 
 export const matchAction = (node, selectedNode, selectedRecordingDetails) => {
@@ -41,12 +42,9 @@ export const matchAction = (node, selectedNode, selectedRecordingDetails) => {
   if(UDAGlobalConfig.enableAISearch && recordedNodeData.meta?.inputType){
     const invokedNodeFromLLM = matchLLMInputToNode(node, selectedNode, selectedRecordingDetails, timeToInvoke);
     if(invokedNodeFromLLM) {
-        // invokeNextNode(node, timeToInvoke);
-        console.log('llm input processing success');
         return;
     } else {
-      console.log('llm input processing failed');
-      return;
+      UDAErrorLogger.error('llm input processing failed');
     }
   }
 
