@@ -36,12 +36,12 @@ export const matchLLMInputToNode = (node, selectedNode, selectedRecordingDetails
 
         // If no LLM input is found or input value is missing, log an error and return
         if (!llmInput) {
-            UDAErrorLogger.error('LLM input not found');
+            // UDAErrorLogger.error('LLM input not found');
             return false;
         }
 
         if (llmInput && !llmInput.InputValue) {
-            UDAErrorLogger.error('LLM input value not provided');
+            // UDAErrorLogger.error('LLM input value not provided');
             return false;
         }
 
@@ -171,7 +171,7 @@ export const matchLLMInputToNode = (node, selectedNode, selectedRecordingDetails
 
         return performedAction;
     } catch (error) {
-        UDAErrorLogger.error('Error in matchLLMInputToNode:', error);
+        // UDAErrorLogger.error('Error in matchLLMInputToNode:', error);
         return false;
     }
 }
