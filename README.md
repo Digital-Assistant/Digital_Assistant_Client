@@ -2,9 +2,9 @@
 
 Client for Universal Digital Assistant
 
-**Update - We are working on upgrading this to an 'AI agent'. Integrating this into your website should automatically help LLMs like chatGPT, Claude, Gemini etc interface with your website with minimal effort.**
+**Update - We are working on upgrading this to an 'AI agent'. Integrating this into your website should automatically help LLMs like chatGPT, Claude, Gemini etc interface with your website with minimal effort. Expect to see a POC by end of October 2025**
 
-World's first and only Open Source Digital Adoption Platform !!
+World's first and only AI driven Open Source Digital Adoption Platform !!
 Concept video: https://youtu.be/yEPGWexvpL8 
 
 Assistant in Action: https://youtu.be/Iz2WgKY0fhc
