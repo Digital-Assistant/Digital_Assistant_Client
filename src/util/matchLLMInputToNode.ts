@@ -105,10 +105,15 @@ export const matchLLMInputToNode = (node, selectedNode, selectedRecordingDetails
                 });
                 break;
             case "select":
-                addToolTip(node, node, selectedNode, navigationData, false, false, true);
+                // addToolTip(node, node, selectedNode, navigationData, false, false, true);
+                addToolTip(node, node, selectedNode, navigationData, false, false, false, translate('highLightText'), false, true);
                 for (let i = 0; i < node.options.length; i++) {
                     if (node.options[i].value === llmInput.InputValue) {
                         node.options[i].selected = true;
+                        // Create and dispatch the change event
+                        const event = new Event('change');
+                        node.dispatchEvent(event);
+                        invokeNextNode(node, timeToInvoke);
                         performedAction = true;
                     }
                 }
