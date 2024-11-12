@@ -537,7 +537,7 @@ export const RecordedData = (props: MProps) => {
         const _objData = getObjData(recordData[index]?.objectdata);
         if (_objData) {
             if (_objData.meta[key] === undefined) _objData.meta[key] = tooltip;
-            _objData.meta[key] = tooltip
+            _objData.meta[key] = tooltip;
             recordData[index].objectdata = TSON.stringify(_objData);
             storeRecording(recordData);
             setToolTip('');
