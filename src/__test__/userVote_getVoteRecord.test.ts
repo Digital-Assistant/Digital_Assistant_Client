@@ -26,11 +26,6 @@ import TSON from "typescript-json";
 jest.mock("domjson", () => ({
   toJSON: jest.fn(),
 }));
-/**
- * Mocks the `typescript-json` module by providing a mock implementation for the `stringify` function.
- * This is likely used for testing purposes, to simulate the behavior of the `typescript-json` module without
- * actually using the real implementation.
- */
 
 /**
  * Mocks the `typescript-json` module by providing a mock implementation for the `stringify` function.

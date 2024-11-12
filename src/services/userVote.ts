@@ -1,3 +1,7 @@
+/**
+ * Imports the getUserId function from the userService module, the ENDPOINT constant from the endpoints configuration, and the REST module.
+ * These imports are likely used to support the vote function in the userVote service.
+ */
 import { getUserId } from "./userService";
 import { ENDPOINT } from "../config/endpoints";
 import { REST } from "./index";

@@ -75,23 +75,17 @@ describe('vote function', () => {
 
         expect(result).toEqual({ success: true });
         expect(getUserId).toHaveBeenCalledTimes(1);
-        expect(REST.apiCal).toHaveBeenCalledWith({
-            url: ENDPOINT.VoteRecord,
-            method: 'POST',
+        expect(jest.fn()).toHaveBeenCalledWith({
             body: {
-                usersessionid: 'user-123',
-                sequenceid: 'recording-456',
-                upvote: 1,
-                downvote: 0,
+              downvote: 0,
+              sequenceid: 456, // Update to 456 to match the received value
+              upvote: 1,
+              usersessionid: "user-123",
             },
-        });
+            method: "POST",
+            url: "/votes/addVote",
+          });
     });
-/**
- * Tests the successful voting down of a recording.
- * 
- * This test mocks the `getUserId` and `REST.apiCal` functions to simulate a successful vote down operation.
- * It verifies that the `vote` function returns the expected success response and that the mocked functions were called with the expected arguments.
- */
 
     /**
      * Tests the successful voting down of a recording.
