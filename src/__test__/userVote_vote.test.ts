@@ -75,7 +75,7 @@ describe('vote function', () => {
 
         expect(result).toEqual({ success: true });
         expect(getUserId).toHaveBeenCalledTimes(1);
-        expect(jest.fn()).toHaveBeenCalledWith({
+        expect(REST.apiCal).toHaveBeenCalledWith({
             body: {
               downvote: 0,
               sequenceid: 456, // Update to 456 to match the received value

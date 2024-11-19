@@ -121,16 +121,17 @@ describe('getVoteRecord', () => {
     
     expect(result).toEqual({ voteData: 'someData' });
   });
-/**
- * Tests that the `getVoteRecord` function correctly fetches the vote record data from the API.
- * This test case ensures that when the `getVoteRecord` function is called with a valid request object,
- * it correctly fetches the vote record data from the API and returns it.
- *
- * @param {Object} mockRequest - The mock request object to pass to the `getVoteRecord` function.
- * @param {string} mockRequest.id - The ID of the sequence to fetch the vote record for.
- * @returns {Object} - The vote record data returned by the `REST.apiCal` function.
- */
 
+
+  /**
+   * Tests that the `getVoteRecord` function correctly fetches the vote record data from the API.
+   * This test case ensures that when the `getVoteRecord` function is called with a valid request object,
+   * it correctly fetches the vote record data from the API and returns it.
+   *
+   * @param {Object} mockRequest - The mock request object to pass to the `getVoteRecord` function.
+   * @param {string} mockRequest.id - The ID of the sequence to fetch the vote record for.
+   * @returns {Object} - The vote record data returned by the `REST.apiCal` function.
+   */
   it('should fetch the vote record', async () => {
     (getUserId as jest.Mock).mockResolvedValue('user123');
     (REST.apiCal as jest.Mock).mockResolvedValue({ data: 'voteData' });
