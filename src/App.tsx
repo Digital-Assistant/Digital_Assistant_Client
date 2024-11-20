@@ -282,7 +282,7 @@ function App(props) {
         await initSpecialNodes();
         if(searchParams.get(CONFIG.UDA_URL_Param)){
             let searchId = searchParams.get(CONFIG.UDA_URL_Param);
-            await recordUserClickData('searchRecordingId', window.location.host, parseInt(searchId));
+            recordUserClickData('searchRecordingId', '', parseInt(searchId));
             let recordDetails = await fetchRecord({
                 id: searchParams.get(CONFIG.UDA_URL_Param),
                 domain: encodeURI(fetchDomain()),
@@ -355,7 +355,7 @@ function App(props) {
             init();
 
             // Send pageview with a custom path
-            ReactGA.send({ hitType: "pageview", page: "/", title: "Loaded Plugin" });
+            ReactGA.send({ hitType: "pageView", page: "/", title: "Loaded Plugin" });
 
         }
 
@@ -497,7 +497,7 @@ function App(props) {
         setShowRecord(false);
         setReFetchSearch("");
         setShowSearch(false);
-        await recordUserClickData('recordingStart', window.location.host);
+        recordUserClickData('recordingStart');
         await addBodyEvents();
     };
 
@@ -527,12 +527,12 @@ function App(props) {
     const recordHandler = async (type: string, data?: any) => {
         switch (type) {
             case "submit":
-                await recordUserClickData('recordingSubmit', window.location.host);
+                recordUserClickData('recordingSubmit');
                 await postRecordSequenceData({ ...data });
                 await setSearchKeyword("");
                 break;
             case "cancel":
-                await recordUserClickData('recordingStop', window.location.host);
+                recordUserClickData('recordingStop');
                 setIsRecording(false);
                 await setSearchKeyword("");
                 break;

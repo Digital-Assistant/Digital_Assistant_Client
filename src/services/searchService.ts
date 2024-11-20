@@ -17,8 +17,8 @@ export const fetchSearchResults = async (request?: {
   userSessionId?: any
 }) => {
 
-  if(request?.keyword) {
-    await recordUserClickData('search', request?.keyword);
+  if(request?.keyword && request.keyword !== '') {
+    recordUserClickData('search', request.keyword);
   }
 
   request.userSessionId = await getUserId();

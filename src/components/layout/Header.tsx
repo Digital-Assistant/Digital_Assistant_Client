@@ -2,13 +2,13 @@ import React, { useState } from "react";
 
 import { HeaderProps } from "./interfaces";
 import MicButton from "../MicButton";
-import { getLogo } from "./common";
 
 import { CONFIG } from "../../config";
 import LanguageSelect from "./LanguageSelect";
 import { translateText } from "../../services/translateService";
 import {translate} from "../../util/translation";
 import {CloseCircleOutlined} from "@ant-design/icons";
+import {recordUserClickData} from "../../services";
 
 /**
  * To render search result elements
@@ -28,8 +28,11 @@ const Header = (props: HeaderProps) => {
   /**
    * Toggle right side panel visibility
    */
-  const togglePanel = () => {
-    if (props.toggleHandler) props.toggleHandler(hide, "header");
+  const togglePanel = async () => {
+    recordUserClickData('UDAPanelClosed');
+    if (props.toggleHandler){
+      props.toggleHandler(hide, "header");
+    }
   };
 
   /**
@@ -49,9 +52,10 @@ const Header = (props: HeaderProps) => {
    * clear search function
    * @param event
    */
-  const clearSearch = () => {
+  const clearSearch = async () => {
     props.setSearchKeyword('');
     setSearchKeyword('');
+    recordUserClickData('clearSearch');
   }
 
   const submitSearch = (event) => {
