@@ -87,42 +87,6 @@ describe('getUserId', () => {
   });
 });
 
- // Test suite for getUserId function
- describe('getUserId', () => {
-    // Test case to verify null return when userSessionData.authdata.id is not a string
-    it('should return null if userSessionData.authdata.id is not a string', async () => {
-      // Mock setup and assertion
-    });
-  
-    // Test case to verify null return when userSessionData.authdata.id is an empty string
-    it('should return null if userSessionData.authdata.id is an empty string', async () => {
-      // Mock setup and assertion
-    });
-  
-    // Test case to verify null return when userSessionData.authdata.id is a string of length 0
-    it('should return null if userSessionData.authdata.id is a string of length 0', async () => {
-      // Mock setup and assertion
-    });
-  
-    // Test case to verify null return when userSessionData.authdata.id is a string longer than 255 characters
-    it('should return null if userSessionData.authdata.id is a string of length greater than 255', async () => {
-      // Mock setup and assertion
-    });
-  });
-
-  // Test suite for getUserId function
-  describe('getUserId', () => {
-    // Test case to verify correct user ID return when authdata is available
-    it('should return the user ID when authdata is available', async () => {
-      // Mock setup, function call, and assertions
-    });
-
-    // Test case to verify null return when authdata is not available
-    it('should return null when authdata is not available', async () => {
-      // Mock setup, function call, and assertions
-    });
-  });
-
   
 /**
  * Tests the behavior of the `getUserId` function in the `userService`.
@@ -554,9 +518,10 @@ describe('userService', () => {
           });
   });
   
- /**
- * Tests that the `getUserId` function returns `null` when the stored user session data does not have an "authdata" property.
- */
+ 
+      /**
+       * Tests that the `getUserId` function returns `null` when the `userSessionData` object does not have an `authdata` property.
+       */
                     
      it('should return null when the user session data does not have an "authdata" property', async () => {
      const mockUserSessionData = {};
