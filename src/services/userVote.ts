@@ -68,7 +68,6 @@ export const vote = async (request?: any, type?: string) => {
      */
     return await REST.apiCal(parameters); // Make the API call using the REST utility
   } catch (error) {
-    console.log("Error in vote function:", error);
     throw error;
   }
 };
@@ -112,7 +111,6 @@ export const getVoteRecord = async (request?: any) => {
     // Catch any errors that occur during the API call
     } catch (error) {
       // Log the error to the console for debugging purposes
-      console.log("Error in getVoteRecord function:", error);
       throw error;
     }
   };
