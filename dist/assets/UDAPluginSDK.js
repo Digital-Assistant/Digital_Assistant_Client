@@ -619,86 +619,9 @@ var __webpack_exports__ = {};
   !*** ./src/ExtensionSDK.js ***!
   \*****************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _util_checkBrowser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util/checkBrowser */ "./src/util/checkBrowser.ts");
-/* harmony import */ var _util_checkScreenSize__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./util/checkScreenSize */ "./src/util/checkScreenSize.ts");
-
-
-let {
-  enableUDAPlugin,
-  udaBrowserVar,
-  udaIdentifiedBrowser
-} = (0,_util_checkBrowser__WEBPACK_IMPORTED_MODULE_0__.checkBrowser)();
-const {
-  enablePluginForScreen,
-  showScreenAlert
-} = (0,_util_checkScreenSize__WEBPACK_IMPORTED_MODULE_1__.checkScreenSize)();
-if (enableUDAPlugin === false) {
-  console.log('Plugin disabled for browser: ' + udaIdentifiedBrowser.name);
-} else if (enablePluginForScreen === false) {
-  console.log('Plugin disabled due to lower resolution');
-} else {
-  console.log('Browser Enabled');
-  let s1 = document.createElement('script');
-  let scriptPath = udaBrowserVar?.runtime?.getURL("assets/UDASdk.js");
-  s1.src = scriptPath;
-  s1.onload = function () {};
-  (document.body || document.documentElement).appendChild(s1);
-  document.addEventListener("RequestUDASessionData", function (data) {
-    udaBrowserVar.runtime.sendMessage({
-      action: data.detail.data,
-      data: data.detail.data
-    });
-  });
-  document.addEventListener("UDADebugSetEvent", function (data) {
-    udaBrowserVar.runtime.sendMessage({
-      action: data.detail.data.action,
-      data: data.detail.data.value
-    });
-  });
-  document.addEventListener("UDAGetNewToken", function (data) {
-    udaBrowserVar.runtime.sendMessage({
-      action: data.detail.data,
-      data: data.detail.data
-    });
-  });
-
-  /**
-   * create keycloak storage to browserVar
-   */
-  document.addEventListener("CreateUDASessionData", function (data) {
-    udaBrowserVar.runtime.sendMessage({
-      action: data.detail.action,
-      data: data.detail.data
-    });
-  });
-  udaBrowserVar.runtime.onMessage.addListener(function (request) {
-    if (request.action === "UDAUserSessionData") {
-      document.dispatchEvent(new CustomEvent("UDAUserSessionData", {
-        detail: {
-          data: request.data
-        },
-        bubbles: false,
-        cancelable: false
-      }));
-    } else if (request.action === "UDAAuthenticatedUserSessionData") {
-      document.dispatchEvent(new CustomEvent("UDAAuthenticatedUserSessionData", {
-        detail: {
-          data: request.data
-        },
-        bubbles: false,
-        cancelable: false
-      }));
-    } else if (request.action === "UDAAlertMessageData") {
-      document.dispatchEvent(new CustomEvent("UDAAlertMessageData", {
-        detail: {
-          data: request.data
-        },
-        bubbles: false,
-        cancelable: false
-      }));
-    }
-  });
-}
+/* harmony import */ var _util_checkBrowser_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util/checkBrowser.ts */ "./src/util/checkBrowser.ts");
+/* harmony import */ var _util_checkScreenSize_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./util/checkScreenSize.ts */ "./src/util/checkScreenSize.ts");
+let{enableUDAPlugin,udaBrowserVar,udaIdentifiedBrowser}=(0,_util_checkBrowser_ts__WEBPACK_IMPORTED_MODULE_0__.checkBrowser)();const{enablePluginForScreen,showScreenAlert}=(0,_util_checkScreenSize_ts__WEBPACK_IMPORTED_MODULE_1__.checkScreenSize)();if(enableUDAPlugin===false){console.log("Plugin disabled for browser: "+udaIdentifiedBrowser.name)}else if(enablePluginForScreen===false){console.log("Plugin disabled due to lower resolution")}else{console.log("Browser Enabled");let s1=document.createElement("script");let scriptPath=udaBrowserVar?.runtime?.getURL("assets/UDASdk.js");s1.src=scriptPath;s1.onload=function(){};(document.body||document.documentElement).appendChild(s1);document.addEventListener("RequestUDASessionData",function(data){udaBrowserVar.runtime.sendMessage({action:data.detail.data,data:data.detail.data})});document.addEventListener("UDADebugSetEvent",function(data){udaBrowserVar.runtime.sendMessage({action:data.detail.data.action,data:data.detail.data.value})});document.addEventListener("UDAGetNewToken",function(data){udaBrowserVar.runtime.sendMessage({action:data.detail.data,data:data.detail.data})});document.addEventListener("CreateUDASessionData",function(data){udaBrowserVar.runtime.sendMessage({action:data.detail.action,data:data.detail.data})});udaBrowserVar.runtime.onMessage.addListener(function(request){if(request.action==="UDAUserSessionData"){document.dispatchEvent(new CustomEvent("UDAUserSessionData",{detail:{data:request.data},bubbles:false,cancelable:false}))}else if(request.action==="UDAAuthenticatedUserSessionData"){document.dispatchEvent(new CustomEvent("UDAAuthenticatedUserSessionData",{detail:{data:request.data},bubbles:false,cancelable:false}))}else if(request.action==="UDAAlertMessageData"){document.dispatchEvent(new CustomEvent("UDAAlertMessageData",{detail:{data:request.data},bubbles:false,cancelable:false}))}})}
 })();
 
 UdanLibrary = __webpack_exports__;
