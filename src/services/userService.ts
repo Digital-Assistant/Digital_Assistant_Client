@@ -4,10 +4,6 @@
  */
 import { getFromStore } from "../util";
 import { CONFIG } from "../config";
-
-/**
- * For getting user id from the storage
- */
 /**
  * Retrieves the user's ID from the application's storage.
  * 
