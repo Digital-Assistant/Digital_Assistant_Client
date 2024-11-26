@@ -14,40 +14,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   AddToClickObjects: () => (/* binding */ AddToClickObjects),
 /* harmony export */   ignoreTags: () => (/* binding */ ignoreTags)
 /* harmony export */ });
-const ignoreTags = ["body", "document", "window", "html", "script", "style", "iframe", "doctype", "link", "svg", "path", "meta", "circle", "rect", "stop", "defs", "linearGradient", "g"];
-const AddToClickObjects = node => {
-  try {
-    let clickObject = {
-      element: node,
-      id: ''
-    };
-
-    //checking whether the element is window or not
-    if (clickObject.element === window) {
-      return;
-    }
-    if (typeof clickObject?.element?.tagName === 'undefined') {
-      return;
-    }
-    let tag = clickObject?.element?.tagName;
-    if (tag && ignoreTags.indexOf(tag.toLowerCase()) !== -1) {
-      return;
-    }
-    if (node.classList && node.classList.contains('uda_exclude')) {
-      return;
-    }
-    for (let i = 0; i < UDAClickObjects.length; i++) {
-      if (UDAClickObjects[i].element.isSameNode(clickObject.element)) {
-        //todo, discuss , how better to call actions, if multiple actions should be stored, or selector better.
-        return;
-      }
-    }
-    clickObject.id = UDAClickObjects.length;
-    UDAClickObjects.push(clickObject);
-  } catch (e) {
-    console.log('Unable to process clickable object - ' + node, e);
-  }
-};
+const ignoreTags=["body","document","window","html","script","style","iframe","doctype","link","svg","path","meta","circle","rect","stop","defs","linearGradient","g"];const AddToClickObjects=node=>{try{let clickObject={element:node,id:""};if(clickObject.element===window){return}if(typeof clickObject?.element?.tagName==="undefined"){return}let tag=clickObject?.element?.tagName;if(tag&&ignoreTags.indexOf(tag.toLowerCase())!==-1){return}if(node.classList&&node.classList.contains("uda_exclude")){return}for(let i=0;i<UDAClickObjects.length;i++){if(UDAClickObjects[i].element.isSameNode(clickObject.element)){return}}clickObject.id=UDAClickObjects.length;UDAClickObjects.push(clickObject)}catch(e){console.log("Unable to process clickable object - "+node,e)}};
 
 /***/ })
 
@@ -114,19 +81,8 @@ var __webpack_exports__ = {};
   !*** ./src/Headers.js ***!
   \************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _util_headers_addToClickObject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util/headers/addToClickObject */ "./src/util/headers/addToClickObject.js");
-// adding the click object that is registered via javascript
-window.UDAClickObjects = [];
-window.UDARemovedClickObjects = [];
-
-EventTarget.prototype.addEventListener = function (addEventListener) {
-  return function () {
-    if (arguments[0] === "click") {
-      (0,_util_headers_addToClickObject__WEBPACK_IMPORTED_MODULE_0__.AddToClickObjects)(this);
-    }
-    addEventListener.call(this, arguments[0], arguments[1], arguments[2]);
-  };
-}(EventTarget.prototype.addEventListener);
+/* harmony import */ var _util_headers_addToClickObject_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util/headers/addToClickObject.js */ "./src/util/headers/addToClickObject.js");
+window.UDAClickObjects=[];window.UDARemovedClickObjects=[];EventTarget.prototype.addEventListener=function(addEventListener){return function(){if(arguments[0]==="click"){(0,_util_headers_addToClickObject_js__WEBPACK_IMPORTED_MODULE_0__.AddToClickObjects)(this)}addEventListener.call(this,arguments[0],arguments[1],arguments[2])}}(EventTarget.prototype.addEventListener);
 })();
 
 UdanLibrary = __webpack_exports__;
