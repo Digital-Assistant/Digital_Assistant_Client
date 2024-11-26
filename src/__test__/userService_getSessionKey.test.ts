@@ -122,42 +122,7 @@ describe('userService', () => {
     });
   });
 
-// Test suite for getSessionKey function
-describe('getSessionKey', () => {
-    // Test case to verify null return when userSessionData.sessionkey is not a string
-    it('should return null if userSessionData.sessionkey is not a string', async () => {
-      // Mock setup and assertion
-    });
   
-    // Test case to verify null return when userSessionData.sessionkey is an empty string
-    it('should return null if userSessionData.sessionkey is an empty string', async () => {
-      // Mock setup and assertion
-    });
-  
-    // Test case to verify null return when userSessionData.sessionkey is a string of length 0
-    it('should return null if userSessionData.sessionkey is a string of length 0', async () => {
-      // Mock setup and assertion
-    });
-  
-    // Test case to verify null return when userSessionData.sessionkey is a string longer than 255 characters
-    it('should return null if userSessionData.sessionkey is a string of length greater than 255', async () => {
-      // Mock setup and assertion
-    });
-  });
-  
-  // Test suite for getSessionKey function
-  describe('getSessionKey', () => {
-    // Test case to verify correct session key return when it is available
-    it('should return the session key when it is available', async () => {
-      // Mock setup, function call, and assertions
-    });
-
-    // Test case to verify null return when userSessionData is null
-    it('should return null when userSessionData is null', async () => {
-      // Mock setup, function call, and assertions
-    });
-  });
-
 // Test suite for getSessionKey function
 describe('getSessionKey', () => {
     // Test case to verify null return when userSessionData is null
@@ -614,9 +579,9 @@ describe('getSessionKey', () => {
     jest.spyOn(require('../util'), 'getFromStore').mockResolvedValue(mockUserSessionData);
 
     const sessionKey = await getSessionKey();
-expect(sessionKey).toBeNull();
-expect(getFromStore).toHaveBeenCalledWith(CONFIG.USER_AUTH_DATA_KEY, false);
-});
+    expect(sessionKey).toBeNull();
+    expect(getFromStore).toHaveBeenCalledWith(CONFIG.USER_AUTH_DATA_KEY, false);
+  });
 
 describe('getSessionKey', () => {
     afterEach(() => {
