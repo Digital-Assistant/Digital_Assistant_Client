@@ -1,7 +1,7 @@
 /**
- * @author Yureswar Ravuri
+ * Imports the `getFromStore` utility function from the "../util" module.
+ * Imports the `CONFIG` object from the "../config" module.
  */
-
 import { getFromStore } from "../util";
 import { CONFIG } from "../config";
 
@@ -29,7 +29,7 @@ export const getUserId = async (): Promise<string | null> => {
     return null;
   } catch (error) {
     // Log the error to the console
-    console.error("Error retrieving user ID:", error);
+    console.log("Error retrieving user ID:", error);
 
     // Throw a new Error with a custom message
     throw new Error("Failed to retrieve user ID");
@@ -64,7 +64,7 @@ export const getSessionKey = async (): Promise<string | null> => {
     return null;
   } catch (error) {
     // Log the error to the console
-    console.error("Error retrieving session key:", error);
+    console.log("Error retrieving session key:", error);
 
     // Throw a new Error with a custom message
     throw new Error("Failed to retrieve session key");
