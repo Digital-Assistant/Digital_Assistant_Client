@@ -102,6 +102,7 @@ describe('getVoteRecord', () => {
     await expect(getVoteRecord('not an object')).rejects.toThrow();
   });
 
+  
   /**
    * Tests that the `getVoteRecord` function correctly returns the result of the `REST.apiCal` function.
    * This test case ensures that when the `getVoteRecord` function is called with a valid request object,

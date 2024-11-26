@@ -16,10 +16,6 @@ import { ENDPOINT } from '../config/endpoints';
 import domJSON from "domjson";
 import TSON from "typescript-json";
 
-/**
- * Mocks the `domjson` module by providing a mock implementation of the `toJSON` function.
- * This is used for testing purposes to simulate the behavior of the `domjson` module.
- */
 jest.mock("domjson", () => ({
     toJSON: jest.fn(),
 }));
