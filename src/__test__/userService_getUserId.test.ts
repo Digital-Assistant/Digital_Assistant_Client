@@ -39,19 +39,6 @@ describe('userService', () => {
    */
   describe('getUserId', () => {
     // Test case to verify getFromStore is called with correct parameters
-    it('should return user id when user session data is available', async () => {
-      const mockUserData = {
-        authdata: {
-          id: 'user123',
-        },
-      };
-      (getFromStore as jest.Mock).mockResolvedValue(mockUserData);
-
-      const result = await getUserId();
-      expect(result).toBe('user123');
-      expect(getFromStore).toHaveBeenCalledWith(CONFIG.USER_AUTH_DATA_KEY, false);
-    });
-    // Test case to verify getFromStore is called with correct parameters
     it('should return null when user session data is not available', async () => {
       (getFromStore as jest.Mock).mockResolvedValue(null);
 
@@ -129,20 +116,6 @@ describe('getUserId', () => {
    * Tests that the `getUserId` function returns the user ID when the `userSessionData.authdata.id` property is available.
    */
   describe('getUserId', () => {
-    it('should return the user ID when authdata is available', async () => {
-      const mockUserSessionData = {
-        authdata: {
-          id: 'user123',
-        },
-      };
-      (getFromStore as jest.Mock).mockResolvedValueOnce(mockUserSessionData);
-
-      const userId = await getUserId();
-
-      expect(getFromStore).toHaveBeenCalledWith(CONFIG.USER_AUTH_DATA_KEY, false);
-      expect(userId).toBe('user123');
-    });
-
     /**
      * Tests that the `getUserId` function returns `null` when the `userSessionData.authdata` property is `null`.
      */
@@ -300,19 +273,6 @@ describe('userService', () => {
  */
 describe('userService', () => {
     describe('getUserId', () => {
-      it('should return user id if authdata is present', async () => {
-        const mockUserSessionData = {
-          authdata: {
-            id: 'user123'
-          }
-        };
-        (getFromStore as jest.Mock).mockResolvedValue(mockUserSessionData);
-  
-        const userId = await getUserId();
-        expect(userId).toBe('user123');
-        expect(getFromStore).toHaveBeenCalledWith(CONFIG.USER_AUTH_DATA_KEY, false);
-      });
-  
       /**
        * Tests that the `getUserId` function returns `null` when the `userSessionData` does not have an `authdata` property with an `id` property.
        */
@@ -402,17 +362,6 @@ describe('userService', () => {
 
 describe('userService', () => {
     describe('getUserId', () => {
-      /**
-       * Tests that the `getUserId` function returns the user ID from the `authdata` property of the `userSessionData` object if it is available.
-       */
-      it('should return the user ID from authdata if available', async () => {
-        (getFromStore as jest.Mock).mockResolvedValue({
-          authdata: { id: 'user123' },
-        });
-        const userId = await getUserId();
-        expect(getFromStore).toHaveBeenCalledWith(CONFIG.USER_AUTH_DATA_KEY, false);
-        expect(userId).toBe('user123');
-      });
   /**
    * Tests that the `getUserId` function returns `null` when the `userSessionData` object does not contain an `authdata` property.
    */
@@ -488,23 +437,7 @@ describe('userService', () => {
   afterEach(() => {
   jest.clearAllMocks();
   });
-                    
- /** 
-  ** Tests that the `getUserId` function returns the user ID from the stored user session data.
-  */
-    it('should return the user ID from the stored user session data', async () => {
-    const mockUserSessionData = {
-     authdata: {
-     id: 'user-123'
-     }
-     };
-                    
-     jest.spyOn(require('../util'), 'getFromStore').mockResolvedValue(mockUserSessionData);
-                
-     const userId = await getUserId();
-     expect(userId).toBe('user-123');
-     expect(getFromStore).toHaveBeenCalledWith(CONFIG.USER_AUTH_DATA_KEY, false);
-     });
+
                     
   /**
     * Tests that the `getUserId` function returns `null` when the stored user session data is not available.
@@ -605,25 +538,7 @@ describe('userService', () => {
            afterEach(() => {
              jest.clearAllMocks();
            });
-         
-           it('should return the user ID from the stored user session data', async () => {
-             // Mock user session data with user ID
-             const mockUserSessionData = {
-               authdata: {
-                 id: 'user-123'
-               }
-             };
-         
-             // Mock the getFromStore function to return the user session data
-             jest.spyOn(require('../util'), 'getFromStore').mockResolvedValue(mockUserSessionData);
-         
-             // Call getUserId function
-             const userId = await getUserId();
-         
-             // Assert that the user ID is returned correctly
-             expect(userId).toBe('user-123');
-           });
-         
+
            it('should return null when the user session data is not available', async () => {
              // Mock the getFromStore function to return null
              jest.spyOn(require('../util'), 'getFromStore').mockResolvedValue(null);
@@ -687,39 +602,6 @@ describe('userService', () => {
               expect(userId).toBeNull();
             });
           
-            /**
-             * Tests that the `getUserId` function returns the user ID as a string when the user session data has an `authdata` property with an `id` property that is a string.
-             */
-            it('should return the user id when the "authdata" property has an "id" property as a string', async () => {
-              const mockUserSessionData = {
-                authdata: {
-                  id: '123456789'
-                }
-              };
-          
-              jest.spyOn(require('../util'), 'getFromStore').mockResolvedValue(mockUserSessionData);
-          
-              const userId = await getUserId();
-          
-              expect(userId).toBe('123456789');
-            });
-          
-            /**
-             * Tests that the `getUserId` function returns the user ID as a string when the user session data has an `authdata` property with an `id` property that is a number.
-             */
-            it('should return the user id when the "authdata" property has an "id" property as a number', async () => {
-              const mockUserSessionData = {
-                authdata: {
-                  id: 123456789
-                }
-              };
-          
-              jest.spyOn(require('../util'), 'getFromStore').mockResolvedValue(mockUserSessionData);
-          
-              const userId = await getUserId();
-          
-              expect(userId).toBe('123456789');
-            });
           
             /**
              * Tests that the `getUserId` function returns `null` when the user session data has an `authdata` property with an `id` property that is not a string or number.
