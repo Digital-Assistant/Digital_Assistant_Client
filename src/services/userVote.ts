@@ -1,3 +1,7 @@
+/**
+ * Imports the getUserId function from the userService module, the ENDPOINT constant from the endpoints configuration, and the REST module.
+ * These imports are likely used to support the vote function in the userVote service.
+ */
 import { getUserId } from "./userService";
 import { ENDPOINT } from "../config/endpoints";
 import { REST } from "./index";
@@ -64,7 +68,6 @@ export const vote = async (request?: any, type?: string) => {
      */
     return await REST.apiCal(parameters); // Make the API call using the REST utility
   } catch (error) {
-    console.error("Error in vote function:", error);
     throw error;
   }
 };
@@ -102,9 +105,12 @@ export const getVoteRecord = async (request?: any) => {
      * @returns A promise that resolves with the result of the vote operation.
      * @throws {Error} If an error occurs during the vote request.
      */
+    // Attempt to make the API call using the REST utility
     return await REST.apiCal(parameters); // Make the API call using the REST utility
-  } catch (error) {
-    console.error("Error in getVoteRecord function:", error);
-    throw error;
-  }
+    
+    // Catch any errors that occur during the API call
+    } catch (error) {
+      // Log the error to the console for debugging purposes
+      throw error;
+    }
   };

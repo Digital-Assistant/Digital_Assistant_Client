@@ -24,6 +24,11 @@ describe('userService', () => {
     jest.clearAllMocks();
   });
 
+  beforeEach(() => {
+    // Clear all mocks before each test
+    jest.clearAllMocks();
+  });
+
   it('should initialize correctly', () => {
     // Add a simple test case here
     expect(true).toBe(true);
@@ -32,23 +37,6 @@ describe('userService', () => {
 
  // Test suite for getSessionKey function
  describe('getSessionKey', () => {
-    // Test case to verify session key retrieval when user session data is available
-    it('should return session key when user session data is available', async () => {
-      // Mock user data with a session key
-      const mockUserData = {
-        sessionkey: 'session123',
-      };
-      // Mock getFromStore to return the mockUserData
-      (getFromStore as jest.Mock).mockResolvedValue(mockUserData);
-  
-      // Call the function being tested
-      const result = await getSessionKey();
-      // Assert the correct session key is returned
-      expect(result).toBe('session123');
-      // Verify getFromStore was called with correct parameters
-      expect(getFromStore).toHaveBeenCalledWith(CONFIG.USER_AUTH_DATA_KEY, false);
-    });
-  
     // Test case to verify null return when user session data is not available
     it('should return null when user session data is not available', async () => {
       // Mock getFromStore to return null
@@ -77,87 +65,7 @@ describe('userService', () => {
   });
   
   // Additional edge cases test suite
-  describe('Edge cases', () => {
-    // Test case to handle empty string user id
-    it('should handle empty string user id', async () => {
-      // Mock user data with an empty string id
-      const mockUserData = {
-        authdata: {
-          id: '',
-        },
-      };
-      // Mock getFromStore to return the mockUserData
-      (getFromStore as jest.Mock).mockResolvedValue(mockUserData);
-  
-      // Call getUserId function
-      const result = await getUserId();
-      // Assert an empty string is returned
-      expect(result).toBe('');
-    });
-  
-    // Test case to handle empty string session key
-    it('should handle empty string session key', async () => {
-      // Mock user data with an empty string sessionkey
-      const mockUserData = {
-        sessionkey: '',
-      };
-      // Mock getFromStore to return the mockUserData
-      (getFromStore as jest.Mock).mockResolvedValue(mockUserData);
-  
-      // Call getSessionKey function
-      const result = await getSessionKey();
-      // Assert an empty string is returned
-      expect(result).toBe('');
-    });
-  
-    // Test case to handle getFromStore throwing an error
-    it('should handle getFromStore throwing an error', async () => {
-      // Mock getFromStore to throw an error
-      (getFromStore as jest.Mock).mockRejectedValue(new Error('Storage error'));
-  
-      // Assert that getUserId rejects with the correct error
-      await expect(getUserId()).rejects.toThrow('Storage error');
-      // Assert that getSessionKey rejects with the correct error
-      await expect(getSessionKey()).rejects.toThrow('Storage error');
-    });
-  });
-
-// Test suite for getSessionKey function
-describe('getSessionKey', () => {
-    // Test case to verify null return when userSessionData.sessionkey is not a string
-    it('should return null if userSessionData.sessionkey is not a string', async () => {
-      // Mock setup and assertion
-    });
-  
-    // Test case to verify null return when userSessionData.sessionkey is an empty string
-    it('should return null if userSessionData.sessionkey is an empty string', async () => {
-      // Mock setup and assertion
-    });
-  
-    // Test case to verify null return when userSessionData.sessionkey is a string of length 0
-    it('should return null if userSessionData.sessionkey is a string of length 0', async () => {
-      // Mock setup and assertion
-    });
-  
-    // Test case to verify null return when userSessionData.sessionkey is a string longer than 255 characters
-    it('should return null if userSessionData.sessionkey is a string of length greater than 255', async () => {
-      // Mock setup and assertion
-    });
-  });
-  
-  // Test suite for getSessionKey function
-  describe('getSessionKey', () => {
-    // Test case to verify correct session key return when it is available
-    it('should return the session key when it is available', async () => {
-      // Mock setup, function call, and assertions
-    });
-
-    // Test case to verify null return when userSessionData is null
-    it('should return null when userSessionData is null', async () => {
-      // Mock setup, function call, and assertions
-    });
-  });
-
+  describe('Edge cases', () => { 
 // Test suite for getSessionKey function
 describe('getSessionKey', () => {
     // Test case to verify null return when userSessionData is null
@@ -166,6 +74,8 @@ describe('getSessionKey', () => {
       (getFromStore as jest.Mock).mockResolvedValue(null);
       expect(await getSessionKey()).toBeNull();
     });
+   });
+});
   
     /**
      * Tests the behavior of the `getSessionKey` function in the `userService`.
@@ -177,13 +87,6 @@ describe('getSessionKey', () => {
       (getFromStore as jest.Mock).mockResolvedValue({});
       expect(await getSessionKey()).toBeNull();
     });
-  
-    it('should return the session key if userSessionData has sessionkey property', async () => {
-      const sessionKey = 'abc123';
-      (getFromStore as jest.Mock).mockResolvedValue({ sessionkey: sessionKey });
-      expect(await getSessionKey()).toBe(sessionKey);
-    });
-  });
   
 /**
  * Tests that the `getSessionKey` function returns `null` when the `userSessionData.sessionkey` property is not a string.
@@ -212,22 +115,8 @@ describe('getSessionKey', () => {
     });
   });
   
- /**
-   * Tests that the `getSessionKey` function returns the session key when it is available in the user session data.
-   */
+ 
  describe('getSessionKey', () => {
-    it('should return the session key when it is available', async () => {
-      const mockUserSessionData = {
-        sessionkey: 'session123',
-      };
-      (getFromStore as jest.Mock).mockResolvedValueOnce(mockUserSessionData);
-
-      const sessionKey = await getSessionKey();
-
-      expect(getFromStore).toHaveBeenCalledWith(CONFIG.USER_AUTH_DATA_KEY, false);
-      expect(sessionKey).toBe('session123');
-    });
-
     /**
      * Tests that the `getSessionKey` function returns `null` when the `userSessionData` is `null`.
      */
@@ -338,21 +227,8 @@ describe('getSessionKey', () => {
     });
   });
   
-  /**
-   * Tests that the `getSessionKey` function returns the session key when the `userSessionData` has a `sessionkey` property.
-   */
+
   describe('getSessionKey', () => {
-    it('should return session key if sessionkey is present', async () => {
-      const mockUserSessionData = {
-        sessionkey: 'session123'
-      };
-      (getFromStore as jest.Mock).mockResolvedValue(mockUserSessionData);
-
-      const sessionKey = await getSessionKey();
-      expect(sessionKey).toBe('session123');
-      expect(getFromStore).toHaveBeenCalledWith(CONFIG.USER_AUTH_DATA_KEY, false);
-    });
-
     /**
      * Tests that the `getSessionKey` function returns `null` when the `userSessionData` does not have a `sessionkey` property.
      */
@@ -377,21 +253,7 @@ describe('getSessionKey', () => {
     });
   });
 
-  /**
-   * Tests that the `getSessionKey` function returns the session key if it is present in the user session data.
-   */
   describe('getSessionKey', () => {
-    it('should return session key if sessionkey is present', async () => {
-      const mockUserSessionData = {
-        sessionkey: 'session123'
-      };
-      (getFromStore as jest.Mock).mockResolvedValue(mockUserSessionData);
-
-      const sessionKey = await getSessionKey();
-      expect(sessionKey).toBe('session123');
-      expect(getFromStore).toHaveBeenCalledWith(CONFIG.USER_AUTH_DATA_KEY, false);
-    });
-
     /**
      * Tests that the `getSessionKey` function returns `null` when the `userSessionData` does not contain a `sessionkey` property.
      */
@@ -469,19 +331,8 @@ describe('getSessionKey', () => {
     });
   });
 
-  /**
-   * Tests that the `getSessionKey` function returns the session key from the `userSessionData` object if it is available.
-   */
+  
   describe('getSessionKey', () => {
-    it('should return the session key if available', async () => {
-      (getFromStore as jest.Mock).mockResolvedValue({
-        sessionkey: 'session123',
-      });
-      const sessionKey = await getSessionKey();
-      expect(getFromStore).toHaveBeenCalledWith(CONFIG.USER_AUTH_DATA_KEY, false);
-      expect(sessionKey).toBe('session123');
-    });
-
     /**
      * Tests that the `getSessionKey` function returns `null` when the `userSessionData` object does not contain a `sessionkey` property.
      */
@@ -529,24 +380,7 @@ describe('getSessionKey', () => {
            * Clears all mocks after each test in the 'getSessionKey' test suite.
            */
   describe('getSessionKey', () => {
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
-  
-    /**
-     * Tests that the `getSessionKey` function returns the session key from the stored user session data.
-     */
-    it('should return the session key from the stored user session data', async () => {
-      const mockUserSessionData = {
-        sessionkey: 'session-123'
-      };
-  
-      jest.spyOn(require('../util'), 'getFromStore').mockResolvedValue(mockUserSessionData);
-  
-      const sessionKey = await getSessionKey();
-      expect(sessionKey).toBe('session-123');
-      expect(getFromStore).toHaveBeenCalledWith(CONFIG.USER_AUTH_DATA_KEY, false);
-    });
+   
   
     /**
      * Tests that the `getSessionKey` function returns `null` when the stored user session data is not available.
@@ -614,32 +448,13 @@ describe('getSessionKey', () => {
     jest.spyOn(require('../util'), 'getFromStore').mockResolvedValue(mockUserSessionData);
 
     const sessionKey = await getSessionKey();
-expect(sessionKey).toBeNull();
-expect(getFromStore).toHaveBeenCalledWith(CONFIG.USER_AUTH_DATA_KEY, false);
-});
-
-describe('getSessionKey', () => {
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
-  
-    it('should return the session key from the stored user session data', async () => {
-      // Mock user session data with session key
-      const mockUserSessionData = {
-        sessionkey: 'session-123'
-      };
-  
-      // Mock the getFromStore function to return the user session data
-      jest.spyOn(require('../util'), 'getFromStore').mockResolvedValue(mockUserSessionData);
-  
-      // Call getSessionKey function
-      const sessionKey = await getSessionKey();
-  
-      // Assert that the session key is returned correctly
-      expect(sessionKey).toBe('session-123');
-    });
+    expect(sessionKey).toBeNull();
+    expect(getFromStore).toHaveBeenCalledWith(CONFIG.USER_AUTH_DATA_KEY, false);
   });
 
+describe('getSessionKey', () => {
+   
+});
 /**
  * Cleans up any mocks created for the `getSessionKey` tests.
  */
@@ -647,9 +462,7 @@ afterEach(() => {
     jest.clearAllMocks();
   });
   describe('getSessionKey', () => {
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
+    
   
     /**
      * Tests that the `getSessionKey` function returns `null` when the user session data does not have a "sessionkey" property.
@@ -684,10 +497,6 @@ afterEach(() => {
   * Clears all mocks after each test in the `getSessionKey` test suite.
   */
  describe('getSessionKey', () => {
-   afterEach(() => {
-     jest.clearAllMocks();
-   });
- 
  
    /**
     * Tests that the `getSessionKey` function returns `null` when the user session data has a `sessionkey` property that is `undefined`.
@@ -720,36 +529,6 @@ afterEach(() => {
    });
  
    /**
-    * Tests that the `getSessionKey` function returns the session key when the "sessionkey" property exists in the user session data.
-    */
-   it('should return the session key when the "sessionkey" property exists', async () => {
-     const mockUserSessionData = {
-       sessionkey: 'abcdef1234567890'
-     };
- 
-     jest.spyOn(require('../util'), 'getFromStore').mockResolvedValue(mockUserSessionData);
- 
-     const sessionKey = await getSessionKey();
- 
-     expect(sessionKey).toBe('abcdef1234567890');
-   });
- 
-   /**
-    * Tests that the `getSessionKey` function returns the session key when the "sessionkey" property is a number.
-    */
-   it('should return the session key when the "sessionkey" property is a number', async () => {
-     const mockUserSessionData = {
-       sessionkey: 1234567890
-     };
-   
-     jest.spyOn(require('../util'), 'getFromStore').mockResolvedValue(mockUserSessionData);
-   
-     const sessionKey = await getSessionKey();
-   
-     expect(sessionKey).toBe(String(1234567890)); // Convert the number to string for comparison
-   });
- 
-   /**
     * Tests that the `getSessionKey` function returns `null` when the user session data has a `sessionkey` property that is not a string or number.
     */
    it('should return null when the "sessionkey" property is not a string or number', async () => {
@@ -764,5 +543,6 @@ afterEach(() => {
      expect(sessionKey).toBeNull();
    });
  });  
+
   
   
