@@ -1,42 +1,21 @@
-/**
- * Imports the `AuthData` and `CSPData` classes from their respective files.
- * These classes are used within the `UDASessionData` class to manage authentication
- * data and Content Security Policy (CSP) settings for a User Digital Assistant (UDA)
- * session.
- */
 import { AuthData } from "./AuthData";
 import { CSPData } from "./CSPData";
 
-/**
- * Class representing session data for User Digital Assistant (UDA)
- * Manages authentication state and security policies
- */
+// UDASessionData class to manage user session data
 export class UDASessionData {
-    // Unique identifier for the current session
-    sessionKey: string;
-
-    // Flag indicating if user is currently authenticated
-    authenticated: boolean;
-
-    // System or method used for authentication (e.g., 'oauth', 'jwt')
-    authenticationSource: string;
-
-    // User authentication details including credentials and permissions
-    authData: AuthData;
-
-    // Content Security Policy settings for the session
-    csp: CSPData;
+    sessionKey: string; // Unique identifier for the session
+    authenticated: boolean; // Indicates whether the user is authenticated
+    authenticationSource: string; // Source of authentication (e.g., SSO, Local)
+    authData: AuthData; // Contains additional authentication details
+    csp: CSPData; // Contains CSP-related information
 
     /**
-     * Constructs a new instance of the `UDASessionData` class, which represents session data for a User Digital Assistant (UDA).
-     * The constructor initializes the session key, authentication state, authentication source, authentication data, and Content Security Policy (CSP) data.
-     * It performs validation checks to ensure that the required properties are not null or undefined.
-     *
-     * @param sessionKey - The unique identifier for the current session.
-     * @param authenticated - A flag indicating whether the user is currently authenticated.
-     * @param authenticationSource - The system or method used for authentication (e.g., 'oauth', 'jwt').
-     * @param authData - The user authentication details, including credentials and permissions.
-     * @param csp - The Content Security Policy settings for the session.
+     * Constructor to initialize the UDASessionData object
+     * @param {string|null} sessionKey - Session key (default: null)
+     * @param {boolean} authenticated - Authentication status (default: false)
+     * @param {string|null} authenticationSource - Source of authentication (default: null)
+     * @param {AuthData} authData - Authentication data object (default: new AuthData())
+     * @param {CSPData} csp - CSP data object (default: new CSPData())
      */
     constructor(
         sessionKey: string = null,
@@ -45,36 +24,60 @@ export class UDASessionData {
         authData: AuthData = new AuthData(),
         csp: CSPData = new CSPData()
     ) {
-        // Validate session key presence
-        if (sessionKey === null) {
-            throw new Error("Session key cannot be null.");
+        // Validate sessionKey: must be a non-empty string if provided
+        if (sessionKey !== null && typeof sessionKey !== "string") {
+            throw new Error("Invalid sessionKey: must be a string or null.");
         }
 
-        // Ensure authentication state is defined
-        if (authenticated === null) {
-            throw new Error("Authenticated cannot be null.");
+        // Validate authenticationSource: must be a non-empty string if provided
+        if (authenticationSource !== null && typeof authenticationSource !== "string") {
+            throw new Error("Invalid authenticationSource: must be a string or null.");
         }
 
-        // Verify authentication source is provided
-        if (authenticationSource === null) {
-            throw new Error("Authentication source cannot be null.");
+        // Validate that authData is an instance of AuthData
+        if (!(authData instanceof AuthData)) {
+            throw new Error("Invalid authData: must be an instance of AuthData.");
         }
 
-        // Check for valid authentication data object
-        if (authData === null) {
-            throw new Error("Authentication data cannot be null.");
+        // Validate that csp is an instance of CSPData
+        if (!(csp instanceof CSPData)) {
+            throw new Error("Invalid csp: must be an instance of CSPData.");
         }
 
-        // Validate CSP data presence
-        if (csp === null) {
-            throw new Error("Content Security Policy data cannot be null.");
-        }
-
-        // Initialize instance properties
+        // Assign values to class properties
         this.sessionKey = sessionKey;
         this.authenticated = authenticated;
         this.authenticationSource = authenticationSource;
         this.authData = authData;
         this.csp = csp;
+    }
+
+    /**
+     * Updates the session key.
+     * @param {string} newSessionKey - New session key
+     */
+    updateSessionKey(newSessionKey: string): void {
+        if (!newSessionKey || typeof newSessionKey !== "string") {
+            throw new Error("Invalid newSessionKey: must be a non-empty string.");
+        }
+        this.sessionKey = newSessionKey;
+    }
+
+    /**
+     * Toggles the authenticated status.
+     */
+    toggleAuthentication(): void {
+        this.authenticated = !this.authenticated;
+    }
+
+    /**
+     * Updates the authentication source.
+     * @param {string} newAuthSource - New authentication source
+     */
+    updateAuthSource(newAuthSource: string): void {
+        if (!newAuthSource || typeof newAuthSource !== "string") {
+            throw new Error("Invalid newAuthSource: must be a non-empty string.");
+        }
+        this.authenticationSource = newAuthSource;
     }
 }
