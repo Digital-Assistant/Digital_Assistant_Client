@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect, useRef, useState} from "react";
-import {Button, Col, List, Popconfirm, Row, Checkbox} from "antd";
+import {Button, Col, List, Popconfirm, Row, Checkbox, Switch} from "antd";
 import {
   DeleteOutlined,
   DislikeFilled,
@@ -305,6 +305,43 @@ export const RecordSequenceDetails = (props: MProps) => {
     await setTmpPermissionsObj({...permissions});
   };
 
+
+  /**
+   * Toggles the publish/unpublish state of a recording and updates it in the store
+   * This async function handles the permission changes and persists them
+   * @returns {Promise<void>}
+   */
+  const publishUnpublish = async () => {
+    // Show loading state while operation is in progress
+    props.showLoader(true);
+
+    // Create a copy of permissions object to avoid direct mutation
+    let permissions = {...tmpPermissionsObj};
+
+    // Toggle published state if it exists, otherwise set it to false
+    if(permissions.hasOwnProperty('published')) {
+      permissions.published = !permissions.published;
+    } else {
+      permissions.published = false;
+    }
+
+    // Update the temporary permissions state
+    setTmpPermissionsObj({...permissions});
+
+    // Persist the changes to the recording
+    await updateRecording({id: selectedRecordingDetails.id, additionalParams: permissions});
+
+    // Update the recording details with new permissions
+    selectedRecordingDetails.additionalParams = permissions;
+
+    // Save updated recording details to store
+    setToStore(selectedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
+
+    // Hide loader after operation is complete
+    props.showLoader(false);
+  };
+
+
   return props?.recordSequenceDetailsVisibility ? (
       <>
         <div
@@ -402,14 +439,35 @@ export const RecordSequenceDetails = (props: MProps) => {
             </Col>
             <Col span={8}>
               {(selectedRecordingDetails.usersessionid === userId) &&
-                  <Popconfirm title={translate('deleteRecording')} onConfirm={removeRecording} className="uda_exclude">
+                  <>
+                    <Popconfirm title={translate('deleteRecording')} onConfirm={removeRecording} className="uda_exclude">
                       <Button className="uda_exclude">
-                          <DeleteOutlined width={33} className="secondary uda_exclude"/>
+                        <DeleteOutlined width={33} className="secondary uda_exclude"/>
                       </Button>
-                  </Popconfirm>
+                    </Popconfirm>
+                  </>
               }
             </Col>
           </Row>
+          {/* Row container for publish/unpublish controls */}
+          <Row>
+            {/* Left column taking up 8/24 of the row width */}
+            <Col span={8}>
+              {/* Only show publish controls if the current user owns this recording */}
+              {(selectedRecordingDetails.usersessionid === userId) &&
+                  <>
+                    {/* Confirmation popup before toggling publish state */}
+                    <Popconfirm title={(tmpPermissionsObj && tmpPermissionsObj.hasOwnProperty('published') && tmpPermissionsObj.published)?translate('confirmUnpublish'):translate('confirmPublish')} onConfirm={publishUnpublish} className="uda_exclude">
+                      {/* Button containing the publish switch control */}
+                      <Button className="uda_exclude">
+                        Published: <Switch checked={(tmpPermissionsObj && tmpPermissionsObj.hasOwnProperty('published'))?tmpPermissionsObj.published : true} className="uda_exclude"/>
+                      </Button>
+                    </Popconfirm>
+                  </>
+              }
+            </Col>
+          </Row>
+
           {/* enabling update permissions*/}
           {(props?.config?.enablePermissions && (selectedRecordingDetails.usersessionid === userId)) && (
               <div id="uda-permissions-section" style={{padding: "25px", display:'flex'}}>
