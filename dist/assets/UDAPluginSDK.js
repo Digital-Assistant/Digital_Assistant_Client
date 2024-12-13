@@ -36063,27 +36063,44 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
  * @returns promise
  */
 const fetchSearchResults = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    if ((request === null || request === void 0 ? void 0 : request.keyword) && request.keyword !== '') {
-        (0,___WEBPACK_IMPORTED_MODULE_1__.recordUserClickData)('search', request.keyword);
+    try {
+        if ((request === null || request === void 0 ? void 0 : request.keyword) && request.keyword !== '') {
+            (0,___WEBPACK_IMPORTED_MODULE_1__.recordUserClickData)('search', request.keyword);
+        }
+        request.userSessionId = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
+        if (request.additionalParams === null) {
+            delete request.additionalParams;
+        }
+        let parameters;
+        if (request.additionalParams != null) {
+            parameters = {
+                url: ___WEBPACK_IMPORTED_MODULE_1__.REST.processArgs(_config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.SearchWithPermissions, request),
+                method: "GET",
+            };
+        }
+        else {
+            parameters = {
+                url: ___WEBPACK_IMPORTED_MODULE_1__.REST.processArgs(_config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.Search, request),
+                method: "GET",
+            };
+        }
+        const response = yield ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+        if (response !== undefined) {
+            return response;
+        }
+        else {
+            return [];
+        }
     }
-    request.userSessionId = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
-    if (request.additionalParams === null) {
-        delete request.additionalParams;
+    catch (error) {
+        // Type guard to check if error is an instance of Error
+        const errorMessage = error instanceof Error ? error.message : 'Unknown search error';
+        // Log the error for debugging
+        console.error('Search service error:', errorMessage);
+        // You can customize the error response based on your needs
+        throw new Error(`Failed to perform search: ${errorMessage}`);
+        return [];
     }
-    let parameters;
-    if (request.additionalParams != null) {
-        parameters = {
-            url: ___WEBPACK_IMPORTED_MODULE_1__.REST.processArgs(_config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.SearchWithPermissions, request),
-            method: "GET",
-        };
-    }
-    else {
-        parameters = {
-            url: ___WEBPACK_IMPORTED_MODULE_1__.REST.processArgs(_config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.Search, request),
-            method: "GET",
-        };
-    }
-    return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
 });
 /**
  * To serve search results
@@ -36567,9 +36584,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   checkScreenSize: () => (/* binding */ checkScreenSize)
 /* harmony export */ });
-/* harmony import */ var _getScreenSize__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getScreenSize */ "./src/util/getScreenSize.ts");
-/* harmony import */ var _config_error_log__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config/error-log */ "./src/config/error-log.ts");
-
+/* harmony import */ var _config_error_log__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config/error-log */ "./src/config/error-log.ts");
 
 /**
  * Checks the screen size and determines plugin compatibility and alert status
@@ -36586,15 +36601,18 @@ __webpack_require__.r(__webpack_exports__);
 const checkScreenSize = () => {
     try {
         // Verify browser environment
-        if (typeof window === 'undefined') {
+        /*if (typeof window === 'undefined') {
             throw new Error('Window object is not available');
         }
+
         // Get current screen dimensions
-        const screenSize = (0,_getScreenSize__WEBPACK_IMPORTED_MODULE_0__.getScreenSize)();
+        const screenSize = getScreenSize();
+
         // Validate screen size data structure
         if (!screenSize || !screenSize.resolution) {
             throw new Error('Invalid screen size object');
         }
+
         // Ensure resolution values are valid numbers
         if (typeof screenSize.resolution.width !== 'number' ||
             typeof screenSize.resolution.height !== 'number' ||
@@ -36602,40 +36620,47 @@ const checkScreenSize = () => {
             screenSize.resolution.height <= 0) {
             throw new Error('Invalid resolution values');
         }
+
         // Get device pixel ratio for high DPI displays
         const devicePixelRatio = window.devicePixelRatio || 1;
+
         // Validate device pixel ratio
         if (devicePixelRatio <= 0) {
             throw new Error('Invalid device pixel ratio');
         }
+
         // Calculate effective dimensions accounting for pixel ratio
         const effectiveHeight = screenSize.resolution.height * devicePixelRatio;
         const effectiveWidth = screenSize.resolution.width * devicePixelRatio;
+
         // Initialize status flags
         let enablePluginForScreen = true;
         let showScreenAlert = false;
+
         // Check height requirements
         if (effectiveHeight < 720) {
             enablePluginForScreen = false;
-        }
-        else if (effectiveHeight < 1080) {
+        } else if (effectiveHeight < 1080) {
             showScreenAlert = true;
         }
+
         // Check width requirements
         if (effectiveWidth < 1280) {
             enablePluginForScreen = false;
-        }
-        else if (effectiveWidth < 1920) {
+        } else if (effectiveWidth < 1920) {
             showScreenAlert = true;
         }
+
         // Log resolution information
-        _config_error_log__WEBPACK_IMPORTED_MODULE_1__.UDAConsoleLogger.info(`System given resolution is: ${screenSize.resolution.width}x${screenSize.resolution.height}`);
-        _config_error_log__WEBPACK_IMPORTED_MODULE_1__.UDAConsoleLogger.info(`Current resolution is: ${effectiveWidth}x${effectiveHeight}`);
-        return { enablePluginForScreen, showScreenAlert };
+        UDAConsoleLogger.info(`System given resolution is: ${screenSize.resolution.width}x${screenSize.resolution.height}`);
+        UDAConsoleLogger.info(`Current resolution is: ${effectiveWidth}x${effectiveHeight}`);
+
+        return { enablePluginForScreen, showScreenAlert };*/
+        return { enablePluginForScreen: true, showScreenAlert: false };
     }
     catch (error) {
         // Log error and return safe defaults
-        _config_error_log__WEBPACK_IMPORTED_MODULE_1__.UDAErrorLogger.error(`Screen size check failed: ${error.message}`);
+        _config_error_log__WEBPACK_IMPORTED_MODULE_0__.UDAErrorLogger.error(`Screen size check failed: ${error.message}`);
         return {
             enablePluginForScreen: false,
             showScreenAlert: true
@@ -36870,54 +36895,6 @@ const getClickedInputLabels = (node, fromDocument = false, selectchange = false)
             }
     }
     return inputLabels;
-};
-
-
-/***/ }),
-
-/***/ "./src/util/getScreenSize.ts":
-/*!***********************************!*\
-  !*** ./src/util/getScreenSize.ts ***!
-  \***********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   getScreenSize: () => (/* binding */ getScreenSize)
-/* harmony export */ });
-/**
- * To get screen/window size
- * @returns object
- */
-const getScreenSize = () => {
-    let page = { height: 0, width: 0 };
-    let screen = { height: 0, width: 0 };
-    let body = document.body, html = document.documentElement;
-    const docEl = document.documentElement;
-    const scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
-    const scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
-    let resolution = { height: 0, width: 0 };
-    page.height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
-    page.width = Math.max(body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth);
-    if (window.innerWidth !== undefined) {
-        screen.width = window.innerWidth * 0.75;
-        screen.height = window.innerHeight;
-    }
-    else {
-        const D = document.documentElement;
-        screen.width = D.clientWidth;
-        screen.height = D.clientHeight * 0.75;
-    }
-    resolution.height = window.screen.height;
-    resolution.width = window.screen.width;
-    const windowProperties = {
-        page: page,
-        screen: screen,
-        scrollInfo: { scrollTop: scrollTop, scrollLeft: scrollLeft },
-        resolution,
-    };
-    return windowProperties;
 };
 
 
