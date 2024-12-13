@@ -16,29 +16,48 @@ export const fetchSearchResults = async (request?: {
   additionalParams?: any
   userSessionId?: any
 }) => {
+  try {
+    if(request?.keyword && request.keyword !== '') {
+      recordUserClickData('search', request.keyword);
+    }
 
-  if(request?.keyword && request.keyword !== '') {
-    recordUserClickData('search', request.keyword);
+    request.userSessionId = await getUserId();
+    if (request.additionalParams === null) {
+      delete request.additionalParams;
+    }
+
+    let parameters: any;
+    if (request.additionalParams != null) {
+      parameters = {
+        url: REST.processArgs(ENDPOINT.SearchWithPermissions, request),
+        method: "GET",
+      };
+    } else {
+      parameters = {
+        url: REST.processArgs(ENDPOINT.Search, request),
+        method: "GET",
+      };
+    }
+
+    const response = await REST.apiCal(parameters);
+    if(response !== undefined) {
+      return response;
+    } else {
+      return [];
+    }
+
+  } catch (error) {
+    // Type guard to check if error is an instance of Error
+    const errorMessage = error instanceof Error ? error.message : 'Unknown search error';
+
+    // Log the error for debugging
+    console.error('Search service error:', errorMessage);
+
+    // You can customize the error response based on your needs
+    throw new Error(`Failed to perform search: ${errorMessage}`);
+    return [];
   }
 
-  request.userSessionId = await getUserId();
-  if (request.additionalParams === null) {
-    delete request.additionalParams;
-  }
-  let parameters: any;
-  if (request.additionalParams != null) {
-    parameters = {
-      url: REST.processArgs(ENDPOINT.SearchWithPermissions, request),
-      method: "GET",
-    };
-  } else {
-    parameters = {
-      url: REST.processArgs(ENDPOINT.Search, request),
-      method: "GET",
-    };
-  }
-
-  return REST.apiCal(parameters);
 };
 
 /**
