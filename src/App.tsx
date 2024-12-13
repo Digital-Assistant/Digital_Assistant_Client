@@ -240,11 +240,12 @@ function App(props) {
         }
     };
 
-    const createSession = useCallback((data) => {
+    const createSession = useCallback(async (data) => {
         setToStore(data.detail.data, CONFIG.USER_AUTH_DATA_KEY, true);
         setAuthenticated(true);
         setUserSessionData(data.detail.data);
         openUDAPanel();
+        await getSearchResults(0, true);
     }, []);
 
     const authenticationError = useCallback((data) => {
@@ -470,7 +471,7 @@ function App(props) {
                         : null,
                 });
                 setTimeout(() => setShowLoader(false), 500);
-                if (_searchResults.length) {
+                if (_searchResults.length > 0) {
                     setPage(_page);
                     if(_searchResults.length===10){
                         setHasMorePages(true);
