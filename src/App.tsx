@@ -240,12 +240,11 @@ function App(props) {
         }
     };
 
-    const createSession = useCallback(async (data) => {
+    const createSession = useCallback((data) => {
         setToStore(data.detail.data, CONFIG.USER_AUTH_DATA_KEY, true);
         setAuthenticated(true);
         setUserSessionData(data.detail.data);
         openUDAPanel();
-        await getSearchResults(0, true);
     }, []);
 
     const authenticationError = useCallback((data) => {
@@ -311,6 +310,11 @@ function App(props) {
         }
     };
 
+    const logout = async () => {
+        removeFromStore(CONFIG.USER_AUTH_DATA_KEY);
+        setAuthenticated(false);
+    }
+
     /**
      * Initializing functionality on start of the application
      */
@@ -323,6 +327,7 @@ function App(props) {
         on("UDAClearSessionData", clearSession);
         on("openPanel", openPanel);
         on("closePanel", closePanel);
+        on("UDAGetNewToken", logout);
 
         /**
          * Asynchronous function to be get called in the beginning
