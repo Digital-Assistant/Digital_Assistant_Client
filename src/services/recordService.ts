@@ -241,3 +241,12 @@ export const recordUserClickData = async (clickType='sequencerecord', clickedNam
 
   return await userClick(payload);
 };
+
+export const fetchStatuses = async (request: {category: string} = {category: 'sequenceList'}) => {
+  const parameters = {
+    url: REST.processArgs(ENDPOINT.statuses, request),
+    method: "GET"
+  };
+
+  return REST.apiCal(parameters);
+};

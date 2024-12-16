@@ -291,8 +291,8 @@ export const RecordedData = (props: MProps) => {
         };
 
         //add published status in payload
-        if(!tmpPermissionsObj.hasOwnProperty('published')) {
-            tmpPermissionsObj.published = false;
+        if(!tmpPermissionsObj.hasOwnProperty('status')) {
+            tmpPermissionsObj.status = 1;
         }
 
         //if additional params available send them part of payload

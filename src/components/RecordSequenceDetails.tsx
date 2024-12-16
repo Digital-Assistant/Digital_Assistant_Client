@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect, useRef, useState} from "react";
-import {Button, Col, List, Popconfirm, Row, Checkbox, Switch} from "antd";
+import {Button, Col, List, Popconfirm, Row, Checkbox, Switch, Select, Form} from "antd";
 import {
   DeleteOutlined,
   DislikeFilled,
@@ -20,7 +20,7 @@ import {
   CopyFilled
 } from "@ant-design/icons";
 import {getCurrentPlayItem, getFromStore, getObjData, setToStore,} from "../util";
-import {deleteRecording, recordUserClickData, updateRecording} from "../services/recordService";
+import {deleteRecording, fetchStatuses, recordUserClickData, updateRecording} from "../services/recordService";
 import {getUserId} from "../services/userService";
 import {matchNode} from "../util/invokeNode";
 import {CONFIG} from "../config";
@@ -51,8 +51,9 @@ interface MProps {
 export const RecordSequenceDetails = (props: MProps) => {
   const [advBtnShow, setAdvBtnShow] = useState<boolean>(false);
   const [permissions, setPermissions] = useState<any>({});
-  const [selectedRecordingDetails, setSelectedRecordingDetails] =
-      React.useState<any>(props.data);
+  const [selectedRecordingDetails, setSelectedRecordingDetails] = React.useState<any>(props.data);
+  const [userId, setUserId] = useState<string>(null);
+  const [statusOptions, setStatusOptions] = useState<string[]>([]);
 
   /**
    * Every time isPlaying state changes, and status is "on", play continues
@@ -77,12 +78,22 @@ export const RecordSequenceDetails = (props: MProps) => {
     };
   }, []);
 
+  const fetchStatusOptions = async () => {
+    props.showLoader(true);
+    const response = await fetchStatuses();
+    setStatusOptions(response);
+    props.showLoader(false);
+  };
+
   useEffect(()=>{
     if(props.data){
       setSelectedRecordingDetails(props.data);
       setTmpPermissionsObj(props.data.additionalParams);
+      if((props.data.usersessionid === userId)){
+        fetchStatusOptions()
+      }
     }
-  },[props.data])
+  },[props.data, userId])
 
 
   /**
@@ -215,8 +226,6 @@ export const RecordSequenceDetails = (props: MProps) => {
     }
   };
 
-  const [userId, setUserId] = useState<string>(null);
-
   /**
    * setting the user vote record
    */
@@ -311,7 +320,8 @@ export const RecordSequenceDetails = (props: MProps) => {
    * This async function handles the permission changes and persists them
    * @returns {Promise<void>}
    */
-  const publishUnpublish = async () => {
+  const updateStatusChange = async (newStatus: number) => {
+    console.log(newStatus);
     // Show loading state while operation is in progress
     props.showLoader(true);
 
@@ -319,10 +329,10 @@ export const RecordSequenceDetails = (props: MProps) => {
     let permissions = {...tmpPermissionsObj};
 
     // Toggle published state if it exists, otherwise set it to false
-    if(permissions.hasOwnProperty('published')) {
-      permissions.published = !permissions.published;
+    if(permissions.hasOwnProperty('status')) {
+      permissions.status = newStatus;
     } else {
-      permissions.published = false;
+      permissions.status = 1;
     }
 
     // Update the temporary permissions state
@@ -452,17 +462,27 @@ export const RecordSequenceDetails = (props: MProps) => {
           {/* Row container for publish/unpublish controls */}
           <Row>
             {/* Left column taking up 8/24 of the row width */}
-            <Col span={8}>
+            <Col span={24}>
               {/* Only show publish controls if the current user owns this recording */}
               {(selectedRecordingDetails.usersessionid === userId) &&
                   <>
-                    {/* Confirmation popup before toggling publish state */}
-                    <Popconfirm title={(tmpPermissionsObj && tmpPermissionsObj.hasOwnProperty('published') && tmpPermissionsObj.published)?translate('confirmUnpublish'):translate('confirmPublish')} onConfirm={publishUnpublish} className="uda_exclude">
-                      {/* Button containing the publish switch control */}
-                      <Button className="uda_exclude">
-                        Published: <Switch checked={(tmpPermissionsObj && tmpPermissionsObj.hasOwnProperty('published'))?tmpPermissionsObj.published : true} className="uda_exclude"/>
-                      </Button>
-                    </Popconfirm>
+                    <Form.Item labelCol={{ span: 8 }}
+                        label="Recording Status"
+                        className="uda_exclude"
+                        style={{ marginBottom: 0 }}
+                    >
+                    <Select
+                        defaultValue={(tmpPermissionsObj && tmpPermissionsObj.hasOwnProperty('status'))?tmpPermissionsObj.status : 6}
+                        onChange={updateStatusChange}
+                        className="uda_exclude"
+                    >
+                      {statusOptions.map((status: any) => (
+                          <Select.Option key={status.id} value={status.id}>
+                            {status.name.toUpperCase()}
+                          </Select.Option>
+                      ))}
+                    </Select>
+                    </Form.Item>
                   </>
               }
             </Col>
