@@ -137,8 +137,6 @@ export const saveClickData = async (node: any, text: string, meta: any) => {
   // removing circular reference before converting to json with deep clone.
   const processedNode = await node.cloneNode(true);
 
-  console.log(getAbsoluteOffsets(processedNode));
-
   let objectData: any = domJSON.toJSON(processedNode, {serialProperties: true});
   if (objectData.meta) {
     objectData.meta = meta;
