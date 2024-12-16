@@ -35939,7 +35939,6 @@ const profanityCheck = (request) => __awaiter(void 0, void 0, void 0, function* 
 const saveClickData = (node, text, meta) => __awaiter(void 0, void 0, void 0, function* () {
     // removing circular reference before converting to json with deep clone.
     const processedNode = yield node.cloneNode(true);
-    console.log((0,_util__WEBPACK_IMPORTED_MODULE_6__.getAbsoluteOffsets)(processedNode));
     let objectData = domjson__WEBPACK_IMPORTED_MODULE_7___default().toJSON(processedNode, { serialProperties: true });
     if (objectData.meta) {
         objectData.meta = meta;
@@ -37800,6 +37799,10 @@ const recordUserClick = (node, event) => __awaiter(void 0, void 0, void 0, funct
         meta.isPersonal = true;
         _text = recordingNode.nodeName;
     }
+    // adding personal flag to icon elements
+    if ((0,_checkNodeValues__WEBPACK_IMPORTED_MODULE_5__.checkNodeValues)(recordingNode, 'iconNodes')) {
+        meta.isPersonal = true;
+    }
     // adding text editor name for the recording
     if ((0,_checkNodeValues__WEBPACK_IMPORTED_MODULE_5__.checkNodeValues)(recordingNode, 'textEditors')) {
         meta.displayText = 'Text Editor';
@@ -38120,6 +38123,11 @@ const specialNodes = {
         "tags": ['a', 'button'],
         "classes": [],
         "attributes": ['href']
+    },
+    "iconNodes": {
+        "tags": ['i'],
+        "classes": [],
+        "attributes": []
     }
 };
 
