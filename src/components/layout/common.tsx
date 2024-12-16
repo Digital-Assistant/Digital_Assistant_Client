@@ -25,6 +25,21 @@ export const Toggler = (props: MProps) => {
     const [showAlert, setShowAlert] = useState<boolean>(false);
     const [showCspAlert, setCspShowAlert] = useState<boolean>(false);
     const [showCspAlertPopup, setCspShowAlertPopup] = useState<boolean>(false);
+
+
+    const checkUserPreference = () => {
+        let userScreenAcceptance = getFromStore(CONFIG.UserScreenAcceptance, false);
+        if (userScreenAcceptance !== 'undefined') {
+            if (userScreenAcceptance === true) {
+                setShowAlert(false);
+            } else {
+                setShowAlert(true);
+            }
+        } else {
+            setShowAlert(true);
+        }
+    }
+
     useEffect(() => {
         const {enablePluginForScreen, showScreenAlert} = checkScreenSize();
         if (enablePluginForScreen === false) {
@@ -33,7 +48,7 @@ export const Toggler = (props: MProps) => {
         if (showScreenAlert) {
             checkUserPreference();
         }
-    }, []);
+    }, [checkUserPreference]);
 
 
     /**
@@ -152,19 +167,6 @@ export const Toggler = (props: MProps) => {
         if (val === true) {
             await setShowAlert(false);
             toggle();
-        }
-    }
-
-    const checkUserPreference = () => {
-        let userScreenAcceptance = getFromStore(CONFIG.UserScreenAcceptance, false);
-        if (userScreenAcceptance !== 'undefined') {
-            if (userScreenAcceptance === true) {
-                setShowAlert(false);
-            } else {
-                setShowAlert(true);
-            }
-        } else {
-            setShowAlert(true);
         }
     }
 

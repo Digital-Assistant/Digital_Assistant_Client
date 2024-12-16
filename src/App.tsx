@@ -310,6 +310,11 @@ function App(props) {
         }
     };
 
+    const logout = async () => {
+        removeFromStore(CONFIG.USER_AUTH_DATA_KEY);
+        setAuthenticated(false);
+    }
+
     /**
      * Initializing functionality on start of the application
      */
@@ -322,6 +327,7 @@ function App(props) {
         on("UDAClearSessionData", clearSession);
         on("openPanel", openPanel);
         on("closePanel", closePanel);
+        on("UDAGetNewToken", logout);
 
         /**
          * Asynchronous function to be get called in the beginning
@@ -470,7 +476,7 @@ function App(props) {
                         : null,
                 });
                 setTimeout(() => setShowLoader(false), 500);
-                if (_searchResults.length) {
+                if (_searchResults.length > 0) {
                     setPage(_page);
                     if(_searchResults.length===10){
                         setHasMorePages(true);
