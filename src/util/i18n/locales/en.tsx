@@ -6,7 +6,7 @@ export const TRANSLATIONS_EN = {
   recordSequenceDescription:"Please navigate in the page to record.",
   searchPlaceHolder: "Search recorded sequences",
   playBackTittle: "Playback Error",
-  playBackError: "Nistapp UDA ran into a problem and will exit",
+  playBackError: "Nistapp UDA ran into a problem as recorded click was not found and will exit the playback",
   autoplayCompletedTitle: "Playback completed.",
   autoplayCompleted: "Playback is completed. If you want more help please click on udan icon.",
   tooltipMessage: "Please input the value and then click on",
@@ -43,4 +43,6 @@ export const TRANSLATIONS_EN = {
   cspAlertInfo: "UDAN will not work as our system has detected CSP has been enabled. Please whitelist our domains in order to continue.",
   confirmPublish: "Are you sure you want to publish",
   confirmUnpublish: "Are you sure you want to unpublish",
+  statusLabel: "Recording Status",
+  playBackItemNotFound: "Clickable element not found",
 };

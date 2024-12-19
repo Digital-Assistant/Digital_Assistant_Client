@@ -48,12 +48,6 @@
     "test": "jest",
     "postinstall": "node ./scripts/postinstall.js"
   },
-  "jest": {
-    "transform": {
-      "^.+\\.(ts|tsx|js|jsx)$": "ts-jest"
-    },
-    "testEnvironment": "jsdom"
-  },
   "browserslist": {
     "production": [
       ">0.2%",

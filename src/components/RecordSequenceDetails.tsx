@@ -78,23 +78,43 @@ export const RecordSequenceDetails = (props: MProps) => {
     };
   }, []);
 
+  /**
+   * Fetches available status options from the API
+   * Manages loading state during the fetch operation
+   * Updates the local state with fetched status options
+   * @returns {Promise<void>}
+   */
   const fetchStatusOptions = async () => {
-    props.showLoader(true);
-    const response = await fetchStatuses();
-    setStatusOptions(response);
-    props.showLoader(false);
+    props.showLoader(true);    // Show loading indicator before fetch
+    const response = await fetchStatuses();    // Get statuses from API
+    setStatusOptions(response);    // Update local state with fetched options
+    props.showLoader(false);    // Hide loading indicator after completion
   };
+
 
   useEffect(()=>{
     if(props.data){
       setSelectedRecordingDetails(props.data);
       setTmpPermissionsObj(props.data.additionalParams);
-      if((props.data.usersessionid === userId)){
-        fetchStatusOptions()
+      if(props.config.enableStatusSelection && (props.data.usersessionid === userId)){
+        fetchStatusOptions();
       }
     }
   },[props.data, userId])
 
+  /**
+   * Effect hook to fetch status options when component mounts
+   * Only fetches if:
+   * 1. Status selection is enabled in config
+   * 2. Current user session matches the userId
+   *
+   * @dependency props.config.enableStatusSelection - Triggers fetch when status selection setting changes
+   */
+  useEffect(() => {
+    if(props?.config?.enableStatusSelection && (props.data.usersessionid === userId)){
+      fetchStatusOptions();
+    }
+  }, [props.config.enableStatusSelection]);
 
   /**
    * Record player(auto play)
@@ -460,6 +480,7 @@ export const RecordSequenceDetails = (props: MProps) => {
             </Col>
           </Row>
           {/* Row container for publish/unpublish controls */}
+          {(props?.config?.enableStatusSelection) &&
           <Row>
             {/* Left column taking up 8/24 of the row width */}
             <Col span={24}>
@@ -467,12 +488,12 @@ export const RecordSequenceDetails = (props: MProps) => {
               {(selectedRecordingDetails.usersessionid === userId) &&
                   <>
                     <Form.Item labelCol={{ span: 8 }}
-                        label="Recording Status"
+                        label={translate('statusLabel')}
                         className="uda_exclude"
                         style={{ marginBottom: 0 }}
                     >
                     <Select
-                        defaultValue={(tmpPermissionsObj && tmpPermissionsObj.hasOwnProperty('status'))?tmpPermissionsObj.status : 6}
+                        defaultValue={(tmpPermissionsObj && tmpPermissionsObj.hasOwnProperty('status'))?parseInt(tmpPermissionsObj.status) : 6}
                         onChange={updateStatusChange}
                         className="uda_exclude"
                     >
@@ -487,7 +508,7 @@ export const RecordSequenceDetails = (props: MProps) => {
               }
             </Col>
           </Row>
-
+          }
           {/* enabling update permissions*/}
           {(props?.config?.enablePermissions && (selectedRecordingDetails.usersessionid === userId)) && (
               <div id="uda-permissions-section" style={{padding: "25px", display:'flex'}}>

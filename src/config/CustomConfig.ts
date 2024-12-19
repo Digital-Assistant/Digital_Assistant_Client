@@ -26,7 +26,8 @@ export interface CustomConfigPropTypes {
   realm: string,
   clientId: string,
   clientSecret: string,
-  enableHidePanelAfterCompletion: boolean
+  enableHidePanelAfterCompletion: boolean,
+  enableStatusSelection: boolean
 }
 
 // assigning default values to the default configuration
@@ -52,5 +53,6 @@ export const CustomConfig: CustomConfigPropTypes = {
   realm: process.env.keycloakRealm,
   clientId: process.env.keycloakClientId,
   clientSecret: process.env.keycloakClientSecret,
-  enableHidePanelAfterCompletion: false
+  enableHidePanelAfterCompletion: false,
+  enableStatusSelection: false
 };
