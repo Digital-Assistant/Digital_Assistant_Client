@@ -27,7 +27,8 @@ export interface CustomConfigPropTypes {
   clientId: string,
   clientSecret: string,
   enableHidePanelAfterCompletion: boolean,
-  enableStatusSelection: boolean
+  enableStatusSelection: boolean,
+    enableUDAIconDuringRecording: boolean
 }
 
 // assigning default values to the default configuration
@@ -54,5 +55,6 @@ export const CustomConfig: CustomConfigPropTypes = {
   clientId: process.env.keycloakClientId,
   clientSecret: process.env.keycloakClientSecret,
   enableHidePanelAfterCompletion: false,
-  enableStatusSelection: false
+  enableStatusSelection: false,
+    enableUDAIconDuringRecording: false
 };
