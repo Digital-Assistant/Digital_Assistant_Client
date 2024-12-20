@@ -526,7 +526,9 @@ const CustomConfig = {
     realm: "UDAN",
     clientId: "backend-service",
     clientSecret: "cXA2yFTq3ORQfrio2mGXttFaOTfvIC7N",
-    enableHidePanelAfterCompletion: false
+    enableHidePanelAfterCompletion: false,
+    enableStatusSelection: false,
+    enableUDAIconDuringRecording: false
 };
 
 
@@ -566,7 +568,8 @@ const ENDPOINT = {
     fetchRecord: '/search',
     VoteRecord: `/votes/addVote`,
     fetchVoteRecord: `/votes/`,
-    tokenUrl: 'user/token'
+    tokenUrl: 'user/token',
+    statuses: '/status/category/#category#'
 };
 
 

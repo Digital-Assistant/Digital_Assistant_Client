@@ -35247,7 +35247,9 @@ const CustomConfig = {
     realm: "UDAN",
     clientId: "backend-service",
     clientSecret: "cXA2yFTq3ORQfrio2mGXttFaOTfvIC7N",
-    enableHidePanelAfterCompletion: false
+    enableHidePanelAfterCompletion: false,
+    enableStatusSelection: false,
+    enableUDAIconDuringRecording: false
 };
 
 
@@ -35287,7 +35289,8 @@ const ENDPOINT = {
     fetchRecord: '/search',
     VoteRecord: `/votes/addVote`,
     fetchVoteRecord: `/votes/`,
-    tokenUrl: 'user/token'
+    tokenUrl: 'user/token',
+    statuses: '/status/category/#category#'
 };
 
 
@@ -35315,7 +35318,7 @@ const { combine, label, json } = format;
 
 
 const UDALogLevel = 0;
-const UDA_LOG_URL = "udantest.nistapp.ai";
+const UDA_LOG_URL = "https://authenticatetest.nistapp.com/";
 const UDAConsoleLogger = {
     info: function (mes, level = 1) {
         if (UDALogLevel >= level) {
@@ -35331,7 +35334,9 @@ const UDAErrorLogger = {
             message =
                 "UserID: " + ((_a = UDAUserAuthData === null || UDAUserAuthData === void 0 ? void 0 : UDAUserAuthData.authdata) === null || _a === void 0 ? void 0 : _a.id) + " Error: " + message;
         }
-        catch (e) { }
+        catch (e) {
+            message = "Error: " + message;
+        }
         let logger = winston.createLogger({
             transports: [
                 new winston.transports.Http({
@@ -35686,35 +35691,43 @@ const apiCal = (options) => {
     }
     return fetch(url, requestOptions)
         .then((response) => {
-        //throw route to login if unauthorized response received
         switch (response === null || response === void 0 ? void 0 : response.status) {
-            case 401:
-                // localStorage.clear();
-                (0,_util_events__WEBPACK_IMPORTED_MODULE_4__.trigger)('UDAGetNewToken', { detail: { data: "UDAGetNewToken" } });
-                break;
             case 200:
                 return (options === null || options === void 0 ? void 0 : options.responseType) == "text" ? response.text() : response.json();
-                break;
+            case 201:
+                return (options === null || options === void 0 ? void 0 : options.responseType) == "text" ? response.text() : response.json();
             case 204:
                 return null;
-                break;
+            case 400:
+                throw new Error('Bad Request - The request was malformed or invalid');
+            case 401:
+                (0,_util_events__WEBPACK_IMPORTED_MODULE_4__.trigger)('UDAGetNewToken', { detail: { data: "UDAGetNewToken" } });
+                throw new Error('Unauthorized - Authentication required');
+            case 403:
+                throw new Error('Forbidden - You do not have permission to access this resource');
+            case 404:
+                throw new Error('Not Found - The requested resource does not exist');
+            case 408:
+                throw new Error('Request Timeout - The server timed out waiting for the request');
+            case 429:
+                throw new Error('Too Many Requests - Rate limit exceeded');
+            case 500:
+                throw new Error('Internal Server Error - Something went wrong on the server');
+            case 502:
+                throw new Error('Bad Gateway - Invalid response from upstream server');
+            case 503:
+                throw new Error('Service Unavailable - The server is temporarily unavailable');
+            case 504:
+                throw new Error('Gateway Timeout - The upstream server timed out');
+            default:
+                throw new Error(`Unexpected status code: ${response.status}`);
         }
-        /*if (response?.status == 401) {
-          localStorage.clear();
-        }
-        if(response?.status == 200) {
-          return options?.responseType == "text"
-              ? response.text()
-              : response.json();
-        } else {
-          return response;
-        }*/
     })
         .then((json) => {
         return json;
     })
         .catch((error) => {
-        return error;
+        throw error;
     });
 };
 /**
@@ -35789,6 +35802,7 @@ const REST = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   deleteRecording: () => (/* binding */ deleteRecording),
+/* harmony export */   fetchStatuses: () => (/* binding */ fetchStatuses),
 /* harmony export */   postRecordSequenceData: () => (/* binding */ postRecordSequenceData),
 /* harmony export */   profanityCheck: () => (/* binding */ profanityCheck),
 /* harmony export */   recordClicks: () => (/* binding */ recordClicks),
@@ -35869,13 +35883,30 @@ const updateRecordClicks = (request) => __awaiter(void 0, void 0, void 0, functi
  * @returns promise
  */
 const recordSequence = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    request.usersessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
-    const parameters = {
-        url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.RecordSequence,
-        method: "POST",
-        body: request,
-    };
-    return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+    try {
+        if (!request) {
+            throw new Error('Request object is required');
+        }
+        request.usersessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
+        if (!request.usersessionid) {
+            throw new Error('User session ID could not be retrieved');
+        }
+        const parameters = {
+            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.RecordSequence,
+            method: "POST",
+            body: request,
+        };
+        const response = yield ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+        if (!response) {
+            throw new Error('No response received from record sequence API');
+        }
+        return response;
+    }
+    catch (error) {
+        _config_error_log__WEBPACK_IMPORTED_MODULE_9__.UDAConsoleLogger.info('Record Sequence Error:', error);
+        throw error;
+        return false;
+    }
 });
 /**
  * To record set of actions/events belong to one recording
@@ -35992,12 +36023,25 @@ const saveClickData = (node, text, meta) => __awaiter(void 0, void 0, void 0, fu
  * @returns promise
  */
 const postRecordSequenceData = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    window.udanSelectedNodes = [];
-    const userclicknodesSet = (0,_util__WEBPACK_IMPORTED_MODULE_6__.getFromStore)(_config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.RECORDING_SEQUENCE, false);
-    const ids = userclicknodesSet.map((item) => item.id);
-    let domain = (0,_util_fetchDomain__WEBPACK_IMPORTED_MODULE_10__.fetchDomain)();
-    const payload = Object.assign(Object.assign({}, request), { domain: domain, isIgnored: 0, isValid: 1, userclicknodelist: ids.join(","), userclicknodesSet });
-    return yield recordSequence(payload);
+    try {
+        window.udanSelectedNodes = [];
+        const userclicknodesSet = (0,_util__WEBPACK_IMPORTED_MODULE_6__.getFromStore)(_config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.RECORDING_SEQUENCE, false);
+        if (!userclicknodesSet || !Array.isArray(userclicknodesSet)) {
+            throw new Error('Invalid recording sequence data');
+        }
+        const ids = userclicknodesSet.map((item) => item.id);
+        let domain = (0,_util_fetchDomain__WEBPACK_IMPORTED_MODULE_10__.fetchDomain)();
+        if (!domain) {
+            throw new Error('Domain could not be determined');
+        }
+        const payload = Object.assign(Object.assign({}, request), { domain: domain, isIgnored: 0, isValid: 1, userclicknodelist: ids.join(","), userclicknodesSet });
+        return yield recordSequence(payload);
+    }
+    catch (error) {
+        _config_error_log__WEBPACK_IMPORTED_MODULE_9__.UDAConsoleLogger.info('Post Record Sequence Error:', error);
+        throw error;
+        return false;
+    }
 });
 /**
  * To update click data to REST
@@ -36021,6 +36065,33 @@ const recordUserClickData = (clickType = 'sequencerecord', clickedName = '', rec
         transport: "xhr",
     });
     return yield userClick(payload);
+});
+/**
+ * Fetches status options from the API
+ * @param {Object} request - The request object containing category
+ * @param {string} request.category - Category for status filtering, defaults to 'sequenceList'
+ * @returns {Promise} API response containing status options
+ */
+const fetchStatuses = (request = { category: 'sequenceList' }) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (!request.category) {
+            throw new Error('Category is required');
+        }
+        const parameters = {
+            url: ___WEBPACK_IMPORTED_MODULE_1__.REST.processArgs(_config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.statuses, request),
+            method: "GET"
+        };
+        const response = yield ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+        if (!response) {
+            throw new Error('No response received from status API');
+        }
+        return response;
+    }
+    catch (error) {
+        _config_error_log__WEBPACK_IMPORTED_MODULE_9__.UDAConsoleLogger.info('Fetch Status Error:', error);
+        console.log(error);
+        return Promise.reject(error);
+    }
 });
 
 
