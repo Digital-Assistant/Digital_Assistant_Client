@@ -59,14 +59,37 @@ export const updateRecordClicks = async (request?: any) => {
  */
 
 export const recordSequence = async (request?: any) => {
-  request.usersessionid = await getUserId();
-  const parameters = {
-    url: ENDPOINT.RecordSequence,
-    method: "POST",
-    body: request,
-  };
-  return REST.apiCal(parameters);
-};
+  try {
+    if (!request) {
+      throw new Error('Request object is required');
+    }
+
+    request.usersessionid = await getUserId();
+
+    if (!request.usersessionid) {
+      throw new Error('User session ID could not be retrieved');
+    }
+
+    const parameters = {
+      url: ENDPOINT.RecordSequence,
+      method: "POST",
+      body: request,
+    };
+
+    const response = await REST.apiCal(parameters);
+    if (!response) {
+      throw new Error('No response received from record sequence API');
+    }
+
+    return response;
+
+  } catch (error) {
+    UDAConsoleLogger.info('Record Sequence Error:', error);
+    throw error;
+    return false;
+  }
+}
+
 
 /**
  * To record set of actions/events belong to one recording
@@ -199,20 +222,39 @@ export const saveClickData = async (node: any, text: string, meta: any) => {
  * @returns promise
  */
 export const postRecordSequenceData = async (request: any) => {
-  window.udanSelectedNodes = [];
-  const userclicknodesSet = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
-  const ids = userclicknodesSet.map((item: any) => item.id);
-  let domain = fetchDomain();
-  const payload = {
-    ...request,
-    domain: domain,
-    isIgnored: 0,
-    isValid: 1,
-    userclicknodelist: ids.join(","),
-    userclicknodesSet,
-  };
-  return await recordSequence(payload);
+  try {
+    window.udanSelectedNodes = [];
+    const userclicknodesSet = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
+
+    if (!userclicknodesSet || !Array.isArray(userclicknodesSet)) {
+      throw new Error('Invalid recording sequence data');
+    }
+
+    const ids = userclicknodesSet.map((item: any) => item.id);
+    let domain = fetchDomain();
+
+    if (!domain) {
+      throw new Error('Domain could not be determined');
+    }
+
+    const payload = {
+      ...request,
+      domain: domain,
+      isIgnored: 0,
+      isValid: 1,
+      userclicknodelist: ids.join(","),
+      userclicknodesSet,
+    };
+
+    return await recordSequence(payload);
+
+  } catch (error) {
+    UDAConsoleLogger.info('Post Record Sequence Error:', error);
+    throw error;
+    return false;
+  }
 };
+
 
 /**
  * To update click data to REST
@@ -239,3 +281,35 @@ export const recordUserClickData = async (clickType='sequencerecord', clickedNam
 
   return await userClick(payload);
 };
+
+/**
+ * Fetches status options from the API
+ * @param {Object} request - The request object containing category
+ * @param {string} request.category - Category for status filtering, defaults to 'sequenceList'
+ * @returns {Promise} API response containing status options
+ */
+export const fetchStatuses = async (request: {category: string} = {category: 'sequenceList'}) => {
+  try {
+    if (!request.category) {
+      throw new Error('Category is required');
+    }
+
+    const parameters = {
+      url: REST.processArgs(ENDPOINT.statuses, request),
+      method: "GET"
+    };
+
+    const response = await REST.apiCal(parameters);
+    if (!response) {
+      throw new Error('No response received from status API');
+    }
+
+    return response;
+
+  } catch (error) {
+    UDAConsoleLogger.info('Fetch Status Error:', error);
+    console.log(error);
+    return Promise.reject(error);
+  }
+};
+

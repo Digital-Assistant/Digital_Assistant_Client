@@ -7,7 +7,7 @@ import { getFromStore } from "../util";
 
 export const UDALogLevel = 0;
 
-const UDA_LOG_URL = "udantest.nistapp.ai";
+const UDA_LOG_URL = process.env.tokenUrl;
 
 export const UDAConsoleLogger = {
   info: function (mes: any, level = 1) {
@@ -23,7 +23,9 @@ export const UDAErrorLogger = {
       const UDAUserAuthData = getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
       message =
         "UserID: " + UDAUserAuthData?.authdata?.id + " Error: " + message;
-    } catch (e) {}
+    } catch (e) {
+      message = "Error: " + message;
+    }
     let logger = winston.createLogger({
       transports: [
         new winston.transports.Http({

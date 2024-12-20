@@ -17,7 +17,7 @@ import TSON from "typescript-json";
 import {translate} from "../util/translation";
 import {isHighlightNode} from "../util/checkNode";
 import {Alert, notification, Progress, Space, Switch} from "antd";
-import {UDAErrorLogger} from "../config/error-log";
+import {UDAConsoleLogger, UDAErrorLogger} from "../config/error-log";
 import {addNotification} from "../util/addNotification";
 
 export interface MProps {
@@ -290,6 +290,11 @@ export const RecordedData = (props: MProps) => {
             name: TSON.stringify(_labels),
         };
 
+        //add published status in payload
+        if(global.UDAGlobalConfig.enableStatusSelection && !tmpPermissionsObj.hasOwnProperty('status')) {
+            tmpPermissionsObj.enableStatus = 1;
+        }
+
         //if additional params available send them part of payload
         if (!_.isEmpty(tmpPermissionsObj)) {
             _payload.additionalParams = tmpPermissionsObj;
@@ -357,25 +362,36 @@ export const RecordedData = (props: MProps) => {
             return;
         }
 
-        const instance = await postRecordSequenceData(_payload);
-        await resetForm();
-        await setFormSubmit(false);
-        setSavedClickedDataPercent((prevState) => {
-            return Math.ceil(((savedClicks + 1) / totalClicks) * 100);
-        });
+        try {
+            const instance = await postRecordSequenceData(_payload);
 
-        if (instance && props?.refetchSearch) {
-            addNotification(translate('savedSequence'), translate('savedSequenceDescription'), 'success');
-            setTimeout(() => {
-                props.refetchSearch("on");
-            }, CONFIG.indexInterval);
-        } else {
+            if (instance) {
+                await resetForm();
+                await setFormSubmit(false);
+
+                setSavedClickedDataPercent((prevState) => {
+                    return Math.ceil(((savedClicks + 1) / totalClicks) * 100);
+                });
+
+                addNotification(translate('savedSequence'), translate('savedSequenceDescription'), 'success');
+
+                setTimeout(() => {
+                    props.refetchSearch("on");
+                }, CONFIG.indexInterval);
+            } else {
+                throw new Error('Failed to save sequence');
+            }
+
+            if (props.recordHandler) props.recordHandler("cancel");
+            setToStore(false, CONFIG.RECORDING_SWITCH_KEY, true);
+            setToStore([], CONFIG.RECORDING_SEQUENCE, false);
+
+        } catch (error) {
+            setFormSubmit(false);
+            setDisableForm(false);
+            UDAConsoleLogger.info('Save Sequence Error:', error);
             addNotification(translate('savedSequenceError'), translate('savedSequenceErrorDescription'), 'error');
         }
-
-        if (props.recordHandler) props.recordHandler("cancel");
-        setToStore(false, CONFIG.RECORDING_SWITCH_KEY, true);
-        setToStore([], CONFIG.RECORDING_SEQUENCE, false);
     };
 
     const [timer, setTimer] = useState(null);
