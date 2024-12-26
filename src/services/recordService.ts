@@ -132,32 +132,35 @@ export const updateRecordClicks = async (request?: any) => {
 export const recordSequence = async (request?: any) => {
   try {
     if (!request) {
-      // Request object is required
-      throw new Error("Request object is required");
+      throw new Error('Request object is required');
     }
 
-    // Get the user's ID
     request.usersessionid = await getUserId();
 
-    // Prepare the request parameters
+    if (!request.usersessionid) {
+      throw new Error('User session ID could not be retrieved');
+    }
+
     const parameters = {
-      // The URL for the API call
       url: ENDPOINT.RecordSequence,
-      // The HTTP method to use
       method: "POST",
-      // The request body
       body: request,
     };
 
-    // Call the API
-    return REST.apiCal(parameters);
+    const response = await REST.apiCal(parameters);
+    if (!response) {
+      throw new Error('No response received from record sequence API');
+    }
+
+    return response;
+
   } catch (error) {
-    // Handle any errors that occurred during the API call
-    UDAErrorLogger.error(`Error in recordSequence: ${error.message}`, error);
-    // Re-throw the error so it can be handled by the caller
+    UDAConsoleLogger.info('Record Sequence Error:', error);
     throw error;
+    return false;
   }
-};
+}
+
 
 /**
  * Records a user click event.
@@ -539,6 +542,7 @@ export const postRecordSequenceData = async (request: any) => {
   }
 };
 
+
 /**
  * To update click data to REST
  * @returns  promise
@@ -578,3 +582,35 @@ export const recordUserClickData = async (
     throw error;
   }
 };
+
+/**
+ * Fetches status options from the API
+ * @param {Object} request - The request object containing category
+ * @param {string} request.category - Category for status filtering, defaults to 'sequenceList'
+ * @returns {Promise} API response containing status options
+ */
+export const fetchStatuses = async (request: {category: string} = {category: 'sequenceList'}) => {
+  try {
+    if (!request.category) {
+      throw new Error('Category is required');
+    }
+
+    const parameters = {
+      url: REST.processArgs(ENDPOINT.statuses, request),
+      method: "GET"
+    };
+
+    const response = await REST.apiCal(parameters);
+    if (!response) {
+      throw new Error('No response received from status API');
+    }
+
+    return response;
+
+  } catch (error) {
+    UDAConsoleLogger.info('Fetch Status Error:', error);
+    console.log(error);
+    return Promise.reject(error);
+  }
+};
+

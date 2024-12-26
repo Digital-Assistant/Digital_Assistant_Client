@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect, useState} from "react";
-import {DeleteOutlined, InfoCircleOutlined, PauseCircleFilled} from "@ant-design/icons";
+import {DeleteOutlined, InfoCircleOutlined} from "@ant-design/icons";
 import _ from "lodash";
 import {getObjData, setToStore} from "../util";
 import {postRecordSequenceData, profanityCheck, recordClicks} from "../services/recordService";
@@ -16,8 +16,8 @@ import SelectedElement from "./SelectedElement";
 import TSON from "typescript-json";
 import {translate} from "../util/translation";
 import {isHighlightNode} from "../util/checkNode";
-import {Alert, notification, Progress, Space, Switch} from "antd";
-import {UDAErrorLogger} from "../config/error-log";
+import {Alert, Progress, Space, Switch} from "antd";
+import {UDAConsoleLogger, UDAErrorLogger} from "../config/error-log";
 import {addNotification} from "../util/addNotification";
 
 export interface MProps {
@@ -55,6 +55,8 @@ export const RecordedData = (props: MProps) => {
     const [savingError, setSavingError] = useState<boolean>(false);
     const [slowPlayback, setSlowPlayback] = useState<boolean>(false);
     const [delayPlaybackTime, setDelayPlaybackTime] = useState<number>(1);
+    //variables for slow playback time for each click
+    const [slowPlaybackTime, setSlowPlaybackTime] = useState<number>(0);
 
     useEffect(() => {
         setRecordData([...(props.data || [])]);
@@ -160,20 +162,30 @@ export const RecordedData = (props: MProps) => {
     };
 
     const handlePersonal = (index: number) => async () => {
-        await updatePersonalOrSkipPlay("isPersonal", index);
+        await updateRecordMetadata("isPersonal", index);
     };
 
     const handleSkipPlay = (index: number) => async () => {
-        await updatePersonalOrSkipPlay("skipDuringPlay", index);
+        await updateRecordMetadata("skipDuringPlay", index);
     };
 
-    const updatePersonalOrSkipPlay = async (key: string, index: number) => {
+    const updateRecordMetadata = async (key: string, index: number, value: any = null) => {
         const _objData = getObjData(recordData[index]?.objectdata);
         if (_objData) {
-            if (_objData.meta[key] === undefined) _objData.meta[key] = false;
-            _objData.meta[key] = !_objData.meta[key];
-            recordData[index].objectdata = TSON.stringify(_objData);
+            if(value === null) {
+                if (_objData.meta[key] === undefined) _objData.meta[key] = false;
+                _objData.meta[key] = !_objData.meta[key];
+                recordData[index].objectdata = TSON.stringify(_objData);
+            } else {
+                if(value === '') {
+                    delete _objData.meta[key];
+                } else {
+                    _objData.meta[key] = value;
+                }
+                recordData[index].objectdata = TSON.stringify(_objData);
+            }
             storeRecording(recordData);
+            setRecordData([...(recordData)]);
         }
     };
 
@@ -290,6 +302,11 @@ export const RecordedData = (props: MProps) => {
             name: TSON.stringify(_labels),
         };
 
+        //add published status in payload
+        if(global.UDAGlobalConfig.enableStatusSelection && !tmpPermissionsObj.hasOwnProperty('status')) {
+            tmpPermissionsObj.enableStatus = 1;
+        }
+
         //if additional params available send them part of payload
         if (!_.isEmpty(tmpPermissionsObj)) {
             _payload.additionalParams = tmpPermissionsObj;
@@ -357,25 +374,36 @@ export const RecordedData = (props: MProps) => {
             return;
         }
 
-        const instance = await postRecordSequenceData(_payload);
-        await resetForm();
-        await setFormSubmit(false);
-        setSavedClickedDataPercent((prevState) => {
-            return Math.ceil(((savedClicks + 1) / totalClicks) * 100);
-        });
+        try {
+            const instance = await postRecordSequenceData(_payload);
 
-        if (instance && props?.refetchSearch) {
-            addNotification(translate('savedSequence'), translate('savedSequenceDescription'), 'success');
-            setTimeout(() => {
-                props.refetchSearch("on");
-            }, CONFIG.indexInterval);
-        } else {
+            if (instance) {
+                await resetForm();
+                await setFormSubmit(false);
+
+                setSavedClickedDataPercent((prevState) => {
+                    return Math.ceil(((savedClicks + 1) / totalClicks) * 100);
+                });
+
+                addNotification(translate('savedSequence'), translate('savedSequenceDescription'), 'success');
+
+                setTimeout(() => {
+                    props.refetchSearch("on");
+                }, CONFIG.indexInterval);
+            } else {
+                throw new Error('Failed to save sequence');
+            }
+
+            if (props.recordHandler) props.recordHandler("cancel");
+            setToStore(false, CONFIG.RECORDING_SWITCH_KEY, true);
+            setToStore([], CONFIG.RECORDING_SEQUENCE, false);
+
+        } catch (error) {
+            setFormSubmit(false);
+            setDisableForm(false);
+            UDAConsoleLogger.info('Save Sequence Error:', error);
             addNotification(translate('savedSequenceError'), translate('savedSequenceErrorDescription'), 'error');
         }
-
-        if (props.recordHandler) props.recordHandler("cancel");
-        setToStore(false, CONFIG.RECORDING_SWITCH_KEY, true);
-        setToStore([], CONFIG.RECORDING_SEQUENCE, false);
     };
 
     const [timer, setTimer] = useState(null);
@@ -495,9 +523,18 @@ export const RecordedData = (props: MProps) => {
         }
     }
 
-    const validateDelayTime = async(value: number) => {
+    const validateDelayTime = async(value: number, category: string = 'overAllDelayTime', index: number = null) => {
         if(!isNaN(value)){
-            setDelayPlaybackTime(value);
+            if(category === 'overAllDelayTime') {
+                setDelayPlaybackTime(value);
+            } else if(category === 'slowPlaybackTime' && index !== null) {
+                updateRecordMetadata('slowPlaybackTime', index, value);
+            }
+        } else {
+            setInputError({...inputError, slowPlayBackTime: true});
+            if(category === 'slowPlaybackTime' && index !== null) {
+                updateRecordMetadata('slowPlaybackTime', index, value);
+            }
         }
     }
 
@@ -587,10 +624,10 @@ export const RecordedData = (props: MProps) => {
                         }}
                         value={(objectData.meta.hasOwnProperty('displayText')) ? objectData.meta.displayText : item.clickednodename}
                     />
-                                    {(inputAlert.clickedInputNameProfanity) &&
-                                        <span className={`uda-alert`}> {translate('profanityDetected')}</span>}
-                                    {inputError.clickedNodeName &&
-                                        <span className={`uda-alert`}> {translate('inputError')}</span>}
+                    {(inputAlert.clickedInputNameProfanity) &&
+                        <span className={`uda-alert`}> {translate('profanityDetected')}</span>}
+                    {inputError.clickedNodeName &&
+                        <span className={`uda-alert`}> {translate('inputError')}</span>}
                   </span>
                             )}
                             <br/>
@@ -682,6 +719,43 @@ export const RecordedData = (props: MProps) => {
                                         </div>
                                     </>
                                 }
+                                {(props.config.enableSlowReplay === true) &&
+                                    <>
+                                        <div className="uda-recording uda_exclude" style={{textAlign: "center"}}>
+                                            {(objectData.meta?.slowPlaybackTime) &&
+                                                <>
+                                                    <input type="number" id="uda-slowPlaybackTime" name="uda-slowPlaybackTime"
+                                                           className="uda-form-input uda_exclude"
+                                                           placeholder={translate('playBackTimePlaceHolder')}
+                                                           style={{width: "68% !important"}}
+                                                           onChange={async (e: any) => {
+                                                               await validateDelayTime(e.target.value, 'slowPlaybackTime', index);
+                                                           }}
+                                                           onBlur={async (e: any) => {
+                                                               await validateDelayTime(e.target.value, 'slowPlaybackTime', index);
+                                                           }}
+                                                           value={parseInt(objectData.meta?.slowPlaybackTime)}/>
+                                                </>
+                                            }
+                                            {(!objectData.meta?.slowPlaybackTime) &&
+                                                <>
+                                                    <input type="number" id="uda-slowPlaybackTime" name="uda-slowPlaybackTime"
+                                                           className="uda-form-input uda_exclude"
+                                                           placeholder={translate('playBackTimePlaceHolder')}
+                                                           style={{width: "68% !important"}}
+                                                           onChange={async (e: any) => {
+                                                               await validateDelayTime(e.target.value, 'slowPlaybackTime', index);
+                                                           }}
+                                                           onBlur={async (e: any) => {
+                                                               await validateDelayTime(e.target.value, 'slowPlaybackTime', index);
+                                                           }}
+                                                           value={parseInt(objectData.meta?.slowPlaybackTime)}/>
+                                                </>
+                                            }
+                                            {inputError?.slowPlaybackTime && <span className={`uda-alert`}> {translate('inputError')}</span>}
+                                        </div>
+                                    </>
+                                }
                                 <SelectedElement data={item} index={index} recordData={recordData} config={props.config} storeRecording={storeRecording}/>
                             </>
                         )}
@@ -740,7 +814,7 @@ export const RecordedData = (props: MProps) => {
                     <div id="uda-play-slow-section">
                         <div className="flex-card flex-vcenter selectedElement">
                                 <span className="col-6">
-                                   Enable slow replay
+                                   {translate("enableDelayTimeText")}
                                 </span>
                             <span className="uda_exclude col-6">
                                     <Switch defaultChecked={slowPlayback} onChange={()=> {setSlowPlayback(!slowPlayback);}} />
@@ -749,9 +823,9 @@ export const RecordedData = (props: MProps) => {
                         { (slowPlayback === true) &&
                             <div className="flex-card flex-vcenter selectedElement">
                                      <span style={{ marginRight: "4px" }} className="col-6">
-                                        Number of seconds to delay{" "}
+                                        {translate('delayTimePlaceHolder')+" "}
                                     </span>
-                                <input type="text" id="uda-add-slowplay" name="uda-edited-tooltip"
+                                <input type="number" id="uda-add-slowplay" name="uda-edited-tooltip"
                                        className="uda-form-input uda_exclude col-6"
                                        placeholder={translate('delayTimePlaceHolder')}
                                        style={{width: "68% !important"}}

@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect, useRef, useState} from "react";
-import {Button, Col, List, Popconfirm, Row, Checkbox} from "antd";
+import {Button, Col, List, Popconfirm, Row, Checkbox, Switch, Select, Form} from "antd";
 import {
   DeleteOutlined,
   DislikeFilled,
@@ -17,10 +17,11 @@ import {
   PauseCircleOutlined,
   PlayCircleOutlined,
   ShareAltOutlined,
-  CopyFilled
+  CopyFilled,
+  ReloadOutlined
 } from "@ant-design/icons";
 import {getCurrentPlayItem, getFromStore, getObjData, setToStore,} from "../util";
-import {deleteRecording, recordUserClickData, updateRecording} from "../services/recordService";
+import {deleteRecording, fetchStatuses, recordUserClickData, updateRecording} from "../services/recordService";
 import {getUserId} from "../services/userService";
 import {matchNode} from "../util/invokeNode";
 import {CONFIG} from "../config";
@@ -51,8 +52,10 @@ interface MProps {
 export const RecordSequenceDetails = (props: MProps) => {
   const [advBtnShow, setAdvBtnShow] = useState<boolean>(false);
   const [permissions, setPermissions] = useState<any>({});
-  const [selectedRecordingDetails, setSelectedRecordingDetails] =
-      React.useState<any>(props.data);
+  const [selectedRecordingDetails, setSelectedRecordingDetails] = React.useState<any>(props.data);
+  const [userId, setUserId] = useState<string>(null);
+  const [statusOptions, setStatusOptions] = useState<string[]>([]);
+  const [playStatus, setPlayStatus] = useState<string>("");
 
   /**
    * Every time isPlaying state changes, and status is "on", play continues
@@ -77,13 +80,49 @@ export const RecordSequenceDetails = (props: MProps) => {
     };
   }, []);
 
+  /**
+   * Fetches available status options from the API
+   * Manages loading state during the fetch operation
+   * Updates the local state with fetched status options
+   * @returns {Promise<void>}
+   */
+  const fetchStatusOptions = async () => {
+    props.showLoader(true);    // Show loading indicator before fetch
+    const response = await fetchStatuses();    // Get statuses from API
+    setStatusOptions(response);    // Update local state with fetched options
+    props.showLoader(false);    // Hide loading indicator after completion
+  };
+
+
   useEffect(()=>{
     if(props.data){
       setSelectedRecordingDetails(props.data);
       setTmpPermissionsObj(props.data.additionalParams);
+      if(props.config.enableStatusSelection && (props.data.usersessionid === userId)){
+        fetchStatusOptions();
+      }
     }
-  },[props.data])
+  },[props.data, userId]);
 
+  useEffect(() => {
+    if(setSelectedRecordingDetails){
+      checkStatus();
+    }
+  }, [selectedRecordingDetails]);
+
+  /**
+   * Effect hook to fetch status options when component mounts
+   * Only fetches if:
+   * 1. Status selection is enabled in config
+   * 2. Current user session matches the userId
+   *
+   * @dependency props.config.enableStatusSelection - Triggers fetch when status selection setting changes
+   */
+  useEffect(() => {
+    if(props?.config?.enableStatusSelection && (props.data.usersessionid === userId)){
+      fetchStatusOptions();
+    }
+  }, [props.config.enableStatusSelection]);
 
   /**
    * Record player(auto play)
@@ -106,10 +145,12 @@ export const RecordSequenceDetails = (props: MProps) => {
       recordUserClickData('playCompleted', '', selectedRecordingDetails.id);
       pause();
       removeToolTip();
+      addNotification(translate('autoplayCompletedTitle'), translate('autoplayCompleted'), 'success');
+      setPlayStatus('completed');
+      props.playHandler("off");
       if(!props?.config?.enableHidePanelAfterCompletion) {
         trigger("openPanel", {action: 'openPanel'});
       } else {
-        addNotification(translate('autoplayCompletedTitle'), translate('autoplayCompleted'), 'success');
         backNav(true, false);
       }
     }
@@ -129,12 +170,29 @@ export const RecordSequenceDetails = (props: MProps) => {
    * Updates all recorded nodes status to 'none'
    */
   const resetStatus = () => {
-    selectedRecordingDetails?.userclicknodesSet?.forEach((element: any) => {
-      element.status = "none";
-    });
+    for (let i = 0; i < selectedRecordingDetails?.userclicknodesSet?.length; i++) {
+      delete selectedRecordingDetails.userclicknodesSet[i].status;
+    }
     setToStore(selectedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
     setSelectedRecordingDetails({...selectedRecordingDetails});
     setUserVote({upvote: 0, downvote: 0});
+    return true;
+  };
+
+  /**
+   * check node status(to completed) by index
+   * @param index
+   */
+  const checkStatus = () => {
+    let count = 0;
+    for (let i = 0; i < selectedRecordingDetails?.userclicknodesSet?.length; i++) {
+      if (selectedRecordingDetails.userclicknodesSet[i].status === "completed") {
+        count++;
+      }
+    }
+    if(count === selectedRecordingDetails?.userclicknodesSet?.length) {
+      setPlayStatus('completed');
+    }
   };
 
   /**
@@ -192,6 +250,19 @@ export const RecordSequenceDetails = (props: MProps) => {
     }
   }
 
+  /**
+   * Replay the recording
+   */
+  const replay = async () => {
+    recordUserClickData('replay', '', selectedRecordingDetails.id);
+    setPlayStatus('playing');
+    if(resetStatus()) {
+      trigger("closePanel", {action: 'closePanel'});
+      if (props.playHandler) props.playHandler("on");
+      autoPlay();
+    }
+  };
+
   const removeRecording = async () => {
     recordUserClickData('delete', '', selectedRecordingDetails.id);
     props.showLoader(true);
@@ -214,8 +285,6 @@ export const RecordSequenceDetails = (props: MProps) => {
       recordUserClickData('downVote', '', selectedRecordingDetails.id);
     }
   };
-
-  const [userId, setUserId] = useState<string>(null);
 
   /**
    * setting the user vote record
@@ -305,6 +374,44 @@ export const RecordSequenceDetails = (props: MProps) => {
     await setTmpPermissionsObj({...permissions});
   };
 
+
+  /**
+   * Toggles the publish/unpublish state of a recording and updates it in the store
+   * This async function handles the permission changes and persists them
+   * @returns {Promise<void>}
+   */
+  const updateStatusChange = async (newStatus: number) => {
+    console.log(newStatus);
+    // Show loading state while operation is in progress
+    props.showLoader(true);
+
+    // Create a copy of permissions object to avoid direct mutation
+    let permissions = {...tmpPermissionsObj};
+
+    // Toggle published state if it exists, otherwise set it to false
+    if(permissions.hasOwnProperty('status')) {
+      permissions.status = newStatus;
+    } else {
+      permissions.status = 1;
+    }
+
+    // Update the temporary permissions state
+    setTmpPermissionsObj({...permissions});
+
+    // Persist the changes to the recording
+    await updateRecording({id: selectedRecordingDetails.id, additionalParams: permissions});
+
+    // Update the recording details with new permissions
+    selectedRecordingDetails.additionalParams = permissions;
+
+    // Save updated recording details to store
+    setToStore(selectedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
+
+    // Hide loader after operation is complete
+    props.showLoader(false);
+  };
+
+
   return props?.recordSequenceDetailsVisibility ? (
       <>
         <div
@@ -325,7 +432,7 @@ export const RecordSequenceDetails = (props: MProps) => {
             >
               <LeftOutlined/>
             </Button>
-            {props?.isPlaying == "off" && (
+            {(props?.isPlaying == "off" && playStatus !== "completed") && (
                 <PlayCircleOutlined
                     className="large secondary uda_exclude"
                     onClick={async () => {
@@ -333,12 +440,21 @@ export const RecordSequenceDetails = (props: MProps) => {
                     }}
                 />
             )}
-            {props?.isPlaying == "on" && (
+            {(props?.isPlaying == "on" && playStatus !== "completed") && (
                 <PauseCircleOutlined
                     className="large secondary uda_exclude"
                     onClick={async () => {
                       recordUserClickData('stopPlay', '', selectedRecordingDetails.id);
                       pause();
+                    }}
+                />
+            )}
+            {playStatus == "completed" && (
+                <ReloadOutlined
+                    className="large secondary uda_exclude"
+                    onClick={async () => {
+                      recordUserClickData('restartPlay', '', selectedRecordingDetails.id);
+                      replay();
                     }}
                 />
             )}
@@ -402,14 +518,46 @@ export const RecordSequenceDetails = (props: MProps) => {
             </Col>
             <Col span={8}>
               {(selectedRecordingDetails.usersessionid === userId) &&
-                  <Popconfirm title={translate('deleteRecording')} onConfirm={removeRecording} className="uda_exclude">
+                  <>
+                    <Popconfirm title={translate('deleteRecording')} onConfirm={removeRecording} className="uda_exclude">
                       <Button className="uda_exclude">
-                          <DeleteOutlined width={33} className="secondary uda_exclude"/>
+                        <DeleteOutlined width={33} className="secondary uda_exclude"/>
                       </Button>
-                  </Popconfirm>
+                    </Popconfirm>
+                  </>
               }
             </Col>
           </Row>
+          {/* Row container for publish/unpublish controls */}
+          {(props?.config?.enableStatusSelection) &&
+          <Row>
+            {/* Left column taking up 8/24 of the row width */}
+            <Col span={24}>
+              {/* Only show publish controls if the current user owns this recording */}
+              {(selectedRecordingDetails.usersessionid === userId) &&
+                  <>
+                    <Form.Item labelCol={{ span: 8 }}
+                        label={translate('statusLabel')}
+                        className="uda_exclude"
+                        style={{ marginBottom: 0 }}
+                    >
+                    <Select
+                        defaultValue={(tmpPermissionsObj && tmpPermissionsObj.hasOwnProperty('status'))?parseInt(tmpPermissionsObj.status) : 6}
+                        onChange={updateStatusChange}
+                        className="uda_exclude"
+                    >
+                      {statusOptions.map((status: any) => (
+                          <Select.Option key={status.id} value={status.id}>
+                            {status.name.toUpperCase()}
+                          </Select.Option>
+                      ))}
+                    </Select>
+                    </Form.Item>
+                  </>
+              }
+            </Col>
+          </Row>
+          }
           {/* enabling update permissions*/}
           {(props?.config?.enablePermissions && (selectedRecordingDetails.usersessionid === userId)) && (
               <div id="uda-permissions-section" style={{padding: "25px", display:'flex'}}>

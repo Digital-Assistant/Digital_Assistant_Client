@@ -33,37 +33,45 @@ export const apiCal = (options: any) => {
   }
 
   return fetch(url, requestOptions)
-    .then((response) => {
-      //throw route to login if unauthorized response received
-      switch (response?.status) {
-        case 401:
-          // localStorage.clear();
+      .then((response) => {
+        switch (response?.status) {
+          case 200:
+            return options?.responseType == "text" ? response.text() : response.json();
+          case 201:
+            return options?.responseType == "text" ? response.text() : response.json();
+          case 204:
+            return null;
+          case 400:
+            throw new Error('Bad Request - The request was malformed or invalid');
+          case 401:
             trigger('UDAGetNewToken', {detail: {data: "UDAGetNewToken"}});
-          break;
-        case 200:
-          return options?.responseType == "text" ? response.text() : response.json();
-          break;
-        case 204:
-          return null;
-          break;
-      }
-      /*if (response?.status == 401) {
-        localStorage.clear();
-      }
-      if(response?.status == 200) {
-        return options?.responseType == "text"
-            ? response.text()
-            : response.json();
-      } else {
-        return response;
-      }*/
-    })
-    .then((json) => {
-      return json;
-    })
-    .catch((error) => {
-      return error;
-    });
+            throw new Error('Unauthorized - Authentication required');
+          case 403:
+            throw new Error('Forbidden - You do not have permission to access this resource');
+          case 404:
+            throw new Error('Not Found - The requested resource does not exist');
+          case 408:
+            throw new Error('Request Timeout - The server timed out waiting for the request');
+          case 429:
+            throw new Error('Too Many Requests - Rate limit exceeded');
+          case 500:
+            throw new Error('Internal Server Error - Something went wrong on the server');
+          case 502:
+            throw new Error('Bad Gateway - Invalid response from upstream server');
+          case 503:
+            throw new Error('Service Unavailable - The server is temporarily unavailable');
+          case 504:
+            throw new Error('Gateway Timeout - The upstream server timed out');
+          default:
+            throw new Error(`Unexpected status code: ${response.status}`);
+        }
+      })
+      .then((json) => {
+        return json;
+      })
+      .catch((error) => {
+        throw error;
+      });
 }
 
 /**

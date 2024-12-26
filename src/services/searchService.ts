@@ -66,13 +66,25 @@ export const fetchSearchResults = async (request?: {
       };
     }
 
-    // Make the API call and return the result.
-    return await REST.apiCal(parameters);
+    const response = await REST.apiCal(parameters);
+    if(response !== undefined) {
+      return response;
+    } else {
+      return [];
+    }
+
   } catch (error) {
-    // Log the error and throw a new error with a user-friendly message.
-    console.error("Error fetching search results:", error);
-    throw new Error(`Failed to fetch search results: ${error.message}`);
+    // Type guard to check if error is an instance of Error
+    const errorMessage = error instanceof Error ? error.message : 'Unknown search error';
+
+    // Log the error for debugging
+    console.error('Search service error:', errorMessage);
+
+    // You can customize the error response based on your needs
+    throw new Error(`Failed to perform search: ${errorMessage}`);
+    return [];
   }
+
 };
 
 /**
