@@ -17,9 +17,14 @@ export const matchAction = (node, selectedNode, toolTipVisibleTIme = 1) => {
     return;
   }
 
-  // let timeToInvoke = CONFIG.invokeTime;
+  const recordedNodeData = JSON.parse(selectedNode.objectdata);
 
   let timeToInvoke = toolTipVisibleTIme*1000;
+
+  // overriding the default time to invoke
+  if(UDAGlobalConfig.enableSlowReplay && recordedNodeData.hasOwnProperty('meta') && recordedNodeData.meta.hasOwnProperty('slowPlaybackTime') && parseInt(recordedNodeData.meta.slowPlaybackTime) > 0) {
+    timeToInvoke = parseInt(recordedNodeData.meta.slowPlaybackTime)*1000;
+  }
 
   // remove added tooltips before invoking
   removeToolTip();
@@ -31,7 +36,6 @@ export const matchAction = (node, selectedNode, toolTipVisibleTIme = 1) => {
 
   // perform click action based on the input given
   if(UDAGlobalConfig.enableNodeTypeSelection) {
-    const recordedNodeData = JSON.parse(selectedNode.objectdata);
     if (recordedNodeData.meta && recordedNodeData.meta.hasOwnProperty('selectedElement') && recordedNodeData.meta.selectedElement && recordedNodeData.meta.selectedElement.systemTag.trim() != 'others') {
       let performedAction = mapSelectedElementAction(node, selectedNode, navigationData, recordedNodeData, timeToInvoke);
       if (performedAction) {

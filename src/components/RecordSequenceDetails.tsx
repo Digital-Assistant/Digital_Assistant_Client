@@ -17,7 +17,8 @@ import {
   PauseCircleOutlined,
   PlayCircleOutlined,
   ShareAltOutlined,
-  CopyFilled
+  CopyFilled,
+  ReloadOutlined
 } from "@ant-design/icons";
 import {getCurrentPlayItem, getFromStore, getObjData, setToStore,} from "../util";
 import {deleteRecording, fetchStatuses, recordUserClickData, updateRecording} from "../services/recordService";
@@ -54,6 +55,7 @@ export const RecordSequenceDetails = (props: MProps) => {
   const [selectedRecordingDetails, setSelectedRecordingDetails] = React.useState<any>(props.data);
   const [userId, setUserId] = useState<string>(null);
   const [statusOptions, setStatusOptions] = useState<string[]>([]);
+  const [playStatus, setPlayStatus] = useState<string>("");
 
   /**
    * Every time isPlaying state changes, and status is "on", play continues
@@ -100,7 +102,13 @@ export const RecordSequenceDetails = (props: MProps) => {
         fetchStatusOptions();
       }
     }
-  },[props.data, userId])
+  },[props.data, userId]);
+
+  useEffect(() => {
+    if(setSelectedRecordingDetails){
+      checkStatus();
+    }
+  }, [selectedRecordingDetails]);
 
   /**
    * Effect hook to fetch status options when component mounts
@@ -137,10 +145,12 @@ export const RecordSequenceDetails = (props: MProps) => {
       recordUserClickData('playCompleted', '', selectedRecordingDetails.id);
       pause();
       removeToolTip();
+      addNotification(translate('autoplayCompletedTitle'), translate('autoplayCompleted'), 'success');
+      setPlayStatus('completed');
+      props.playHandler("off");
       if(!props?.config?.enableHidePanelAfterCompletion) {
         trigger("openPanel", {action: 'openPanel'});
       } else {
-        addNotification(translate('autoplayCompletedTitle'), translate('autoplayCompleted'), 'success');
         backNav(true, false);
       }
     }
@@ -160,12 +170,29 @@ export const RecordSequenceDetails = (props: MProps) => {
    * Updates all recorded nodes status to 'none'
    */
   const resetStatus = () => {
-    selectedRecordingDetails?.userclicknodesSet?.forEach((element: any) => {
-      element.status = "none";
-    });
+    for (let i = 0; i < selectedRecordingDetails?.userclicknodesSet?.length; i++) {
+      delete selectedRecordingDetails.userclicknodesSet[i].status;
+    }
     setToStore(selectedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
     setSelectedRecordingDetails({...selectedRecordingDetails});
     setUserVote({upvote: 0, downvote: 0});
+    return true;
+  };
+
+  /**
+   * check node status(to completed) by index
+   * @param index
+   */
+  const checkStatus = () => {
+    let count = 0;
+    for (let i = 0; i < selectedRecordingDetails?.userclicknodesSet?.length; i++) {
+      if (selectedRecordingDetails.userclicknodesSet[i].status === "completed") {
+        count++;
+      }
+    }
+    if(count === selectedRecordingDetails?.userclicknodesSet?.length) {
+      setPlayStatus('completed');
+    }
   };
 
   /**
@@ -222,6 +249,19 @@ export const RecordSequenceDetails = (props: MProps) => {
       updateStatus(index);
     }
   }
+
+  /**
+   * Replay the recording
+   */
+  const replay = async () => {
+    recordUserClickData('replay', '', selectedRecordingDetails.id);
+    setPlayStatus('playing');
+    if(resetStatus()) {
+      trigger("closePanel", {action: 'closePanel'});
+      if (props.playHandler) props.playHandler("on");
+      autoPlay();
+    }
+  };
 
   const removeRecording = async () => {
     recordUserClickData('delete', '', selectedRecordingDetails.id);
@@ -392,7 +432,7 @@ export const RecordSequenceDetails = (props: MProps) => {
             >
               <LeftOutlined/>
             </Button>
-            {props?.isPlaying == "off" && (
+            {(props?.isPlaying == "off" && playStatus !== "completed") && (
                 <PlayCircleOutlined
                     className="large secondary uda_exclude"
                     onClick={async () => {
@@ -400,12 +440,21 @@ export const RecordSequenceDetails = (props: MProps) => {
                     }}
                 />
             )}
-            {props?.isPlaying == "on" && (
+            {(props?.isPlaying == "on" && playStatus !== "completed") && (
                 <PauseCircleOutlined
                     className="large secondary uda_exclude"
                     onClick={async () => {
                       recordUserClickData('stopPlay', '', selectedRecordingDetails.id);
                       pause();
+                    }}
+                />
+            )}
+            {playStatus == "completed" && (
+                <ReloadOutlined
+                    className="large secondary uda_exclude"
+                    onClick={async () => {
+                      recordUserClickData('restartPlay', '', selectedRecordingDetails.id);
+                      replay();
                     }}
                 />
             )}
