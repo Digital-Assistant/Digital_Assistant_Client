@@ -206,7 +206,7 @@ export const RecordedData = (props: MProps) => {
         await setDisableForm(false);
         await setName("");
         await setLabels([]);
-        await setToolTip('');
+        await setToolTip("");
         global.udanSelectedNodes = [];
         global.clickedNode = null;
         setSavedClickedDataPercent(0);
@@ -410,7 +410,7 @@ export const RecordedData = (props: MProps) => {
 
     /**
      * validate and update of first label
-     * @param e
+     * @param value
      */
     const validateChange = async (value: string) => {
         await setName(value);
@@ -426,7 +426,7 @@ export const RecordedData = (props: MProps) => {
 
     /**
      * validate for profanity words and remove them
-     * @param e
+     * @param value
      */
     const checkMainLabelProfanity = async (value: string) => {
         if (value.trim() === '') {
@@ -546,7 +546,6 @@ export const RecordedData = (props: MProps) => {
     const onChangeTooltip = async (value: string) => {
         let changedName: any = await checkProfanity(value);
         changedName = changedName.trim();
-        await setToolTip(changedName);
         return await validateTooltip(changedName);
     };
 
@@ -556,9 +555,11 @@ export const RecordedData = (props: MProps) => {
      * @param index
      */
     const updateTooltip = async (key: string, index: number) => {
-        if (!validateInput(tooltip)) {
+        if(tooltip ===""){
+            return;
+        }
+        if ((tooltip !== '') && (!validateInput(tooltip))) {
             await setInputError({...inputError, tooltip: true});
-            await setDisableForm(true);
             return;
         }
         props.showLoader(true);
@@ -569,7 +570,7 @@ export const RecordedData = (props: MProps) => {
             _objData.meta[key] = tooltip
             recordData[index].objectdata = TSON.stringify(_objData);
             storeRecording(recordData);
-            setToolTip('');
+            setToolTip("");
         }
         await setDisableTooltipSubmitBtn(false);
         props.showLoader(false);
@@ -675,36 +676,17 @@ export const RecordedData = (props: MProps) => {
                                 {(props.config.enableTooltipAddition === true && isHighlightNode(objectData)) &&
                                     <>
                                         <div className="uda-recording uda_exclude" style={{textAlign: "center"}}>
-                                            {(objectData.meta?.tooltipInfo && !tooltip) &&
-                                                <>
-                                                    <input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip"
-                                                           className="uda-form-input uda_exclude"
-                                                           placeholder={translate('toolTipPlaceHolder')}
-                                                           style={{width: "68% !important"}}
-                                                           onChange={async (e: any) => {
-                                                               await validateTooltip(e.target.value);
-                                                           }}
-                                                           onBlur={async (e: any) => {
-                                                               await onChangeTooltip(e.target.value);
-                                                           }}
-                                                           value={objectData.meta?.tooltipInfo}/>
-                                                </>
-                                            }
-                                            {(!objectData.meta?.tooltipInfo || tooltip) &&
-                                                <>
-                                                    <input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip"
-                                                           className="uda-form-input uda_exclude"
-                                                           placeholder={translate('toolTipPlaceHolder')}
-                                                           style={{width: "68% !important"}}
-                                                           onChange={async (e: any) => {
-                                                               await validateTooltip(e.target.value);
-                                                           }}
-                                                           onBlur={async (e: any) => {
-                                                               await onChangeTooltip(e.target.value);
-                                                           }}
-                                                           value={tooltip}/>
-                                                </>
-                                            }
+
+                                            <>
+                                                <input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip"
+                                                       className="uda-form-input uda_exclude"
+                                                       placeholder={translate('toolTipPlaceHolder')}
+                                                       style={{width: "68% !important"}}
+                                                       onChange={async (e: any) => {
+                                                           await validateTooltip(e.target.value);
+                                                       }}
+                                                       value={(tooltip && tooltip !=="")? tooltip : objectData.meta?.tooltipInfo}/>
+                                            </>
                                             {inputError.tooltip && <span className={`uda-alert`}> {translate('inputError')}</span>}
                                             <span>
                                               <button
@@ -719,44 +701,27 @@ export const RecordedData = (props: MProps) => {
                                         </div>
                                     </>
                                 }
+                                <SelectedElement data={item} index={index} recordData={recordData} config={props.config} storeRecording={storeRecording}/>
                                 {(props.config.enableSlowReplay === true) &&
                                     <>
                                         <div className="uda-recording uda_exclude" style={{textAlign: "center"}}>
-                                            {(objectData.meta?.slowPlaybackTime) &&
-                                                <>
-                                                    <input type="number" id="uda-slowPlaybackTime" name="uda-slowPlaybackTime"
-                                                           className="uda-form-input uda_exclude"
-                                                           placeholder={translate('playBackTimePlaceHolder')}
-                                                           style={{width: "68% !important"}}
-                                                           onChange={async (e: any) => {
-                                                               await validateDelayTime(e.target.value, 'slowPlaybackTime', index);
-                                                           }}
-                                                           onBlur={async (e: any) => {
-                                                               await validateDelayTime(e.target.value, 'slowPlaybackTime', index);
-                                                           }}
-                                                           value={parseInt(objectData.meta?.slowPlaybackTime)}/>
-                                                </>
-                                            }
-                                            {(!objectData.meta?.slowPlaybackTime) &&
-                                                <>
-                                                    <input type="number" id="uda-slowPlaybackTime" name="uda-slowPlaybackTime"
-                                                           className="uda-form-input uda_exclude"
-                                                           placeholder={translate('playBackTimePlaceHolder')}
-                                                           style={{width: "68% !important"}}
-                                                           onChange={async (e: any) => {
-                                                               await validateDelayTime(e.target.value, 'slowPlaybackTime', index);
-                                                           }}
-                                                           onBlur={async (e: any) => {
-                                                               await validateDelayTime(e.target.value, 'slowPlaybackTime', index);
-                                                           }}
-                                                           value={parseInt(objectData.meta?.slowPlaybackTime)}/>
-                                                </>
-                                            }
+                                            <>
+                                                <input type="number" id="uda-slowPlaybackTime" name="uda-slowPlaybackTime"
+                                                       className="uda-form-input uda_exclude"
+                                                       placeholder={translate('playBackTimePlaceHolder')}
+                                                       style={{width: "68% !important"}}
+                                                       onChange={async (e: any) => {
+                                                           await validateDelayTime(e.target.value, 'slowPlaybackTime', index);
+                                                       }}
+                                                       onBlur={async (e: any) => {
+                                                           await validateDelayTime(e.target.value, 'slowPlaybackTime', index);
+                                                       }}
+                                                       value={parseInt(objectData.meta?.slowPlaybackTime)}/>
+                                            </>
                                             {inputError?.slowPlaybackTime && <span className={`uda-alert`}> {translate('inputError')}</span>}
                                         </div>
                                     </>
                                 }
-                                <SelectedElement data={item} index={index} recordData={recordData} config={props.config} storeRecording={storeRecording}/>
                             </>
                         )}
                     </li>
