@@ -22,9 +22,9 @@ export const matchAction = (node, selectedNode, toolTipVisibleTIme = 1) => {
   let timeToInvoke = toolTipVisibleTIme*1000;
 
   // overriding the default time to invoke
-  if(UDAGlobalConfig.enableSlowReplay && recordedNodeData.hasOwnProperty('meta') && recordedNodeData.meta.hasOwnProperty('slowPlaybackTime') && parseInt(recordedNodeData.meta.slowPlaybackTime) > 0) {
+  /*if(UDAGlobalConfig.enableSlowReplay && recordedNodeData.hasOwnProperty('meta') && recordedNodeData.meta.hasOwnProperty('slowPlaybackTime') && parseInt(recordedNodeData.meta.slowPlaybackTime) > 0) {
     timeToInvoke = parseInt(recordedNodeData.meta.slowPlaybackTime)*1000;
-  }
+  }*/
 
   // remove added tooltips before invoking
   removeToolTip();
