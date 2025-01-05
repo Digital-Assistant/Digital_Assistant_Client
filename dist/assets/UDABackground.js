@@ -528,7 +528,7 @@ const CustomConfig = {
     clientSecret: "cXA2yFTq3ORQfrio2mGXttFaOTfvIC7N",
     enableHidePanelAfterCompletion: false,
     enableStatusSelection: false,
-    enableUDAIconDuringRecording: false
+    enableUDAIconDuringRecording: false // Flag to enable UDA icon during recording
 };
 
 
@@ -1549,7 +1549,7 @@ const invokeApi = (url, method, data, parseJson = true) => __awaiter(void 0, voi
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
 (() => {
 "use strict";
 /*!***************************!*\

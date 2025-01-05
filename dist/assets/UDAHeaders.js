@@ -17,6 +17,7 @@ __webpack_require__.r(__webpack_exports__);
 const ignoreTags = ["body", "document", "window", "html", "script", "style", "iframe", "doctype", "link", "svg", "path", "meta", "circle", "rect", "stop", "defs", "linearGradient", "g"];
 const AddToClickObjects = node => {
   try {
+    var _clickObject$element, _clickObject$element2;
     let clickObject = {
       element: node,
       id: ''
@@ -26,10 +27,10 @@ const AddToClickObjects = node => {
     if (clickObject.element === window) {
       return;
     }
-    if (typeof clickObject?.element?.tagName === 'undefined') {
+    if (typeof (clickObject === null || clickObject === void 0 || (_clickObject$element = clickObject.element) === null || _clickObject$element === void 0 ? void 0 : _clickObject$element.tagName) === 'undefined') {
       return;
     }
-    let tag = clickObject?.element?.tagName;
+    let tag = clickObject === null || clickObject === void 0 || (_clickObject$element2 = clickObject.element) === null || _clickObject$element2 === void 0 ? void 0 : _clickObject$element2.tagName;
     if (tag && ignoreTags.indexOf(tag.toLowerCase()) !== -1) {
       return;
     }
@@ -108,7 +109,7 @@ const AddToClickObjects = node => {
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!************************!*\
   !*** ./src/Headers.js ***!
