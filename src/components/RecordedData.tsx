@@ -314,7 +314,6 @@ export const RecordedData = (props: MProps) => {
 
         // Save the original domain in which the recording has happened if enableForAllDomains flag is true
         if(global.UDAGlobalConfig.enableForAllDomains){
-            console.log('parsing');
             if(_payload.hasOwnProperty('additionalParams')) {
                 _payload.additionalParams = {
                     enableForAllDomains: true,

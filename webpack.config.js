@@ -24,12 +24,7 @@ const customStyleLoader = {
             insert: function (linkTag) {
                 setTimeout(()=>{
                     const parent = document.querySelector('#udan-react-root').shadowRoot;
-                    const styleTag = parent.querySelector('style');
-                    if(styleTag){
-                        parent.appendChild(linkTag);
-                    } else {
-                        parent.prepend(linkTag);
-                    }
+                    parent.appendChild(linkTag);
                 },10);
             },
             // injectType: "linkTag"

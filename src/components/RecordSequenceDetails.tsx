@@ -381,7 +381,6 @@ export const RecordSequenceDetails = (props: MProps) => {
    * @returns {Promise<void>}
    */
   const updateStatusChange = async (newStatus: number) => {
-    console.log(newStatus);
     // Show loading state while operation is in progress
     props.showLoader(true);
 
