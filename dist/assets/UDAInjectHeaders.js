@@ -1,1 +1,1 @@
-var UdanLibrary;(()=>{let e=document.createElement("script"),n=chrome?.runtime?.getURL("assets/UDAHeaders.js");e.src=n,e.onload=function(){},(document.head||document.documentElement).appendChild(e),UdanLibrary={}})();
+var UdanLibrary;(()=>{var e;let n=document.createElement("script"),d=null===(e=chrome)||void 0===e||null===(e=e.runtime)||void 0===e?void 0:e.getURL("assets/UDAHeaders.js");n.src=d,n.onload=function(){},(document.head||document.documentElement).appendChild(n),UdanLibrary={}})();
