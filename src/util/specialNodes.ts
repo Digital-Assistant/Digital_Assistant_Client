@@ -89,5 +89,10 @@ export const specialNodes = {
     "tags": ['a', 'button'],
     "classes": [],
     "attributes": ['href']
+  },
+  "iconNodes": {
+    "tags": ['i'],
+    "classes": [],
+    "attributes": []
   }
 }
