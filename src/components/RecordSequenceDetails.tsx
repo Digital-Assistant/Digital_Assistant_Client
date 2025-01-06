@@ -133,7 +133,7 @@ export const RecordSequenceDetails = (props: MProps) => {
     }
     const playItem = getCurrentPlayItem();
     if (playItem.node) {
-      if(matchNode(playItem)) {
+      if(await matchNode(playItem)) {
         updateStatus(playItem.index);
       } else {
         recordUserClickData('playBackError', '', selectedRecordingDetails.id);
@@ -244,8 +244,8 @@ export const RecordSequenceDetails = (props: MProps) => {
     }
   };
 
-  const playNode = (item, index) => {
-    if (matchNode({node: item, index, additionalParams: selectedRecordingDetails?.additionalParams})) {
+  const playNode = async (item, index) => {
+    if (await matchNode({node: item, index, additionalParams: selectedRecordingDetails?.additionalParams})) {
       updateStatus(index);
     }
   }
@@ -381,7 +381,6 @@ export const RecordSequenceDetails = (props: MProps) => {
    * @returns {Promise<void>}
    */
   const updateStatusChange = async (newStatus: number) => {
-    console.log(newStatus);
     // Show loading state while operation is in progress
     props.showLoader(true);
 
