@@ -158,15 +158,15 @@ module.exports = {
         }]
       ]
     },
-    "presets": [
-      ["@babel/preset-env", {
-        "targets": {
-          "node": "current"
-        },
-        "modules": "commonjs"
-      }]
-    ],
     "test": {
+      "presets": [
+        ["@babel/preset-env", {
+          "targets": {
+            "node": "current"
+          },
+          "modules": "commonjs"
+        }]
+      ],
       "plugins": [
         "@babel/plugin-transform-modules-commonjs" // Use CommonJS in test environment
       ]
