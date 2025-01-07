@@ -1,27 +1,11 @@
 var UdanLibrary;
 /******/ (() => { // webpackBootstrap
-/******/ 	var __webpack_modules__ = ({
-
-/***/ "./src/InjectHeaders.js":
+var __webpack_exports__ = {};
 /*!******************************!*\
   !*** ./src/InjectHeaders.js ***!
   \******************************/
-/***/ (() => {
-
-throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nError: .env[\"presets\"] must be an object, or undefined");
-
-/***/ })
-
-/******/ 	});
-/************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
-/******/ 	var __webpack_exports__ = {};
-/******/ 	__webpack_modules__["./src/InjectHeaders.js"]();
-/******/ 	UdanLibrary = __webpack_exports__;
-/******/ 	
+var _chrome;let s=document.createElement("script");let scriptpath=(_chrome=chrome)==null||(_chrome=_chrome.runtime)==null?void 0:_chrome.getURL("assets/UDAHeaders.js");s.src=scriptpath;s.onload=function(){};(document.head||document.documentElement).appendChild(s);
+UdanLibrary = __webpack_exports__;
 /******/ })()
 ;
 //# sourceMappingURL=UDAInjectHeaders.js.map

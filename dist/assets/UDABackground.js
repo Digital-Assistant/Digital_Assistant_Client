@@ -523,10 +523,12 @@ const CustomConfig = {
     enableSlowReplay: false,
     enableCustomIcon: false,
     customIcon: 'https://udan.nistapp.com/uda-logo.jpg',
-    realm: "UDAN",
+    realm: "UDAN-Plugin",
     clientId: "backend-service",
-    clientSecret: "cXA2yFTq3ORQfrio2mGXttFaOTfvIC7N",
-    enableHidePanelAfterCompletion: false
+    clientSecret: "lf55acXW38Tvea5Qt1931AyWRaDYtCLL",
+    enableHidePanelAfterCompletion: false,
+    enableStatusSelection: false,
+    enableUDAIconDuringRecording: false // Flag to enable UDA icon during recording
 };
 
 
@@ -566,7 +568,8 @@ const ENDPOINT = {
     fetchRecord: '/search',
     VoteRecord: `/votes/addVote`,
     fetchVoteRecord: `/votes/`,
-    tokenUrl: 'user/token'
+    tokenUrl: 'user/token',
+    statuses: '/status/category/#category#'
 };
 
 
@@ -1546,7 +1549,7 @@ const invokeApi = (url, method, data, parseJson = true) => __awaiter(void 0, voi
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
 (() => {
 "use strict";
 /*!***************************!*\
