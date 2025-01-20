@@ -1,3 +1,4 @@
+# kc test
 module.exports = {
   "presets": [
     ["@babel/preset-env", {
