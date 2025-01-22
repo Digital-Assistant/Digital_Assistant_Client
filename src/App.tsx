@@ -490,7 +490,6 @@ function App(props) {
                     }
                 } else {
                     setHasMorePages(false);
-                    setSearchResults([]);
                 }
             }, CONFIG.apiInvokeTime)
         );
