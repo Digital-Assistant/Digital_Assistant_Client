@@ -25966,6 +25966,1047 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ "./node_modules/qs/lib/formats.js":
+/*!****************************************!*\
+  !*** ./node_modules/qs/lib/formats.js ***!
+  \****************************************/
+/***/ ((module) => {
+
+"use strict";
+
+
+var replace = String.prototype.replace;
+var percentTwenties = /%20/g;
+
+var Format = {
+    RFC1738: 'RFC1738',
+    RFC3986: 'RFC3986'
+};
+
+module.exports = {
+    'default': Format.RFC3986,
+    formatters: {
+        RFC1738: function (value) {
+            return replace.call(value, percentTwenties, '+');
+        },
+        RFC3986: function (value) {
+            return String(value);
+        }
+    },
+    RFC1738: Format.RFC1738,
+    RFC3986: Format.RFC3986
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/qs/lib/index.js":
+/*!**************************************!*\
+  !*** ./node_modules/qs/lib/index.js ***!
+  \**************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+
+var stringify = __webpack_require__(/*! ./stringify */ "./node_modules/qs/lib/stringify.js");
+var parse = __webpack_require__(/*! ./parse */ "./node_modules/qs/lib/parse.js");
+var formats = __webpack_require__(/*! ./formats */ "./node_modules/qs/lib/formats.js");
+
+module.exports = {
+    formats: formats,
+    parse: parse,
+    stringify: stringify
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/qs/lib/parse.js":
+/*!**************************************!*\
+  !*** ./node_modules/qs/lib/parse.js ***!
+  \**************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+
+var utils = __webpack_require__(/*! ./utils */ "./node_modules/qs/lib/utils.js");
+
+var has = Object.prototype.hasOwnProperty;
+var isArray = Array.isArray;
+
+var defaults = {
+    allowDots: false,
+    allowEmptyArrays: false,
+    allowPrototypes: false,
+    allowSparse: false,
+    arrayLimit: 20,
+    charset: 'utf-8',
+    charsetSentinel: false,
+    comma: false,
+    decodeDotInKeys: false,
+    decoder: utils.decode,
+    delimiter: '&',
+    depth: 5,
+    duplicates: 'combine',
+    ignoreQueryPrefix: false,
+    interpretNumericEntities: false,
+    parameterLimit: 1000,
+    parseArrays: true,
+    plainObjects: false,
+    strictDepth: false,
+    strictNullHandling: false,
+    throwOnLimitExceeded: false
+};
+
+var interpretNumericEntities = function (str) {
+    return str.replace(/&#(\d+);/g, function ($0, numberStr) {
+        return String.fromCharCode(parseInt(numberStr, 10));
+    });
+};
+
+var parseArrayValue = function (val, options, currentArrayLength) {
+    if (val && typeof val === 'string' && options.comma && val.indexOf(',') > -1) {
+        return val.split(',');
+    }
+
+    if (options.throwOnLimitExceeded && currentArrayLength >= options.arrayLimit) {
+        throw new RangeError('Array limit exceeded. Only ' + options.arrayLimit + ' element' + (options.arrayLimit === 1 ? '' : 's') + ' allowed in an array.');
+    }
+
+    return val;
+};
+
+// This is what browsers will submit when the ✓ character occurs in an
+// application/x-www-form-urlencoded body and the encoding of the page containing
+// the form is iso-8859-1, or when the submitted form has an accept-charset
+// attribute of iso-8859-1. Presumably also with other charsets that do not contain
+// the ✓ character, such as us-ascii.
+var isoSentinel = 'utf8=%26%2310003%3B'; // encodeURIComponent('&#10003;')
+
+// These are the percent-encoded utf-8 octets representing a checkmark, indicating that the request actually is utf-8 encoded.
+var charsetSentinel = 'utf8=%E2%9C%93'; // encodeURIComponent('✓')
+
+var parseValues = function parseQueryStringValues(str, options) {
+    var obj = { __proto__: null };
+
+    var cleanStr = options.ignoreQueryPrefix ? str.replace(/^\?/, '') : str;
+    cleanStr = cleanStr.replace(/%5B/gi, '[').replace(/%5D/gi, ']');
+
+    var limit = options.parameterLimit === Infinity ? undefined : options.parameterLimit;
+    var parts = cleanStr.split(
+        options.delimiter,
+        options.throwOnLimitExceeded ? limit + 1 : limit
+    );
+
+    if (options.throwOnLimitExceeded && parts.length > limit) {
+        throw new RangeError('Parameter limit exceeded. Only ' + limit + ' parameter' + (limit === 1 ? '' : 's') + ' allowed.');
+    }
+
+    var skipIndex = -1; // Keep track of where the utf8 sentinel was found
+    var i;
+
+    var charset = options.charset;
+    if (options.charsetSentinel) {
+        for (i = 0; i < parts.length; ++i) {
+            if (parts[i].indexOf('utf8=') === 0) {
+                if (parts[i] === charsetSentinel) {
+                    charset = 'utf-8';
+                } else if (parts[i] === isoSentinel) {
+                    charset = 'iso-8859-1';
+                }
+                skipIndex = i;
+                i = parts.length; // The eslint settings do not allow break;
+            }
+        }
+    }
+
+    for (i = 0; i < parts.length; ++i) {
+        if (i === skipIndex) {
+            continue;
+        }
+        var part = parts[i];
+
+        var bracketEqualsPos = part.indexOf(']=');
+        var pos = bracketEqualsPos === -1 ? part.indexOf('=') : bracketEqualsPos + 1;
+
+        var key;
+        var val;
+        if (pos === -1) {
+            key = options.decoder(part, defaults.decoder, charset, 'key');
+            val = options.strictNullHandling ? null : '';
+        } else {
+            key = options.decoder(part.slice(0, pos), defaults.decoder, charset, 'key');
+
+            val = utils.maybeMap(
+                parseArrayValue(
+                    part.slice(pos + 1),
+                    options,
+                    isArray(obj[key]) ? obj[key].length : 0
+                ),
+                function (encodedVal) {
+                    return options.decoder(encodedVal, defaults.decoder, charset, 'value');
+                }
+            );
+        }
+
+        if (val && options.interpretNumericEntities && charset === 'iso-8859-1') {
+            val = interpretNumericEntities(String(val));
+        }
+
+        if (part.indexOf('[]=') > -1) {
+            val = isArray(val) ? [val] : val;
+        }
+
+        var existing = has.call(obj, key);
+        if (existing && options.duplicates === 'combine') {
+            obj[key] = utils.combine(obj[key], val);
+        } else if (!existing || options.duplicates === 'last') {
+            obj[key] = val;
+        }
+    }
+
+    return obj;
+};
+
+var parseObject = function (chain, val, options, valuesParsed) {
+    var currentArrayLength = 0;
+    if (chain.length > 0 && chain[chain.length - 1] === '[]') {
+        var parentKey = chain.slice(0, -1).join('');
+        currentArrayLength = Array.isArray(val) && val[parentKey] ? val[parentKey].length : 0;
+    }
+
+    var leaf = valuesParsed ? val : parseArrayValue(val, options, currentArrayLength);
+
+    for (var i = chain.length - 1; i >= 0; --i) {
+        var obj;
+        var root = chain[i];
+
+        if (root === '[]' && options.parseArrays) {
+            obj = options.allowEmptyArrays && (leaf === '' || (options.strictNullHandling && leaf === null))
+                ? []
+                : utils.combine([], leaf);
+        } else {
+            obj = options.plainObjects ? { __proto__: null } : {};
+            var cleanRoot = root.charAt(0) === '[' && root.charAt(root.length - 1) === ']' ? root.slice(1, -1) : root;
+            var decodedRoot = options.decodeDotInKeys ? cleanRoot.replace(/%2E/g, '.') : cleanRoot;
+            var index = parseInt(decodedRoot, 10);
+            if (!options.parseArrays && decodedRoot === '') {
+                obj = { 0: leaf };
+            } else if (
+                !isNaN(index)
+                && root !== decodedRoot
+                && String(index) === decodedRoot
+                && index >= 0
+                && (options.parseArrays && index <= options.arrayLimit)
+            ) {
+                obj = [];
+                obj[index] = leaf;
+            } else if (decodedRoot !== '__proto__') {
+                obj[decodedRoot] = leaf;
+            }
+        }
+
+        leaf = obj;
+    }
+
+    return leaf;
+};
+
+var parseKeys = function parseQueryStringKeys(givenKey, val, options, valuesParsed) {
+    if (!givenKey) {
+        return;
+    }
+
+    // Transform dot notation to bracket notation
+    var key = options.allowDots ? givenKey.replace(/\.([^.[]+)/g, '[$1]') : givenKey;
+
+    // The regex chunks
+
+    var brackets = /(\[[^[\]]*])/;
+    var child = /(\[[^[\]]*])/g;
+
+    // Get the parent
+
+    var segment = options.depth > 0 && brackets.exec(key);
+    var parent = segment ? key.slice(0, segment.index) : key;
+
+    // Stash the parent if it exists
+
+    var keys = [];
+    if (parent) {
+        // If we aren't using plain objects, optionally prefix keys that would overwrite object prototype properties
+        if (!options.plainObjects && has.call(Object.prototype, parent)) {
+            if (!options.allowPrototypes) {
+                return;
+            }
+        }
+
+        keys.push(parent);
+    }
+
+    // Loop through children appending to the array until we hit depth
+
+    var i = 0;
+    while (options.depth > 0 && (segment = child.exec(key)) !== null && i < options.depth) {
+        i += 1;
+        if (!options.plainObjects && has.call(Object.prototype, segment[1].slice(1, -1))) {
+            if (!options.allowPrototypes) {
+                return;
+            }
+        }
+        keys.push(segment[1]);
+    }
+
+    // If there's a remainder, check strictDepth option for throw, else just add whatever is left
+
+    if (segment) {
+        if (options.strictDepth === true) {
+            throw new RangeError('Input depth exceeded depth option of ' + options.depth + ' and strictDepth is true');
+        }
+        keys.push('[' + key.slice(segment.index) + ']');
+    }
+
+    return parseObject(keys, val, options, valuesParsed);
+};
+
+var normalizeParseOptions = function normalizeParseOptions(opts) {
+    if (!opts) {
+        return defaults;
+    }
+
+    if (typeof opts.allowEmptyArrays !== 'undefined' && typeof opts.allowEmptyArrays !== 'boolean') {
+        throw new TypeError('`allowEmptyArrays` option can only be `true` or `false`, when provided');
+    }
+
+    if (typeof opts.decodeDotInKeys !== 'undefined' && typeof opts.decodeDotInKeys !== 'boolean') {
+        throw new TypeError('`decodeDotInKeys` option can only be `true` or `false`, when provided');
+    }
+
+    if (opts.decoder !== null && typeof opts.decoder !== 'undefined' && typeof opts.decoder !== 'function') {
+        throw new TypeError('Decoder has to be a function.');
+    }
+
+    if (typeof opts.charset !== 'undefined' && opts.charset !== 'utf-8' && opts.charset !== 'iso-8859-1') {
+        throw new TypeError('The charset option must be either utf-8, iso-8859-1, or undefined');
+    }
+
+    if (typeof opts.throwOnLimitExceeded !== 'undefined' && typeof opts.throwOnLimitExceeded !== 'boolean') {
+        throw new TypeError('`throwOnLimitExceeded` option must be a boolean');
+    }
+
+    var charset = typeof opts.charset === 'undefined' ? defaults.charset : opts.charset;
+
+    var duplicates = typeof opts.duplicates === 'undefined' ? defaults.duplicates : opts.duplicates;
+
+    if (duplicates !== 'combine' && duplicates !== 'first' && duplicates !== 'last') {
+        throw new TypeError('The duplicates option must be either combine, first, or last');
+    }
+
+    var allowDots = typeof opts.allowDots === 'undefined' ? opts.decodeDotInKeys === true ? true : defaults.allowDots : !!opts.allowDots;
+
+    return {
+        allowDots: allowDots,
+        allowEmptyArrays: typeof opts.allowEmptyArrays === 'boolean' ? !!opts.allowEmptyArrays : defaults.allowEmptyArrays,
+        allowPrototypes: typeof opts.allowPrototypes === 'boolean' ? opts.allowPrototypes : defaults.allowPrototypes,
+        allowSparse: typeof opts.allowSparse === 'boolean' ? opts.allowSparse : defaults.allowSparse,
+        arrayLimit: typeof opts.arrayLimit === 'number' ? opts.arrayLimit : defaults.arrayLimit,
+        charset: charset,
+        charsetSentinel: typeof opts.charsetSentinel === 'boolean' ? opts.charsetSentinel : defaults.charsetSentinel,
+        comma: typeof opts.comma === 'boolean' ? opts.comma : defaults.comma,
+        decodeDotInKeys: typeof opts.decodeDotInKeys === 'boolean' ? opts.decodeDotInKeys : defaults.decodeDotInKeys,
+        decoder: typeof opts.decoder === 'function' ? opts.decoder : defaults.decoder,
+        delimiter: typeof opts.delimiter === 'string' || utils.isRegExp(opts.delimiter) ? opts.delimiter : defaults.delimiter,
+        // eslint-disable-next-line no-implicit-coercion, no-extra-parens
+        depth: (typeof opts.depth === 'number' || opts.depth === false) ? +opts.depth : defaults.depth,
+        duplicates: duplicates,
+        ignoreQueryPrefix: opts.ignoreQueryPrefix === true,
+        interpretNumericEntities: typeof opts.interpretNumericEntities === 'boolean' ? opts.interpretNumericEntities : defaults.interpretNumericEntities,
+        parameterLimit: typeof opts.parameterLimit === 'number' ? opts.parameterLimit : defaults.parameterLimit,
+        parseArrays: opts.parseArrays !== false,
+        plainObjects: typeof opts.plainObjects === 'boolean' ? opts.plainObjects : defaults.plainObjects,
+        strictDepth: typeof opts.strictDepth === 'boolean' ? !!opts.strictDepth : defaults.strictDepth,
+        strictNullHandling: typeof opts.strictNullHandling === 'boolean' ? opts.strictNullHandling : defaults.strictNullHandling,
+        throwOnLimitExceeded: typeof opts.throwOnLimitExceeded === 'boolean' ? opts.throwOnLimitExceeded : false
+    };
+};
+
+module.exports = function (str, opts) {
+    var options = normalizeParseOptions(opts);
+
+    if (str === '' || str === null || typeof str === 'undefined') {
+        return options.plainObjects ? { __proto__: null } : {};
+    }
+
+    var tempObj = typeof str === 'string' ? parseValues(str, options) : str;
+    var obj = options.plainObjects ? { __proto__: null } : {};
+
+    // Iterate over the keys and setup the new object
+
+    var keys = Object.keys(tempObj);
+    for (var i = 0; i < keys.length; ++i) {
+        var key = keys[i];
+        var newObj = parseKeys(key, tempObj[key], options, typeof str === 'string');
+        obj = utils.merge(obj, newObj, options);
+    }
+
+    if (options.allowSparse === true) {
+        return obj;
+    }
+
+    return utils.compact(obj);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/qs/lib/stringify.js":
+/*!******************************************!*\
+  !*** ./node_modules/qs/lib/stringify.js ***!
+  \******************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+
+var getSideChannel = __webpack_require__(/*! side-channel */ "./node_modules/side-channel/index.js");
+var utils = __webpack_require__(/*! ./utils */ "./node_modules/qs/lib/utils.js");
+var formats = __webpack_require__(/*! ./formats */ "./node_modules/qs/lib/formats.js");
+var has = Object.prototype.hasOwnProperty;
+
+var arrayPrefixGenerators = {
+    brackets: function brackets(prefix) {
+        return prefix + '[]';
+    },
+    comma: 'comma',
+    indices: function indices(prefix, key) {
+        return prefix + '[' + key + ']';
+    },
+    repeat: function repeat(prefix) {
+        return prefix;
+    }
+};
+
+var isArray = Array.isArray;
+var push = Array.prototype.push;
+var pushToArray = function (arr, valueOrArray) {
+    push.apply(arr, isArray(valueOrArray) ? valueOrArray : [valueOrArray]);
+};
+
+var toISO = Date.prototype.toISOString;
+
+var defaultFormat = formats['default'];
+var defaults = {
+    addQueryPrefix: false,
+    allowDots: false,
+    allowEmptyArrays: false,
+    arrayFormat: 'indices',
+    charset: 'utf-8',
+    charsetSentinel: false,
+    commaRoundTrip: false,
+    delimiter: '&',
+    encode: true,
+    encodeDotInKeys: false,
+    encoder: utils.encode,
+    encodeValuesOnly: false,
+    filter: void undefined,
+    format: defaultFormat,
+    formatter: formats.formatters[defaultFormat],
+    // deprecated
+    indices: false,
+    serializeDate: function serializeDate(date) {
+        return toISO.call(date);
+    },
+    skipNulls: false,
+    strictNullHandling: false
+};
+
+var isNonNullishPrimitive = function isNonNullishPrimitive(v) {
+    return typeof v === 'string'
+        || typeof v === 'number'
+        || typeof v === 'boolean'
+        || typeof v === 'symbol'
+        || typeof v === 'bigint';
+};
+
+var sentinel = {};
+
+var stringify = function stringify(
+    object,
+    prefix,
+    generateArrayPrefix,
+    commaRoundTrip,
+    allowEmptyArrays,
+    strictNullHandling,
+    skipNulls,
+    encodeDotInKeys,
+    encoder,
+    filter,
+    sort,
+    allowDots,
+    serializeDate,
+    format,
+    formatter,
+    encodeValuesOnly,
+    charset,
+    sideChannel
+) {
+    var obj = object;
+
+    var tmpSc = sideChannel;
+    var step = 0;
+    var findFlag = false;
+    while ((tmpSc = tmpSc.get(sentinel)) !== void undefined && !findFlag) {
+        // Where object last appeared in the ref tree
+        var pos = tmpSc.get(object);
+        step += 1;
+        if (typeof pos !== 'undefined') {
+            if (pos === step) {
+                throw new RangeError('Cyclic object value');
+            } else {
+                findFlag = true; // Break while
+            }
+        }
+        if (typeof tmpSc.get(sentinel) === 'undefined') {
+            step = 0;
+        }
+    }
+
+    if (typeof filter === 'function') {
+        obj = filter(prefix, obj);
+    } else if (obj instanceof Date) {
+        obj = serializeDate(obj);
+    } else if (generateArrayPrefix === 'comma' && isArray(obj)) {
+        obj = utils.maybeMap(obj, function (value) {
+            if (value instanceof Date) {
+                return serializeDate(value);
+            }
+            return value;
+        });
+    }
+
+    if (obj === null) {
+        if (strictNullHandling) {
+            return encoder && !encodeValuesOnly ? encoder(prefix, defaults.encoder, charset, 'key', format) : prefix;
+        }
+
+        obj = '';
+    }
+
+    if (isNonNullishPrimitive(obj) || utils.isBuffer(obj)) {
+        if (encoder) {
+            var keyValue = encodeValuesOnly ? prefix : encoder(prefix, defaults.encoder, charset, 'key', format);
+            return [formatter(keyValue) + '=' + formatter(encoder(obj, defaults.encoder, charset, 'value', format))];
+        }
+        return [formatter(prefix) + '=' + formatter(String(obj))];
+    }
+
+    var values = [];
+
+    if (typeof obj === 'undefined') {
+        return values;
+    }
+
+    var objKeys;
+    if (generateArrayPrefix === 'comma' && isArray(obj)) {
+        // we need to join elements in
+        if (encodeValuesOnly && encoder) {
+            obj = utils.maybeMap(obj, encoder);
+        }
+        objKeys = [{ value: obj.length > 0 ? obj.join(',') || null : void undefined }];
+    } else if (isArray(filter)) {
+        objKeys = filter;
+    } else {
+        var keys = Object.keys(obj);
+        objKeys = sort ? keys.sort(sort) : keys;
+    }
+
+    var encodedPrefix = encodeDotInKeys ? String(prefix).replace(/\./g, '%2E') : String(prefix);
+
+    var adjustedPrefix = commaRoundTrip && isArray(obj) && obj.length === 1 ? encodedPrefix + '[]' : encodedPrefix;
+
+    if (allowEmptyArrays && isArray(obj) && obj.length === 0) {
+        return adjustedPrefix + '[]';
+    }
+
+    for (var j = 0; j < objKeys.length; ++j) {
+        var key = objKeys[j];
+        var value = typeof key === 'object' && key && typeof key.value !== 'undefined'
+            ? key.value
+            : obj[key];
+
+        if (skipNulls && value === null) {
+            continue;
+        }
+
+        var encodedKey = allowDots && encodeDotInKeys ? String(key).replace(/\./g, '%2E') : String(key);
+        var keyPrefix = isArray(obj)
+            ? typeof generateArrayPrefix === 'function' ? generateArrayPrefix(adjustedPrefix, encodedKey) : adjustedPrefix
+            : adjustedPrefix + (allowDots ? '.' + encodedKey : '[' + encodedKey + ']');
+
+        sideChannel.set(object, step);
+        var valueSideChannel = getSideChannel();
+        valueSideChannel.set(sentinel, sideChannel);
+        pushToArray(values, stringify(
+            value,
+            keyPrefix,
+            generateArrayPrefix,
+            commaRoundTrip,
+            allowEmptyArrays,
+            strictNullHandling,
+            skipNulls,
+            encodeDotInKeys,
+            generateArrayPrefix === 'comma' && encodeValuesOnly && isArray(obj) ? null : encoder,
+            filter,
+            sort,
+            allowDots,
+            serializeDate,
+            format,
+            formatter,
+            encodeValuesOnly,
+            charset,
+            valueSideChannel
+        ));
+    }
+
+    return values;
+};
+
+var normalizeStringifyOptions = function normalizeStringifyOptions(opts) {
+    if (!opts) {
+        return defaults;
+    }
+
+    if (typeof opts.allowEmptyArrays !== 'undefined' && typeof opts.allowEmptyArrays !== 'boolean') {
+        throw new TypeError('`allowEmptyArrays` option can only be `true` or `false`, when provided');
+    }
+
+    if (typeof opts.encodeDotInKeys !== 'undefined' && typeof opts.encodeDotInKeys !== 'boolean') {
+        throw new TypeError('`encodeDotInKeys` option can only be `true` or `false`, when provided');
+    }
+
+    if (opts.encoder !== null && typeof opts.encoder !== 'undefined' && typeof opts.encoder !== 'function') {
+        throw new TypeError('Encoder has to be a function.');
+    }
+
+    var charset = opts.charset || defaults.charset;
+    if (typeof opts.charset !== 'undefined' && opts.charset !== 'utf-8' && opts.charset !== 'iso-8859-1') {
+        throw new TypeError('The charset option must be either utf-8, iso-8859-1, or undefined');
+    }
+
+    var format = formats['default'];
+    if (typeof opts.format !== 'undefined') {
+        if (!has.call(formats.formatters, opts.format)) {
+            throw new TypeError('Unknown format option provided.');
+        }
+        format = opts.format;
+    }
+    var formatter = formats.formatters[format];
+
+    var filter = defaults.filter;
+    if (typeof opts.filter === 'function' || isArray(opts.filter)) {
+        filter = opts.filter;
+    }
+
+    var arrayFormat;
+    if (opts.arrayFormat in arrayPrefixGenerators) {
+        arrayFormat = opts.arrayFormat;
+    } else if ('indices' in opts) {
+        arrayFormat = opts.indices ? 'indices' : 'repeat';
+    } else {
+        arrayFormat = defaults.arrayFormat;
+    }
+
+    if ('commaRoundTrip' in opts && typeof opts.commaRoundTrip !== 'boolean') {
+        throw new TypeError('`commaRoundTrip` must be a boolean, or absent');
+    }
+
+    var allowDots = typeof opts.allowDots === 'undefined' ? opts.encodeDotInKeys === true ? true : defaults.allowDots : !!opts.allowDots;
+
+    return {
+        addQueryPrefix: typeof opts.addQueryPrefix === 'boolean' ? opts.addQueryPrefix : defaults.addQueryPrefix,
+        allowDots: allowDots,
+        allowEmptyArrays: typeof opts.allowEmptyArrays === 'boolean' ? !!opts.allowEmptyArrays : defaults.allowEmptyArrays,
+        arrayFormat: arrayFormat,
+        charset: charset,
+        charsetSentinel: typeof opts.charsetSentinel === 'boolean' ? opts.charsetSentinel : defaults.charsetSentinel,
+        commaRoundTrip: !!opts.commaRoundTrip,
+        delimiter: typeof opts.delimiter === 'undefined' ? defaults.delimiter : opts.delimiter,
+        encode: typeof opts.encode === 'boolean' ? opts.encode : defaults.encode,
+        encodeDotInKeys: typeof opts.encodeDotInKeys === 'boolean' ? opts.encodeDotInKeys : defaults.encodeDotInKeys,
+        encoder: typeof opts.encoder === 'function' ? opts.encoder : defaults.encoder,
+        encodeValuesOnly: typeof opts.encodeValuesOnly === 'boolean' ? opts.encodeValuesOnly : defaults.encodeValuesOnly,
+        filter: filter,
+        format: format,
+        formatter: formatter,
+        serializeDate: typeof opts.serializeDate === 'function' ? opts.serializeDate : defaults.serializeDate,
+        skipNulls: typeof opts.skipNulls === 'boolean' ? opts.skipNulls : defaults.skipNulls,
+        sort: typeof opts.sort === 'function' ? opts.sort : null,
+        strictNullHandling: typeof opts.strictNullHandling === 'boolean' ? opts.strictNullHandling : defaults.strictNullHandling
+    };
+};
+
+module.exports = function (object, opts) {
+    var obj = object;
+    var options = normalizeStringifyOptions(opts);
+
+    var objKeys;
+    var filter;
+
+    if (typeof options.filter === 'function') {
+        filter = options.filter;
+        obj = filter('', obj);
+    } else if (isArray(options.filter)) {
+        filter = options.filter;
+        objKeys = filter;
+    }
+
+    var keys = [];
+
+    if (typeof obj !== 'object' || obj === null) {
+        return '';
+    }
+
+    var generateArrayPrefix = arrayPrefixGenerators[options.arrayFormat];
+    var commaRoundTrip = generateArrayPrefix === 'comma' && options.commaRoundTrip;
+
+    if (!objKeys) {
+        objKeys = Object.keys(obj);
+    }
+
+    if (options.sort) {
+        objKeys.sort(options.sort);
+    }
+
+    var sideChannel = getSideChannel();
+    for (var i = 0; i < objKeys.length; ++i) {
+        var key = objKeys[i];
+        var value = obj[key];
+
+        if (options.skipNulls && value === null) {
+            continue;
+        }
+        pushToArray(keys, stringify(
+            value,
+            key,
+            generateArrayPrefix,
+            commaRoundTrip,
+            options.allowEmptyArrays,
+            options.strictNullHandling,
+            options.skipNulls,
+            options.encodeDotInKeys,
+            options.encode ? options.encoder : null,
+            options.filter,
+            options.sort,
+            options.allowDots,
+            options.serializeDate,
+            options.format,
+            options.formatter,
+            options.encodeValuesOnly,
+            options.charset,
+            sideChannel
+        ));
+    }
+
+    var joined = keys.join(options.delimiter);
+    var prefix = options.addQueryPrefix === true ? '?' : '';
+
+    if (options.charsetSentinel) {
+        if (options.charset === 'iso-8859-1') {
+            // encodeURIComponent('&#10003;'), the "numeric entity" representation of a checkmark
+            prefix += 'utf8=%26%2310003%3B&';
+        } else {
+            // encodeURIComponent('✓')
+            prefix += 'utf8=%E2%9C%93&';
+        }
+    }
+
+    return joined.length > 0 ? prefix + joined : '';
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/qs/lib/utils.js":
+/*!**************************************!*\
+  !*** ./node_modules/qs/lib/utils.js ***!
+  \**************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+
+var formats = __webpack_require__(/*! ./formats */ "./node_modules/qs/lib/formats.js");
+
+var has = Object.prototype.hasOwnProperty;
+var isArray = Array.isArray;
+
+var hexTable = (function () {
+    var array = [];
+    for (var i = 0; i < 256; ++i) {
+        array.push('%' + ((i < 16 ? '0' : '') + i.toString(16)).toUpperCase());
+    }
+
+    return array;
+}());
+
+var compactQueue = function compactQueue(queue) {
+    while (queue.length > 1) {
+        var item = queue.pop();
+        var obj = item.obj[item.prop];
+
+        if (isArray(obj)) {
+            var compacted = [];
+
+            for (var j = 0; j < obj.length; ++j) {
+                if (typeof obj[j] !== 'undefined') {
+                    compacted.push(obj[j]);
+                }
+            }
+
+            item.obj[item.prop] = compacted;
+        }
+    }
+};
+
+var arrayToObject = function arrayToObject(source, options) {
+    var obj = options && options.plainObjects ? { __proto__: null } : {};
+    for (var i = 0; i < source.length; ++i) {
+        if (typeof source[i] !== 'undefined') {
+            obj[i] = source[i];
+        }
+    }
+
+    return obj;
+};
+
+var merge = function merge(target, source, options) {
+    /* eslint no-param-reassign: 0 */
+    if (!source) {
+        return target;
+    }
+
+    if (typeof source !== 'object' && typeof source !== 'function') {
+        if (isArray(target)) {
+            target.push(source);
+        } else if (target && typeof target === 'object') {
+            if (
+                (options && (options.plainObjects || options.allowPrototypes))
+                || !has.call(Object.prototype, source)
+            ) {
+                target[source] = true;
+            }
+        } else {
+            return [target, source];
+        }
+
+        return target;
+    }
+
+    if (!target || typeof target !== 'object') {
+        return [target].concat(source);
+    }
+
+    var mergeTarget = target;
+    if (isArray(target) && !isArray(source)) {
+        mergeTarget = arrayToObject(target, options);
+    }
+
+    if (isArray(target) && isArray(source)) {
+        source.forEach(function (item, i) {
+            if (has.call(target, i)) {
+                var targetItem = target[i];
+                if (targetItem && typeof targetItem === 'object' && item && typeof item === 'object') {
+                    target[i] = merge(targetItem, item, options);
+                } else {
+                    target.push(item);
+                }
+            } else {
+                target[i] = item;
+            }
+        });
+        return target;
+    }
+
+    return Object.keys(source).reduce(function (acc, key) {
+        var value = source[key];
+
+        if (has.call(acc, key)) {
+            acc[key] = merge(acc[key], value, options);
+        } else {
+            acc[key] = value;
+        }
+        return acc;
+    }, mergeTarget);
+};
+
+var assign = function assignSingleSource(target, source) {
+    return Object.keys(source).reduce(function (acc, key) {
+        acc[key] = source[key];
+        return acc;
+    }, target);
+};
+
+var decode = function (str, defaultDecoder, charset) {
+    var strWithoutPlus = str.replace(/\+/g, ' ');
+    if (charset === 'iso-8859-1') {
+        // unescape never throws, no try...catch needed:
+        return strWithoutPlus.replace(/%[0-9a-f]{2}/gi, unescape);
+    }
+    // utf-8
+    try {
+        return decodeURIComponent(strWithoutPlus);
+    } catch (e) {
+        return strWithoutPlus;
+    }
+};
+
+var limit = 1024;
+
+/* eslint operator-linebreak: [2, "before"] */
+
+var encode = function encode(str, defaultEncoder, charset, kind, format) {
+    // This code was originally written by Brian White (mscdex) for the io.js core querystring library.
+    // It has been adapted here for stricter adherence to RFC 3986
+    if (str.length === 0) {
+        return str;
+    }
+
+    var string = str;
+    if (typeof str === 'symbol') {
+        string = Symbol.prototype.toString.call(str);
+    } else if (typeof str !== 'string') {
+        string = String(str);
+    }
+
+    if (charset === 'iso-8859-1') {
+        return escape(string).replace(/%u[0-9a-f]{4}/gi, function ($0) {
+            return '%26%23' + parseInt($0.slice(2), 16) + '%3B';
+        });
+    }
+
+    var out = '';
+    for (var j = 0; j < string.length; j += limit) {
+        var segment = string.length >= limit ? string.slice(j, j + limit) : string;
+        var arr = [];
+
+        for (var i = 0; i < segment.length; ++i) {
+            var c = segment.charCodeAt(i);
+            if (
+                c === 0x2D // -
+                || c === 0x2E // .
+                || c === 0x5F // _
+                || c === 0x7E // ~
+                || (c >= 0x30 && c <= 0x39) // 0-9
+                || (c >= 0x41 && c <= 0x5A) // a-z
+                || (c >= 0x61 && c <= 0x7A) // A-Z
+                || (format === formats.RFC1738 && (c === 0x28 || c === 0x29)) // ( )
+            ) {
+                arr[arr.length] = segment.charAt(i);
+                continue;
+            }
+
+            if (c < 0x80) {
+                arr[arr.length] = hexTable[c];
+                continue;
+            }
+
+            if (c < 0x800) {
+                arr[arr.length] = hexTable[0xC0 | (c >> 6)]
+                    + hexTable[0x80 | (c & 0x3F)];
+                continue;
+            }
+
+            if (c < 0xD800 || c >= 0xE000) {
+                arr[arr.length] = hexTable[0xE0 | (c >> 12)]
+                    + hexTable[0x80 | ((c >> 6) & 0x3F)]
+                    + hexTable[0x80 | (c & 0x3F)];
+                continue;
+            }
+
+            i += 1;
+            c = 0x10000 + (((c & 0x3FF) << 10) | (segment.charCodeAt(i) & 0x3FF));
+
+            arr[arr.length] = hexTable[0xF0 | (c >> 18)]
+                + hexTable[0x80 | ((c >> 12) & 0x3F)]
+                + hexTable[0x80 | ((c >> 6) & 0x3F)]
+                + hexTable[0x80 | (c & 0x3F)];
+        }
+
+        out += arr.join('');
+    }
+
+    return out;
+};
+
+var compact = function compact(value) {
+    var queue = [{ obj: { o: value }, prop: 'o' }];
+    var refs = [];
+
+    for (var i = 0; i < queue.length; ++i) {
+        var item = queue[i];
+        var obj = item.obj[item.prop];
+
+        var keys = Object.keys(obj);
+        for (var j = 0; j < keys.length; ++j) {
+            var key = keys[j];
+            var val = obj[key];
+            if (typeof val === 'object' && val !== null && refs.indexOf(val) === -1) {
+                queue.push({ obj: obj, prop: key });
+                refs.push(val);
+            }
+        }
+    }
+
+    compactQueue(queue);
+
+    return value;
+};
+
+var isRegExp = function isRegExp(obj) {
+    return Object.prototype.toString.call(obj) === '[object RegExp]';
+};
+
+var isBuffer = function isBuffer(obj) {
+    if (!obj || typeof obj !== 'object') {
+        return false;
+    }
+
+    return !!(obj.constructor && obj.constructor.isBuffer && obj.constructor.isBuffer(obj));
+};
+
+var combine = function combine(a, b) {
+    return [].concat(a, b);
+};
+
+var maybeMap = function maybeMap(val, fn) {
+    if (isArray(val)) {
+        var mapped = [];
+        for (var i = 0; i < val.length; i += 1) {
+            mapped.push(fn(val[i]));
+        }
+        return mapped;
+    }
+    return fn(val);
+};
+
+module.exports = {
+    arrayToObject: arrayToObject,
+    assign: assign,
+    combine: combine,
+    compact: compact,
+    decode: decode,
+    encode: encode,
+    isBuffer: isBuffer,
+    isRegExp: isRegExp,
+    maybeMap: maybeMap,
+    merge: merge
+};
+
+
+/***/ }),
+
 /***/ "./node_modules/randexp/lib/randexp.js":
 /*!*********************************************!*\
   !*** ./node_modules/randexp/lib/randexp.js ***!
@@ -36947,15 +37988,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config */ "./src/config/index.ts");
 /* harmony import */ var _userService__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./userService */ "./src/services/userService.ts");
 /* harmony import */ var _util_nodeInfo__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../util/nodeInfo */ "./src/util/nodeInfo.ts");
-/* harmony import */ var typescript_json__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! typescript-json */ "./node_modules/typescript-json/lib/index.js");
-/* harmony import */ var typescript_json__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(typescript_json__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../util */ "./src/util/index.ts");
-/* harmony import */ var domjson__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! domjson */ "./node_modules/domjson/dist/domJSON.js");
-/* harmony import */ var domjson__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(domjson__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _util_recording_utils_mapClickedElementToHtmlFormElement__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../util/recording-utils/mapClickedElementToHtmlFormElement */ "./src/util/recording-utils/mapClickedElementToHtmlFormElement.ts");
-/* harmony import */ var _config_error_log__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../config/error-log */ "./src/config/error-log.ts");
-/* harmony import */ var _util_fetchDomain__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../util/fetchDomain */ "./src/util/fetchDomain.ts");
-/* harmony import */ var react_ga4__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react-ga4 */ "./node_modules/react-ga4/dist/index.js");
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../util */ "./src/util/index.ts");
+/* harmony import */ var domjson__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! domjson */ "./node_modules/domjson/dist/domJSON.js");
+/* harmony import */ var domjson__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(domjson__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _util_recording_utils_mapClickedElementToHtmlFormElement__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../util/recording-utils/mapClickedElementToHtmlFormElement */ "./src/util/recording-utils/mapClickedElementToHtmlFormElement.ts");
+/* harmony import */ var _config_error_log__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../config/error-log */ "./src/config/error-log.ts");
+/* harmony import */ var _util_fetchDomain__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../util/fetchDomain */ "./src/util/fetchDomain.ts");
+/* harmony import */ var react_ga4__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-ga4 */ "./node_modules/react-ga4/dist/index.js");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36965,6 +38004,19 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+/**
+ * This code imports various modules and utilities used throughout the application, including:
+ * - ENDPOINT: configuration for API endpoints
+ * - REST: a utility for making API calls
+ * - CONFIG: general application configuration
+ * - userService: functions for getting the user's session key and user ID
+ * - nodeInfo: a utility for getting information about DOM nodes
+ * - TSON: a library for serializing TypeScript objects to JSON
+ * - various utility functions for working with DOM elements and data storage
+ * - a function for mapping clicked elements to HTML form elements
+ * - logging utilities for console and error logging
+ * - a function for fetching the current domain
+ */
 
 
 
@@ -36975,21 +38027,45 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 
 
 
-
-
+ // @ts-ignore
 /**
  * To record each action/event
  * @param request
  * @returns promise
  */
+/**
+ * Records a set of clicks or other user interactions.
+ *
+ * @param {any} request - An object containing the details of the user interactions to be recorded.
+ * @returns {Promise<any>} A promise that resolves with the result of the API call to record the interactions.
+ */
+/**
+ * Records a set of clicks or other user interactions.
+ *
+ * @param {any} [request] - An object containing the details of the user interactions to be recorded.
+ * @returns {Promise<any>} A promise that resolves with the result of the API call to record the interactions.
+ */
 const recordClicks = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    request.sessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getSessionKey)();
-    const parameters = {
-        url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.Record,
-        method: "POST",
-        body: request,
-    };
-    return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+    try {
+        // Retrieve the user's session key
+        request.sessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getSessionKey)();
+        // Prepare the request parameters
+        const parameters = {
+            // The URL for the API call
+            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.Record,
+            // The HTTP method to use
+            method: "POST",
+            // The request body
+            body: request,
+        };
+        // Call the API
+        return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+    }
+    catch (error) {
+        // Handle any errors that occurred during the API call
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in recordClicks: ${error.message}`, error);
+        throw error;
+    }
 });
 /**
  * Updates the record clicks.
@@ -36998,18 +38074,32 @@ const recordClicks = (request) => __awaiter(void 0, void 0, void 0, function* ()
  * @return {Promise<any>} A promise that resolves with the result of the API call.
  */
 const updateRecordClicks = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    request.sessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getSessionKey)();
-    const parameters = {
-        url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.UpdateRecord,
-        method: "POST",
-        body: request,
-    };
-    return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+    try {
+        // Retrieve the user's session key
+        request.sessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getSessionKey)();
+        // Prepare the request parameters
+        const parameters = {
+            // The URL for the API call
+            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.UpdateRecord,
+            // The HTTP method to use
+            method: "POST",
+            // The request body
+            body: request,
+        };
+        // Call the API
+        return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+    }
+    catch (error) {
+        // Handle any errors that occurred during the API call
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in updateRecordClicks: ${error.message}`, error);
+        throw error;
+    }
 });
 /**
- * To record set of actions/events belong to one recording
- * @param request
- * @returns promise
+ * Records a sequence of user interactions.
+ *
+ * @param request - An object containing the data required to record the sequence of user interactions.
+ * @returns A promise that resolves when the sequence of user interactions has been recorded.
  */
 const recordSequence = (request) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -37032,144 +38122,350 @@ const recordSequence = (request) => __awaiter(void 0, void 0, void 0, function* 
         return response;
     }
     catch (error) {
-        _config_error_log__WEBPACK_IMPORTED_MODULE_9__.UDAConsoleLogger.info('Record Sequence Error:', error);
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAConsoleLogger.info('Record Sequence Error:', error);
         throw error;
         return false;
     }
 });
 /**
- * To record set of actions/events belong to one recording
- * @param request
- * @returns promise
+ * Records a user click event.
+ *
+ * @param request - An object containing the data required to record the user click event.
+ * @returns A promise that resolves when the user click event has been recorded.
  */
 const userClick = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    request.usersessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
-    if (!request.domain || request.domain === '') {
-        request.domain = window.location.host;
+    try {
+        if (!request) {
+            // Request object is required
+            throw new Error("Request object is required");
+        }
+        // Get the user's ID
+        request.usersessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
+        // Set the clicked name to the host of the current page
+        request.clickedname = window.location.host;
+        // Prepare the request parameters
+        const parameters = {
+            // The URL for the API call
+            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.UserClick,
+            // The HTTP method to use
+            method: "PUT",
+            // The request body
+            body: request,
+        };
+        // Call the API
+        return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
     }
-    const parameters = {
-        url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.UserClick,
-        method: "PUT",
-        body: request,
-    };
-    return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
-});
-const deleteRecording = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    request.usersessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
-    const parameters = {
-        url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.DeleteSequence,
-        method: "POST",
-        body: request,
-    };
-    return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
-});
-const updateRecording = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    request.usersessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
-    const parameters = {
-        url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.updateRecordSequence,
-        method: "POST",
-        body: request,
-    };
-    return yield ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+    catch (error) {
+        // Handle any errors that occurred during the API call
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in userClick: ${error.message}`, error);
+        // Re-throw the error so it can be handled by the caller
+        throw error;
+    }
 });
 /**
- * To check profanity validation/filters for sequence name/labels
- * @param request
- * @returns promise
+ * Deletes a recording sequence.
+ *
+ * @param request - An object containing the data required to delete the recording sequence.
+ * @returns A promise that resolves when the recording sequence has been deleted.
+ */
+const deleteRecording = (request) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (!request) {
+            // Request object is required
+            throw new Error("Request object is required");
+        }
+        // Add the user session ID to the request object
+        request.usersessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
+        // Prepare the request parameters
+        const parameters = {
+            // The URL for the API call
+            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.DeleteSequence,
+            // The HTTP method to use
+            method: "POST",
+            // The request body
+            body: request,
+        };
+        // Call the API
+        return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+    }
+    catch (error) {
+        // Handle any errors that occurred during the API call
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in deleteRecording: ${error.message}`, error);
+        // Re-throw the error so it can be handled by the caller
+        throw error;
+    }
+});
+/**
+ * Updates an existing recording session.
+ *
+ * @param request - An object containing the data to update the recording session.
+ * @returns A promise that resolves when the recording session has been updated.
+ */
+const updateRecording = (request) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (!request) {
+            // Request object is required
+            throw new Error("Request object is required");
+        }
+        // Get the user's ID and add it to the request object
+        request.usersessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
+        // Prepare the request parameters
+        const parameters = {
+            // The URL for the API call
+            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.updateRecordSequence,
+            // The HTTP method to use
+            method: "POST",
+            // The request body
+            body: request,
+        };
+        // Call the API
+        return yield ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+    }
+    catch (error) {
+        // Handle any errors that occurred during the API call
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in updateRecording: ${error.message}`, error);
+        // Re-throw the error so it can be handled by the caller
+        throw error;
+    }
+});
+/**
+ * Checks for profanity in the provided request object.
+ *
+ * @param request - The request object containing the text to be checked for profanity.
+ * @returns A promise that resolves with the profanity check result.
  */
 const profanityCheck = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    const headers = new Headers();
-    headers.append("Content-Type", "text/plain");
-    headers.append("Ocp-Apim-Subscription-Key", _config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.profanity.config.key1);
-    const parameters = {
-        url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.ProfanityCheck,
-        method: "POST",
-        body: request,
-        headers,
-    };
-    return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+    try {
+        if (!request) {
+            // Request object is required for the profanity check
+            throw new Error("Request object is required");
+        }
+        // Set the Content-Type header to text/plain
+        const headers = new Headers();
+        headers.append("Content-Type", "text/plain");
+        // Set the Ocp-Apim-Subscription-Key header to the profanity API key
+        headers.append("Ocp-Apim-Subscription-Key", _config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.profanity.config.key1);
+        // Prepare the request parameters
+        const parameters = {
+            // The URL for the API call
+            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.ProfanityCheck,
+            // The HTTP method to use
+            method: "POST",
+            // The request body
+            body: request,
+            // The headers to include in the request
+            headers,
+        };
+        // Call the API
+        return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+    }
+    catch (error) {
+        // Handle any errors that occurred during the API call
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in profanityCheck: ${error.message}`, error);
+        // Re-throw the error so it can be handled by the caller
+        throw error;
+    }
 });
 /**
- * To save click data to REST
- * @param node HTMLElement
- * @param text
- * @param meta
- * @returns promise
+ * Saves click data to a REST service.
+ *
+ * @param node - The clicked HTML element.
+ * @param text - The text content of the clicked element.
+ * @param meta - The metadata associated with the clicked element.
+ * @returns A promise that resolves when the click data has been saved.
  */
 const saveClickData = (node, text, meta) => __awaiter(void 0, void 0, void 0, function* () {
-    // removing circular reference before converting to json with deep clone.
-    const processedNode = yield node.cloneNode(true);
-    let objectData = domjson__WEBPACK_IMPORTED_MODULE_7___default().toJSON(processedNode, { serialProperties: true });
-    if (objectData.meta) {
-        objectData.meta = meta;
-    }
-    else {
-        objectData.meta = meta;
-    }
-    //removing the unwanted attributes which were added while processing click objects.
-    delete (objectData.node.addedClickRecord);
-    delete (objectData.node.hasClick);
-    delete (objectData.node.udaIgnoreChildren);
-    delete (objectData.node.udaIgnoreClick);
-    if ((0,_util__WEBPACK_IMPORTED_MODULE_6__.inArray)(node.nodeName.toLowerCase(), _config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.ignoreNodesFromIndexing) !== -1 && _config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.customNameForSpecialNodes.hasOwnProperty(node.nodeName.toLowerCase())) {
-        objectData.meta.displayText = _config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.customNameForSpecialNodes[node.nodeName.toLowerCase()];
-    }
-    if (!objectData.node.outerHTML) {
-        objectData.node.outerHTML = node.outerHTML;
-    }
-    objectData.offset = (0,_util__WEBPACK_IMPORTED_MODULE_6__.getAbsoluteOffsets)(node);
-    objectData.node.nodeInfo = (0,_util_nodeInfo__WEBPACK_IMPORTED_MODULE_4__.getNodeInfo)(node);
-    // Added to handle the case where screen size is not available
-    if (objectData.node.nodeInfo && (!objectData.node.nodeInfo.screenSize.screen.width || !objectData.node.nodeInfo.screenSize.screen.height)) {
-        return false;
-    }
-    const { enableNodeTypeChangeSelection } = _config__WEBPACK_IMPORTED_MODULE_2__.CONFIG;
-    if (enableNodeTypeChangeSelection) {
-        objectData.meta.systemDetected = (0,_util_recording_utils_mapClickedElementToHtmlFormElement__WEBPACK_IMPORTED_MODULE_8__["default"])(node);
-        if (objectData.meta.systemDetected.inputElement !== 'others') {
-            objectData.meta.selectedElement = objectData.meta.systemDetected;
+    try {
+        // Check if all the required parameters are provided
+        if (!node || !text || !meta) {
+            throw new Error("Required parameters are missing");
         }
+        // node: The clicked HTML element
+        // text: The text content of the clicked element
+        // meta: The metadata associated with the clicked element
+        // removing circular reference before converting to json with deep clone.
+        /**
+         * Processes the clicked node and creates a JSON representation of it, including its metadata.
+         * - Clones the clicked node to create a new node object.
+         * - Logs the absolute offsets of the processed node.
+         * - Converts the processed node to a JSON object using the `domJSON.toJSON` function, with the `serialProperties` option set to `true`.
+         * - Assigns the provided `meta` object to the `meta` property of the JSON object.
+         *
+         * @param {any} node - The clicked node.
+         * @param {string} text - The text content of the clicked node.
+         * @param {any} meta - The metadata associated with the clicked node.
+         * @returns {any} - The processed JSON object containing the node information and metadata.
+         */
+        // Clone the clicked node to create a new node object.
+        const processedNode = yield node.cloneNode(true);
+        // Log the absolute offsets of the processed node.
+        const absoluteOffsets = (0,_util__WEBPACK_IMPORTED_MODULE_5__.getAbsoluteOffsets)(processedNode);
+        if (absoluteOffsets) {
+            console.log(absoluteOffsets);
+        }
+        // Convert the processed node to a JSON object using the `domJSON.toJSON` function, with the `serialProperties` option set to `true`.
+        let objectData = domjson__WEBPACK_IMPORTED_MODULE_6___default().toJSON(processedNode, {
+            serialProperties: true,
+        });
+        // Assign the provided `meta` object to the `meta` property of the JSON object.
+        if (objectData.meta) {
+            objectData.meta = meta;
+        }
+        else {
+            objectData.meta = meta;
+        }
+        //removing the unwanted attributes which were added while processing click objects.
+        /**
+         * Removes certain properties from the `objectData.node` object before saving the click data.
+         * - `addedClickRecord`: This property is removed to prevent duplicate click data from being saved.
+         * - `hasClick`: This property is removed as it is no longer needed after the click data has been saved.
+         * - `udaIgnoreChildren`: This property is removed as it is no longer needed after the click data has been saved.
+         * - `udaIgnoreClick`: This property is removed as it is no longer needed after the click data has been saved.
+         */
+        // Remove `addedClickRecord` property from the `objectData.node` object.
+        // This property is no longer needed after the click data has been saved.
+        delete objectData.node.addedClickRecord;
+        // Remove `hasClick` property from the `objectData.node` object.
+        // This property is no longer needed after the click data has been saved.
+        delete objectData.node.hasClick;
+        // Remove `udaIgnoreChildren` property from the `objectData.node` object.
+        // This property is no longer needed after the click data has been saved.
+        delete objectData.node.udaIgnoreChildren;
+        // Remove `udaIgnoreClick` property from the `objectData.node` object.
+        // This property is no longer needed after the click data has been saved.
+        delete objectData.node.udaIgnoreClick;
+        /**
+         * Processes the clicked node before saving the click data.
+         * - If the clicked node's name is in the `CONFIG.ignoreNodesFromIndexing` list and has a custom name in `CONFIG.customNameForSpecialNodes`, the `displayText` property of the `meta` object is set to the custom name.
+         * - If the `outerHTML` property of the `node` object is not set, it is set to the actual outer HTML of the clicked node.
+         * - The `offset` property of the `objectData` object is set to the absolute offsets of the clicked node.
+         * - The `nodeInfo` property of the `node` object is set to the result of calling the `getNodeInfo` function with the clicked node.
+         */
+        // If the clicked node is in the ignoreNodesFromIndexing list and has a custom name in customNameForSpecialNodes,
+        // set the displayText property of the meta object to the custom name.
+        if ((0,_util__WEBPACK_IMPORTED_MODULE_5__.inArray)(node.nodeName.toLowerCase(), _config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.ignoreNodesFromIndexing) !==
+            -1 &&
+            _config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.customNameForSpecialNodes.hasOwnProperty(node.nodeName.toLowerCase())) {
+            // Set the displayText property to the custom name for special nodes.
+            objectData.meta.displayText =
+                _config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.customNameForSpecialNodes[node.nodeName.toLowerCase()];
+        }
+        // If the outerHTML property of the node object is not set, set it to the actual outer HTML of the clicked node.
+        if (!objectData.node.outerHTML) {
+            // Set the outerHTML property to the actual outer HTML of the clicked node.
+            objectData.node.outerHTML = node.outerHTML;
+        }
+        // Set the offset property of the objectData object to the absolute offsets of the clicked node.
+        objectData.offset = (0,_util__WEBPACK_IMPORTED_MODULE_5__.getAbsoluteOffsets)(node);
+        // Set the nodeInfo property of the node object to the result of calling the getNodeInfo function with the clicked node.
+        objectData.node.nodeInfo = (0,_util_nodeInfo__WEBPACK_IMPORTED_MODULE_4__.getNodeInfo)(node);
+        // Added to handle the case where screen size is not available
+        /**
+         * Handles the case where the screen size information is not available in the node's metadata.
+         * If the screen size is not available, the function returns `false` to indicate that the click data should not be saved.
+         * Otherwise, it checks if the `enableNodeTypeChangeSelection` configuration is enabled, and if so, it maps the clicked element to an HTML form element and updates the `meta` object accordingly.
+         * Finally, it logs the `objectData` to the console with a log level of 3.
+         *
+         * @param {any} objectData - The object containing the data to be saved, including the node information and metadata.
+         * @returns {boolean} - `false` if the screen size information is not available, `true` otherwise.
+         */
+        // If the screen size information is not available in the node's metadata, return false to indicate that the click data should not be saved.
+        if (objectData.node.nodeInfo &&
+            (!objectData.node.nodeInfo.screenSize.screen.width ||
+                !objectData.node.nodeInfo.screenSize.screen.height)) {
+            return false;
+        }
+        const { enableNodeTypeChangeSelection } = _config__WEBPACK_IMPORTED_MODULE_2__.CONFIG;
+        // If the enableNodeTypeChangeSelection configuration is enabled, map the clicked element to an HTML form element and update the meta object accordingly.
+        if (enableNodeTypeChangeSelection) {
+            objectData.meta.systemDetected = (0,_util_recording_utils_mapClickedElementToHtmlFormElement__WEBPACK_IMPORTED_MODULE_7__["default"])(node);
+            // If the system detected input element is not "others", set the selected element to the system detected input element.
+            if (objectData.meta.systemDetected.inputElement !== "others") {
+                objectData.meta.selectedElement = objectData.meta.systemDetected;
+            }
+        }
+        // Log the object data to the console with a log level of 3.
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAConsoleLogger.info(objectData, 3);
+        // let domain = fetchDomain();
+        /**
+         * To save the user's click data to a REST endpoint.
+         * @param clickType - The type of click event being recorded (e.g. "sequencerecord").
+         * @param clickedName - The name or text content of the clicked element.
+         * @param recordId - The ID of the record being updated (default is 0).
+         * @returns An object containing the domain, URL path, clicked node name, HTML5 flag, clicked path, and the serialized object data.
+         * @throws An error if there is a problem saving the click data.
+         */
+        // Get the domain from the window's location object.
+        let domain = window.location.host;
+        // Serialize the object data to a JSON string using JSON.stringify.
+        const jsonString = JSON.stringify(objectData);
+        // Log the JSON string to the console with a log level of 1.
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAConsoleLogger.info(jsonString, 1);
+        // Return an object containing the domain, URL path, clicked node name, HTML5 flag, clicked path, and the serialized object data.
+        return {
+            // The domain of the current web page.
+            domain: domain,
+            // The URL path of the current web page.
+            urlpath: window.location.pathname,
+            // The name or text content of the clicked node.
+            clickednodename: text,
+            // A flag indicating whether the clicked node is an HTML5 element.
+            html5: 0,
+            // The path of the clicked node (empty string by default).
+            clickedpath: "",
+            // The serialized object data as a JSON string.
+            objectdata: jsonString,
+        };
     }
-    _config_error_log__WEBPACK_IMPORTED_MODULE_9__.UDAConsoleLogger.info(objectData, 3);
-    // let domain = fetchDomain();
-    let domain = window.location.host;
-    const jsonString = (input => {
-        return undefined !== input ? JSON.stringify(input) : undefined;
-    })(objectData);
-    _config_error_log__WEBPACK_IMPORTED_MODULE_9__.UDAConsoleLogger.info(jsonString, 1);
-    return {
-        domain: domain,
-        urlpath: window.location.pathname,
-        clickednodename: text,
-        html5: 0,
-        clickedpath: "",
-        objectdata: jsonString,
-    };
+    catch (error) {
+        // Log any errors that occur during the saving process to the console with a log level of 1.
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in saveClickData: ${error.message}`, error);
+        // Rethrow the error to allow the calling code to handle it.
+        throw error;
+    }
 });
 /**
  * * To post click sequence data to REST
  * @param request
  * @returns promise
  */
+/**
+ * To post the recorded user click sequence data to a REST endpoint.
+ * @param request - An object containing the data to be sent in the request payload.
+ * @returns A promise that resolves with the response from the REST endpoint.
+ */
 const postRecordSequenceData = (request) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        // Throw an error if the request object is undefined or null.
+        if (!request) {
+            throw new Error("Request object is required");
+        }
+        // Clear the udanSelectedNodes array at the beginning of each call.
         window.udanSelectedNodes = [];
-        const userclicknodesSet = (0,_util__WEBPACK_IMPORTED_MODULE_6__.getFromStore)(_config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.RECORDING_SEQUENCE, false);
-        if (!userclicknodesSet || !Array.isArray(userclicknodesSet)) {
-            throw new Error('Invalid recording sequence data');
-        }
+        // Retrieve the user click node set from the store.
+        const userclicknodesSet = (0,_util__WEBPACK_IMPORTED_MODULE_5__.getFromStore)(_config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.RECORDING_SEQUENCE, false);
+        // Get the IDs of the user click nodes and join them into a comma-separated string.
         const ids = userclicknodesSet.map((item) => item.id);
-        let domain = (0,_util_fetchDomain__WEBPACK_IMPORTED_MODULE_10__.fetchDomain)();
-        if (!domain) {
-            throw new Error('Domain could not be determined');
-        }
-        const payload = Object.assign(Object.assign({}, request), { domain: domain, isIgnored: 0, isValid: 1, userclicknodelist: ids.join(","), userclicknodesSet });
+        // Get the domain of the current web page.
+        let domain = (0,_util_fetchDomain__WEBPACK_IMPORTED_MODULE_9__.fetchDomain)();
+        // Construct the payload object by merging the request object and the other properties.
+        const payload = Object.assign(Object.assign({}, request), { domain: domain, 
+            // Set the ignored status to 0 (false) by default.
+            isIgnored: 0, 
+            // Set the validity status to 1 (true) by default.
+            isValid: 1, 
+            // Use the comma-separated string of user click node IDs.
+            userclicknodelist: ids.join(","), 
+            // Pass the user click node set as an array of objects.
+            userclicknodesSet });
+        // Call the recordSequence function with the constructed payload and return the result.
         return yield recordSequence(payload);
     }
     catch (error) {
-        _config_error_log__WEBPACK_IMPORTED_MODULE_9__.UDAConsoleLogger.info('Post Record Sequence Error:', error);
+        // Log any errors that occur to the console with a log level of 1.
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in postRecordSequenceData: ${error.message}`, error);
+        // Rethrow the error to allow the calling code to handle it.
         throw error;
-        return false;
     }
 });
 /**
@@ -37177,23 +38473,31 @@ const postRecordSequenceData = (request) => __awaiter(void 0, void 0, void 0, fu
  * @returns  promise
  * @param request
  */
-const recordUserClickData = (clickType = 'sequencerecord', clickedName = '', recordId = 0) => __awaiter(void 0, void 0, void 0, function* () {
-    const payload = {
-        usersessionid: yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getSessionKey)(),
-        clickedname: clickedName,
-        clicktype: clickType,
-        recordid: recordId,
-    };
-    // Sending events to google analytics
-    react_ga4__WEBPACK_IMPORTED_MODULE_11__["default"].event({
-        category: clickType,
-        action: clickType,
-        label: clickedName,
-        value: recordId,
-        nonInteraction: true,
-        transport: "xhr",
-    });
-    return yield userClick(payload);
+const recordUserClickData = (clickType = "sequencerecord", clickedName = "", recordId = 0) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const payload = {
+            usersessionid: yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getSessionKey)(),
+            clickedname: clickedName,
+            clicktype: clickType,
+            recordid: recordId,
+        };
+        // Sending events to google analytics
+        react_ga4__WEBPACK_IMPORTED_MODULE_10__["default"].event({
+            category: clickType,
+            action: clickType,
+            label: clickedName,
+            value: recordId,
+            nonInteraction: true,
+            transport: "xhr",
+        });
+        return yield userClick(payload);
+    }
+    catch (error) {
+        // Log any errors that occur to the console with a log level of 1.
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in recordUserClickData: ${error.message}`, error);
+        // Rethrow the error to allow the calling code to handle it.
+        throw error;
+    }
 });
 /**
  * Fetches status options from the API
@@ -37217,7 +38521,7 @@ const fetchStatuses = (request = { category: 'sequenceList' }) => __awaiter(void
         return response;
     }
     catch (error) {
-        _config_error_log__WEBPACK_IMPORTED_MODULE_9__.UDAConsoleLogger.info('Fetch Status Error:', error);
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAConsoleLogger.info('Fetch Status Error:', error);
         console.log(error);
         return Promise.reject(error);
     }
@@ -37252,34 +38556,56 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+/**
+ * Imports various utility functions and constants used in the search service.
+ * - `ENDPOINT`: Provides the endpoint URLs for the search-related API calls.
+ * - `recordUserClickData`: Records user click data for search-related actions.
+ * - `REST`: Provides utility functions for processing API request parameters.
+ * - `specialNodes`: Provides a list of special node types used in the application.
+ * - `getUserId`: Retrieves the user's session ID.
+ */
 
 
 
 
 /**
- * To serve search results
- * @param request
- * @returns promise
+ * Fetches search results from the backend with error handling.
+ *
+ * @param request - An optional object containing the following properties:
+ *   - keyword: The search keyword to record user click data.
+ *   - page: The page number for the search results.
+ *   - domain: The domain to filter the search results.
+ *   - additionalParams: Any additional parameters to include in the search request.
+ *   - userSessionId: The user's session ID.
+ * @returns A promise that resolves to the search results.
  */
 const fetchSearchResults = (request) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if ((request === null || request === void 0 ? void 0 : request.keyword) && request.keyword !== '') {
-            (0,___WEBPACK_IMPORTED_MODULE_1__.recordUserClickData)('search', request.keyword);
+        // If the keyword is not empty, record user click data.
+        if ((request === null || request === void 0 ? void 0 : request.keyword) && request.keyword !== "") {
+            (0,___WEBPACK_IMPORTED_MODULE_1__.recordUserClickData)("search", request.keyword);
         }
+        // Retrieve the user's session ID.
         request.userSessionId = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
+        // If additionalParams is null, delete it from the request object.
         if (request.additionalParams === null) {
             delete request.additionalParams;
         }
+        // Construct the API call parameters based on whether additionalParams is present.
         let parameters;
         if (request.additionalParams != null) {
             parameters = {
+                // Use the SearchWithPermissions endpoint when additionalParams is present.
                 url: ___WEBPACK_IMPORTED_MODULE_1__.REST.processArgs(_config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.SearchWithPermissions, request),
+                // Use the GET method.
                 method: "GET",
             };
         }
         else {
             parameters = {
+                // Use the Search endpoint when additionalParams is not present.
                 url: ___WEBPACK_IMPORTED_MODULE_1__.REST.processArgs(_config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.Search, request),
+                // Use the GET method.
                 method: "GET",
             };
         }
@@ -37302,43 +38628,73 @@ const fetchSearchResults = (request) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 /**
- * To serve search results
- * @param request
- * @returns promise
+ * Fetch a record from the backend with optional additional parameters and error handling.
+ * @param request - An optional object containing the following properties:
+ *   - id: The ID of the record to fetch.
+ *   - domain: The domain to filter the record.
+ *   - additionalParams: Any additional parameters to include in the record fetch request.
+ *   - userSessionId: The user's session ID.
+ * @returns A promise that resolves to the fetched record.
  */
 const fetchRecord = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    if (request.additionalParams === null) {
-        delete request.additionalParams;
+    try {
+        // If additionalParams is null, remove it from the request object
+        if (request.additionalParams === null) {
+            delete request.additionalParams;
+        }
+        else {
+            // If additionalParams is present, add the userSessionId to the request object
+            request.userSessionId = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
+        }
+        let parameters;
+        let url = _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.fetchRecord;
+        // Determine which endpoint to use based on whether additionalParams is present
+        if (request.additionalParams != null) {
+            url += "/withPermissions";
+        }
+        // Construct the full URL by appending the id and domain to the endpoint URL
+        url += "/" + request.id + "?domain=" + request.domain;
+        // If additionalParams is present, append it to the URL
+        if (request.additionalParams != null) {
+            url +=
+                "&additionalParams=" +
+                    request.additionalParams +
+                    "&userSessionId=" +
+                    request.userSessionId;
+        }
+        // Construct the API call parameters
+        parameters = {
+            url,
+            method: "GET",
+        };
+        // Make the API call and return the result
+        return yield ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
     }
-    else {
-        request.userSessionId = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
+    catch (error) {
+        // Log the error and throw a new error with a user-friendly message
+        console.error("Error fetching record:", error);
+        throw new Error(`Failed to fetch record: ${error.message}`);
     }
-    let parameters;
-    let url = _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.fetchRecord;
-    if (request.additionalParams != null) {
-        url += '/withPermissions';
-    }
-    url += '/' + request.id + '?domain=' + request.domain;
-    if (request.additionalParams != null) {
-        url += '&additionalParams=' + request.additionalParams + '&userSessionId=' + request.userSessionId;
-    }
-    parameters = {
-        url,
-        method: "GET",
-    };
-    return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
 });
 /**
- * Fetch special nodes processing from backend
- * @param request
+ * Fetch special nodes processing from backend with error handling
+ * @param request - An optional object containing parameters for the special nodes request
+ * @returns A promise that resolves to the fetched special nodes
  */
 const fetchSpecialNodes = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    const parameters = {
-        url: ___WEBPACK_IMPORTED_MODULE_1__.REST.processArgs(_config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.SpecialNodes, request),
-        method: "GET",
-    };
-    // return REST.apiCal(parameters);
-    return _util_specialNodes__WEBPACK_IMPORTED_MODULE_2__.specialNodes;
+    try {
+        // Construct the API call parameters by processing the request using the REST.processArgs function
+        const parameters = {
+            url: ___WEBPACK_IMPORTED_MODULE_1__.REST.processArgs(_config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.SpecialNodes, request),
+            method: "GET",
+        };
+        return _util_specialNodes__WEBPACK_IMPORTED_MODULE_2__.specialNodes;
+    }
+    catch (error) {
+        // Log the error and throw a new error with a user-friendly message
+        console.error("Error fetching special nodes:", error);
+        throw new Error(`Failed to fetch special nodes: ${error.message}`);
+    }
 });
 
 
@@ -37358,9 +38714,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util */ "./src/util/index.ts");
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config */ "./src/config/index.ts");
-/**
- * @author Yureswar Ravuri
- */
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -37370,11 +38723,12 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-
-
 /**
- * For getting user id from the storage
+ * Imports the `getFromStore` utility function from the "../util" module.
+ * Imports the `CONFIG` object from the "../config" module.
  */
+
+
 /**
  * Retrieves the user's ID from the application's storage.
  *
@@ -37395,7 +38749,7 @@ const getUserId = () => __awaiter(void 0, void 0, void 0, function* () {
     }
     catch (error) {
         // Log the error to the console
-        console.error("Error retrieving user ID:", error);
+        console.log("Error retrieving user ID:", error);
         // Throw a new Error with a custom message
         throw new Error("Failed to retrieve user ID");
     }
@@ -37426,7 +38780,7 @@ const getSessionKey = () => __awaiter(void 0, void 0, void 0, function* () {
     }
     catch (error) {
         // Log the error to the console
-        console.error("Error retrieving session key:", error);
+        console.log("Error retrieving session key:", error);
         // Throw a new Error with a custom message
         throw new Error("Failed to retrieve session key");
     }
@@ -41040,1016 +42394,6 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/*! https://mths.be/punycode v1.4.1 by @mathia
 
 /***/ }),
 
-/***/ "./node_modules/url/node_modules/qs/lib/formats.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/url/node_modules/qs/lib/formats.js ***!
-  \*********************************************************/
-/***/ ((module) => {
-
-"use strict";
-
-
-var replace = String.prototype.replace;
-var percentTwenties = /%20/g;
-
-var Format = {
-    RFC1738: 'RFC1738',
-    RFC3986: 'RFC3986'
-};
-
-module.exports = {
-    'default': Format.RFC3986,
-    formatters: {
-        RFC1738: function (value) {
-            return replace.call(value, percentTwenties, '+');
-        },
-        RFC3986: function (value) {
-            return String(value);
-        }
-    },
-    RFC1738: Format.RFC1738,
-    RFC3986: Format.RFC3986
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/url/node_modules/qs/lib/index.js":
-/*!*******************************************************!*\
-  !*** ./node_modules/url/node_modules/qs/lib/index.js ***!
-  \*******************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var stringify = __webpack_require__(/*! ./stringify */ "./node_modules/url/node_modules/qs/lib/stringify.js");
-var parse = __webpack_require__(/*! ./parse */ "./node_modules/url/node_modules/qs/lib/parse.js");
-var formats = __webpack_require__(/*! ./formats */ "./node_modules/url/node_modules/qs/lib/formats.js");
-
-module.exports = {
-    formats: formats,
-    parse: parse,
-    stringify: stringify
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/url/node_modules/qs/lib/parse.js":
-/*!*******************************************************!*\
-  !*** ./node_modules/url/node_modules/qs/lib/parse.js ***!
-  \*******************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./utils */ "./node_modules/url/node_modules/qs/lib/utils.js");
-
-var has = Object.prototype.hasOwnProperty;
-var isArray = Array.isArray;
-
-var defaults = {
-    allowDots: false,
-    allowEmptyArrays: false,
-    allowPrototypes: false,
-    allowSparse: false,
-    arrayLimit: 20,
-    charset: 'utf-8',
-    charsetSentinel: false,
-    comma: false,
-    decodeDotInKeys: false,
-    decoder: utils.decode,
-    delimiter: '&',
-    depth: 5,
-    duplicates: 'combine',
-    ignoreQueryPrefix: false,
-    interpretNumericEntities: false,
-    parameterLimit: 1000,
-    parseArrays: true,
-    plainObjects: false,
-    strictDepth: false,
-    strictNullHandling: false
-};
-
-var interpretNumericEntities = function (str) {
-    return str.replace(/&#(\d+);/g, function ($0, numberStr) {
-        return String.fromCharCode(parseInt(numberStr, 10));
-    });
-};
-
-var parseArrayValue = function (val, options) {
-    if (val && typeof val === 'string' && options.comma && val.indexOf(',') > -1) {
-        return val.split(',');
-    }
-
-    return val;
-};
-
-// This is what browsers will submit when the ✓ character occurs in an
-// application/x-www-form-urlencoded body and the encoding of the page containing
-// the form is iso-8859-1, or when the submitted form has an accept-charset
-// attribute of iso-8859-1. Presumably also with other charsets that do not contain
-// the ✓ character, such as us-ascii.
-var isoSentinel = 'utf8=%26%2310003%3B'; // encodeURIComponent('&#10003;')
-
-// These are the percent-encoded utf-8 octets representing a checkmark, indicating that the request actually is utf-8 encoded.
-var charsetSentinel = 'utf8=%E2%9C%93'; // encodeURIComponent('✓')
-
-var parseValues = function parseQueryStringValues(str, options) {
-    var obj = { __proto__: null };
-
-    var cleanStr = options.ignoreQueryPrefix ? str.replace(/^\?/, '') : str;
-    cleanStr = cleanStr.replace(/%5B/gi, '[').replace(/%5D/gi, ']');
-    var limit = options.parameterLimit === Infinity ? undefined : options.parameterLimit;
-    var parts = cleanStr.split(options.delimiter, limit);
-    var skipIndex = -1; // Keep track of where the utf8 sentinel was found
-    var i;
-
-    var charset = options.charset;
-    if (options.charsetSentinel) {
-        for (i = 0; i < parts.length; ++i) {
-            if (parts[i].indexOf('utf8=') === 0) {
-                if (parts[i] === charsetSentinel) {
-                    charset = 'utf-8';
-                } else if (parts[i] === isoSentinel) {
-                    charset = 'iso-8859-1';
-                }
-                skipIndex = i;
-                i = parts.length; // The eslint settings do not allow break;
-            }
-        }
-    }
-
-    for (i = 0; i < parts.length; ++i) {
-        if (i === skipIndex) {
-            continue;
-        }
-        var part = parts[i];
-
-        var bracketEqualsPos = part.indexOf(']=');
-        var pos = bracketEqualsPos === -1 ? part.indexOf('=') : bracketEqualsPos + 1;
-
-        var key;
-        var val;
-        if (pos === -1) {
-            key = options.decoder(part, defaults.decoder, charset, 'key');
-            val = options.strictNullHandling ? null : '';
-        } else {
-            key = options.decoder(part.slice(0, pos), defaults.decoder, charset, 'key');
-            val = utils.maybeMap(
-                parseArrayValue(part.slice(pos + 1), options),
-                function (encodedVal) {
-                    return options.decoder(encodedVal, defaults.decoder, charset, 'value');
-                }
-            );
-        }
-
-        if (val && options.interpretNumericEntities && charset === 'iso-8859-1') {
-            val = interpretNumericEntities(String(val));
-        }
-
-        if (part.indexOf('[]=') > -1) {
-            val = isArray(val) ? [val] : val;
-        }
-
-        var existing = has.call(obj, key);
-        if (existing && options.duplicates === 'combine') {
-            obj[key] = utils.combine(obj[key], val);
-        } else if (!existing || options.duplicates === 'last') {
-            obj[key] = val;
-        }
-    }
-
-    return obj;
-};
-
-var parseObject = function (chain, val, options, valuesParsed) {
-    var leaf = valuesParsed ? val : parseArrayValue(val, options);
-
-    for (var i = chain.length - 1; i >= 0; --i) {
-        var obj;
-        var root = chain[i];
-
-        if (root === '[]' && options.parseArrays) {
-            obj = options.allowEmptyArrays && (leaf === '' || (options.strictNullHandling && leaf === null))
-                ? []
-                : [].concat(leaf);
-        } else {
-            obj = options.plainObjects ? { __proto__: null } : {};
-            var cleanRoot = root.charAt(0) === '[' && root.charAt(root.length - 1) === ']' ? root.slice(1, -1) : root;
-            var decodedRoot = options.decodeDotInKeys ? cleanRoot.replace(/%2E/g, '.') : cleanRoot;
-            var index = parseInt(decodedRoot, 10);
-            if (!options.parseArrays && decodedRoot === '') {
-                obj = { 0: leaf };
-            } else if (
-                !isNaN(index)
-                && root !== decodedRoot
-                && String(index) === decodedRoot
-                && index >= 0
-                && (options.parseArrays && index <= options.arrayLimit)
-            ) {
-                obj = [];
-                obj[index] = leaf;
-            } else if (decodedRoot !== '__proto__') {
-                obj[decodedRoot] = leaf;
-            }
-        }
-
-        leaf = obj;
-    }
-
-    return leaf;
-};
-
-var parseKeys = function parseQueryStringKeys(givenKey, val, options, valuesParsed) {
-    if (!givenKey) {
-        return;
-    }
-
-    // Transform dot notation to bracket notation
-    var key = options.allowDots ? givenKey.replace(/\.([^.[]+)/g, '[$1]') : givenKey;
-
-    // The regex chunks
-
-    var brackets = /(\[[^[\]]*])/;
-    var child = /(\[[^[\]]*])/g;
-
-    // Get the parent
-
-    var segment = options.depth > 0 && brackets.exec(key);
-    var parent = segment ? key.slice(0, segment.index) : key;
-
-    // Stash the parent if it exists
-
-    var keys = [];
-    if (parent) {
-        // If we aren't using plain objects, optionally prefix keys that would overwrite object prototype properties
-        if (!options.plainObjects && has.call(Object.prototype, parent)) {
-            if (!options.allowPrototypes) {
-                return;
-            }
-        }
-
-        keys.push(parent);
-    }
-
-    // Loop through children appending to the array until we hit depth
-
-    var i = 0;
-    while (options.depth > 0 && (segment = child.exec(key)) !== null && i < options.depth) {
-        i += 1;
-        if (!options.plainObjects && has.call(Object.prototype, segment[1].slice(1, -1))) {
-            if (!options.allowPrototypes) {
-                return;
-            }
-        }
-        keys.push(segment[1]);
-    }
-
-    // If there's a remainder, check strictDepth option for throw, else just add whatever is left
-
-    if (segment) {
-        if (options.strictDepth === true) {
-            throw new RangeError('Input depth exceeded depth option of ' + options.depth + ' and strictDepth is true');
-        }
-        keys.push('[' + key.slice(segment.index) + ']');
-    }
-
-    return parseObject(keys, val, options, valuesParsed);
-};
-
-var normalizeParseOptions = function normalizeParseOptions(opts) {
-    if (!opts) {
-        return defaults;
-    }
-
-    if (typeof opts.allowEmptyArrays !== 'undefined' && typeof opts.allowEmptyArrays !== 'boolean') {
-        throw new TypeError('`allowEmptyArrays` option can only be `true` or `false`, when provided');
-    }
-
-    if (typeof opts.decodeDotInKeys !== 'undefined' && typeof opts.decodeDotInKeys !== 'boolean') {
-        throw new TypeError('`decodeDotInKeys` option can only be `true` or `false`, when provided');
-    }
-
-    if (opts.decoder !== null && typeof opts.decoder !== 'undefined' && typeof opts.decoder !== 'function') {
-        throw new TypeError('Decoder has to be a function.');
-    }
-
-    if (typeof opts.charset !== 'undefined' && opts.charset !== 'utf-8' && opts.charset !== 'iso-8859-1') {
-        throw new TypeError('The charset option must be either utf-8, iso-8859-1, or undefined');
-    }
-    var charset = typeof opts.charset === 'undefined' ? defaults.charset : opts.charset;
-
-    var duplicates = typeof opts.duplicates === 'undefined' ? defaults.duplicates : opts.duplicates;
-
-    if (duplicates !== 'combine' && duplicates !== 'first' && duplicates !== 'last') {
-        throw new TypeError('The duplicates option must be either combine, first, or last');
-    }
-
-    var allowDots = typeof opts.allowDots === 'undefined' ? opts.decodeDotInKeys === true ? true : defaults.allowDots : !!opts.allowDots;
-
-    return {
-        allowDots: allowDots,
-        allowEmptyArrays: typeof opts.allowEmptyArrays === 'boolean' ? !!opts.allowEmptyArrays : defaults.allowEmptyArrays,
-        allowPrototypes: typeof opts.allowPrototypes === 'boolean' ? opts.allowPrototypes : defaults.allowPrototypes,
-        allowSparse: typeof opts.allowSparse === 'boolean' ? opts.allowSparse : defaults.allowSparse,
-        arrayLimit: typeof opts.arrayLimit === 'number' ? opts.arrayLimit : defaults.arrayLimit,
-        charset: charset,
-        charsetSentinel: typeof opts.charsetSentinel === 'boolean' ? opts.charsetSentinel : defaults.charsetSentinel,
-        comma: typeof opts.comma === 'boolean' ? opts.comma : defaults.comma,
-        decodeDotInKeys: typeof opts.decodeDotInKeys === 'boolean' ? opts.decodeDotInKeys : defaults.decodeDotInKeys,
-        decoder: typeof opts.decoder === 'function' ? opts.decoder : defaults.decoder,
-        delimiter: typeof opts.delimiter === 'string' || utils.isRegExp(opts.delimiter) ? opts.delimiter : defaults.delimiter,
-        // eslint-disable-next-line no-implicit-coercion, no-extra-parens
-        depth: (typeof opts.depth === 'number' || opts.depth === false) ? +opts.depth : defaults.depth,
-        duplicates: duplicates,
-        ignoreQueryPrefix: opts.ignoreQueryPrefix === true,
-        interpretNumericEntities: typeof opts.interpretNumericEntities === 'boolean' ? opts.interpretNumericEntities : defaults.interpretNumericEntities,
-        parameterLimit: typeof opts.parameterLimit === 'number' ? opts.parameterLimit : defaults.parameterLimit,
-        parseArrays: opts.parseArrays !== false,
-        plainObjects: typeof opts.plainObjects === 'boolean' ? opts.plainObjects : defaults.plainObjects,
-        strictDepth: typeof opts.strictDepth === 'boolean' ? !!opts.strictDepth : defaults.strictDepth,
-        strictNullHandling: typeof opts.strictNullHandling === 'boolean' ? opts.strictNullHandling : defaults.strictNullHandling
-    };
-};
-
-module.exports = function (str, opts) {
-    var options = normalizeParseOptions(opts);
-
-    if (str === '' || str === null || typeof str === 'undefined') {
-        return options.plainObjects ? { __proto__: null } : {};
-    }
-
-    var tempObj = typeof str === 'string' ? parseValues(str, options) : str;
-    var obj = options.plainObjects ? { __proto__: null } : {};
-
-    // Iterate over the keys and setup the new object
-
-    var keys = Object.keys(tempObj);
-    for (var i = 0; i < keys.length; ++i) {
-        var key = keys[i];
-        var newObj = parseKeys(key, tempObj[key], options, typeof str === 'string');
-        obj = utils.merge(obj, newObj, options);
-    }
-
-    if (options.allowSparse === true) {
-        return obj;
-    }
-
-    return utils.compact(obj);
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/url/node_modules/qs/lib/stringify.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/url/node_modules/qs/lib/stringify.js ***!
-  \***********************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var getSideChannel = __webpack_require__(/*! side-channel */ "./node_modules/side-channel/index.js");
-var utils = __webpack_require__(/*! ./utils */ "./node_modules/url/node_modules/qs/lib/utils.js");
-var formats = __webpack_require__(/*! ./formats */ "./node_modules/url/node_modules/qs/lib/formats.js");
-var has = Object.prototype.hasOwnProperty;
-
-var arrayPrefixGenerators = {
-    brackets: function brackets(prefix) {
-        return prefix + '[]';
-    },
-    comma: 'comma',
-    indices: function indices(prefix, key) {
-        return prefix + '[' + key + ']';
-    },
-    repeat: function repeat(prefix) {
-        return prefix;
-    }
-};
-
-var isArray = Array.isArray;
-var push = Array.prototype.push;
-var pushToArray = function (arr, valueOrArray) {
-    push.apply(arr, isArray(valueOrArray) ? valueOrArray : [valueOrArray]);
-};
-
-var toISO = Date.prototype.toISOString;
-
-var defaultFormat = formats['default'];
-var defaults = {
-    addQueryPrefix: false,
-    allowDots: false,
-    allowEmptyArrays: false,
-    arrayFormat: 'indices',
-    charset: 'utf-8',
-    charsetSentinel: false,
-    commaRoundTrip: false,
-    delimiter: '&',
-    encode: true,
-    encodeDotInKeys: false,
-    encoder: utils.encode,
-    encodeValuesOnly: false,
-    filter: void undefined,
-    format: defaultFormat,
-    formatter: formats.formatters[defaultFormat],
-    // deprecated
-    indices: false,
-    serializeDate: function serializeDate(date) {
-        return toISO.call(date);
-    },
-    skipNulls: false,
-    strictNullHandling: false
-};
-
-var isNonNullishPrimitive = function isNonNullishPrimitive(v) {
-    return typeof v === 'string'
-        || typeof v === 'number'
-        || typeof v === 'boolean'
-        || typeof v === 'symbol'
-        || typeof v === 'bigint';
-};
-
-var sentinel = {};
-
-var stringify = function stringify(
-    object,
-    prefix,
-    generateArrayPrefix,
-    commaRoundTrip,
-    allowEmptyArrays,
-    strictNullHandling,
-    skipNulls,
-    encodeDotInKeys,
-    encoder,
-    filter,
-    sort,
-    allowDots,
-    serializeDate,
-    format,
-    formatter,
-    encodeValuesOnly,
-    charset,
-    sideChannel
-) {
-    var obj = object;
-
-    var tmpSc = sideChannel;
-    var step = 0;
-    var findFlag = false;
-    while ((tmpSc = tmpSc.get(sentinel)) !== void undefined && !findFlag) {
-        // Where object last appeared in the ref tree
-        var pos = tmpSc.get(object);
-        step += 1;
-        if (typeof pos !== 'undefined') {
-            if (pos === step) {
-                throw new RangeError('Cyclic object value');
-            } else {
-                findFlag = true; // Break while
-            }
-        }
-        if (typeof tmpSc.get(sentinel) === 'undefined') {
-            step = 0;
-        }
-    }
-
-    if (typeof filter === 'function') {
-        obj = filter(prefix, obj);
-    } else if (obj instanceof Date) {
-        obj = serializeDate(obj);
-    } else if (generateArrayPrefix === 'comma' && isArray(obj)) {
-        obj = utils.maybeMap(obj, function (value) {
-            if (value instanceof Date) {
-                return serializeDate(value);
-            }
-            return value;
-        });
-    }
-
-    if (obj === null) {
-        if (strictNullHandling) {
-            return encoder && !encodeValuesOnly ? encoder(prefix, defaults.encoder, charset, 'key', format) : prefix;
-        }
-
-        obj = '';
-    }
-
-    if (isNonNullishPrimitive(obj) || utils.isBuffer(obj)) {
-        if (encoder) {
-            var keyValue = encodeValuesOnly ? prefix : encoder(prefix, defaults.encoder, charset, 'key', format);
-            return [formatter(keyValue) + '=' + formatter(encoder(obj, defaults.encoder, charset, 'value', format))];
-        }
-        return [formatter(prefix) + '=' + formatter(String(obj))];
-    }
-
-    var values = [];
-
-    if (typeof obj === 'undefined') {
-        return values;
-    }
-
-    var objKeys;
-    if (generateArrayPrefix === 'comma' && isArray(obj)) {
-        // we need to join elements in
-        if (encodeValuesOnly && encoder) {
-            obj = utils.maybeMap(obj, encoder);
-        }
-        objKeys = [{ value: obj.length > 0 ? obj.join(',') || null : void undefined }];
-    } else if (isArray(filter)) {
-        objKeys = filter;
-    } else {
-        var keys = Object.keys(obj);
-        objKeys = sort ? keys.sort(sort) : keys;
-    }
-
-    var encodedPrefix = encodeDotInKeys ? String(prefix).replace(/\./g, '%2E') : String(prefix);
-
-    var adjustedPrefix = commaRoundTrip && isArray(obj) && obj.length === 1 ? encodedPrefix + '[]' : encodedPrefix;
-
-    if (allowEmptyArrays && isArray(obj) && obj.length === 0) {
-        return adjustedPrefix + '[]';
-    }
-
-    for (var j = 0; j < objKeys.length; ++j) {
-        var key = objKeys[j];
-        var value = typeof key === 'object' && key && typeof key.value !== 'undefined'
-            ? key.value
-            : obj[key];
-
-        if (skipNulls && value === null) {
-            continue;
-        }
-
-        var encodedKey = allowDots && encodeDotInKeys ? String(key).replace(/\./g, '%2E') : String(key);
-        var keyPrefix = isArray(obj)
-            ? typeof generateArrayPrefix === 'function' ? generateArrayPrefix(adjustedPrefix, encodedKey) : adjustedPrefix
-            : adjustedPrefix + (allowDots ? '.' + encodedKey : '[' + encodedKey + ']');
-
-        sideChannel.set(object, step);
-        var valueSideChannel = getSideChannel();
-        valueSideChannel.set(sentinel, sideChannel);
-        pushToArray(values, stringify(
-            value,
-            keyPrefix,
-            generateArrayPrefix,
-            commaRoundTrip,
-            allowEmptyArrays,
-            strictNullHandling,
-            skipNulls,
-            encodeDotInKeys,
-            generateArrayPrefix === 'comma' && encodeValuesOnly && isArray(obj) ? null : encoder,
-            filter,
-            sort,
-            allowDots,
-            serializeDate,
-            format,
-            formatter,
-            encodeValuesOnly,
-            charset,
-            valueSideChannel
-        ));
-    }
-
-    return values;
-};
-
-var normalizeStringifyOptions = function normalizeStringifyOptions(opts) {
-    if (!opts) {
-        return defaults;
-    }
-
-    if (typeof opts.allowEmptyArrays !== 'undefined' && typeof opts.allowEmptyArrays !== 'boolean') {
-        throw new TypeError('`allowEmptyArrays` option can only be `true` or `false`, when provided');
-    }
-
-    if (typeof opts.encodeDotInKeys !== 'undefined' && typeof opts.encodeDotInKeys !== 'boolean') {
-        throw new TypeError('`encodeDotInKeys` option can only be `true` or `false`, when provided');
-    }
-
-    if (opts.encoder !== null && typeof opts.encoder !== 'undefined' && typeof opts.encoder !== 'function') {
-        throw new TypeError('Encoder has to be a function.');
-    }
-
-    var charset = opts.charset || defaults.charset;
-    if (typeof opts.charset !== 'undefined' && opts.charset !== 'utf-8' && opts.charset !== 'iso-8859-1') {
-        throw new TypeError('The charset option must be either utf-8, iso-8859-1, or undefined');
-    }
-
-    var format = formats['default'];
-    if (typeof opts.format !== 'undefined') {
-        if (!has.call(formats.formatters, opts.format)) {
-            throw new TypeError('Unknown format option provided.');
-        }
-        format = opts.format;
-    }
-    var formatter = formats.formatters[format];
-
-    var filter = defaults.filter;
-    if (typeof opts.filter === 'function' || isArray(opts.filter)) {
-        filter = opts.filter;
-    }
-
-    var arrayFormat;
-    if (opts.arrayFormat in arrayPrefixGenerators) {
-        arrayFormat = opts.arrayFormat;
-    } else if ('indices' in opts) {
-        arrayFormat = opts.indices ? 'indices' : 'repeat';
-    } else {
-        arrayFormat = defaults.arrayFormat;
-    }
-
-    if ('commaRoundTrip' in opts && typeof opts.commaRoundTrip !== 'boolean') {
-        throw new TypeError('`commaRoundTrip` must be a boolean, or absent');
-    }
-
-    var allowDots = typeof opts.allowDots === 'undefined' ? opts.encodeDotInKeys === true ? true : defaults.allowDots : !!opts.allowDots;
-
-    return {
-        addQueryPrefix: typeof opts.addQueryPrefix === 'boolean' ? opts.addQueryPrefix : defaults.addQueryPrefix,
-        allowDots: allowDots,
-        allowEmptyArrays: typeof opts.allowEmptyArrays === 'boolean' ? !!opts.allowEmptyArrays : defaults.allowEmptyArrays,
-        arrayFormat: arrayFormat,
-        charset: charset,
-        charsetSentinel: typeof opts.charsetSentinel === 'boolean' ? opts.charsetSentinel : defaults.charsetSentinel,
-        commaRoundTrip: !!opts.commaRoundTrip,
-        delimiter: typeof opts.delimiter === 'undefined' ? defaults.delimiter : opts.delimiter,
-        encode: typeof opts.encode === 'boolean' ? opts.encode : defaults.encode,
-        encodeDotInKeys: typeof opts.encodeDotInKeys === 'boolean' ? opts.encodeDotInKeys : defaults.encodeDotInKeys,
-        encoder: typeof opts.encoder === 'function' ? opts.encoder : defaults.encoder,
-        encodeValuesOnly: typeof opts.encodeValuesOnly === 'boolean' ? opts.encodeValuesOnly : defaults.encodeValuesOnly,
-        filter: filter,
-        format: format,
-        formatter: formatter,
-        serializeDate: typeof opts.serializeDate === 'function' ? opts.serializeDate : defaults.serializeDate,
-        skipNulls: typeof opts.skipNulls === 'boolean' ? opts.skipNulls : defaults.skipNulls,
-        sort: typeof opts.sort === 'function' ? opts.sort : null,
-        strictNullHandling: typeof opts.strictNullHandling === 'boolean' ? opts.strictNullHandling : defaults.strictNullHandling
-    };
-};
-
-module.exports = function (object, opts) {
-    var obj = object;
-    var options = normalizeStringifyOptions(opts);
-
-    var objKeys;
-    var filter;
-
-    if (typeof options.filter === 'function') {
-        filter = options.filter;
-        obj = filter('', obj);
-    } else if (isArray(options.filter)) {
-        filter = options.filter;
-        objKeys = filter;
-    }
-
-    var keys = [];
-
-    if (typeof obj !== 'object' || obj === null) {
-        return '';
-    }
-
-    var generateArrayPrefix = arrayPrefixGenerators[options.arrayFormat];
-    var commaRoundTrip = generateArrayPrefix === 'comma' && options.commaRoundTrip;
-
-    if (!objKeys) {
-        objKeys = Object.keys(obj);
-    }
-
-    if (options.sort) {
-        objKeys.sort(options.sort);
-    }
-
-    var sideChannel = getSideChannel();
-    for (var i = 0; i < objKeys.length; ++i) {
-        var key = objKeys[i];
-        var value = obj[key];
-
-        if (options.skipNulls && value === null) {
-            continue;
-        }
-        pushToArray(keys, stringify(
-            value,
-            key,
-            generateArrayPrefix,
-            commaRoundTrip,
-            options.allowEmptyArrays,
-            options.strictNullHandling,
-            options.skipNulls,
-            options.encodeDotInKeys,
-            options.encode ? options.encoder : null,
-            options.filter,
-            options.sort,
-            options.allowDots,
-            options.serializeDate,
-            options.format,
-            options.formatter,
-            options.encodeValuesOnly,
-            options.charset,
-            sideChannel
-        ));
-    }
-
-    var joined = keys.join(options.delimiter);
-    var prefix = options.addQueryPrefix === true ? '?' : '';
-
-    if (options.charsetSentinel) {
-        if (options.charset === 'iso-8859-1') {
-            // encodeURIComponent('&#10003;'), the "numeric entity" representation of a checkmark
-            prefix += 'utf8=%26%2310003%3B&';
-        } else {
-            // encodeURIComponent('✓')
-            prefix += 'utf8=%E2%9C%93&';
-        }
-    }
-
-    return joined.length > 0 ? prefix + joined : '';
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/url/node_modules/qs/lib/utils.js":
-/*!*******************************************************!*\
-  !*** ./node_modules/url/node_modules/qs/lib/utils.js ***!
-  \*******************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var formats = __webpack_require__(/*! ./formats */ "./node_modules/url/node_modules/qs/lib/formats.js");
-
-var has = Object.prototype.hasOwnProperty;
-var isArray = Array.isArray;
-
-var hexTable = (function () {
-    var array = [];
-    for (var i = 0; i < 256; ++i) {
-        array.push('%' + ((i < 16 ? '0' : '') + i.toString(16)).toUpperCase());
-    }
-
-    return array;
-}());
-
-var compactQueue = function compactQueue(queue) {
-    while (queue.length > 1) {
-        var item = queue.pop();
-        var obj = item.obj[item.prop];
-
-        if (isArray(obj)) {
-            var compacted = [];
-
-            for (var j = 0; j < obj.length; ++j) {
-                if (typeof obj[j] !== 'undefined') {
-                    compacted.push(obj[j]);
-                }
-            }
-
-            item.obj[item.prop] = compacted;
-        }
-    }
-};
-
-var arrayToObject = function arrayToObject(source, options) {
-    var obj = options && options.plainObjects ? { __proto__: null } : {};
-    for (var i = 0; i < source.length; ++i) {
-        if (typeof source[i] !== 'undefined') {
-            obj[i] = source[i];
-        }
-    }
-
-    return obj;
-};
-
-var merge = function merge(target, source, options) {
-    /* eslint no-param-reassign: 0 */
-    if (!source) {
-        return target;
-    }
-
-    if (typeof source !== 'object' && typeof source !== 'function') {
-        if (isArray(target)) {
-            target.push(source);
-        } else if (target && typeof target === 'object') {
-            if (
-                (options && (options.plainObjects || options.allowPrototypes))
-                || !has.call(Object.prototype, source)
-            ) {
-                target[source] = true;
-            }
-        } else {
-            return [target, source];
-        }
-
-        return target;
-    }
-
-    if (!target || typeof target !== 'object') {
-        return [target].concat(source);
-    }
-
-    var mergeTarget = target;
-    if (isArray(target) && !isArray(source)) {
-        mergeTarget = arrayToObject(target, options);
-    }
-
-    if (isArray(target) && isArray(source)) {
-        source.forEach(function (item, i) {
-            if (has.call(target, i)) {
-                var targetItem = target[i];
-                if (targetItem && typeof targetItem === 'object' && item && typeof item === 'object') {
-                    target[i] = merge(targetItem, item, options);
-                } else {
-                    target.push(item);
-                }
-            } else {
-                target[i] = item;
-            }
-        });
-        return target;
-    }
-
-    return Object.keys(source).reduce(function (acc, key) {
-        var value = source[key];
-
-        if (has.call(acc, key)) {
-            acc[key] = merge(acc[key], value, options);
-        } else {
-            acc[key] = value;
-        }
-        return acc;
-    }, mergeTarget);
-};
-
-var assign = function assignSingleSource(target, source) {
-    return Object.keys(source).reduce(function (acc, key) {
-        acc[key] = source[key];
-        return acc;
-    }, target);
-};
-
-var decode = function (str, defaultDecoder, charset) {
-    var strWithoutPlus = str.replace(/\+/g, ' ');
-    if (charset === 'iso-8859-1') {
-        // unescape never throws, no try...catch needed:
-        return strWithoutPlus.replace(/%[0-9a-f]{2}/gi, unescape);
-    }
-    // utf-8
-    try {
-        return decodeURIComponent(strWithoutPlus);
-    } catch (e) {
-        return strWithoutPlus;
-    }
-};
-
-var limit = 1024;
-
-/* eslint operator-linebreak: [2, "before"] */
-
-var encode = function encode(str, defaultEncoder, charset, kind, format) {
-    // This code was originally written by Brian White (mscdex) for the io.js core querystring library.
-    // It has been adapted here for stricter adherence to RFC 3986
-    if (str.length === 0) {
-        return str;
-    }
-
-    var string = str;
-    if (typeof str === 'symbol') {
-        string = Symbol.prototype.toString.call(str);
-    } else if (typeof str !== 'string') {
-        string = String(str);
-    }
-
-    if (charset === 'iso-8859-1') {
-        return escape(string).replace(/%u[0-9a-f]{4}/gi, function ($0) {
-            return '%26%23' + parseInt($0.slice(2), 16) + '%3B';
-        });
-    }
-
-    var out = '';
-    for (var j = 0; j < string.length; j += limit) {
-        var segment = string.length >= limit ? string.slice(j, j + limit) : string;
-        var arr = [];
-
-        for (var i = 0; i < segment.length; ++i) {
-            var c = segment.charCodeAt(i);
-            if (
-                c === 0x2D // -
-                || c === 0x2E // .
-                || c === 0x5F // _
-                || c === 0x7E // ~
-                || (c >= 0x30 && c <= 0x39) // 0-9
-                || (c >= 0x41 && c <= 0x5A) // a-z
-                || (c >= 0x61 && c <= 0x7A) // A-Z
-                || (format === formats.RFC1738 && (c === 0x28 || c === 0x29)) // ( )
-            ) {
-                arr[arr.length] = segment.charAt(i);
-                continue;
-            }
-
-            if (c < 0x80) {
-                arr[arr.length] = hexTable[c];
-                continue;
-            }
-
-            if (c < 0x800) {
-                arr[arr.length] = hexTable[0xC0 | (c >> 6)]
-                    + hexTable[0x80 | (c & 0x3F)];
-                continue;
-            }
-
-            if (c < 0xD800 || c >= 0xE000) {
-                arr[arr.length] = hexTable[0xE0 | (c >> 12)]
-                    + hexTable[0x80 | ((c >> 6) & 0x3F)]
-                    + hexTable[0x80 | (c & 0x3F)];
-                continue;
-            }
-
-            i += 1;
-            c = 0x10000 + (((c & 0x3FF) << 10) | (segment.charCodeAt(i) & 0x3FF));
-
-            arr[arr.length] = hexTable[0xF0 | (c >> 18)]
-                + hexTable[0x80 | ((c >> 12) & 0x3F)]
-                + hexTable[0x80 | ((c >> 6) & 0x3F)]
-                + hexTable[0x80 | (c & 0x3F)];
-        }
-
-        out += arr.join('');
-    }
-
-    return out;
-};
-
-var compact = function compact(value) {
-    var queue = [{ obj: { o: value }, prop: 'o' }];
-    var refs = [];
-
-    for (var i = 0; i < queue.length; ++i) {
-        var item = queue[i];
-        var obj = item.obj[item.prop];
-
-        var keys = Object.keys(obj);
-        for (var j = 0; j < keys.length; ++j) {
-            var key = keys[j];
-            var val = obj[key];
-            if (typeof val === 'object' && val !== null && refs.indexOf(val) === -1) {
-                queue.push({ obj: obj, prop: key });
-                refs.push(val);
-            }
-        }
-    }
-
-    compactQueue(queue);
-
-    return value;
-};
-
-var isRegExp = function isRegExp(obj) {
-    return Object.prototype.toString.call(obj) === '[object RegExp]';
-};
-
-var isBuffer = function isBuffer(obj) {
-    if (!obj || typeof obj !== 'object') {
-        return false;
-    }
-
-    return !!(obj.constructor && obj.constructor.isBuffer && obj.constructor.isBuffer(obj));
-};
-
-var combine = function combine(a, b) {
-    return [].concat(a, b);
-};
-
-var maybeMap = function maybeMap(val, fn) {
-    if (isArray(val)) {
-        var mapped = [];
-        for (var i = 0; i < val.length; i += 1) {
-            mapped.push(fn(val[i]));
-        }
-        return mapped;
-    }
-    return fn(val);
-};
-
-module.exports = {
-    arrayToObject: arrayToObject,
-    assign: assign,
-    combine: combine,
-    compact: compact,
-    decode: decode,
-    encode: encode,
-    isBuffer: isBuffer,
-    isRegExp: isRegExp,
-    maybeMap: maybeMap,
-    merge: merge
-};
-
-
-/***/ }),
-
 /***/ "./node_modules/url/url.js":
 /*!*********************************!*\
   !*** ./node_modules/url/url.js ***!
@@ -42164,7 +42508,7 @@ var protocolPattern = /^([a-z0-9.+-]+:)/i,
     'gopher:': true,
     'file:': true
   },
-  querystring = __webpack_require__(/*! qs */ "./node_modules/url/node_modules/qs/lib/index.js");
+  querystring = __webpack_require__(/*! qs */ "./node_modules/qs/lib/index.js");
 
 function urlParse(url, parseQueryString, slashesDenoteHost) {
   if (url && typeof url === 'object' && url instanceof Url) { return url; }
@@ -52963,87 +53307,9 @@ var __webpack_exports__ = {};
   !*** ./src/ExtensionSDK.js ***!
   \*****************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _util_checkBrowser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util/checkBrowser */ "./src/util/checkBrowser.ts");
-/* harmony import */ var _util_checkScreenSize__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./util/checkScreenSize */ "./src/util/checkScreenSize.ts");
-
-
-let {
-  enableUDAPlugin,
-  udaBrowserVar,
-  udaIdentifiedBrowser
-} = (0,_util_checkBrowser__WEBPACK_IMPORTED_MODULE_0__.checkBrowser)();
-const {
-  enablePluginForScreen,
-  showScreenAlert
-} = (0,_util_checkScreenSize__WEBPACK_IMPORTED_MODULE_1__.checkScreenSize)();
-if (enableUDAPlugin === false) {
-  console.log('Plugin disabled for browser: ' + udaIdentifiedBrowser.name);
-} else if (enablePluginForScreen === false) {
-  console.log('Plugin disabled due to lower resolution');
-} else {
-  var _udaBrowserVar$runtim;
-  console.log('Browser Enabled');
-  let s1 = document.createElement('script');
-  let scriptPath = udaBrowserVar === null || udaBrowserVar === void 0 || (_udaBrowserVar$runtim = udaBrowserVar.runtime) === null || _udaBrowserVar$runtim === void 0 ? void 0 : _udaBrowserVar$runtim.getURL("assets/UDASdk.js");
-  s1.src = scriptPath;
-  s1.onload = function () {};
-  (document.body || document.documentElement).appendChild(s1);
-  document.addEventListener("RequestUDASessionData", function (data) {
-    udaBrowserVar.runtime.sendMessage({
-      action: data.detail.data,
-      data: data.detail.data
-    });
-  });
-  document.addEventListener("UDADebugSetEvent", function (data) {
-    udaBrowserVar.runtime.sendMessage({
-      action: data.detail.data.action,
-      data: data.detail.data.value
-    });
-  });
-  document.addEventListener("UDAGetNewToken", function (data) {
-    udaBrowserVar.runtime.sendMessage({
-      action: data.detail.data,
-      data: data.detail.data
-    });
-  });
-
-  /**
-   * create keycloak storage to browserVar
-   */
-  document.addEventListener("CreateUDASessionData", function (data) {
-    udaBrowserVar.runtime.sendMessage({
-      action: data.detail.action,
-      data: data.detail.data
-    });
-  });
-  udaBrowserVar.runtime.onMessage.addListener(function (request) {
-    if (request.action === "UDAUserSessionData") {
-      document.dispatchEvent(new CustomEvent("UDAUserSessionData", {
-        detail: {
-          data: request.data
-        },
-        bubbles: false,
-        cancelable: false
-      }));
-    } else if (request.action === "UDAAuthenticatedUserSessionData") {
-      document.dispatchEvent(new CustomEvent("UDAAuthenticatedUserSessionData", {
-        detail: {
-          data: request.data
-        },
-        bubbles: false,
-        cancelable: false
-      }));
-    } else if (request.action === "UDAAlertMessageData") {
-      document.dispatchEvent(new CustomEvent("UDAAlertMessageData", {
-        detail: {
-          data: request.data
-        },
-        bubbles: false,
-        cancelable: false
-      }));
-    }
-  });
-}
+/* harmony import */ var _util_checkBrowser_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util/checkBrowser.ts */ "./src/util/checkBrowser.ts");
+/* harmony import */ var _util_checkScreenSize_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./util/checkScreenSize.ts */ "./src/util/checkScreenSize.ts");
+let{enableUDAPlugin,udaBrowserVar,udaIdentifiedBrowser}=(0,_util_checkBrowser_ts__WEBPACK_IMPORTED_MODULE_0__.checkBrowser)();const{enablePluginForScreen,showScreenAlert}=(0,_util_checkScreenSize_ts__WEBPACK_IMPORTED_MODULE_1__.checkScreenSize)();if(enableUDAPlugin===false){console.log("Plugin disabled for browser: "+udaIdentifiedBrowser.name)}else if(enablePluginForScreen===false){console.log("Plugin disabled due to lower resolution")}else{var _udaBrowserVar$runtim;console.log("Browser Enabled");let s1=document.createElement("script");let scriptPath=udaBrowserVar==null||(_udaBrowserVar$runtim=udaBrowserVar.runtime)==null?void 0:_udaBrowserVar$runtim.getURL("assets/UDASdk.js");s1.src=scriptPath;s1.onload=function(){};(document.body||document.documentElement).appendChild(s1);document.addEventListener("RequestUDASessionData",function(data){udaBrowserVar.runtime.sendMessage({action:data.detail.data,data:data.detail.data})});document.addEventListener("UDADebugSetEvent",function(data){udaBrowserVar.runtime.sendMessage({action:data.detail.data.action,data:data.detail.data.value})});document.addEventListener("UDAGetNewToken",function(data){udaBrowserVar.runtime.sendMessage({action:data.detail.data,data:data.detail.data})});document.addEventListener("CreateUDASessionData",function(data){udaBrowserVar.runtime.sendMessage({action:data.detail.action,data:data.detail.data})});udaBrowserVar.runtime.onMessage.addListener(function(request){if(request.action==="UDAUserSessionData"){document.dispatchEvent(new CustomEvent("UDAUserSessionData",{detail:{data:request.data},bubbles:false,cancelable:false}))}else if(request.action==="UDAAuthenticatedUserSessionData"){document.dispatchEvent(new CustomEvent("UDAAuthenticatedUserSessionData",{detail:{data:request.data},bubbles:false,cancelable:false}))}else if(request.action==="UDAAlertMessageData"){document.dispatchEvent(new CustomEvent("UDAAlertMessageData",{detail:{data:request.data},bubbles:false,cancelable:false}))}})}
 })();
 
 UdanLibrary = __webpack_exports__;
