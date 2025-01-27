@@ -1,3 +1,6 @@
+/*Imports the `UDASessionData`, `AuthData`, and `CSPData` classes from their respective modules. 
+These classes are used in the `UDASessionData` test suite to provide mock implementations of the `AuthData` and `CSPData` classes,
+ allowing the tests to focus on the `UDASessionData` class without needing to create real instances of the dependent classes.*/
 import { UDASessionData } from "../models/UDASessionData";
 import { AuthData } from "../models/AuthData";
 import { CSPData } from "../models/CSPData";
