@@ -1,8 +1,3 @@
-/**
- * Imports the `AuthData` and `CSPData` classes from their respective files.
- * These classes are used to manage authentication data and Content Security Policy (CSP) data
- * within the `UDASessionData` class.
- */
 import { AuthData } from "./AuthData";
 import { CSPData } from "./CSPData";
 
