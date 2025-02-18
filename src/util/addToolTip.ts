@@ -48,6 +48,26 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
         options: {
           offset: ({placement, reference, popper}) => [0, 30],
         }
+      },
+      {
+        name: 'offset',
+        options: {
+          offset: [0, 12],
+        },
+      },
+      {
+        name: 'arrow',
+        options: {
+          padding: 5,
+          element: '[data-popper-arrow]',
+        },
+      },
+      {
+        name: 'preventOverflow',
+        options: {
+          boundary: 'viewport',
+          padding: 10,
+        },
       }
     ],
   });

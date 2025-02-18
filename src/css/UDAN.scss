@@ -923,22 +923,20 @@ Progress animation
 .uda-tooltip {
     position: absolute;
     min-width: 200px;
-    max-width: 400px;
+    max-width: 300px;
     text-align: center;
     color: $uda-primary-color;
-    text-align: center;
     padding: 10px;
     border-radius: 8px;
-    border-color: #333;
+    border: 1px solid $uda-primary-color;
     transition: opacity 0.6s;
     background-color: $uda-tooltip-bg;
     box-shadow: 0 1px 16px $uda-boxshodow-color;
     z-index: 10000000000000000;
-    border: 1px solid $uda-primary-color;
 
     .uda-tooltip-text-content {
-        margin: 10px !important;
-        /**Submit button */
+        margin: 5px !important;
+
         .uda-tutorial-btn {
             background-color: $uda-primary-color;
             border: none;
@@ -949,6 +947,7 @@ Progress animation
             font-size: 14px;
             cursor: pointer;
             height: 30px;
+            margin-right: 5px;
 
             &:hover {
                 background-color: $uda-secondary-color;
@@ -974,23 +973,16 @@ Progress animation
 
     .uda-arrow {
         position: absolute;
-        width: 20px;
-        height: 20px;
-        /*   background: inherit; */
-        background-color: $uda-tooltip-bg;
-        box-shadow: 16px $uda-boxshodow-color;
-    }
-
-    .uda-arrow {
+        width: 12px;
+        height: 12px;
+        background-color: transparent;
         visibility: hidden;
 
         &::before {
             position: absolute;
-            width: 20px;
-            height: 20px;
-            /*   background: inherit; */
+            width: 12px;
+            height: 12px;
             background-color: $uda-tooltip-bg;
-            box-shadow: 16px $uda-boxshodow-color;
             visibility: visible;
             content: "";
             transform: rotate(45deg);
@@ -1005,79 +997,115 @@ Progress animation
         width: 400px;
         border-radius: 8px 8px 0 0;
     }
+}
 
-    i {
-        position: absolute;
-        top: 50%;
-        right: 100%;
-        margin-top: -12px;
-        width: 12px;
-        height: 24px;
-        overflow: hidden;
-
-        &::after {
-            background-color: #444444;
+// Top positions
+.uda-tooltip[data-popper-placement^="top"] {
+    > .uda-arrow {
+        bottom: -6px;
+        &::before {
+            border-right: 1px solid $uda-primary-color;
+            border-bottom: 1px solid $uda-primary-color;
         }
     }
 }
 
+.uda-tooltip[data-popper-placement="top-start"] > .uda-arrow {
+    left: 15px;
+}
+
+.uda-tooltip[data-popper-placement="top"] > .uda-arrow {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.uda-tooltip[data-popper-placement="top-end"] > .uda-arrow {
+    right: 15px;
+}
+
+// Right positions
+.uda-tooltip[data-popper-placement^="right"] {
+    > .uda-arrow {
+        left: -13px;
+        &::before {
+            border-left: 1px solid $uda-primary-color;
+            border-bottom: 1px solid $uda-primary-color;
+            background-color: $uda-tooltip-bg;
+        }
+    }
+}
+
+.uda-tooltip[data-popper-placement="right-start"] > .uda-arrow {
+    top: 8px;
+}
+
+.uda-tooltip[data-popper-placement="right"] > .uda-arrow {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.uda-tooltip[data-popper-placement="right-end"] > .uda-arrow {
+    bottom: 8px;
+}
+
+// Bottom positions
+.uda-tooltip[data-popper-placement^="bottom"] {
+    > .uda-arrow {
+        top: -6px;
+        &::before {
+            border-top: 1px solid $uda-primary-color;
+            border-left: 1px solid $uda-primary-color;
+        }
+    }
+}
+
+.uda-tooltip[data-popper-placement="bottom-start"] > .uda-arrow {
+    left: 8px;
+}
+
+.uda-tooltip[data-popper-placement="bottom"] > .uda-arrow {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.uda-tooltip[data-popper-placement="bottom-end"] > .uda-arrow {
+    right: 15px;
+}
+
+// Left positions
+.uda-tooltip[data-popper-placement^="left"] {
+    > .uda-arrow {
+        right: -1px;
+        &::before {
+            border-right: 1px solid $uda-primary-color;
+            border-top: 1px solid $uda-primary-color;
+        }
+    }
+}
+
+.uda-tooltip[data-popper-placement="left-start"] > .uda-arrow {
+    top: 8px;
+}
+
+.uda-tooltip[data-popper-placement="left"] > .uda-arrow {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.uda-tooltip[data-popper-placement="left-end"] > .uda-arrow {
+    bottom: 8px;
+}
+
+// Show/hide states
 .uda-tooltip[data-show] {
     display: block;
 }
 
-.uda-tooltip[data-popper-placement^="top"] {
-    > .uda-arrow {
-        &::before {
-            border-right: 1px solid $uda-primary-color;
-            border-bottom: 1px solid $uda-primary-color;
-        }
-
-        margin-left: 75px;
-    }
+.uda-tooltip[data-hide] {
+    display: none;
 }
 
-.uda-tooltip[data-popper-placement^="bottom"] {
-    > .uda-arrow {
-        &::before {
-            border-top: 1px solid $uda-primary-color;
-            border-left: 1px solid $uda-primary-color;
-        }
 
-        top: -10px;
-        bottom: -10px;
-        margin-left: 75px;
-    }
-}
-
-.uda-tooltip[data-popper-placement^="left"] {
-    > .uda-arrow {
-        &::before {
-            border-right: 1px solid $uda-primary-color;
-            border-top: 1px solid $uda-primary-color;
-        }
-
-        right: 0px;
-        margin-top: -50px;
-    }
-}
-
-.uda-tooltip[data-popper-placement^="right"] {
-    > .uda-arrow {
-        &::before {
-            border-left: 1px solid $uda-primary-color;
-            border-bottom: 1px solid $uda-primary-color;
-        }
-
-        left: -20px;
-        margin-top: -50px;
-    }
-}
-
-.uda-tooltip[data-popper-placement^="top"] {
-    > .uda-arrow {
-        bottom: -10px;
-    }
-}
 
 /* The Modal (background) */
 .udamodal {
