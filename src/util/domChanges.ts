@@ -3,8 +3,12 @@ import {CONFIG} from "../config";
 import {getFromStore} from "./index";
 
 export let timer: any = null;
+let mutationCount = 0;
 
 const observer = new MutationObserver(async (mutationList, observer) => {
+  const startTime = performance.now();
+  mutationCount++;
+
   if (timer) {
     clearTimeout(timer);
   }
@@ -14,7 +18,17 @@ const observer = new MutationObserver(async (mutationList, observer) => {
     if (isRecording) {
       await addBodyEvents();
     }
-  }, CONFIG.indexInterval);
 
+    const endTime = performance.now();
+    const executionTime = endTime - startTime;
+
+    console.group('MutationObserver Performance Metrics');
+    console.log(`Mutation #${mutationCount}`);
+    console.log(`Execution time: ${executionTime.toFixed(2)}ms`);
+    console.log(`Mutations list length: ${mutationList.length}`);
+    console.log('Mutation types:', mutationList.map(mutation => mutation.type));
+    console.groupEnd();
+  }, CONFIG.indexInterval);
 });
+
 observer.observe(document.body, {attributes: true, childList: true, subtree: true});

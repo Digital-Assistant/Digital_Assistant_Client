@@ -2,7 +2,7 @@ import {checkNodeValues} from "./checkNodeValues";
 // import {hasClass} from "./index";
 declare const UDAClickObjects;
 
-export const isClickableNode = (element: HTMLElement) => {
+export const isClickableNode = (element: any) => {
   if (!element) return false;
 
   /*if(element.hasAttribute("udaIgnoreChildren")) {
@@ -11,6 +11,10 @@ export const isClickableNode = (element: HTMLElement) => {
 
   if(element.hasAttribute("udaIgnoreNode")) {
     element.removeAttribute("udaIgnoreNode");
+  }*/
+
+  /*if (element.hasOwnProperty("addedClickRecord") && element.addedClickRecord === true) {
+    return true;
   }*/
 
   const isUdaPanel: any = element.closest('#udan-react-root');
