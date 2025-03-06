@@ -997,6 +997,63 @@ Progress animation
         width: 400px;
         border-radius: 8px 8px 0 0;
     }
+
+    .uda-tooltip-controls {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        gap: 10px;
+
+        .uda-tooltip-arrows-circle {
+            position: relative;
+            width: 50px;
+            height: 50px;
+        }
+
+        .uda-tooltip-arrow-btn {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.2s;
+
+            &:hover {
+                background-color: #e0e0e0;
+            }
+
+            &.uda-tooltip-arrow-top {
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            &.uda-tooltip-arrow-right {
+                top: 50%;
+                right: 0;
+                transform: translateY(-50%);
+            }
+
+            &.uda-tooltip-arrow-bottom {
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            &.uda-tooltip-arrow-left {
+                top: 50%;
+                left: 0;
+                transform: translateY(-50%);
+            }
+        }
+    }
+
 }
 
 // Top positions
