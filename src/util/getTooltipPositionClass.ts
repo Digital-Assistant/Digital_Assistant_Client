@@ -4,9 +4,12 @@ import {getNodeCoordinates} from "./getNodeCoordinates";
 
 export const getTooltipPositionClass = (
     targetElement: HTMLElement,
-    tooltipElement: HTMLElement
+    tooltipElement: HTMLElement,
+    selectedPosition: string = 'auto',
+    currentToolTipPositionClass: string = null,
+    availablePositionsForElement: Array<string> = [],
 ) => {
-  const availablePositions = [
+  let availablePositions = [
     "top", "right", "bottom", "left"
   ].slice();
 
@@ -54,8 +57,45 @@ export const getTooltipPositionClass = (
   // Determine best position based on maximum available space
   let finalCssClass = "right"; // default fallback
 
-  if (availablePositions.length > 0) {
+  if (availablePositions.length > 0 && selectedPosition === 'auto') {
     finalCssClass = availablePositions[0];
+  } else if(selectedPosition !== 'auto'){
+    availablePositions = availablePositionsForElement;
+    if(availablePositionsForElement.includes(selectedPosition) === true){
+      finalCssClass = selectedPosition;
+    } else if(currentToolTipPositionClass !== selectedPosition){
+      let currentPosition: string = currentToolTipPositionClass;
+      switch (currentToolTipPositionClass) {
+        case "right":
+        case "right-start":
+        case "right-end":
+          currentPosition = 'right';
+          break;
+        case "left":
+        case "left-start":
+        case "left-end":
+          currentPosition = 'left';
+          break;
+        case "top":
+        case "top-start":
+        case "top-end":
+          currentPosition = 'top';
+          break;
+        case "bottom":
+        case "bottom-start":
+        case "bottom-end":
+          currentPosition = 'bottom';
+          break;
+      }
+      if(currentPosition){
+        let currentPosIndex = availablePositionsForElement.findIndex((position)=>{return currentPosition===position});
+        if(currentPosIndex > -1){
+          finalCssClass = availablePositionsForElement[currentPosIndex+1];
+        }
+      }
+    } else {
+      finalCssClass = currentToolTipPositionClass;
+    }
   }
 
   switch (finalCssClass) {
@@ -89,7 +129,5 @@ export const getTooltipPositionClass = (
       break;
   }
 
-  console.log(finalCssClass);
-
-  return finalCssClass;
+  return {finalCssClass, availablePositions};
 };

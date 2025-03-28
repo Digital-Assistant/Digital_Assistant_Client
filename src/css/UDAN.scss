@@ -934,8 +934,41 @@ Progress animation
     box-shadow: 0 1px 16px $uda-boxshodow-color;
     z-index: 10000000000000000;
 
-    .uda-tooltip-text-content {
-        margin: 5px !important;
+    .uda-tooltip-header {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 10px;
+
+        .uda-tooltip-exit-btn {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            padding: 0;
+
+            svg {
+                color: $uda-primary-color;
+                stroke: $uda-primary-color;
+            }
+
+            &:hover {
+                background-color: #e0e0e0;
+            }
+        }
+    }
+
+    .uda-tooltip-controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 15px;
+        position: relative;
 
         .uda-tutorial-btn {
             background-color: $uda-primary-color;
@@ -947,28 +980,39 @@ Progress animation
             font-size: 14px;
             cursor: pointer;
             height: 30px;
-            margin-right: 5px;
 
             &:hover {
                 background-color: $uda-secondary-color;
             }
         }
 
-        .uda-tutorial-exit-btn {
-            background-color: $uda-secondary-color;
-            border: none;
-            outline: none;
-            color: $uda-text-color-bg-white;
-            border-radius: 5px;
-            padding: 5px 12px;
-            font-size: 14px;
-            cursor: pointer;
+        .uda-tooltip-direction-btn {
+            position: absolute;
+            right: 0;
+            width: 30px;
             height: 30px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.3s;
 
             &:hover {
-                background-color: $uda-primary-color;
+                background-color: #e0e0e0;
+            }
+
+            svg {
+                color: $uda-primary-color;
             }
         }
+    }
+
+
+    .uda-tooltip-text-content {
+        margin: 5px !important;
     }
 
     .uda-arrow {
