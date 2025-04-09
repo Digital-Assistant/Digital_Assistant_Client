@@ -123,6 +123,7 @@ export const updateRecordClicks = async (request?: any) => {
     throw error;
   }
 };
+
 /**
  * Records a sequence of user interactions.
  *
@@ -491,11 +492,7 @@ export const saveClickData = async (node: any, text: string, meta: any) => {
     throw error;
   }
 };
-/**
- * * To post click sequence data to REST
- * @param request
- * @returns promise
- */
+
 /**
  * To post the recorded user click sequence data to a REST endpoint.
  * @param request - An object containing the data to be sent in the request payload.
@@ -536,6 +533,52 @@ export const postRecordSequenceData = async (request: any) => {
     UDAErrorLogger.error(
       `Error in postRecordSequenceData: ${error.message}`,
       error
+    );
+    // Rethrow the error to allow the calling code to handle it.
+    throw error;
+  }
+};
+
+/**
+ * To update the recorded user click sequence data to a REST endpoint.
+ * @param request - An object containing the data to be sent in the request payload.
+ * @returns A promise that resolves with the response from the REST endpoint.
+ */
+export const updateRecordSequenceData = async (request: any) => {
+  try {
+    // Throw an error if the request object is undefined or null.
+    if (!request) {
+      throw new Error("Request object is required");
+    }
+
+    // Clear the udanSelectedNodes array at the beginning of each call.
+    window.udanSelectedNodes = [];
+    // Retrieve the user click node set from the store.
+    const userclicknodesSet = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
+    // Get the IDs of the user click nodes and join them into a comma-separated string.
+    const ids = userclicknodesSet.map((item: any) => item.id);
+    // Get the domain of the current web page.
+    let domain = fetchDomain();
+    // Construct the payload object by merging the request object and the other properties.
+    const payload = {
+      ...request,
+      domain: domain,
+      // Set the ignored status to 0 (false) by default.
+      isIgnored: 0,
+      // Set the validity status to 1 (true) by default.
+      isValid: 1,
+      // Use the comma-separated string of user click node IDs.
+      userclicknodelist: ids.join(","),
+      // Pass the user click node set as an array of objects.
+      userclicknodesSet,
+    };
+    // Call the recordSequence function with the constructed payload and return the result.
+    return await recordSequence(payload);
+  } catch (error) {
+    // Log any errors that occur to the console with a log level of 1.
+    UDAErrorLogger.error(
+        `Error in postRecordSequenceData: ${error.message}`,
+        error
     );
     // Rethrow the error to allow the calling code to handle it.
     throw error;

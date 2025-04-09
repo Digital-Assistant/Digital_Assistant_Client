@@ -104,7 +104,7 @@ export const Toggler = (props: MProps) => {
         }
         // check for udasdk is defined or not
         if(typeof isUDASdk === 'undefined') {
-            checkCsp();
+            // checkCsp();
         }
 
     }, [])

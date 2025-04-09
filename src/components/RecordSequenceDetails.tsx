@@ -6,19 +6,20 @@
  */
 
 import React, {useEffect, useRef, useState} from "react";
-import {Button, Col, List, Popconfirm, Row, Checkbox, Switch, Select, Form} from "antd";
+import {Button, Checkbox, Col, Form, List, Popconfirm, Row, Select} from "antd";
 import {
+  CopyFilled,
   DeleteOutlined,
   DislikeFilled,
   DislikeOutlined,
+  EditOutlined,
   LeftOutlined,
   LikeFilled,
   LikeOutlined,
   PauseCircleOutlined,
   PlayCircleOutlined,
-  ShareAltOutlined,
-  CopyFilled,
-  ReloadOutlined
+  ReloadOutlined,
+  ShareAltOutlined
 } from "@ant-design/icons";
 import {getCurrentPlayItem, getFromStore, getObjData, setToStore,} from "../util";
 import {deleteRecording, fetchStatuses, recordUserClickData, updateRecording} from "../services/recordService";
@@ -205,7 +206,12 @@ export const RecordSequenceDetails = (props: MProps) => {
       try {
         // name = JSON.parse(props?.data?.name)?.join(",");
         let names = JSON.parse(props?.data?.name);
-        name = names[0] ? names[0] : 'NA';
+        // name = names[0] ? names[0] : 'NA';
+        if (typeof names[0] === 'object' && 'label' in names[0]) {
+          name = names[0].label;
+        } else {
+          name = names[0] ? names[0] : 'NA';
+        }
       } catch (e) {
       }
     }
@@ -410,6 +416,86 @@ export const RecordSequenceDetails = (props: MProps) => {
     props.showLoader(false);
   };
 
+  // Editing labels functionality
+  const [isEditingLabels, setIsEditingLabels] = useState(false);
+  const [labels, setLabels] = useState<Array<{label: string, profanity: boolean}>>([]);
+  const [inputError, setInputError] = useState<Record<string, {error: boolean}>>({});
+
+  // Function to get all labels from props.data.name
+  const getAllLabels = () => {
+    try {
+      // Parse the name from props
+      const names = JSON.parse(props?.data?.name || '[]');
+      // Ensure it's an array and each item has the expected structure
+      return Array.isArray(names)
+          ? names.map(item => {
+            // If item is already in the correct format, return it
+            if (typeof item === 'object' && 'label' in item) {
+              return item;
+            }
+            // If item is just a string, convert to the expected format
+            return { label: String(item), profanity: false };
+          })
+          : [];
+    } catch (e) {
+      console.error("Error parsing labels:", e);
+      return [];
+    }
+  };
+
+// Initialize labels when starting to edit
+  const startEditing = () => {
+    const currentLabels = getAllLabels();
+    console.log("Current labels:", currentLabels); // For debugging
+    setLabels(currentLabels);
+    setIsEditingLabels(true);
+  };
+
+  const onExtraLabelChange = async (index: number, value: string) => {
+    const updatedLabels = [...labels];
+    updatedLabels[index] = { ...updatedLabels[index], label: value };
+    setLabels(updatedLabels);
+  };
+
+  const setInputAt = async (key: string) => {
+    setInputError({ ...inputError, [key]: { error: false } });
+  };
+
+  const checkLabelProfanity = async (index: number, value: string) => {
+    // Implement profanity check similar to RecordedData.tsx
+    // This is a placeholder - implement actual profanity check logic
+    const hasProfanity = false; // Replace with actual check
+
+    const updatedLabels = [...labels];
+    updatedLabels[index] = { ...updatedLabels[index], profanity: hasProfanity };
+    setLabels(updatedLabels);
+  };
+
+  const addLabel = () => {
+    setLabels([...labels, { label: '', profanity: false }]);
+  };
+
+  const removeLabel = (index: number) => {
+    const updatedLabels = [...labels];
+    updatedLabels.splice(index, 1);
+    setLabels(updatedLabels);
+  };
+
+  const saveLabels = async () => {
+    // Save the updated labels array back to props.data.name
+    // You'll need to implement the actual update mechanism based on your app's structure
+    // Example:
+    let convertedLabels = [];
+    labels.map((item)=>{convertedLabels.push(item.label)})
+    const updatedData = { ...props.data, name: JSON.stringify(convertedLabels)};
+    // updateSequence(updatedData);
+    await updateRecording(updatedData);
+    setSelectedRecordingDetails(updatedData);
+    setToStore(updatedData, CONFIG.SELECTED_RECORDING, false);
+
+    setIsEditingLabels(false);
+  };
+
 
   return props?.recordSequenceDetailsVisibility ? (
       <>
@@ -458,7 +544,87 @@ export const RecordSequenceDetails = (props: MProps) => {
                 />
             )}
           </div>
-          <h5>{getName()}</h5>
+          {/*<h5>{getName()}</h5>*/}
+          <div className="sequence-name-container">
+            {isEditingLabels ? (
+                <div>
+                  <div id="uda-sequence-names">
+                    {labels.map((item, index) => (
+                        <div key={`label-${index}`}>
+                          <div className="flex-card flex-center">
+                            <input
+                                type="text"
+                                id="uda-recorded-name"
+                                name="uda-save-recorded[]"
+                                className={`uda-form-input uda-form-input-reduced uda_exclude ${
+                                    item.profanity ? "profanity" : ""
+                                }`}
+                                placeholder="Enter Label"
+                                onChange={async (e) => {
+                                  await onExtraLabelChange(index, e.target.value);
+                                  await setInputAt('label' + index);
+                                }}
+                                onBlur={async (e) => {
+                                  await checkLabelProfanity(index, e.target.value);
+                                }}
+                                value={item.label}
+                            />
+                            <Button
+                                type="text"
+                                icon={<DeleteOutlined />}
+                                className="delete-btn uda-remove-row uda_exclude"
+                                onClick={() => removeLabel(index)}
+                            />
+                          </div>
+                          <div className="flex-card flex-center">
+                            {item.profanity && (
+                                <span className="uda-alert">{translate('profanityDetected')}<br/></span>
+                            )}
+                            {(inputError['label' + index] && inputError['label' + index].error) && (
+                                <span className="uda-alert">{translate('inputError')}</span>
+                            )}
+                          </div>
+                        </div>
+                    ))}
+                  </div>
+
+                  <div className="add_lebel_btn_wrap">
+                    <Button className="add-btn uda_exclude" onClick={() => addLabel()}>
+                      + {translate('addLabel')}
+                    </Button>
+                  </div>
+
+                  <div className="action-buttons">
+                    <Button
+                        type="primary"
+                        className="uda_exclude"
+                        onClick={saveLabels}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                        className="uda_exclude"
+                        onClick={() => {
+                          setIsEditingLabels(false);
+                        }}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+            ) : (
+                <div className="flex-card flex-center">
+                  <h5>{getName()}</h5>
+                  <Button
+                      type="text"
+                      icon={<EditOutlined />}
+                      className="edit-btn uda_exclude"
+                      onClick={startEditing}
+                  />
+                </div>
+            )}
+          </div>
+
           <hr/>
           <ul className="uda-suggestion-list" id="uda-sequence-steps">
             {/* {renderData()} */}
@@ -572,7 +738,7 @@ export const RecordSequenceDetails = (props: MProps) => {
                 <div>
 
                     { advBtnShow && Object.entries(props?.config?.permissions).map(([key, value]) => {
-                        if(tmpPermissionsObj[key] !== undefined) {
+                        if(tmpPermissionsObj && typeof tmpPermissionsObj[key] !== "undefined") {
                           return <div key={key} style={{marginLeft: 30}}>
                             <Checkbox id="uda-recorded-name" className="uda_exclude" checked={true}
                                       onChange={handlePermissions({[key]: value, key})}
