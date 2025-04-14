@@ -595,8 +595,8 @@ export const RecordedData = (props: MProps) => {
                         >
                             {recordData?.length - 1 != index &&
                                 <span id="uda-display-clicked-text" style={{flex: 2}}>
-                        {(objectData.meta.hasOwnProperty('displayText')) ? objectData.meta.displayText : item.clickednodename}
-                    </span>
+                                    {(objectData.meta.hasOwnProperty('displayText')) ? objectData.meta.displayText : item.clickednodename}
+                                </span>
                             }
                             {recordData?.length - 1 === index && (
                                 <span id="uda-display-clicked-text" style={{flex: 2}}>
