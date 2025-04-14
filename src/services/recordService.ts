@@ -99,8 +99,6 @@ export const recordClicks = async (request?: any) => {
 
 export const updateRecordClicks = async (request?: any) => {
   try {
-    // Retrieve the user's session key
-    request.sessionid = await getSessionKey();
 
     // Prepare the request parameters
     const parameters = {
@@ -119,6 +117,37 @@ export const updateRecordClicks = async (request?: any) => {
     UDAErrorLogger.error(
       `Error in updateRecordClicks: ${error.message}`,
       error
+    );
+    throw error;
+  }
+};
+
+
+/**
+ * Updates the record clicks.
+ *
+ * @return {Promise<any>} A promise that resolves with the result of the API call.
+ * @param id
+ */
+
+export const updateSequnceIndex = async (id: number) => {
+  try {
+
+    // Prepare the request parameters
+    const parameters = {
+      // The URL for the API call
+      url: ENDPOINT.updateSequenceIndex+id,
+      // The HTTP method to use
+      method: "POST"
+    };
+
+    // Call the API
+    return REST.apiCal(parameters);
+  } catch (error) {
+    // Handle any errors that occurred during the API call
+    UDAErrorLogger.error(
+        `Error in updateRecordClicks: ${error.message}`,
+        error
     );
     throw error;
   }

@@ -18,6 +18,7 @@ export const ENDPOINT = {
   RecordSequence: `/clickevents/recordsequencedata`,
   // updateRecordSequence: `/clickevents/updatesequencedata`,
   updateRecordSequence: `/sequence/update`,
+  updateSequenceIndex: `/sequence/reindex/`,
   UserClick: `/clickevents/userclick`,
   DeleteSequence: `/clickevents/sequence/delete`,
   fetchRecord: '/search',
