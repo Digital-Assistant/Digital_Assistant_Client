@@ -505,13 +505,13 @@ __webpack_require__.r(__webpack_exports__);
  */
 // assigning default values to the default configuration
 const CustomConfig = {
-    enableEditClickedName: false,
-    enableSkipDuringPlay: false,
+    enableEditClickedName: true,
+    enableSkipDuringPlay: true,
     enableTooltipAddition: true,
-    enableMultilingual: false,
+    enableMultilingual: true,
     enableNodeTypeSelection: true,
-    enablePermissions: false,
-    permissions: {},
+    enablePermissions: true,
+    permissions: { 'user': true, 'admin': true },
     enableProfanity: false,
     enableRecording: true,
     enableOverlay: true,
@@ -519,16 +519,17 @@ const CustomConfig = {
     enableUdaIcon: true,
     udaDivId: 'uda-nistapp-logo',
     enableForAllDomains: false,
-    enableSpeechToText: false,
-    enableSlowReplay: false,
+    enableSpeechToText: true,
+    enableSlowReplay: true,
     enableCustomIcon: false,
     customIcon: 'https://udan.nistapp.com/uda-logo.jpg',
     realm: "UDAN",
     clientId: "backend-service",
     clientSecret: "cXA2yFTq3ORQfrio2mGXttFaOTfvIC7N",
-    enableHidePanelAfterCompletion: false,
-    enableStatusSelection: false,
-    enableUDAIconDuringRecording: false // Flag to enable UDA icon during recording
+    enableHidePanelAfterCompletion: true,
+    enableStatusSelection: true,
+    enableUDAIconDuringRecording: true,
+    enableEditingOfRecordings: true // Flag to enable editing of recordings
 };
 
 
@@ -562,7 +563,9 @@ const ENDPOINT = {
     Record: `/clickevents/clickednode`,
     UpdateRecord: `/clickevents/updateclickednode`,
     RecordSequence: `/clickevents/recordsequencedata`,
-    updateRecordSequence: `/clickevents/updatesequencedata`,
+    // updateRecordSequence: `/clickevents/updatesequencedata`,
+    updateRecordSequence: `/sequence/update`,
+    updateSequenceIndex: `/sequence/reindex/`,
     UserClick: `/clickevents/userclick`,
     DeleteSequence: `/clickevents/sequence/delete`,
     fetchRecord: '/search',

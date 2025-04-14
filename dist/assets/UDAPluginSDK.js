@@ -37396,13 +37396,13 @@ __webpack_require__.r(__webpack_exports__);
  */
 // assigning default values to the default configuration
 const CustomConfig = {
-    enableEditClickedName: false,
-    enableSkipDuringPlay: false,
+    enableEditClickedName: true,
+    enableSkipDuringPlay: true,
     enableTooltipAddition: true,
-    enableMultilingual: false,
+    enableMultilingual: true,
     enableNodeTypeSelection: true,
-    enablePermissions: false,
-    permissions: {},
+    enablePermissions: true,
+    permissions: { 'user': true, 'admin': true },
     enableProfanity: false,
     enableRecording: true,
     enableOverlay: true,
@@ -37410,16 +37410,17 @@ const CustomConfig = {
     enableUdaIcon: true,
     udaDivId: 'uda-nistapp-logo',
     enableForAllDomains: false,
-    enableSpeechToText: false,
-    enableSlowReplay: false,
+    enableSpeechToText: true,
+    enableSlowReplay: true,
     enableCustomIcon: false,
     customIcon: 'https://udan.nistapp.com/uda-logo.jpg',
     realm: "UDAN",
     clientId: "backend-service",
     clientSecret: "cXA2yFTq3ORQfrio2mGXttFaOTfvIC7N",
-    enableHidePanelAfterCompletion: false,
-    enableStatusSelection: false,
-    enableUDAIconDuringRecording: false // Flag to enable UDA icon during recording
+    enableHidePanelAfterCompletion: true,
+    enableStatusSelection: true,
+    enableUDAIconDuringRecording: true,
+    enableEditingOfRecordings: true // Flag to enable editing of recordings
 };
 
 
@@ -37453,7 +37454,9 @@ const ENDPOINT = {
     Record: `/clickevents/clickednode`,
     UpdateRecord: `/clickevents/updateclickednode`,
     RecordSequence: `/clickevents/recordsequencedata`,
-    updateRecordSequence: `/clickevents/updatesequencedata`,
+    // updateRecordSequence: `/clickevents/updatesequencedata`,
+    updateRecordSequence: `/sequence/update`,
+    updateSequenceIndex: `/sequence/reindex/`,
     UserClick: `/clickevents/userclick`,
     DeleteSequence: `/clickevents/sequence/delete`,
     fetchRecord: '/search',
@@ -37980,7 +37983,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   recordUserClickData: () => (/* binding */ recordUserClickData),
 /* harmony export */   saveClickData: () => (/* binding */ saveClickData),
 /* harmony export */   updateRecordClicks: () => (/* binding */ updateRecordClicks),
+/* harmony export */   updateRecordSequenceData: () => (/* binding */ updateRecordSequenceData),
 /* harmony export */   updateRecording: () => (/* binding */ updateRecording),
+/* harmony export */   updateSequnceIndex: () => (/* binding */ updateSequnceIndex),
 /* harmony export */   userClick: () => (/* binding */ userClick)
 /* harmony export */ });
 /* harmony import */ var _config_endpoints__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config/endpoints */ "./src/config/endpoints.ts");
@@ -38075,8 +38080,6 @@ const recordClicks = (request) => __awaiter(void 0, void 0, void 0, function* ()
  */
 const updateRecordClicks = (request) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Retrieve the user's session key
-        request.sessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getSessionKey)();
         // Prepare the request parameters
         const parameters = {
             // The URL for the API call
@@ -38085,6 +38088,30 @@ const updateRecordClicks = (request) => __awaiter(void 0, void 0, void 0, functi
             method: "POST",
             // The request body
             body: request,
+        };
+        // Call the API
+        return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+    }
+    catch (error) {
+        // Handle any errors that occurred during the API call
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in updateRecordClicks: ${error.message}`, error);
+        throw error;
+    }
+});
+/**
+ * Updates the record clicks.
+ *
+ * @return {Promise<any>} A promise that resolves with the result of the API call.
+ * @param id
+ */
+const updateSequnceIndex = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Prepare the request parameters
+        const parameters = {
+            // The URL for the API call
+            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.updateSequenceIndex + id,
+            // The HTTP method to use
+            method: "POST"
         };
         // Call the API
         return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
@@ -38425,16 +38452,50 @@ const saveClickData = (node, text, meta) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 /**
- * * To post click sequence data to REST
- * @param request
- * @returns promise
- */
-/**
  * To post the recorded user click sequence data to a REST endpoint.
  * @param request - An object containing the data to be sent in the request payload.
  * @returns A promise that resolves with the response from the REST endpoint.
  */
 const postRecordSequenceData = (request) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Throw an error if the request object is undefined or null.
+        if (!request) {
+            throw new Error("Request object is required");
+        }
+        // Clear the udanSelectedNodes array at the beginning of each call.
+        window.udanSelectedNodes = [];
+        // Retrieve the user click node set from the store.
+        const userclicknodesSet = (0,_util__WEBPACK_IMPORTED_MODULE_5__.getFromStore)(_config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.RECORDING_SEQUENCE, false);
+        // Get the IDs of the user click nodes and join them into a comma-separated string.
+        const ids = userclicknodesSet.map((item) => item.id);
+        // Get the domain of the current web page.
+        let domain = (0,_util_fetchDomain__WEBPACK_IMPORTED_MODULE_9__.fetchDomain)();
+        // Construct the payload object by merging the request object and the other properties.
+        const payload = Object.assign(Object.assign({}, request), { domain: domain, 
+            // Set the ignored status to 0 (false) by default.
+            isIgnored: 0, 
+            // Set the validity status to 1 (true) by default.
+            isValid: 1, 
+            // Use the comma-separated string of user click node IDs.
+            userclicknodelist: ids.join(","), 
+            // Pass the user click node set as an array of objects.
+            userclicknodesSet });
+        // Call the recordSequence function with the constructed payload and return the result.
+        return yield recordSequence(payload);
+    }
+    catch (error) {
+        // Log any errors that occur to the console with a log level of 1.
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in postRecordSequenceData: ${error.message}`, error);
+        // Rethrow the error to allow the calling code to handle it.
+        throw error;
+    }
+});
+/**
+ * To update the recorded user click sequence data to a REST endpoint.
+ * @param request - An object containing the data to be sent in the request payload.
+ * @returns A promise that resolves with the response from the REST endpoint.
+ */
+const updateRecordSequenceData = (request) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Throw an error if the request object is undefined or null.
         if (!request) {
