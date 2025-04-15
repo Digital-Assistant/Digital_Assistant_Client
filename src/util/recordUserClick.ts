@@ -101,6 +101,11 @@ export const recordUserClick = async (node: HTMLElement, event: any) => {
 
   }
 
+  // adding personal flag to icon elements
+  if(checkNodeValues(recordingNode, 'iconNodes')){
+    meta.isPersonal = true;
+  }
+
   // adding text editor name for the recording
   if (checkNodeValues(recordingNode, 'textEditors')) {
     meta.displayText = 'Text Editor';

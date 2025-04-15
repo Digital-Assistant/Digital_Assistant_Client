@@ -16,7 +16,7 @@ import {UDAConsoleLogger, UDAErrorLogger} from "../config/error-log";
 export const checkScreenSize = (): { enablePluginForScreen: boolean; showScreenAlert: boolean } => {
     try {
         // Verify browser environment
-        if (typeof window === 'undefined') {
+        /*if (typeof window === 'undefined') {
             throw new Error('Window object is not available');
         }
 
@@ -70,7 +70,8 @@ export const checkScreenSize = (): { enablePluginForScreen: boolean; showScreenA
         UDAConsoleLogger.info(`System given resolution is: ${screenSize.resolution.width}x${screenSize.resolution.height}`);
         UDAConsoleLogger.info(`Current resolution is: ${effectiveWidth}x${effectiveHeight}`);
 
-        return { enablePluginForScreen, showScreenAlert };
+        return { enablePluginForScreen, showScreenAlert };*/
+        return { enablePluginForScreen: true, showScreenAlert: false };
 
     } catch (error) {
         // Log error and return safe defaults

@@ -16,7 +16,12 @@ export const getRowObject = (data: any) => {
   }
   let sequenceName: string;
   try {
-    sequenceName = JSON.parse(data.name)[0];
+    const names = JSON.parse(data.name || '[]');
+    if (typeof names[0] === 'object' && 'label' in names[0]) {
+      sequenceName = names[0].label;
+    } else {
+      sequenceName = names[0];
+    }
   } catch (e) {
     sequenceName = data.name.toString();
   }

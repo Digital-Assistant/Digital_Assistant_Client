@@ -99,8 +99,6 @@ export const recordClicks = async (request?: any) => {
 
 export const updateRecordClicks = async (request?: any) => {
   try {
-    // Retrieve the user's session key
-    request.sessionid = await getSessionKey();
 
     // Prepare the request parameters
     const parameters = {
@@ -123,6 +121,38 @@ export const updateRecordClicks = async (request?: any) => {
     throw error;
   }
 };
+
+
+/**
+ * Updates the record clicks.
+ *
+ * @return {Promise<any>} A promise that resolves with the result of the API call.
+ * @param id
+ */
+
+export const updateSequnceIndex = async (id: number) => {
+  try {
+
+    // Prepare the request parameters
+    const parameters = {
+      // The URL for the API call
+      url: ENDPOINT.updateSequenceIndex+id,
+      // The HTTP method to use
+      method: "POST"
+    };
+
+    // Call the API
+    return REST.apiCal(parameters);
+  } catch (error) {
+    // Handle any errors that occurred during the API call
+    UDAErrorLogger.error(
+        `Error in updateRecordClicks: ${error.message}`,
+        error
+    );
+    throw error;
+  }
+};
+
 /**
  * Records a sequence of user interactions.
  *
@@ -132,32 +162,35 @@ export const updateRecordClicks = async (request?: any) => {
 export const recordSequence = async (request?: any) => {
   try {
     if (!request) {
-      // Request object is required
-      throw new Error("Request object is required");
+      throw new Error('Request object is required');
     }
 
-    // Get the user's ID
     request.usersessionid = await getUserId();
 
-    // Prepare the request parameters
+    if (!request.usersessionid) {
+      throw new Error('User session ID could not be retrieved');
+    }
+
     const parameters = {
-      // The URL for the API call
       url: ENDPOINT.RecordSequence,
-      // The HTTP method to use
       method: "POST",
-      // The request body
       body: request,
     };
 
-    // Call the API
-    return REST.apiCal(parameters);
+    const response = await REST.apiCal(parameters);
+    if (!response) {
+      throw new Error('No response received from record sequence API');
+    }
+
+    return response;
+
   } catch (error) {
-    // Handle any errors that occurred during the API call
-    UDAErrorLogger.error(`Error in recordSequence: ${error.message}`, error);
-    // Re-throw the error so it can be handled by the caller
+    UDAConsoleLogger.info('Record Sequence Error:', error);
     throw error;
+    return false;
   }
-};
+}
+
 
 /**
  * Records a user click event.
@@ -488,11 +521,7 @@ export const saveClickData = async (node: any, text: string, meta: any) => {
     throw error;
   }
 };
-/**
- * * To post click sequence data to REST
- * @param request
- * @returns promise
- */
+
 /**
  * To post the recorded user click sequence data to a REST endpoint.
  * @param request - An object containing the data to be sent in the request payload.
@@ -540,6 +569,53 @@ export const postRecordSequenceData = async (request: any) => {
 };
 
 /**
+ * To update the recorded user click sequence data to a REST endpoint.
+ * @param request - An object containing the data to be sent in the request payload.
+ * @returns A promise that resolves with the response from the REST endpoint.
+ */
+export const updateRecordSequenceData = async (request: any) => {
+  try {
+    // Throw an error if the request object is undefined or null.
+    if (!request) {
+      throw new Error("Request object is required");
+    }
+
+    // Clear the udanSelectedNodes array at the beginning of each call.
+    window.udanSelectedNodes = [];
+    // Retrieve the user click node set from the store.
+    const userclicknodesSet = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
+    // Get the IDs of the user click nodes and join them into a comma-separated string.
+    const ids = userclicknodesSet.map((item: any) => item.id);
+    // Get the domain of the current web page.
+    let domain = fetchDomain();
+    // Construct the payload object by merging the request object and the other properties.
+    const payload = {
+      ...request,
+      domain: domain,
+      // Set the ignored status to 0 (false) by default.
+      isIgnored: 0,
+      // Set the validity status to 1 (true) by default.
+      isValid: 1,
+      // Use the comma-separated string of user click node IDs.
+      userclicknodelist: ids.join(","),
+      // Pass the user click node set as an array of objects.
+      userclicknodesSet,
+    };
+    // Call the recordSequence function with the constructed payload and return the result.
+    return await recordSequence(payload);
+  } catch (error) {
+    // Log any errors that occur to the console with a log level of 1.
+    UDAErrorLogger.error(
+        `Error in postRecordSequenceData: ${error.message}`,
+        error
+    );
+    // Rethrow the error to allow the calling code to handle it.
+    throw error;
+  }
+};
+
+
+/**
  * To update click data to REST
  * @returns  promise
  * @param request
@@ -578,3 +654,35 @@ export const recordUserClickData = async (
     throw error;
   }
 };
+
+/**
+ * Fetches status options from the API
+ * @param {Object} request - The request object containing category
+ * @param {string} request.category - Category for status filtering, defaults to 'sequenceList'
+ * @returns {Promise} API response containing status options
+ */
+export const fetchStatuses = async (request: {category: string} = {category: 'sequenceList'}) => {
+  try {
+    if (!request.category) {
+      throw new Error('Category is required');
+    }
+
+    const parameters = {
+      url: REST.processArgs(ENDPOINT.statuses, request),
+      method: "GET"
+    };
+
+    const response = await REST.apiCal(parameters);
+    if (!response) {
+      throw new Error('No response received from status API');
+    }
+
+    return response;
+
+  } catch (error) {
+    UDAConsoleLogger.info('Fetch Status Error:', error);
+    console.log(error);
+    return Promise.reject(error);
+  }
+};
+

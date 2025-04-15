@@ -17,11 +17,11 @@ jest.mock('../config/CustomConfig', () => ({
       setting2: 42,
       setting3: true,
     },
-  
+
 
   /**
    * Defines the property types for the `CustomConfig` object.
-   * 
+   *
    * - `setting1`: A string value.
    * - `setting2`: A number value.
    * - `setting3`: A boolean value.
@@ -69,7 +69,7 @@ it('should update CustomConfig with valid data', () => {
 
 /**
  * Tests that the `AppConfig` function correctly handles invalid data types for the `CustomConfig` object.
- * 
+ *
  * This test verifies that when the `AppConfig` function is called with a `Partial<CustomConfigPropTypes>` object
  * containing properties with invalid data types, the `CustomConfig` object is not updated with those invalid values.
  * Instead, the test expects the default values to be preserved.
@@ -89,7 +89,7 @@ it('should not update CustomConfig with invalid data types', () => {
 
   /**
    * Tests that the `AppConfig` function correctly handles undefined values for the `CustomConfig` object.
-   * 
+   *
    * This test verifies that when the `AppConfig` function is called with a `Partial<CustomConfigPropTypes>` object
    * containing properties with `undefined` values, the `CustomConfig` object is not updated with those `undefined` values.
    * Instead, the test expects the default values to be preserved.
@@ -109,10 +109,10 @@ it('should not update CustomConfig with invalid data types', () => {
 });
 
 
- 
+
   /**
    * Tests that the `AppConfig` function correctly handles partial updates to the `CustomConfig` object.
-   * 
+   *
    * This test verifies that when the `AppConfig` function is called with a `Partial<CustomConfigPropTypes>` object
    * containing only a subset of the `CustomConfigPropTypes` properties, the `CustomConfig` object is updated with
    * the provided values, while the remaining properties retain their default values.
@@ -134,7 +134,7 @@ it('should not update CustomConfig with invalid data types', () => {
 
  /**
   * Tests that the `AppConfig` function correctly logs appropriate messages when invalid data types are provided.
-  * 
+  *
   * This test verifies that when the `AppConfig` function is called with a `Partial<CustomConfigPropTypes>` object
   * containing properties with invalid data types, the function logs the appropriate error messages.
   */
@@ -154,7 +154,7 @@ it('should not update CustomConfig with invalid data types', () => {
 
   /**
    * Tests that the `AppConfig` function correctly handles empty input.
-   * 
+   *
    * This test verifies that when the `AppConfig` function is called with an empty `Partial<CustomConfigPropTypes>` object,
    * the `CustomConfig` object is updated with the default values for all properties.
    */
@@ -181,9 +181,12 @@ it('should not update CustomConfig with invalid data types', () => {
         realm: 'your-realm', // Add this property
         clientId: 'your-client-id', // Add this property
         clientSecret: 'your-client-secret', // Add this property
-        enableHidePanelAfterCompletion: false // Add this property
+        enableHidePanelAfterCompletion: false, // Add this property
+        enableStatusSelection: false, // Flag to enable status selection
+        enableUDAIconDuringRecording: false, // Flag to enable UDA icon during recording
+        enableEditingOfRecordings: false // Flag to enable editing of recordings
       };
-  });      
+  });
 
 // Mock CustomConfig
 /**
@@ -196,7 +199,7 @@ jest.mock('../config/CustomConfig', () => ({
     setting2: 42,
     setting3: true,
   },
-  
+
   CustomConfigPropTypes: {
     setting1: 'string',
     setting2: 'number',
@@ -218,7 +221,7 @@ describe('AppConfig', () => {
     CustomConfig.setting3 = true;
   });
 
- 
+
   /**
    * Updates the `CustomConfig` object with the provided partial configuration data.
    *
@@ -238,10 +241,10 @@ describe('AppConfig', () => {
   expect(CustomConfig.enableSkipDuringPlay).toBe(false);
 });
 
- 
+
  /**
   * Tests that the `AppConfig` function correctly handles undefined values in the provided `testData` object.
-  * 
+  *
   * When the `testData` object contains properties with `undefined` values, the `AppConfig` function should update the corresponding properties in the `CustomConfig` object to `undefined` as well.
   */
  it('should handle undefined values', () => {
@@ -256,7 +259,7 @@ describe('AppConfig', () => {
   expect(CustomConfig.enableSkipDuringPlay).toBeUndefined();
 });
 
-  
+
  /**
   * Updates the `CustomConfig` object with the provided partial configuration data.
   *
@@ -274,7 +277,7 @@ describe('AppConfig', () => {
   expect(CustomConfig.enableEditClickedName).toBe(true);
 });
 
-  
+
  /**
   * Tests that the `AppConfig` function correctly ignores properties that are not present in the `CustomConfig` object.
   *
@@ -292,7 +295,7 @@ describe('AppConfig', () => {
   expect(CustomConfig).not.toHaveProperty('nonExistentProperty');
 });
 
-  
+
 /**
  * Tests that the `AppConfig` function correctly ignores invalid data types for configuration properties.
  *
@@ -343,7 +346,7 @@ it('should ignore non-existent keys', () => {
   expect(CustomConfig).not.toHaveProperty('nonExistentKey');
 });
 
- 
+
   /**
    * Tests that the `AppConfig` function correctly handles null values for configuration properties.
    *
@@ -355,9 +358,9 @@ it('should ignore non-existent keys', () => {
         enableSkipDuringPlay: null,
         // Add other properties from CustomConfigPropTypes as needed
       };
-    
+
       AppConfig(testData as CustomConfigPropTypes);
-    
+
       expect(CustomConfig.enableEditClickedName).toBeNull();
       expect(CustomConfig.enableSkipDuringPlay).toBeNull();
     });
@@ -383,7 +386,7 @@ it('should handle both valid and invalid properties', () => {
   };
 
   const consoleSpy = jest.spyOn(console, 'log');
-  
+
   AppConfig(invalidData as CustomConfigPropTypes);
 
   expect(CustomConfig.enableEditClickedName).toBe(true);
@@ -524,7 +527,10 @@ describe('AppConfig', () => {
         realm: 'your-realm', // Add this property
         clientId: 'your-client-id', // Add this property
         clientSecret: 'your-client-secret', // Add this property
-        enableHidePanelAfterCompletion: false // Add this property
+        enableHidePanelAfterCompletion: false, // Add this property
+        enableStatusSelection: false, // Flag to enable status selection
+        enableUDAIconDuringRecording: false, // Flag to enable UDA icon during recording
+        enableEditingOfRecordings: false // Flag to enable editing of recordings
       };
     AppConfig(testData);
     expect(CustomConfig).toEqual(testData);
@@ -541,9 +547,9 @@ describe('AppConfig', () => {
 
   /**
    * Tests that the `AppConfig` function correctly handles type mismatches for multiple configuration properties.
-   * 
+   *
    * This test verifies that the `AppConfig` function correctly sets the corresponding `CustomConfig` properties to their default values when the input data contains values of the wrong type.
-   * 
+   *
    * The test provides an input object with properties of types `number`, `string`, and `object`, which do not match the expected types for those properties in `CustomConfig`. The test then verifies that the `AppConfig` function sets the corresponding `CustomConfig` properties to their default values, and that the `console.warn` function is called the expected number of times to log the type mismatches.
    */
   it('should handle type mismatches for multiple properties', () => {
@@ -565,9 +571,9 @@ describe('AppConfig', () => {
 
 /**
  * Resets the `CustomConfig` object to its initial state before each test in the `AppConfig` test suite.
- * 
+ *
  * This `beforeEach` hook is used to ensure that the `CustomConfig` object is in a known state before each test is executed. It iterates over the keys of the `CustomConfig` object and sets each property to `false`, effectively resetting the configuration to its default state.
- * 
+ *
  * This setup ensures that the tests in the `AppConfig` suite are independent and do not rely on the state of the `CustomConfig` object from previous tests.
  */
 describe('AppConfig', () => {
@@ -579,9 +585,9 @@ describe('AppConfig', () => {
   });
 /**
  * Tests that the `AppConfig` function correctly handles partial updates with some undefined values.
- * 
+ *
  * This test case verifies that the `AppConfig` function correctly updates the `CustomConfig` object with a partial set of configuration data, where some properties are set to `undefined`. The test ensures that the `AppConfig` function sets the `CustomConfig` properties to their default values for the properties that are not explicitly set in the input data.
- * 
+ *
  * @remarks
  * This test case is part of the suite of tests for the `AppConfig` function, which is responsible for updating the `CustomConfig` object with configuration settings.
  */
@@ -600,9 +606,9 @@ describe('AppConfig', () => {
 
   /**
    * Tests that the `AppConfig` function correctly handles boolean conversions for configuration properties.
-   * 
+   *
    * This test case verifies that the `AppConfig` function correctly updates the `CustomConfig` object with boolean properties, including handling values that can be converted to boolean (e.g. `Boolean(1)` and `Boolean(0)`).
-   * 
+   *
    * @remarks
    * This test case is part of the suite of tests for the `AppConfig` function, which is responsible for updating the `CustomConfig` object with configuration settings.
    */
@@ -622,9 +628,9 @@ describe('AppConfig', () => {
 
   /**
    * Tests that the `AppConfig` function correctly handles repeated calls with different data.
-   * 
+   *
    * This test case verifies that the `AppConfig` function correctly updates the `CustomConfig` object with multiple sets of configuration data, ensuring that the final state reflects the latest updates.
-   * 
+   *
    * @remarks
    * This test case is part of the suite of tests for the `AppConfig` function, which is responsible for updating the `CustomConfig` object with configuration settings.
    */
@@ -644,9 +650,9 @@ describe('AppConfig', () => {
 
   /**
    * Tests that the `AppConfig` function correctly handles non-boolean properties.
-   * 
+   *
    * This test case verifies that the `AppConfig` function correctly updates the `CustomConfig` object with non-boolean properties, such as strings and arrays.
-   * 
+   *
    * @remarks
    * This test case is part of the suite of tests for the `AppConfig` function, which is responsible for updating the `CustomConfig` object with configuration settings.
    */
@@ -665,7 +671,7 @@ describe('AppConfig', () => {
 
 /**
  * Resets the `CustomConfig` object to its initial state before each test in the `AppConfig` test suite.
- * 
+ *
  * This `beforeEach` hook is used to ensure that the `CustomConfig` object is in a known state before each test is executed. This helps to isolate the tests from any side effects that may have occurred in previous tests.
  */
 describe('AppConfig', () => {
@@ -678,9 +684,9 @@ describe('AppConfig', () => {
 
   /**
    * Tests that the `AppConfig` function correctly handles edge case values for boolean properties.
-   * 
+   *
    * This test case verifies that the `AppConfig` function correctly updates the `CustomConfig` object with boolean properties that have edge case values, such as an empty object, the number 0, the number 1, and an empty string.
-   * 
+   *
    * @remarks
    * This test case is part of the suite of tests for the `AppConfig` function, which is responsible for updating the `CustomConfig` object with configuration settings.
    */
@@ -700,9 +706,9 @@ describe('AppConfig', () => {
 
   /**
    * Tests that the `AppConfig` function correctly maintains the type consistency of non-boolean properties.
-   * 
+   *
    * This test case verifies that the `AppConfig` function correctly updates the `CustomConfig` object with non-boolean properties, ensuring that the types of the properties are preserved.
-   * 
+   *
    * @remarks
    * This test case is part of the suite of tests for the `AppConfig` function, which is responsible for updating the `CustomConfig` object with configuration settings.
    */
@@ -720,9 +726,9 @@ describe('AppConfig', () => {
 
   /**
    * Tests that the `AppConfig` function correctly handles properties with default values.
-   * 
+   *
    * This test case verifies that the `AppConfig` function correctly updates the `CustomConfig` object with a property that has a default value. It ensures that the other properties in `CustomConfig` are not affected and maintain their default values.
-   * 
+   *
    * @remarks
    * This test case is part of the suite of tests for the `AppConfig` function, which is responsible for updating the `CustomConfig` object with configuration settings.
    */
@@ -742,9 +748,9 @@ describe('AppConfig', () => {
 
   /**
    * Tests that the `AppConfig` function correctly ignores properties with `undefined` values.
-   * 
+   *
    * This test case verifies that the `AppConfig` function correctly handles properties with `undefined` values in the input data. It ensures that the `CustomConfig` object is not updated for these properties, and the existing default values are maintained.
-   * 
+   *
    * @remarks
    * This test case is part of the suite of tests for the `AppConfig` function, which is responsible for updating the `CustomConfig` object with configuration settings.
    */
