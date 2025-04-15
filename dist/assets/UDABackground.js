@@ -505,13 +505,13 @@ __webpack_require__.r(__webpack_exports__);
  */
 // assigning default values to the default configuration
 const CustomConfig = {
-    enableEditClickedName: true,
-    enableSkipDuringPlay: true,
+    enableEditClickedName: false,
+    enableSkipDuringPlay: false,
     enableTooltipAddition: true,
-    enableMultilingual: true,
+    enableMultilingual: false,
     enableNodeTypeSelection: true,
-    enablePermissions: true,
-    permissions: { 'user': true, 'admin': true },
+    enablePermissions: false,
+    permissions: {},
     enableProfanity: false,
     enableRecording: true,
     enableOverlay: true,
@@ -519,16 +519,16 @@ const CustomConfig = {
     enableUdaIcon: true,
     udaDivId: 'uda-nistapp-logo',
     enableForAllDomains: false,
-    enableSpeechToText: true,
-    enableSlowReplay: true,
+    enableSpeechToText: false,
+    enableSlowReplay: false,
     enableCustomIcon: false,
     customIcon: 'https://udan.nistapp.com/uda-logo.jpg',
     realm: "UDAN",
     clientId: "backend-service",
     clientSecret: "cXA2yFTq3ORQfrio2mGXttFaOTfvIC7N",
-    enableHidePanelAfterCompletion: true,
-    enableStatusSelection: true,
-    enableUDAIconDuringRecording: true,
+    enableHidePanelAfterCompletion: false,
+    enableStatusSelection: false,
+    enableUDAIconDuringRecording: false,
     enableEditingOfRecordings: true // Flag to enable editing of recordings
 };
 
