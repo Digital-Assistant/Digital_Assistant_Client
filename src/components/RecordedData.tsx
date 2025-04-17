@@ -1,5 +1,5 @@
 /**
- * Author: Lakshman Veti
+ * Author: Yureswar Ravuri
  * Type: Component
  * Objective: To render recorded sequences
  * Associated Route/Usage: *
@@ -19,6 +19,7 @@ import {isHighlightNode} from "../util/checkNode";
 import {Alert, Progress, Space, Switch} from "antd";
 import {UDAConsoleLogger, UDAErrorLogger} from "../config/error-log";
 import {addNotification} from "../util/addNotification";
+import EditableStepForm from "./EditableStepForm";
 
 export interface MProps {
     sequenceName?: string;
@@ -581,9 +582,7 @@ export const RecordedData = (props: MProps) => {
             return recordData?.map((item: any, index: number) => {
                 let objectData = getObjData(item?.objectdata);
                 let clickedName = (objectData.meta.hasOwnProperty('displayText')) ? objectData.meta.displayText : item.clickednodename;
-                if (recordData?.length - 1 === index) {
-                    // validateClickedInputName(index, clickedName);
-                }
+
                 return (
                     <li
                         className="uda-recorded-label-editable completed"
@@ -598,130 +597,18 @@ export const RecordedData = (props: MProps) => {
                                     {(objectData.meta.hasOwnProperty('displayText')) ? objectData.meta.displayText : item.clickednodename}
                                 </span>
                             }
-                            {recordData?.length - 1 === index && (
-                                <span id="uda-display-clicked-text" style={{flex: 2}}>
-                    <input
-                        type="text"
-                        id="uda-edited-name"
-                        name="uda-edited-name"
-                        className={`uda-form-input uda_exclude ${
-                            !item.editable ? "non-editable" : ""
-                        } ${item.profanity ? "profanity" : ""}`}
-                        placeholder="Enter Name"
-                        // onChange={onLabelChange(index)}
-                        onChange={async (e: any) => {
-                            await validateClickedInputName(index, e.target.value)
-                        }}
-                        // onChange={updateInput(index)}
-                        onBlur={async (e: any) => {
-                            await checkProfanityForGivenLabel(index, e.target.value);
-                        }}
-                        readOnly={!item.editable}
-                        style={{width: "85%! important"}}
-                        // onKeyDown={handleLabelChange(index)}
-                        onClick={() => {
-                            setEdit(index);
-                        }}
-                        value={(objectData.meta.hasOwnProperty('displayText')) ? objectData.meta.displayText : item.clickednodename}
-                    />
-                    {(inputAlert.clickedInputNameProfanity) &&
-                        <span className={`uda-alert`}> {translate('profanityDetected')}</span>}
-                    {inputError.clickedNodeName &&
-                        <span className={`uda-alert`}> {translate('inputError')}</span>}
-                  </span>
-                            )}
-                            <br/>
                         </div>
 
                         {recordData?.length - 1 === index && (
-                            <>
-                                {props.config.enableSkipDuringPlay &&
-                                    <>
-                                        <div className="flex-card flex-vcenter small-text">
-                                            <input
-                                                type="checkbox"
-                                                id="UDA-skip-duringPlay"
-                                                className="uda-checkbox flex-vcenter uda_exclude"
-                                                value={(objectData.meta.hasOwnProperty('skipDuringPlay') && objectData.meta.skipDuringPlay) ? 1 : 0}
-                                                checked={(objectData.meta.hasOwnProperty('skipDuringPlay') && objectData.meta.skipDuringPlay)}
-                                                onChange={handleSkipPlay(index)}
-                                            />
-                                            <label className="uda-checkbox-label">Skip during play</label>
-                                            <span
-                                                className="info-icon ms-1 "
-                                                title={translate('skipInfo')}
-                                            >
-                                  <InfoCircleOutlined/>
-                                </span>
-                                        </div>
-                                    </>
-                                }
-                                <>
-                                    <div className="flex-card flex-vcenter small-text">
-                                        <input
-                                            type="checkbox"
-                                            id="isPersonal"
-                                            className="uda-checkbox uda_exclude"
-                                            value={(objectData.meta.hasOwnProperty('isPersonal') && objectData.meta.isPersonal) ? 1 : 0}
-                                            checked={(objectData.meta.hasOwnProperty('isPersonal') && objectData.meta.isPersonal)}
-                                            onChange={handlePersonal(index)}
-                                        />
-                                        <label className="uda-checkbox-label">{translate('personalInfoLabel')}</label>
-                                        <span className="info-icon" title={translate('personalInfoTooltip')}>
-                          <InfoCircleOutlined/>
-                        </span>
-                                    </div>
-                                </>
-                                {(props.config.enableTooltipAddition === true && isHighlightNode(objectData)) &&
-                                    <>
-                                        <div className="uda-recording uda_exclude" style={{textAlign: "center"}}>
-
-                                            <>
-                                                <input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip"
-                                                       className="uda-form-input uda_exclude"
-                                                       placeholder={translate('toolTipPlaceHolder')}
-                                                       style={{width: "68% !important"}}
-                                                       onChange={async (e: any) => {
-                                                           await validateTooltip(e.target.value);
-                                                       }}
-                                                       value={(tooltip && tooltip !=="")? tooltip : objectData.meta?.tooltipInfo}/>
-                                            </>
-                                            {inputError.tooltip && <span className={`uda-alert`}> {translate('inputError')}</span>}
-                                            <span>
-                                              <button
-                                                  className={`uda-tutorial-btn uda_exclude ${(disableTooltipSubmitBtn) ? "disabled" : ""}`}
-                                                  style={{color: "#fff", marginTop: "10px"}}
-                                                  id="uda-tooltip-save"
-                                                  disabled={disableTooltipSubmitBtn}
-                                                  onClick={async () => {
-                                                      await updateTooltip('tooltipInfo', index)
-                                                  }}>{(!objectData.meta?.tooltipInfo)?translate('submitTooltip'):translate('updateTooltip')}</button>
-                                            </span>
-                                        </div>
-                                    </>
-                                }
-                                <SelectedElement data={item} index={index} recordData={recordData} config={props.config} storeRecording={storeRecording}/>
-                                {(props.config.enableSlowReplay === true) &&
-                                    <>
-                                        <div className="uda-recording uda_exclude" style={{textAlign: "center"}}>
-                                            <>
-                                                <input type="number" id="uda-slowPlaybackTime" name="uda-slowPlaybackTime"
-                                                       className="uda-form-input uda_exclude"
-                                                       placeholder={translate('playBackTimePlaceHolder')}
-                                                       style={{width: "68% !important"}}
-                                                       onChange={async (e: any) => {
-                                                           await validateDelayTime(e.target.value, 'slowPlaybackTime', index);
-                                                       }}
-                                                       onBlur={async (e: any) => {
-                                                           await validateDelayTime(e.target.value, 'slowPlaybackTime', index);
-                                                       }}
-                                                       value={parseInt(objectData.meta?.slowPlaybackTime)}/>
-                                            </>
-                                            {inputError?.slowPlaybackTime && <span className={`uda-alert`}> {translate('inputError')}</span>}
-                                        </div>
-                                    </>
-                                }
-                            </>
+                            <EditableStepForm
+                                item={item}
+                                index={index}
+                                recordData={recordData}
+                                config={props.config}
+                                isUpdateMode={false} // No save/cancel buttons in recording mode
+                                storeRecording={storeRecording}
+                                showLoader={props.showLoader}
+                            />
                         )}
                     </li>
                 );
