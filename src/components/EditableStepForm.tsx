@@ -5,14 +5,15 @@
  * Associated Usage: RecordSequenceDetails.tsx, RecordedData.tsx
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { getObjData } from "../util";
-import { profanityCheck } from "../services/recordService";
+import { profanityCheck, updateRecordClicks, updateSequnceIndex } from "../services/recordService";
 import { translate } from "../util/translation";
 import { isHighlightNode } from "../util/checkNode";
 import SelectedElement from "./SelectedElement";
 import { Button } from "antd";
+import { addNotification } from "../util/addNotification";
 
 interface EditableStepFormProps {
     item: any;
@@ -24,6 +25,7 @@ interface EditableStepFormProps {
     onSave?: (index: number) => Promise<void>;
     onCancel?: () => void;
     showLoader?: Function;
+    recordingId?: number;
 }
 
 const EditableStepForm: React.FC<EditableStepFormProps> = ({
@@ -35,45 +37,75 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
                                                                storeRecording,
                                                                onSave,
                                                                onCancel,
-                                                               showLoader
+                                                               showLoader,
+                                                               recordingId
                                                            }) => {
-    const objectData = getObjData(item.objectdata);
+    // Create refs to track if component is mounted
+    const isMounted = useRef(true);
 
-    // State for form fields
-    const [stepEditValue, setStepEditValue] = useState<string>('');
-    const [stepProfanityError, setStepProfanityError] = useState<boolean>(false);
-    const [stepInputError, setStepInputError] = useState<boolean>(false);
-    const [inputError, setInputError] = useState<any>({});
-    const [tooltip, setTooltip] = useState<string>('');
-    const [disableTooltipSubmitBtn, setDisableTooltipSubmitBtn] = useState<boolean>(true);
+    // Get object data from the item
+    const objectData = getObjData(item?.objectdata || '{}');
 
-    // Initialize form values from item data
+    // State for form fields - using refs to prevent re-renders
+    const [formState, setFormState] = useState({
+        stepEditValue: '',
+        tooltip: '',
+        slowPlaybackTime: '',
+        stepProfanityError: false,
+        stepInputError: false,
+        inputError: {tooltip: false, slowPlaybackTime: false},
+        disableTooltipSubmitBtn: true
+    });
+
+    // Initialize form values from item data only once on mount
     useEffect(() => {
-        // Prefill the step name with existing data
-        setStepEditValue(objectData.meta?.displayText || item.clickednodename);
+        // Get the display text from meta or use clickednodename as fallback
+        const displayText = objectData?.meta?.displayText || item?.clickednodename || '';
 
-        // Prefill the tooltip with existing data
-        setTooltip(objectData.meta?.tooltipInfo || '');
+        // Get tooltip info from meta
+        const tooltipInfo = objectData?.meta?.tooltipInfo || '';
 
-        // Enable tooltip submit button if tooltip already exists
-        setDisableTooltipSubmitBtn(!objectData.meta?.tooltipInfo);
-    }, [item, objectData]);
+        // Get slow playback time from meta
+        const playbackTime = objectData?.meta?.slowPlaybackTime || '';
+
+        setFormState({
+            ...formState,
+            stepEditValue: displayText,
+            tooltip: tooltipInfo,
+            slowPlaybackTime: playbackTime,
+            disableTooltipSubmitBtn: tooltipInfo === ''
+        });
+
+        // Cleanup function to set isMounted to false when component unmounts
+        return () => {
+            isMounted.current = false;
+        };
+    }, []); // Empty dependency array means this runs once on mount
+
+    // Update form state safely
+    const updateFormState = (updates) => {
+        if (isMounted.current) {
+            setFormState(prevState => ({
+                ...prevState,
+                ...updates
+            }));
+        }
+    };
 
     /**
      * Validate step name input
      * @param value - The new value for the step
      */
-    const validateStepName = async (value: string) => {
-        setStepEditValue(value);
-
+    const validateStepName = (value: string) => {
         // Basic validation - check if empty or too long
-        if (!value.trim() || value.length > 100) {
-            setStepInputError(true);
-            return false;
-        } else {
-            setStepInputError(false);
-            return true;
-        }
+        const hasError = !value.trim() || value.length > 100;
+
+        updateFormState({
+            stepEditValue: value,
+            stepInputError: hasError
+        });
+
+        return !hasError;
     };
 
     /**
@@ -82,7 +114,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
      */
     const checkProfanityForStep = async (value: string) => {
         if (!config.enableProfanity || !value.trim()) {
-            setStepProfanityError(false);
+            updateFormState({ stepProfanityError: false });
             return;
         }
 
@@ -90,13 +122,13 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
             const response = await profanityCheck(value);
 
             if (response.Terms && response.Terms.length > 0) {
-                setStepProfanityError(true);
+                updateFormState({ stepProfanityError: true });
             } else {
-                setStepProfanityError(false);
+                updateFormState({ stepProfanityError: false });
             }
         } catch (error) {
             console.error("Error checking profanity:", error);
-            setStepProfanityError(false);
+            updateFormState({ stepProfanityError: false });
         }
     };
 
@@ -104,17 +136,17 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
      * Validate tooltip input
      * @param value - The tooltip text to validate
      */
-    const validateTooltip = async (value: string) => {
-        setTooltip(value);
-
+    const validateTooltip = (value: string) => {
         // Basic validation - check if empty or too long
-        if (value && value.length > 0 && value.length <= 100) {
-            setDisableTooltipSubmitBtn(false);
-            setInputError({...inputError, tooltip: false});
-        } else {
-            setDisableTooltipSubmitBtn(true);
-            setInputError({...inputError, tooltip: true});
-        }
+        const isValid = value && value.length > 0 && value.length <= 100;
+
+        const newInputError = {...formState.inputError, tooltip: !isValid};
+
+        updateFormState({
+            tooltip: value,
+            disableTooltipSubmitBtn: !isValid,
+            inputError: newInputError
+        });
     };
 
     /**
@@ -122,7 +154,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
      * @param field - The field to update
      */
     const updateTooltip = async (field: string) => {
-        if (disableTooltipSubmitBtn) {
+        if (formState.disableTooltipSubmitBtn) {
             return;
         }
 
@@ -134,11 +166,16 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
             if (!nodeData.meta) {
                 nodeData.meta = {};
             }
-            nodeData.meta[field] = tooltip;
+            nodeData.meta[field] = formState.tooltip;
             updatedRecordData[index].objectdata = JSON.stringify(nodeData);
 
             storeRecording(updatedRecordData);
-            setDisableTooltipSubmitBtn(true);
+            updateFormState({ disableTooltipSubmitBtn: true });
+
+            addNotification(translate('tooltipUpdated'), translate('tooltipUpdatedDescription'), 'success');
+        } catch (error) {
+            console.error("Error updating tooltip:", error);
+            addNotification(translate('tooltipUpdateError'), translate('tooltipUpdateErrorDescription'), 'error');
         } finally {
             if (showLoader) showLoader(false);
         }
@@ -149,13 +186,21 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
      * @param value - The delay time value
      * @param field - The field name
      */
-    const validateDelayTime = async (value: number, field: string) => {
+    const validateDelayTime = (value: number | string, field: string) => {
+        const numValue = Number(value);
+
         // Implement validation logic for delay time
-        if (isNaN(value) || value < 0 || value > 10000) {
-            setInputError({...inputError, [field]: true});
+        const hasError = isNaN(numValue) || numValue < 0 || numValue > 10000;
+
+        const newInputError = {...formState.inputError, [field]: hasError};
+
+        updateFormState({
+            slowPlaybackTime: value,
+            inputError: newInputError
+        });
+
+        if (hasError) {
             return;
-        } else {
-            setInputError({...inputError, [field]: false});
         }
 
         if (showLoader) showLoader(true);
@@ -166,10 +211,15 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
             if (!nodeData.meta) {
                 nodeData.meta = {};
             }
-            nodeData.meta[field] = value;
+            nodeData.meta[field] = numValue;
             updatedRecordData[index].objectdata = JSON.stringify(nodeData);
 
             storeRecording(updatedRecordData);
+
+            addNotification(translate('delayTimeUpdated'), translate('delayTimeUpdatedDescription'), 'success');
+        } catch (error) {
+            console.error("Error updating delay time:", error);
+            addNotification(translate('delayTimeUpdateError'), translate('delayTimeUpdateErrorDescription'), 'error');
         } finally {
             if (showLoader) showLoader(false);
         }
@@ -178,7 +228,9 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
     /**
      * Handle skip during play checkbox change
      */
-    const handleSkipPlay = () => {
+    const handleSkipPlay = (e) => {
+        e.stopPropagation();
+
         const updatedRecordData = [...recordData];
         const nodeData = getObjData(updatedRecordData[index].objectdata);
         if (!nodeData.meta) {
@@ -193,7 +245,9 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
     /**
      * Handle personal info checkbox change
      */
-    const handlePersonal = () => {
+    const handlePersonal = (e) => {
+        e.stopPropagation();
+
         const updatedRecordData = [...recordData];
         const nodeData = getObjData(updatedRecordData[index].objectdata);
         if (!nodeData.meta) {
@@ -201,6 +255,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
         }
         nodeData.meta.isPersonal = !nodeData.meta.isPersonal;
         updatedRecordData[index].objectdata = JSON.stringify(nodeData);
+
         storeRecording(updatedRecordData);
     };
 
@@ -209,7 +264,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
      */
     const saveStep = async () => {
         // Don't save if there are errors
-        if (stepInputError || stepProfanityError) {
+        if (formState.stepInputError || formState.stepProfanityError) {
             return;
         }
 
@@ -226,52 +281,65 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
             if (!nodeData.meta) {
                 nodeData.meta = {};
             }
-            nodeData.meta.displayText = stepEditValue;
+            nodeData.meta.displayText = formState.stepEditValue;
 
             // Convert back to string and update the objectdata
             updatedRecordData[index].objectdata = JSON.stringify(nodeData);
 
             // Update the clickednodename field as well for backward compatibility
-            updatedRecordData[index].clickednodename = stepEditValue;
+            updatedRecordData[index].clickednodename = formState.stepEditValue;
 
             // Store the updated data
             storeRecording(updatedRecordData);
 
+            // If in update mode, update the record in the backend
+            if (isUpdateMode && recordingId) {
+                await updateRecordClicks(updatedRecordData[index]);
+                await updateSequnceIndex(recordingId);
+            }
+
             // Call the onSave callback if provided
             if (onSave) {
                 await onSave(index);
+            } else {
+                addNotification(translate('stepUpdated'), translate('stepUpdatedDescription'), 'success');
             }
         } catch (error) {
             console.error("Error saving step:", error);
+            addNotification(translate('stepUpdateError'), translate('stepUpdateErrorDescription'), 'error');
         } finally {
             if (showLoader) showLoader(false);
         }
     };
 
+    // Prevent re-renders from affecting the form
+    const handleInputChange = (e) => {
+        e.stopPropagation();
+        validateStepName(e.target.value);
+    };
+
     return (
-        <div style={{ width: '100%', padding: '10px' }}>
+        <div style={{ width: '100%', padding: '10px' }} onClick={(e) => e.stopPropagation()}>
           <span style={{flex: 2}}>
             <input
                 type="text"
                 id="uda-edited-name"
                 name="uda-edited-name"
                 className={`uda-form-input uda_exclude ${
-                    stepProfanityError ? "profanity" : ""
+                    formState.stepProfanityError ? "profanity" : ""
                 }`}
                 placeholder="Enter Name"
-                onChange={async (e) => {
-                    await validateStepName(e.target.value);
-                }}
-                onBlur={async (e) => {
-                    await checkProfanityForStep(e.target.value);
+                onChange={handleInputChange}
+                onBlur={(e) => {
+                    checkProfanityForStep(e.target.value);
                 }}
                 style={{width: "85%"}}
                 onClick={(e) => e.stopPropagation()}
-                value={stepEditValue}
+                value={formState.stepEditValue}
             />
-              {stepProfanityError &&
+              {formState.stepProfanityError &&
                   <span className={`uda-alert`}> {translate('profanityDetected')}</span>}
-              {stepInputError &&
+              {formState.stepInputError &&
                   <span className={`uda-alert`}> {translate('inputError')}</span>}
           </span>
 
@@ -281,8 +349,8 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
                         type="checkbox"
                         id="UDA-skip-duringPlay"
                         className="uda-checkbox flex-vcenter uda_exclude"
-                        value={(objectData.meta?.skipDuringPlay) ? 1 : 0}
-                        checked={(objectData.meta?.skipDuringPlay)}
+                        value={(objectData?.meta?.skipDuringPlay) ? 1 : 0}
+                        checked={(objectData?.meta?.skipDuringPlay)}
                         onChange={handleSkipPlay}
                         onClick={(e) => e.stopPropagation()}
                     />
@@ -301,8 +369,8 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
                     type="checkbox"
                     id="isPersonal"
                     className="uda-checkbox uda_exclude"
-                    value={(objectData.meta?.isPersonal) ? 1 : 0}
-                    checked={(objectData.meta?.isPersonal)}
+                    value={(objectData?.meta?.isPersonal) ? 1 : 0}
+                    checked={(objectData?.meta?.isPersonal)}
                     onChange={handlePersonal}
                     onClick={(e) => e.stopPropagation()}
                 />
@@ -321,29 +389,29 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
                         className="uda-form-input uda_exclude"
                         placeholder={translate('toolTipPlaceHolder')}
                         style={{width: "68% !important"}}
-                        onChange={async (e) => {
-                            await validateTooltip(e.target.value);
+                        onChange={(e) => {
+                            validateTooltip(e.target.value);
                         }}
                         onClick={(e) => e.stopPropagation()}
-                        value={tooltip}
+                        value={formState.tooltip}
                     />
-                    {inputError.tooltip &&
+                    {formState.inputError?.tooltip &&
                         <span className={`uda-alert`}> {translate('inputError')}</span>
                     }
-                    <span>
+                    <div>
                         <button
-                            className={`uda-tutorial-btn uda_exclude ${(disableTooltipSubmitBtn) ? "disabled" : ""}`}
+                            className={`uda-tutorial-btn uda_exclude ${(formState.disableTooltipSubmitBtn) ? "disabled" : ""}`}
                             style={{color: "#fff", marginTop: "10px"}}
                             id="uda-tooltip-save"
-                            disabled={disableTooltipSubmitBtn}
-                            onClick={async (e) => {
+                            disabled={formState.disableTooltipSubmitBtn}
+                            onClick={(e) => {
                                 e.stopPropagation();
-                                await updateTooltip('tooltipInfo');
+                                updateTooltip('tooltipInfo');
                             }}
                         >
-                          {(!objectData.meta?.tooltipInfo) ? translate('submitTooltip') : translate('updateTooltip')}
+                          {(!objectData?.meta?.tooltipInfo) ? translate('submitTooltip') : translate('updateTooltip')}
                         </button>
-                    </span>
+                    </div>
                 </div>
             }
 
@@ -364,16 +432,16 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
                         className="uda-form-input uda_exclude"
                         placeholder={translate('playBackTimePlaceHolder')}
                         style={{width: "68% !important"}}
-                        onChange={async (e) => {
-                            await validateDelayTime(parseInt(e.target.value), 'slowPlaybackTime');
+                        onChange={(e) => {
+                            validateDelayTime(e.target.value, 'slowPlaybackTime');
                         }}
-                        onBlur={async (e) => {
-                            await validateDelayTime(parseInt(e.target.value), 'slowPlaybackTime');
+                        onBlur={(e) => {
+                            validateDelayTime(e.target.value, 'slowPlaybackTime');
                         }}
                         onClick={(e) => e.stopPropagation()}
-                        value={objectData.meta?.slowPlaybackTime || ''}
+                        value={formState.slowPlaybackTime}
                     />
-                    {inputError?.slowPlaybackTime &&
+                    {formState.inputError?.slowPlaybackTime &&
                         <span className={`uda-alert`}> {translate('inputError')}</span>}
                 </div>
             }
@@ -409,4 +477,5 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
 };
 
 export default EditableStepForm;
+
 

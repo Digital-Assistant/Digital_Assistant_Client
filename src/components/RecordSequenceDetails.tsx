@@ -948,58 +948,59 @@ export const RecordSequenceDetails = (props: MProps) => {
                             {editingStepIndex === index ? (
                                 <div className="step-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
                                   <EditableStepForm
-                                        item={item}
-                                        index={index}
-                                        recordData={selectedRecordingDetails.userclicknodesSet}
-                                        config={props.config}
-                                        isUpdateMode={true}
-                                        storeRecording={(data) => {
-                                          const updatedRecordingDetails = { ...selectedRecordingDetails };
-                                          updatedRecordingDetails.userclicknodesSet = data;
-                                          setSelectedRecordingDetails(updatedRecordingDetails);
-                                          setToStore(updatedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
-                                        }}
-                                        onSave={async () => {
-                                          // Save to API
-                                          props.showLoader(true);
-                                          try {
-                                            await updateRecording(selectedRecordingDetails);
+                                      item={item}
+                                      index={index}
+                                      recordData={selectedRecordingDetails.userclicknodesSet}
+                                      config={props.config}
+                                      isUpdateMode={true}
+                                      storeRecording={(data) => {
+                                        const updatedRecordingDetails = { ...selectedRecordingDetails };
+                                        updatedRecordingDetails.userclicknodesSet = data;
+                                        setSelectedRecordingDetails(updatedRecordingDetails);
+                                        setToStore(updatedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
+                                      }}
+                                      onSave={async () => {
+                                        // Save to API
+                                        props.showLoader(true);
+                                        try {
+                                          await updateRecording(selectedRecordingDetails);
 
-                                            // Record this action
-                                            recordUserClickData('editStep', '', selectedRecordingDetails.id);
+                                          // Record this action
+                                          recordUserClickData('editStep', '', selectedRecordingDetails.id);
 
-                                            // Show success notification
-                                            addNotification(translate('stepUpdated'), translate('stepUpdatedDescription'), 'success');
+                                          // Show success notification
+                                          addNotification(translate('stepUpdated'), translate('stepUpdatedDescription'), 'success');
 
-                                            // Exit edit mode
-                                            setEditingStepIndex(null);
-                                          } catch (error) {
-                                            console.error("Error updating step:", error);
-                                            addNotification(translate('stepUpdateError'), translate('stepUpdateErrorDescription'), 'error');
-                                          } finally {
-                                            props.showLoader(false);
-                                          }
-                                        }}
-                                        onCancel={() => setEditingStepIndex(null)}
-                                        showLoader={props.showLoader}
-                                    />
+                                          // Exit edit mode
+                                          setEditingStepIndex(null);
+                                        } catch (error) {
+                                          console.error("Error updating step:", error);
+                                          addNotification(translate('stepUpdateError'), translate('stepUpdateErrorDescription'), 'error');
+                                        } finally {
+                                          props.showLoader(false);
+                                        }
+                                      }}
+                                      onCancel={() => setEditingStepIndex(null)}
+                                      showLoader={props.showLoader}
+                                      recordingId={selectedRecordingDetails.id}
+                                  />
                                 </div>
-                              ) : (
-                                  <>
-                                    <i>{getClickedNodeLabel(item)}</i>
-                                    {(props?.config?.enableEditingOfRecordings && (selectedRecordingDetails.usersessionid === userId)) && (
-                                        <Button
-                                            type="text"
-                                            icon={<EditOutlined />}
-                                            className="edit-btn uda_exclude"
-                                            onClick={(e) => {
-                                              e.stopPropagation();
-                                              setEditingStepIndex(index);
-                                            }}
-                                        />
-                                    )}
-                                  </>
-                              )}
+                            ) : (
+                                <>
+                                  <i>{getClickedNodeLabel(item)}</i>
+                                  {(props?.config?.enableEditingOfRecordings && (selectedRecordingDetails.usersessionid === userId)) && (
+                                      <Button
+                                          type="text"
+                                          icon={<EditOutlined />}
+                                          className="edit-btn uda_exclude"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setEditingStepIndex(index);
+                                          }}
+                                      />
+                                  )}
+                                </>
+                            )}
                           </li>
                       );
                     }}
