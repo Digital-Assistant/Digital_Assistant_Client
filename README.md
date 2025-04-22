@@ -26,6 +26,8 @@ our world of continuous integration. We need a self learning assistant which wil
 continuously evolving applications.
 
 Universal Digital Assistant (UDA):
+![Agentic UDAN_white](https://github.com/user-attachments/assets/52d996fe-10e7-42ce-90e1-4fdd67ef0077)
+
 UDA is a Digital Assistant which helps you accomplish tasks in any (currently) browser based application. A ‘task’ is
 accomplished in an application via a sequence of clicks (and other user inputs) to achieve a particular objective.
 Examples Create a new issue (in a proj. Mgmt. tool)
