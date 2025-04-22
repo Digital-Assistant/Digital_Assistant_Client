@@ -1,5 +1,5 @@
 /**
- * Author: Lakshman Veti
+ * Author: Yureswar Ravuri
  * Type: Component
  * Objective: To render miscellaneous components
  * Associated Route/Usage: *
@@ -40,6 +40,7 @@ import {getVoteRecord, vote} from "../services/userVote";
 import {addNotification} from "../util/addNotification";
 import SelectedElement from "./SelectedElement";
 import {isHighlightNode} from "../util/checkNode";
+import EditableStepForm from "./EditableStepForm";
 
 
 interface MProps {
@@ -944,184 +945,62 @@ export const RecordSequenceDetails = (props: MProps) => {
                               className={addSkipClass(item)}
                               onClick={() => editingStepIndex !== index && playNode(item, index)}
                           >
-                              {editingStepIndex === index ? (
+                            {editingStepIndex === index ? (
                                 <div className="step-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-                                  <div style={{ width: '100%', padding: '10px' }}>
-                                    <span id="uda-display-clicked-text" style={{flex: 2}}>
-                                        <input
-                                            type="text"
-                                            id="uda-edited-name"
-                                            name="uda-edited-name"
-                                            className={`uda-form-input uda_exclude ${
-                                                stepProfanityError ? "profanity" : ""
-                                            }`}
-                                            placeholder="Enter Name"
-                                            onChange={async (e) => {
-                                              await validateStepName(index, e.target.value);
-                                            }}
-                                            onBlur={async (e) => {
-                                              await checkProfanityForStep(index, e.target.value);
-                                            }}
-                                            style={{width: "85%"}}
-                                            onClick={(e) => e.stopPropagation()}
-                                            value={stepEditValue}
-                                        />
-                                      {stepProfanityError &&
-                                          <span className={`uda-alert`}> {translate('profanityDetected')}</span>}
-                                      {stepInputError &&
-                                          <span className={`uda-alert`}> {translate('inputError')}</span>}
-                                    </span>
+                                  <EditableStepForm
+                                      item={item}
+                                      index={index}
+                                      recordData={selectedRecordingDetails.userclicknodesSet}
+                                      config={props.config}
+                                      isUpdateMode={true}
+                                      storeRecording={(data) => {
+                                        const updatedRecordingDetails = { ...selectedRecordingDetails };
+                                        updatedRecordingDetails.userclicknodesSet = data;
+                                        setSelectedRecordingDetails(updatedRecordingDetails);
+                                        setToStore(updatedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
+                                      }}
+                                      onSave={async () => {
+                                        // Save to API
+                                        props.showLoader(true);
+                                        try {
+                                          await updateRecording(selectedRecordingDetails);
 
-                                    {props.config.enableSkipDuringPlay &&
-                                        <div className="flex-card flex-vcenter small-text">
-                                          <input
-                                              type="checkbox"
-                                              id="UDA-skip-duringPlay"
-                                              className="uda-checkbox flex-vcenter uda_exclude"
-                                              value={(objectData.meta?.skipDuringPlay) ? 1 : 0}
-                                              checked={(objectData.meta?.skipDuringPlay)}
-                                              onChange={handleSkipPlay(index)}
-                                              onClick={(e) => e.stopPropagation()}
-                                          />
-                                          <label className="uda-checkbox-label">{translate('skipDuringPlay')}</label>
-                                          <span
-                                              className="info-icon ms-1"
-                                              title={translate('skipInfo')}
-                                          >
-                                            <InfoCircleOutlined/>
-                                        </span>
-                                        </div>
-                                    }
+                                          // Record this action
+                                          recordUserClickData('editStep', '', selectedRecordingDetails.id);
 
-                                    <div className="flex-card flex-vcenter small-text">
-                                      <input
-                                          type="checkbox"
-                                          id="isPersonal"
-                                          className="uda-checkbox uda_exclude"
-                                          value={(objectData.meta?.isPersonal) ? 1 : 0}
-                                          checked={(objectData.meta?.isPersonal)}
-                                          onChange={handlePersonal(index)}
-                                          onClick={(e) => e.stopPropagation()}
-                                      />
-                                      <label className="uda-checkbox-label">{translate('personalInfoLabel')}</label>
-                                      <span className="info-icon" title={translate('personalInfoTooltip')}>
-                                        <InfoCircleOutlined/>
-                                    </span>
-                                    </div>
+                                          // Show success notification
+                                          addNotification(translate('stepUpdated'), translate('stepUpdatedDescription'), 'success');
 
-                                    {(props.config.enableTooltipAddition === true && isHighlightNode(objectData)) &&
-                                        <div className="uda-recording uda_exclude" style={{textAlign: "center"}}>
-                                          <input
-                                              type="text"
-                                              id="uda-edited-tooltip"
-                                              name="uda-edited-tooltip"
-                                              className="uda-form-input uda_exclude"
-                                              placeholder={translate('toolTipPlaceHolder')}
-                                              style={{width: "68% !important"}}
-                                              onChange={async (e) => {
-                                                await validateTooltip(e.target.value);
-                                              }}
-                                              onClick={(e) => e.stopPropagation()}
-                                              value={tooltip}
-                                          />
-                                          {inputError.tooltip &&
-                                              <span className={`uda-alert`}> {translate('inputError')}</span>}
-                                          <span>
-                                            <button
-                                                className={`uda-tutorial-btn uda_exclude ${(disableTooltipSubmitBtn) ? "disabled" : ""}`}
-                                                style={{color: "#fff", marginTop: "10px"}}
-                                                id="uda-tooltip-save"
-                                                disabled={disableTooltipSubmitBtn}
-                                                onClick={async (e) => {
-                                                  e.stopPropagation();
-                                                  await updateTooltip('tooltipInfo', index);
-                                                }}
-                                            >
-                                                {(!objectData.meta?.tooltipInfo) ? translate('submitTooltip') : translate('updateTooltip')}
-                                            </button>
-                                        </span>
-                                        </div>
-                                    }
-
-                                    {/* Include the SelectedElement component */}
-                                    <SelectedElement
-                                        data={item}
-                                        index={index}
-                                        recordData={selectedRecordingDetails.userclicknodesSet}
-                                        config={props.config}
-                                        storeRecording={(data) => {
-                                          const updatedRecordingDetails = { ...selectedRecordingDetails };
-                                          updatedRecordingDetails.userclicknodesSet = data;
-                                          setSelectedRecordingDetails(updatedRecordingDetails);
-                                          setToStore(updatedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
-                                        }}
-                                    />
-
-                                    {(props.config.enableSlowReplay === true) &&
-                                        <div className="uda-recording uda_exclude" style={{textAlign: "center"}}>
-                                          <input
-                                              type="number"
-                                              id="uda-slowPlaybackTime"
-                                              name="uda-slowPlaybackTime"
-                                              className="uda-form-input uda_exclude"
-                                              placeholder={translate('playBackTimePlaceHolder')}
-                                              style={{width: "68% !important"}}
-                                              onChange={async (e) => {
-                                                await validateDelayTime(parseInt(e.target.value), 'slowPlaybackTime', index);
-                                              }}
-                                              onBlur={async (e) => {
-                                                await validateDelayTime(parseInt(e.target.value), 'slowPlaybackTime', index);
-                                              }}
-                                              onClick={(e) => e.stopPropagation()}
-                                              value={objectData.meta?.slowPlaybackTime || ''}
-                                          />
-                                          {inputError?.slowPlaybackTime &&
-                                              <span className={`uda-alert`}> {translate('inputError')}</span>}
-                                        </div>
-                                    }
-
-                                    <div style={{ marginTop: '10px' }}>
-                                      <Button
-                                          size="small"
-                                          type="primary"
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            saveStepEdit(index);
-                                          }}
-                                          className="uda_exclude"
-                                      >
-                                        Save
-                                      </Button>
-                                      <Button
-                                          size="small"
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            cancelStepEdit();
-                                          }}
-                                          className="uda_exclude"
-                                          style={{ marginLeft: '5px' }}
-                                      >
-                                        Cancel
-                                      </Button>
-                                    </div>
-                                  </div>
+                                          // Exit edit mode
+                                          setEditingStepIndex(null);
+                                        } catch (error) {
+                                          console.error("Error updating step:", error);
+                                          addNotification(translate('stepUpdateError'), translate('stepUpdateErrorDescription'), 'error');
+                                        } finally {
+                                          props.showLoader(false);
+                                        }
+                                      }}
+                                      onCancel={() => setEditingStepIndex(null)}
+                                      showLoader={props.showLoader}
+                                      recordingId={selectedRecordingDetails.id}
+                                  />
                                 </div>
-                              ) : (
-                                  <>
-                                    <i>{getClickedNodeLabel(item)}</i>
-                                    {(props?.config?.enableEditingOfRecordings && (selectedRecordingDetails.usersessionid === userId)) &&
-                                        <Button
-                                        type="text"
-                                        icon={<EditOutlined />}
-                                        className="edit-btn uda_exclude"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          startStepEdit(index, item);
-                                        }}
-                                        />
-                                    }
-                                  </>
-                              )}
+                            ) : (
+                                <>
+                                  <i>{getClickedNodeLabel(item)}</i>
+                                  {(props?.config?.enableEditingOfRecordings && (selectedRecordingDetails.usersessionid === userId)) && (
+                                      <Button
+                                          type="text"
+                                          icon={<EditOutlined />}
+                                          className="edit-btn uda_exclude"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setEditingStepIndex(index);
+                                          }}
+                                      />
+                                  )}
+                                </>
+                            )}
                           </li>
                       );
                     }}
