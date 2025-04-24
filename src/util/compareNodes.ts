@@ -67,8 +67,8 @@ export const compareNodes = (compareNode, recordedNode, isPersonalNode = false, 
       }
     } else if ((key === 'class' || key === 'className') && recordedNode.hasOwnProperty(key) && compareNode.hasOwnProperty(key)) {
       // fix for calendar issue
-      compareNode[key] = compareNode[key].replace(' ng-star-inserted', '').replace('disabled', '');
-      recordedNode[key] = recordedNode[key].replace(' ng-star-inserted', '').replace('disabled', '');
+      compareNode[key] = compareNode[key].replace(' ng-star-inserted', '').replace('disabled', '').replace('writeInput');
+      recordedNode[key] = recordedNode[key].replace(' ng-star-inserted', '').replace('disabled', '').replace('writeInput');
       if (compareNode[key] === recordedNode[key]) {
         match.matched++;
       } else {

@@ -57,7 +57,7 @@ export const CONFIG = {
   htmlIndex: [],
   invokeTime: 2000,
   apiInvokeTime: 300,
-  maxStringLength: 40,
+  maxStringLength: 25,
   playNextAction: true,
   navigatedToNextPage: {check: false, url: ''},
   ignoreElements: ["script", "h1", "h2", "h3", "link", "noscript", "style"],

@@ -11,7 +11,7 @@ const UDA_LOG_URL = process.env.tokenUrl;
 
 export const UDAConsoleLogger = {
   info: function (mes: any, level = 1) {
-    if (UDALogLevel >= level) {
+    if (UDALogLevel === level) {
       console.log(mes);
     }
   },
