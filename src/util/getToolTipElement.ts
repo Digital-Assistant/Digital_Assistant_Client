@@ -88,7 +88,7 @@ export const getToolTipElement = (message = 'Please input the value and then cli
     });
 
     // Optional: Add keyboard arrow support
-    document.addEventListener('keydown', (event) => {
+    /*document.addEventListener('keydown', (event) => {
       if (!tooltipDivElement.isConnected) return;
 
       switch(event.key) {
@@ -109,7 +109,7 @@ export const getToolTipElement = (message = 'Please input the value and then cli
           trigger("ChangeTooltipPosition", {detail: {position: 'left'}});
           break;
       }
-    });
+    });*/
 
     /*// Set up exit and continue button handlers
     const exitBtn = shadowRoot.getElementById("uda-autoplay-exit");

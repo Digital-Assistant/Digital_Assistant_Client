@@ -28,7 +28,8 @@ export interface CustomConfigPropTypes {
   clientSecret: string,
   enableHidePanelAfterCompletion: boolean,
   enableStatusSelection: boolean,
-  enableUDAIconDuringRecording: boolean
+  enableUDAIconDuringRecording: boolean,
+  enableEditingOfRecordings: boolean
 }
 
 // assigning default values to the default configuration
@@ -56,5 +57,6 @@ export const CustomConfig: CustomConfigPropTypes = {
   clientSecret: process.env.keycloakClientSecret, // Client secret to be used for authentication
   enableHidePanelAfterCompletion: false, // Flag to enable hiding the panel after completion
   enableStatusSelection: false, // Flag to enable status selection
-  enableUDAIconDuringRecording: false // Flag to enable UDA icon during recording
+  enableUDAIconDuringRecording: false, // Flag to enable UDA icon during recording
+  enableEditingOfRecordings: true // Flag to enable editing of recordings
 };

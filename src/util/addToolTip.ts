@@ -80,6 +80,7 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
 
   // Listen for position change events
   on("ChangeTooltipPosition", (event) => {
+    console.log(event.detail);
     if (currentPopperInstance && event.detail && event.detail.position) {
       updateTooltipPosition(event.detail.position);
     }

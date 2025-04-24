@@ -183,7 +183,8 @@ it('should not update CustomConfig with invalid data types', () => {
         clientSecret: 'your-client-secret', // Add this property
         enableHidePanelAfterCompletion: false, // Add this property
         enableStatusSelection: false, // Flag to enable status selection
-        enableUDAIconDuringRecording: false // Flag to enable UDA icon during recording
+        enableUDAIconDuringRecording: false, // Flag to enable UDA icon during recording
+        enableEditingOfRecordings: false // Flag to enable editing of recordings
       };
   });
 
@@ -528,7 +529,8 @@ describe('AppConfig', () => {
         clientSecret: 'your-client-secret', // Add this property
         enableHidePanelAfterCompletion: false, // Add this property
         enableStatusSelection: false, // Flag to enable status selection
-        enableUDAIconDuringRecording: false // Flag to enable UDA icon during recording
+        enableUDAIconDuringRecording: false, // Flag to enable UDA icon during recording
+        enableEditingOfRecordings: false // Flag to enable editing of recordings
       };
     AppConfig(testData);
     expect(CustomConfig).toEqual(testData);

@@ -47,4 +47,23 @@ export const TRANSLATIONS_EN = {
   statusLabel: "Recording Status",
   playBackItemNotFound: "Clickable element not found",
   playBackTimePlaceHolder: "Number of seconds to delay (Optional)",
+
+  // New translations for RecordSequenceDetails.tsx
+  skipDuringPlay: "Skip during play",
+  tooltipUpdated: "Tooltip Updated",
+  tooltipUpdatedDescription: "The tooltip has been updated successfully.",
+  tooltipUpdateError: "Tooltip Update Error",
+  tooltipUpdateErrorDescription: "Failed to update the tooltip. Please try again.",
+  delayTimeUpdated: "Delay Time Updated",
+  delayTimeUpdatedDescription: "The delay time has been updated successfully.",
+  delayTimeUpdateError: "Delay Time Update Error",
+  delayTimeUpdateErrorDescription: "Failed to update the delay time. Please try again.",
+  stepUpdated: "Step Updated",
+  stepUpdatedDescription: "The step has been updated successfully.",
+  stepUpdateError: "Step Update Error",
+  stepUpdateErrorDescription: "Failed to update the step. Please try again.",
+  labelsUpdated: "Labels Updated",
+  labelsUpdatedDescription: "The sequence labels have been updated successfully.",
+  labelsUpdateError: "Labels Update Error",
+  labelsUpdateErrorDescription: "Failed to update the labels. Please try again."
 };
