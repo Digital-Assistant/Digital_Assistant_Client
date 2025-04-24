@@ -186,7 +186,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
      * @param value - The delay time value
      * @param field - The field name
      */
-    const validateDelayTime = (value: number | string, field: string) => {
+    const validateDelayTime = (value: number | string, field: string, showNotification: boolean = false) => {
         const numValue = Number(value);
 
         // Implement validation logic for delay time
@@ -216,10 +216,14 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
 
             storeRecording(updatedRecordData);
 
-            addNotification(translate('delayTimeUpdated'), translate('delayTimeUpdatedDescription'), 'success');
+            if(showNotification) {
+                addNotification(translate('delayTimeUpdated'), translate('delayTimeUpdatedDescription'), 'success');
+            }
         } catch (error) {
             console.error("Error updating delay time:", error);
-            addNotification(translate('delayTimeUpdateError'), translate('delayTimeUpdateErrorDescription'), 'error');
+            if(showNotification) {
+                addNotification(translate('delayTimeUpdateError'), translate('delayTimeUpdateErrorDescription'), 'error');
+            }
         } finally {
             if (showLoader) showLoader(false);
         }
@@ -292,6 +296,9 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
             // Store the updated data
             storeRecording(updatedRecordData);
 
+            // Add explicit local storage saving
+            localStorage.setItem('recordedData', JSON.stringify(updatedRecordData));
+
             // If in update mode, update the record in the backend
             if (isUpdateMode && recordingId) {
                 await updateRecordClicks(updatedRecordData[index]);
@@ -332,6 +339,9 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
                 onChange={handleInputChange}
                 onBlur={(e) => {
                     checkProfanityForStep(e.target.value);
+                    if (!formState.stepInputError && !formState.stepProfanityError) {
+                        saveStep();
+                    }
                 }}
                 style={{width: "85%"}}
                 onClick={(e) => e.stopPropagation()}
@@ -436,7 +446,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
                             validateDelayTime(e.target.value, 'slowPlaybackTime');
                         }}
                         onBlur={(e) => {
-                            validateDelayTime(e.target.value, 'slowPlaybackTime');
+                            validateDelayTime(e.target.value, 'slowPlaybackTime', true);
                         }}
                         onClick={(e) => e.stopPropagation()}
                         value={formState.slowPlaybackTime}
