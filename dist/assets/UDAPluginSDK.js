@@ -37494,7 +37494,7 @@ const UDALogLevel = 0;
 const UDA_LOG_URL = "https://authenticatetest.nistapp.com/";
 const UDAConsoleLogger = {
     info: function (mes, level = 1) {
-        if (UDALogLevel >= level) {
+        if (UDALogLevel === level) {
             console.log(mes);
         }
     },
@@ -37595,7 +37595,7 @@ const CONFIG = {
     htmlIndex: [],
     invokeTime: 2000,
     apiInvokeTime: 300,
-    maxStringLength: 40,
+    maxStringLength: 25,
     playNextAction: true,
     navigatedToNextPage: { check: false, url: '' },
     ignoreElements: ["script", "h1", "h2", "h3", "link", "noscript", "style"],
