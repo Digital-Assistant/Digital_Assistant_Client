@@ -68,7 +68,11 @@ export const RecordSequenceDetails = (props: MProps) => {
   const [playStatus, setPlayStatus] = useState<string>("");
 
   // State for step editing
-  const [editingStepIndex, setEditingStepIndex] = useState<number | null>(null);
+  const [editingStepIndex, setEditingStepIndex] = useState<number | null>(() => {
+    // Initialize from localStorage if available
+    const savedIndex = localStorage.getItem('UDA_EDITING_STEP_INDEX');
+    return savedIndex ? parseInt(savedIndex, 10) : null;
+  });
   const [stepEditValue, setStepEditValue] = useState<string>('');
   const [stepProfanityError, setStepProfanityError] = useState<boolean>(false);
   const [stepInputError, setStepInputError] = useState<boolean>(false);
@@ -92,11 +96,21 @@ export const RecordSequenceDetails = (props: MProps) => {
     on("BackToSearchResults", backNav);
     on("PausePlay", pause);
 
+    // Add this new listener for validation playback
+    on("UDAValidatePlay", () => {
+      recordUserClickData('validatePlayback', '', selectedRecordingDetails.id);
+      if (props.playHandler) props.playHandler("on");
+      // Set a flag in localStorage to indicate we're in validation mode
+      localStorage.setItem('UDA_VALIDATION_MODE', 'true');
+      autoPlay();
+    });
+
     return () => {
       off("UDAPlayNext", autoPlay);
       off("ContinuePlay", autoPlay);
       off("BackToSearchResults", backNav);
       off("PausePlay", pause);
+      off("UDAValidatePlay", () => {});
     };
   }, []);
 
@@ -160,18 +174,66 @@ export const RecordSequenceDetails = (props: MProps) => {
         pause();
         removeToolTip();
         trigger("openPanel", {action: 'openPanel'});
+
+        // If we're in validation mode, clear the flag and show an error
+        if (localStorage.getItem('UDA_VALIDATION_MODE') === 'true') {
+          // localStorage.removeItem('UDA_VALIDATION_MODE');
+          addNotification(
+              translate('validationFailed'),
+              translate('validationFailedDescription'),
+              'error'
+          );
+        }
       }
     } else {
       recordUserClickData('playCompleted', '', selectedRecordingDetails.id);
       pause();
       removeToolTip();
-      addNotification(translate('autoplayCompletedTitle'), translate('autoplayCompleted'), 'success');
-      setPlayStatus('completed');
-      props.playHandler("off");
-      if(!props?.config?.enableHidePanelAfterCompletion) {
+
+      // Check if we're in validation mode
+      const isValidationMode = localStorage.getItem('UDA_VALIDATION_MODE') === 'true';
+
+      // Clear the validation mode flag
+      // localStorage.removeItem('UDA_VALIDATION_MODE');
+
+      // Show appropriate notification
+      if (isValidationMode) {
+        addNotification(
+            translate('validationCompleted'),
+            translate('validationCompletedDescription'),
+            'success'
+        );
+        setPlayStatus('completed');
+        props.playHandler("off");
+
+        // Dispatch the UDAPlayCompleted event
+        const playCompletedEvent = new CustomEvent('UDAValidationCompleted', {
+          detail: { recordingId: selectedRecordingDetails.id }
+        });
+        window.dispatchEvent(playCompletedEvent);
+
         trigger("openPanel", {action: 'openPanel'});
       } else {
-        backNav(true, false);
+        addNotification(
+            translate('autoplayCompletedTitle'),
+            translate('autoplayCompleted'),
+            'success'
+        );
+
+        setPlayStatus('completed');
+        props.playHandler("off");
+
+        // Dispatch the UDAPlayCompleted event
+        const playCompletedEvent = new CustomEvent('UDAPlayCompleted', {
+          detail: { recordingId: selectedRecordingDetails.id }
+        });
+        window.dispatchEvent(playCompletedEvent);
+
+        if(!props?.config?.enableHidePanelAfterCompletion) {
+          trigger("openPanel", {action: 'openPanel'});
+        } else {
+          backNav(true, false);
+        }
       }
     }
   };
@@ -212,8 +274,16 @@ export const RecordSequenceDetails = (props: MProps) => {
     }
     if(count === selectedRecordingDetails?.userclicknodesSet?.length) {
       setPlayStatus('completed');
+
+      // Dispatch an event to notify that playback is completed
+      // This will be used by EditableStepForm to enable the save button
+      const playCompletedEvent = new CustomEvent('UDAPlayCompleted', {
+        detail: { recordingId: selectedRecordingDetails.id }
+      });
+      window.dispatchEvent(playCompletedEvent);
     }
   };
+
 
   /**
    *
@@ -533,6 +603,22 @@ export const RecordSequenceDetails = (props: MProps) => {
     }
   };
 
+  // Handle start step editing index number
+  const startEditingStep = (index: number) => {
+    setEditingStepIndex(index);
+    // Save to localStorage
+    localStorage.setItem('UDA_EDITING_STEP_INDEX', index.toString());
+  };
+
+// Handle cancels editing step index number
+  const cancelEditingStep = () => {
+    setEditingStepIndex(null);
+    // Clear from localStorage
+    localStorage.removeItem('UDA_EDITING_STEP_INDEX');
+    // Also clear any temporary edit data
+    localStorage.removeItem('tempEditedRecordData');
+  };
+
   return props?.recordSequenceDetailsVisibility ? (
       <>
         <div
@@ -702,8 +788,8 @@ export const RecordSequenceDetails = (props: MProps) => {
                                           // Show success notification
                                           addNotification(translate('stepUpdated'), translate('stepUpdatedDescription'), 'success');
 
-                                          // Exit edit mode
-                                          setEditingStepIndex(null);
+                                          // Exit edit mode and clear localStorage
+                                          cancelEditingStep();
                                         } catch (error) {
                                           console.error("Error updating step:", error);
                                           addNotification(translate('stepUpdateError'), translate('stepUpdateErrorDescription'), 'error');
@@ -711,7 +797,7 @@ export const RecordSequenceDetails = (props: MProps) => {
                                           props.showLoader(false);
                                         }
                                       }}
-                                      onCancel={() => setEditingStepIndex(null)}
+                                      onCancel={() => cancelEditingStep()}
                                       showLoader={props.showLoader}
                                       recordingId={selectedRecordingDetails.id}
                                   />
@@ -726,7 +812,7 @@ export const RecordSequenceDetails = (props: MProps) => {
                                           className="edit-btn uda_exclude"
                                           onClick={(e) => {
                                             e.stopPropagation();
-                                            setEditingStepIndex(index);
+                                            startEditingStep(index);
                                           }}
                                       />
                                   )}

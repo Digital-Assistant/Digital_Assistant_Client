@@ -1,26 +1,28 @@
 /**
  * Author: Yureswar Ravuri
  * Type: Component
- * Objective: Reusable component for editing step details
+ * Objective: Reusable component for editing step details with validation through playback
  * Associated Usage: RecordSequenceDetails.tsx, RecordedData.tsx
  */
 
 import React, { useState, useEffect, useRef } from "react";
-import { InfoCircleOutlined } from "@ant-design/icons";
-import { getObjData } from "../util";
+import { InfoCircleOutlined, PlayCircleOutlined } from "@ant-design/icons";
+import { getObjData, setToStore } from "../util";
 import { profanityCheck, updateRecordClicks, updateSequnceIndex } from "../services/recordService";
 import { translate } from "../util/translation";
 import { isHighlightNode } from "../util/checkNode";
 import SelectedElement from "./SelectedElement";
-import { Button } from "antd";
+import { Button, Tooltip } from "antd";
 import { addNotification } from "../util/addNotification";
+import { CONFIG } from "../config";
+import { trigger } from "../util/events";
 
 interface EditableStepFormProps {
     item: any;
     index: number;
     recordData: any[];
     config: any;
-    isUpdateMode: boolean;
+    isUpdateMode: boolean;  // This indicates if we're in update mode (editing existing step)
     storeRecording: (data: any[]) => void;
     onSave?: (index: number) => Promise<void>;
     onCancel?: () => void;
@@ -57,7 +59,28 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
         disableTooltipSubmitBtn: true
     });
 
-    // Initialize form values from item data only once on mount
+    // Generate a unique key for this edit session - only used in update mode
+    const editSessionKey = isUpdateMode ? `editValidation` : null;
+
+    // State to track if the edited sequence has been successfully played - only relevant in update mode
+    const [playbackValidated, setPlaybackValidated] = useState(() => {
+        // Only check localStorage if we're in update mode
+        if (isUpdateMode && editSessionKey) {
+            const savedState = localStorage.getItem(editSessionKey);
+            return savedState === 'validated';
+        }
+        return false;
+    });
+
+    // State to track if temporary changes have been stored - only relevant in update mode
+    const [changesPending, setChangesPending] = useState(() => {
+        // Only check for pending changes if we're in update mode
+        if (isUpdateMode) {
+            return localStorage.getItem('tempEditedRecordData') !== null;
+        }
+        return false;
+    });
+
     useEffect(() => {
         // Get the display text from meta or use clickednodename as fallback
         const displayText = objectData?.meta?.displayText || item?.clickednodename || '';
@@ -76,11 +99,45 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
             disableTooltipSubmitBtn: tooltipInfo === ''
         });
 
+        // Only set up playback completion listener if we're in update mode
+        if (isUpdateMode) {
+            // Setup event listener for playback completion
+            const handlePlaybackComplete = (event) => {
+                console.log(event);
+                // Check if this is the step we're editing
+                const editingIndex = localStorage.getItem('UDA_EDITING_STEP_INDEX');
+                if (editingIndex && parseInt(editingIndex, 10) === index) {
+                    if (changesPending) {
+                        // Store validation state in localStorage
+                        localStorage.setItem(editSessionKey, 'validated');
+                        setPlaybackValidated(true);
+
+                        // Force panel to open to show the save button
+                        trigger("openPanel", {action: 'openPanel'});
+
+                        addNotification(
+                            translate('playbackValidated'),
+                            translate('playbackValidatedDescription'),
+                            'success'
+                        );
+                    }
+                }
+            };
+
+            // Add event listener for playback completion
+            window.addEventListener('UDAValidationCompleted', handlePlaybackComplete);
+
+            // Cleanup function to remove event listener
+            return () => {
+                window.removeEventListener('UDAPlayCompleted', handlePlaybackComplete);
+            };
+        }
+
         // Cleanup function to set isMounted to false when component unmounts
         return () => {
             isMounted.current = false;
         };
-    }, []); // Empty dependency array means this runs once on mount
+    }, [editSessionKey, isUpdateMode, index]);
 
     // Update form state safely
     const updateFormState = (updates) => {
@@ -95,6 +152,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
     /**
      * Validate step name input
      * @param value - The new value for the step
+     * @returns {boolean} - Whether the input is valid
      */
     const validateStepName = (value: string) => {
         // Basic validation - check if empty or too long
@@ -104,6 +162,16 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
             stepEditValue: value,
             stepInputError: hasError
         });
+
+        // Reset validation state when input changes (only in update mode)
+        if (isUpdateMode && playbackValidated && editSessionKey) {
+            localStorage.removeItem(editSessionKey);
+            setPlaybackValidated(false);
+        } else if(editSessionKey) {
+            localStorage.removeItem(editSessionKey);
+            setPlaybackValidated(false);
+            setChangesPending(true);
+        }
 
         return !hasError;
     };
@@ -129,6 +197,11 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
         } catch (error) {
             console.error("Error checking profanity:", error);
             updateFormState({ stepProfanityError: false });
+            addNotification(
+                translate('profanityCheckError'),
+                translate('profanityCheckErrorDescription'),
+                'error'
+            );
         }
     };
 
@@ -147,6 +220,16 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
             disableTooltipSubmitBtn: !isValid,
             inputError: newInputError
         });
+
+        // Reset validation state when input changes (only in update mode)
+        if (isUpdateMode && playbackValidated && editSessionKey) {
+            localStorage.removeItem(editSessionKey);
+            setPlaybackValidated(false);
+        } else if(editSessionKey) {
+            localStorage.removeItem(editSessionKey);
+            setPlaybackValidated(false);
+            setChangesPending(true);
+        }
     };
 
     /**
@@ -170,12 +253,38 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
             updatedRecordData[index].objectdata = JSON.stringify(nodeData);
 
             storeRecording(updatedRecordData);
+
+            // Store temporary changes in local storage (only in update mode)
+            if (isUpdateMode) {
+                localStorage.setItem('tempEditedRecordData', JSON.stringify(updatedRecordData));
+                setChangesPending(true);
+
+                // Reset validation state
+                if (editSessionKey) {
+                    localStorage.removeItem(editSessionKey);
+                    setPlaybackValidated(false);
+                    setChangesPending(true);
+                }
+            } else if(editSessionKey) {
+                localStorage.removeItem(editSessionKey);
+                setPlaybackValidated(false);
+                setChangesPending(true);
+            }
+
             updateFormState({ disableTooltipSubmitBtn: true });
 
-            addNotification(translate('tooltipUpdated'), translate('tooltipUpdatedDescription'), 'success');
+            addNotification(
+                translate('tooltipUpdated'),
+                translate('tooltipUpdatedDescription'),
+                'info'
+            );
         } catch (error) {
             console.error("Error updating tooltip:", error);
-            addNotification(translate('tooltipUpdateError'), translate('tooltipUpdateErrorDescription'), 'error');
+            addNotification(
+                translate('tooltipUpdateError'),
+                translate('tooltipUpdateErrorDescription'),
+                'error'
+            );
         } finally {
             if (showLoader) showLoader(false);
         }
@@ -185,6 +294,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
      * Validate delay time input
      * @param value - The delay time value
      * @param field - The field name
+     * @param showNotification - Whether to show a notification
      */
     const validateDelayTime = (value: number | string, field: string, showNotification: boolean = false) => {
         const numValue = Number(value);
@@ -198,6 +308,16 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
             slowPlaybackTime: value,
             inputError: newInputError
         });
+
+        // Reset validation state when input changes (only in update mode)
+        if (isUpdateMode && playbackValidated && editSessionKey) {
+            localStorage.removeItem(editSessionKey);
+            setPlaybackValidated(false);
+        } else if(editSessionKey) {
+            localStorage.removeItem(editSessionKey);
+            setPlaybackValidated(false);
+            setChangesPending(true);
+        }
 
         if (hasError) {
             return;
@@ -216,13 +336,34 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
 
             storeRecording(updatedRecordData);
 
+            // Store temporary changes in local storage (only in update mode)
+            if (isUpdateMode) {
+                localStorage.setItem('tempEditedRecordData', JSON.stringify(updatedRecordData));
+                setChangesPending(true);
+
+                // Reset validation state
+                if(editSessionKey) {
+                    localStorage.removeItem(editSessionKey);
+                    setPlaybackValidated(false);
+                    setChangesPending(true);
+                }
+            }
+
             if(showNotification) {
-                addNotification(translate('delayTimeUpdated'), translate('delayTimeUpdatedDescription'), 'success');
+                addNotification(
+                    translate('delayTimeUpdated'),
+                    translate('delayTimeUpdatedDescription'),
+                    'info'
+                );
             }
         } catch (error) {
             console.error("Error updating delay time:", error);
             if(showNotification) {
-                addNotification(translate('delayTimeUpdateError'), translate('delayTimeUpdateErrorDescription'), 'error');
+                addNotification(
+                    translate('delayTimeUpdateError'),
+                    translate('delayTimeUpdateErrorDescription'),
+                    'error'
+                );
             }
         } finally {
             if (showLoader) showLoader(false);
@@ -231,6 +372,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
 
     /**
      * Handle skip during play checkbox change
+     * @param e - The event object
      */
     const handleSkipPlay = (e) => {
         e.stopPropagation();
@@ -244,10 +386,28 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
         updatedRecordData[index].objectdata = JSON.stringify(nodeData);
 
         storeRecording(updatedRecordData);
+
+        // Store temporary changes in local storage (only in update mode)
+        if (isUpdateMode) {
+            localStorage.setItem('tempEditedRecordData', JSON.stringify(updatedRecordData));
+            setChangesPending(true);
+
+            // Reset validation state
+            if(editSessionKey) {
+                localStorage.removeItem(editSessionKey);
+                setPlaybackValidated(false);
+                setChangesPending(true);
+            }
+        } else if(editSessionKey) {
+            localStorage.removeItem(editSessionKey);
+            setPlaybackValidated(false);
+            setChangesPending(true);
+        }
     };
 
     /**
      * Handle personal info checkbox change
+     * @param e - The event object
      */
     const handlePersonal = (e) => {
         e.stopPropagation();
@@ -261,18 +421,38 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
         updatedRecordData[index].objectdata = JSON.stringify(nodeData);
 
         storeRecording(updatedRecordData);
+
+        // Store temporary changes in local storage (only in update mode)
+        if (isUpdateMode) {
+            localStorage.setItem('tempEditedRecordData', JSON.stringify(updatedRecordData));
+            setChangesPending(true);
+
+            // Reset validation state
+            if (editSessionKey) {
+                localStorage.removeItem(editSessionKey);
+                setPlaybackValidated(false);
+                setChangesPending(true);
+            }
+        } else if(editSessionKey) {
+            localStorage.removeItem(editSessionKey);
+            setPlaybackValidated(false);
+            setChangesPending(true);
+        }
     };
 
     /**
-     * Save the edited step
+     * Temporarily save the edited step to local storage for validation
+     * Only used in update mode
+     * @returns {boolean} - Whether the step was successfully saved temporarily
      */
-    const saveStep = async () => {
+    const saveStepTemporarily = () => {
+        // Only applicable in update mode
+        if (!isUpdateMode) return true;
+
         // Don't save if there are errors
         if (formState.stepInputError || formState.stepProfanityError) {
-            return;
+            return false;
         }
-
-        if (showLoader) showLoader(true);
 
         try {
             // Create a copy of the current data
@@ -296,13 +476,150 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
             // Store the updated data
             storeRecording(updatedRecordData);
 
-            // Add explicit local storage saving
-            localStorage.setItem('recordedData', JSON.stringify(updatedRecordData));
+            // Store temporary changes in local storage
+            localStorage.setItem('tempEditedRecordData', JSON.stringify(updatedRecordData));
+            setChangesPending(true);
+
+            // Reset validation state
+            if (editSessionKey) {
+                localStorage.removeItem(editSessionKey);
+                setPlaybackValidated(false);
+            }
+
+            return true;
+        } catch (error) {
+            console.error("Error saving step temporarily:", error);
+            addNotification(
+                translate('tempSaveError'),
+                translate('tempSaveErrorDescription'),
+                'error'
+            );
+            return false;
+        }
+    };
+
+    /**
+     * Start playback to validate the edited step
+     * Only used in update mode
+     */
+    const validateByPlayback = () => {
+        // Only applicable in update mode
+        if (!isUpdateMode) return;
+
+        if (!saveStepTemporarily()) {
+            return;
+        }
+
+        try {
+            // Get the current recording data
+            const updatedRecordData = [...recordData];
+
+            // Reset all steps' status to ensure full playback
+            for (let i = 0; i < updatedRecordData.length; i++) {
+                delete updatedRecordData[i].status;
+            }
+
+            // Store the updated recording data
+            storeRecording(updatedRecordData);
+
+            // Get the full recording object from localStorage
+            let currentRecording = JSON.parse(localStorage.getItem(CONFIG.SELECTED_RECORDING) || '{}');
+
+            // Update the recording with our edited data
+            currentRecording.userclicknodesSet = updatedRecordData;
+
+            // Save back to localStorage
+            setToStore(currentRecording, CONFIG.SELECTED_RECORDING, false);
+
+            // Save the current editing index to localStorage
+            localStorage.setItem('UDA_EDITING_STEP_INDEX', index.toString());
+
+            // Close the panel
+            trigger("closePanel", {action: 'closePanel'});
+
+            // Trigger the global play event
+            trigger("UDAValidatePlay", {action: 'play'});
+
+            addNotification(
+                translate('validationStarted'),
+                translate('validationStartedDescription'),
+                'info'
+            );
+        } catch (error) {
+            console.error("Error starting validation playback:", error);
+            addNotification(
+                translate('validationError'),
+                translate('validationErrorDescription'),
+                'error'
+            );
+        }
+    };
+
+    /**
+     * Save the edited step to the server
+     */
+    const saveStep = async () => {
+        // Don't save if there are errors
+        if (formState.stepInputError || formState.stepProfanityError) {
+            return;
+        }
+
+        // In update mode, check if validation is required but not completed
+        if (isUpdateMode && !playbackValidated && changesPending) {
+            addNotification(
+                translate('playbackValidationRequired'),
+                translate('playbackValidationRequiredDescription'),
+                'warning'
+            );
+            return;
+        } else if(isUpdateMode && playbackValidated && changesPending){
+            localStorage.removeItem('UDA_VALIDATION_MODE');
+        }
+
+        if (showLoader) showLoader(true);
+
+        try {
+            // In update mode, get the temporarily stored data if it exists
+            let updatedRecordData;
+            if (isUpdateMode) {
+                const tempData = localStorage.getItem('tempEditedRecordData');
+                updatedRecordData = tempData ? JSON.parse(tempData) : recordData;
+            } else {
+                // In recording mode, just use the current data
+                updatedRecordData = recordData;
+
+                // Update the node's objectdata to include the new name
+                const nodeData = getObjData(updatedRecordData[index].objectdata);
+
+                // Update the displayText in meta
+                if (!nodeData.meta) {
+                    nodeData.meta = {};
+                }
+                nodeData.meta.displayText = formState.stepEditValue;
+
+                // Convert back to string and update the objectdata
+                updatedRecordData[index].objectdata = JSON.stringify(nodeData);
+
+                // Update the clickednodename field as well for backward compatibility
+                updatedRecordData[index].clickednodename = formState.stepEditValue;
+
+                // Store the updated data
+                storeRecording(updatedRecordData);
+            }
 
             // If in update mode, update the record in the backend
             if (isUpdateMode && recordingId) {
                 await updateRecordClicks(updatedRecordData[index]);
                 await updateSequnceIndex(recordingId);
+
+                // Clean up temporary storage
+                localStorage.removeItem('tempEditedRecordData');
+                localStorage.removeItem('UDA_EDITING_STEP_INDEX');
+                if (editSessionKey) {
+                    localStorage.removeItem(editSessionKey);
+                }
+                setChangesPending(false);
+                setPlaybackValidated(false);
             }
 
             // Call the onSave callback if provided
@@ -325,6 +642,25 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
         validateStepName(e.target.value);
     };
 
+    // Handle input blur event
+    const handleInputBlur = (e) => {
+        e.stopPropagation();
+        checkProfanityForStep(e.target.value);
+
+        // In update mode, save temporarily when user leaves the input field
+        if (isUpdateMode && !formState.stepInputError && !formState.stepProfanityError) {
+            saveStepTemporarily();
+            addNotification(
+                translate('changesPending'),
+                translate('validatePlaybackRequired'),
+                'info'
+            );
+        } else if (!isUpdateMode && !formState.stepInputError && !formState.stepProfanityError) {
+            // In recording mode, just save the step directly
+            saveStep();
+        }
+    };
+
     return (
         <div style={{ width: '100%', padding: '10px' }} onClick={(e) => e.stopPropagation()}>
           <span style={{flex: 2}}>
@@ -337,12 +673,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
                 }`}
                 placeholder="Enter Name"
                 onChange={handleInputChange}
-                onBlur={(e) => {
-                    checkProfanityForStep(e.target.value);
-                    if (!formState.stepInputError && !formState.stepProfanityError) {
-                        saveStep();
-                    }
-                }}
+                onBlur={handleInputBlur}
                 style={{width: "85%"}}
                 onClick={(e) => e.stopPropagation()}
                 value={formState.stepEditValue}
@@ -419,7 +750,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
                                 updateTooltip('tooltipInfo');
                             }}
                         >
-                          {(!objectData?.meta?.tooltipInfo) ? translate('submitTooltip') : translate('updateTooltip')}
+                            {(!objectData?.meta?.tooltipInfo) ? translate('submitTooltip') : translate('updateTooltip')}
                         </button>
                     </div>
                 </div>
@@ -456,29 +787,67 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
                 </div>
             }
 
+            {/* Only show validation controls in update mode */}
             {isUpdateMode && (
                 <div style={{ marginTop: '10px' }}>
+                    {/* Validate button to test the edited step */}
+                    <Tooltip title={changesPending ? translate('validatePlaybackTooltip') : translate('noChangesToValidate')}>
+                        <Button
+                            size="small"
+                            type="default"
+                            icon={<PlayCircleOutlined />}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                validateByPlayback();
+                            }}
+                            className="uda_exclude"
+                            disabled={!changesPending}
+                            style={{ marginRight: '5px' }}
+                        >
+                            {translate('validatePlayback')}
+                        </Button>
+                    </Tooltip>
+
+                    {/* Save button - only enabled after successful playback validation if changes are pending */}
+                    <Tooltip title={(!playbackValidated && changesPending) ? translate('playbackValidationRequiredTooltip') : ''}>
+                        <Button
+                            size="small"
+                            type="primary"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                saveStep();
+                            }}
+                            className="uda_exclude"
+                            disabled={!playbackValidated && changesPending}
+                        >
+                            {translate('save')}
+                        </Button>
+                    </Tooltip>
                     <Button
                         size="small"
-                        type="primary"
                         onClick={(e) => {
                             e.stopPropagation();
-                            saveStep();
-                        }}
-                        className="uda_exclude"
-                    >
-                        Save
-                    </Button>
-                    <Button
-                        size="small"
-                        onClick={(e) => {
-                            e.stopPropagation();
+                            // Clean up temporary storage
+                            localStorage.removeItem('tempEditedRecordData');
+                            localStorage.removeItem('UDA_EDITING_STEP_INDEX');
+                            if (editSessionKey) {
+                                localStorage.removeItem(editSessionKey);
+                            }
+
+                            // If we have original data in recordData, revert to it
+                            // This ensures we go back to the original state
+                            if (isUpdateMode) {
+                                // Get the original data from recordData (without any temporary changes)
+                                const originalData = [...recordData];
+                                storeRecording(originalData);
+                            }
+
                             if (onCancel) onCancel();
                         }}
                         className="uda_exclude"
                         style={{ marginLeft: '5px' }}
                     >
-                        Cancel
+                        {translate('cancel')}
                     </Button>
                 </div>
             )}
@@ -487,5 +856,4 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
 };
 
 export default EditableStepForm;
-
 

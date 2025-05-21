@@ -65,5 +65,36 @@ export const TRANSLATIONS_EN = {
   labelsUpdated: "Labels Updated",
   labelsUpdatedDescription: "The sequence labels have been updated successfully.",
   labelsUpdateError: "Labels Update Error",
-  labelsUpdateErrorDescription: "Failed to update the labels. Please try again."
+  labelsUpdateErrorDescription: "Failed to update the labels. Please try again.",
+  validationStarted: "Validation Started",
+  validationStartedDescription: "The validation has started successfully.",
+  validationError: "Validation Error",
+  validationErrorDescription: "Failed to complete the validation. Please try again.",
+
+  // New translations for EditableStepForm.tsx
+  playbackValidated: "Playback Validated",
+  playbackValidatedDescription: "The step has been successfully validated through playback.",
+  playbackValidationRequired: "Validation Required",
+  playbackValidationRequiredDescription: "Please validate your changes by playing back the sequence before saving.",
+  tempSaveError: "Temporary Save Error",
+  tempSaveErrorDescription: "Failed to save changes temporarily. Please try again.",
+  validatePlaybackTooltip: "Test your changes by playing back the sequence",
+  noChangesToValidate: "No changes to validate",
+  playbackValidationRequiredTooltip: "You must validate your changes before saving",
+  validatePlayback: "Validate",
+  save: "Save",
+  cancel: "Cancel",
+  playbackValidatedStatus: "Validated ✓",
+  pendingValidationStatus: "Pending validation...",
+  changesPending: "Changes Pending",
+  validatePlaybackRequired: "Please validate your changes by clicking the Validate button",
+  profanityCheckError: "Profanity Check Error",
+  profanityCheckErrorDescription: "Failed to check for profanity. Please try again.",
+
+  // New translations for RecordSequenceDetails.tsx
+  validationFailed: "Validation Failed",
+  validationFailedDescription: "The validation playback could not be completed. Please try again.",
+  validationCompleted: "Validation Completed",
+  validationCompletedDescription: "The validation playback has been completed successfully.",
+  playbackItemNotFound: "Playback Item Not Found",
 };
