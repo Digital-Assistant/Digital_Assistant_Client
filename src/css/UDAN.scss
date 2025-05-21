@@ -612,6 +612,15 @@ $uda-blue-bg-hover: #05f;
                     background-color: $uda-secondary-color;
                 }
             }
+
+            .edit-mode-active {
+                border: 2px dashed #1890ff;
+
+                .uda-suggestion-list li:hover {
+                    background-color: rgba(24, 144, 255, 0.1);
+                    cursor: pointer;
+                }
+            }
         }
 
         .uda-details-footer {

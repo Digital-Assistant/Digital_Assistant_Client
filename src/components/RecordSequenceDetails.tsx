@@ -81,6 +81,13 @@ export const RecordSequenceDetails = (props: MProps) => {
   const [tooltip, setTooltip] = useState<string>('');
   const [disableTooltipSubmitBtn, setDisableTooltipSubmitBtn] = useState<boolean>(true);
 
+  const [editModeEnabled, setEditModeEnabled] = useState<boolean>(() => {
+    // Try to get the saved value from localStorage
+    const savedEditMode = localStorage.getItem('UDA_EDIT_MODE_ENABLED');
+    // Return true if the saved value is 'true', otherwise return false
+    return savedEditMode === 'true';
+  });
+
   /**
    * Every time isPlaying state changes, and status is "on", play continues
    */
@@ -619,10 +626,57 @@ export const RecordSequenceDetails = (props: MProps) => {
     localStorage.removeItem('tempEditedRecordData');
   };
 
+  // Add a toggle function
+  const toggleEditMode = () => {
+    // If we're exiting edit mode, make sure to cancel any active editing
+    if (editModeEnabled && editingStepIndex !== null) {
+      cancelEditingStep();
+    }
+    if (editModeEnabled && isEditingLabels) {
+      setIsEditingLabels(false);
+    }
+
+    // Toggle the state
+    const newEditModeValue = !editModeEnabled;
+
+    // Update localStorage with the new value
+    localStorage.setItem('UDA_EDIT_MODE_ENABLED', newEditModeValue.toString());
+
+    // Update the state
+    setEditModeEnabled(newEditModeValue);
+
+    // Record the action
+    recordUserClickData('toggleEditMode', '', selectedRecordingDetails.id);
+  };
+
+  useEffect(() => {
+    // Return a cleanup function
+    return () => {
+      // If edit mode is enabled when component unmounts, disable it
+      if (editModeEnabled) {
+        // This ensures we don't leave edit mode enabled when navigating away
+        // localStorage.setItem('UDA_EDIT_MODE_ENABLED', 'false');
+      }
+    };
+  }, [editModeEnabled]);
+
+  // Add this effect to validate edit mode when userId or selectedRecordingDetails change
+  useEffect(() => {
+    // If edit mode is enabled but this isn't the user's recording, disable it
+    if (editModeEnabled &&
+        selectedRecordingDetails &&
+        userId &&
+        selectedRecordingDetails.usersessionid !== userId) {
+      setEditModeEnabled(false);
+      localStorage.setItem('UDA_EDIT_MODE_ENABLED', 'false');
+    }
+  }, [userId, selectedRecordingDetails, editModeEnabled]);
+
+
   return props?.recordSequenceDetailsVisibility ? (
       <>
         <div
-            className="uda-card-details"
+            className={`uda-card-details ${editModeEnabled ? 'edit-mode-active' : ''}`}
             style={{
               borderBottomLeftRadius: "0px",
               borderBottomRightRadius: "0px",
@@ -667,6 +721,20 @@ export const RecordSequenceDetails = (props: MProps) => {
             )}
           </div>
           {/*<h5>{getName()}</h5>*/}
+          <Row style={{ marginBottom: '10px' }}>
+            <Col span={24} style={{ textAlign: 'right' }}>
+              {(props?.config?.enableEditingOfRecordings && (selectedRecordingDetails.usersessionid === userId)) && (
+                  <Button
+                      type={editModeEnabled ? "primary" : "default"}
+                      icon={<EditOutlined />}
+                      onClick={toggleEditMode}
+                      className="uda_exclude"
+                  >
+                    {editModeEnabled ? "Exit Editing" : "Edit Recording"}
+                  </Button>
+              )}
+            </Col>
+          </Row>
           <div className="sequence-name-container">
             {isEditingLabels ? (
                 <div>
@@ -737,14 +805,16 @@ export const RecordSequenceDetails = (props: MProps) => {
             ) : (
                 <div className="flex-card flex-center">
                   <h5>{getName()}</h5>
-                  {(props?.config?.enableEditingOfRecordings && (selectedRecordingDetails.usersessionid === userId)) &&
-                    <Button
-                        type="text"
-                        icon={<EditOutlined />}
-                        className="edit-btn uda_exclude"
-                        onClick={startEditing}
-                    />
-                  }
+                  {(props?.config?.enableEditingOfRecordings &&
+                      (selectedRecordingDetails.usersessionid === userId) &&
+                      editModeEnabled) && (
+                      <Button
+                          type="text"
+                          icon={<EditOutlined />}
+                          className="edit-btn uda_exclude"
+                          onClick={startEditing}
+                      />
+                  )}
                 </div>
             )}
           </div>
@@ -757,6 +827,14 @@ export const RecordSequenceDetails = (props: MProps) => {
                     dataSource={selectedRecordingDetails?.userclicknodesSet}
                     renderItem={(item: any, index: number) => {
                       const objectData = getObjData(item.objectdata);
+                      let nodeData = getObjData(item.objectdata);
+                      let skipItem = false;
+                      if (nodeData.meta.hasOwnProperty('skipDuringPlay') && nodeData.meta.skipDuringPlay && !editModeEnabled) {
+                        skipItem = true;
+                      }
+                      if(skipItem) {
+                        return <></>;
+                      }
                       return (
                           <li
                               className={addSkipClass(item)}
@@ -805,7 +883,7 @@ export const RecordSequenceDetails = (props: MProps) => {
                             ) : (
                                 <>
                                   <i>{getClickedNodeLabel(item)}</i>
-                                  {(props?.config?.enableEditingOfRecordings && (selectedRecordingDetails.usersessionid === userId)) && (
+                                  {(props?.config?.enableEditingOfRecordings && (selectedRecordingDetails.usersessionid === userId) && editModeEnabled) && (
                                       <Button
                                           type="text"
                                           icon={<EditOutlined />}
