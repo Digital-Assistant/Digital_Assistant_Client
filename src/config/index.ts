@@ -49,6 +49,14 @@ export const CONFIG = {
   get Environment() {
     return this.current;
   },
+  editingConfig: {
+    storageName: {
+      indexStorageName: "UDA_EDITING_STEP_INDEX",
+      editModeStorageName: "UDA_EDIT_MODE_ENABLED",
+      validationStorageName: "UDA_VALIDATION_MODE",
+      editDataStorageName: "tempEditedRecordData",
+    }
+  },
   DEBOUNCE_INTERVAL: 1000,
   indexInterval: 1000,
   clickObjects: [],

@@ -70,7 +70,7 @@ export const RecordSequenceDetails = (props: MProps) => {
   // State for step editing
   const [editingStepIndex, setEditingStepIndex] = useState<number | null>(() => {
     // Initialize from localStorage if available
-    const savedIndex = localStorage.getItem('UDA_EDITING_STEP_INDEX');
+    const savedIndex = localStorage.getItem(CONFIG.editingConfig.storageName.indexStorageName);
     return savedIndex ? parseInt(savedIndex, 10) : null;
   });
   const [stepEditValue, setStepEditValue] = useState<string>('');
@@ -83,7 +83,7 @@ export const RecordSequenceDetails = (props: MProps) => {
 
   const [editModeEnabled, setEditModeEnabled] = useState<boolean>(() => {
     // Try to get the saved value from localStorage
-    const savedEditMode = localStorage.getItem('UDA_EDIT_MODE_ENABLED');
+    const savedEditMode = localStorage.getItem(CONFIG.editingConfig.storageName.editModeStorageName);
     // Return true if the saved value is 'true', otherwise return false
     return savedEditMode === 'true';
   });
@@ -108,7 +108,7 @@ export const RecordSequenceDetails = (props: MProps) => {
       recordUserClickData('validatePlayback', '', selectedRecordingDetails.id);
       if (props.playHandler) props.playHandler("on");
       // Set a flag in localStorage to indicate we're in validation mode
-      localStorage.setItem('UDA_VALIDATION_MODE', 'true');
+      localStorage.setItem(CONFIG.editingConfig.storageName.editModeStorageName, 'true');
       autoPlay();
     });
 
@@ -183,7 +183,7 @@ export const RecordSequenceDetails = (props: MProps) => {
         trigger("openPanel", {action: 'openPanel'});
 
         // If we're in validation mode, clear the flag and show an error
-        if (localStorage.getItem('UDA_VALIDATION_MODE') === 'true') {
+        if (localStorage.getItem(CONFIG.editingConfig.storageName.editDataStorageName) === 'true') {
           // localStorage.removeItem('UDA_VALIDATION_MODE');
           addNotification(
               translate('validationFailed'),
@@ -198,7 +198,7 @@ export const RecordSequenceDetails = (props: MProps) => {
       removeToolTip();
 
       // Check if we're in validation mode
-      const isValidationMode = localStorage.getItem('UDA_VALIDATION_MODE') === 'true';
+      const isValidationMode = localStorage.getItem(CONFIG.editingConfig.storageName.editModeStorageName) === 'true';
 
       // Clear the validation mode flag
       // localStorage.removeItem('UDA_VALIDATION_MODE');
@@ -324,6 +324,7 @@ export const RecordSequenceDetails = (props: MProps) => {
     }
     resetStatus();
     removeToolTip();
+    cancelEditingStep();
     if (props.cancelHandler) props.cancelHandler(forceRefresh);
   };
 
@@ -614,16 +615,16 @@ export const RecordSequenceDetails = (props: MProps) => {
   const startEditingStep = (index: number) => {
     setEditingStepIndex(index);
     // Save to localStorage
-    localStorage.setItem('UDA_EDITING_STEP_INDEX', index.toString());
+    localStorage.setItem(CONFIG.editingConfig.storageName.indexStorageName, index.toString());
   };
 
 // Handle cancels editing step index number
   const cancelEditingStep = () => {
     setEditingStepIndex(null);
     // Clear from localStorage
-    localStorage.removeItem('UDA_EDITING_STEP_INDEX');
+    localStorage.removeItem(CONFIG.editingConfig.storageName.indexStorageName);
     // Also clear any temporary edit data
-    localStorage.removeItem('tempEditedRecordData');
+    localStorage.removeItem(CONFIG.editingConfig.storageName.editModeStorageName);
   };
 
   // Add a toggle function
@@ -640,7 +641,7 @@ export const RecordSequenceDetails = (props: MProps) => {
     const newEditModeValue = !editModeEnabled;
 
     // Update localStorage with the new value
-    localStorage.setItem('UDA_EDIT_MODE_ENABLED', newEditModeValue.toString());
+    localStorage.setItem(CONFIG.editingConfig.storageName.editModeStorageName, newEditModeValue.toString());
 
     // Update the state
     setEditModeEnabled(newEditModeValue);
@@ -668,7 +669,7 @@ export const RecordSequenceDetails = (props: MProps) => {
         userId &&
         selectedRecordingDetails.usersessionid !== userId) {
       setEditModeEnabled(false);
-      localStorage.setItem('UDA_EDIT_MODE_ENABLED', 'false');
+      localStorage.setItem(CONFIG.editingConfig.storageName.editModeStorageName, 'false');
     }
   }, [userId, selectedRecordingDetails, editModeEnabled]);
 

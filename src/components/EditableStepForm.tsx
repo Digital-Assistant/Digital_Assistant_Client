@@ -76,7 +76,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
     const [changesPending, setChangesPending] = useState(() => {
         // Only check for pending changes if we're in update mode
         if (isUpdateMode) {
-            return localStorage.getItem('tempEditedRecordData') !== null;
+            return localStorage.getItem(CONFIG.editingConfig.storageName.editDataStorageName) !== null;
         }
         return false;
     });
@@ -105,7 +105,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
             const handlePlaybackComplete = (event) => {
                 console.log(event);
                 // Check if this is the step we're editing
-                const editingIndex = localStorage.getItem('UDA_EDITING_STEP_INDEX');
+                const editingIndex = localStorage.getItem(CONFIG.editingConfig.storageName.editModeStorageName);
                 if (editingIndex && parseInt(editingIndex, 10) === index) {
                     if (changesPending) {
                         // Store validation state in localStorage
@@ -256,7 +256,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
 
             // Store temporary changes in local storage (only in update mode)
             if (isUpdateMode) {
-                localStorage.setItem('tempEditedRecordData', JSON.stringify(updatedRecordData));
+                localStorage.setItem(CONFIG.editingConfig.storageName.editDataStorageName, JSON.stringify(updatedRecordData));
                 setChangesPending(true);
 
                 // Reset validation state
@@ -338,7 +338,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
 
             // Store temporary changes in local storage (only in update mode)
             if (isUpdateMode) {
-                localStorage.setItem('tempEditedRecordData', JSON.stringify(updatedRecordData));
+                localStorage.setItem(CONFIG.editingConfig.storageName.editDataStorageName, JSON.stringify(updatedRecordData));
                 setChangesPending(true);
 
                 // Reset validation state
@@ -389,7 +389,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
 
         // Store temporary changes in local storage (only in update mode)
         if (isUpdateMode) {
-            localStorage.setItem('tempEditedRecordData', JSON.stringify(updatedRecordData));
+            localStorage.setItem(CONFIG.editingConfig.storageName.editDataStorageName, JSON.stringify(updatedRecordData));
             setChangesPending(true);
 
             // Reset validation state
@@ -424,7 +424,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
 
         // Store temporary changes in local storage (only in update mode)
         if (isUpdateMode) {
-            localStorage.setItem('tempEditedRecordData', JSON.stringify(updatedRecordData));
+            localStorage.setItem(CONFIG.editingConfig.storageName.editDataStorageName, JSON.stringify(updatedRecordData));
             setChangesPending(true);
 
             // Reset validation state
@@ -477,7 +477,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
             storeRecording(updatedRecordData);
 
             // Store temporary changes in local storage
-            localStorage.setItem('tempEditedRecordData', JSON.stringify(updatedRecordData));
+            localStorage.setItem(CONFIG.editingConfig.storageName.editDataStorageName, JSON.stringify(updatedRecordData));
             setChangesPending(true);
 
             // Reset validation state
@@ -532,7 +532,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
             setToStore(currentRecording, CONFIG.SELECTED_RECORDING, false);
 
             // Save the current editing index to localStorage
-            localStorage.setItem('UDA_EDITING_STEP_INDEX', index.toString());
+            localStorage.setItem(CONFIG.editingConfig.storageName.indexStorageName, index.toString());
 
             // Close the panel
             trigger("closePanel", {action: 'closePanel'});
@@ -573,7 +573,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
             );
             return;
         } else if(isUpdateMode && playbackValidated && changesPending){
-            localStorage.removeItem('UDA_VALIDATION_MODE');
+            localStorage.removeItem(CONFIG.editingConfig.storageName.validationStorageName);
         }
 
         if (showLoader) showLoader(true);
@@ -582,7 +582,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
             // In update mode, get the temporarily stored data if it exists
             let updatedRecordData;
             if (isUpdateMode) {
-                const tempData = localStorage.getItem('tempEditedRecordData');
+                const tempData = localStorage.getItem(CONFIG.editingConfig.storageName.editDataStorageName);
                 updatedRecordData = tempData ? JSON.parse(tempData) : recordData;
             } else {
                 // In recording mode, just use the current data
@@ -613,8 +613,8 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
                 await updateSequnceIndex(recordingId);
 
                 // Clean up temporary storage
-                localStorage.removeItem('tempEditedRecordData');
-                localStorage.removeItem('UDA_EDITING_STEP_INDEX');
+                localStorage.removeItem(CONFIG.editingConfig.storageName.editDataStorageName);
+                localStorage.removeItem(CONFIG.editingConfig.storageName.indexStorageName);
                 if (editSessionKey) {
                     localStorage.removeItem(editSessionKey);
                 }
@@ -828,8 +828,8 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
                         onClick={(e) => {
                             e.stopPropagation();
                             // Clean up temporary storage
-                            localStorage.removeItem('tempEditedRecordData');
-                            localStorage.removeItem('UDA_EDITING_STEP_INDEX');
+                            localStorage.removeItem(CONFIG.editingConfig.storageName.editDataStorageName);
+                            localStorage.removeItem(CONFIG.editingConfig.storageName.indexStorageName);
                             if (editSessionKey) {
                                 localStorage.removeItem(editSessionKey);
                             }
