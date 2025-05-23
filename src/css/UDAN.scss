@@ -137,6 +137,9 @@ $uda-blue-bg-hover: #05f;
         cursor: pointer;
         margin-left: 6px;
         box-shadow: -4px 0 4px #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         img {
             padding: 10px;
@@ -147,6 +150,23 @@ $uda-blue-bg-hover: #05f;
                 width: inherit !important;
                 height: inherit !important;
             }
+        }
+
+        // Specific styling for the close button on the right side
+        &#uda-close-panel {
+            left: auto !important; // Use !important to override any inline styles
+            right: -2% !important;
+            border-radius: 37% 0 0 37% !important;
+            //background-color: $uda-secondary-color !important;
+            margin-left: 0 !important;
+            margin-right: 6px !important;
+            box-shadow: 4px 0 4px #ccc !important;
+        }
+
+        // Ensure the toggle panel button stays on the left
+        &#uda-toggle-panel {
+            left: -2% !important;
+            right: auto !important;
         }
     }
 
