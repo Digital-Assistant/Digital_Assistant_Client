@@ -183,7 +183,7 @@ export const RecordSequenceDetails = (props: MProps) => {
         trigger("openPanel", {action: 'openPanel'});
 
         // If we're in validation mode, clear the flag and show an error
-        if (localStorage.getItem(CONFIG.editingConfig.storageName.editDataStorageName) === 'true') {
+        if (localStorage.getItem(CONFIG.editingConfig.storageName.editModeStorageName) === 'true') {
           // localStorage.removeItem('UDA_VALIDATION_MODE');
           addNotification(
               translate('validationFailed'),
@@ -625,6 +625,12 @@ export const RecordSequenceDetails = (props: MProps) => {
     localStorage.removeItem(CONFIG.editingConfig.storageName.indexStorageName);
     // Also clear any temporary edit data
     localStorage.removeItem(CONFIG.editingConfig.storageName.editModeStorageName);
+
+    let tempData = localStorage.getItem(CONFIG.editingConfig.storageName.editDataStorageName);
+    if(tempData){
+      setToStore(JSON.parse(tempData), CONFIG.SELECTED_RECORDING, false);
+      localStorage.removeItem(CONFIG.editingConfig.storageName.editDataStorageName);
+    }
   };
 
   // Add a toggle function
@@ -656,7 +662,7 @@ export const RecordSequenceDetails = (props: MProps) => {
       // If edit mode is enabled when component unmounts, disable it
       if (editModeEnabled) {
         // This ensures we don't leave edit mode enabled when navigating away
-        // localStorage.setItem('UDA_EDIT_MODE_ENABLED', 'false');
+        localStorage.setItem(CONFIG.editingConfig.storageName.editModeStorageName, 'false');
       }
     };
   }, [editModeEnabled]);

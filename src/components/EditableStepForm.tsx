@@ -256,7 +256,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
 
             // Store temporary changes in local storage (only in update mode)
             if (isUpdateMode) {
-                localStorage.setItem(CONFIG.editingConfig.storageName.editDataStorageName, JSON.stringify(updatedRecordData));
+                // localStorage.setItem(CONFIG.editingConfig.storageName.editDataStorageName, JSON.stringify(updatedRecordData));
                 setChangesPending(true);
 
                 // Reset validation state
@@ -338,7 +338,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
 
             // Store temporary changes in local storage (only in update mode)
             if (isUpdateMode) {
-                localStorage.setItem(CONFIG.editingConfig.storageName.editDataStorageName, JSON.stringify(updatedRecordData));
+                // localStorage.setItem(CONFIG.editingConfig.storageName.editDataStorageName, JSON.stringify(updatedRecordData));
                 setChangesPending(true);
 
                 // Reset validation state
@@ -389,7 +389,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
 
         // Store temporary changes in local storage (only in update mode)
         if (isUpdateMode) {
-            localStorage.setItem(CONFIG.editingConfig.storageName.editDataStorageName, JSON.stringify(updatedRecordData));
+            // localStorage.setItem(CONFIG.editingConfig.storageName.editDataStorageName, JSON.stringify(updatedRecordData));
             setChangesPending(true);
 
             // Reset validation state
@@ -424,7 +424,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
 
         // Store temporary changes in local storage (only in update mode)
         if (isUpdateMode) {
-            localStorage.setItem(CONFIG.editingConfig.storageName.editDataStorageName, JSON.stringify(updatedRecordData));
+            // localStorage.setItem(CONFIG.editingConfig.storageName.editDataStorageName, JSON.stringify(updatedRecordData));
             setChangesPending(true);
 
             // Reset validation state
@@ -477,7 +477,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
             storeRecording(updatedRecordData);
 
             // Store temporary changes in local storage
-            localStorage.setItem(CONFIG.editingConfig.storageName.editDataStorageName, JSON.stringify(updatedRecordData));
+            // localStorage.setItem(CONFIG.editingConfig.storageName.editDataStorageName, JSON.stringify(updatedRecordData));
             setChangesPending(true);
 
             // Reset validation state
@@ -581,31 +581,27 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
         try {
             // In update mode, get the temporarily stored data if it exists
             let updatedRecordData;
-            if (isUpdateMode) {
-                const tempData = localStorage.getItem(CONFIG.editingConfig.storageName.editDataStorageName);
-                updatedRecordData = tempData ? JSON.parse(tempData) : recordData;
-            } else {
-                // In recording mode, just use the current data
-                updatedRecordData = recordData;
 
-                // Update the node's objectdata to include the new name
-                const nodeData = getObjData(updatedRecordData[index].objectdata);
+            // In recording mode, just use the current data
+            updatedRecordData = recordData;
 
-                // Update the displayText in meta
-                if (!nodeData.meta) {
-                    nodeData.meta = {};
-                }
-                nodeData.meta.displayText = formState.stepEditValue;
+            // Update the node's objectdata to include the new name
+            const nodeData = getObjData(updatedRecordData[index].objectdata);
 
-                // Convert back to string and update the objectdata
-                updatedRecordData[index].objectdata = JSON.stringify(nodeData);
-
-                // Update the clickednodename field as well for backward compatibility
-                updatedRecordData[index].clickednodename = formState.stepEditValue;
-
-                // Store the updated data
-                storeRecording(updatedRecordData);
+            // Update the displayText in meta
+            if (!nodeData.meta) {
+                nodeData.meta = {};
             }
+            nodeData.meta.displayText = formState.stepEditValue;
+
+            // Convert back to string and update the objectdata
+            updatedRecordData[index].objectdata = JSON.stringify(nodeData);
+
+            // Update the clickednodename field as well for backward compatibility
+            updatedRecordData[index].clickednodename = formState.stepEditValue;
+
+            // Store the updated data
+            storeRecording(updatedRecordData);
 
             // If in update mode, update the record in the backend
             if (isUpdateMode && recordingId) {
