@@ -256,6 +256,7 @@ function App(props) {
     const clearSession = useCallback(() => {
         removeFromStore(CONFIG.USER_AUTH_DATA_KEY);
         removeFromStore(CONFIG.UDAKeyCloakKey);
+        removeFromStore(CONFIG.SELECTED_RECORDING);
         setAuthenticated(false);
         setInvokeKeycloak(true);
         setKeycloakSessionData(null);
@@ -564,6 +565,16 @@ function App(props) {
     };
 
     /**
+     * common close callback function
+     * @param hideFlag
+     * @param type
+     */
+    const closeHandler = async (hideFlag: boolean, type: string) => {
+        cancel();
+        await togglePanel();
+    };
+
+    /**
      * to handle record button
      * @param flag
      */
@@ -637,6 +648,7 @@ function App(props) {
                       toggleFlag={hide}
                       toggleHandler={toggleHandler}
                       config={global.UDAGlobalConfig}
+                      closeHandler={closeHandler}
                   />
                   <Body
                       content={
