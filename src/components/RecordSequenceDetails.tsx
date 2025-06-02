@@ -69,13 +69,8 @@ export const RecordSequenceDetails = (props: MProps) => {
 
   // State for step editing
   const [editingStepIndex, setEditingStepIndex] = useState<number | null>(null);
-  const [stepEditValue, setStepEditValue] = useState<string>('');
-  const [stepProfanityError, setStepProfanityError] = useState<boolean>(false);
-  const [stepInputError, setStepInputError] = useState<boolean>(false);
   const [inputError, setInputError] = useState<any>({});
-  const [inputAlert, setInputAlert] = useState<any>({});
-  const [tooltip, setTooltip] = useState<string>('');
-  const [disableTooltipSubmitBtn, setDisableTooltipSubmitBtn] = useState<boolean>(true);
+  const [editRecording, setEditRecording] = useState(false);
 
   /**
    * Every time isPlaying state changes, and status is "on", play continues
@@ -97,6 +92,7 @@ export const RecordSequenceDetails = (props: MProps) => {
       off("ContinuePlay", autoPlay);
       off("BackToSearchResults", backNav);
       off("PausePlay", pause);
+      setEditRecording(false);
     };
   }, []);
 
@@ -247,6 +243,7 @@ export const RecordSequenceDetails = (props: MProps) => {
     }
     resetStatus();
     removeToolTip();
+    setEditRecording(false); // Reset edit mode when navigating away
     if (props.cancelHandler) props.cancelHandler(forceRefresh);
   };
 
@@ -579,6 +576,19 @@ export const RecordSequenceDetails = (props: MProps) => {
                     }}
                 />
             )}
+
+            {/* Add Edit Recording button here */}
+            {(selectedRecordingDetails.usersessionid === userId) && (
+                <Button
+                    className="uda_exclude"
+                    type={editRecording ? "primary" : "default"}
+                    style={{position: "absolute", top: 12, right: 0}}
+                    onClick={() => setEditRecording(!editRecording)}
+                >
+                  <EditOutlined className="uda_exclude" />
+                  {editRecording ? "Done" : "Edit"}
+                </Button>
+            )}
           </div>
           {/*<h5>{getName()}</h5>*/}
           <div className="sequence-name-container">
@@ -651,13 +661,13 @@ export const RecordSequenceDetails = (props: MProps) => {
             ) : (
                 <div className="flex-card flex-center">
                   <h5>{getName()}</h5>
-                  {(props?.config?.enableEditingOfRecordings && (selectedRecordingDetails.usersessionid === userId)) &&
-                    <Button
-                        type="text"
-                        icon={<EditOutlined />}
-                        className="edit-btn uda_exclude"
-                        onClick={startEditing}
-                    />
+                  {(props?.config?.enableEditingOfRecordings && (selectedRecordingDetails.usersessionid === userId) && editRecording) &&
+                      <Button
+                          type="text"
+                          icon={<EditOutlined />}
+                          className="edit-btn uda_exclude"
+                          onClick={startEditing}
+                      />
                   }
                 </div>
             )}
@@ -671,6 +681,14 @@ export const RecordSequenceDetails = (props: MProps) => {
                     dataSource={selectedRecordingDetails?.userclicknodesSet}
                     renderItem={(item: any, index: number) => {
                       const objectData = getObjData(item.objectdata);
+                      let nodeData = getObjData(item.objectdata);
+                      let skipItem = false;
+                      if (nodeData.meta.hasOwnProperty('skipDuringPlay') && nodeData.meta.skipDuringPlay && !editRecording) {
+                        skipItem = true;
+                      }
+                      if(skipItem) {
+                        return <></>;
+                      }
                       return (
                           <li
                               className={addSkipClass(item)}
@@ -719,7 +737,7 @@ export const RecordSequenceDetails = (props: MProps) => {
                             ) : (
                                 <>
                                   <i>{getClickedNodeLabel(item)}</i>
-                                  {(props?.config?.enableEditingOfRecordings && (selectedRecordingDetails.usersessionid === userId)) && (
+                                  {(props?.config?.enableEditingOfRecordings && (selectedRecordingDetails.usersessionid === userId) && editRecording) && (
                                       <Button
                                           type="text"
                                           icon={<EditOutlined />}
@@ -749,12 +767,6 @@ export const RecordSequenceDetails = (props: MProps) => {
                 {((userVote && userVote?.upvote === 0) || !userVote) &&
                     <LikeOutlined width={33} className="secondary"/>
                 }
-                {/*<br/>
-                <Badge
-                    className="site-badge-count-109"
-                    count={selectedRecordingDetails.upVoteCount}
-                    style={{ backgroundColor: '#52c41a' }}
-                />*/}
               </Button>
               <Button onClick={() => manageVote("down")} className="uda_exclude">
                 {(userVote && userVote?.downvote === 1) &&
@@ -763,12 +775,6 @@ export const RecordSequenceDetails = (props: MProps) => {
                 {((userVote && userVote?.downvote === 0) || (!userVote)) &&
                     <DislikeOutlined width={33} className="secondary"/>
                 }
-                {/*<br/>
-                <Badge
-                    className="site-badge-count-109"
-                    count={selectedRecordingDetails.downVoteCount}
-                    style={{ backgroundColor: '#faad14' }}
-                />*/}
               </Button>
             </Col>
             <Col span={8}>
@@ -789,7 +795,7 @@ export const RecordSequenceDetails = (props: MProps) => {
             </Col>
           </Row>
           {/* Row container for publish/unpublish controls */}
-          {(props?.config?.enableStatusSelection) &&
+          {(props?.config?.enableStatusSelection && (selectedRecordingDetails.usersessionid === userId) && editRecording) &&
               <Row>
                 {/* Left column taking up 8/24 of the row width */}
                 <Col span={24}>
@@ -819,7 +825,7 @@ export const RecordSequenceDetails = (props: MProps) => {
               </Row>
           }
           {/* enabling update permissions*/}
-          {(props?.config?.enablePermissions && (selectedRecordingDetails.usersessionid === userId)) && (
+          {(props?.config?.enablePermissions && (selectedRecordingDetails.usersessionid === userId) && editRecording) && (
               <div id="uda-permissions-section" style={{padding: "25px", display:'flex'}}>
                 <div>
                   <button
