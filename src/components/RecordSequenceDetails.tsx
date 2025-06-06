@@ -38,9 +38,10 @@ import {removeToolTip} from "../util/addToolTip";
 import {getClickedNodeLabel} from "../util/getClickedNodeLabel";
 import {getVoteRecord, vote} from "../services/userVote";
 import {addNotification} from "../util/addNotification";
-import SelectedElement from "./SelectedElement";
-import {isHighlightNode} from "../util/checkNode";
 import EditableStepForm from "./EditableStepForm";
+
+import { useAppSelector, useAppDispatch } from '../redux';
+import {cancelEditingStep, markValidationCompleted, startEditingStep, startValidation} from "../redux/editingStep";
 
 
 interface MProps {
@@ -71,6 +72,16 @@ export const RecordSequenceDetails = (props: MProps) => {
   const [editingStepIndex, setEditingStepIndex] = useState<number | null>(null);
   const [inputError, setInputError] = useState<any>({});
   const [editRecording, setEditRecording] = useState(false);
+
+  const dispatch = useAppDispatch();
+  const editingState= useAppSelector(state => state.editingStep);
+
+  useEffect(() => {
+    console.log(editingState);
+    if(editingState && editingState.editingStepId){
+      setEditingStepIndex(editingState.editingStepId);
+    }
+  }, [editingState]);
 
   /**
    * Every time isPlaying state changes, and status is "on", play continues
@@ -164,6 +175,9 @@ export const RecordSequenceDetails = (props: MProps) => {
       addNotification(translate('autoplayCompletedTitle'), translate('autoplayCompleted'), 'success');
       setPlayStatus('completed');
       props.playHandler("off");
+      if(editingState && editingState.validationRequired){
+        dispatch(markValidationCompleted());
+      }
       if(!props?.config?.enableHidePanelAfterCompletion) {
         trigger("openPanel", {action: 'openPanel'});
       } else {
@@ -187,7 +201,9 @@ export const RecordSequenceDetails = (props: MProps) => {
    */
   const resetStatus = () => {
     for (let i = 0; i < selectedRecordingDetails?.userclicknodesSet?.length; i++) {
-      delete selectedRecordingDetails.userclicknodesSet[i].status;
+      if(selectedRecordingDetails.userclicknodesSet[i]?.status) {
+        delete selectedRecordingDetails.userclicknodesSet[i].status;
+      }
     }
     setToStore(selectedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
     setSelectedRecordingDetails({...selectedRecordingDetails});
@@ -244,6 +260,7 @@ export const RecordSequenceDetails = (props: MProps) => {
     resetStatus();
     removeToolTip();
     setEditRecording(false); // Reset edit mode when navigating away
+    dispatch(cancelEditingStep());
     if (props.cancelHandler) props.cancelHandler(forceRefresh);
   };
 
@@ -253,6 +270,15 @@ export const RecordSequenceDetails = (props: MProps) => {
   const play = async () => {
     recordUserClickData('play', '', selectedRecordingDetails.id);
     trigger("closePanel", {action: 'closePanel'});
+    if (props.playHandler) props.playHandler("on");
+    // autoPlay();
+  };
+
+  /**
+   * Validate editing of step handler
+   */
+  const validateStepEdit = async () => {
+    recordUserClickData('validate', '', selectedRecordingDetails.id);
     if (props.playHandler) props.playHandler("on");
     // autoPlay();
   };
@@ -461,7 +487,6 @@ export const RecordSequenceDetails = (props: MProps) => {
   // Initialize labels when starting to edit
   const startEditing = () => {
     const currentLabels = getAllLabels();
-    console.log("Current labels:", currentLabels); // For debugging
     setLabels(currentLabels);
     setIsEditingLabels(true);
   };
@@ -530,6 +555,41 @@ export const RecordSequenceDetails = (props: MProps) => {
     }
   };
 
+  const storeRecording= (data: any, enableValidation: boolean = true) => {
+    const updatedRecordingDetails = { ...selectedRecordingDetails };
+    updatedRecordingDetails.userclicknodesSet = data;
+    setSelectedRecordingDetails(updatedRecordingDetails);
+    setToStore(updatedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
+    if(enableValidation) {
+      dispatch(startValidation(selectedRecordingDetails.id));
+    }
+  };
+
+  const onCancel= () => {
+    const originalData = [...selectedRecordingDetails.userclicknodesSet];
+    originalData[editingState.editingStepId] = {...editingState.editingStepOriginalData};
+    storeRecording(originalData);
+    setEditingStepIndex(null);
+    dispatch(cancelEditingStep());
+  };
+
+  const editStep = (index: number, item: any) => {
+    if(editingState.editingStepId !== null && editingState.editingStepId !== item.id) {
+      const originalData = [...selectedRecordingDetails.userclicknodesSet];
+      originalData[editingState.editingStepId] = {...editingState.editingStepOriginalData};
+      storeRecording(originalData);
+    }
+    setEditingStepIndex(index);
+    dispatch(startEditingStep({recordingId: selectedRecordingDetails.id, editingStepId: index, editingStepData: item}));
+  }
+
+  const toggleEditIcon = () => {
+    if(editingState.editingStepId !== null) {
+      onCancel();
+    }
+    setEditRecording(!editRecording);
+  }
+
   return props?.recordSequenceDetailsVisibility ? (
       <>
         <div
@@ -583,7 +643,7 @@ export const RecordSequenceDetails = (props: MProps) => {
                     className="uda_exclude"
                     type={editRecording ? "primary" : "default"}
                     style={{position: "absolute", top: 12, right: 0}}
-                    onClick={() => setEditRecording(!editRecording)}
+                    onClick={toggleEditIcon}
                 >
                   <EditOutlined className="uda_exclude" />
                   {editRecording ? "Done" : "Edit"}
@@ -702,12 +762,7 @@ export const RecordSequenceDetails = (props: MProps) => {
                                       recordData={selectedRecordingDetails.userclicknodesSet}
                                       config={props.config}
                                       isUpdateMode={true}
-                                      storeRecording={(data) => {
-                                        const updatedRecordingDetails = { ...selectedRecordingDetails };
-                                        updatedRecordingDetails.userclicknodesSet = data;
-                                        setSelectedRecordingDetails(updatedRecordingDetails);
-                                        setToStore(updatedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
-                                      }}
+                                      storeRecording={storeRecording}
                                       onSave={async () => {
                                         // Save to API
                                         props.showLoader(true);
@@ -729,9 +784,10 @@ export const RecordSequenceDetails = (props: MProps) => {
                                           props.showLoader(false);
                                         }
                                       }}
-                                      onCancel={() => setEditingStepIndex(null)}
+                                      onCancel={onCancel}
                                       showLoader={props.showLoader}
                                       recordingId={selectedRecordingDetails.id}
+                                      autoPlay={validateStepEdit}
                                   />
                                 </div>
                             ) : (
@@ -742,9 +798,9 @@ export const RecordSequenceDetails = (props: MProps) => {
                                           type="text"
                                           icon={<EditOutlined />}
                                           className="edit-btn uda_exclude"
-                                          onClick={(e) => {
+                                          onClick={(e)=>{
                                             e.stopPropagation();
-                                            setEditingStepIndex(index);
+                                            editStep(index, item);
                                           }}
                                       />
                                   )}
