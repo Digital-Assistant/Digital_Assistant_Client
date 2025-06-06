@@ -526,7 +526,7 @@ const CustomConfig = {
     realm: "UDAN-Plugin",
     clientId: "backend-service",
     clientSecret: "lf55acXW38Tvea5Qt1931AyWRaDYtCLL",
-    enableHidePanelAfterCompletion: true,
+    enableHidePanelAfterCompletion: false,
     enableStatusSelection: true,
     enableUDAIconDuringRecording: true,
     enableEditingOfRecordings: true // Flag to enable editing of recordings
