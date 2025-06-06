@@ -41,7 +41,13 @@ import {addNotification} from "../util/addNotification";
 import EditableStepForm from "./EditableStepForm";
 
 import { useAppSelector, useAppDispatch } from '../redux';
-import {cancelEditingStep, markValidationCompleted, startEditingStep, startValidation} from "../redux/editingStep";
+import {
+  cancelEditingStep,
+  markValidationCompleted,
+  resetValidationState,
+  startEditingStep,
+  startValidation
+} from "../redux/editingStep";
 
 
 interface MProps {
@@ -79,6 +85,7 @@ export const RecordSequenceDetails = (props: MProps) => {
   useEffect(() => {
     console.log(editingState);
     if(editingState && editingState.editingStepId){
+      setEditRecording(true);
       setEditingStepIndex(editingState.editingStepId);
     }
   }, [editingState]);
@@ -177,11 +184,13 @@ export const RecordSequenceDetails = (props: MProps) => {
       props.playHandler("off");
       if(editingState && editingState.validationRequired){
         dispatch(markValidationCompleted());
-      }
-      if(!props?.config?.enableHidePanelAfterCompletion) {
         trigger("openPanel", {action: 'openPanel'});
       } else {
-        backNav(true, false);
+        if (!props?.config?.enableHidePanelAfterCompletion) {
+          trigger("openPanel", {action: 'openPanel'});
+        } else {
+          backNav(true, false);
+        }
       }
     }
   };
@@ -279,8 +288,10 @@ export const RecordSequenceDetails = (props: MProps) => {
    */
   const validateStepEdit = async () => {
     recordUserClickData('validate', '', selectedRecordingDetails.id);
-    if (props.playHandler) props.playHandler("on");
-    // autoPlay();
+    resetStatus();
+    if (props.playHandler) {
+      props.playHandler("on");
+    }
   };
 
   /**
@@ -777,6 +788,7 @@ export const RecordSequenceDetails = (props: MProps) => {
 
                                           // Exit edit mode
                                           setEditingStepIndex(null);
+                                          dispatch(resetValidationState());
                                         } catch (error) {
                                           console.error("Error updating step:", error);
                                           addNotification(translate('stepUpdateError'), translate('stepUpdateErrorDescription'), 'error');
