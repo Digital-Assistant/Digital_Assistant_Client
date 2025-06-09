@@ -110,7 +110,6 @@ export const RecordSequenceDetails = (props: MProps) => {
       off("ContinuePlay", autoPlay);
       off("BackToSearchResults", backNav);
       off("PausePlay", pause);
-      setEditRecording(false);
     };
   }, []);
 
