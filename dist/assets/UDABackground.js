@@ -511,7 +511,7 @@ const CustomConfig = {
     enableMultilingual: true,
     enableNodeTypeSelection: true,
     enablePermissions: true,
-    permissions: { "user": true, "admin": true },
+    permissions: { 'developer': true, 'manager': true },
     enableProfanity: false,
     enableRecording: true,
     enableOverlay: true,
