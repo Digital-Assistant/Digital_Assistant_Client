@@ -287,9 +287,10 @@ export const RecordSequenceDetails = (props: MProps) => {
    */
   const validateStepEdit = async () => {
     recordUserClickData('validate', '', selectedRecordingDetails.id);
-    resetStatus();
-    if (props.playHandler) {
-      props.playHandler("on");
+    if(resetStatus()) {
+      if (props.playHandler) {
+        props.playHandler("on");
+      }
     }
   };
 
@@ -589,6 +590,7 @@ export const RecordSequenceDetails = (props: MProps) => {
       originalData[editingState.editingStepId] = {...editingState.editingStepOriginalData};
       storeRecording(originalData);
     }
+    resetStatus();
     setEditingStepIndex(index);
     dispatch(startEditingStep({recordingId: selectedRecordingDetails.id, editingStepId: index, editingStepData: item}));
   }
