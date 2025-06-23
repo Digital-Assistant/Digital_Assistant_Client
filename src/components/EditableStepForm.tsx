@@ -7,13 +7,15 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { InfoCircleOutlined } from "@ant-design/icons";
-import { getObjData } from "../util";
+import {getObjData, setToStore} from "../util";
 import { profanityCheck, updateRecordClicks, updateSequnceIndex } from "../services/recordService";
 import { translate } from "../util/translation";
 import { isHighlightNode } from "../util/checkNode";
 import SelectedElement from "./SelectedElement";
 import { Button } from "antd";
 import { addNotification } from "../util/addNotification";
+import {useAppDispatch, useAppSelector} from "../redux";
+import {CONFIG} from "../config";
 
 interface EditableStepFormProps {
     item: any;
@@ -26,6 +28,7 @@ interface EditableStepFormProps {
     onCancel?: () => void;
     showLoader?: Function;
     recordingId?: number;
+    autoPlay?: Function;
 }
 
 const EditableStepForm: React.FC<EditableStepFormProps> = ({
@@ -38,7 +41,8 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
                                                                onSave,
                                                                onCancel,
                                                                showLoader,
-                                                               recordingId
+                                                               recordingId,
+                                                               autoPlay,
                                                            }) => {
     // Create refs to track if component is mounted
     const isMounted = useRef(true);
@@ -56,6 +60,13 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
         inputError: {tooltip: false, slowPlaybackTime: false},
         disableTooltipSubmitBtn: true
     });
+
+    const dispatch = useAppDispatch();
+    const validationState= useAppSelector(state => state.editingStep);
+
+    useEffect(() => {
+        console.log(validationState);
+    }, [validationState]);
 
     // Initialize form values from item data only once on mount
     useEffect(() => {
@@ -161,13 +172,17 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
         if (showLoader) showLoader(true);
 
         try {
-            const updatedRecordData = [...recordData];
-            const nodeData = getObjData(updatedRecordData[index].objectdata);
+            let updatedRecordData = [...recordData];
+            let nodeData = getObjData(updatedRecordData[index].objectdata);
             if (!nodeData.meta) {
                 nodeData.meta = {};
             }
             nodeData.meta[field] = formState.tooltip;
-            updatedRecordData[index].objectdata = JSON.stringify(nodeData);
+            // updatedRecordData[index].objectdata = JSON.stringify(nodeData);
+            updatedRecordData[index] = {
+                ...updatedRecordData[index],
+                objectdata: JSON.stringify(nodeData)
+            };
 
             storeRecording(updatedRecordData);
             updateFormState({ disableTooltipSubmitBtn: true });
@@ -206,13 +221,17 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
         if (showLoader) showLoader(true);
 
         try {
-            const updatedRecordData = [...recordData];
-            const nodeData = getObjData(updatedRecordData[index].objectdata);
+            let updatedRecordData = [...recordData];
+            let nodeData = getObjData(updatedRecordData[index].objectdata);
             if (!nodeData.meta) {
                 nodeData.meta = {};
             }
             nodeData.meta[field] = numValue;
-            updatedRecordData[index].objectdata = JSON.stringify(nodeData);
+            // updatedRecordData[index].objectdata = JSON.stringify(nodeData);
+            updatedRecordData[index] = {
+                ...updatedRecordData[index],
+                objectdata: JSON.stringify(nodeData)
+            };
 
             storeRecording(updatedRecordData);
 
@@ -235,13 +254,17 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
     const handleSkipPlay = (e) => {
         e.stopPropagation();
 
-        const updatedRecordData = [...recordData];
-        const nodeData = getObjData(updatedRecordData[index].objectdata);
+        let updatedRecordData = [...recordData];
+        let nodeData = getObjData(updatedRecordData[index].objectdata);
         if (!nodeData.meta) {
             nodeData.meta = {};
         }
         nodeData.meta.skipDuringPlay = !nodeData.meta.skipDuringPlay;
-        updatedRecordData[index].objectdata = JSON.stringify(nodeData);
+        // updatedRecordData[index].objectdata = JSON.stringify(nodeData);
+        updatedRecordData[index] = {
+            ...updatedRecordData[index],
+            objectdata: JSON.stringify(nodeData)
+        };
 
         storeRecording(updatedRecordData);
     };
@@ -252,13 +275,17 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
     const handlePersonal = (e) => {
         e.stopPropagation();
 
-        const updatedRecordData = [...recordData];
-        const nodeData = getObjData(updatedRecordData[index].objectdata);
+        let updatedRecordData = [...recordData];
+        let nodeData = getObjData(updatedRecordData[index].objectdata);
         if (!nodeData.meta) {
             nodeData.meta = {};
         }
         nodeData.meta.isPersonal = !nodeData.meta.isPersonal;
-        updatedRecordData[index].objectdata = JSON.stringify(nodeData);
+        // updatedRecordData[index].objectdata = JSON.stringify(nodeData);
+        updatedRecordData[index] = {
+            ...updatedRecordData[index],
+            objectdata: JSON.stringify(nodeData)
+        };
 
         storeRecording(updatedRecordData);
     };
@@ -288,10 +315,18 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
             nodeData.meta.displayText = formState.stepEditValue;
 
             // Convert back to string and update the objectdata
-            updatedRecordData[index].objectdata = JSON.stringify(nodeData);
+            // updatedRecordData[index].objectdata = JSON.stringify(nodeData);
+            updatedRecordData[index] = {
+                ...updatedRecordData[index],
+                objectdata: JSON.stringify(nodeData)
+            };
 
             // Update the clickednodename field as well for backward compatibility
-            updatedRecordData[index].clickednodename = formState.stepEditValue;
+            // updatedRecordData[index].clickednodename = formState.stepEditValue;
+            updatedRecordData[index] = {
+                ...updatedRecordData[index],
+                clickednodename: formState.stepEditValue
+            };
 
             // Store the updated data
             storeRecording(updatedRecordData);
@@ -463,8 +498,22 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
                         type="primary"
                         onClick={(e) => {
                             e.stopPropagation();
+                            setToStore(true, CONFIG.RECORDING_IS_PLAYING, true);
+                            autoPlay();
+                        }}
+                        disabled={!validationState.validationRequired}
+                        className="uda_exclude"
+                    >
+                        Validate
+                    </Button>
+                    <Button
+                        size="small"
+                        type="primary"
+                        onClick={(e) => {
+                            e.stopPropagation();
                             saveStep();
                         }}
+                        disabled={!validationState.validationCompleted}
                         className="uda_exclude"
                     >
                         Save
