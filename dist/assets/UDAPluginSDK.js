@@ -695,7 +695,8 @@ var CheckCircleFilled = function CheckCircleFilled(props, ref) {
   }));
 };
 var RefIcon = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(CheckCircleFilled);
-if (false) {}
+if (false) // removed by dead control flow
+{}
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RefIcon);
 
 /***/ }),
@@ -728,7 +729,8 @@ var CheckCircleOutlined = function CheckCircleOutlined(props, ref) {
   }));
 };
 var RefIcon = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(CheckCircleOutlined);
-if (false) {}
+if (false) // removed by dead control flow
+{}
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RefIcon);
 
 /***/ }),
@@ -761,7 +763,8 @@ var CloseCircleFilled = function CloseCircleFilled(props, ref) {
   }));
 };
 var RefIcon = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(CloseCircleFilled);
-if (false) {}
+if (false) // removed by dead control flow
+{}
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RefIcon);
 
 /***/ }),
@@ -794,7 +797,8 @@ var CloseCircleOutlined = function CloseCircleOutlined(props, ref) {
   }));
 };
 var RefIcon = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(CloseCircleOutlined);
-if (false) {}
+if (false) // removed by dead control flow
+{}
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RefIcon);
 
 /***/ }),
@@ -827,7 +831,8 @@ var CloseOutlined = function CloseOutlined(props, ref) {
   }));
 };
 var RefIcon = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(CloseOutlined);
-if (false) {}
+if (false) // removed by dead control flow
+{}
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RefIcon);
 
 /***/ }),
@@ -860,7 +865,8 @@ var ExclamationCircleFilled = function ExclamationCircleFilled(props, ref) {
   }));
 };
 var RefIcon = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(ExclamationCircleFilled);
-if (false) {}
+if (false) // removed by dead control flow
+{}
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RefIcon);
 
 /***/ }),
@@ -893,7 +899,8 @@ var ExclamationCircleOutlined = function ExclamationCircleOutlined(props, ref) {
   }));
 };
 var RefIcon = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(ExclamationCircleOutlined);
-if (false) {}
+if (false) // removed by dead control flow
+{}
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RefIcon);
 
 /***/ }),
@@ -926,7 +933,8 @@ var InfoCircleFilled = function InfoCircleFilled(props, ref) {
   }));
 };
 var RefIcon = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(InfoCircleFilled);
-if (false) {}
+if (false) // removed by dead control flow
+{}
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RefIcon);
 
 /***/ }),
@@ -959,7 +967,8 @@ var InfoCircleOutlined = function InfoCircleOutlined(props, ref) {
   }));
 };
 var RefIcon = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(InfoCircleOutlined);
-if (false) {}
+if (false) // removed by dead control flow
+{}
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RefIcon);
 
 /***/ }),
@@ -992,7 +1001,8 @@ var LoadingOutlined = function LoadingOutlined(props, ref) {
   }));
 };
 var RefIcon = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(LoadingOutlined);
-if (false) {}
+if (false) // removed by dead control flow
+{}
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RefIcon);
 
 /***/ }),
@@ -1100,6 +1110,1139 @@ var useInsertStyles = function useInsertStyles() {
     });
   }, []);
 };
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/OverloadYield.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/OverloadYield.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _OverloadYield)
+/* harmony export */ });
+function _OverloadYield(e, d) {
+  this.v = e, this.k = d;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _arrayLikeToArray)
+/* harmony export */ });
+function _arrayLikeToArray(r, a) {
+  (null == a || a > r.length) && (a = r.length);
+  for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+  return n;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _arrayWithHoles)
+/* harmony export */ });
+function _arrayWithHoles(r) {
+  if (Array.isArray(r)) return r;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _arrayWithoutHoles)
+/* harmony export */ });
+/* harmony import */ var _arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./arrayLikeToArray.js */ "./node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js");
+
+function _arrayWithoutHoles(r) {
+  if (Array.isArray(r)) return (0,_arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__["default"])(r);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _assertThisInitialized)
+/* harmony export */ });
+function _assertThisInitialized(e) {
+  if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  return e;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _asyncToGenerator)
+/* harmony export */ });
+function asyncGeneratorStep(n, t, e, r, o, a, c) {
+  try {
+    var i = n[a](c),
+      u = i.value;
+  } catch (n) {
+    return void e(n);
+  }
+  i.done ? t(u) : Promise.resolve(u).then(r, o);
+}
+function _asyncToGenerator(n) {
+  return function () {
+    var t = this,
+      e = arguments;
+    return new Promise(function (r, o) {
+      var a = n.apply(t, e);
+      function _next(n) {
+        asyncGeneratorStep(a, r, o, _next, _throw, "next", n);
+      }
+      function _throw(n) {
+        asyncGeneratorStep(a, r, o, _next, _throw, "throw", n);
+      }
+      _next(void 0);
+    });
+  };
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/classCallCheck.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _classCallCheck)
+/* harmony export */ });
+function _classCallCheck(a, n) {
+  if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/createClass.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/createClass.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _createClass)
+/* harmony export */ });
+/* harmony import */ var _toPropertyKey_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./toPropertyKey.js */ "./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js");
+
+function _defineProperties(e, r) {
+  for (var t = 0; t < r.length; t++) {
+    var o = r[t];
+    o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, (0,_toPropertyKey_js__WEBPACK_IMPORTED_MODULE_0__["default"])(o.key), o);
+  }
+}
+function _createClass(e, r, t) {
+  return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", {
+    writable: !1
+  }), e;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/createSuper.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/createSuper.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _createSuper)
+/* harmony export */ });
+/* harmony import */ var _getPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getPrototypeOf.js */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
+/* harmony import */ var _isNativeReflectConstruct_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./isNativeReflectConstruct.js */ "./node_modules/@babel/runtime/helpers/esm/isNativeReflectConstruct.js");
+/* harmony import */ var _possibleConstructorReturn_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./possibleConstructorReturn.js */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
+
+
+
+function _createSuper(t) {
+  var r = (0,_isNativeReflectConstruct_js__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  return function () {
+    var e,
+      o = (0,_getPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__["default"])(t);
+    if (r) {
+      var s = (0,_getPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__["default"])(this).constructor;
+      e = Reflect.construct(o, arguments, s);
+    } else e = o.apply(this, arguments);
+    return (0,_possibleConstructorReturn_js__WEBPACK_IMPORTED_MODULE_2__["default"])(this, e);
+  };
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/defineProperty.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _defineProperty)
+/* harmony export */ });
+/* harmony import */ var _toPropertyKey_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./toPropertyKey.js */ "./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js");
+
+function _defineProperty(e, r, t) {
+  return (r = (0,_toPropertyKey_js__WEBPACK_IMPORTED_MODULE_0__["default"])(r)) in e ? Object.defineProperty(e, r, {
+    value: t,
+    enumerable: !0,
+    configurable: !0,
+    writable: !0
+  }) : e[r] = t, e;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/extends.js":
+/*!************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/extends.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _extends)
+/* harmony export */ });
+function _extends() {
+  return _extends = Object.assign ? Object.assign.bind() : function (n) {
+    for (var e = 1; e < arguments.length; e++) {
+      var t = arguments[e];
+      for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);
+    }
+    return n;
+  }, _extends.apply(null, arguments);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _getPrototypeOf)
+/* harmony export */ });
+function _getPrototypeOf(t) {
+  return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) {
+    return t.__proto__ || Object.getPrototypeOf(t);
+  }, _getPrototypeOf(t);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/inherits.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/inherits.js ***!
+  \*************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _inherits)
+/* harmony export */ });
+/* harmony import */ var _setPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./setPrototypeOf.js */ "./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js");
+
+function _inherits(t, e) {
+  if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function");
+  t.prototype = Object.create(e && e.prototype, {
+    constructor: {
+      value: t,
+      writable: !0,
+      configurable: !0
+    }
+  }), Object.defineProperty(t, "prototype", {
+    writable: !1
+  }), e && (0,_setPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__["default"])(t, e);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/isNativeReflectConstruct.js":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/isNativeReflectConstruct.js ***!
+  \*****************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _isNativeReflectConstruct)
+/* harmony export */ });
+function _isNativeReflectConstruct() {
+  try {
+    var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
+  } catch (t) {}
+  return (_isNativeReflectConstruct = function _isNativeReflectConstruct() {
+    return !!t;
+  })();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/iterableToArray.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/iterableToArray.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _iterableToArray)
+/* harmony export */ });
+function _iterableToArray(r) {
+  if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _iterableToArrayLimit)
+/* harmony export */ });
+function _iterableToArrayLimit(r, l) {
+  var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
+  if (null != t) {
+    var e,
+      n,
+      i,
+      u,
+      a = [],
+      f = !0,
+      o = !1;
+    try {
+      if (i = (t = t.call(r)).next, 0 === l) {
+        if (Object(t) !== t) return;
+        f = !1;
+      } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);
+    } catch (r) {
+      o = !0, n = r;
+    } finally {
+      try {
+        if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return;
+      } finally {
+        if (o) throw n;
+      }
+    }
+    return a;
+  }
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/nonIterableRest.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/nonIterableRest.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _nonIterableRest)
+/* harmony export */ });
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _nonIterableSpread)
+/* harmony export */ });
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/objectSpread2.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/objectSpread2.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _objectSpread2)
+/* harmony export */ });
+/* harmony import */ var _defineProperty_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./defineProperty.js */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+
+function ownKeys(e, r) {
+  var t = Object.keys(e);
+  if (Object.getOwnPropertySymbols) {
+    var o = Object.getOwnPropertySymbols(e);
+    r && (o = o.filter(function (r) {
+      return Object.getOwnPropertyDescriptor(e, r).enumerable;
+    })), t.push.apply(t, o);
+  }
+  return t;
+}
+function _objectSpread2(e) {
+  for (var r = 1; r < arguments.length; r++) {
+    var t = null != arguments[r] ? arguments[r] : {};
+    r % 2 ? ownKeys(Object(t), !0).forEach(function (r) {
+      (0,_defineProperty_js__WEBPACK_IMPORTED_MODULE_0__["default"])(e, r, t[r]);
+    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) {
+      Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r));
+    });
+  }
+  return e;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/objectWithoutProperties.js":
+/*!****************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/objectWithoutProperties.js ***!
+  \****************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _objectWithoutProperties)
+/* harmony export */ });
+/* harmony import */ var _objectWithoutPropertiesLoose_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./objectWithoutPropertiesLoose.js */ "./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js");
+
+function _objectWithoutProperties(e, t) {
+  if (null == e) return {};
+  var o,
+    r,
+    i = (0,_objectWithoutPropertiesLoose_js__WEBPACK_IMPORTED_MODULE_0__["default"])(e, t);
+  if (Object.getOwnPropertySymbols) {
+    var n = Object.getOwnPropertySymbols(e);
+    for (r = 0; r < n.length; r++) o = n[r], -1 === t.indexOf(o) && {}.propertyIsEnumerable.call(e, o) && (i[o] = e[o]);
+  }
+  return i;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js":
+/*!*********************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js ***!
+  \*********************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _objectWithoutPropertiesLoose)
+/* harmony export */ });
+function _objectWithoutPropertiesLoose(r, e) {
+  if (null == r) return {};
+  var t = {};
+  for (var n in r) if ({}.hasOwnProperty.call(r, n)) {
+    if (-1 !== e.indexOf(n)) continue;
+    t[n] = r[n];
+  }
+  return t;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js":
+/*!******************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js ***!
+  \******************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _possibleConstructorReturn)
+/* harmony export */ });
+/* harmony import */ var _typeof_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./typeof.js */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
+/* harmony import */ var _assertThisInitialized_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./assertThisInitialized.js */ "./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js");
+
+
+function _possibleConstructorReturn(t, e) {
+  if (e && ("object" == (0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(e) || "function" == typeof e)) return e;
+  if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined");
+  return (0,_assertThisInitialized_js__WEBPACK_IMPORTED_MODULE_1__["default"])(t);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/regenerator.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/regenerator.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _regenerator)
+/* harmony export */ });
+/* harmony import */ var _regeneratorDefine_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./regeneratorDefine.js */ "./node_modules/@babel/runtime/helpers/esm/regeneratorDefine.js");
+
+function _regenerator() {
+  /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */
+  var e,
+    t,
+    r = "function" == typeof Symbol ? Symbol : {},
+    n = r.iterator || "@@iterator",
+    o = r.toStringTag || "@@toStringTag";
+  function i(r, n, o, i) {
+    var c = n && n.prototype instanceof Generator ? n : Generator,
+      u = Object.create(c.prototype);
+    return (0,_regeneratorDefine_js__WEBPACK_IMPORTED_MODULE_0__["default"])(u, "_invoke", function (r, n, o) {
+      var i,
+        c,
+        u,
+        f = 0,
+        p = o || [],
+        y = !1,
+        G = {
+          p: 0,
+          n: 0,
+          v: e,
+          a: d,
+          f: d.bind(e, 4),
+          d: function d(t, r) {
+            return i = t, c = 0, u = e, G.n = r, a;
+          }
+        };
+      function d(r, n) {
+        for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) {
+          var o,
+            i = p[t],
+            d = G.p,
+            l = i[2];
+          r > 3 ? (o = l === n) && (c = i[4] || 3, u = i[5] === e ? i[3] : i[5], i[4] = 3, i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0));
+        }
+        if (o || r > 1) return a;
+        throw y = !0, n;
+      }
+      return function (o, p, l) {
+        if (f > 1) throw TypeError("Generator is already running");
+        for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) {
+          i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u);
+          try {
+            if (f = 2, i) {
+              if (c || (o = "next"), t = i[o]) {
+                if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object");
+                if (!t.done) return t;
+                u = t.value, c < 2 && (c = 0);
+              } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1);
+              i = e;
+            } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break;
+          } catch (t) {
+            i = e, c = 1, u = t;
+          } finally {
+            f = 1;
+          }
+        }
+        return {
+          value: t,
+          done: y
+        };
+      };
+    }(r, o, i), !0), u;
+  }
+  var a = {};
+  function Generator() {}
+  function GeneratorFunction() {}
+  function GeneratorFunctionPrototype() {}
+  t = Object.getPrototypeOf;
+  var c = [][n] ? t(t([][n]())) : ((0,_regeneratorDefine_js__WEBPACK_IMPORTED_MODULE_0__["default"])(t = {}, n, function () {
+      return this;
+    }), t),
+    u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c);
+  function f(e) {
+    return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, (0,_regeneratorDefine_js__WEBPACK_IMPORTED_MODULE_0__["default"])(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e;
+  }
+  return GeneratorFunction.prototype = GeneratorFunctionPrototype, (0,_regeneratorDefine_js__WEBPACK_IMPORTED_MODULE_0__["default"])(u, "constructor", GeneratorFunctionPrototype), (0,_regeneratorDefine_js__WEBPACK_IMPORTED_MODULE_0__["default"])(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", (0,_regeneratorDefine_js__WEBPACK_IMPORTED_MODULE_0__["default"])(GeneratorFunctionPrototype, o, "GeneratorFunction"), (0,_regeneratorDefine_js__WEBPACK_IMPORTED_MODULE_0__["default"])(u), (0,_regeneratorDefine_js__WEBPACK_IMPORTED_MODULE_0__["default"])(u, o, "Generator"), (0,_regeneratorDefine_js__WEBPACK_IMPORTED_MODULE_0__["default"])(u, n, function () {
+    return this;
+  }), (0,_regeneratorDefine_js__WEBPACK_IMPORTED_MODULE_0__["default"])(u, "toString", function () {
+    return "[object Generator]";
+  }), (_regenerator = function _regenerator() {
+    return {
+      w: i,
+      m: f
+    };
+  })();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/regeneratorAsync.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/regeneratorAsync.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _regeneratorAsync)
+/* harmony export */ });
+/* harmony import */ var _regeneratorAsyncGen_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./regeneratorAsyncGen.js */ "./node_modules/@babel/runtime/helpers/esm/regeneratorAsyncGen.js");
+
+function _regeneratorAsync(n, e, r, t, o) {
+  var a = (0,_regeneratorAsyncGen_js__WEBPACK_IMPORTED_MODULE_0__["default"])(n, e, r, t, o);
+  return a.next().then(function (n) {
+    return n.done ? n.value : a.next();
+  });
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/regeneratorAsyncGen.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/regeneratorAsyncGen.js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _regeneratorAsyncGen)
+/* harmony export */ });
+/* harmony import */ var _regenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./regenerator.js */ "./node_modules/@babel/runtime/helpers/esm/regenerator.js");
+/* harmony import */ var _regeneratorAsyncIterator_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./regeneratorAsyncIterator.js */ "./node_modules/@babel/runtime/helpers/esm/regeneratorAsyncIterator.js");
+
+
+function _regeneratorAsyncGen(r, e, t, o, n) {
+  return new _regeneratorAsyncIterator_js__WEBPACK_IMPORTED_MODULE_1__["default"]((0,_regenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])().w(r, e, t, o), n || Promise);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/regeneratorAsyncIterator.js":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/regeneratorAsyncIterator.js ***!
+  \*****************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ AsyncIterator)
+/* harmony export */ });
+/* harmony import */ var _OverloadYield_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./OverloadYield.js */ "./node_modules/@babel/runtime/helpers/esm/OverloadYield.js");
+/* harmony import */ var _regeneratorDefine_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./regeneratorDefine.js */ "./node_modules/@babel/runtime/helpers/esm/regeneratorDefine.js");
+
+
+function AsyncIterator(t, e) {
+  function n(r, o, i, f) {
+    try {
+      var c = t[r](o),
+        u = c.value;
+      return u instanceof _OverloadYield_js__WEBPACK_IMPORTED_MODULE_0__["default"] ? e.resolve(u.v).then(function (t) {
+        n("next", t, i, f);
+      }, function (t) {
+        n("throw", t, i, f);
+      }) : e.resolve(u).then(function (t) {
+        c.value = t, i(c);
+      }, function (t) {
+        return n("throw", t, i, f);
+      });
+    } catch (t) {
+      f(t);
+    }
+  }
+  var r;
+  this.next || ((0,_regeneratorDefine_js__WEBPACK_IMPORTED_MODULE_1__["default"])(AsyncIterator.prototype), (0,_regeneratorDefine_js__WEBPACK_IMPORTED_MODULE_1__["default"])(AsyncIterator.prototype, "function" == typeof Symbol && Symbol.asyncIterator || "@asyncIterator", function () {
+    return this;
+  })), (0,_regeneratorDefine_js__WEBPACK_IMPORTED_MODULE_1__["default"])(this, "_invoke", function (t, o, i) {
+    function f() {
+      return new e(function (e, r) {
+        n(t, i, e, r);
+      });
+    }
+    return r = r ? r.then(f, f) : f();
+  }, !0);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/regeneratorDefine.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/regeneratorDefine.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _regeneratorDefine)
+/* harmony export */ });
+function _regeneratorDefine(e, r, n, t) {
+  var i = Object.defineProperty;
+  try {
+    i({}, "", {});
+  } catch (e) {
+    i = 0;
+  }
+  _regeneratorDefine = function regeneratorDefine(e, r, n, t) {
+    if (r) i ? i(e, r, {
+      value: n,
+      enumerable: !t,
+      configurable: !t,
+      writable: !t
+    }) : e[r] = n;else {
+      var o = function o(r, n) {
+        _regeneratorDefine(e, r, function (e) {
+          return this._invoke(r, n, e);
+        });
+      };
+      o("next", 0), o("throw", 1), o("return", 2);
+    }
+  }, _regeneratorDefine(e, r, n, t);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/regeneratorKeys.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/regeneratorKeys.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _regeneratorKeys)
+/* harmony export */ });
+function _regeneratorKeys(e) {
+  var n = Object(e),
+    r = [];
+  for (var t in n) r.unshift(t);
+  return function e() {
+    for (; r.length;) if ((t = r.pop()) in n) return e.value = t, e.done = !1, e;
+    return e.done = !0, e;
+  };
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/regeneratorRuntime.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/regeneratorRuntime.js ***!
+  \***********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _regeneratorRuntime)
+/* harmony export */ });
+/* harmony import */ var _OverloadYield_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./OverloadYield.js */ "./node_modules/@babel/runtime/helpers/esm/OverloadYield.js");
+/* harmony import */ var _regenerator_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./regenerator.js */ "./node_modules/@babel/runtime/helpers/esm/regenerator.js");
+/* harmony import */ var _regeneratorAsync_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./regeneratorAsync.js */ "./node_modules/@babel/runtime/helpers/esm/regeneratorAsync.js");
+/* harmony import */ var _regeneratorAsyncGen_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./regeneratorAsyncGen.js */ "./node_modules/@babel/runtime/helpers/esm/regeneratorAsyncGen.js");
+/* harmony import */ var _regeneratorAsyncIterator_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./regeneratorAsyncIterator.js */ "./node_modules/@babel/runtime/helpers/esm/regeneratorAsyncIterator.js");
+/* harmony import */ var _regeneratorKeys_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./regeneratorKeys.js */ "./node_modules/@babel/runtime/helpers/esm/regeneratorKeys.js");
+/* harmony import */ var _regeneratorValues_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./regeneratorValues.js */ "./node_modules/@babel/runtime/helpers/esm/regeneratorValues.js");
+
+
+
+
+
+
+
+function _regeneratorRuntime() {
+  "use strict";
+
+  var r = (0,_regenerator_js__WEBPACK_IMPORTED_MODULE_1__["default"])(),
+    e = r.m(_regeneratorRuntime),
+    t = (Object.getPrototypeOf ? Object.getPrototypeOf(e) : e.__proto__).constructor;
+  function n(r) {
+    var e = "function" == typeof r && r.constructor;
+    return !!e && (e === t || "GeneratorFunction" === (e.displayName || e.name));
+  }
+  var o = {
+    "throw": 1,
+    "return": 2,
+    "break": 3,
+    "continue": 3
+  };
+  function a(r) {
+    var e, t;
+    return function (n) {
+      e || (e = {
+        stop: function stop() {
+          return t(n.a, 2);
+        },
+        "catch": function _catch() {
+          return n.v;
+        },
+        abrupt: function abrupt(r, e) {
+          return t(n.a, o[r], e);
+        },
+        delegateYield: function delegateYield(r, o, a) {
+          return e.resultName = o, t(n.d, (0,_regeneratorValues_js__WEBPACK_IMPORTED_MODULE_6__["default"])(r), a);
+        },
+        finish: function finish(r) {
+          return t(n.f, r);
+        }
+      }, t = function t(r, _t, o) {
+        n.p = e.prev, n.n = e.next;
+        try {
+          return r(_t, o);
+        } finally {
+          e.next = n.n;
+        }
+      }), e.resultName && (e[e.resultName] = n.v, e.resultName = void 0), e.sent = n.v, e.next = n.n;
+      try {
+        return r.call(this, e);
+      } finally {
+        n.p = e.prev, n.n = e.next;
+      }
+    };
+  }
+  return (_regeneratorRuntime = function _regeneratorRuntime() {
+    return {
+      wrap: function wrap(e, t, n, o) {
+        return r.w(a(e), t, n, o && o.reverse());
+      },
+      isGeneratorFunction: n,
+      mark: r.m,
+      awrap: function awrap(r, e) {
+        return new _OverloadYield_js__WEBPACK_IMPORTED_MODULE_0__["default"](r, e);
+      },
+      AsyncIterator: _regeneratorAsyncIterator_js__WEBPACK_IMPORTED_MODULE_4__["default"],
+      async: function async(r, e, t, o, u) {
+        return (n(e) ? _regeneratorAsyncGen_js__WEBPACK_IMPORTED_MODULE_3__["default"] : _regeneratorAsync_js__WEBPACK_IMPORTED_MODULE_2__["default"])(a(r), e, t, o, u);
+      },
+      keys: _regeneratorKeys_js__WEBPACK_IMPORTED_MODULE_5__["default"],
+      values: _regeneratorValues_js__WEBPACK_IMPORTED_MODULE_6__["default"]
+    };
+  })();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/regeneratorValues.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/regeneratorValues.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _regeneratorValues)
+/* harmony export */ });
+/* harmony import */ var _typeof_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./typeof.js */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
+
+function _regeneratorValues(e) {
+  if (null != e) {
+    var t = e["function" == typeof Symbol && Symbol.iterator || "@@iterator"],
+      r = 0;
+    if (t) return t.call(e);
+    if ("function" == typeof e.next) return e;
+    if (!isNaN(e.length)) return {
+      next: function next() {
+        return e && r >= e.length && (e = void 0), {
+          value: e && e[r++],
+          done: !e
+        };
+      }
+    };
+  }
+  throw new TypeError((0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(e) + " is not iterable");
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _setPrototypeOf)
+/* harmony export */ });
+function _setPrototypeOf(t, e) {
+  return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) {
+    return t.__proto__ = e, t;
+  }, _setPrototypeOf(t, e);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/slicedToArray.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/slicedToArray.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _slicedToArray)
+/* harmony export */ });
+/* harmony import */ var _arrayWithHoles_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./arrayWithHoles.js */ "./node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js");
+/* harmony import */ var _iterableToArrayLimit_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./iterableToArrayLimit.js */ "./node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js");
+/* harmony import */ var _unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./unsupportedIterableToArray.js */ "./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js");
+/* harmony import */ var _nonIterableRest_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./nonIterableRest.js */ "./node_modules/@babel/runtime/helpers/esm/nonIterableRest.js");
+
+
+
+
+function _slicedToArray(r, e) {
+  return (0,_arrayWithHoles_js__WEBPACK_IMPORTED_MODULE_0__["default"])(r) || (0,_iterableToArrayLimit_js__WEBPACK_IMPORTED_MODULE_1__["default"])(r, e) || (0,_unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__["default"])(r, e) || (0,_nonIterableRest_js__WEBPACK_IMPORTED_MODULE_3__["default"])();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/toArray.js":
+/*!************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/toArray.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _toArray)
+/* harmony export */ });
+/* harmony import */ var _arrayWithHoles_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./arrayWithHoles.js */ "./node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js");
+/* harmony import */ var _iterableToArray_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./iterableToArray.js */ "./node_modules/@babel/runtime/helpers/esm/iterableToArray.js");
+/* harmony import */ var _unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./unsupportedIterableToArray.js */ "./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js");
+/* harmony import */ var _nonIterableRest_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./nonIterableRest.js */ "./node_modules/@babel/runtime/helpers/esm/nonIterableRest.js");
+
+
+
+
+function _toArray(r) {
+  return (0,_arrayWithHoles_js__WEBPACK_IMPORTED_MODULE_0__["default"])(r) || (0,_iterableToArray_js__WEBPACK_IMPORTED_MODULE_1__["default"])(r) || (0,_unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__["default"])(r) || (0,_nonIterableRest_js__WEBPACK_IMPORTED_MODULE_3__["default"])();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _toConsumableArray)
+/* harmony export */ });
+/* harmony import */ var _arrayWithoutHoles_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./arrayWithoutHoles.js */ "./node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js");
+/* harmony import */ var _iterableToArray_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./iterableToArray.js */ "./node_modules/@babel/runtime/helpers/esm/iterableToArray.js");
+/* harmony import */ var _unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./unsupportedIterableToArray.js */ "./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js");
+/* harmony import */ var _nonIterableSpread_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./nonIterableSpread.js */ "./node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js");
+
+
+
+
+function _toConsumableArray(r) {
+  return (0,_arrayWithoutHoles_js__WEBPACK_IMPORTED_MODULE_0__["default"])(r) || (0,_iterableToArray_js__WEBPACK_IMPORTED_MODULE_1__["default"])(r) || (0,_unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__["default"])(r) || (0,_nonIterableSpread_js__WEBPACK_IMPORTED_MODULE_3__["default"])();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/toPrimitive.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/toPrimitive.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ toPrimitive)
+/* harmony export */ });
+/* harmony import */ var _typeof_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./typeof.js */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
+
+function toPrimitive(t, r) {
+  if ("object" != (0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(t) || !t) return t;
+  var e = t[Symbol.toPrimitive];
+  if (void 0 !== e) {
+    var i = e.call(t, r || "default");
+    if ("object" != (0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(i)) return i;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return ("string" === r ? String : Number)(t);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ toPropertyKey)
+/* harmony export */ });
+/* harmony import */ var _typeof_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./typeof.js */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
+/* harmony import */ var _toPrimitive_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./toPrimitive.js */ "./node_modules/@babel/runtime/helpers/esm/toPrimitive.js");
+
+
+function toPropertyKey(t) {
+  var i = (0,_toPrimitive_js__WEBPACK_IMPORTED_MODULE_1__["default"])(t, "string");
+  return "symbol" == (0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(i) ? i : i + "";
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/typeof.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/typeof.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _typeof)
+/* harmony export */ });
+function _typeof(o) {
+  "@babel/helpers - typeof";
+
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
+    return typeof o;
+  } : function (o) {
+    return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
+  }, _typeof(o);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js ***!
+  \*******************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _unsupportedIterableToArray)
+/* harmony export */ });
+/* harmony import */ var _arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./arrayLikeToArray.js */ "./node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js");
+
+function _unsupportedIterableToArray(r, a) {
+  if (r) {
+    if ("string" == typeof r) return (0,_arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__["default"])(r, a);
+    var t = {}.toString.call(r).slice(8, -1);
+    return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? (0,_arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__["default"])(r, a) : void 0;
+  }
+}
+
 
 /***/ }),
 
@@ -3189,7 +4332,8 @@ function pad2(c) {
 //
 if (true) {
   module.exports = __webpack_require__(/*! ./production.js */ "./node_modules/@dabh/diagnostics/browser/production.js");
-} else {}
+} else // removed by dead control flow
+{}
 
 
 /***/ }),
@@ -3566,7 +4710,8 @@ function withConfigConsumer(config) {
     };
     var cons = Component.constructor;
     var name = cons && cons.displayName || Component.name || 'Component';
-    if (false) {}
+    if (false) // removed by dead control flow
+{}
     return SFC;
   };
 }
@@ -4075,7 +5220,8 @@ var LocaleProvider = function LocaleProvider(props) {
     locale = _props$locale === void 0 ? {} : _props$locale,
     children = props.children,
     _ANT_MARK__ = props._ANT_MARK__;
-  if (false) {}
+  if (false) // removed by dead control flow
+{}
   react__WEBPACK_IMPORTED_MODULE_1__.useEffect(function () {
     (0,_modal_locale__WEBPACK_IMPORTED_MODULE_2__.changeConfirmLocale)(locale && locale.Modal);
     return function () {
@@ -4460,7 +5606,8 @@ function getRCNotificationInstance(args, callback) {
       return;
     }
     messageInstance = instance;
-    if (false) {}
+    if (false) // removed by dead control flow
+{}
     callback({
       prefixCls: prefixCls,
       rootPrefixCls: rootPrefixCls,
@@ -8195,6 +9342,34 @@ module.exports = exports.default;
 
 /***/ }),
 
+/***/ "./node_modules/available-typed-arrays/index.js":
+/*!******************************************************!*\
+  !*** ./node_modules/available-typed-arrays/index.js ***!
+  \******************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+
+var possibleNames = __webpack_require__(/*! possible-typed-array-names */ "./node_modules/possible-typed-array-names/index.js");
+
+var g = typeof globalThis === 'undefined' ? __webpack_require__.g : globalThis;
+
+/** @type {import('.')} */
+module.exports = function availableTypedArrays() {
+	var /** @type {ReturnType<typeof availableTypedArrays>} */ out = [];
+	for (var i = 0; i < possibleNames.length; i++) {
+		if (typeof g[possibleNames[i]] === 'function') {
+			// @ts-expect-error
+			out[out.length] = possibleNames[i];
+		}
+	}
+	return out;
+};
+
+
+/***/ }),
+
 /***/ "./node_modules/base64-js/index.js":
 /*!*****************************************!*\
   !*** ./node_modules/base64-js/index.js ***!
@@ -11675,7 +12850,7 @@ var $TypeError = __webpack_require__(/*! es-errors/type */ "./node_modules/es-er
 var $call = __webpack_require__(/*! ./functionCall */ "./node_modules/call-bind-apply-helpers/functionCall.js");
 var $actualApply = __webpack_require__(/*! ./actualApply */ "./node_modules/call-bind-apply-helpers/actualApply.js");
 
-/** @type {import('.')} */
+/** @type {(args: [Function, thisArg?: unknown, ...args: unknown[]]) => Function} TODO FIXME, find a way to use import('.') */
 module.exports = function callBindBasic(args) {
 	if (args.length < 1 || typeof args[0] !== 'function') {
 		throw new $TypeError('a function is required');
@@ -11780,13 +12955,101 @@ var $indexOf = callBindBasic([GetIntrinsic('%String.prototype.indexOf%')]);
 
 /** @type {import('.')} */
 module.exports = function callBoundIntrinsic(name, allowMissing) {
-	// eslint-disable-next-line no-extra-parens
-	var intrinsic = /** @type {Parameters<typeof callBindBasic>[0][0]} */ (GetIntrinsic(name, !!allowMissing));
+	/* eslint no-extra-parens: 0 */
+
+	var intrinsic = /** @type {(this: unknown, ...args: unknown[]) => unknown} */ (GetIntrinsic(name, !!allowMissing));
 	if (typeof intrinsic === 'function' && $indexOf(name, '.prototype.') > -1) {
-		return callBindBasic([intrinsic]);
+		return callBindBasic(/** @type {const} */ ([intrinsic]));
 	}
 	return intrinsic;
 };
+
+
+/***/ }),
+
+/***/ "./node_modules/classnames/index.js":
+/*!******************************************!*\
+  !*** ./node_modules/classnames/index.js ***!
+  \******************************************/
+/***/ ((module, exports) => {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	Copyright (c) 2018 Jed Watson.
+	Licensed under the MIT License (MIT), see
+	http://jedwatson.github.io/classnames
+*/
+/* global define */
+
+(function () {
+	'use strict';
+
+	var hasOwn = {}.hasOwnProperty;
+
+	function classNames () {
+		var classes = '';
+
+		for (var i = 0; i < arguments.length; i++) {
+			var arg = arguments[i];
+			if (arg) {
+				classes = appendClass(classes, parseValue(arg));
+			}
+		}
+
+		return classes;
+	}
+
+	function parseValue (arg) {
+		if (typeof arg === 'string' || typeof arg === 'number') {
+			return arg;
+		}
+
+		if (typeof arg !== 'object') {
+			return '';
+		}
+
+		if (Array.isArray(arg)) {
+			return classNames.apply(null, arg);
+		}
+
+		if (arg.toString !== Object.prototype.toString && !arg.toString.toString().includes('[native code]')) {
+			return arg.toString();
+		}
+
+		var classes = '';
+
+		for (var key in arg) {
+			if (hasOwn.call(arg, key) && arg[key]) {
+				classes = appendClass(classes, key);
+			}
+		}
+
+		return classes;
+	}
+
+	function appendClass (value, newClass) {
+		if (!newClass) {
+			return value;
+		}
+	
+		if (value) {
+			return value + ' ' + newClass;
+		}
+	
+		return value + newClass;
+	}
+
+	if ( true && module.exports) {
+		classNames.default = classNames;
+		module.exports = classNames;
+	} else if (true) {
+		// register as 'classnames', consistent with npm package name
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {
+			return classNames;
+		}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	} else // removed by dead control flow
+{}
+}());
 
 
 /***/ }),
@@ -12167,7 +13430,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;(function(root, factory) {
             return factory(root);
         }).call(exports, __webpack_require__, exports, module),
 		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    } else { var domJSON; }
+    } else // removed by dead control flow
+{ var domJSON; }
 })(this, function(win) {
     "use strict";
     var domJSON = {};
@@ -13952,6 +15216,7 @@ var isCallable = __webpack_require__(/*! is-callable */ "./node_modules/is-calla
 var toStr = Object.prototype.toString;
 var hasOwnProperty = Object.prototype.hasOwnProperty;
 
+/** @type {<This, A extends readonly unknown[]>(arr: A, iterator: (this: This | void, value: A[number], index: number, arr: A) => void, receiver: This | undefined) => void} */
 var forEachArray = function forEachArray(array, iterator, receiver) {
     for (var i = 0, len = array.length; i < len; i++) {
         if (hasOwnProperty.call(array, i)) {
@@ -13964,6 +15229,7 @@ var forEachArray = function forEachArray(array, iterator, receiver) {
     }
 };
 
+/** @type {<This, S extends string>(string: S, iterator: (this: This | void, value: S[number], index: number, string: S) => void, receiver: This | undefined) => void} */
 var forEachString = function forEachString(string, iterator, receiver) {
     for (var i = 0, len = string.length; i < len; i++) {
         // no such thing as a sparse string.
@@ -13975,6 +15241,7 @@ var forEachString = function forEachString(string, iterator, receiver) {
     }
 };
 
+/** @type {<This, O>(obj: O, iterator: (this: This | void, value: O[keyof O], index: keyof O, obj: O) => void, receiver: This | undefined) => void} */
 var forEachObject = function forEachObject(object, iterator, receiver) {
     for (var k in object) {
         if (hasOwnProperty.call(object, k)) {
@@ -13987,7 +15254,13 @@ var forEachObject = function forEachObject(object, iterator, receiver) {
     }
 };
 
-var forEach = function forEach(list, iterator, thisArg) {
+/** @type {(x: unknown) => x is readonly unknown[]} */
+function isArray(x) {
+    return toStr.call(x) === '[object Array]';
+}
+
+/** @type {import('.')._internal} */
+module.exports = function forEach(list, iterator, thisArg) {
     if (!isCallable(iterator)) {
         throw new TypeError('iterator must be a function');
     }
@@ -13997,7 +15270,7 @@ var forEach = function forEach(list, iterator, thisArg) {
         receiver = thisArg;
     }
 
-    if (toStr.call(list) === '[object Array]') {
+    if (isArray(list)) {
         forEachArray(list, iterator, receiver);
     } else if (typeof list === 'string') {
         forEachString(list, iterator, receiver);
@@ -14005,8 +15278,6 @@ var forEach = function forEach(list, iterator, thisArg) {
         forEachObject(list, iterator, receiver);
     }
 };
-
-module.exports = forEach;
 
 
 /***/ }),
@@ -14221,6 +15492,7 @@ var INTRINSICS = {
 	'%Error%': $Error,
 	'%eval%': eval, // eslint-disable-line no-eval
 	'%EvalError%': $EvalError,
+	'%Float16Array%': typeof Float16Array === 'undefined' ? undefined : Float16Array,
 	'%Float32Array%': typeof Float32Array === 'undefined' ? undefined : Float32Array,
 	'%Float64Array%': typeof Float64Array === 'undefined' ? undefined : Float64Array,
 	'%FinalizationRegistry%': typeof FinalizationRegistry === 'undefined' ? undefined : FinalizationRegistry,
@@ -14814,6 +16086,2559 @@ function validateParams (params) {
 
 /***/ }),
 
+/***/ "./node_modules/i18next/dist/esm/i18next.js":
+/*!**************************************************!*\
+  !*** ./node_modules/i18next/dist/esm/i18next.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   changeLanguage: () => (/* binding */ changeLanguage),
+/* harmony export */   createInstance: () => (/* binding */ createInstance),
+/* harmony export */   "default": () => (/* binding */ instance),
+/* harmony export */   dir: () => (/* binding */ dir),
+/* harmony export */   exists: () => (/* binding */ exists),
+/* harmony export */   getFixedT: () => (/* binding */ getFixedT),
+/* harmony export */   hasLoadedNamespace: () => (/* binding */ hasLoadedNamespace),
+/* harmony export */   init: () => (/* binding */ init),
+/* harmony export */   loadLanguages: () => (/* binding */ loadLanguages),
+/* harmony export */   loadNamespaces: () => (/* binding */ loadNamespaces),
+/* harmony export */   loadResources: () => (/* binding */ loadResources),
+/* harmony export */   reloadResources: () => (/* binding */ reloadResources),
+/* harmony export */   setDefaultNamespace: () => (/* binding */ setDefaultNamespace),
+/* harmony export */   t: () => (/* binding */ t),
+/* harmony export */   use: () => (/* binding */ use)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/typeof */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
+/* harmony import */ var _babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/esm/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/esm/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/esm/assertThisInitialized */ "./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js");
+/* harmony import */ var _babel_runtime_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/esm/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/esm/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/esm/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
+/* harmony import */ var _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @babel/runtime/helpers/esm/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_esm_toArray__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @babel/runtime/helpers/esm/toArray */ "./node_modules/@babel/runtime/helpers/esm/toArray.js");
+
+
+
+
+
+
+
+
+
+
+function ownKeys$6(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread$6(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$6(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$6(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+var consoleLogger = {
+  type: 'logger',
+  log: function log(args) {
+    this.output('log', args);
+  },
+  warn: function warn(args) {
+    this.output('warn', args);
+  },
+  error: function error(args) {
+    this.output('error', args);
+  },
+  output: function output(type, args) {
+    if (console && console[type]) console[type].apply(console, args);
+  }
+};
+var Logger = function () {
+  function Logger(concreteLogger) {
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    (0,_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, Logger);
+    this.init(concreteLogger, options);
+  }
+  (0,_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(Logger, [{
+    key: "init",
+    value: function init(concreteLogger) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      this.prefix = options.prefix || 'i18next:';
+      this.logger = concreteLogger || consoleLogger;
+      this.options = options;
+      this.debug = options.debug;
+    }
+  }, {
+    key: "setDebug",
+    value: function setDebug(bool) {
+      this.debug = bool;
+    }
+  }, {
+    key: "log",
+    value: function log() {
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+      return this.forward(args, 'log', '', true);
+    }
+  }, {
+    key: "warn",
+    value: function warn() {
+      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        args[_key2] = arguments[_key2];
+      }
+      return this.forward(args, 'warn', '', true);
+    }
+  }, {
+    key: "error",
+    value: function error() {
+      for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+        args[_key3] = arguments[_key3];
+      }
+      return this.forward(args, 'error', '');
+    }
+  }, {
+    key: "deprecate",
+    value: function deprecate() {
+      for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+        args[_key4] = arguments[_key4];
+      }
+      return this.forward(args, 'warn', 'WARNING DEPRECATED: ', true);
+    }
+  }, {
+    key: "forward",
+    value: function forward(args, lvl, prefix, debugOnly) {
+      if (debugOnly && !this.debug) return null;
+      if (typeof args[0] === 'string') args[0] = "".concat(prefix).concat(this.prefix, " ").concat(args[0]);
+      return this.logger[lvl](args);
+    }
+  }, {
+    key: "create",
+    value: function create(moduleName) {
+      return new Logger(this.logger, _objectSpread$6(_objectSpread$6({}, {
+        prefix: "".concat(this.prefix, ":").concat(moduleName, ":")
+      }), this.options));
+    }
+  }, {
+    key: "clone",
+    value: function clone(options) {
+      options = options || this.options;
+      options.prefix = options.prefix || this.prefix;
+      return new Logger(this.logger, options);
+    }
+  }]);
+  return Logger;
+}();
+var baseLogger = new Logger();
+
+var EventEmitter = function () {
+  function EventEmitter() {
+    (0,_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, EventEmitter);
+    this.observers = {};
+  }
+  (0,_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(EventEmitter, [{
+    key: "on",
+    value: function on(events, listener) {
+      var _this = this;
+      events.split(' ').forEach(function (event) {
+        _this.observers[event] = _this.observers[event] || [];
+        _this.observers[event].push(listener);
+      });
+      return this;
+    }
+  }, {
+    key: "off",
+    value: function off(event, listener) {
+      if (!this.observers[event]) return;
+      if (!listener) {
+        delete this.observers[event];
+        return;
+      }
+      this.observers[event] = this.observers[event].filter(function (l) {
+        return l !== listener;
+      });
+    }
+  }, {
+    key: "emit",
+    value: function emit(event) {
+      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
+      if (this.observers[event]) {
+        var cloned = [].concat(this.observers[event]);
+        cloned.forEach(function (observer) {
+          observer.apply(void 0, args);
+        });
+      }
+      if (this.observers['*']) {
+        var _cloned = [].concat(this.observers['*']);
+        _cloned.forEach(function (observer) {
+          observer.apply(observer, [event].concat(args));
+        });
+      }
+    }
+  }]);
+  return EventEmitter;
+}();
+
+function defer() {
+  var res;
+  var rej;
+  var promise = new Promise(function (resolve, reject) {
+    res = resolve;
+    rej = reject;
+  });
+  promise.resolve = res;
+  promise.reject = rej;
+  return promise;
+}
+function makeString(object) {
+  if (object == null) return '';
+  return '' + object;
+}
+function copy(a, s, t) {
+  a.forEach(function (m) {
+    if (s[m]) t[m] = s[m];
+  });
+}
+function getLastOfPath(object, path, Empty) {
+  function cleanKey(key) {
+    return key && key.indexOf('###') > -1 ? key.replace(/###/g, '.') : key;
+  }
+  function canNotTraverseDeeper() {
+    return !object || typeof object === 'string';
+  }
+  var stack = typeof path !== 'string' ? [].concat(path) : path.split('.');
+  while (stack.length > 1) {
+    if (canNotTraverseDeeper()) return {};
+    var key = cleanKey(stack.shift());
+    if (!object[key] && Empty) object[key] = new Empty();
+    if (Object.prototype.hasOwnProperty.call(object, key)) {
+      object = object[key];
+    } else {
+      object = {};
+    }
+  }
+  if (canNotTraverseDeeper()) return {};
+  return {
+    obj: object,
+    k: cleanKey(stack.shift())
+  };
+}
+function setPath(object, path, newValue) {
+  var _getLastOfPath = getLastOfPath(object, path, Object),
+    obj = _getLastOfPath.obj,
+    k = _getLastOfPath.k;
+  obj[k] = newValue;
+}
+function pushPath(object, path, newValue, concat) {
+  var _getLastOfPath2 = getLastOfPath(object, path, Object),
+    obj = _getLastOfPath2.obj,
+    k = _getLastOfPath2.k;
+  obj[k] = obj[k] || [];
+  if (concat) obj[k] = obj[k].concat(newValue);
+  if (!concat) obj[k].push(newValue);
+}
+function getPath(object, path) {
+  var _getLastOfPath3 = getLastOfPath(object, path),
+    obj = _getLastOfPath3.obj,
+    k = _getLastOfPath3.k;
+  if (!obj) return undefined;
+  return obj[k];
+}
+function getPathWithDefaults(data, defaultData, key) {
+  var value = getPath(data, key);
+  if (value !== undefined) {
+    return value;
+  }
+  return getPath(defaultData, key);
+}
+function deepExtend(target, source, overwrite) {
+  for (var prop in source) {
+    if (prop !== '__proto__' && prop !== 'constructor') {
+      if (prop in target) {
+        if (typeof target[prop] === 'string' || target[prop] instanceof String || typeof source[prop] === 'string' || source[prop] instanceof String) {
+          if (overwrite) target[prop] = source[prop];
+        } else {
+          deepExtend(target[prop], source[prop], overwrite);
+        }
+      } else {
+        target[prop] = source[prop];
+      }
+    }
+  }
+  return target;
+}
+function regexEscape(str) {
+  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+}
+var _entityMap = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+  '/': '&#x2F;'
+};
+function escape(data) {
+  if (typeof data === 'string') {
+    return data.replace(/[&<>"'\/]/g, function (s) {
+      return _entityMap[s];
+    });
+  }
+  return data;
+}
+var isIE10 = typeof window !== 'undefined' && window.navigator && typeof window.navigator.userAgentData === 'undefined' && window.navigator.userAgent && window.navigator.userAgent.indexOf('MSIE') > -1;
+var chars = [' ', ',', '?', '!', ';'];
+function looksLikeObjectPath(key, nsSeparator, keySeparator) {
+  nsSeparator = nsSeparator || '';
+  keySeparator = keySeparator || '';
+  var possibleChars = chars.filter(function (c) {
+    return nsSeparator.indexOf(c) < 0 && keySeparator.indexOf(c) < 0;
+  });
+  if (possibleChars.length === 0) return true;
+  var r = new RegExp("(".concat(possibleChars.map(function (c) {
+    return c === '?' ? '\\?' : c;
+  }).join('|'), ")"));
+  var matched = !r.test(key);
+  if (!matched) {
+    var ki = key.indexOf(keySeparator);
+    if (ki > 0 && !r.test(key.substring(0, ki))) {
+      matched = true;
+    }
+  }
+  return matched;
+}
+function deepFind(obj, path) {
+  var keySeparator = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '.';
+  if (!obj) return undefined;
+  if (obj[path]) return obj[path];
+  var paths = path.split(keySeparator);
+  var current = obj;
+  for (var i = 0; i < paths.length; ++i) {
+    if (!current) return undefined;
+    if (typeof current[paths[i]] === 'string' && i + 1 < paths.length) {
+      return undefined;
+    }
+    if (current[paths[i]] === undefined) {
+      var j = 2;
+      var p = paths.slice(i, i + j).join(keySeparator);
+      var mix = current[p];
+      while (mix === undefined && paths.length > i + j) {
+        j++;
+        p = paths.slice(i, i + j).join(keySeparator);
+        mix = current[p];
+      }
+      if (mix === undefined) return undefined;
+      if (mix === null) return null;
+      if (path.endsWith(p)) {
+        if (typeof mix === 'string') return mix;
+        if (p && typeof mix[p] === 'string') return mix[p];
+      }
+      var joinedPath = paths.slice(i + j).join(keySeparator);
+      if (joinedPath) return deepFind(mix, joinedPath, keySeparator);
+      return undefined;
+    }
+    current = current[paths[i]];
+  }
+  return current;
+}
+
+function ownKeys$5(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread$5(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$5(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$5(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _createSuper$3(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$3(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5__["default"])(this, result); }; }
+function _isNativeReflectConstruct$3() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+var ResourceStore = function (_EventEmitter) {
+  (0,_babel_runtime_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(ResourceStore, _EventEmitter);
+  var _super = _createSuper$3(ResourceStore);
+  function ResourceStore(data) {
+    var _this;
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
+      ns: ['translation'],
+      defaultNS: 'translation'
+    };
+    (0,_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, ResourceStore);
+    _this = _super.call(this);
+    if (isIE10) {
+      EventEmitter.call((0,_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
+    }
+    _this.data = data || {};
+    _this.options = options;
+    if (_this.options.keySeparator === undefined) {
+      _this.options.keySeparator = '.';
+    }
+    if (_this.options.ignoreJSONStructure === undefined) {
+      _this.options.ignoreJSONStructure = true;
+    }
+    return _this;
+  }
+  (0,_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(ResourceStore, [{
+    key: "addNamespaces",
+    value: function addNamespaces(ns) {
+      if (this.options.ns.indexOf(ns) < 0) {
+        this.options.ns.push(ns);
+      }
+    }
+  }, {
+    key: "removeNamespaces",
+    value: function removeNamespaces(ns) {
+      var index = this.options.ns.indexOf(ns);
+      if (index > -1) {
+        this.options.ns.splice(index, 1);
+      }
+    }
+  }, {
+    key: "getResource",
+    value: function getResource(lng, ns, key) {
+      var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+      var keySeparator = options.keySeparator !== undefined ? options.keySeparator : this.options.keySeparator;
+      var ignoreJSONStructure = options.ignoreJSONStructure !== undefined ? options.ignoreJSONStructure : this.options.ignoreJSONStructure;
+      var path = [lng, ns];
+      if (key && typeof key !== 'string') path = path.concat(key);
+      if (key && typeof key === 'string') path = path.concat(keySeparator ? key.split(keySeparator) : key);
+      if (lng.indexOf('.') > -1) {
+        path = lng.split('.');
+      }
+      var result = getPath(this.data, path);
+      if (result || !ignoreJSONStructure || typeof key !== 'string') return result;
+      return deepFind(this.data && this.data[lng] && this.data[lng][ns], key, keySeparator);
+    }
+  }, {
+    key: "addResource",
+    value: function addResource(lng, ns, key, value) {
+      var options = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {
+        silent: false
+      };
+      var keySeparator = options.keySeparator !== undefined ? options.keySeparator : this.options.keySeparator;
+      var path = [lng, ns];
+      if (key) path = path.concat(keySeparator ? key.split(keySeparator) : key);
+      if (lng.indexOf('.') > -1) {
+        path = lng.split('.');
+        value = ns;
+        ns = path[1];
+      }
+      this.addNamespaces(ns);
+      setPath(this.data, path, value);
+      if (!options.silent) this.emit('added', lng, ns, key, value);
+    }
+  }, {
+    key: "addResources",
+    value: function addResources(lng, ns, resources) {
+      var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {
+        silent: false
+      };
+      for (var m in resources) {
+        if (typeof resources[m] === 'string' || Object.prototype.toString.apply(resources[m]) === '[object Array]') this.addResource(lng, ns, m, resources[m], {
+          silent: true
+        });
+      }
+      if (!options.silent) this.emit('added', lng, ns, resources);
+    }
+  }, {
+    key: "addResourceBundle",
+    value: function addResourceBundle(lng, ns, resources, deep, overwrite) {
+      var options = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {
+        silent: false
+      };
+      var path = [lng, ns];
+      if (lng.indexOf('.') > -1) {
+        path = lng.split('.');
+        deep = resources;
+        resources = ns;
+        ns = path[1];
+      }
+      this.addNamespaces(ns);
+      var pack = getPath(this.data, path) || {};
+      if (deep) {
+        deepExtend(pack, resources, overwrite);
+      } else {
+        pack = _objectSpread$5(_objectSpread$5({}, pack), resources);
+      }
+      setPath(this.data, path, pack);
+      if (!options.silent) this.emit('added', lng, ns, resources);
+    }
+  }, {
+    key: "removeResourceBundle",
+    value: function removeResourceBundle(lng, ns) {
+      if (this.hasResourceBundle(lng, ns)) {
+        delete this.data[lng][ns];
+      }
+      this.removeNamespaces(ns);
+      this.emit('removed', lng, ns);
+    }
+  }, {
+    key: "hasResourceBundle",
+    value: function hasResourceBundle(lng, ns) {
+      return this.getResource(lng, ns) !== undefined;
+    }
+  }, {
+    key: "getResourceBundle",
+    value: function getResourceBundle(lng, ns) {
+      if (!ns) ns = this.options.defaultNS;
+      if (this.options.compatibilityAPI === 'v1') return _objectSpread$5(_objectSpread$5({}, {}), this.getResource(lng, ns));
+      return this.getResource(lng, ns);
+    }
+  }, {
+    key: "getDataByLanguage",
+    value: function getDataByLanguage(lng) {
+      return this.data[lng];
+    }
+  }, {
+    key: "hasLanguageSomeTranslations",
+    value: function hasLanguageSomeTranslations(lng) {
+      var data = this.getDataByLanguage(lng);
+      var n = data && Object.keys(data) || [];
+      return !!n.find(function (v) {
+        return data[v] && Object.keys(data[v]).length > 0;
+      });
+    }
+  }, {
+    key: "toJSON",
+    value: function toJSON() {
+      return this.data;
+    }
+  }]);
+  return ResourceStore;
+}(EventEmitter);
+
+var postProcessor = {
+  processors: {},
+  addPostProcessor: function addPostProcessor(module) {
+    this.processors[module.name] = module;
+  },
+  handle: function handle(processors, value, key, options, translator) {
+    var _this = this;
+    processors.forEach(function (processor) {
+      if (_this.processors[processor]) value = _this.processors[processor].process(value, key, options, translator);
+    });
+    return value;
+  }
+};
+
+function ownKeys$4(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread$4(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$4(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$4(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _createSuper$2(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$2(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5__["default"])(this, result); }; }
+function _isNativeReflectConstruct$2() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+var checkedLoadedFor = {};
+var Translator = function (_EventEmitter) {
+  (0,_babel_runtime_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(Translator, _EventEmitter);
+  var _super = _createSuper$2(Translator);
+  function Translator(services) {
+    var _this;
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    (0,_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, Translator);
+    _this = _super.call(this);
+    if (isIE10) {
+      EventEmitter.call((0,_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
+    }
+    copy(['resourceStore', 'languageUtils', 'pluralResolver', 'interpolator', 'backendConnector', 'i18nFormat', 'utils'], services, (0,_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
+    _this.options = options;
+    if (_this.options.keySeparator === undefined) {
+      _this.options.keySeparator = '.';
+    }
+    _this.logger = baseLogger.create('translator');
+    return _this;
+  }
+  (0,_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(Translator, [{
+    key: "changeLanguage",
+    value: function changeLanguage(lng) {
+      if (lng) this.language = lng;
+    }
+  }, {
+    key: "exists",
+    value: function exists(key) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
+        interpolation: {}
+      };
+      if (key === undefined || key === null) {
+        return false;
+      }
+      var resolved = this.resolve(key, options);
+      return resolved && resolved.res !== undefined;
+    }
+  }, {
+    key: "extractFromKey",
+    value: function extractFromKey(key, options) {
+      var nsSeparator = options.nsSeparator !== undefined ? options.nsSeparator : this.options.nsSeparator;
+      if (nsSeparator === undefined) nsSeparator = ':';
+      var keySeparator = options.keySeparator !== undefined ? options.keySeparator : this.options.keySeparator;
+      var namespaces = options.ns || this.options.defaultNS || [];
+      var wouldCheckForNsInKey = nsSeparator && key.indexOf(nsSeparator) > -1;
+      var seemsNaturalLanguage = !this.options.userDefinedKeySeparator && !options.keySeparator && !this.options.userDefinedNsSeparator && !options.nsSeparator && !looksLikeObjectPath(key, nsSeparator, keySeparator);
+      if (wouldCheckForNsInKey && !seemsNaturalLanguage) {
+        var m = key.match(this.interpolator.nestingRegexp);
+        if (m && m.length > 0) {
+          return {
+            key: key,
+            namespaces: namespaces
+          };
+        }
+        var parts = key.split(nsSeparator);
+        if (nsSeparator !== keySeparator || nsSeparator === keySeparator && this.options.ns.indexOf(parts[0]) > -1) namespaces = parts.shift();
+        key = parts.join(keySeparator);
+      }
+      if (typeof namespaces === 'string') namespaces = [namespaces];
+      return {
+        key: key,
+        namespaces: namespaces
+      };
+    }
+  }, {
+    key: "translate",
+    value: function translate(keys, options, lastKey) {
+      var _this2 = this;
+      if ((0,_babel_runtime_helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_0__["default"])(options) !== 'object' && this.options.overloadTranslationOptionHandler) {
+        options = this.options.overloadTranslationOptionHandler(arguments);
+      }
+      if ((0,_babel_runtime_helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_0__["default"])(options) === 'object') options = _objectSpread$4({}, options);
+      if (!options) options = {};
+      if (keys === undefined || keys === null) return '';
+      if (!Array.isArray(keys)) keys = [String(keys)];
+      var returnDetails = options.returnDetails !== undefined ? options.returnDetails : this.options.returnDetails;
+      var keySeparator = options.keySeparator !== undefined ? options.keySeparator : this.options.keySeparator;
+      var _this$extractFromKey = this.extractFromKey(keys[keys.length - 1], options),
+        key = _this$extractFromKey.key,
+        namespaces = _this$extractFromKey.namespaces;
+      var namespace = namespaces[namespaces.length - 1];
+      var lng = options.lng || this.language;
+      var appendNamespaceToCIMode = options.appendNamespaceToCIMode || this.options.appendNamespaceToCIMode;
+      if (lng && lng.toLowerCase() === 'cimode') {
+        if (appendNamespaceToCIMode) {
+          var nsSeparator = options.nsSeparator || this.options.nsSeparator;
+          if (returnDetails) {
+            return {
+              res: "".concat(namespace).concat(nsSeparator).concat(key),
+              usedKey: key,
+              exactUsedKey: key,
+              usedLng: lng,
+              usedNS: namespace
+            };
+          }
+          return "".concat(namespace).concat(nsSeparator).concat(key);
+        }
+        if (returnDetails) {
+          return {
+            res: key,
+            usedKey: key,
+            exactUsedKey: key,
+            usedLng: lng,
+            usedNS: namespace
+          };
+        }
+        return key;
+      }
+      var resolved = this.resolve(keys, options);
+      var res = resolved && resolved.res;
+      var resUsedKey = resolved && resolved.usedKey || key;
+      var resExactUsedKey = resolved && resolved.exactUsedKey || key;
+      var resType = Object.prototype.toString.apply(res);
+      var noObject = ['[object Number]', '[object Function]', '[object RegExp]'];
+      var joinArrays = options.joinArrays !== undefined ? options.joinArrays : this.options.joinArrays;
+      var handleAsObjectInI18nFormat = !this.i18nFormat || this.i18nFormat.handleAsObject;
+      var handleAsObject = typeof res !== 'string' && typeof res !== 'boolean' && typeof res !== 'number';
+      if (handleAsObjectInI18nFormat && res && handleAsObject && noObject.indexOf(resType) < 0 && !(typeof joinArrays === 'string' && resType === '[object Array]')) {
+        if (!options.returnObjects && !this.options.returnObjects) {
+          if (!this.options.returnedObjectHandler) {
+            this.logger.warn('accessing an object - but returnObjects options is not enabled!');
+          }
+          var r = this.options.returnedObjectHandler ? this.options.returnedObjectHandler(resUsedKey, res, _objectSpread$4(_objectSpread$4({}, options), {}, {
+            ns: namespaces
+          })) : "key '".concat(key, " (").concat(this.language, ")' returned an object instead of string.");
+          if (returnDetails) {
+            resolved.res = r;
+            return resolved;
+          }
+          return r;
+        }
+        if (keySeparator) {
+          var resTypeIsArray = resType === '[object Array]';
+          var copy = resTypeIsArray ? [] : {};
+          var newKeyToUse = resTypeIsArray ? resExactUsedKey : resUsedKey;
+          for (var m in res) {
+            if (Object.prototype.hasOwnProperty.call(res, m)) {
+              var deepKey = "".concat(newKeyToUse).concat(keySeparator).concat(m);
+              copy[m] = this.translate(deepKey, _objectSpread$4(_objectSpread$4({}, options), {
+                joinArrays: false,
+                ns: namespaces
+              }));
+              if (copy[m] === deepKey) copy[m] = res[m];
+            }
+          }
+          res = copy;
+        }
+      } else if (handleAsObjectInI18nFormat && typeof joinArrays === 'string' && resType === '[object Array]') {
+        res = res.join(joinArrays);
+        if (res) res = this.extendTranslation(res, keys, options, lastKey);
+      } else {
+        var usedDefault = false;
+        var usedKey = false;
+        var needsPluralHandling = options.count !== undefined && typeof options.count !== 'string';
+        var hasDefaultValue = Translator.hasDefaultValue(options);
+        var defaultValueSuffix = needsPluralHandling ? this.pluralResolver.getSuffix(lng, options.count, options) : '';
+        var defaultValue = options["defaultValue".concat(defaultValueSuffix)] || options.defaultValue;
+        if (!this.isValidLookup(res) && hasDefaultValue) {
+          usedDefault = true;
+          res = defaultValue;
+        }
+        if (!this.isValidLookup(res)) {
+          usedKey = true;
+          res = key;
+        }
+        var missingKeyNoValueFallbackToKey = options.missingKeyNoValueFallbackToKey || this.options.missingKeyNoValueFallbackToKey;
+        var resForMissing = missingKeyNoValueFallbackToKey && usedKey ? undefined : res;
+        var updateMissing = hasDefaultValue && defaultValue !== res && this.options.updateMissing;
+        if (usedKey || usedDefault || updateMissing) {
+          this.logger.log(updateMissing ? 'updateKey' : 'missingKey', lng, namespace, key, updateMissing ? defaultValue : res);
+          if (keySeparator) {
+            var fk = this.resolve(key, _objectSpread$4(_objectSpread$4({}, options), {}, {
+              keySeparator: false
+            }));
+            if (fk && fk.res) this.logger.warn('Seems the loaded translations were in flat JSON format instead of nested. Either set keySeparator: false on init or make sure your translations are published in nested format.');
+          }
+          var lngs = [];
+          var fallbackLngs = this.languageUtils.getFallbackCodes(this.options.fallbackLng, options.lng || this.language);
+          if (this.options.saveMissingTo === 'fallback' && fallbackLngs && fallbackLngs[0]) {
+            for (var i = 0; i < fallbackLngs.length; i++) {
+              lngs.push(fallbackLngs[i]);
+            }
+          } else if (this.options.saveMissingTo === 'all') {
+            lngs = this.languageUtils.toResolveHierarchy(options.lng || this.language);
+          } else {
+            lngs.push(options.lng || this.language);
+          }
+          var send = function send(l, k, specificDefaultValue) {
+            var defaultForMissing = hasDefaultValue && specificDefaultValue !== res ? specificDefaultValue : resForMissing;
+            if (_this2.options.missingKeyHandler) {
+              _this2.options.missingKeyHandler(l, namespace, k, defaultForMissing, updateMissing, options);
+            } else if (_this2.backendConnector && _this2.backendConnector.saveMissing) {
+              _this2.backendConnector.saveMissing(l, namespace, k, defaultForMissing, updateMissing, options);
+            }
+            _this2.emit('missingKey', l, namespace, k, res);
+          };
+          if (this.options.saveMissing) {
+            if (this.options.saveMissingPlurals && needsPluralHandling) {
+              lngs.forEach(function (language) {
+                _this2.pluralResolver.getSuffixes(language, options).forEach(function (suffix) {
+                  send([language], key + suffix, options["defaultValue".concat(suffix)] || defaultValue);
+                });
+              });
+            } else {
+              send(lngs, key, defaultValue);
+            }
+          }
+        }
+        res = this.extendTranslation(res, keys, options, resolved, lastKey);
+        if (usedKey && res === key && this.options.appendNamespaceToMissingKey) res = "".concat(namespace, ":").concat(key);
+        if ((usedKey || usedDefault) && this.options.parseMissingKeyHandler) {
+          if (this.options.compatibilityAPI !== 'v1') {
+            res = this.options.parseMissingKeyHandler(this.options.appendNamespaceToMissingKey ? "".concat(namespace, ":").concat(key) : key, usedDefault ? res : undefined);
+          } else {
+            res = this.options.parseMissingKeyHandler(res);
+          }
+        }
+      }
+      if (returnDetails) {
+        resolved.res = res;
+        return resolved;
+      }
+      return res;
+    }
+  }, {
+    key: "extendTranslation",
+    value: function extendTranslation(res, key, options, resolved, lastKey) {
+      var _this3 = this;
+      if (this.i18nFormat && this.i18nFormat.parse) {
+        res = this.i18nFormat.parse(res, _objectSpread$4(_objectSpread$4({}, this.options.interpolation.defaultVariables), options), resolved.usedLng, resolved.usedNS, resolved.usedKey, {
+          resolved: resolved
+        });
+      } else if (!options.skipInterpolation) {
+        if (options.interpolation) this.interpolator.init(_objectSpread$4(_objectSpread$4({}, options), {
+          interpolation: _objectSpread$4(_objectSpread$4({}, this.options.interpolation), options.interpolation)
+        }));
+        var skipOnVariables = typeof res === 'string' && (options && options.interpolation && options.interpolation.skipOnVariables !== undefined ? options.interpolation.skipOnVariables : this.options.interpolation.skipOnVariables);
+        var nestBef;
+        if (skipOnVariables) {
+          var nb = res.match(this.interpolator.nestingRegexp);
+          nestBef = nb && nb.length;
+        }
+        var data = options.replace && typeof options.replace !== 'string' ? options.replace : options;
+        if (this.options.interpolation.defaultVariables) data = _objectSpread$4(_objectSpread$4({}, this.options.interpolation.defaultVariables), data);
+        res = this.interpolator.interpolate(res, data, options.lng || this.language, options);
+        if (skipOnVariables) {
+          var na = res.match(this.interpolator.nestingRegexp);
+          var nestAft = na && na.length;
+          if (nestBef < nestAft) options.nest = false;
+        }
+        if (!options.lng && this.options.compatibilityAPI !== 'v1' && resolved && resolved.res) options.lng = resolved.usedLng;
+        if (options.nest !== false) res = this.interpolator.nest(res, function () {
+          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+          if (lastKey && lastKey[0] === args[0] && !options.context) {
+            _this3.logger.warn("It seems you are nesting recursively key: ".concat(args[0], " in key: ").concat(key[0]));
+            return null;
+          }
+          return _this3.translate.apply(_this3, args.concat([key]));
+        }, options);
+        if (options.interpolation) this.interpolator.reset();
+      }
+      var postProcess = options.postProcess || this.options.postProcess;
+      var postProcessorNames = typeof postProcess === 'string' ? [postProcess] : postProcess;
+      if (res !== undefined && res !== null && postProcessorNames && postProcessorNames.length && options.applyPostProcessor !== false) {
+        res = postProcessor.handle(postProcessorNames, res, key, this.options && this.options.postProcessPassResolved ? _objectSpread$4({
+          i18nResolved: resolved
+        }, options) : options, this);
+      }
+      return res;
+    }
+  }, {
+    key: "resolve",
+    value: function resolve(keys) {
+      var _this4 = this;
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var found;
+      var usedKey;
+      var exactUsedKey;
+      var usedLng;
+      var usedNS;
+      if (typeof keys === 'string') keys = [keys];
+      keys.forEach(function (k) {
+        if (_this4.isValidLookup(found)) return;
+        var extracted = _this4.extractFromKey(k, options);
+        var key = extracted.key;
+        usedKey = key;
+        var namespaces = extracted.namespaces;
+        if (_this4.options.fallbackNS) namespaces = namespaces.concat(_this4.options.fallbackNS);
+        var needsPluralHandling = options.count !== undefined && typeof options.count !== 'string';
+        var needsZeroSuffixLookup = needsPluralHandling && !options.ordinal && options.count === 0 && _this4.pluralResolver.shouldUseIntlApi();
+        var needsContextHandling = options.context !== undefined && (typeof options.context === 'string' || typeof options.context === 'number') && options.context !== '';
+        var codes = options.lngs ? options.lngs : _this4.languageUtils.toResolveHierarchy(options.lng || _this4.language, options.fallbackLng);
+        namespaces.forEach(function (ns) {
+          if (_this4.isValidLookup(found)) return;
+          usedNS = ns;
+          if (!checkedLoadedFor["".concat(codes[0], "-").concat(ns)] && _this4.utils && _this4.utils.hasLoadedNamespace && !_this4.utils.hasLoadedNamespace(usedNS)) {
+            checkedLoadedFor["".concat(codes[0], "-").concat(ns)] = true;
+            _this4.logger.warn("key \"".concat(usedKey, "\" for languages \"").concat(codes.join(', '), "\" won't get resolved as namespace \"").concat(usedNS, "\" was not yet loaded"), 'This means something IS WRONG in your setup. You access the t function before i18next.init / i18next.loadNamespace / i18next.changeLanguage was done. Wait for the callback or Promise to resolve before accessing it!!!');
+          }
+          codes.forEach(function (code) {
+            if (_this4.isValidLookup(found)) return;
+            usedLng = code;
+            var finalKeys = [key];
+            if (_this4.i18nFormat && _this4.i18nFormat.addLookupKeys) {
+              _this4.i18nFormat.addLookupKeys(finalKeys, key, code, ns, options);
+            } else {
+              var pluralSuffix;
+              if (needsPluralHandling) pluralSuffix = _this4.pluralResolver.getSuffix(code, options.count, options);
+              var zeroSuffix = "".concat(_this4.options.pluralSeparator, "zero");
+              if (needsPluralHandling) {
+                finalKeys.push(key + pluralSuffix);
+                if (needsZeroSuffixLookup) {
+                  finalKeys.push(key + zeroSuffix);
+                }
+              }
+              if (needsContextHandling) {
+                var contextKey = "".concat(key).concat(_this4.options.contextSeparator).concat(options.context);
+                finalKeys.push(contextKey);
+                if (needsPluralHandling) {
+                  finalKeys.push(contextKey + pluralSuffix);
+                  if (needsZeroSuffixLookup) {
+                    finalKeys.push(contextKey + zeroSuffix);
+                  }
+                }
+              }
+            }
+            var possibleKey;
+            while (possibleKey = finalKeys.pop()) {
+              if (!_this4.isValidLookup(found)) {
+                exactUsedKey = possibleKey;
+                found = _this4.getResource(code, ns, possibleKey, options);
+              }
+            }
+          });
+        });
+      });
+      return {
+        res: found,
+        usedKey: usedKey,
+        exactUsedKey: exactUsedKey,
+        usedLng: usedLng,
+        usedNS: usedNS
+      };
+    }
+  }, {
+    key: "isValidLookup",
+    value: function isValidLookup(res) {
+      return res !== undefined && !(!this.options.returnNull && res === null) && !(!this.options.returnEmptyString && res === '');
+    }
+  }, {
+    key: "getResource",
+    value: function getResource(code, ns, key) {
+      var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+      if (this.i18nFormat && this.i18nFormat.getResource) return this.i18nFormat.getResource(code, ns, key, options);
+      return this.resourceStore.getResource(code, ns, key, options);
+    }
+  }], [{
+    key: "hasDefaultValue",
+    value: function hasDefaultValue(options) {
+      var prefix = 'defaultValue';
+      for (var option in options) {
+        if (Object.prototype.hasOwnProperty.call(options, option) && prefix === option.substring(0, prefix.length) && undefined !== options[option]) {
+          return true;
+        }
+      }
+      return false;
+    }
+  }]);
+  return Translator;
+}(EventEmitter);
+
+function capitalize(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+var LanguageUtil = function () {
+  function LanguageUtil(options) {
+    (0,_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, LanguageUtil);
+    this.options = options;
+    this.supportedLngs = this.options.supportedLngs || false;
+    this.logger = baseLogger.create('languageUtils');
+  }
+  (0,_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(LanguageUtil, [{
+    key: "getScriptPartFromCode",
+    value: function getScriptPartFromCode(code) {
+      if (!code || code.indexOf('-') < 0) return null;
+      var p = code.split('-');
+      if (p.length === 2) return null;
+      p.pop();
+      if (p[p.length - 1].toLowerCase() === 'x') return null;
+      return this.formatLanguageCode(p.join('-'));
+    }
+  }, {
+    key: "getLanguagePartFromCode",
+    value: function getLanguagePartFromCode(code) {
+      if (!code || code.indexOf('-') < 0) return code;
+      var p = code.split('-');
+      return this.formatLanguageCode(p[0]);
+    }
+  }, {
+    key: "formatLanguageCode",
+    value: function formatLanguageCode(code) {
+      if (typeof code === 'string' && code.indexOf('-') > -1) {
+        var specialCases = ['hans', 'hant', 'latn', 'cyrl', 'cans', 'mong', 'arab'];
+        var p = code.split('-');
+        if (this.options.lowerCaseLng) {
+          p = p.map(function (part) {
+            return part.toLowerCase();
+          });
+        } else if (p.length === 2) {
+          p[0] = p[0].toLowerCase();
+          p[1] = p[1].toUpperCase();
+          if (specialCases.indexOf(p[1].toLowerCase()) > -1) p[1] = capitalize(p[1].toLowerCase());
+        } else if (p.length === 3) {
+          p[0] = p[0].toLowerCase();
+          if (p[1].length === 2) p[1] = p[1].toUpperCase();
+          if (p[0] !== 'sgn' && p[2].length === 2) p[2] = p[2].toUpperCase();
+          if (specialCases.indexOf(p[1].toLowerCase()) > -1) p[1] = capitalize(p[1].toLowerCase());
+          if (specialCases.indexOf(p[2].toLowerCase()) > -1) p[2] = capitalize(p[2].toLowerCase());
+        }
+        return p.join('-');
+      }
+      return this.options.cleanCode || this.options.lowerCaseLng ? code.toLowerCase() : code;
+    }
+  }, {
+    key: "isSupportedCode",
+    value: function isSupportedCode(code) {
+      if (this.options.load === 'languageOnly' || this.options.nonExplicitSupportedLngs) {
+        code = this.getLanguagePartFromCode(code);
+      }
+      return !this.supportedLngs || !this.supportedLngs.length || this.supportedLngs.indexOf(code) > -1;
+    }
+  }, {
+    key: "getBestMatchFromCodes",
+    value: function getBestMatchFromCodes(codes) {
+      var _this = this;
+      if (!codes) return null;
+      var found;
+      codes.forEach(function (code) {
+        if (found) return;
+        var cleanedLng = _this.formatLanguageCode(code);
+        if (!_this.options.supportedLngs || _this.isSupportedCode(cleanedLng)) found = cleanedLng;
+      });
+      if (!found && this.options.supportedLngs) {
+        codes.forEach(function (code) {
+          if (found) return;
+          var lngOnly = _this.getLanguagePartFromCode(code);
+          if (_this.isSupportedCode(lngOnly)) return found = lngOnly;
+          found = _this.options.supportedLngs.find(function (supportedLng) {
+            if (supportedLng === lngOnly) return supportedLng;
+            if (supportedLng.indexOf('-') < 0 && lngOnly.indexOf('-') < 0) return;
+            if (supportedLng.indexOf(lngOnly) === 0) return supportedLng;
+          });
+        });
+      }
+      if (!found) found = this.getFallbackCodes(this.options.fallbackLng)[0];
+      return found;
+    }
+  }, {
+    key: "getFallbackCodes",
+    value: function getFallbackCodes(fallbacks, code) {
+      if (!fallbacks) return [];
+      if (typeof fallbacks === 'function') fallbacks = fallbacks(code);
+      if (typeof fallbacks === 'string') fallbacks = [fallbacks];
+      if (Object.prototype.toString.apply(fallbacks) === '[object Array]') return fallbacks;
+      if (!code) return fallbacks["default"] || [];
+      var found = fallbacks[code];
+      if (!found) found = fallbacks[this.getScriptPartFromCode(code)];
+      if (!found) found = fallbacks[this.formatLanguageCode(code)];
+      if (!found) found = fallbacks[this.getLanguagePartFromCode(code)];
+      if (!found) found = fallbacks["default"];
+      return found || [];
+    }
+  }, {
+    key: "toResolveHierarchy",
+    value: function toResolveHierarchy(code, fallbackCode) {
+      var _this2 = this;
+      var fallbackCodes = this.getFallbackCodes(fallbackCode || this.options.fallbackLng || [], code);
+      var codes = [];
+      var addCode = function addCode(c) {
+        if (!c) return;
+        if (_this2.isSupportedCode(c)) {
+          codes.push(c);
+        } else {
+          _this2.logger.warn("rejecting language code not found in supportedLngs: ".concat(c));
+        }
+      };
+      if (typeof code === 'string' && code.indexOf('-') > -1) {
+        if (this.options.load !== 'languageOnly') addCode(this.formatLanguageCode(code));
+        if (this.options.load !== 'languageOnly' && this.options.load !== 'currentOnly') addCode(this.getScriptPartFromCode(code));
+        if (this.options.load !== 'currentOnly') addCode(this.getLanguagePartFromCode(code));
+      } else if (typeof code === 'string') {
+        addCode(this.formatLanguageCode(code));
+      }
+      fallbackCodes.forEach(function (fc) {
+        if (codes.indexOf(fc) < 0) addCode(_this2.formatLanguageCode(fc));
+      });
+      return codes;
+    }
+  }]);
+  return LanguageUtil;
+}();
+
+var sets = [{
+  lngs: ['ach', 'ak', 'am', 'arn', 'br', 'fil', 'gun', 'ln', 'mfe', 'mg', 'mi', 'oc', 'pt', 'pt-BR', 'tg', 'tl', 'ti', 'tr', 'uz', 'wa'],
+  nr: [1, 2],
+  fc: 1
+}, {
+  lngs: ['af', 'an', 'ast', 'az', 'bg', 'bn', 'ca', 'da', 'de', 'dev', 'el', 'en', 'eo', 'es', 'et', 'eu', 'fi', 'fo', 'fur', 'fy', 'gl', 'gu', 'ha', 'hi', 'hu', 'hy', 'ia', 'it', 'kk', 'kn', 'ku', 'lb', 'mai', 'ml', 'mn', 'mr', 'nah', 'nap', 'nb', 'ne', 'nl', 'nn', 'no', 'nso', 'pa', 'pap', 'pms', 'ps', 'pt-PT', 'rm', 'sco', 'se', 'si', 'so', 'son', 'sq', 'sv', 'sw', 'ta', 'te', 'tk', 'ur', 'yo'],
+  nr: [1, 2],
+  fc: 2
+}, {
+  lngs: ['ay', 'bo', 'cgg', 'fa', 'ht', 'id', 'ja', 'jbo', 'ka', 'km', 'ko', 'ky', 'lo', 'ms', 'sah', 'su', 'th', 'tt', 'ug', 'vi', 'wo', 'zh'],
+  nr: [1],
+  fc: 3
+}, {
+  lngs: ['be', 'bs', 'cnr', 'dz', 'hr', 'ru', 'sr', 'uk'],
+  nr: [1, 2, 5],
+  fc: 4
+}, {
+  lngs: ['ar'],
+  nr: [0, 1, 2, 3, 11, 100],
+  fc: 5
+}, {
+  lngs: ['cs', 'sk'],
+  nr: [1, 2, 5],
+  fc: 6
+}, {
+  lngs: ['csb', 'pl'],
+  nr: [1, 2, 5],
+  fc: 7
+}, {
+  lngs: ['cy'],
+  nr: [1, 2, 3, 8],
+  fc: 8
+}, {
+  lngs: ['fr'],
+  nr: [1, 2],
+  fc: 9
+}, {
+  lngs: ['ga'],
+  nr: [1, 2, 3, 7, 11],
+  fc: 10
+}, {
+  lngs: ['gd'],
+  nr: [1, 2, 3, 20],
+  fc: 11
+}, {
+  lngs: ['is'],
+  nr: [1, 2],
+  fc: 12
+}, {
+  lngs: ['jv'],
+  nr: [0, 1],
+  fc: 13
+}, {
+  lngs: ['kw'],
+  nr: [1, 2, 3, 4],
+  fc: 14
+}, {
+  lngs: ['lt'],
+  nr: [1, 2, 10],
+  fc: 15
+}, {
+  lngs: ['lv'],
+  nr: [1, 2, 0],
+  fc: 16
+}, {
+  lngs: ['mk'],
+  nr: [1, 2],
+  fc: 17
+}, {
+  lngs: ['mnk'],
+  nr: [0, 1, 2],
+  fc: 18
+}, {
+  lngs: ['mt'],
+  nr: [1, 2, 11, 20],
+  fc: 19
+}, {
+  lngs: ['or'],
+  nr: [2, 1],
+  fc: 2
+}, {
+  lngs: ['ro'],
+  nr: [1, 2, 20],
+  fc: 20
+}, {
+  lngs: ['sl'],
+  nr: [5, 1, 2, 3],
+  fc: 21
+}, {
+  lngs: ['he', 'iw'],
+  nr: [1, 2, 20, 21],
+  fc: 22
+}];
+var _rulesPluralsTypes = {
+  1: function _(n) {
+    return Number(n > 1);
+  },
+  2: function _(n) {
+    return Number(n != 1);
+  },
+  3: function _(n) {
+    return 0;
+  },
+  4: function _(n) {
+    return Number(n % 10 == 1 && n % 100 != 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
+  },
+  5: function _(n) {
+    return Number(n == 0 ? 0 : n == 1 ? 1 : n == 2 ? 2 : n % 100 >= 3 && n % 100 <= 10 ? 3 : n % 100 >= 11 ? 4 : 5);
+  },
+  6: function _(n) {
+    return Number(n == 1 ? 0 : n >= 2 && n <= 4 ? 1 : 2);
+  },
+  7: function _(n) {
+    return Number(n == 1 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
+  },
+  8: function _(n) {
+    return Number(n == 1 ? 0 : n == 2 ? 1 : n != 8 && n != 11 ? 2 : 3);
+  },
+  9: function _(n) {
+    return Number(n >= 2);
+  },
+  10: function _(n) {
+    return Number(n == 1 ? 0 : n == 2 ? 1 : n < 7 ? 2 : n < 11 ? 3 : 4);
+  },
+  11: function _(n) {
+    return Number(n == 1 || n == 11 ? 0 : n == 2 || n == 12 ? 1 : n > 2 && n < 20 ? 2 : 3);
+  },
+  12: function _(n) {
+    return Number(n % 10 != 1 || n % 100 == 11);
+  },
+  13: function _(n) {
+    return Number(n !== 0);
+  },
+  14: function _(n) {
+    return Number(n == 1 ? 0 : n == 2 ? 1 : n == 3 ? 2 : 3);
+  },
+  15: function _(n) {
+    return Number(n % 10 == 1 && n % 100 != 11 ? 0 : n % 10 >= 2 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
+  },
+  16: function _(n) {
+    return Number(n % 10 == 1 && n % 100 != 11 ? 0 : n !== 0 ? 1 : 2);
+  },
+  17: function _(n) {
+    return Number(n == 1 || n % 10 == 1 && n % 100 != 11 ? 0 : 1);
+  },
+  18: function _(n) {
+    return Number(n == 0 ? 0 : n == 1 ? 1 : 2);
+  },
+  19: function _(n) {
+    return Number(n == 1 ? 0 : n == 0 || n % 100 > 1 && n % 100 < 11 ? 1 : n % 100 > 10 && n % 100 < 20 ? 2 : 3);
+  },
+  20: function _(n) {
+    return Number(n == 1 ? 0 : n == 0 || n % 100 > 0 && n % 100 < 20 ? 1 : 2);
+  },
+  21: function _(n) {
+    return Number(n % 100 == 1 ? 1 : n % 100 == 2 ? 2 : n % 100 == 3 || n % 100 == 4 ? 3 : 0);
+  },
+  22: function _(n) {
+    return Number(n == 1 ? 0 : n == 2 ? 1 : (n < 0 || n > 10) && n % 10 == 0 ? 2 : 3);
+  }
+};
+var deprecatedJsonVersions = ['v1', 'v2', 'v3'];
+var suffixesOrder = {
+  zero: 0,
+  one: 1,
+  two: 2,
+  few: 3,
+  many: 4,
+  other: 5
+};
+function createRules() {
+  var rules = {};
+  sets.forEach(function (set) {
+    set.lngs.forEach(function (l) {
+      rules[l] = {
+        numbers: set.nr,
+        plurals: _rulesPluralsTypes[set.fc]
+      };
+    });
+  });
+  return rules;
+}
+var PluralResolver = function () {
+  function PluralResolver(languageUtils) {
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    (0,_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, PluralResolver);
+    this.languageUtils = languageUtils;
+    this.options = options;
+    this.logger = baseLogger.create('pluralResolver');
+    if ((!this.options.compatibilityJSON || this.options.compatibilityJSON === 'v4') && (typeof Intl === 'undefined' || !Intl.PluralRules)) {
+      this.options.compatibilityJSON = 'v3';
+      this.logger.error('Your environment seems not to be Intl API compatible, use an Intl.PluralRules polyfill. Will fallback to the compatibilityJSON v3 format handling.');
+    }
+    this.rules = createRules();
+  }
+  (0,_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(PluralResolver, [{
+    key: "addRule",
+    value: function addRule(lng, obj) {
+      this.rules[lng] = obj;
+    }
+  }, {
+    key: "getRule",
+    value: function getRule(code) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      if (this.shouldUseIntlApi()) {
+        try {
+          return new Intl.PluralRules(code, {
+            type: options.ordinal ? 'ordinal' : 'cardinal'
+          });
+        } catch (_unused) {
+          return;
+        }
+      }
+      return this.rules[code] || this.rules[this.languageUtils.getLanguagePartFromCode(code)];
+    }
+  }, {
+    key: "needsPlural",
+    value: function needsPlural(code) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var rule = this.getRule(code, options);
+      if (this.shouldUseIntlApi()) {
+        return rule && rule.resolvedOptions().pluralCategories.length > 1;
+      }
+      return rule && rule.numbers.length > 1;
+    }
+  }, {
+    key: "getPluralFormsOfKey",
+    value: function getPluralFormsOfKey(code, key) {
+      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+      return this.getSuffixes(code, options).map(function (suffix) {
+        return "".concat(key).concat(suffix);
+      });
+    }
+  }, {
+    key: "getSuffixes",
+    value: function getSuffixes(code) {
+      var _this = this;
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var rule = this.getRule(code, options);
+      if (!rule) {
+        return [];
+      }
+      if (this.shouldUseIntlApi()) {
+        return rule.resolvedOptions().pluralCategories.sort(function (pluralCategory1, pluralCategory2) {
+          return suffixesOrder[pluralCategory1] - suffixesOrder[pluralCategory2];
+        }).map(function (pluralCategory) {
+          return "".concat(_this.options.prepend).concat(pluralCategory);
+        });
+      }
+      return rule.numbers.map(function (number) {
+        return _this.getSuffix(code, number, options);
+      });
+    }
+  }, {
+    key: "getSuffix",
+    value: function getSuffix(code, count) {
+      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+      var rule = this.getRule(code, options);
+      if (rule) {
+        if (this.shouldUseIntlApi()) {
+          return "".concat(this.options.prepend).concat(rule.select(count));
+        }
+        return this.getSuffixRetroCompatible(rule, count);
+      }
+      this.logger.warn("no plural rule found for: ".concat(code));
+      return '';
+    }
+  }, {
+    key: "getSuffixRetroCompatible",
+    value: function getSuffixRetroCompatible(rule, count) {
+      var _this2 = this;
+      var idx = rule.noAbs ? rule.plurals(count) : rule.plurals(Math.abs(count));
+      var suffix = rule.numbers[idx];
+      if (this.options.simplifyPluralSuffix && rule.numbers.length === 2 && rule.numbers[0] === 1) {
+        if (suffix === 2) {
+          suffix = 'plural';
+        } else if (suffix === 1) {
+          suffix = '';
+        }
+      }
+      var returnSuffix = function returnSuffix() {
+        return _this2.options.prepend && suffix.toString() ? _this2.options.prepend + suffix.toString() : suffix.toString();
+      };
+      if (this.options.compatibilityJSON === 'v1') {
+        if (suffix === 1) return '';
+        if (typeof suffix === 'number') return "_plural_".concat(suffix.toString());
+        return returnSuffix();
+      } else if (this.options.compatibilityJSON === 'v2') {
+        return returnSuffix();
+      } else if (this.options.simplifyPluralSuffix && rule.numbers.length === 2 && rule.numbers[0] === 1) {
+        return returnSuffix();
+      }
+      return this.options.prepend && idx.toString() ? this.options.prepend + idx.toString() : idx.toString();
+    }
+  }, {
+    key: "shouldUseIntlApi",
+    value: function shouldUseIntlApi() {
+      return !deprecatedJsonVersions.includes(this.options.compatibilityJSON);
+    }
+  }]);
+  return PluralResolver;
+}();
+
+function ownKeys$3(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread$3(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$3(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$3(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function deepFindWithDefaults(data, defaultData, key) {
+  var keySeparator = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '.';
+  var ignoreJSONStructure = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
+  var path = getPathWithDefaults(data, defaultData, key);
+  if (!path && ignoreJSONStructure && typeof key === 'string') {
+    path = deepFind(data, key, keySeparator);
+    if (path === undefined) path = deepFind(defaultData, key, keySeparator);
+  }
+  return path;
+}
+var Interpolator = function () {
+  function Interpolator() {
+    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    (0,_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, Interpolator);
+    this.logger = baseLogger.create('interpolator');
+    this.options = options;
+    this.format = options.interpolation && options.interpolation.format || function (value) {
+      return value;
+    };
+    this.init(options);
+  }
+  (0,_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(Interpolator, [{
+    key: "init",
+    value: function init() {
+      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      if (!options.interpolation) options.interpolation = {
+        escapeValue: true
+      };
+      var iOpts = options.interpolation;
+      this.escape = iOpts.escape !== undefined ? iOpts.escape : escape;
+      this.escapeValue = iOpts.escapeValue !== undefined ? iOpts.escapeValue : true;
+      this.useRawValueToEscape = iOpts.useRawValueToEscape !== undefined ? iOpts.useRawValueToEscape : false;
+      this.prefix = iOpts.prefix ? regexEscape(iOpts.prefix) : iOpts.prefixEscaped || '{{';
+      this.suffix = iOpts.suffix ? regexEscape(iOpts.suffix) : iOpts.suffixEscaped || '}}';
+      this.formatSeparator = iOpts.formatSeparator ? iOpts.formatSeparator : iOpts.formatSeparator || ',';
+      this.unescapePrefix = iOpts.unescapeSuffix ? '' : iOpts.unescapePrefix || '-';
+      this.unescapeSuffix = this.unescapePrefix ? '' : iOpts.unescapeSuffix || '';
+      this.nestingPrefix = iOpts.nestingPrefix ? regexEscape(iOpts.nestingPrefix) : iOpts.nestingPrefixEscaped || regexEscape('$t(');
+      this.nestingSuffix = iOpts.nestingSuffix ? regexEscape(iOpts.nestingSuffix) : iOpts.nestingSuffixEscaped || regexEscape(')');
+      this.nestingOptionsSeparator = iOpts.nestingOptionsSeparator ? iOpts.nestingOptionsSeparator : iOpts.nestingOptionsSeparator || ',';
+      this.maxReplaces = iOpts.maxReplaces ? iOpts.maxReplaces : 1000;
+      this.alwaysFormat = iOpts.alwaysFormat !== undefined ? iOpts.alwaysFormat : false;
+      this.resetRegExp();
+    }
+  }, {
+    key: "reset",
+    value: function reset() {
+      if (this.options) this.init(this.options);
+    }
+  }, {
+    key: "resetRegExp",
+    value: function resetRegExp() {
+      var regexpStr = "".concat(this.prefix, "(.+?)").concat(this.suffix);
+      this.regexp = new RegExp(regexpStr, 'g');
+      var regexpUnescapeStr = "".concat(this.prefix).concat(this.unescapePrefix, "(.+?)").concat(this.unescapeSuffix).concat(this.suffix);
+      this.regexpUnescape = new RegExp(regexpUnescapeStr, 'g');
+      var nestingRegexpStr = "".concat(this.nestingPrefix, "(.+?)").concat(this.nestingSuffix);
+      this.nestingRegexp = new RegExp(nestingRegexpStr, 'g');
+    }
+  }, {
+    key: "interpolate",
+    value: function interpolate(str, data, lng, options) {
+      var _this = this;
+      var match;
+      var value;
+      var replaces;
+      var defaultData = this.options && this.options.interpolation && this.options.interpolation.defaultVariables || {};
+      function regexSafe(val) {
+        return val.replace(/\$/g, '$$$$');
+      }
+      var handleFormat = function handleFormat(key) {
+        if (key.indexOf(_this.formatSeparator) < 0) {
+          var path = deepFindWithDefaults(data, defaultData, key, _this.options.keySeparator, _this.options.ignoreJSONStructure);
+          return _this.alwaysFormat ? _this.format(path, undefined, lng, _objectSpread$3(_objectSpread$3(_objectSpread$3({}, options), data), {}, {
+            interpolationkey: key
+          })) : path;
+        }
+        var p = key.split(_this.formatSeparator);
+        var k = p.shift().trim();
+        var f = p.join(_this.formatSeparator).trim();
+        return _this.format(deepFindWithDefaults(data, defaultData, k, _this.options.keySeparator, _this.options.ignoreJSONStructure), f, lng, _objectSpread$3(_objectSpread$3(_objectSpread$3({}, options), data), {}, {
+          interpolationkey: k
+        }));
+      };
+      this.resetRegExp();
+      var missingInterpolationHandler = options && options.missingInterpolationHandler || this.options.missingInterpolationHandler;
+      var skipOnVariables = options && options.interpolation && options.interpolation.skipOnVariables !== undefined ? options.interpolation.skipOnVariables : this.options.interpolation.skipOnVariables;
+      var todos = [{
+        regex: this.regexpUnescape,
+        safeValue: function safeValue(val) {
+          return regexSafe(val);
+        }
+      }, {
+        regex: this.regexp,
+        safeValue: function safeValue(val) {
+          return _this.escapeValue ? regexSafe(_this.escape(val)) : regexSafe(val);
+        }
+      }];
+      todos.forEach(function (todo) {
+        replaces = 0;
+        while (match = todo.regex.exec(str)) {
+          var matchedVar = match[1].trim();
+          value = handleFormat(matchedVar);
+          if (value === undefined) {
+            if (typeof missingInterpolationHandler === 'function') {
+              var temp = missingInterpolationHandler(str, match, options);
+              value = typeof temp === 'string' ? temp : '';
+            } else if (options && Object.prototype.hasOwnProperty.call(options, matchedVar)) {
+              value = '';
+            } else if (skipOnVariables) {
+              value = match[0];
+              continue;
+            } else {
+              _this.logger.warn("missed to pass in variable ".concat(matchedVar, " for interpolating ").concat(str));
+              value = '';
+            }
+          } else if (typeof value !== 'string' && !_this.useRawValueToEscape) {
+            value = makeString(value);
+          }
+          var safeValue = todo.safeValue(value);
+          str = str.replace(match[0], safeValue);
+          if (skipOnVariables) {
+            todo.regex.lastIndex += value.length;
+            todo.regex.lastIndex -= match[0].length;
+          } else {
+            todo.regex.lastIndex = 0;
+          }
+          replaces++;
+          if (replaces >= _this.maxReplaces) {
+            break;
+          }
+        }
+      });
+      return str;
+    }
+  }, {
+    key: "nest",
+    value: function nest(str, fc) {
+      var _this2 = this;
+      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+      var match;
+      var value;
+      var clonedOptions;
+      function handleHasOptions(key, inheritedOptions) {
+        var sep = this.nestingOptionsSeparator;
+        if (key.indexOf(sep) < 0) return key;
+        var c = key.split(new RegExp("".concat(sep, "[ ]*{")));
+        var optionsString = "{".concat(c[1]);
+        key = c[0];
+        optionsString = this.interpolate(optionsString, clonedOptions);
+        var matchedSingleQuotes = optionsString.match(/'/g);
+        var matchedDoubleQuotes = optionsString.match(/"/g);
+        if (matchedSingleQuotes && matchedSingleQuotes.length % 2 === 0 && !matchedDoubleQuotes || matchedDoubleQuotes.length % 2 !== 0) {
+          optionsString = optionsString.replace(/'/g, '"');
+        }
+        try {
+          clonedOptions = JSON.parse(optionsString);
+          if (inheritedOptions) clonedOptions = _objectSpread$3(_objectSpread$3({}, inheritedOptions), clonedOptions);
+        } catch (e) {
+          this.logger.warn("failed parsing options string in nesting for key ".concat(key), e);
+          return "".concat(key).concat(sep).concat(optionsString);
+        }
+        delete clonedOptions.defaultValue;
+        return key;
+      }
+      while (match = this.nestingRegexp.exec(str)) {
+        var formatters = [];
+        clonedOptions = _objectSpread$3({}, options);
+        clonedOptions = clonedOptions.replace && typeof clonedOptions.replace !== 'string' ? clonedOptions.replace : clonedOptions;
+        clonedOptions.applyPostProcessor = false;
+        delete clonedOptions.defaultValue;
+        var doReduce = false;
+        if (match[0].indexOf(this.formatSeparator) !== -1 && !/{.*}/.test(match[1])) {
+          var r = match[1].split(this.formatSeparator).map(function (elem) {
+            return elem.trim();
+          });
+          match[1] = r.shift();
+          formatters = r;
+          doReduce = true;
+        }
+        value = fc(handleHasOptions.call(this, match[1].trim(), clonedOptions), clonedOptions);
+        if (value && match[0] === str && typeof value !== 'string') return value;
+        if (typeof value !== 'string') value = makeString(value);
+        if (!value) {
+          this.logger.warn("missed to resolve ".concat(match[1], " for nesting ").concat(str));
+          value = '';
+        }
+        if (doReduce) {
+          value = formatters.reduce(function (v, f) {
+            return _this2.format(v, f, options.lng, _objectSpread$3(_objectSpread$3({}, options), {}, {
+              interpolationkey: match[1].trim()
+            }));
+          }, value.trim());
+        }
+        str = str.replace(match[0], value);
+        this.regexp.lastIndex = 0;
+      }
+      return str;
+    }
+  }]);
+  return Interpolator;
+}();
+
+function ownKeys$2(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread$2(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$2(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$2(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function parseFormatStr(formatStr) {
+  var formatName = formatStr.toLowerCase().trim();
+  var formatOptions = {};
+  if (formatStr.indexOf('(') > -1) {
+    var p = formatStr.split('(');
+    formatName = p[0].toLowerCase().trim();
+    var optStr = p[1].substring(0, p[1].length - 1);
+    if (formatName === 'currency' && optStr.indexOf(':') < 0) {
+      if (!formatOptions.currency) formatOptions.currency = optStr.trim();
+    } else if (formatName === 'relativetime' && optStr.indexOf(':') < 0) {
+      if (!formatOptions.range) formatOptions.range = optStr.trim();
+    } else {
+      var opts = optStr.split(';');
+      opts.forEach(function (opt) {
+        if (!opt) return;
+        var _opt$split = opt.split(':'),
+          _opt$split2 = (0,_babel_runtime_helpers_esm_toArray__WEBPACK_IMPORTED_MODULE_8__["default"])(_opt$split),
+          key = _opt$split2[0],
+          rest = _opt$split2.slice(1);
+        var val = rest.join(':').trim().replace(/^'+|'+$/g, '');
+        if (!formatOptions[key.trim()]) formatOptions[key.trim()] = val;
+        if (val === 'false') formatOptions[key.trim()] = false;
+        if (val === 'true') formatOptions[key.trim()] = true;
+        if (!isNaN(val)) formatOptions[key.trim()] = parseInt(val, 10);
+      });
+    }
+  }
+  return {
+    formatName: formatName,
+    formatOptions: formatOptions
+  };
+}
+function createCachedFormatter(fn) {
+  var cache = {};
+  return function invokeFormatter(val, lng, options) {
+    var key = lng + JSON.stringify(options);
+    var formatter = cache[key];
+    if (!formatter) {
+      formatter = fn(lng, options);
+      cache[key] = formatter;
+    }
+    return formatter(val);
+  };
+}
+var Formatter = function () {
+  function Formatter() {
+    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    (0,_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, Formatter);
+    this.logger = baseLogger.create('formatter');
+    this.options = options;
+    this.formats = {
+      number: createCachedFormatter(function (lng, opt) {
+        var formatter = new Intl.NumberFormat(lng, _objectSpread$2({}, opt));
+        return function (val) {
+          return formatter.format(val);
+        };
+      }),
+      currency: createCachedFormatter(function (lng, opt) {
+        var formatter = new Intl.NumberFormat(lng, _objectSpread$2(_objectSpread$2({}, opt), {}, {
+          style: 'currency'
+        }));
+        return function (val) {
+          return formatter.format(val);
+        };
+      }),
+      datetime: createCachedFormatter(function (lng, opt) {
+        var formatter = new Intl.DateTimeFormat(lng, _objectSpread$2({}, opt));
+        return function (val) {
+          return formatter.format(val);
+        };
+      }),
+      relativetime: createCachedFormatter(function (lng, opt) {
+        var formatter = new Intl.RelativeTimeFormat(lng, _objectSpread$2({}, opt));
+        return function (val) {
+          return formatter.format(val, opt.range || 'day');
+        };
+      }),
+      list: createCachedFormatter(function (lng, opt) {
+        var formatter = new Intl.ListFormat(lng, _objectSpread$2({}, opt));
+        return function (val) {
+          return formatter.format(val);
+        };
+      })
+    };
+    this.init(options);
+  }
+  (0,_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(Formatter, [{
+    key: "init",
+    value: function init(services) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
+        interpolation: {}
+      };
+      var iOpts = options.interpolation;
+      this.formatSeparator = iOpts.formatSeparator ? iOpts.formatSeparator : iOpts.formatSeparator || ',';
+    }
+  }, {
+    key: "add",
+    value: function add(name, fc) {
+      this.formats[name.toLowerCase().trim()] = fc;
+    }
+  }, {
+    key: "addCached",
+    value: function addCached(name, fc) {
+      this.formats[name.toLowerCase().trim()] = createCachedFormatter(fc);
+    }
+  }, {
+    key: "format",
+    value: function format(value, _format, lng) {
+      var _this = this;
+      var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+      var formats = _format.split(this.formatSeparator);
+      var result = formats.reduce(function (mem, f) {
+        var _parseFormatStr = parseFormatStr(f),
+          formatName = _parseFormatStr.formatName,
+          formatOptions = _parseFormatStr.formatOptions;
+        if (_this.formats[formatName]) {
+          var formatted = mem;
+          try {
+            var valOptions = options && options.formatParams && options.formatParams[options.interpolationkey] || {};
+            var l = valOptions.locale || valOptions.lng || options.locale || options.lng || lng;
+            formatted = _this.formats[formatName](mem, l, _objectSpread$2(_objectSpread$2(_objectSpread$2({}, formatOptions), options), valOptions));
+          } catch (error) {
+            _this.logger.warn(error);
+          }
+          return formatted;
+        } else {
+          _this.logger.warn("there was no format function for ".concat(formatName));
+        }
+        return mem;
+      }, value);
+      return result;
+    }
+  }]);
+  return Formatter;
+}();
+
+function ownKeys$1(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread$1(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$1(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$1(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _createSuper$1(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$1(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5__["default"])(this, result); }; }
+function _isNativeReflectConstruct$1() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+function removePending(q, name) {
+  if (q.pending[name] !== undefined) {
+    delete q.pending[name];
+    q.pendingCount--;
+  }
+}
+var Connector = function (_EventEmitter) {
+  (0,_babel_runtime_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(Connector, _EventEmitter);
+  var _super = _createSuper$1(Connector);
+  function Connector(backend, store, services) {
+    var _this;
+    var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+    (0,_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, Connector);
+    _this = _super.call(this);
+    if (isIE10) {
+      EventEmitter.call((0,_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
+    }
+    _this.backend = backend;
+    _this.store = store;
+    _this.services = services;
+    _this.languageUtils = services.languageUtils;
+    _this.options = options;
+    _this.logger = baseLogger.create('backendConnector');
+    _this.waitingReads = [];
+    _this.maxParallelReads = options.maxParallelReads || 10;
+    _this.readingCalls = 0;
+    _this.maxRetries = options.maxRetries >= 0 ? options.maxRetries : 5;
+    _this.retryTimeout = options.retryTimeout >= 1 ? options.retryTimeout : 350;
+    _this.state = {};
+    _this.queue = [];
+    if (_this.backend && _this.backend.init) {
+      _this.backend.init(services, options.backend, options);
+    }
+    return _this;
+  }
+  (0,_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(Connector, [{
+    key: "queueLoad",
+    value: function queueLoad(languages, namespaces, options, callback) {
+      var _this2 = this;
+      var toLoad = {};
+      var pending = {};
+      var toLoadLanguages = {};
+      var toLoadNamespaces = {};
+      languages.forEach(function (lng) {
+        var hasAllNamespaces = true;
+        namespaces.forEach(function (ns) {
+          var name = "".concat(lng, "|").concat(ns);
+          if (!options.reload && _this2.store.hasResourceBundle(lng, ns)) {
+            _this2.state[name] = 2;
+          } else if (_this2.state[name] < 0) ; else if (_this2.state[name] === 1) {
+            if (pending[name] === undefined) pending[name] = true;
+          } else {
+            _this2.state[name] = 1;
+            hasAllNamespaces = false;
+            if (pending[name] === undefined) pending[name] = true;
+            if (toLoad[name] === undefined) toLoad[name] = true;
+            if (toLoadNamespaces[ns] === undefined) toLoadNamespaces[ns] = true;
+          }
+        });
+        if (!hasAllNamespaces) toLoadLanguages[lng] = true;
+      });
+      if (Object.keys(toLoad).length || Object.keys(pending).length) {
+        this.queue.push({
+          pending: pending,
+          pendingCount: Object.keys(pending).length,
+          loaded: {},
+          errors: [],
+          callback: callback
+        });
+      }
+      return {
+        toLoad: Object.keys(toLoad),
+        pending: Object.keys(pending),
+        toLoadLanguages: Object.keys(toLoadLanguages),
+        toLoadNamespaces: Object.keys(toLoadNamespaces)
+      };
+    }
+  }, {
+    key: "loaded",
+    value: function loaded(name, err, data) {
+      var s = name.split('|');
+      var lng = s[0];
+      var ns = s[1];
+      if (err) this.emit('failedLoading', lng, ns, err);
+      if (data) {
+        this.store.addResourceBundle(lng, ns, data);
+      }
+      this.state[name] = err ? -1 : 2;
+      var loaded = {};
+      this.queue.forEach(function (q) {
+        pushPath(q.loaded, [lng], ns);
+        removePending(q, name);
+        if (err) q.errors.push(err);
+        if (q.pendingCount === 0 && !q.done) {
+          Object.keys(q.loaded).forEach(function (l) {
+            if (!loaded[l]) loaded[l] = {};
+            var loadedKeys = q.loaded[l];
+            if (loadedKeys.length) {
+              loadedKeys.forEach(function (n) {
+                if (loaded[l][n] === undefined) loaded[l][n] = true;
+              });
+            }
+          });
+          q.done = true;
+          if (q.errors.length) {
+            q.callback(q.errors);
+          } else {
+            q.callback();
+          }
+        }
+      });
+      this.emit('loaded', loaded);
+      this.queue = this.queue.filter(function (q) {
+        return !q.done;
+      });
+    }
+  }, {
+    key: "read",
+    value: function read(lng, ns, fcName) {
+      var _this3 = this;
+      var tried = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+      var wait = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : this.retryTimeout;
+      var callback = arguments.length > 5 ? arguments[5] : undefined;
+      if (!lng.length) return callback(null, {});
+      if (this.readingCalls >= this.maxParallelReads) {
+        this.waitingReads.push({
+          lng: lng,
+          ns: ns,
+          fcName: fcName,
+          tried: tried,
+          wait: wait,
+          callback: callback
+        });
+        return;
+      }
+      this.readingCalls++;
+      var resolver = function resolver(err, data) {
+        _this3.readingCalls--;
+        if (_this3.waitingReads.length > 0) {
+          var next = _this3.waitingReads.shift();
+          _this3.read(next.lng, next.ns, next.fcName, next.tried, next.wait, next.callback);
+        }
+        if (err && data && tried < _this3.maxRetries) {
+          setTimeout(function () {
+            _this3.read.call(_this3, lng, ns, fcName, tried + 1, wait * 2, callback);
+          }, wait);
+          return;
+        }
+        callback(err, data);
+      };
+      var fc = this.backend[fcName].bind(this.backend);
+      if (fc.length === 2) {
+        try {
+          var r = fc(lng, ns);
+          if (r && typeof r.then === 'function') {
+            r.then(function (data) {
+              return resolver(null, data);
+            })["catch"](resolver);
+          } else {
+            resolver(null, r);
+          }
+        } catch (err) {
+          resolver(err);
+        }
+        return;
+      }
+      return fc(lng, ns, resolver);
+    }
+  }, {
+    key: "prepareLoading",
+    value: function prepareLoading(languages, namespaces) {
+      var _this4 = this;
+      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+      var callback = arguments.length > 3 ? arguments[3] : undefined;
+      if (!this.backend) {
+        this.logger.warn('No backend was added via i18next.use. Will not load resources.');
+        return callback && callback();
+      }
+      if (typeof languages === 'string') languages = this.languageUtils.toResolveHierarchy(languages);
+      if (typeof namespaces === 'string') namespaces = [namespaces];
+      var toLoad = this.queueLoad(languages, namespaces, options, callback);
+      if (!toLoad.toLoad.length) {
+        if (!toLoad.pending.length) callback();
+        return null;
+      }
+      toLoad.toLoad.forEach(function (name) {
+        _this4.loadOne(name);
+      });
+    }
+  }, {
+    key: "load",
+    value: function load(languages, namespaces, callback) {
+      this.prepareLoading(languages, namespaces, {}, callback);
+    }
+  }, {
+    key: "reload",
+    value: function reload(languages, namespaces, callback) {
+      this.prepareLoading(languages, namespaces, {
+        reload: true
+      }, callback);
+    }
+  }, {
+    key: "loadOne",
+    value: function loadOne(name) {
+      var _this5 = this;
+      var prefix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+      var s = name.split('|');
+      var lng = s[0];
+      var ns = s[1];
+      this.read(lng, ns, 'read', undefined, undefined, function (err, data) {
+        if (err) _this5.logger.warn("".concat(prefix, "loading namespace ").concat(ns, " for language ").concat(lng, " failed"), err);
+        if (!err && data) _this5.logger.log("".concat(prefix, "loaded namespace ").concat(ns, " for language ").concat(lng), data);
+        _this5.loaded(name, err, data);
+      });
+    }
+  }, {
+    key: "saveMissing",
+    value: function saveMissing(languages, namespace, key, fallbackValue, isUpdate) {
+      var options = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
+      var clb = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : function () {};
+      if (this.services.utils && this.services.utils.hasLoadedNamespace && !this.services.utils.hasLoadedNamespace(namespace)) {
+        this.logger.warn("did not save key \"".concat(key, "\" as the namespace \"").concat(namespace, "\" was not yet loaded"), 'This means something IS WRONG in your setup. You access the t function before i18next.init / i18next.loadNamespace / i18next.changeLanguage was done. Wait for the callback or Promise to resolve before accessing it!!!');
+        return;
+      }
+      if (key === undefined || key === null || key === '') return;
+      if (this.backend && this.backend.create) {
+        var opts = _objectSpread$1(_objectSpread$1({}, options), {}, {
+          isUpdate: isUpdate
+        });
+        var fc = this.backend.create.bind(this.backend);
+        if (fc.length < 6) {
+          try {
+            var r;
+            if (fc.length === 5) {
+              r = fc(languages, namespace, key, fallbackValue, opts);
+            } else {
+              r = fc(languages, namespace, key, fallbackValue);
+            }
+            if (r && typeof r.then === 'function') {
+              r.then(function (data) {
+                return clb(null, data);
+              })["catch"](clb);
+            } else {
+              clb(null, r);
+            }
+          } catch (err) {
+            clb(err);
+          }
+        } else {
+          fc(languages, namespace, key, fallbackValue, clb, opts);
+        }
+      }
+      if (!languages || !languages[0]) return;
+      this.store.addResource(languages[0], namespace, key, fallbackValue);
+    }
+  }]);
+  return Connector;
+}(EventEmitter);
+
+function get() {
+  return {
+    debug: false,
+    initImmediate: true,
+    ns: ['translation'],
+    defaultNS: ['translation'],
+    fallbackLng: ['dev'],
+    fallbackNS: false,
+    supportedLngs: false,
+    nonExplicitSupportedLngs: false,
+    load: 'all',
+    preload: false,
+    simplifyPluralSuffix: true,
+    keySeparator: '.',
+    nsSeparator: ':',
+    pluralSeparator: '_',
+    contextSeparator: '_',
+    partialBundledLanguages: false,
+    saveMissing: false,
+    updateMissing: false,
+    saveMissingTo: 'fallback',
+    saveMissingPlurals: true,
+    missingKeyHandler: false,
+    missingInterpolationHandler: false,
+    postProcess: false,
+    postProcessPassResolved: false,
+    returnNull: true,
+    returnEmptyString: true,
+    returnObjects: false,
+    joinArrays: false,
+    returnedObjectHandler: false,
+    parseMissingKeyHandler: false,
+    appendNamespaceToMissingKey: false,
+    appendNamespaceToCIMode: false,
+    overloadTranslationOptionHandler: function handle(args) {
+      var ret = {};
+      if ((0,_babel_runtime_helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_0__["default"])(args[1]) === 'object') ret = args[1];
+      if (typeof args[1] === 'string') ret.defaultValue = args[1];
+      if (typeof args[2] === 'string') ret.tDescription = args[2];
+      if ((0,_babel_runtime_helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_0__["default"])(args[2]) === 'object' || (0,_babel_runtime_helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_0__["default"])(args[3]) === 'object') {
+        var options = args[3] || args[2];
+        Object.keys(options).forEach(function (key) {
+          ret[key] = options[key];
+        });
+      }
+      return ret;
+    },
+    interpolation: {
+      escapeValue: true,
+      format: function format(value, _format, lng, options) {
+        return value;
+      },
+      prefix: '{{',
+      suffix: '}}',
+      formatSeparator: ',',
+      unescapePrefix: '-',
+      nestingPrefix: '$t(',
+      nestingSuffix: ')',
+      nestingOptionsSeparator: ',',
+      maxReplaces: 1000,
+      skipOnVariables: true
+    }
+  };
+}
+function transformOptions(options) {
+  if (typeof options.ns === 'string') options.ns = [options.ns];
+  if (typeof options.fallbackLng === 'string') options.fallbackLng = [options.fallbackLng];
+  if (typeof options.fallbackNS === 'string') options.fallbackNS = [options.fallbackNS];
+  if (options.supportedLngs && options.supportedLngs.indexOf('cimode') < 0) {
+    options.supportedLngs = options.supportedLngs.concat(['cimode']);
+  }
+  return options;
+}
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5__["default"])(this, result); }; }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+function noop() {}
+function bindMemberFunctions(inst) {
+  var mems = Object.getOwnPropertyNames(Object.getPrototypeOf(inst));
+  mems.forEach(function (mem) {
+    if (typeof inst[mem] === 'function') {
+      inst[mem] = inst[mem].bind(inst);
+    }
+  });
+}
+var I18n = function (_EventEmitter) {
+  (0,_babel_runtime_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(I18n, _EventEmitter);
+  var _super = _createSuper(I18n);
+  function I18n() {
+    var _this;
+    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var callback = arguments.length > 1 ? arguments[1] : undefined;
+    (0,_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, I18n);
+    _this = _super.call(this);
+    if (isIE10) {
+      EventEmitter.call((0,_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
+    }
+    _this.options = transformOptions(options);
+    _this.services = {};
+    _this.logger = baseLogger;
+    _this.modules = {
+      external: []
+    };
+    bindMemberFunctions((0,_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
+    if (callback && !_this.isInitialized && !options.isClone) {
+      if (!_this.options.initImmediate) {
+        _this.init(options, callback);
+        return (0,_babel_runtime_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5__["default"])(_this, (0,_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
+      }
+      setTimeout(function () {
+        _this.init(options, callback);
+      }, 0);
+    }
+    return _this;
+  }
+  (0,_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(I18n, [{
+    key: "init",
+    value: function init() {
+      var _this2 = this;
+      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      var callback = arguments.length > 1 ? arguments[1] : undefined;
+      if (typeof options === 'function') {
+        callback = options;
+        options = {};
+      }
+      if (!options.defaultNS && options.defaultNS !== false && options.ns) {
+        if (typeof options.ns === 'string') {
+          options.defaultNS = options.ns;
+        } else if (options.ns.indexOf('translation') < 0) {
+          options.defaultNS = options.ns[0];
+        }
+      }
+      var defOpts = get();
+      this.options = _objectSpread(_objectSpread(_objectSpread({}, defOpts), this.options), transformOptions(options));
+      if (this.options.compatibilityAPI !== 'v1') {
+        this.options.interpolation = _objectSpread(_objectSpread({}, defOpts.interpolation), this.options.interpolation);
+      }
+      if (options.keySeparator !== undefined) {
+        this.options.userDefinedKeySeparator = options.keySeparator;
+      }
+      if (options.nsSeparator !== undefined) {
+        this.options.userDefinedNsSeparator = options.nsSeparator;
+      }
+      function createClassOnDemand(ClassOrObject) {
+        if (!ClassOrObject) return null;
+        if (typeof ClassOrObject === 'function') return new ClassOrObject();
+        return ClassOrObject;
+      }
+      if (!this.options.isClone) {
+        if (this.modules.logger) {
+          baseLogger.init(createClassOnDemand(this.modules.logger), this.options);
+        } else {
+          baseLogger.init(null, this.options);
+        }
+        var formatter;
+        if (this.modules.formatter) {
+          formatter = this.modules.formatter;
+        } else if (typeof Intl !== 'undefined') {
+          formatter = Formatter;
+        }
+        var lu = new LanguageUtil(this.options);
+        this.store = new ResourceStore(this.options.resources, this.options);
+        var s = this.services;
+        s.logger = baseLogger;
+        s.resourceStore = this.store;
+        s.languageUtils = lu;
+        s.pluralResolver = new PluralResolver(lu, {
+          prepend: this.options.pluralSeparator,
+          compatibilityJSON: this.options.compatibilityJSON,
+          simplifyPluralSuffix: this.options.simplifyPluralSuffix
+        });
+        if (formatter && (!this.options.interpolation.format || this.options.interpolation.format === defOpts.interpolation.format)) {
+          s.formatter = createClassOnDemand(formatter);
+          s.formatter.init(s, this.options);
+          this.options.interpolation.format = s.formatter.format.bind(s.formatter);
+        }
+        s.interpolator = new Interpolator(this.options);
+        s.utils = {
+          hasLoadedNamespace: this.hasLoadedNamespace.bind(this)
+        };
+        s.backendConnector = new Connector(createClassOnDemand(this.modules.backend), s.resourceStore, s, this.options);
+        s.backendConnector.on('*', function (event) {
+          for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+            args[_key - 1] = arguments[_key];
+          }
+          _this2.emit.apply(_this2, [event].concat(args));
+        });
+        if (this.modules.languageDetector) {
+          s.languageDetector = createClassOnDemand(this.modules.languageDetector);
+          if (s.languageDetector.init) s.languageDetector.init(s, this.options.detection, this.options);
+        }
+        if (this.modules.i18nFormat) {
+          s.i18nFormat = createClassOnDemand(this.modules.i18nFormat);
+          if (s.i18nFormat.init) s.i18nFormat.init(this);
+        }
+        this.translator = new Translator(this.services, this.options);
+        this.translator.on('*', function (event) {
+          for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+            args[_key2 - 1] = arguments[_key2];
+          }
+          _this2.emit.apply(_this2, [event].concat(args));
+        });
+        this.modules.external.forEach(function (m) {
+          if (m.init) m.init(_this2);
+        });
+      }
+      this.format = this.options.interpolation.format;
+      if (!callback) callback = noop;
+      if (this.options.fallbackLng && !this.services.languageDetector && !this.options.lng) {
+        var codes = this.services.languageUtils.getFallbackCodes(this.options.fallbackLng);
+        if (codes.length > 0 && codes[0] !== 'dev') this.options.lng = codes[0];
+      }
+      if (!this.services.languageDetector && !this.options.lng) {
+        this.logger.warn('init: no languageDetector is used and no lng is defined');
+      }
+      var storeApi = ['getResource', 'hasResourceBundle', 'getResourceBundle', 'getDataByLanguage'];
+      storeApi.forEach(function (fcName) {
+        _this2[fcName] = function () {
+          var _this2$store;
+          return (_this2$store = _this2.store)[fcName].apply(_this2$store, arguments);
+        };
+      });
+      var storeApiChained = ['addResource', 'addResources', 'addResourceBundle', 'removeResourceBundle'];
+      storeApiChained.forEach(function (fcName) {
+        _this2[fcName] = function () {
+          var _this2$store2;
+          (_this2$store2 = _this2.store)[fcName].apply(_this2$store2, arguments);
+          return _this2;
+        };
+      });
+      var deferred = defer();
+      var load = function load() {
+        var finish = function finish(err, t) {
+          if (_this2.isInitialized && !_this2.initializedStoreOnce) _this2.logger.warn('init: i18next is already initialized. You should call init just once!');
+          _this2.isInitialized = true;
+          if (!_this2.options.isClone) _this2.logger.log('initialized', _this2.options);
+          _this2.emit('initialized', _this2.options);
+          deferred.resolve(t);
+          callback(err, t);
+        };
+        if (_this2.languages && _this2.options.compatibilityAPI !== 'v1' && !_this2.isInitialized) return finish(null, _this2.t.bind(_this2));
+        _this2.changeLanguage(_this2.options.lng, finish);
+      };
+      if (this.options.resources || !this.options.initImmediate) {
+        load();
+      } else {
+        setTimeout(load, 0);
+      }
+      return deferred;
+    }
+  }, {
+    key: "loadResources",
+    value: function loadResources(language) {
+      var _this3 = this;
+      var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop;
+      var usedCallback = callback;
+      var usedLng = typeof language === 'string' ? language : this.language;
+      if (typeof language === 'function') usedCallback = language;
+      if (!this.options.resources || this.options.partialBundledLanguages) {
+        if (usedLng && usedLng.toLowerCase() === 'cimode') return usedCallback();
+        var toLoad = [];
+        var append = function append(lng) {
+          if (!lng) return;
+          var lngs = _this3.services.languageUtils.toResolveHierarchy(lng);
+          lngs.forEach(function (l) {
+            if (toLoad.indexOf(l) < 0) toLoad.push(l);
+          });
+        };
+        if (!usedLng) {
+          var fallbacks = this.services.languageUtils.getFallbackCodes(this.options.fallbackLng);
+          fallbacks.forEach(function (l) {
+            return append(l);
+          });
+        } else {
+          append(usedLng);
+        }
+        if (this.options.preload) {
+          this.options.preload.forEach(function (l) {
+            return append(l);
+          });
+        }
+        this.services.backendConnector.load(toLoad, this.options.ns, function (e) {
+          if (!e && !_this3.resolvedLanguage && _this3.language) _this3.setResolvedLanguage(_this3.language);
+          usedCallback(e);
+        });
+      } else {
+        usedCallback(null);
+      }
+    }
+  }, {
+    key: "reloadResources",
+    value: function reloadResources(lngs, ns, callback) {
+      var deferred = defer();
+      if (!lngs) lngs = this.languages;
+      if (!ns) ns = this.options.ns;
+      if (!callback) callback = noop;
+      this.services.backendConnector.reload(lngs, ns, function (err) {
+        deferred.resolve();
+        callback(err);
+      });
+      return deferred;
+    }
+  }, {
+    key: "use",
+    value: function use(module) {
+      if (!module) throw new Error('You are passing an undefined module! Please check the object you are passing to i18next.use()');
+      if (!module.type) throw new Error('You are passing a wrong module! Please check the object you are passing to i18next.use()');
+      if (module.type === 'backend') {
+        this.modules.backend = module;
+      }
+      if (module.type === 'logger' || module.log && module.warn && module.error) {
+        this.modules.logger = module;
+      }
+      if (module.type === 'languageDetector') {
+        this.modules.languageDetector = module;
+      }
+      if (module.type === 'i18nFormat') {
+        this.modules.i18nFormat = module;
+      }
+      if (module.type === 'postProcessor') {
+        postProcessor.addPostProcessor(module);
+      }
+      if (module.type === 'formatter') {
+        this.modules.formatter = module;
+      }
+      if (module.type === '3rdParty') {
+        this.modules.external.push(module);
+      }
+      return this;
+    }
+  }, {
+    key: "setResolvedLanguage",
+    value: function setResolvedLanguage(l) {
+      if (!l || !this.languages) return;
+      if (['cimode', 'dev'].indexOf(l) > -1) return;
+      for (var li = 0; li < this.languages.length; li++) {
+        var lngInLngs = this.languages[li];
+        if (['cimode', 'dev'].indexOf(lngInLngs) > -1) continue;
+        if (this.store.hasLanguageSomeTranslations(lngInLngs)) {
+          this.resolvedLanguage = lngInLngs;
+          break;
+        }
+      }
+    }
+  }, {
+    key: "changeLanguage",
+    value: function changeLanguage(lng, callback) {
+      var _this4 = this;
+      this.isLanguageChangingTo = lng;
+      var deferred = defer();
+      this.emit('languageChanging', lng);
+      var setLngProps = function setLngProps(l) {
+        _this4.language = l;
+        _this4.languages = _this4.services.languageUtils.toResolveHierarchy(l);
+        _this4.resolvedLanguage = undefined;
+        _this4.setResolvedLanguage(l);
+      };
+      var done = function done(err, l) {
+        if (l) {
+          setLngProps(l);
+          _this4.translator.changeLanguage(l);
+          _this4.isLanguageChangingTo = undefined;
+          _this4.emit('languageChanged', l);
+          _this4.logger.log('languageChanged', l);
+        } else {
+          _this4.isLanguageChangingTo = undefined;
+        }
+        deferred.resolve(function () {
+          return _this4.t.apply(_this4, arguments);
+        });
+        if (callback) callback(err, function () {
+          return _this4.t.apply(_this4, arguments);
+        });
+      };
+      var setLng = function setLng(lngs) {
+        if (!lng && !lngs && _this4.services.languageDetector) lngs = [];
+        var l = typeof lngs === 'string' ? lngs : _this4.services.languageUtils.getBestMatchFromCodes(lngs);
+        if (l) {
+          if (!_this4.language) {
+            setLngProps(l);
+          }
+          if (!_this4.translator.language) _this4.translator.changeLanguage(l);
+          if (_this4.services.languageDetector && _this4.services.languageDetector.cacheUserLanguage) _this4.services.languageDetector.cacheUserLanguage(l);
+        }
+        _this4.loadResources(l, function (err) {
+          done(err, l);
+        });
+      };
+      if (!lng && this.services.languageDetector && !this.services.languageDetector.async) {
+        setLng(this.services.languageDetector.detect());
+      } else if (!lng && this.services.languageDetector && this.services.languageDetector.async) {
+        if (this.services.languageDetector.detect.length === 0) {
+          this.services.languageDetector.detect().then(setLng);
+        } else {
+          this.services.languageDetector.detect(setLng);
+        }
+      } else {
+        setLng(lng);
+      }
+      return deferred;
+    }
+  }, {
+    key: "getFixedT",
+    value: function getFixedT(lng, ns, keyPrefix) {
+      var _this5 = this;
+      var fixedT = function fixedT(key, opts) {
+        var options;
+        if ((0,_babel_runtime_helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_0__["default"])(opts) !== 'object') {
+          for (var _len3 = arguments.length, rest = new Array(_len3 > 2 ? _len3 - 2 : 0), _key3 = 2; _key3 < _len3; _key3++) {
+            rest[_key3 - 2] = arguments[_key3];
+          }
+          options = _this5.options.overloadTranslationOptionHandler([key, opts].concat(rest));
+        } else {
+          options = _objectSpread({}, opts);
+        }
+        options.lng = options.lng || fixedT.lng;
+        options.lngs = options.lngs || fixedT.lngs;
+        options.ns = options.ns || fixedT.ns;
+        options.keyPrefix = options.keyPrefix || keyPrefix || fixedT.keyPrefix;
+        var keySeparator = _this5.options.keySeparator || '.';
+        var resultKey;
+        if (options.keyPrefix && Array.isArray(key)) {
+          resultKey = key.map(function (k) {
+            return "".concat(options.keyPrefix).concat(keySeparator).concat(k);
+          });
+        } else {
+          resultKey = options.keyPrefix ? "".concat(options.keyPrefix).concat(keySeparator).concat(key) : key;
+        }
+        return _this5.t(resultKey, options);
+      };
+      if (typeof lng === 'string') {
+        fixedT.lng = lng;
+      } else {
+        fixedT.lngs = lng;
+      }
+      fixedT.ns = ns;
+      fixedT.keyPrefix = keyPrefix;
+      return fixedT;
+    }
+  }, {
+    key: "t",
+    value: function t() {
+      var _this$translator;
+      return this.translator && (_this$translator = this.translator).translate.apply(_this$translator, arguments);
+    }
+  }, {
+    key: "exists",
+    value: function exists() {
+      var _this$translator2;
+      return this.translator && (_this$translator2 = this.translator).exists.apply(_this$translator2, arguments);
+    }
+  }, {
+    key: "setDefaultNamespace",
+    value: function setDefaultNamespace(ns) {
+      this.options.defaultNS = ns;
+    }
+  }, {
+    key: "hasLoadedNamespace",
+    value: function hasLoadedNamespace(ns) {
+      var _this6 = this;
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      if (!this.isInitialized) {
+        this.logger.warn('hasLoadedNamespace: i18next was not initialized', this.languages);
+        return false;
+      }
+      if (!this.languages || !this.languages.length) {
+        this.logger.warn('hasLoadedNamespace: i18n.languages were undefined or empty', this.languages);
+        return false;
+      }
+      var lng = options.lng || this.resolvedLanguage || this.languages[0];
+      var fallbackLng = this.options ? this.options.fallbackLng : false;
+      var lastLng = this.languages[this.languages.length - 1];
+      if (lng.toLowerCase() === 'cimode') return true;
+      var loadNotPending = function loadNotPending(l, n) {
+        var loadState = _this6.services.backendConnector.state["".concat(l, "|").concat(n)];
+        return loadState === -1 || loadState === 2;
+      };
+      if (options.precheck) {
+        var preResult = options.precheck(this, loadNotPending);
+        if (preResult !== undefined) return preResult;
+      }
+      if (this.hasResourceBundle(lng, ns)) return true;
+      if (!this.services.backendConnector.backend || this.options.resources && !this.options.partialBundledLanguages) return true;
+      if (loadNotPending(lng, ns) && (!fallbackLng || loadNotPending(lastLng, ns))) return true;
+      return false;
+    }
+  }, {
+    key: "loadNamespaces",
+    value: function loadNamespaces(ns, callback) {
+      var _this7 = this;
+      var deferred = defer();
+      if (!this.options.ns) {
+        if (callback) callback();
+        return Promise.resolve();
+      }
+      if (typeof ns === 'string') ns = [ns];
+      ns.forEach(function (n) {
+        if (_this7.options.ns.indexOf(n) < 0) _this7.options.ns.push(n);
+      });
+      this.loadResources(function (err) {
+        deferred.resolve();
+        if (callback) callback(err);
+      });
+      return deferred;
+    }
+  }, {
+    key: "loadLanguages",
+    value: function loadLanguages(lngs, callback) {
+      var deferred = defer();
+      if (typeof lngs === 'string') lngs = [lngs];
+      var preloaded = this.options.preload || [];
+      var newLngs = lngs.filter(function (lng) {
+        return preloaded.indexOf(lng) < 0;
+      });
+      if (!newLngs.length) {
+        if (callback) callback();
+        return Promise.resolve();
+      }
+      this.options.preload = preloaded.concat(newLngs);
+      this.loadResources(function (err) {
+        deferred.resolve();
+        if (callback) callback(err);
+      });
+      return deferred;
+    }
+  }, {
+    key: "dir",
+    value: function dir(lng) {
+      if (!lng) lng = this.resolvedLanguage || (this.languages && this.languages.length > 0 ? this.languages[0] : this.language);
+      if (!lng) return 'rtl';
+      var rtlLngs = ['ar', 'shu', 'sqr', 'ssh', 'xaa', 'yhd', 'yud', 'aao', 'abh', 'abv', 'acm', 'acq', 'acw', 'acx', 'acy', 'adf', 'ads', 'aeb', 'aec', 'afb', 'ajp', 'apc', 'apd', 'arb', 'arq', 'ars', 'ary', 'arz', 'auz', 'avl', 'ayh', 'ayl', 'ayn', 'ayp', 'bbz', 'pga', 'he', 'iw', 'ps', 'pbt', 'pbu', 'pst', 'prp', 'prd', 'ug', 'ur', 'ydd', 'yds', 'yih', 'ji', 'yi', 'hbo', 'men', 'xmn', 'fa', 'jpr', 'peo', 'pes', 'prs', 'dv', 'sam', 'ckb'];
+      var languageUtils = this.services && this.services.languageUtils || new LanguageUtil(get());
+      return rtlLngs.indexOf(languageUtils.getLanguagePartFromCode(lng)) > -1 || lng.toLowerCase().indexOf('-arab') > 1 ? 'rtl' : 'ltr';
+    }
+  }, {
+    key: "cloneInstance",
+    value: function cloneInstance() {
+      var _this8 = this;
+      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop;
+      var mergedOptions = _objectSpread(_objectSpread(_objectSpread({}, this.options), options), {
+        isClone: true
+      });
+      var clone = new I18n(mergedOptions);
+      if (options.debug !== undefined || options.prefix !== undefined) {
+        clone.logger = clone.logger.clone(options);
+      }
+      var membersToCopy = ['store', 'services', 'language'];
+      membersToCopy.forEach(function (m) {
+        clone[m] = _this8[m];
+      });
+      clone.services = _objectSpread({}, this.services);
+      clone.services.utils = {
+        hasLoadedNamespace: clone.hasLoadedNamespace.bind(clone)
+      };
+      clone.translator = new Translator(clone.services, clone.options);
+      clone.translator.on('*', function (event) {
+        for (var _len4 = arguments.length, args = new Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
+          args[_key4 - 1] = arguments[_key4];
+        }
+        clone.emit.apply(clone, [event].concat(args));
+      });
+      clone.init(mergedOptions, callback);
+      clone.translator.options = clone.options;
+      clone.translator.backendConnector.services.utils = {
+        hasLoadedNamespace: clone.hasLoadedNamespace.bind(clone)
+      };
+      return clone;
+    }
+  }, {
+    key: "toJSON",
+    value: function toJSON() {
+      return {
+        options: this.options,
+        store: this.store,
+        language: this.language,
+        languages: this.languages,
+        resolvedLanguage: this.resolvedLanguage
+      };
+    }
+  }]);
+  return I18n;
+}(EventEmitter);
+(0,_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(I18n, "createInstance", function () {
+  var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var callback = arguments.length > 1 ? arguments[1] : undefined;
+  return new I18n(options, callback);
+});
+var instance = I18n.createInstance();
+instance.createInstance = I18n.createInstance;
+
+var createInstance = instance.createInstance;
+var dir = instance.dir;
+var init = instance.init;
+var loadResources = instance.loadResources;
+var reloadResources = instance.reloadResources;
+var use = instance.use;
+var changeLanguage = instance.changeLanguage;
+var getFixedT = instance.getFixedT;
+var t = instance.t;
+var exists = instance.exists;
+var setDefaultNamespace = instance.setDefaultNamespace;
+var hasLoadedNamespace = instance.hasLoadedNamespace;
+var loadNamespaces = instance.loadNamespaces;
+var loadLanguages = instance.loadLanguages;
+
+
+
+
+/***/ }),
+
 /***/ "./node_modules/ieee754/index.js":
 /*!***************************************!*\
   !*** ./node_modules/ieee754/index.js ***!
@@ -14942,6 +18767,57 @@ if (typeof Object.create === 'function') {
     }
   }
 }
+
+
+/***/ }),
+
+/***/ "./node_modules/ip-regex/index.js":
+/*!****************************************!*\
+  !*** ./node_modules/ip-regex/index.js ***!
+  \****************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+const word = '[a-fA-F\\d:]';
+
+const boundry = options => options && options.includeBoundaries
+	? `(?:(?<=\\s|^)(?=${word})|(?<=${word})(?=\\s|$))`
+	: '';
+
+const v4 = '(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]\\d|\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]\\d|\\d)){3}';
+
+const v6segment = '[a-fA-F\\d]{1,4}';
+
+const v6 = `
+(?:
+(?:${v6segment}:){7}(?:${v6segment}|:)|                                    // 1:2:3:4:5:6:7::  1:2:3:4:5:6:7:8
+(?:${v6segment}:){6}(?:${v4}|:${v6segment}|:)|                             // 1:2:3:4:5:6::    1:2:3:4:5:6::8   1:2:3:4:5:6::8  1:2:3:4:5:6::1.2.3.4
+(?:${v6segment}:){5}(?::${v4}|(?::${v6segment}){1,2}|:)|                   // 1:2:3:4:5::      1:2:3:4:5::7:8   1:2:3:4:5::8    1:2:3:4:5::7:1.2.3.4
+(?:${v6segment}:){4}(?:(?::${v6segment}){0,1}:${v4}|(?::${v6segment}){1,3}|:)| // 1:2:3:4::        1:2:3:4::6:7:8   1:2:3:4::8      1:2:3:4::6:7:1.2.3.4
+(?:${v6segment}:){3}(?:(?::${v6segment}){0,2}:${v4}|(?::${v6segment}){1,4}|:)| // 1:2:3::          1:2:3::5:6:7:8   1:2:3::8        1:2:3::5:6:7:1.2.3.4
+(?:${v6segment}:){2}(?:(?::${v6segment}){0,3}:${v4}|(?::${v6segment}){1,5}|:)| // 1:2::            1:2::4:5:6:7:8   1:2::8          1:2::4:5:6:7:1.2.3.4
+(?:${v6segment}:){1}(?:(?::${v6segment}){0,4}:${v4}|(?::${v6segment}){1,6}|:)| // 1::              1::3:4:5:6:7:8   1::8            1::3:4:5:6:7:1.2.3.4
+(?::(?:(?::${v6segment}){0,5}:${v4}|(?::${v6segment}){1,7}|:))             // ::2:3:4:5:6:7:8  ::2:3:4:5:6:7:8  ::8             ::1.2.3.4
+)(?:%[0-9a-zA-Z]{1,})?                                             // %eth0            %1
+`.replace(/\s*\/\/.*$/gm, '').replace(/\n/g, '').trim();
+
+// Pre-compile only the exact regexes because adding a global flag make regexes stateful
+const v46Exact = new RegExp(`(?:^${v4}$)|(?:^${v6}$)`);
+const v4exact = new RegExp(`^${v4}$`);
+const v6exact = new RegExp(`^${v6}$`);
+
+const ipRegex = options => options && options.exact
+	? v46Exact
+	: new RegExp(`(?:${boundry(options)}${v4}${boundry(options)})|(?:${boundry(options)}${v6}${boundry(options)})`, 'g');
+
+ipRegex.v4 = options => options && options.exact ? v4exact : new RegExp(`${boundry(options)}${v4}${boundry(options)}`, 'g');
+ipRegex.v6 = options => options && options.exact ? v6exact : new RegExp(`${boundry(options)}${v6}${boundry(options)}`, 'g');
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ipRegex);
 
 
 /***/ }),
@@ -15167,6 +19043,42 @@ module.exports = function isGeneratorFunction(fn) {
 	}
 	return getProto(fn) === GeneratorFunction;
 };
+
+
+/***/ }),
+
+/***/ "./node_modules/is-ip/index.js":
+/*!*************************************!*\
+  !*** ./node_modules/is-ip/index.js ***!
+  \*************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ipVersion: () => (/* binding */ ipVersion),
+/* harmony export */   isIP: () => (/* binding */ isIP),
+/* harmony export */   isIPv4: () => (/* binding */ isIPv4),
+/* harmony export */   isIPv6: () => (/* binding */ isIPv6)
+/* harmony export */ });
+/* harmony import */ var ip_regex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ip-regex */ "./node_modules/ip-regex/index.js");
+
+
+function isIP(string) {
+	return (0,ip_regex__WEBPACK_IMPORTED_MODULE_0__["default"])({exact: true}).test(string);
+}
+
+function isIPv6(string) {
+	return ip_regex__WEBPACK_IMPORTED_MODULE_0__["default"].v6({exact: true}).test(string);
+}
+
+function isIPv4(string) {
+	return ip_regex__WEBPACK_IMPORTED_MODULE_0__["default"].v4({exact: true}).test(string);
+}
+
+function ipVersion(string) {
+	return isIP(string) ? (isIPv6(string) ? 6 : 4) : undefined;
+}
 
 
 /***/ }),
@@ -18584,13 +22496,16 @@ function quote(s) {
     return $replace.call(String(s), /"/g, '&quot;');
 }
 
-function isArray(obj) { return toStr(obj) === '[object Array]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
-function isDate(obj) { return toStr(obj) === '[object Date]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
-function isRegExp(obj) { return toStr(obj) === '[object RegExp]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
-function isError(obj) { return toStr(obj) === '[object Error]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
-function isString(obj) { return toStr(obj) === '[object String]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
-function isNumber(obj) { return toStr(obj) === '[object Number]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
-function isBoolean(obj) { return toStr(obj) === '[object Boolean]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
+function canTrustToString(obj) {
+    return !toStringTag || !(typeof obj === 'object' && (toStringTag in obj || typeof obj[toStringTag] !== 'undefined'));
+}
+function isArray(obj) { return toStr(obj) === '[object Array]' && canTrustToString(obj); }
+function isDate(obj) { return toStr(obj) === '[object Date]' && canTrustToString(obj); }
+function isRegExp(obj) { return toStr(obj) === '[object RegExp]' && canTrustToString(obj); }
+function isError(obj) { return toStr(obj) === '[object Error]' && canTrustToString(obj); }
+function isString(obj) { return toStr(obj) === '[object String]' && canTrustToString(obj); }
+function isNumber(obj) { return toStr(obj) === '[object Number]' && canTrustToString(obj); }
+function isBoolean(obj) { return toStr(obj) === '[object Boolean]' && canTrustToString(obj); }
 
 // Symbol and BigInt do have Symbol.toStringTag by spec, so that can't be used to eliminate false positives
 function isSymbol(obj) {
@@ -25204,6 +29119,530 @@ module.exports = ZStream;
 
 /***/ }),
 
+/***/ "./node_modules/parse-domain/build/parse-domain.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/parse-domain/build/parse-domain.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ParseResultType: () => (/* binding */ ParseResultType),
+/* harmony export */   RESERVED_TOP_LEVEL_DOMAINS: () => (/* binding */ RESERVED_TOP_LEVEL_DOMAINS),
+/* harmony export */   parseDomain: () => (/* binding */ parseDomain)
+/* harmony export */ });
+/* harmony import */ var _serialized_tries_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./serialized-tries.js */ "./node_modules/parse-domain/serialized-tries/icann.js");
+/* harmony import */ var _serialized_tries_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./serialized-tries.js */ "./node_modules/parse-domain/serialized-tries/private.js");
+/* harmony import */ var _trie_look_up_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./trie/look-up.js */ "./node_modules/parse-domain/build/trie/look-up.js");
+/* harmony import */ var _sanitize_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./sanitize.js */ "./node_modules/parse-domain/build/sanitize.js");
+/* harmony import */ var _trie_parse_trie_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./trie/parse-trie.js */ "./node_modules/parse-domain/build/trie/parse-trie.js");
+
+
+
+
+const RESERVED_TOP_LEVEL_DOMAINS = [
+    "localhost",
+    "local",
+    "example",
+    "invalid",
+    "test",
+];
+var ParseResultType;
+(function (ParseResultType) {
+    /**
+     * This parse result is returned in case the given hostname does not adhere to [RFC 1034](https://tools.ietf.org/html/rfc1034).
+     */
+    ParseResultType["Invalid"] = "INVALID";
+    /**
+     * This parse result is returned if the given hostname was an IPv4 or IPv6.
+     */
+    ParseResultType["Ip"] = "IP";
+    /**
+     * This parse result is returned when the given hostname
+     * - is the root domain (the empty string `""`)
+     * - belongs to the top-level domain `localhost`, `local`, `example`, `invalid` or `test`
+     */
+    ParseResultType["Reserved"] = "RESERVED";
+    /**
+     * This parse result is returned when the given hostname is valid and does not belong to a reserved top-level domain, but is not listed in the public suffix list.
+     */
+    ParseResultType["NotListed"] = "NOT_LISTED";
+    /**
+     * This parse result is returned when the given hostname belongs to a top-level domain that is listed in the public suffix list.
+     */
+    ParseResultType["Listed"] = "LISTED";
+})(ParseResultType || (ParseResultType = {}));
+const getAtIndex = (array, index) => {
+    return index >= 0 && index < array.length ? array[index] : undefined;
+};
+const splitLabelsIntoDomains = (labels, index) => {
+    return {
+        subDomains: labels.slice(0, Math.max(0, index)),
+        domain: getAtIndex(labels, index),
+        topLevelDomains: labels.slice(index + 1),
+    };
+};
+let parsedIcannTrie;
+let parsedPrivateTrie;
+/**
+ * Splits the given hostname in topLevelDomains, a domain and subDomains.
+ */
+const parseDomain = (hostname, options) => {
+    const sanitizationResult = (0,_sanitize_js__WEBPACK_IMPORTED_MODULE_0__.sanitize)(hostname, options);
+    if (sanitizationResult.type === _sanitize_js__WEBPACK_IMPORTED_MODULE_0__.SanitizationResultType.Error) {
+        return {
+            type: ParseResultType.Invalid,
+            hostname,
+            errors: sanitizationResult.errors,
+        };
+    }
+    if (sanitizationResult.type === _sanitize_js__WEBPACK_IMPORTED_MODULE_0__.SanitizationResultType.ValidIp) {
+        return {
+            type: ParseResultType.Ip,
+            hostname: sanitizationResult.ip,
+            ipVersion: sanitizationResult.ipVersion,
+        };
+    }
+    const { labels, domain } = sanitizationResult;
+    if (hostname === "" ||
+        RESERVED_TOP_LEVEL_DOMAINS.includes(labels[labels.length - 1])) {
+        return {
+            type: ParseResultType.Reserved,
+            hostname: domain,
+            labels,
+        };
+    }
+    // Parse the serialized trie lazily
+    parsedIcannTrie = parsedIcannTrie !== null && parsedIcannTrie !== void 0 ? parsedIcannTrie : (0,_trie_parse_trie_js__WEBPACK_IMPORTED_MODULE_1__.parseTrie)(_serialized_tries_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
+    parsedPrivateTrie = parsedPrivateTrie !== null && parsedPrivateTrie !== void 0 ? parsedPrivateTrie : (0,_trie_parse_trie_js__WEBPACK_IMPORTED_MODULE_1__.parseTrie)(_serialized_tries_js__WEBPACK_IMPORTED_MODULE_3__["default"]);
+    const icannTlds = (0,_trie_look_up_js__WEBPACK_IMPORTED_MODULE_4__.lookUpTldsInTrie)(labels, parsedIcannTrie);
+    const privateTlds = (0,_trie_look_up_js__WEBPACK_IMPORTED_MODULE_4__.lookUpTldsInTrie)(labels, parsedPrivateTrie);
+    if (icannTlds.length === 0 && privateTlds.length === 0) {
+        return {
+            type: ParseResultType.NotListed,
+            hostname: domain,
+            labels,
+        };
+    }
+    const indexOfPublicSuffixDomain = labels.length - Math.max(privateTlds.length, icannTlds.length) - 1;
+    const indexOfIcannDomain = labels.length - icannTlds.length - 1;
+    return Object.assign({ type: ParseResultType.Listed, hostname: domain, labels, icann: splitLabelsIntoDomains(labels, indexOfIcannDomain) }, splitLabelsIntoDomains(labels, indexOfPublicSuffixDomain));
+};
+//# sourceMappingURL=parse-domain.js.map
+
+/***/ }),
+
+/***/ "./node_modules/parse-domain/build/sanitize.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/parse-domain/build/sanitize.js ***!
+  \*****************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   SanitizationResultType: () => (/* binding */ SanitizationResultType),
+/* harmony export */   Validation: () => (/* binding */ Validation),
+/* harmony export */   ValidationErrorType: () => (/* binding */ ValidationErrorType),
+/* harmony export */   sanitize: () => (/* binding */ sanitize)
+/* harmony export */ });
+/* harmony import */ var is_ip__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! is-ip */ "./node_modules/is-ip/index.js");
+
+// See https://en.wikipedia.org/wiki/Domain_name
+// See https://tools.ietf.org/html/rfc1034
+const LABEL_SEPARATOR = ".";
+const LABEL_LENGTH_MIN = 1;
+const LABEL_LENGTH_MAX = 63;
+/**
+ * 255 octets - 2 octets if you remove the last dot
+ * @see https://devblogs.microsoft.com/oldnewthing/20120412-00/?p=7873
+ */
+const DOMAIN_LENGTH_MAX = 253;
+const textEncoder = new TextEncoder();
+var Validation;
+(function (Validation) {
+    /**
+     * Allows any octets as labels
+     * but still restricts the length of labels and the overall domain.
+     *
+     * @see https://www.rfc-editor.org/rfc/rfc2181#section-11
+     **/
+    Validation["Lax"] = "LAX";
+    /**
+     * Only allows ASCII letters, digits and hyphens (aka LDH),
+     * forbids hyphens at the beginning or end of a label
+     * and requires top-level domain names not to be all-numeric.
+     *
+     * This is the default if no validation is configured.
+     *
+     * @see https://datatracker.ietf.org/doc/html/rfc3696#section-2
+     */
+    Validation["Strict"] = "STRICT";
+})(Validation || (Validation = {}));
+var ValidationErrorType;
+(function (ValidationErrorType) {
+    ValidationErrorType["NoHostname"] = "NO_HOSTNAME";
+    ValidationErrorType["DomainMaxLength"] = "DOMAIN_MAX_LENGTH";
+    ValidationErrorType["LabelMinLength"] = "LABEL_MIN_LENGTH";
+    ValidationErrorType["LabelMaxLength"] = "LABEL_MAX_LENGTH";
+    ValidationErrorType["LabelInvalidCharacter"] = "LABEL_INVALID_CHARACTER";
+    ValidationErrorType["LastLabelInvalid"] = "LAST_LABEL_INVALID";
+})(ValidationErrorType || (ValidationErrorType = {}));
+var SanitizationResultType;
+(function (SanitizationResultType) {
+    SanitizationResultType["ValidIp"] = "VALID_IP";
+    SanitizationResultType["ValidDomain"] = "VALID_DOMAIN";
+    SanitizationResultType["Error"] = "ERROR";
+})(SanitizationResultType || (SanitizationResultType = {}));
+const createNoHostnameError = (input) => {
+    return {
+        type: ValidationErrorType.NoHostname,
+        message: `The given input ${String(input)} does not look like a hostname.`,
+        column: 1,
+    };
+};
+const createDomainMaxLengthError = (domain, length) => {
+    return {
+        type: ValidationErrorType.DomainMaxLength,
+        message: `Domain "${domain}" is too long. Domain is ${length} octets long but should not be longer than ${DOMAIN_LENGTH_MAX}.`,
+        column: length,
+    };
+};
+const createLabelMinLengthError = (label, column) => {
+    const length = label.length;
+    return {
+        type: ValidationErrorType.LabelMinLength,
+        message: `Label "${label}" is too short. Label is ${length} octets long but should be at least ${LABEL_LENGTH_MIN}.`,
+        column,
+    };
+};
+const createLabelMaxLengthError = (label, column) => {
+    const length = label.length;
+    return {
+        type: ValidationErrorType.LabelMaxLength,
+        message: `Label "${label}" is too long. Label is ${length} octets long but should not be longer than ${LABEL_LENGTH_MAX}.`,
+        column,
+    };
+};
+const createLabelInvalidCharacterError = (label, invalidCharacter, column) => {
+    return {
+        type: ValidationErrorType.LabelInvalidCharacter,
+        message: `Label "${label}" contains invalid character "${invalidCharacter}" at column ${column}.`,
+        column,
+    };
+};
+const createLastLabelInvalidError = (label, column) => {
+    return {
+        type: ValidationErrorType.LabelInvalidCharacter,
+        message: `Last label "${label}" must not be all-numeric.`,
+        column,
+    };
+};
+const sanitize = (input, options = {}) => {
+    // Extra check for non-TypeScript users
+    if (typeof input !== "string") {
+        return {
+            type: SanitizationResultType.Error,
+            errors: [createNoHostnameError(input)],
+        };
+    }
+    if (input === "") {
+        return {
+            type: SanitizationResultType.ValidDomain,
+            domain: input,
+            labels: [],
+        };
+    }
+    // IPv6 addresses are surrounded by square brackets in URLs
+    // See https://tools.ietf.org/html/rfc3986#section-3.2.2
+    const inputTrimmedAsIp = input.replace(/^\[|]$/g, "");
+    const ipVersionOfInput = (0,is_ip__WEBPACK_IMPORTED_MODULE_0__.ipVersion)(inputTrimmedAsIp);
+    if (ipVersionOfInput !== undefined) {
+        return {
+            type: SanitizationResultType.ValidIp,
+            ip: inputTrimmedAsIp,
+            ipVersion: ipVersionOfInput,
+        };
+    }
+    const lastChar = input.charAt(input.length - 1);
+    const canonicalInput = lastChar === LABEL_SEPARATOR ? input.slice(0, -1) : input;
+    const octets = new TextEncoder().encode(canonicalInput);
+    if (octets.length > DOMAIN_LENGTH_MAX) {
+        return {
+            type: SanitizationResultType.Error,
+            errors: [createDomainMaxLengthError(input, octets.length)],
+        };
+    }
+    const labels = canonicalInput.split(LABEL_SEPARATOR);
+    const { validation = Validation.Strict } = options;
+    const labelValidationErrors = validateLabels[validation](labels);
+    if (labelValidationErrors.length > 0) {
+        return {
+            type: SanitizationResultType.Error,
+            errors: labelValidationErrors,
+        };
+    }
+    return {
+        type: SanitizationResultType.ValidDomain,
+        domain: input,
+        labels,
+    };
+};
+const validateLabels = {
+    [Validation.Lax]: (labels) => {
+        const labelValidationErrors = [];
+        let column = 1;
+        for (const label of labels) {
+            const octets = textEncoder.encode(label);
+            if (octets.length < LABEL_LENGTH_MIN) {
+                labelValidationErrors.push(createLabelMinLengthError(label, column));
+            }
+            else if (octets.length > LABEL_LENGTH_MAX) {
+                labelValidationErrors.push(createLabelMaxLengthError(label, column));
+            }
+            column += label.length + LABEL_SEPARATOR.length;
+        }
+        return labelValidationErrors;
+    },
+    [Validation.Strict]: (labels) => {
+        const labelValidationErrors = [];
+        let column = 1;
+        let lastLabel;
+        for (const label of labels) {
+            // According to https://tools.ietf.org/html/rfc6761 labels should
+            // only contain ASCII letters, digits and hyphens (LDH).
+            const invalidCharacter = /[^\da-z-]/i.exec(label);
+            if (invalidCharacter) {
+                labelValidationErrors.push(createLabelInvalidCharacterError(label, invalidCharacter[0], invalidCharacter.index + 1));
+            }
+            if (label.startsWith("-")) {
+                labelValidationErrors.push(createLabelInvalidCharacterError(label, "-", column));
+            }
+            else if (label.endsWith("-")) {
+                labelValidationErrors.push(createLabelInvalidCharacterError(label, "-", column + label.length - 1));
+            }
+            if (
+            // We can use .length here to check for the octet size because
+            // label can only contain ASCII LDH characters at this point.
+            label.length < LABEL_LENGTH_MIN) {
+                labelValidationErrors.push(createLabelMinLengthError(label, column));
+            }
+            else if (label.length > LABEL_LENGTH_MAX) {
+                labelValidationErrors.push(createLabelMaxLengthError(label, column));
+            }
+            column += label.length + LABEL_SEPARATOR.length;
+            lastLabel = label;
+        }
+        if (lastLabel !== undefined && /[a-z-]/iu.test(lastLabel) === false) {
+            labelValidationErrors.push(createLastLabelInvalidError(lastLabel, column - lastLabel.length - LABEL_SEPARATOR.length));
+        }
+        return labelValidationErrors;
+    },
+};
+//# sourceMappingURL=sanitize.js.map
+
+/***/ }),
+
+/***/ "./node_modules/parse-domain/build/trie/characters.js":
+/*!************************************************************!*\
+  !*** ./node_modules/parse-domain/build/trie/characters.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   DOWN: () => (/* binding */ DOWN),
+/* harmony export */   EXCEPTION: () => (/* binding */ EXCEPTION),
+/* harmony export */   RESET: () => (/* binding */ RESET),
+/* harmony export */   SAME: () => (/* binding */ SAME),
+/* harmony export */   UP: () => (/* binding */ UP),
+/* harmony export */   WILDCARD: () => (/* binding */ WILDCARD)
+/* harmony export */ });
+// UP, SAME, DOWN, RESET should not be special regex characters in a character class.
+const UP = "<"; // one level up
+const SAME = ","; // same level
+const DOWN = ">"; // one level down
+const RESET = "|"; // reset level index and start new
+const WILDCARD = "*"; // as defined by publicsuffix.org
+const EXCEPTION = "!"; // as defined by publicsuffix.org
+//# sourceMappingURL=characters.js.map
+
+/***/ }),
+
+/***/ "./node_modules/parse-domain/build/trie/look-up.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/parse-domain/build/trie/look-up.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   lookUpTldsInTrie: () => (/* binding */ lookUpTldsInTrie)
+/* harmony export */ });
+/* harmony import */ var _characters_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./characters.js */ "./node_modules/parse-domain/build/trie/characters.js");
+
+const lookUpTldsInTrie = (labels, trie) => {
+    const labelsToCheck = labels.slice();
+    const tlds = [];
+    let node = trie;
+    while (labelsToCheck.length !== 0) {
+        const label = labelsToCheck.pop();
+        const labelLowerCase = label.toLowerCase();
+        if (node.children.has(_characters_js__WEBPACK_IMPORTED_MODULE_0__.WILDCARD)) {
+            if (node.children.has(_characters_js__WEBPACK_IMPORTED_MODULE_0__.EXCEPTION + labelLowerCase)) {
+                break;
+            }
+            node = node.children.get(_characters_js__WEBPACK_IMPORTED_MODULE_0__.WILDCARD);
+        }
+        else {
+            if (node.children.has(labelLowerCase) === false) {
+                break;
+            }
+            node = node.children.get(labelLowerCase);
+        }
+        tlds.unshift(label);
+    }
+    return tlds;
+};
+//# sourceMappingURL=look-up.js.map
+
+/***/ }),
+
+/***/ "./node_modules/parse-domain/build/trie/nodes.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/parse-domain/build/trie/nodes.js ***!
+  \*******************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   NODE_TYPE_CHILD: () => (/* binding */ NODE_TYPE_CHILD),
+/* harmony export */   NODE_TYPE_ROOT: () => (/* binding */ NODE_TYPE_ROOT),
+/* harmony export */   createOrGetChild: () => (/* binding */ createOrGetChild),
+/* harmony export */   createRootNode: () => (/* binding */ createRootNode)
+/* harmony export */ });
+const NODE_TYPE_ROOT = Symbol("ROOT");
+const NODE_TYPE_CHILD = Symbol("CHILD");
+const createRootNode = () => {
+    return {
+        type: NODE_TYPE_ROOT,
+        children: new Map(),
+    };
+};
+const createOrGetChild = (parent, label) => {
+    let child = parent.children.get(label);
+    if (child === undefined) {
+        child = {
+            type: NODE_TYPE_CHILD,
+            label,
+            children: new Map(),
+            parent,
+        };
+        parent.children.set(label, child);
+    }
+    return child;
+};
+//# sourceMappingURL=nodes.js.map
+
+/***/ }),
+
+/***/ "./node_modules/parse-domain/build/trie/parse-trie.js":
+/*!************************************************************!*\
+  !*** ./node_modules/parse-domain/build/trie/parse-trie.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   parseTrie: () => (/* binding */ parseTrie)
+/* harmony export */ });
+/* harmony import */ var _characters_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./characters.js */ "./node_modules/parse-domain/build/trie/characters.js");
+/* harmony import */ var _nodes_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./nodes.js */ "./node_modules/parse-domain/build/trie/nodes.js");
+
+
+const parseTrie = (serializedTrie) => {
+    const rootNode = (0,_nodes_js__WEBPACK_IMPORTED_MODULE_0__.createRootNode)();
+    let domain = "";
+    let parentNode = rootNode;
+    // Type assertion necessary here due to a TypeScript unsoundness
+    // https://github.com/microsoft/TypeScript/issues/9998#issuecomment-235963457
+    let node = rootNode;
+    const addDomain = () => {
+        node = (0,_nodes_js__WEBPACK_IMPORTED_MODULE_0__.createOrGetChild)(parentNode, domain);
+        domain = "";
+    };
+    for (let i = 0; i < serializedTrie.length; i++) {
+        const char = serializedTrie.charAt(i);
+        switch (char) {
+            case _characters_js__WEBPACK_IMPORTED_MODULE_1__.SAME: {
+                addDomain();
+                continue;
+            }
+            case _characters_js__WEBPACK_IMPORTED_MODULE_1__.DOWN: {
+                addDomain();
+                parentNode = node;
+                continue;
+            }
+            case _characters_js__WEBPACK_IMPORTED_MODULE_1__.RESET: {
+                addDomain();
+                parentNode = rootNode;
+                continue;
+            }
+            case _characters_js__WEBPACK_IMPORTED_MODULE_1__.UP: {
+                if (parentNode.type === _nodes_js__WEBPACK_IMPORTED_MODULE_0__.NODE_TYPE_ROOT) {
+                    throw new Error(`Error in serialized trie at position ${i}: Cannot go up, current parent node is already root`);
+                }
+                addDomain();
+                parentNode = parentNode.parent;
+                continue;
+            }
+        }
+        domain += char;
+    }
+    if (domain !== "") {
+        addDomain();
+    }
+    return rootNode;
+};
+//# sourceMappingURL=parse-trie.js.map
+
+/***/ }),
+
+/***/ "./node_modules/parse-domain/serialized-tries/icann.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/parse-domain/serialized-tries/icann.js ***!
+  \*************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("ac>com,edu,gov,net,mil,org<ad>nom<ae>co,net,org,sch,ac,gov,mil<aero>accident-investigation,accident-prevention,aerobatic,aeroclub,aerodrome,agents,aircraft,airline,airport,air-surveillance,airtraffic,air-traffic-control,ambulance,amusement,association,author,ballooning,broker,caa,cargo,catering,certification,championship,charter,civilaviation,club,conference,consultant,consulting,control,council,crew,design,dgca,educator,emergency,engine,engineer,entertainment,equipment,exchange,express,federation,flight,fuel,gliding,government,groundhandling,group,hanggliding,homebuilt,insurance,journal,journalist,leasing,logistics,magazine,maintenance,media,microlight,modelling,navigation,parachuting,paragliding,passenger-association,pilot,press,production,recreation,repbody,res,research,rotorcraft,safety,scientist,services,show,skydiving,software,student,trader,trading,trainer,union,workinggroup,works<af>gov,com,org,net,edu<ag>com,org,net,co,nom<ai>off,com,net,org<al>com,edu,gov,mil,net,org<am>co,com,commune,net,org<ao>ed,gv,og,co,pb,it<aq,ar>bet,com,coop,edu,gob,gov,int,mil,musica,mutual,net,org,senasa,tur<arpa>e164,in-addr,ip6,iris,uri,urn<as>gov<asia,at>ac>sth<co,gv,or<au>com,net,org,edu>act,catholic,nsw>schools<nt,qld,sa,tas,vic,wa<gov>qld,sa,tas,vic,wa<asn,id,info,conf,oz,act,nsw,nt,qld,sa,tas,vic,wa<aw>com<ax,az>com,net,int,gov,org,edu,info,pp,mil,name,pro,biz<ba>com,edu,gov,mil,net,org<bb>biz,co,com,edu,gov,info,net,org,store,tv<bd>*<be>ac<bf>gov<bg>a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,0,1,2,3,4,5,6,7,8,9<bh>com,edu,net,org,gov<bi>co,com,edu,or,org<biz,bj>asso,barreau,gouv<bm>com,edu,gov,net,org<bn>com,edu,gov,net,org<bo>com,edu,gob,int,org,net,mil,tv,web,academia,agro,arte,blog,bolivia,ciencia,cooperativa,democracia,deporte,ecologia,economia,empresa,indigena,industria,info,medicina,movimiento,musica,natural,nombre,noticias,patria,politica,profesional,plurinacional,pueblo,revista,salud,tecnologia,tksat,transporte,wiki<br>9guacu,abc,adm,adv,agr,aju,am,anani,aparecida,app,arq,art,ato,b,barueri,belem,bhz,bib,bio,blog,bmd,boavista,bsb,campinagrande,campinas,caxias,cim,cng,cnt,com,contagem,coop,coz,cri,cuiaba,curitiba,def,des,det,dev,ecn,eco,edu,emp,enf,eng,esp,etc,eti,far,feira,flog,floripa,fm,fnd,fortal,fot,foz,fst,g12,geo,ggf,goiania,gov>ac,al,am,ap,ba,ce,df,es,go,ma,mg,ms,mt,pa,pb,pe,pi,pr,rj,rn,ro,rr,rs,sc,se,sp,to<gru,imb,ind,inf,jab,jampa,jdf,joinville,jor,jus,leg,lel,log,londrina,macapa,maceio,manaus,maringa,mat,med,mil,morena,mp,mus,natal,net,niteroi,nom>*<not,ntr,odo,ong,org,osasco,palmas,poa,ppg,pro,psc,psi,pvh,qsl,radio,rec,recife,rep,ribeirao,rio,riobranco,riopreto,salvador,sampa,santamaria,santoandre,saobernardo,saogonca,seg,sjc,slg,slz,sorocaba,srv,taxi,tc,tec,teo,the,tmp,trd,tur,tv,udi,vet,vix,vlog,wiki,zlg<bs>com,net,org,edu,gov<bt>com,edu,gov,net,org<bv,bw>co,org<by>gov,mil,com,of<bz>com,net,org,edu,gov<ca>ab,bc,mb,nb,nf,nl,ns,nt,nu,on,pe,qc,sk,yk,gc<cat,cc,cd>gov<cf,cg,ch,ci>org,or,com,co,edu,ed,ac,net,go,asso,xn--aroport-bya,int,presse,md,gouv<ck>*,!www<cl>co,gob,gov,mil<cm>co,com,gov,net<cn>ac,com,edu,gov,net,org,mil,xn--55qx5d,xn--io0a7i,xn--od0alg,ah,bj,cq,fj,gd,gs,gz,gx,ha,hb,he,hi,hl,hn,jl,js,jx,ln,nm,nx,qh,sc,sd,sh,sn,sx,tj,xj,xz,yn,zj,hk,mo,tw<co>arts,com,edu,firm,gov,info,int,mil,net,nom,org,rec,web<com,coop,cr>ac,co,ed,fi,go,or,sa<cu>com,edu,org,net,gov,inf<cv>com,edu,int,nome,org<cw>com,edu,net,org<cx>gov<cy>ac,biz,com,ekloges,gov,ltd,mil,net,org,press,pro,tm<cz,de,dj,dk,dm>com,net,org,edu,gov<do>art,com,edu,gob,gov,mil,net,org,sld,web<dz>art,asso,com,edu,gov,org,net,pol,soc,tm<ec>com,info,net,fin,k12,med,pro,org,edu,gov,gob,mil<edu,ee>edu,gov,riik,lib,med,com,pri,aip,org,fie<eg>com,edu,eun,gov,mil,name,net,org,sci<er>*<es>com,nom,org,gob,edu<et>com,gov,org,edu,biz,name,info,net<eu,fi>aland<fj>ac,biz,com,gov,info,mil,name,net,org,pro<fk>*<fm>com,edu,net,org<fo,fr>asso,com,gouv,nom,prd,tm,aeroport,avocat,avoues,cci,chambagri,chirurgiens-dentistes,experts-comptables,geometre-expert,greta,huissier-justice,medecin,notaires,pharmacien,port,veterinaire<ga,gb,gd>edu,gov<ge>com,edu,gov,org,mil,net,pvt<gf,gg>co,net,org<gh>com,edu,gov,org,mil<gi>com,ltd,gov,mod,edu,org<gl>co,com,edu,net,org<gm,gn>ac,com,edu,gov,org,net<gov,gp>com,net,mobi,edu,org,asso<gq,gr>com,edu,net,org,gov<gs,gt>com,edu,gob,ind,mil,net,org<gu>com,edu,gov,guam,info,net,org,web<gw,gy>co,com,edu,gov,net,org<hk>com,edu,gov,idv,net,org,xn--55qx5d,xn--wcvs22d,xn--lcvr32d,xn--mxtq1m,xn--gmqw5a,xn--ciqpn,xn--gmq050i,xn--zf0avx,xn--io0a7i,xn--mk0axi,xn--od0alg,xn--od0aq3b,xn--tn0ag,xn--uc0atv,xn--uc0ay4a<hm,hn>com,edu,org,net,mil,gob<hr>iz,from,name,com<ht>com,shop,firm,info,adult,net,pro,org,med,art,coop,pol,asso,edu,rel,gouv,perso<hu>co,info,org,priv,sport,tm,2000,agrar,bolt,casino,city,erotica,erotika,film,forum,games,hotel,ingatlan,jogasz,konyvelo,lakas,media,news,reklam,sex,shop,suli,szex,tozsde,utazas,video<id>ac,biz,co,desa,go,mil,my,net,or,ponpes,sch,web<ie>gov<il>ac,co,gov,idf,k12,muni,net,org<im>ac,co>ltd,plc<com,net,org,tt,tv<in>co,firm,net,org,gen,ind,nic,ac,edu,res,gov,mil<info,int>eu<io>com<iq>gov,edu,mil,com,org,net<ir>ac,co,gov,id,net,org,sch,xn--mgba3a4f16a,xn--mgba3a4fra<is>net,com,edu,gov,org,int<it>gov,edu,abr,abruzzo,aosta-valley,aostavalley,bas,basilicata,cal,calabria,cam,campania,emilia-romagna,emiliaromagna,emr,friuli-v-giulia,friuli-ve-giulia,friuli-vegiulia,friuli-venezia-giulia,friuli-veneziagiulia,friuli-vgiulia,friuliv-giulia,friulive-giulia,friulivegiulia,friulivenezia-giulia,friuliveneziagiulia,friulivgiulia,fvg,laz,lazio,lig,liguria,lom,lombardia,lombardy,lucania,mar,marche,mol,molise,piedmont,piemonte,pmn,pug,puglia,sar,sardegna,sardinia,sic,sicilia,sicily,taa,tos,toscana,trentin-sud-tirol,xn--trentin-sd-tirol-rzb,trentin-sudtirol,xn--trentin-sdtirol-7vb,trentin-sued-tirol,trentin-suedtirol,trentino-a-adige,trentino-aadige,trentino-alto-adige,trentino-altoadige,trentino-s-tirol,trentino-stirol,trentino-sud-tirol,xn--trentino-sd-tirol-c3b,trentino-sudtirol,xn--trentino-sdtirol-szb,trentino-sued-tirol,trentino-suedtirol,trentino,trentinoa-adige,trentinoaadige,trentinoalto-adige,trentinoaltoadige,trentinos-tirol,trentinostirol,trentinosud-tirol,xn--trentinosd-tirol-rzb,trentinosudtirol,xn--trentinosdtirol-7vb,trentinosued-tirol,trentinosuedtirol,trentinsud-tirol,xn--trentinsd-tirol-6vb,trentinsudtirol,xn--trentinsdtirol-nsb,trentinsued-tirol,trentinsuedtirol,tuscany,umb,umbria,val-d-aosta,val-daosta,vald-aosta,valdaosta,valle-aosta,valle-d-aosta,valle-daosta,valleaosta,valled-aosta,valledaosta,vallee-aoste,xn--valle-aoste-ebb,vallee-d-aoste,xn--valle-d-aoste-ehb,valleeaoste,xn--valleaoste-e7a,valleedaoste,xn--valledaoste-ebb,vao,vda,ven,veneto,ag,agrigento,al,alessandria,alto-adige,altoadige,an,ancona,andria-barletta-trani,andria-trani-barletta,andriabarlettatrani,andriatranibarletta,ao,aosta,aoste,ap,aq,aquila,ar,arezzo,ascoli-piceno,ascolipiceno,asti,at,av,avellino,ba,balsan-sudtirol,xn--balsan-sdtirol-nsb,balsan-suedtirol,balsan,bari,barletta-trani-andria,barlettatraniandria,belluno,benevento,bergamo,bg,bi,biella,bl,bn,bo,bologna,bolzano-altoadige,bolzano,bozen-sudtirol,xn--bozen-sdtirol-2ob,bozen-suedtirol,bozen,br,brescia,brindisi,bs,bt,bulsan-sudtirol,xn--bulsan-sdtirol-nsb,bulsan-suedtirol,bulsan,bz,ca,cagliari,caltanissetta,campidano-medio,campidanomedio,campobasso,carbonia-iglesias,carboniaiglesias,carrara-massa,carraramassa,caserta,catania,catanzaro,cb,ce,cesena-forli,xn--cesena-forl-mcb,cesenaforli,xn--cesenaforl-i8a,ch,chieti,ci,cl,cn,co,como,cosenza,cr,cremona,crotone,cs,ct,cuneo,cz,dell-ogliastra,dellogliastra,en,enna,fc,fe,fermo,ferrara,fg,fi,firenze,florence,fm,foggia,forli-cesena,xn--forl-cesena-fcb,forlicesena,xn--forlcesena-c8a,fr,frosinone,ge,genoa,genova,go,gorizia,gr,grosseto,iglesias-carbonia,iglesiascarbonia,im,imperia,is,isernia,kr,la-spezia,laquila,laspezia,latina,lc,le,lecce,lecco,li,livorno,lo,lodi,lt,lu,lucca,macerata,mantova,massa-carrara,massacarrara,matera,mb,mc,me,medio-campidano,mediocampidano,messina,mi,milan,milano,mn,mo,modena,monza-brianza,monza-e-della-brianza,monza,monzabrianza,monzaebrianza,monzaedellabrianza,ms,mt,na,naples,napoli,no,novara,nu,nuoro,og,ogliastra,olbia-tempio,olbiatempio,or,oristano,ot,pa,padova,padua,palermo,parma,pavia,pc,pd,pe,perugia,pesaro-urbino,pesarourbino,pescara,pg,pi,piacenza,pisa,pistoia,pn,po,pordenone,potenza,pr,prato,pt,pu,pv,pz,ra,ragusa,ravenna,rc,re,reggio-calabria,reggio-emilia,reggiocalabria,reggioemilia,rg,ri,rieti,rimini,rm,rn,ro,roma,rome,rovigo,sa,salerno,sassari,savona,si,siena,siracusa,so,sondrio,sp,sr,ss,suedtirol,xn--sdtirol-n2a,sv,ta,taranto,te,tempio-olbia,tempioolbia,teramo,terni,tn,to,torino,tp,tr,trani-andria-barletta,trani-barletta-andria,traniandriabarletta,tranibarlettaandria,trapani,trento,treviso,trieste,ts,turin,tv,ud,udine,urbino-pesaro,urbinopesaro,va,varese,vb,vc,ve,venezia,venice,verbania,vercelli,verona,vi,vibo-valentia,vibovalentia,vicenza,viterbo,vr,vs,vt,vv<je>co,net,org<jm>*<jo>com,org,net,edu,sch,gov,mil,name<jobs,jp>ac,ad,co,ed,go,gr,lg,ne,or,aichi>aisai,ama,anjo,asuke,chiryu,chita,fuso,gamagori,handa,hazu,hekinan,higashiura,ichinomiya,inazawa,inuyama,isshiki,iwakura,kanie,kariya,kasugai,kira,kiyosu,komaki,konan,kota,mihama,miyoshi,nishio,nisshin,obu,oguchi,oharu,okazaki,owariasahi,seto,shikatsu,shinshiro,shitara,tahara,takahama,tobishima,toei,togo,tokai,tokoname,toyoake,toyohashi,toyokawa,toyone,toyota,tsushima,yatomi<akita>akita,daisen,fujisato,gojome,hachirogata,happou,higashinaruse,honjo,honjyo,ikawa,kamikoani,kamioka,katagami,kazuno,kitaakita,kosaka,kyowa,misato,mitane,moriyoshi,nikaho,noshiro,odate,oga,ogata,semboku,yokote,yurihonjo<aomori>aomori,gonohe,hachinohe,hashikami,hiranai,hirosaki,itayanagi,kuroishi,misawa,mutsu,nakadomari,noheji,oirase,owani,rokunohe,sannohe,shichinohe,shingo,takko,towada,tsugaru,tsuruta<chiba>abiko,asahi,chonan,chosei,choshi,chuo,funabashi,futtsu,hanamigawa,ichihara,ichikawa,ichinomiya,inzai,isumi,kamagaya,kamogawa,kashiwa,katori,katsuura,kimitsu,kisarazu,kozaki,kujukuri,kyonan,matsudo,midori,mihama,minamiboso,mobara,mutsuzawa,nagara,nagareyama,narashino,narita,noda,oamishirasato,omigawa,onjuku,otaki,sakae,sakura,shimofusa,shirako,shiroi,shisui,sodegaura,sosa,tako,tateyama,togane,tohnosho,tomisato,urayasu,yachimata,yachiyo,yokaichiba,yokoshibahikari,yotsukaido<ehime>ainan,honai,ikata,imabari,iyo,kamijima,kihoku,kumakogen,masaki,matsuno,matsuyama,namikata,niihama,ozu,saijo,seiyo,shikokuchuo,tobe,toon,uchiko,uwajima,yawatahama<fukui>echizen,eiheiji,fukui,ikeda,katsuyama,mihama,minamiechizen,obama,ohi,ono,sabae,sakai,takahama,tsuruga,wakasa<fukuoka>ashiya,buzen,chikugo,chikuho,chikujo,chikushino,chikuzen,chuo,dazaifu,fukuchi,hakata,higashi,hirokawa,hisayama,iizuka,inatsuki,kaho,kasuga,kasuya,kawara,keisen,koga,kurate,kurogi,kurume,minami,miyako,miyama,miyawaka,mizumaki,munakata,nakagawa,nakama,nishi,nogata,ogori,okagaki,okawa,oki,omuta,onga,onojo,oto,saigawa,sasaguri,shingu,shinyoshitomi,shonai,soeda,sue,tachiarai,tagawa,takata,toho,toyotsu,tsuiki,ukiha,umi,usui,yamada,yame,yanagawa,yukuhashi<fukushima>aizubange,aizumisato,aizuwakamatsu,asakawa,bandai,date,fukushima,furudono,futaba,hanawa,higashi,hirata,hirono,iitate,inawashiro,ishikawa,iwaki,izumizaki,kagamiishi,kaneyama,kawamata,kitakata,kitashiobara,koori,koriyama,kunimi,miharu,mishima,namie,nango,nishiaizu,nishigo,okuma,omotego,ono,otama,samegawa,shimogo,shirakawa,showa,soma,sukagawa,taishin,tamakawa,tanagura,tenei,yabuki,yamato,yamatsuri,yanaizu,yugawa<gifu>anpachi,ena,gifu,ginan,godo,gujo,hashima,hichiso,hida,higashishirakawa,ibigawa,ikeda,kakamigahara,kani,kasahara,kasamatsu,kawaue,kitagata,mino,minokamo,mitake,mizunami,motosu,nakatsugawa,ogaki,sakahogi,seki,sekigahara,shirakawa,tajimi,takayama,tarui,toki,tomika,wanouchi,yamagata,yaotsu,yoro<gunma>annaka,chiyoda,fujioka,higashiagatsuma,isesaki,itakura,kanna,kanra,katashina,kawaba,kiryu,kusatsu,maebashi,meiwa,midori,minakami,naganohara,nakanojo,nanmoku,numata,oizumi,ora,ota,shibukawa,shimonita,shinto,showa,takasaki,takayama,tamamura,tatebayashi,tomioka,tsukiyono,tsumagoi,ueno,yoshioka<hiroshima>asaminami,daiwa,etajima,fuchu,fukuyama,hatsukaichi,higashihiroshima,hongo,jinsekikogen,kaita,kui,kumano,kure,mihara,miyoshi,naka,onomichi,osakikamijima,otake,saka,sera,seranishi,shinichi,shobara,takehara<hokkaido>abashiri,abira,aibetsu,akabira,akkeshi,asahikawa,ashibetsu,ashoro,assabu,atsuma,bibai,biei,bifuka,bihoro,biratori,chippubetsu,chitose,date,ebetsu,embetsu,eniwa,erimo,esan,esashi,fukagawa,fukushima,furano,furubira,haboro,hakodate,hamatonbetsu,hidaka,higashikagura,higashikawa,hiroo,hokuryu,hokuto,honbetsu,horokanai,horonobe,ikeda,imakane,ishikari,iwamizawa,iwanai,kamifurano,kamikawa,kamishihoro,kamisunagawa,kamoenai,kayabe,kembuchi,kikonai,kimobetsu,kitahiroshima,kitami,kiyosato,koshimizu,kunneppu,kuriyama,kuromatsunai,kushiro,kutchan,kyowa,mashike,matsumae,mikasa,minamifurano,mombetsu,moseushi,mukawa,muroran,naie,nakagawa,nakasatsunai,nakatombetsu,nanae,nanporo,nayoro,nemuro,niikappu,niki,nishiokoppe,noboribetsu,numata,obihiro,obira,oketo,okoppe,otaru,otobe,otofuke,otoineppu,oumu,ozora,pippu,rankoshi,rebun,rikubetsu,rishiri,rishirifuji,saroma,sarufutsu,shakotan,shari,shibecha,shibetsu,shikabe,shikaoi,shimamaki,shimizu,shimokawa,shinshinotsu,shintoku,shiranuka,shiraoi,shiriuchi,sobetsu,sunagawa,taiki,takasu,takikawa,takinoue,teshikaga,tobetsu,tohma,tomakomai,tomari,toya,toyako,toyotomi,toyoura,tsubetsu,tsukigata,urakawa,urausu,uryu,utashinai,wakkanai,wassamu,yakumo,yoichi<hyogo>aioi,akashi,ako,amagasaki,aogaki,asago,ashiya,awaji,fukusaki,goshiki,harima,himeji,ichikawa,inagawa,itami,kakogawa,kamigori,kamikawa,kasai,kasuga,kawanishi,miki,minamiawaji,nishinomiya,nishiwaki,ono,sanda,sannan,sasayama,sayo,shingu,shinonsen,shiso,sumoto,taishi,taka,takarazuka,takasago,takino,tamba,tatsuno,toyooka,yabu,yashiro,yoka,yokawa<ibaraki>ami,asahi,bando,chikusei,daigo,fujishiro,hitachi,hitachinaka,hitachiomiya,hitachiota,ibaraki,ina,inashiki,itako,iwama,joso,kamisu,kasama,kashima,kasumigaura,koga,miho,mito,moriya,naka,namegata,oarai,ogawa,omitama,ryugasaki,sakai,sakuragawa,shimodate,shimotsuma,shirosato,sowa,suifu,takahagi,tamatsukuri,tokai,tomobe,tone,toride,tsuchiura,tsukuba,uchihara,ushiku,yachiyo,yamagata,yawara,yuki<ishikawa>anamizu,hakui,hakusan,kaga,kahoku,kanazawa,kawakita,komatsu,nakanoto,nanao,nomi,nonoichi,noto,shika,suzu,tsubata,tsurugi,uchinada,wajima<iwate>fudai,fujisawa,hanamaki,hiraizumi,hirono,ichinohe,ichinoseki,iwaizumi,iwate,joboji,kamaishi,kanegasaki,karumai,kawai,kitakami,kuji,kunohe,kuzumaki,miyako,mizusawa,morioka,ninohe,noda,ofunato,oshu,otsuchi,rikuzentakata,shiwa,shizukuishi,sumita,tanohata,tono,yahaba,yamada<kagawa>ayagawa,higashikagawa,kanonji,kotohira,manno,marugame,mitoyo,naoshima,sanuki,tadotsu,takamatsu,tonosho,uchinomi,utazu,zentsuji<kagoshima>akune,amami,hioki,isa,isen,izumi,kagoshima,kanoya,kawanabe,kinko,kouyama,makurazaki,matsumoto,minamitane,nakatane,nishinoomote,satsumasendai,soo,tarumizu,yusui<kanagawa>aikawa,atsugi,ayase,chigasaki,ebina,fujisawa,hadano,hakone,hiratsuka,isehara,kaisei,kamakura,kiyokawa,matsuda,minamiashigara,miura,nakai,ninomiya,odawara,oi,oiso,sagamihara,samukawa,tsukui,yamakita,yamato,yokosuka,yugawara,zama,zushi<kochi>aki,geisei,hidaka,higashitsuno,ino,kagami,kami,kitagawa,kochi,mihara,motoyama,muroto,nahari,nakamura,nankoku,nishitosa,niyodogawa,ochi,okawa,otoyo,otsuki,sakawa,sukumo,susaki,tosa,tosashimizu,toyo,tsuno,umaji,yasuda,yusuhara<kumamoto>amakusa,arao,aso,choyo,gyokuto,kamiamakusa,kikuchi,kumamoto,mashiki,mifune,minamata,minamioguni,nagasu,nishihara,oguni,ozu,sumoto,takamori,uki,uto,yamaga,yamato,yatsushiro<kyoto>ayabe,fukuchiyama,higashiyama,ide,ine,joyo,kameoka,kamo,kita,kizu,kumiyama,kyotamba,kyotanabe,kyotango,maizuru,minami,minamiyamashiro,miyazu,muko,nagaokakyo,nakagyo,nantan,oyamazaki,sakyo,seika,tanabe,uji,ujitawara,wazuka,yamashina,yawata<mie>asahi,inabe,ise,kameyama,kawagoe,kiho,kisosaki,kiwa,komono,kumano,kuwana,matsusaka,meiwa,mihama,minamiise,misugi,miyama,nabari,shima,suzuka,tado,taiki,taki,tamaki,toba,tsu,udono,ureshino,watarai,yokkaichi<miyagi>furukawa,higashimatsushima,ishinomaki,iwanuma,kakuda,kami,kawasaki,marumori,matsushima,minamisanriku,misato,murata,natori,ogawara,ohira,onagawa,osaki,rifu,semine,shibata,shichikashuku,shikama,shiogama,shiroishi,tagajo,taiwa,tome,tomiya,wakuya,watari,yamamoto,zao<miyazaki>aya,ebino,gokase,hyuga,kadogawa,kawaminami,kijo,kitagawa,kitakata,kitaura,kobayashi,kunitomi,kushima,mimata,miyakonojo,miyazaki,morotsuka,nichinan,nishimera,nobeoka,saito,shiiba,shintomi,takaharu,takanabe,takazaki,tsuno<nagano>achi,agematsu,anan,aoki,asahi,azumino,chikuhoku,chikuma,chino,fujimi,hakuba,hara,hiraya,iida,iijima,iiyama,iizuna,ikeda,ikusaka,ina,karuizawa,kawakami,kiso,kisofukushima,kitaaiki,komagane,komoro,matsukawa,matsumoto,miasa,minamiaiki,minamimaki,minamiminowa,minowa,miyada,miyota,mochizuki,nagano,nagawa,nagiso,nakagawa,nakano,nozawaonsen,obuse,ogawa,okaya,omachi,omi,ookuwa,ooshika,otaki,otari,sakae,sakaki,saku,sakuho,shimosuwa,shinanomachi,shiojiri,suwa,suzaka,takagi,takamori,takayama,tateshina,tatsuno,togakushi,togura,tomi,ueda,wada,yamagata,yamanouchi,yasaka,yasuoka<nagasaki>chijiwa,futsu,goto,hasami,hirado,iki,isahaya,kawatana,kuchinotsu,matsuura,nagasaki,obama,omura,oseto,saikai,sasebo,seihi,shimabara,shinkamigoto,togitsu,tsushima,unzen<nara>ando,gose,heguri,higashiyoshino,ikaruga,ikoma,kamikitayama,kanmaki,kashiba,kashihara,katsuragi,kawai,kawakami,kawanishi,koryo,kurotaki,mitsue,miyake,nara,nosegawa,oji,ouda,oyodo,sakurai,sango,shimoichi,shimokitayama,shinjo,soni,takatori,tawaramoto,tenkawa,tenri,uda,yamatokoriyama,yamatotakada,yamazoe,yoshino<niigata>aga,agano,gosen,itoigawa,izumozaki,joetsu,kamo,kariwa,kashiwazaki,minamiuonuma,mitsuke,muika,murakami,myoko,nagaoka,niigata,ojiya,omi,sado,sanjo,seiro,seirou,sekikawa,shibata,tagami,tainai,tochio,tokamachi,tsubame,tsunan,uonuma,yahiko,yoita,yuzawa<oita>beppu,bungoono,bungotakada,hasama,hiji,himeshima,hita,kamitsue,kokonoe,kuju,kunisaki,kusu,oita,saiki,taketa,tsukumi,usa,usuki,yufu<okayama>akaiwa,asakuchi,bizen,hayashima,ibara,kagamino,kasaoka,kibichuo,kumenan,kurashiki,maniwa,misaki,nagi,niimi,nishiawakura,okayama,satosho,setouchi,shinjo,shoo,soja,takahashi,tamano,tsuyama,wake,yakage<okinawa>aguni,ginowan,ginoza,gushikami,haebaru,higashi,hirara,iheya,ishigaki,ishikawa,itoman,izena,kadena,kin,kitadaito,kitanakagusuku,kumejima,kunigami,minamidaito,motobu,nago,naha,nakagusuku,nakijin,nanjo,nishihara,ogimi,okinawa,onna,shimoji,taketomi,tarama,tokashiki,tomigusuku,tonaki,urasoe,uruma,yaese,yomitan,yonabaru,yonaguni,zamami<osaka>abeno,chihayaakasaka,chuo,daito,fujiidera,habikino,hannan,higashiosaka,higashisumiyoshi,higashiyodogawa,hirakata,ibaraki,ikeda,izumi,izumiotsu,izumisano,kadoma,kaizuka,kanan,kashiwara,katano,kawachinagano,kishiwada,kita,kumatori,matsubara,minato,minoh,misaki,moriguchi,neyagawa,nishi,nose,osakasayama,sakai,sayama,sennan,settsu,shijonawate,shimamoto,suita,tadaoka,taishi,tajiri,takaishi,takatsuki,tondabayashi,toyonaka,toyono,yao<saga>ariake,arita,fukudomi,genkai,hamatama,hizen,imari,kamimine,kanzaki,karatsu,kashima,kitagata,kitahata,kiyama,kouhoku,kyuragi,nishiarita,ogi,omachi,ouchi,saga,shiroishi,taku,tara,tosu,yoshinogari<saitama>arakawa,asaka,chichibu,fujimi,fujimino,fukaya,hanno,hanyu,hasuda,hatogaya,hatoyama,hidaka,higashichichibu,higashimatsuyama,honjo,ina,iruma,iwatsuki,kamiizumi,kamikawa,kamisato,kasukabe,kawagoe,kawaguchi,kawajima,kazo,kitamoto,koshigaya,kounosu,kuki,kumagaya,matsubushi,minano,misato,miyashiro,miyoshi,moroyama,nagatoro,namegawa,niiza,ogano,ogawa,ogose,okegawa,omiya,otaki,ranzan,ryokami,saitama,sakado,satte,sayama,shiki,shiraoka,soka,sugito,toda,tokigawa,tokorozawa,tsurugashima,urawa,warabi,yashio,yokoze,yono,yorii,yoshida,yoshikawa,yoshimi<shiga>aisho,gamo,higashiomi,hikone,koka,konan,kosei,koto,kusatsu,maibara,moriyama,nagahama,nishiazai,notogawa,omihachiman,otsu,ritto,ryuoh,takashima,takatsuki,torahime,toyosato,yasu<shimane>akagi,ama,gotsu,hamada,higashiizumo,hikawa,hikimi,izumo,kakinoki,masuda,matsue,misato,nishinoshima,ohda,okinoshima,okuizumo,shimane,tamayu,tsuwano,unnan,yakumo,yasugi,yatsuka<shizuoka>arai,atami,fuji,fujieda,fujikawa,fujinomiya,fukuroi,gotemba,haibara,hamamatsu,higashiizu,ito,iwata,izu,izunokuni,kakegawa,kannami,kawanehon,kawazu,kikugawa,kosai,makinohara,matsuzaki,minamiizu,mishima,morimachi,nishiizu,numazu,omaezaki,shimada,shimizu,shimoda,shizuoka,susono,yaizu,yoshida<tochigi>ashikaga,bato,haga,ichikai,iwafune,kaminokawa,kanuma,karasuyama,kuroiso,mashiko,mibu,moka,motegi,nasu,nasushiobara,nikko,nishikata,nogi,ohira,ohtawara,oyama,sakura,sano,shimotsuke,shioya,takanezawa,tochigi,tsuga,ujiie,utsunomiya,yaita<tokushima>aizumi,anan,ichiba,itano,kainan,komatsushima,matsushige,mima,minami,miyoshi,mugi,nakagawa,naruto,sanagochi,shishikui,tokushima,wajiki<tokyo>adachi,akiruno,akishima,aogashima,arakawa,bunkyo,chiyoda,chofu,chuo,edogawa,fuchu,fussa,hachijo,hachioji,hamura,higashikurume,higashimurayama,higashiyamato,hino,hinode,hinohara,inagi,itabashi,katsushika,kita,kiyose,kodaira,koganei,kokubunji,komae,koto,kouzushima,kunitachi,machida,meguro,minato,mitaka,mizuho,musashimurayama,musashino,nakano,nerima,ogasawara,okutama,ome,oshima,ota,setagaya,shibuya,shinagawa,shinjuku,suginami,sumida,tachikawa,taito,tama,toshima<tottori>chizu,hino,kawahara,koge,kotoura,misasa,nanbu,nichinan,sakaiminato,tottori,wakasa,yazu,yonago<toyama>asahi,fuchu,fukumitsu,funahashi,himi,imizu,inami,johana,kamiichi,kurobe,nakaniikawa,namerikawa,nanto,nyuzen,oyabe,taira,takaoka,tateyama,toga,tonami,toyama,unazuki,uozu,yamada<wakayama>arida,aridagawa,gobo,hashimoto,hidaka,hirogawa,inami,iwade,kainan,kamitonda,katsuragi,kimino,kinokawa,kitayama,koya,koza,kozagawa,kudoyama,kushimoto,mihama,misato,nachikatsuura,shingu,shirahama,taiji,tanabe,wakayama,yuasa,yura<yamagata>asahi,funagata,higashine,iide,kahoku,kaminoyama,kaneyama,kawanishi,mamurogawa,mikawa,murayama,nagai,nakayama,nanyo,nishikawa,obanazawa,oe,oguni,ohkura,oishida,sagae,sakata,sakegawa,shinjo,shirataka,shonai,takahata,tendo,tozawa,tsuruoka,yamagata,yamanobe,yonezawa,yuza<yamaguchi>abu,hagi,hikari,hofu,iwakuni,kudamatsu,mitou,nagato,oshima,shimonoseki,shunan,tabuse,tokuyama,toyota,ube,yuu<yamanashi>chuo,doshi,fuefuki,fujikawa,fujikawaguchiko,fujiyoshida,hayakawa,hokuto,ichikawamisato,kai,kofu,koshu,kosuge,minami-alps,minobu,nakamichi,nanbu,narusawa,nirasaki,nishikatsura,oshino,otsuki,showa,tabayama,tsuru,uenohara,yamanakako,yamanashi<xn--4pvxs,xn--vgu402c,xn--c3s14m,xn--f6qx53a,xn--8pvr4u,xn--uist22h,xn--djrs72d6uy,xn--mkru45i,xn--0trq7p7nn,xn--8ltr62k,xn--2m4a15e,xn--efvn9s,xn--32vp30h,xn--4it797k,xn--1lqs71d,xn--5rtp49c,xn--5js045d,xn--ehqz56n,xn--1lqs03n,xn--qqqt11m,xn--kbrq7o,xn--pssu33l,xn--ntsq17g,xn--uisz3g,xn--6btw5a,xn--1ctwo,xn--6orx2r,xn--rht61e,xn--rht27z,xn--djty4k,xn--nit225k,xn--rht3d,xn--klty5x,xn--kltx9a,xn--kltp7d,xn--uuwu58a,xn--zbx025d,xn--ntso0iqx3a,xn--elqq16h,xn--4it168d,xn--klt787d,xn--rny31h,xn--7t0a264c,xn--5rtq34k,xn--k7yn95e,xn--tor131o,xn--d5qv7z876c,kawasaki>*,!city<kitakyushu>*,!city<kobe>*,!city<nagoya>*,!city<sapporo>*,!city<sendai>*,!city<yokohama>*,!city<<ke>ac,co,go,info,me,mobi,ne,or,sc<kg>org,net,com,edu,gov,mil<kh>*<ki>edu,biz,net,org,gov,info,com<km>org,nom,gov,prd,tm,edu,mil,ass,com,coop,asso,presse,medecin,notaires,pharmaciens,veterinaire,gouv<kn>net,org,edu,gov<kp>com,edu,gov,org,rep,tra<kr>ac,co,es,go,hs,kg,mil,ms,ne,or,pe,re,sc,busan,chungbuk,chungnam,daegu,daejeon,gangwon,gwangju,gyeongbuk,gyeonggi,gyeongnam,incheon,jeju,jeonbuk,jeonnam,seoul,ulsan<kw>com,edu,emb,gov,ind,net,org<ky>com,edu,net,org<kz>org,edu,net,gov,mil,com<la>int,net,info,edu,gov,per,com,org<lb>com,edu,gov,net,org<lc>com,net,co,org,edu,gov<li,lk>gov,sch,net,int,com,org,edu,ngo,soc,web,ltd,assn,grp,hotel,ac<lr>com,edu,gov,org,net<ls>ac,biz,co,edu,gov,info,net,org,sc<lt>gov<lu,lv>com,edu,gov,org,mil,id,net,asn,conf<ly>com,net,gov,plc,edu,sch,med,org,id<ma>co,net,gov,org,ac,press<mc>tm,asso<md,me>co,net,org,edu,ac,gov,its,priv<mg>org,nom,gov,prd,tm,edu,mil,com,co<mh,mil,mk>com,org,net,edu,gov,inf,name<ml>com,edu,gouv,gov,net,org,presse<mm>*<mn>gov,edu,org<mo>com,net,org,edu,gov<mobi,mp,mq,mr>gov<ms>com,edu,gov,net,org<mt>com,edu,net,org<mu>com,net,org,gov,ac,co,or<museum>academy,agriculture,air,airguard,alabama,alaska,amber,ambulance,american,americana,americanantiques,americanart,amsterdam,and,annefrank,anthro,anthropology,antiques,aquarium,arboretum,archaeological,archaeology,architecture,art,artanddesign,artcenter,artdeco,arteducation,artgallery,arts,artsandcrafts,asmatart,assassination,assisi,association,astronomy,atlanta,austin,australia,automotive,aviation,axis,badajoz,baghdad,bahn,bale,baltimore,barcelona,baseball,basel,baths,bauern,beauxarts,beeldengeluid,bellevue,bergbau,berkeley,berlin,bern,bible,bilbao,bill,birdart,birthplace,bonn,boston,botanical,botanicalgarden,botanicgarden,botany,brandywinevalley,brasil,bristol,british,britishcolumbia,broadcast,brunel,brussel,brussels,bruxelles,building,burghof,bus,bushey,cadaques,california,cambridge,can,canada,capebreton,carrier,cartoonart,casadelamoneda,castle,castres,celtic,center,chattanooga,cheltenham,chesapeakebay,chicago,children,childrens,childrensgarden,chiropractic,chocolate,christiansburg,cincinnati,cinema,circus,civilisation,civilization,civilwar,clinton,clock,coal,coastaldefence,cody,coldwar,collection,colonialwilliamsburg,coloradoplateau,columbia,columbus,communication,communications,community,computer,computerhistory,xn--comunicaes-v6a2o,contemporary,contemporaryart,convent,copenhagen,corporation,xn--correios-e-telecomunicaes-ghc29a,corvette,costume,countryestate,county,crafts,cranbrook,creation,cultural,culturalcenter,culture,cyber,cymru,dali,dallas,database,ddr,decorativearts,delaware,delmenhorst,denmark,depot,design,detroit,dinosaur,discovery,dolls,donostia,durham,eastafrica,eastcoast,education,educational,egyptian,eisenbahn,elburg,elvendrell,embroidery,encyclopedic,england,entomology,environment,environmentalconservation,epilepsy,essex,estate,ethnology,exeter,exhibition,family,farm,farmequipment,farmers,farmstead,field,figueres,filatelia,film,fineart,finearts,finland,flanders,florida,force,fortmissoula,fortworth,foundation,francaise,frankfurt,franziskaner,freemasonry,freiburg,fribourg,frog,fundacio,furniture,gallery,garden,gateway,geelvinck,gemological,geology,georgia,giessen,glas,glass,gorge,grandrapids,graz,guernsey,halloffame,hamburg,handson,harvestcelebration,hawaii,health,heimatunduhren,hellas,helsinki,hembygdsforbund,heritage,histoire,historical,historicalsociety,historichouses,historisch,historisches,history,historyofscience,horology,house,humanities,illustration,imageandsound,indian,indiana,indianapolis,indianmarket,intelligence,interactive,iraq,iron,isleofman,jamison,jefferson,jerusalem,jewelry,jewish,jewishart,jfk,journalism,judaica,judygarland,juedisches,juif,karate,karikatur,kids,koebenhavn,koeln,kunst,kunstsammlung,kunstunddesign,labor,labour,lajolla,lancashire,landes,lans,xn--lns-qla,larsson,lewismiller,lincoln,linz,living,livinghistory,localhistory,london,losangeles,louvre,loyalist,lucerne,luxembourg,luzern,mad,madrid,mallorca,manchester,mansion,mansions,manx,marburg,maritime,maritimo,maryland,marylhurst,media,medical,medizinhistorisches,meeres,memorial,mesaverde,michigan,midatlantic,military,mill,miners,mining,minnesota,missile,missoula,modern,moma,money,monmouth,monticello,montreal,moscow,motorcycle,muenchen,muenster,mulhouse,muncie,museet,museumcenter,museumvereniging,music,national,nationalfirearms,nationalheritage,nativeamerican,naturalhistory,naturalhistorymuseum,naturalsciences,nature,naturhistorisches,natuurwetenschappen,naumburg,naval,nebraska,neues,newhampshire,newjersey,newmexico,newport,newspaper,newyork,niepce,norfolk,north,nrw,nyc,nyny,oceanographic,oceanographique,omaha,online,ontario,openair,oregon,oregontrail,otago,oxford,pacific,paderborn,palace,paleo,palmsprings,panama,paris,pasadena,pharmacy,philadelphia,philadelphiaarea,philately,phoenix,photography,pilots,pittsburgh,planetarium,plantation,plants,plaza,portal,portland,portlligat,posts-and-telecommunications,preservation,presidio,press,project,public,pubol,quebec,railroad,railway,research,resistance,riodejaneiro,rochester,rockart,roma,russia,saintlouis,salem,salvadordali,salzburg,sandiego,sanfrancisco,santabarbara,santacruz,santafe,saskatchewan,satx,savannahga,schlesisches,schoenbrunn,schokoladen,school,schweiz,science,scienceandhistory,scienceandindustry,sciencecenter,sciencecenters,science-fiction,sciencehistory,sciences,sciencesnaturelles,scotland,seaport,settlement,settlers,shell,sherbrooke,sibenik,silk,ski,skole,society,sologne,soundandvision,southcarolina,southwest,space,spy,square,stadt,stalbans,starnberg,state,stateofdelaware,station,steam,steiermark,stjohn,stockholm,stpetersburg,stuttgart,suisse,surgeonshall,surrey,svizzera,sweden,sydney,tank,tcm,technology,telekommunikation,television,texas,textile,theater,time,timekeeping,topology,torino,touch,town,transport,tree,trolley,trust,trustee,uhren,ulm,undersea,university,usa,usantiques,usarts,uscountryestate,usculture,usdecorativearts,usgarden,ushistory,ushuaia,uslivinghistory,utah,uvic,valley,vantaa,versailles,viking,village,virginia,virtual,virtuel,vlaanderen,volkenkunde,wales,wallonie,war,washingtondc,watchandclock,watch-and-clock,western,westfalen,whaling,wildlife,williamsburg,windmill,workshop,york,yorkshire,yosemite,youth,zoological,zoology,xn--9dbhblg6di,xn--h1aegh<mv>aero,biz,com,coop,edu,gov,info,int,mil,museum,name,net,org,pro<mw>ac,biz,co,com,coop,edu,gov,int,museum,net,org<mx>com,org,gob,edu,net<my>biz,com,edu,gov,mil,name,net,org<mz>ac,adv,co,edu,gov,mil,net,org<na>info,pro,name,school,or,dr,us,mx,ca,in,cc,tv,ws,mobi,co,com,org<name,nc>asso,nom<ne,net,nf>com,net,per,rec,web,arts,firm,info,other,store<ng>com,edu,gov,i,mil,mobi,name,net,org,sch<ni>ac,biz,co,com,edu,gob,in,info,int,mil,net,nom,org,web<nl,no>fhs,vgs,fylkesbibl,folkebibl,museum,idrett,priv,mil,stat,dep,kommune,herad,aa>gs<ah>gs<bu>gs<fm>gs<hl>gs<hm>gs<jan-mayen>gs<mr>gs<nl>gs<nt>gs<of>gs<ol>gs<oslo>gs<rl>gs<sf>gs<st>gs<svalbard>gs<tm>gs<tr>gs<va>gs<vf>gs<akrehamn,xn--krehamn-dxa,algard,xn--lgrd-poac,arna,brumunddal,bryne,bronnoysund,xn--brnnysund-m8ac,drobak,xn--drbak-wua,egersund,fetsund,floro,xn--flor-jra,fredrikstad,hokksund,honefoss,xn--hnefoss-q1a,jessheim,jorpeland,xn--jrpeland-54a,kirkenes,kopervik,krokstadelva,langevag,xn--langevg-jxa,leirvik,mjondalen,xn--mjndalen-64a,mo-i-rana,mosjoen,xn--mosjen-eya,nesoddtangen,orkanger,osoyro,xn--osyro-wua,raholt,xn--rholt-mra,sandnessjoen,xn--sandnessjen-ogb,skedsmokorset,slattum,spjelkavik,stathelle,stavern,stjordalshalsen,xn--stjrdalshalsen-sqb,tananger,tranby,vossevangen,afjord,xn--fjord-lra,agdenes,al,xn--l-1fa,alesund,xn--lesund-hua,alstahaug,alta,xn--lt-liac,alaheadju,xn--laheadju-7ya,alvdal,amli,xn--mli-tla,amot,xn--mot-tla,andebu,andoy,xn--andy-ira,andasuolo,ardal,xn--rdal-poa,aremark,arendal,xn--s-1fa,aseral,xn--seral-lra,asker,askim,askvoll,askoy,xn--asky-ira,asnes,xn--snes-poa,audnedaln,aukra,aure,aurland,aurskog-holand,xn--aurskog-hland-jnb,austevoll,austrheim,averoy,xn--avery-yua,balestrand,ballangen,balat,xn--blt-elab,balsfjord,bahccavuotna,xn--bhccavuotna-k7a,bamble,bardu,beardu,beiarn,bajddar,xn--bjddar-pta,baidar,xn--bidr-5nac,berg,bergen,berlevag,xn--berlevg-jxa,bearalvahki,xn--bearalvhki-y4a,bindal,birkenes,bjarkoy,xn--bjarky-fya,bjerkreim,bjugn,bodo,xn--bod-2na,badaddja,xn--bdddj-mrabd,budejju,bokn,bremanger,bronnoy,xn--brnny-wuac,bygland,bykle,barum,xn--brum-voa,telemark>bo,xn--b-5ga<nordland>bo,xn--b-5ga,heroy,xn--hery-ira<bievat,xn--bievt-0qa,bomlo,xn--bmlo-gra,batsfjord,xn--btsfjord-9za,bahcavuotna,xn--bhcavuotna-s4a,dovre,drammen,drangedal,dyroy,xn--dyry-ira,donna,xn--dnna-gra,eid,eidfjord,eidsberg,eidskog,eidsvoll,eigersund,elverum,enebakk,engerdal,etne,etnedal,evenes,evenassi,xn--eveni-0qa01ga,evje-og-hornnes,farsund,fauske,fuossko,fuoisku,fedje,fet,finnoy,xn--finny-yua,fitjar,fjaler,fjell,flakstad,flatanger,flekkefjord,flesberg,flora,fla,xn--fl-zia,folldal,forsand,fosnes,frei,frogn,froland,frosta,frana,xn--frna-woa,froya,xn--frya-hra,fusa,fyresdal,forde,xn--frde-gra,gamvik,gangaviika,xn--ggaviika-8ya47h,gaular,gausdal,gildeskal,xn--gildeskl-g0a,giske,gjemnes,gjerdrum,gjerstad,gjesdal,gjovik,xn--gjvik-wua,gloppen,gol,gran,grane,granvin,gratangen,grimstad,grong,kraanghke,xn--kranghke-b0a,grue,gulen,hadsel,halden,halsa,hamar,hamaroy,habmer,xn--hbmer-xqa,hapmir,xn--hpmir-xqa,hammerfest,hammarfeasta,xn--hmmrfeasta-s4ac,haram,hareid,harstad,hasvik,aknoluokta,xn--koluokta-7ya57h,hattfjelldal,aarborte,haugesund,hemne,hemnes,hemsedal,more-og-romsdal>heroy,sande<xn--mre-og-romsdal-qqb>xn--hery-ira,sande<hitra,hjartdal,hjelmeland,hobol,xn--hobl-ira,hof,hol,hole,holmestrand,holtalen,xn--holtlen-hxa,hornindal,horten,hurdal,hurum,hvaler,hyllestad,hagebostad,xn--hgebostad-g3a,hoyanger,xn--hyanger-q1a,hoylandet,xn--hylandet-54a,ha,xn--h-2fa,ibestad,inderoy,xn--indery-fya,iveland,jevnaker,jondal,jolster,xn--jlster-bya,karasjok,karasjohka,xn--krjohka-hwab49j,karlsoy,galsa,xn--gls-elac,karmoy,xn--karmy-yua,kautokeino,guovdageaidnu,klepp,klabu,xn--klbu-woa,kongsberg,kongsvinger,kragero,xn--krager-gya,kristiansand,kristiansund,krodsherad,xn--krdsherad-m8a,kvalsund,rahkkeravju,xn--rhkkervju-01af,kvam,kvinesdal,kvinnherad,kviteseid,kvitsoy,xn--kvitsy-fya,kvafjord,xn--kvfjord-nxa,giehtavuoatna,kvanangen,xn--kvnangen-k0a,navuotna,xn--nvuotna-hwa,kafjord,xn--kfjord-iua,gaivuotna,xn--givuotna-8ya,larvik,lavangen,lavagis,loabat,xn--loabt-0qa,lebesby,davvesiida,leikanger,leirfjord,leka,leksvik,lenvik,leangaviika,xn--leagaviika-52b,lesja,levanger,lier,lierne,lillehammer,lillesand,lindesnes,lindas,xn--linds-pra,lom,loppa,lahppi,xn--lhppi-xqa,lund,lunner,luroy,xn--lury-ira,luster,lyngdal,lyngen,ivgu,lardal,lerdal,xn--lrdal-sra,lodingen,xn--ldingen-q1a,lorenskog,xn--lrenskog-54a,loten,xn--lten-gra,malvik,masoy,xn--msy-ula0h,muosat,xn--muost-0qa,mandal,marker,marnardal,masfjorden,meland,meldal,melhus,meloy,xn--mely-ira,meraker,xn--merker-kua,moareke,xn--moreke-jua,midsund,midtre-gauldal,modalen,modum,molde,moskenes,moss,mosvik,malselv,xn--mlselv-iua,malatvuopmi,xn--mlatvuopmi-s4a,namdalseid,aejrie,namsos,namsskogan,naamesjevuemie,xn--nmesjevuemie-tcba,laakesvuemie,nannestad,narvik,narviika,naustdal,nedre-eiker,akershus>nes<buskerud>nes<nesna,nesodden,nesseby,unjarga,xn--unjrga-rta,nesset,nissedal,nittedal,nord-aurdal,nord-fron,nord-odal,norddal,nordkapp,davvenjarga,xn--davvenjrga-y4a,nordre-land,nordreisa,raisa,xn--risa-5na,nore-og-uvdal,notodden,naroy,xn--nry-yla5g,notteroy,xn--nttery-byae,odda,oksnes,xn--ksnes-uua,oppdal,oppegard,xn--oppegrd-ixa,orkdal,orland,xn--rland-uua,orskog,xn--rskog-uua,orsta,xn--rsta-fra,hedmark>os,valer,xn--vler-qoa<hordaland>os<osen,osteroy,xn--ostery-fya,ostre-toten,xn--stre-toten-zcb,overhalla,ovre-eiker,xn--vre-eiker-k8a,oyer,xn--yer-zna,oygarden,xn--ygarden-p1a,oystre-slidre,xn--ystre-slidre-ujb,porsanger,porsangu,xn--porsgu-sta26f,porsgrunn,radoy,xn--rady-ira,rakkestad,rana,ruovat,randaberg,rauma,rendalen,rennebu,rennesoy,xn--rennesy-v1a,rindal,ringebu,ringerike,ringsaker,rissa,risor,xn--risr-ira,roan,rollag,rygge,ralingen,xn--rlingen-mxa,rodoy,xn--rdy-0nab,romskog,xn--rmskog-bya,roros,xn--rros-gra,rost,xn--rst-0na,royken,xn--ryken-vua,royrvik,xn--ryrvik-bya,rade,xn--rde-ula,salangen,siellak,saltdal,salat,xn--slt-elab,xn--slat-5na,samnanger,vestfold>sande<sandefjord,sandnes,sandoy,xn--sandy-yua,sarpsborg,sauda,sauherad,sel,selbu,selje,seljord,sigdal,siljan,sirdal,skaun,skedsmo,ski,skien,skiptvet,skjervoy,xn--skjervy-v1a,skierva,xn--skierv-uta,skjak,xn--skjk-soa,skodje,skanland,xn--sknland-fxa,skanit,xn--sknit-yqa,smola,xn--smla-hra,snillfjord,snasa,xn--snsa-roa,snoasa,snaase,xn--snase-nra,sogndal,sokndal,sola,solund,songdalen,sortland,spydeberg,stange,stavanger,steigen,steinkjer,stjordal,xn--stjrdal-s1a,stokke,stor-elvdal,stord,stordal,storfjord,omasvuotna,strand,stranda,stryn,sula,suldal,sund,sunndal,surnadal,sveio,svelvik,sykkylven,sogne,xn--sgne-gra,somna,xn--smna-gra,sondre-land,xn--sndre-land-0cb,sor-aurdal,xn--sr-aurdal-l8a,sor-fron,xn--sr-fron-q1a,sor-odal,xn--sr-odal-q1a,sor-varanger,xn--sr-varanger-ggb,matta-varjjat,xn--mtta-vrjjat-k7af,sorfold,xn--srfold-bya,sorreisa,xn--srreisa-q1a,sorum,xn--srum-gra,tana,deatnu,time,tingvoll,tinn,tjeldsund,dielddanuorri,tjome,xn--tjme-hra,tokke,tolga,torsken,tranoy,xn--trany-yua,tromso,xn--troms-zua,tromsa,romsa,trondheim,troandin,trysil,trana,xn--trna-woa,trogstad,xn--trgstad-r1a,tvedestrand,tydal,tynset,tysfjord,divtasvuodna,divttasvuotna,tysnes,tysvar,xn--tysvr-vra,tonsberg,xn--tnsberg-q1a,ullensaker,ullensvang,ulvik,utsira,vadso,xn--vads-jra,cahcesuolo,xn--hcesuolo-7ya35b,vaksdal,valle,vang,vanylven,vardo,xn--vard-jra,varggat,xn--vrggt-xqad,vefsn,vaapste,vega,vegarshei,xn--vegrshei-c0a,vennesla,verdal,verran,vestby,vestnes,vestre-slidre,vestre-toten,vestvagoy,xn--vestvgy-ixa6o,vevelstad,vik,vikna,vindafjord,volda,voss,varoy,xn--vry-yla5g,vagan,xn--vgan-qoa,voagat,vagsoy,xn--vgsy-qoa0j,vaga,xn--vg-yiab,ostfold>valer<xn--stfold-9xa>xn--vler-qoa<<np>*<nr>biz,info,gov,edu,org,net,com<nu,nz>ac,co,cri,geek,gen,govt,health,iwi,kiwi,maori,mil,xn--mori-qsa,net,org,parliament,school<om>co,com,edu,gov,med,museum,net,org,pro<onion,org,pa>ac,gob,com,org,sld,edu,net,ing,abo,med,nom<pe>edu,gob,nom,mil,org,com,net<pf>com,org,edu<pg>*<ph>com,net,org,gov,edu,ngo,mil,i<pk>com,net,edu,org,fam,biz,web,gov,gob,gok,gon,gop,gos,info<pl>com,net,org,aid,agro,atm,auto,biz,edu,gmina,gsm,info,mail,miasta,media,mil,nieruchomosci,nom,pc,powiat,priv,realestate,rel,sex,shop,sklep,sos,szkola,targi,tm,tourism,travel,turystyka,gov>ap,ic,is,us,kmpsp,kppsp,kwpsp,psp,wskr,kwp,mw,ug,um,umig,ugim,upow,uw,starostwo,pa,po,psse,pup,rzgw,sa,so,sr,wsa,sko,uzs,wiih,winb,pinb,wios,witd,wzmiuw,piw,wiw,griw,wif,oum,sdn,zp,uppo,mup,wuoz,konsulat,oirm<augustow,babia-gora,bedzin,beskidy,bialowieza,bialystok,bielawa,bieszczady,boleslawiec,bydgoszcz,bytom,cieszyn,czeladz,czest,dlugoleka,elblag,elk,glogow,gniezno,gorlice,grajewo,ilawa,jaworzno,jelenia-gora,jgora,kalisz,kazimierz-dolny,karpacz,kartuzy,kaszuby,katowice,kepno,ketrzyn,klodzko,kobierzyce,kolobrzeg,konin,konskowola,kutno,lapy,lebork,legnica,lezajsk,limanowa,lomza,lowicz,lubin,lukow,malbork,malopolska,mazowsze,mazury,mielec,mielno,mragowo,naklo,nowaruda,nysa,olawa,olecko,olkusz,olsztyn,opoczno,opole,ostroda,ostroleka,ostrowiec,ostrowwlkp,pila,pisz,podhale,podlasie,polkowice,pomorze,pomorskie,prochowice,pruszkow,przeworsk,pulawy,radom,rawa-maz,rybnik,rzeszow,sanok,sejny,slask,slupsk,sosnowiec,stalowa-wola,skoczow,starachowice,stargard,suwalki,swidnica,swiebodzin,swinoujscie,szczecin,szczytno,tarnobrzeg,tgory,turek,tychy,ustka,walbrzych,warmia,warszawa,waw,wegrow,wielun,wlocl,wloclawek,wodzislaw,wolomin,wroclaw,zachpomor,zagan,zarow,zgora,zgorzelec<pm,pn>gov,co,org,edu,net<post,pr>com,net,org,gov,edu,isla,pro,biz,info,name,est,prof,ac<pro>aaa,aca,acct,avocat,bar,cpa,eng,jur,law,med,recht<ps>edu,gov,sec,plo,com,org,net<pt>net,gov,org,edu,int,publ,com,nome<pw>co,ne,or,ed,go,belau<py>com,coop,edu,gov,mil,net,org<qa>com,edu,gov,mil,name,net,org,sch<re>asso,com,nom<ro>arts,com,firm,info,nom,nt,org,rec,store,tm,www<rs>ac,co,edu,gov,in,org<ru,rw>ac,co,coop,gov,mil,net,org<sa>com,net,org,gov,med,pub,edu,sch<sb>com,edu,gov,net,org<sc>com,gov,net,org,edu<sd>com,net,org,edu,med,tv,gov,info<se>a,ac,b,bd,brand,c,d,e,f,fh,fhsk,fhv,g,h,i,k,komforb,kommunalforbund,komvux,l,lanbib,m,n,naturbruksgymn,o,org,p,parti,pp,press,r,s,t,tm,u,w,x,y,z<sg>com,net,org,gov,edu,per<sh>com,net,gov,org,mil<si,sj,sk,sl>com,net,edu,gov,org<sm,sn>art,com,edu,gouv,org,perso,univ<so>com,edu,gov,me,net,org<sr,ss>biz,com,edu,gov,me,net,org,sch<st>co,com,consulado,edu,embaixada,mil,net,org,principe,saotome,store<su,sv>com,edu,gob,org,red<sx>gov<sy>edu,gov,net,mil,com,org<sz>co,ac,org<tc,td,tel,tf,tg,th>ac,co,go,in,mi,net,or<tj>ac,biz,co,com,edu,go,gov,int,mil,name,net,nic,org,test,web<tk,tl>gov<tm>com,co,org,net,nom,gov,mil,edu<tn>com,ens,fin,gov,ind,info,intl,mincom,nat,net,org,perso,tourism<to>com,gov,net,org,edu,mil<tr>av,bbs,bel,biz,com,dr,edu,gen,gov,info,mil,k12,kep,name,net,org,pol,tel,tsk,tv,web,nc>gov<<tt>co,com,org,net,biz,info,pro,int,coop,jobs,mobi,travel,museum,aero,name,gov,edu<tv,tw>edu,gov,mil,com,net,org,idv,game,ebiz,club,xn--zf0ao64a,xn--uc0atv,xn--czrw28b<tz>ac,co,go,hotel,info,me,mil,mobi,ne,or,sc,tv<ua>com,edu,gov,in,net,org,cherkassy,cherkasy,chernigov,chernihiv,chernivtsi,chernovtsy,ck,cn,cr,crimea,cv,dn,dnepropetrovsk,dnipropetrovsk,donetsk,dp,if,ivano-frankivsk,kh,kharkiv,kharkov,kherson,khmelnitskiy,khmelnytskyi,kiev,kirovograd,km,kr,krym,ks,kv,kyiv,lg,lt,lugansk,lutsk,lv,lviv,mk,mykolaiv,nikolaev,od,odesa,odessa,pl,poltava,rivne,rovno,rv,sb,sebastopol,sevastopol,sm,sumy,te,ternopil,uz,uzhgorod,vinnica,vinnytsia,vn,volyn,yalta,zaporizhzhe,zaporizhzhia,zhitomir,zhytomyr,zp,zt<ug>co,or,ac,sc,go,ne,com,org<uk>ac,co,gov,ltd,me,net,nhs,org,plc,police,sch>*<<us>dni,fed,isa,kids,nsn,ak>k12,cc,lib<al>k12,cc,lib<ar>k12,cc,lib<as>k12,cc,lib<az>k12,cc,lib<ca>k12,cc,lib<co>k12,cc,lib<ct>k12,cc,lib<dc>k12,cc,lib<de>k12,cc<fl>k12,cc,lib<ga>k12,cc,lib<gu>k12,cc,lib<hi>cc,lib<ia>k12,cc,lib<id>k12,cc,lib<il>k12,cc,lib<in>k12,cc,lib<ks>k12,cc,lib<ky>k12,cc,lib<la>k12,cc,lib<ma>k12>pvt,chtr,paroch<cc,lib<md>k12,cc,lib<me>k12,cc,lib<mi>k12,cc,lib,ann-arbor,cog,dst,eaton,gen,mus,tec,washtenaw<mn>k12,cc,lib<mo>k12,cc,lib<ms>k12,cc,lib<mt>k12,cc,lib<nc>k12,cc,lib<nd>cc,lib<ne>k12,cc,lib<nh>k12,cc,lib<nj>k12,cc,lib<nm>k12,cc,lib<nv>k12,cc,lib<ny>k12,cc,lib<oh>k12,cc,lib<ok>k12,cc,lib<or>k12,cc,lib<pa>k12,cc,lib<pr>k12,cc,lib<ri>cc,lib<sc>k12,cc,lib<sd>cc,lib<tn>k12,cc,lib<tx>k12,cc,lib<ut>k12,cc,lib<vi>k12,cc,lib<vt>k12,cc,lib<va>k12,cc,lib<wa>k12,cc,lib<wi>k12,cc,lib<wv>cc<wy>k12,cc,lib<<uy>com,edu,gub,mil,net,org<uz>co,com,net,org<va,vc>com,net,org,gov,mil,edu<ve>arts,bib,co,com,e12,edu,firm,gob,gov,info,int,mil,net,nom,org,rar,rec,store,tec,web<vg,vi>co,com,k12,net,org<vn>com,net,org,edu,gov,int,ac,biz,info,name,pro,health<vu>com,edu,net,org<wf,ws>com,net,org,gov,edu<yt,xn--mgbaam7a8h,xn--y9a3aq,xn--54b7fta0cc,xn--90ae,xn--mgbcpq6gpa1a,xn--90ais,xn--fiqs8s,xn--fiqz9s,xn--lgbbat1ad8j,xn--wgbh1c,xn--e1a4c,xn--qxa6a,xn--mgbah1a3hjkrd,xn--node,xn--qxam,xn--j6w193g>xn--55qx5d,xn--wcvs22d,xn--mxtq1m,xn--gmqw5a,xn--od0alg,xn--uc0atv<xn--2scrj9c,xn--3hcrj9c,xn--45br5cyl,xn--h2breg3eve,xn--h2brj9c8c,xn--mgbgu82a,xn--rvc1e0am3e,xn--h2brj9c,xn--mgbbh1a,xn--mgbbh1a71e,xn--fpcrj9c3d,xn--gecrj9c,xn--s9brj9c,xn--45brj9c,xn--xkc2dl3a5ee0h,xn--mgba3a4f16a,xn--mgba3a4fra,xn--mgbtx2b,xn--mgbayh7gpa,xn--3e0b707e,xn--80ao21a,xn--q7ce6a,xn--fzc2c9e2c,xn--xkc2al3hye2a,xn--mgbc0a9azcg,xn--d1alf,xn--l1acc,xn--mix891f,xn--mix082f,xn--mgbx4cd0ab,xn--mgb9awbf,xn--mgbai9azgqp6j,xn--mgbai9a5eva00b,xn--ygbi2ammx,xn--90a3ac>xn--o1ac,xn--c1avg,xn--90azh,xn--d1at,xn--o1ach,xn--80au<xn--p1ai,xn--wgbl6a,xn--mgberp4a5d4ar,xn--mgberp4a5d4a87g,xn--mgbqly7c0a67fbc,xn--mgbqly7cvafr,xn--mgbpl2fh,xn--yfro4i67o,xn--clchc0ea0b2g2a9gcd,xn--ogbpf8fl,xn--mgbtf8fl,xn--o3cw4h>xn--12c1fe0br,xn--12co0c3b4eva,xn--h3cuzk1di,xn--o3cyx2a,xn--m3ch0j3a,xn--12cfi8ixb8l<xn--pgbs0dh,xn--kpry57d,xn--kprw13d,xn--nnx388a,xn--j1amh,xn--mgb2ddes,xxx,ye>com,edu,gov,net,mil,org<za>ac,agric,alt,co,edu,gov,grondar,law,mil,net,ngo,nic,nis,nom,org,school,tm,web<zm>ac,biz,co,com,edu,gov,info,mil,net,org,sch<zw>ac,co,gov,mil,org<aaa,aarp,abarth,abb,abbott,abbvie,abc,able,abogado,abudhabi,academy,accenture,accountant,accountants,aco,actor,adac,ads,adult,aeg,aetna,afl,africa,agakhan,agency,aig,airbus,airforce,airtel,akdn,alfaromeo,alibaba,alipay,allfinanz,allstate,ally,alsace,alstom,amazon,americanexpress,americanfamily,amex,amfam,amica,amsterdam,analytics,android,anquan,anz,aol,apartments,app,apple,aquarelle,arab,aramco,archi,army,art,arte,asda,associates,athleta,attorney,auction,audi,audible,audio,auspost,author,auto,autos,avianca,aws,axa,azure,baby,baidu,banamex,bananarepublic,band,bank,bar,barcelona,barclaycard,barclays,barefoot,bargains,baseball,basketball,bauhaus,bayern,bbc,bbt,bbva,bcg,bcn,beats,beauty,beer,bentley,berlin,best,bestbuy,bet,bharti,bible,bid,bike,bing,bingo,bio,black,blackfriday,blockbuster,blog,bloomberg,blue,bms,bmw,bnpparibas,boats,boehringer,bofa,bom,bond,boo,book,booking,bosch,bostik,boston,bot,boutique,box,bradesco,bridgestone,broadway,broker,brother,brussels,bugatti,build,builders,business,buy,buzz,bzh,cab,cafe,cal,call,calvinklein,cam,camera,camp,cancerresearch,canon,capetown,capital,capitalone,car,caravan,cards,care,career,careers,cars,casa,case,cash,casino,catering,catholic,cba,cbn,cbre,cbs,center,ceo,cern,cfa,cfd,chanel,channel,charity,chase,chat,cheap,chintai,christmas,chrome,church,cipriani,circle,cisco,citadel,citi,citic,city,cityeats,claims,cleaning,click,clinic,clinique,clothing,cloud,club,clubmed,coach,codes,coffee,college,cologne,comcast,commbank,community,company,compare,computer,comsec,condos,construction,consulting,contact,contractors,cooking,cookingchannel,cool,corsica,country,coupon,coupons,courses,cpa,credit,creditcard,creditunion,cricket,crown,crs,cruise,cruises,cuisinella,cymru,cyou,dabur,dad,dance,data,date,dating,datsun,day,dclk,dds,deal,dealer,deals,degree,delivery,dell,deloitte,delta,democrat,dental,dentist,desi,design,dev,dhl,diamonds,diet,digital,direct,directory,discount,discover,dish,diy,dnp,docs,doctor,dog,domains,dot,download,drive,dtv,dubai,dunlop,dupont,durban,dvag,dvr,earth,eat,eco,edeka,education,email,emerck,energy,engineer,engineering,enterprises,epson,equipment,ericsson,erni,esq,estate,etisalat,eurovision,eus,events,exchange,expert,exposed,express,extraspace,fage,fail,fairwinds,faith,family,fan,fans,farm,farmers,fashion,fast,fedex,feedback,ferrari,ferrero,fiat,fidelity,fido,film,final,finance,financial,fire,firestone,firmdale,fish,fishing,fit,fitness,flickr,flights,flir,florist,flowers,fly,foo,food,foodnetwork,football,ford,forex,forsale,forum,foundation,fox,free,fresenius,frl,frogans,frontdoor,frontier,ftr,fujitsu,fun,fund,furniture,futbol,fyi,gal,gallery,gallo,gallup,game,games,gap,garden,gay,gbiz,gdn,gea,gent,genting,george,ggee,gift,gifts,gives,giving,glass,gle,global,globo,gmail,gmbh,gmo,gmx,godaddy,gold,goldpoint,golf,goo,goodyear,goog,google,gop,got,grainger,graphics,gratis,green,gripe,grocery,group,guardian,gucci,guge,guide,guitars,guru,hair,hamburg,hangout,haus,hbo,hdfc,hdfcbank,health,healthcare,help,helsinki,here,hermes,hgtv,hiphop,hisamitsu,hitachi,hiv,hkt,hockey,holdings,holiday,homedepot,homegoods,homes,homesense,honda,horse,hospital,host,hosting,hot,hoteles,hotels,hotmail,house,how,hsbc,hughes,hyatt,hyundai,ibm,icbc,ice,icu,ieee,ifm,ikano,imamat,imdb,immo,immobilien,inc,industries,infiniti,ing,ink,institute,insurance,insure,international,intuit,investments,ipiranga,irish,ismaili,ist,istanbul,itau,itv,jaguar,java,jcb,jeep,jetzt,jewelry,jio,jll,jmp,jnj,joburg,jot,joy,jpmorgan,jprs,juegos,juniper,kaufen,kddi,kerryhotels,kerrylogistics,kerryproperties,kfh,kia,kids,kim,kinder,kindle,kitchen,kiwi,koeln,komatsu,kosher,kpmg,kpn,krd,kred,kuokgroup,kyoto,lacaixa,lamborghini,lamer,lancaster,lancia,land,landrover,lanxess,lasalle,lat,latino,latrobe,law,lawyer,lds,lease,leclerc,lefrak,legal,lego,lexus,lgbt,lidl,life,lifeinsurance,lifestyle,lighting,like,lilly,limited,limo,lincoln,linde,link,lipsy,live,living,llc,llp,loan,loans,locker,locus,loft,lol,london,lotte,lotto,love,lpl,lplfinancial,ltd,ltda,lundbeck,luxe,luxury,macys,madrid,maif,maison,makeup,man,management,mango,map,market,marketing,markets,marriott,marshalls,maserati,mattel,mba,mckinsey,med,media,meet,melbourne,meme,memorial,men,menu,merckmsd,miami,microsoft,mini,mint,mit,mitsubishi,mlb,mls,mma,mobile,moda,moe,moi,mom,monash,money,monster,mormon,mortgage,moscow,moto,motorcycles,mov,movie,msd,mtn,mtr,music,mutual,nab,nagoya,natura,navy,nba,nec,netbank,netflix,network,neustar,new,news,next,nextdirect,nexus,nfl,ngo,nhk,nico,nike,nikon,ninja,nissan,nissay,nokia,northwesternmutual,norton,now,nowruz,nowtv,nra,nrw,ntt,nyc,obi,observer,office,okinawa,olayan,olayangroup,oldnavy,ollo,omega,one,ong,onl,online,ooo,open,oracle,orange,organic,origins,osaka,otsuka,ott,ovh,page,panasonic,paris,pars,partners,parts,party,passagens,pay,pccw,pet,pfizer,pharmacy,phd,philips,phone,photo,photography,photos,physio,pics,pictet,pictures,pid,pin,ping,pink,pioneer,pizza,place,play,playstation,plumbing,plus,pnc,pohl,poker,politie,porn,pramerica,praxi,press,prime,prod,productions,prof,progressive,promo,properties,property,protection,pru,prudential,pub,pwc,qpon,quebec,quest,racing,radio,read,realestate,realtor,realty,recipes,red,redstone,redumbrella,rehab,reise,reisen,reit,reliance,ren,rent,rentals,repair,report,republican,rest,restaurant,review,reviews,rexroth,rich,richardli,ricoh,ril,rio,rip,rocher,rocks,rodeo,rogers,room,rsvp,rugby,ruhr,run,rwe,ryukyu,saarland,safe,safety,sakura,sale,salon,samsclub,samsung,sandvik,sandvikcoromant,sanofi,sap,sarl,sas,save,saxo,sbi,sbs,sca,scb,schaeffler,schmidt,scholarships,school,schule,schwarz,science,scot,search,seat,secure,security,seek,select,sener,services,ses,seven,sew,sex,sexy,sfr,shangrila,sharp,shaw,shell,shia,shiksha,shoes,shop,shopping,shouji,show,showtime,silk,sina,singles,site,ski,skin,sky,skype,sling,smart,smile,sncf,soccer,social,softbank,software,sohu,solar,solutions,song,sony,soy,spa,space,sport,spot,srl,stada,staples,star,statebank,statefarm,stc,stcgroup,stockholm,storage,store,stream,studio,study,style,sucks,supplies,supply,support,surf,surgery,suzuki,swatch,swiss,sydney,systems,tab,taipei,talk,taobao,target,tatamotors,tatar,tattoo,tax,taxi,tci,tdk,team,tech,technology,temasek,tennis,teva,thd,theater,theatre,tiaa,tickets,tienda,tiffany,tips,tires,tirol,tjmaxx,tjx,tkmaxx,tmall,today,tokyo,tools,top,toray,toshiba,total,tours,town,toyota,toys,trade,trading,training,travel,travelchannel,travelers,travelersinsurance,trust,trv,tube,tui,tunes,tushu,tvs,ubank,ubs,unicom,university,uno,uol,ups,vacations,vana,vanguard,vegas,ventures,verisign,versicherung,vet,viajes,video,vig,viking,villas,vin,vip,virgin,visa,vision,viva,vivo,vlaanderen,vodka,volkswagen,volvo,vote,voting,voto,voyage,vuelos,wales,walmart,walter,wang,wanggou,watch,watches,weather,weatherchannel,webcam,weber,website,wedding,weibo,weir,whoswho,wien,wiki,williamhill,win,windows,wine,winners,wme,wolterskluwer,woodside,work,works,world,wow,wtc,wtf,xbox,xerox,xfinity,xihuan,xin,xn--11b4c3d,xn--1ck2e1b,xn--1qqw23a,xn--30rr7y,xn--3bst00m,xn--3ds443g,xn--3pxu8k,xn--42c2d9a,xn--45q11c,xn--4gbrim,xn--55qw42g,xn--55qx5d,xn--5su34j936bgsg,xn--5tzm5g,xn--6frz82g,xn--6qq986b3xl,xn--80adxhks,xn--80aqecdr1a,xn--80asehdb,xn--80aswg,xn--8y0a063a,xn--9dbq2a,xn--9et52u,xn--9krt00a,xn--b4w605ferd,xn--bck1b9a5dre4c,xn--c1avg,xn--c2br7g,xn--cck2b3b,xn--cckwcxetd,xn--cg4bki,xn--czr694b,xn--czrs0t,xn--czru2d,xn--d1acj3b,xn--eckvdtc9d,xn--efvy88h,xn--fct429k,xn--fhbei,xn--fiq228c5hs,xn--fiq64b,xn--fjq720a,xn--flw351e,xn--fzys8d69uvgm,xn--g2xx48c,xn--gckr3f0f,xn--gk3at1e,xn--hxt814e,xn--i1b6b1a6a2e,xn--imr513n,xn--io0a7i,xn--j1aef,xn--jlq480n2rg,xn--jlq61u9w7b,xn--jvr189m,xn--kcrx77d1x4a,xn--kput3i,xn--mgba3a3ejt,xn--mgba7c0bbn0a,xn--mgbaakc7dvf,xn--mgbab2bd,xn--mgbca7dzdo,xn--mgbi4ecexp,xn--mgbt3dhd,xn--mk1bu44c,xn--mxtq1m,xn--ngbc5azd,xn--ngbe9e0a,xn--ngbrx,xn--nqv7f,xn--nqv7fs00ema,xn--nyqy26a,xn--otu796d,xn--p1acf,xn--pssy2u,xn--q9jyb4c,xn--qcka1pmc,xn--rhqv96g,xn--rovu88b,xn--ses554g,xn--t60b56a,xn--tckwe,xn--tiq49xqyj,xn--unup4y,xn--vermgensberater-ctb,xn--vermgensberatung-pwb,xn--vhquv,xn--vuq861b,xn--w4r85el8fhu5dnra,xn--w4rs40l,xn--xhq521b,xn--zfr164b,xyz,yachts,yahoo,yamaxun,yandex,yodobashi,yoga,yokohama,you,youtube,yun,zappos,zara,zero,zip,zone,zuerich");
+
+/***/ }),
+
+/***/ "./node_modules/parse-domain/serialized-tries/private.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/parse-domain/serialized-tries/private.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("ua>cc,inf,ltd,cx,biz,co,pp,v<to>611,oya,rdv,vpnplus,quickconnect>direct<nyan<us>graphox,cloudns,drud,is-by,land-4-sale,stuff-4-sale,enscaled>phx<mircloud,freeddns,golffan,noip,pointto,platterp,de>lib<<com>devcdnaccesso>*<adobeaemcloud>dev>*<<airkitapps,airkitapps-au,aivencloud,kasserver,amazonaws>compute>*<compute-1>*<us-east-1>dualstack>s3<<elb>*<s3,s3-ap-northeast-1,s3-ap-northeast-2,s3-ap-south-1,s3-ap-southeast-1,s3-ap-southeast-2,s3-ca-central-1,s3-eu-central-1,s3-eu-west-1,s3-eu-west-2,s3-eu-west-3,s3-external-1,s3-fips-us-gov-west-1,s3-sa-east-1,s3-us-gov-west-1,s3-us-east-2,s3-us-west-1,s3-us-west-2,ap-northeast-2>s3,dualstack>s3<s3-website<ap-south-1>s3,dualstack>s3<s3-website<ca-central-1>s3,dualstack>s3<s3-website<eu-central-1>s3,dualstack>s3<s3-website<eu-west-2>s3,dualstack>s3<s3-website<eu-west-3>s3,dualstack>s3<s3-website<us-east-2>s3,dualstack>s3<s3-website<ap-northeast-1>dualstack>s3<<ap-southeast-1>dualstack>s3<<ap-southeast-2>dualstack>s3<<eu-west-1>dualstack>s3<<sa-east-1>dualstack>s3<<s3-website-us-east-1,s3-website-us-west-1,s3-website-us-west-2,s3-website-ap-northeast-1,s3-website-ap-southeast-1,s3-website-ap-southeast-2,s3-website-eu-west-1,s3-website-sa-east-1<elasticbeanstalk>ap-northeast-1,ap-northeast-2,ap-northeast-3,ap-south-1,ap-southeast-1,ap-southeast-2,ca-central-1,eu-central-1,eu-west-1,eu-west-2,eu-west-3,sa-east-1,us-east-1,us-east-2,us-gov-west-1,us-west-1,us-west-2<awsglobalaccelerator,siiites,appspacehosted,appspaceusercontent,on-aptible,myasustor,balena-devices,betainabox,boutir,bplaced,cafjs,br,cn,de,eu,jpn,mex,ru,sa,uk,us,za,ar,hu,kr,no,qc,uy,africa,gr,co,jdevcloud,wpdevcloud,cloudcontrolled,cloudcontrolapp,trycloudflare,customer-oci>*,oci>*<ocp>*<ocs>*<<dattolocal,dattorelay,dattoweb,mydatto,builtwithdark,datadetect>demo,instance<ddns5,discordsays,discordsez,drayddns,dreamhosters,mydrobo,dyndns-at-home,dyndns-at-work,dyndns-blog,dyndns-free,dyndns-home,dyndns-ip,dyndns-mail,dyndns-office,dyndns-pics,dyndns-remote,dyndns-server,dyndns-web,dyndns-wiki,dyndns-work,blogdns,cechire,dnsalias,dnsdojo,doesntexist,dontexist,doomdns,dyn-o-saur,dynalias,est-a-la-maison,est-a-la-masion,est-le-patron,est-mon-blogueur,from-ak,from-al,from-ar,from-ca,from-ct,from-dc,from-de,from-fl,from-ga,from-hi,from-ia,from-id,from-il,from-in,from-ks,from-ky,from-ma,from-md,from-mi,from-mn,from-mo,from-ms,from-mt,from-nc,from-nd,from-ne,from-nh,from-nj,from-nm,from-nv,from-oh,from-ok,from-or,from-pa,from-pr,from-ri,from-sc,from-sd,from-tn,from-tx,from-ut,from-va,from-vt,from-wa,from-wi,from-wv,from-wy,getmyip,gotdns,hobby-site,homelinux,homeunix,iamallama,is-a-anarchist,is-a-blogger,is-a-bookkeeper,is-a-bulls-fan,is-a-caterer,is-a-chef,is-a-conservative,is-a-cpa,is-a-cubicle-slave,is-a-democrat,is-a-designer,is-a-doctor,is-a-financialadvisor,is-a-geek,is-a-green,is-a-guru,is-a-hard-worker,is-a-hunter,is-a-landscaper,is-a-lawyer,is-a-liberal,is-a-libertarian,is-a-llama,is-a-musician,is-a-nascarfan,is-a-nurse,is-a-painter,is-a-personaltrainer,is-a-photographer,is-a-player,is-a-republican,is-a-rockstar,is-a-socialist,is-a-student,is-a-teacher,is-a-techie,is-a-therapist,is-an-accountant,is-an-actor,is-an-actress,is-an-anarchist,is-an-artist,is-an-engineer,is-an-entertainer,is-certified,is-gone,is-into-anime,is-into-cars,is-into-cartoons,is-into-games,is-leet,is-not-certified,is-slick,is-uberleet,is-with-theband,isa-geek,isa-hockeynut,issmarterthanyou,likes-pie,likescandy,neat-url,saves-the-whales,selfip,sells-for-less,sells-for-u,servebbs,simple-url,space-to-rent,teaches-yoga,writesthisblog,digitaloceanspaces>*<ddnsfree,ddnsgeek,giize,gleeze,kozow,loseyourip,ooguy,theworkpc,mytuleap,tuleap-partners,encoreapi,evennode>eu-1,eu-2,eu-3,eu-4,us-1,us-2,us-3,us-4<onfabrica,fbsbx>apps<fastly-terrarium,fastvps-server,mydobiss,firebaseapp,fldrv,forgeblocks,framercanvas,freebox-os,freeboxos,freemyip,gentapps,gentlentapis,githubusercontent,0emm>*<appspot>r>*<<codespot,googleapis,googlecode,pagespeedmobilizer,publishproxy,withgoogle,withyoutube,blogspot,awsmppl,herokuapp,herokussl,myravendb,impertrixcdn,impertrix,smushcdn,wphostedmail,wpmucdn,pixolino,amscompute,clicketcloud,dopaas,hidora,hosted-by-previder>paas<hosteur>rag-cloud,rag-cloud-ch<ik-server>jcloud,jcloud-ver-jpc<jelastic>demo<kilatiron,massivegrid>paas<wafaicloud>jed,lon,ryd<joyent>cns>*<<ktistory,lpusercontent,lmpm>app<linode>members,nodebalancer>*<<linodeobjects>*<linodeusercontent>ip<barsycenter,barsyonline,mazeplay,miniserver,meteorapp>eu<hostedpi,mythic-beasts>customer,caracal,fentiger,lynx,ocelot,oncilla,onza,sphinx,vs,x,yali<nospamproxy>cloud<4u,nfshost,001www,ddnslive,myiphost,blogsyte,ciscofreak,damnserver,ditchyourip,dnsiskinky,dynns,geekgalaxy,health-carereform,homesecuritymac,homesecuritypc,myactivedirectory,mysecuritycamera,net-freaks,onthewifi,point2this,quicksytes,securitytactics,serveexchange,servehumour,servep2p,servesarcasm,stufftoread,unusualperson,workisboring,3utilities,ddnsking,myvnc,servebeer,servecounterstrike,serveftp,servegame,servehalflife,servehttp,serveirc,servemp3,servepics,servequake,observableusercontent>static<orsites,operaunite,authgear-staging,authgearapps,skygearapp,outsystemscloud,ownprovider,pgfog,pagefrontapp,pagexl,paywhirl>*<gotpantheon,platter-app,pleskns,postman-echo,prgmr>xen<pythonanywhere>eu<qualifioapp,qbuser,qa2,dev-myqnapcloud,alpha-myqnapcloud,myqnapcloud,quipelements>*<rackmaze,rhcloud,render>app<onrender,code>builder>*<dev-builder>*<stg-builder>*<<logoip,scrysec,firewall-gateway,myshopblocks,myshopify,shopitsite,1kapp,appchizi,applinzi,sinaapp,vipsinaapp,bounty-full>alpha,beta<try-snowplow,stackhero-network,playstation-cloud,myspreadshop,stdlib>api<temp-dns,dsmynas,familyds,tb-hosting>site<reservd,thingdustdata,bloxcms,townnews-staging,typeform>pro<hk,vultrobjects>*<wafflecell,reserve-online,hotelwithflight,remotewd,wiardweb>pages<messwithdns,woltlab-demo,wpenginepowered>js<wixsite,xnbay>u2,u2-local<yolasite<live>hlx<net>adobeaemcloud,alwaysdata,cloudfront,t3l3p0rt,appudo,atlassian-dev>prod>cdn<<myfritz,onavstack,shopselect,blackbaudcdn,boomla,bplaced,square7,gb,hu,jp,se,uk,in,clickrising,cloudaccess,cdn77-ssl,cdn77>r<feste-ip,knx-server,static-access,cryptonomic>*<dattolocal,mydatto,debian,bitbridge,at-band-camp,blogdns,broke-it,buyshouses,dnsalias,dnsdojo,does-it,dontexist,dynalias,dynathome,endofinternet,from-az,from-co,from-la,from-ny,gets-it,ham-radio-op,homeftp,homeip,homelinux,homeunix,in-the-band,is-a-chef,is-a-geek,isa-geek,kicks-ass,office-on-the,podzone,scrapper-site,selfip,sells-it,servebbs,serveftp,thruhere,webhop,definima,casacam,dynu,dynv6,twmail,ru,channelsdvr>u<fastlylb>map<fastly>freetls,map,prod>a,global<ssl>a,b,global<<edgeapp,flynnhosting,cdn-edges,heteml,cloudfunctions,moonscale,in-dsl,in-vpn,ipifony,iobb,cloudjiffy>fra1-de,west1-us<elastx>jls-sto1,jls-sto2,jls-sto3<faststacks,massivegrid>paas>fr-1,lon-1,lon-2,ny-1,ny-2,sg-1<<saveincloud>jelastic,nordeste-idc<scaleforce>j<tsukaeru>jelastic<kinghost,uni5,krellian,barsy,memset,azurewebsites,azure-mobile,cloudapp,azurestaticapps>1,centralus,eastasia,eastus2,westeurope,westus2<dnsup,hicam,now-dns,ownip,vpndns,eating-organic,mydissent,myeffect,mymediapc,mypsx,mysecuritycamera,nhlfan,no-ip,pgafan,privatizehealthinsurance,bounceme,ddns,redirectme,serveblog,serveminecraft,sytes,cloudycluster,ovh>webpaas>*<hosting>*<<bar0,bar1,bar2,rackmaze,schokokeks,firewall-gateway,seidat,senseering,siteleaf,vps-host>jelastic>atl,njs,ric<<myspreadshop,srcf>soc,user<supabase,dsmynas,familyds,tailscale>beta<ts,torproject>pages<reserve-online,community-pro,meinforum,yandexcloud>storage,website<za<page>hlx,hlx3,translated,codeberg,pdns,plesk,prvcy,rocky,magnet<pl>beep,ecommerce-shop,shoparena,homesklep,sdscloud,unicloud,krasnik,leczna,lubartow,lublin,poniatowa,swidnik,co,art,gliwice,krakow,poznan,wroc,zakopane,myspreadshop,gda,gdansk,gdynia,med,sopot<eu>airkitapps,mycd,cloudns,dogado>jelastic<barsy,wellbeingzone,spdns,transurl>*<diskstation<ca>barsy,awdev>*<co,blogspot,no-ip,myspreadshop<estate>compute>*<<network>alces>*<co,arvo,azimuth,tlon<org>altervista,amune>tele<pimienta,poivron,potager,sweetpepper,ae,us,certmgr,cdn77>c,rsc<cdn77-secure>origin>ssl<<cloudns,duckdns,tunk,dyndns>go,home<blogdns,blogsite,boldlygoingnowhere,dnsalias,dnsdojo,doesntexist,dontexist,doomdns,dvrdns,dynalias,endofinternet,endoftheinternet,from-me,game-host,gotdns,hobby-site,homedns,homeftp,homelinux,homeunix,is-a-bruinsfan,is-a-candidate,is-a-celticsfan,is-a-chef,is-a-geek,is-a-knight,is-a-linux-user,is-a-patsfan,is-a-soxfan,is-found,is-lost,is-saved,is-very-bad,is-very-evil,is-very-good,is-very-nice,is-very-sweet,isa-geek,kicks-ass,misconfused,podzone,readmyblog,selfip,sellsyourhome,servebbs,serveftp,servegame,stuff-4-sale,webhop,ddnss,accesscam,camdvr,freeddns,mywire,webredirect,eu>al,asso,at,au,be,bg,ca,cd,ch,cn,cy,cz,de,dk,edu,ee,es,fi,fr,gr,hr,hu,ie,il,in,int,is,it,jp,kr,lt,lu,lv,mc,me,mk,mt,my,net,ng,nl,no,nz,paris,pl,pt,q-a,ro,ru,se,si,sk,tr,uk,us<twmail,fedorainfracloud,fedorapeople,fedoraproject>cloud,os>app<stg>os>app<<<freedesktop,hepforge,in-dsl,in-vpn,js,barsy,mayfirst,mozilla-iot,bmoattachments,dynserv,now-dns,cable-modem,collegefan,couchpotatofries,mlbfan,mysecuritycamera,nflfan,read-books,ufcfan,hopto,myftp,no-ip,zapto,httpbin,pubtls,my-firewall,myfirewall,spdns,small-web,dsmynas,familyds,teckids>s3<tuxfamily,diskstation,hk,wmflabs,toolforge,wmcloud,za<cn>com>amazonaws>compute>*<eb>cn-north-1,cn-northwest-1<elb>*<cn-north-1>s3<<<instantcloud,quickconnect>direct<<io>apigee,b-data,backplaneapp,banzaicloud>app,backyards>*<<bitbucket,bluebite,boxfuse,browsersafetymark,bigv>uk0<cleverapps,dappnode>dyndns<dedyn,drud,definima,fh-muenster,shw,forgerock>id<ghost,github,gitlab,lolipop,hasura-app,hostyhosting,moonscale>*<beebyte>paas<beebyteapp>sekd1<jele,unispace>cloud-fr1<webthings,loginline,barsy,azurecontainer>*<ngrok,nodeart>stage<nid,pantheonsite,dyn53,pstmn>mock<protonet,qoto,qcx>sys>*<<vaporcloud,vbrplsbx>g<on-k3s>*<on-rio>*<readthedocs,resindevice,resinstaging>devices<hzc,sandcats,shiftcrypto,shiftedit,mo-siemens,musician,lair>apps<stolos>*<spacekit,utwente,s5y>*<edugit,telebit,thingdust>dev>cust,reservd<disrec>cust,reservd<prod>cust<testing>cust,reservd<<tickets,upli,2038,wedeploy,editorx,basicserver,virtualserver<jp>ne>aseinet>user<gehirn<buyshop,fashionstore,handcrafted,kawaiishop,supersale,theshop,usercontent,angry,babyblue,babymilk,backdrop,bambina,bitter,blush,boo,boy,boyfriend,but,candypop,capoo,catfood,cheap,chicappa,chillout,chips,chowder,chu,ciao,cocotte,coolblog,cranky,cutegirl,daa,deca,deci,digick,egoism,fakefur,fem,flier,floppy,fool,frenchkiss,girlfriend,girly,gloomy,gonna,greater,hacca,heavy,her,hiho,hippy,holy,hungry,icurus,itigo,jellybean,kikirara,kill,kilo,kuron,littlestar,lolipopmc,lolitapunk,lomo,lovepop,lovesick,main,mods,mond,mongolian,moo,namaste,nikita,nobushi,noor,oops,parallel,parasite,pecori,peewee,penne,pepper,perma,pigboat,pinoko,punyu,pupu,pussycat,pya,raindrop,readymade,sadist,schoolbus,secret,staba,stripper,sub,sunnyday,thick,tonkotsu,under,upper,velvet,verse,versus,vivian,watson,weblike,whitesnow,zombie,blogspot<vc>gv>d<0e<eus>party>user<<ws>advisor>*<cloud66,dyndns,mypets<ba>rs,blogspot<cloud>banzai>*<elementor,encoway>eu<statics>*<ravendb,axarnet>es-1<diadem,jelastic>vip<jele,jenv-aruba>aruba>eur>it1<<it1<keliweb>cs<oxa>tn,uk<primetel>uk<reclaim>ca,uk,us<trendhosting>ch,de<jotelulu,kuleuven,linkyard,magentosite>*<perspecta,vapor,on-rancher>*<scw>baremetal>fr-par-1,fr-par-2,nl-ams-1<fr-par>fnc>functions<k8s>nodes<s3,s3-website,whm<instances>priv,pub<k8s,nl-ams>k8s>nodes<s3,s3-website,whm<pl-waw>k8s>nodes<s3,s3-website<scalebook,smartlabeling<sensiosite>*<trafficplex,urown,voorloper<ec>base,official<shop>base,hoplix,barsy<app>beget>*<clerk,clerkstage,wnext,platform0,deta,ondigitalocean,encr,edgecompute,fireweb,onflashdrive,framer,run>a<web,hasura,loginline,messerli,netlify,developer>*<noop,northflank>*<telebit,typedream,vercel,bookonline<la>bnr,c<je>of<ch>square7,blogspot,flow>ae>alp1<appengine<linkyard-cloud,dnsking,gotdns,myspreadshop,firenet>*,svc>*<<12hp,2ix,4lima,lima-city<de>bplaced,square7,com,cosidns>dyn<dynamisches-dns,dnsupdater,internet-dns,l-o-g-i-n,dnshome,fuettertdasnetz,isteingeek,istmein,lebtimnetz,leitungsen,traeumtgerade,ddnss>dyn,dyndns<dyndns1,dyn-ip24,home-webserver>dyn<myhome-server,frusky>*<goip,blogspot,xn--gnstigbestellen-zvb,xn--gnstigliefern-wob,hs-heilbronn>it>pages<<dyn-berlin,in-berlin,in-brb,in-butter,in-dsl,in-vpn,iservschule,mein-iserv,schulplattform,schulserver,test-iserv,keymachine,git-repos,lcube-server,svn-repos,barsy,logoip,firewall-gateway,my-gateway,my-router,spdns,speedpartner>customer<myspreadshop,taifun-dns,12hp,2ix,4lima,lima-city,dd-dns,dray-dns,draydns,dyn-vpn,dynvpn,mein-vigor,my-vigor,my-wan,syno-ds,synology-diskstation,synology-ds,uberspace>*<virtualuser,virtual-user,community-pro,diskussionsbereich<rs>brendly>shop<blogspot,ua,ox<uk>co>bytemark>dh,vm<blogspot,layershift>j<barsy,barsyonline,retrosnub>cust<nh-serv,no-ip,wellbeingzone,adimo,myspreadshop,gwiddle<conn,copro,hosp,independent-commission,independent-inquest,independent-inquiry,independent-panel,independent-review,public-inquiry,royal-commission,gov>campaign,service,api,homeoffice<pymnt,org>glug,lug,lugs,affinitylottery,raffleentry,weeklylottery<barsy<ac>drr<ai>uwu<co>carrd,crd,otap>*<com>blogspot<leadpages,lpages,mypi,n4t,repl>id<supabase<mp>ju<se>com,blogspot,conf,iopsys,itcouldbewor,myspreadshop,paba>su<<bz>za,gsj<in>web,cloudns,blogspot,barsy,supabase<basketball>aus,nz<am>radio,blogspot,neko,nyaa<fm>radio<group>discourse<team>discourse,jelastic<dev>lcl>*<lclstage>*<stg>*<stgstage>*<pages,workers,curv,deno,deno-staging,deta,fly,githubpreview,gateway>*<iserv,localcert>user>*<<loginline,mediatech,platter-app,shiftcrypto,vercel,webhare>*<<me>c66,daplie>localhost<edgestack,filegear,filegear-au,filegear-de,filegear-gb,filegear-ie,filegear-jp,filegear-sg,glitch,ravendb,lohmus,barsy,mcpe,mcdir,soundcast,tcp4,brasilia,ddns,dnsfor,hopto,loginto,noip,webhop,vp4,diskstation,dscloud,i234,myds,synology,tbits,transip>site<wedeploy,yombo,nohost<zone>cloud66,hs,triton>*<lima<host>cloudaccess,freesite,fastvps,myfast,tempurl,wpmudev,jele,mircloud,pcloud,half<site>cloudera>*<cyon,fnwk,folionetwork,fastvps,jele,lelux,loginline,barsy,mintere,omniwe,opensocial,platformsh>*<tst>*<byen,srht,novecore<cz>co,realm,e4,blogspot,metacentrum>cloud>*<custom<muni>cloud>flt,usr<<<asia>cloudns<biz>cloudns,jozi,dyndns,for-better,for-more,for-some,for-the,selfip,webhop,orx,mmafan,myftp,no-ip,dscloud<club>cloudns,jele,barsy,pony<cc>cloudns,ftpaccess,game-server,myphotos,scrapping,twmail,csx,fantasyleague,spawn>instances<<info>cloudns,dynamic-dns,dyndns,barrel-of-knowledge,barrell-of-knowledge,for-our,groks-the,groks-this,here-for-more,knowsitall,selfip,webhop,barsy,mayfirst,forumz,nsupdate,dvrcam,ilovecollege,no-ip,dnsupdate,v-info<pro>cloudns,dnstrace>bci<barsy<pw>cloudns,x443<gdn>cnpy<nl>co,hosting-cluster,blogspot,gov,khplay,myspreadshop,transurl>*<cistron,demon<no>co,blogspot,myspreadshop<be>webhosting,blogspot,interhostsolutions>cloud<kuleuven>ezproxy<myspreadshop,transurl>*<<ru>ac,edu,gov,int,mil,test,eurodir,adygeya,bashkiria,bir,cbg,com,dagestan,grozny,kalmykia,kustanai,marine,mordovia,msk,mytis,nalchik,nov,pyatigorsk,spb,vladikavkaz,vladimir,blogspot,na4u,mircloud,regruhosting>jelastic<myjino>hosting>*<landing>*<spectrum>*<vps>*<<cldmail>hb<mcdir>vps<mcpre,net,org,pp,lk3,ras<is>cupcake,blogspot<link>cyon,mypep,dweb>*<<dk>biz,co,firm,reg,store,blogspot,myspreadshop<earth>dapps>*,bzz>*<<<id>my>rss>*<<flap,co>blogspot<forte<solutions>diher>*<<th>online,shop<sh>bip,hashbang,platform>bc,ent,eu,us<now,vxl,wedeploy<fi>dy,blogspot,xn--hkkinen-5wa,iki,cloudplatform>fi<datacenter>demo,paas<kapsi,myspreadshop<tv>dyndns,better-than,on-the-web,worse-than<cx>ath,info<name>her>forgot<his>forgot<<nu>merseine,mine,shacknet,enterprisecloud<rocks>myddns,lima-city,webspace<xyz>blogsite,localzone,crafting,zapto,telebit>*<<online>eero,eero-stage,barsy<cool>elementor,de<fr>en-root,fbx-os,fbxos,freebox-os,freeboxos,blogspot,goupile,on-web,chirurgiens-dentistes-en-france,dedibox,myspreadshop,ynh<one>onred>staging<for,under,service,homelink<tw>com>mymailer<url,blogspot<su>abkhazia,adygeya,aktyubinsk,arkhangelsk,armenia,ashgabad,azerbaijan,balashov,bashkiria,bryansk,bukhara,chimkent,dagestan,east-kazakhstan,exnet,georgia,grozny,ivanovo,jambyl,kalmykia,kaluga,karacol,karaganda,karelia,khakassia,krasnodar,kurgan,kustanai,lenug,mangyshlak,mordovia,msk,murmansk,nalchik,navoi,north-kazakhstan,nov,obninsk,penza,pokrovsk,sochi,spb,tashkent,termez,togliatti,troitsk,tselinograd,tula,tuva,vladikavkaz,vladimir,vologda<space>myfast,uber,xs4all<il>co>ravpage,blogspot,tabitorder<<at>funkfeuer>wien<futurecms>*,ex>*<in>*<<futurehosting,futuremailing,ortsinfo>ex>*<kunden>*<<co>blogspot<biz,info,priv,myspreadshop,12hp,2ix,4lima,lima-city<ms>lab,minisite<si>gitapp,gitpage,blogspot<community>nog,ravendb,myforum<ro>co,shop,blogspot,barsy<digital>cloudapps>london<<im>ro<goog>cloud,translate,usercontent>*<<ae>blogspot<al>blogspot<bg>blogspot,barsy<bj>blogspot<cf>blogspot<cl>blogspot<ke>co>blogspot<<nz>co>blogspot<<za>co>blogspot<<ar>com>blogspot<<au>com>blogspot,cloudlets>mel<myspreadshop<<br>com>blogspot,virtualcloud>scale>users<<<leg>ac,al,am,ap,ba,ce,df,es,go,ma,mg,ms,mt,pa,pb,pe,pi,pr,rj,rn,ro,rr,rs,sc,se,sp,to<<by>com>blogspot<mycloud,mediatech<cy>com>blogspot,scaleforce>j<<<ee>com>blogspot<<eg>com>blogspot<<es>com>blogspot<myspreadshop<mt>com>blogspot<<ng>com>blogspot<col,firm,gen,ltd,ngo<tr>com>blogspot<<uy>com>blogspot<<cv>blogspot<gr>blogspot<hk>blogspot,secaas,ltd,inc<hr>blogspot,free<hu>blogspot<ie>blogspot,myspreadshop<it>blogspot,ibxos,iliadboxos,neen>jc<tim>open>jelastic>cloud<<<16-b,32-b,64-b,myspreadshop,syncloud<kr>blogspot<li>blogspot,caa<lt>blogspot<lu>blogspot<md>blogspot,at,de,jp,to<mk>blogspot<mr>blogspot<mx>blogspot<my>blogspot<pe>blogspot<pt>blogspot<qa>blogspot<re>blogspot<sg>blogspot,enscaled<sk>blogspot<sn>blogspot<td>blogspot<ug>blogspot<vn>blogspot<ci>fin,nl<run>hs,development,ravendb,servers,build>*<code>*<database>*<migration>*<onporter,repl<gl>biz,xx<scot>edu,gov>service<<so>sch<kz>jcloud,kazteleport>upaas<<tn>orangecloud<gg>kaas,cya,panel>daemon<<systems>knightpoint<events>koobin,co<krd>co,edu<business>co<education>co<financial>co<place>co<technology>co<bs>we<services>loginline<menu>barsy<mobi>barsy,dscloud<pub>barsy<support>barsy<vu>cn,blog,dev,me<health>hra<casa>nabu>ui<<fashion>of<london>in,of<marketing>from,with<men>for,repair<mom>and,for<sale>for<win>that<work>from,to<news>noticeable<top>now-dns,ntdll<ovh>nerdpol<mn>nyc<lol>omg<hosting>opencraft<orange>tech<pm>own,name<codes>owo>*<<lc>oy<bn>co<today>prequalifyme<builders>cloudsite<edu>rit>git-pages<<xn--p1acf>xn--90amc,xn--j1aef,xn--j1ael8b,xn--h1ahn,xn--j1adp,xn--c1avg,xn--80aaa0cvac,xn--h1aliz,xn--90a1af,xn--41a<store>sellfy,shopware,storebase<land>static>dev,sites<<farm>storj<pictures>1337<rip>clan<tf>sch<wf>biz,sch<yt>org<management>router<ax>be,cat,es,eu,gg,mc,us,xy<gp>app<gt>blog,de,to<gy>be<hn>cc<kg>blog,io,jp,tv,uk,us<ls>de<porn>indie<tc>ch,me,we<vg>at<academy>official<faith>ybo<party>ybo<review>ybo<science>ybo<trade>ybo<st>noho<design>bss");
+
+/***/ }),
+
 /***/ "./node_modules/path-browserify/index.js":
 /*!***********************************************!*\
   !*** ./node_modules/path-browserify/index.js ***!
@@ -25756,6 +30195,7 @@ module.exports = posix;
 
 /** @type {import('.')} */
 module.exports = [
+	'Float16Array',
 	'Float32Array',
 	'Float64Array',
 	'Int8Array',
@@ -28840,7 +33280,8 @@ Notification.newInstance = function newNotificationInstance(properties, callback
     });
   }
   // Only used for test case usage
-  if (false) {}
+  if (false) // removed by dead control flow
+{}
   (0,rc_util_es_React_render__WEBPACK_IMPORTED_MODULE_8__.render)( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement(Notification, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1__["default"])({}, props, {
     ref: ref
   })), div);
@@ -29364,7 +33805,8 @@ function legacyRender(node, container) {
 
 /** @private Test usage. Not work in prod */
 function _r(node, container) {
-  if (false) {}
+  if (false) // removed by dead control flow
+{}
 }
 function render(node, container) {
   if (createRoot) {
@@ -29402,7 +33844,8 @@ function legacyUnmount(container) {
 
 /** @private Test usage. Not work in prod */
 function _u(container) {
-  if (false) {}
+  if (false) // removed by dead control flow
+{}
 }
 function unmount(_x2) {
   return _unmount.apply(this, arguments);
@@ -29785,7 +34228,8 @@ wrapperRaf.cancel = function (id) {
   cleanup(id);
   return caf(realId);
 };
-if (false) {}
+if (false) // removed by dead control flow
+{}
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (wrapperRaf);
 
 /***/ }),
@@ -29816,6 +34260,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+var ReactMajorVersion = Number(react__WEBPACK_IMPORTED_MODULE_1__.version.split('.')[0]);
 var fillRef = function fillRef(ref, node) {
   if (typeof ref === 'function') {
     ref(node);
@@ -29860,7 +34305,7 @@ var supportRef = function supportRef(nodeOrComponent) {
   }
 
   // React 19 no need `forwardRef` anymore. So just pass if is a React element.
-  if (isReactElement(nodeOrComponent) && nodeOrComponent.props.propertyIsEnumerable('ref')) {
+  if (isReactElement(nodeOrComponent) && ReactMajorVersion >= 19) {
     return true;
   }
   var type = (0,react_is__WEBPACK_IMPORTED_MODULE_2__.isMemo)(nodeOrComponent) ? nodeOrComponent.type.type : nodeOrComponent.type;
@@ -30069,12 +34514,14 @@ var preMessage = function preMessage(fn) {
  * ```
  */
 function warning(valid, message) {
-  if (false) { var finalMessage; }
+  if (false) // removed by dead control flow
+{ var finalMessage; }
 }
 
 /** @see Similar to {@link warning} */
 function note(valid, message) {
-  if (false) { var finalMessage; }
+  if (false) // removed by dead control flow
+{ var finalMessage; }
 }
 function resetWarned() {
   warned = {};
@@ -30138,7 +34585,8 @@ exports.isValidElementType=function(a){return"string"===typeof a||"function"===t
 
 if (true) {
   module.exports = __webpack_require__(/*! ./cjs/react-is.production.min.js */ "./node_modules/rc-util/node_modules/react-is/cjs/react-is.production.min.js");
-} else {}
+} else // removed by dead control flow
+{}
 
 
 /***/ }),
@@ -30493,7 +34941,8 @@ function checkDCE() {
   ) {
     return;
   }
-  if (false) {}
+  if (false) // removed by dead control flow
+{}
   try {
     // Verify that the code above has been dead code eliminated (DCE'd).
     __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE(checkDCE);
@@ -30509,7 +34958,8 @@ if (true) {
   // DevTools can report bad minification during injection.
   checkDCE();
   module.exports = __webpack_require__(/*! ./cjs/react-dom.production.min.js */ "./node_modules/react-dom/cjs/react-dom.production.min.js");
-} else {}
+} else // removed by dead control flow
+{}
 
 
 /***/ }),
@@ -31119,7 +35569,8 @@ exports.useMemo=function(a,b){return U.current.useMemo(a,b)};exports.useReducer=
 
 if (true) {
   module.exports = __webpack_require__(/*! ./cjs/react.production.min.js */ "./node_modules/react/cjs/react.production.min.js");
-} else {}
+} else // removed by dead control flow
+{}
 
 
 /***/ }),
@@ -35378,7 +39829,8 @@ exports.unstable_shouldYield=M;exports.unstable_wrapCallback=function(a){var b=y
 
 if (true) {
   module.exports = __webpack_require__(/*! ./cjs/scheduler.production.min.js */ "./node_modules/scheduler/cjs/scheduler.production.min.js");
-} else {}
+} else // removed by dead control flow
+{}
 
 
 /***/ }),
@@ -37378,3397 +41830,6 @@ Object.defineProperty(exports, "configs", ({
 
 /***/ }),
 
-/***/ "./src/config/CustomConfig.ts":
-/*!************************************!*\
-  !*** ./src/config/CustomConfig.ts ***!
-  \************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   CustomConfig: () => (/* binding */ CustomConfig)
-/* harmony export */ });
-/**
- * Author: Yureswar Ravuri
- * Type: MAP
- * Objective: Config Objects
- */
-// assigning default values to the default configuration
-const CustomConfig = {
-    enableEditClickedName: false,
-    enableSkipDuringPlay: false,
-    enableTooltipAddition: true,
-    enableMultilingual: false,
-    enableNodeTypeSelection: true,
-    enablePermissions: false,
-    permissions: {},
-    enableProfanity: false,
-    enableRecording: true,
-    enableOverlay: true,
-    environment: 'PROD',
-    enableUdaIcon: true,
-    udaDivId: 'uda-nistapp-logo',
-    enableForAllDomains: false,
-    enableSpeechToText: false,
-    enableSlowReplay: false,
-    enableCustomIcon: false,
-    customIcon: 'https://udan.nistapp.com/uda-logo.jpg',
-    realm: "UDAN",
-    clientId: "backend-service",
-    clientSecret: "cXA2yFTq3ORQfrio2mGXttFaOTfvIC7N",
-    enableHidePanelAfterCompletion: false,
-    enableStatusSelection: false,
-    enableUDAIconDuringRecording: false,
-    enableEditingOfRecordings: true // Flag to enable editing of recordings
-};
-
-
-/***/ }),
-
-/***/ "./src/config/endpoints.ts":
-/*!*********************************!*\
-  !*** ./src/config/endpoints.ts ***!
-  \*********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   ENDPOINT: () => (/* binding */ ENDPOINT)
-/* harmony export */ });
-/**
- * Author: Lakshman Veti
- * Type: MAP
- * Objective: HTTP Endpoints
- */
-const ENDPOINT = {
-    CheckUserId: `/user/checkauthid`,
-    GetSessionKey: `/user/getsessionkey`,
-    CheckUserSession: `/user/checkusersession`,
-    Search: `/search/all?query=#keyword#&domain=#domain#&page=#page#&userSessionId=#userSessionId#`,
-    SearchWithPermissionsOld: `/clickevents/sequence/search?query=#keyword#&domain=#domain#&page=#page#&additionalParams=#additionalParams#`,
-    SearchWithPermissions: `/search/withPermissions?query=#keyword#&domain=#domain#&page=#page#&additionalParams=#additionalParams#&userSessionId=#userSessionId#`,
-    ProfanityCheck: `https://nistapp-content-moderator.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessText/Screen`,
-    SpecialNodes: `/clickevents`,
-    Record: `/clickevents/clickednode`,
-    UpdateRecord: `/clickevents/updateclickednode`,
-    RecordSequence: `/clickevents/recordsequencedata`,
-    // updateRecordSequence: `/clickevents/updatesequencedata`,
-    updateRecordSequence: `/sequence/update`,
-    updateSequenceIndex: `/sequence/reindex/`,
-    UserClick: `/clickevents/userclick`,
-    DeleteSequence: `/clickevents/sequence/delete`,
-    fetchRecord: '/search',
-    VoteRecord: `/votes/addVote`,
-    fetchVoteRecord: `/votes/`,
-    tokenUrl: 'user/token',
-    statuses: '/status/category/#category#'
-};
-
-
-/***/ }),
-
-/***/ "./src/config/error-log.ts":
-/*!*********************************!*\
-  !*** ./src/config/error-log.ts ***!
-  \*********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   UDAConsoleLogger: () => (/* binding */ UDAConsoleLogger),
-/* harmony export */   UDAErrorLogger: () => (/* binding */ UDAErrorLogger),
-/* harmony export */   UDALogLevel: () => (/* binding */ UDALogLevel)
-/* harmony export */ });
-/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index */ "./src/config/index.ts");
-/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util */ "./src/util/index.ts");
-const winston = __webpack_require__(/*! winston */ "./node_modules/winston/dist/winston.js");
-const { format } = winston;
-const { combine, label, json } = format;
-// const winstonRemoteTransport = require('winston-remote').Transport;
-
-
-const UDALogLevel = 0;
-const UDA_LOG_URL = "https://authenticatetest.nistapp.com/";
-const UDAConsoleLogger = {
-    info: function (mes, level = 1) {
-        if (UDALogLevel === level) {
-            console.log(mes);
-        }
-    },
-};
-const UDAErrorLogger = {
-    error: function (message, exception = { message: "Error" }) {
-        var _a;
-        try {
-            const UDAUserAuthData = (0,_util__WEBPACK_IMPORTED_MODULE_1__.getFromStore)(_index__WEBPACK_IMPORTED_MODULE_0__.CONFIG.USER_AUTH_DATA_KEY, false);
-            message =
-                "UserID: " + ((_a = UDAUserAuthData === null || UDAUserAuthData === void 0 ? void 0 : UDAUserAuthData.authdata) === null || _a === void 0 ? void 0 : _a.id) + " Error: " + message;
-        }
-        catch (e) {
-            message = "Error: " + message;
-        }
-        let logger = winston.createLogger({
-            transports: [
-                new winston.transports.Http({
-                    // ssl: true,
-                    host: UDA_LOG_URL,
-                    port: 443,
-                    path: "logging/error",
-                }),
-            ],
-        });
-        logger.log("error", message);
-    },
-};
-
-
-/***/ }),
-
-/***/ "./src/config/index.ts":
-/*!*****************************!*\
-  !*** ./src/config/index.ts ***!
-  \*****************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   CONFIG: () => (/* binding */ CONFIG)
-/* harmony export */ });
-/**
- * Author: Lakshman Veti
- * Type: MAP
- * Objective: Config Objects
- */
-const CONFIG = {
-    current: "TEST",
-    UDADebug: false,
-    UDA_CONTAINER_CLASS: "udan-main-panel",
-    UDA_CLICK_IGNORE_CLASS: "uda_exclude",
-    UDA_DOMAIN: "https://udantest.nistapp.com/api",
-    UDA_API_URL: "https://udantest.nistapp.com/api" + "/api",
-    UDASessionID: (Math.random().toString(36).substring(2, 15) +
-        Math.random().toString(36).substring(2, 15)),
-    UDA_POST_INTERVAL: 1000,
-    UDALastMutationTime: 0,
-    UDALogLevel: 0,
-    RECORDING_IS_PLAYING: "UDAIsPlaying",
-    RECORDING_MANUAL_PLAY: "UDAManualPlay",
-    RECORDING_SWITCH_KEY: "UDARecordingSwitch",
-    RECORDING_SEQUENCE: "UDAActiveRecordingData",
-    SELECTED_RECORDING: "UDASelectedRecordedItem",
-    USER_AUTH_DATA_KEY: "udaUserData",
-    UserScreenAcceptance: "udaUserScreenAcceptance",
-    USER_SESSION_KEY: "UDASessionKey",
-    UDAKeyCloakKey: "UDAKeyCloak",
-    USER_SESSION_ID: "UDASessionId",
-    SYNC_INTERVAL: 1000,
-    AUTO_PLAY_SLEEP_TIME: 2000,
-    JARO_WEIGHT: 0.95,
-    JARO_WEIGHT_PERSONAL: 0.90,
-    lastClickedTime: null,
-    specialNodeKey: "UDASpecialNodes",
-    enableInfiniteScroll: true,
-    enableInfiniteScrollPageLength: 10,
-    UDA_URL_Param: 'UDA_Sequence_id',
-    set Environment(value) {
-        this.current = value.toString().toUpperCase();
-        if (this.current === "PROD") {
-            this.UDA_DOMAIN = "https://udan.nistapp.ai";
-        }
-        else {
-            this.UDA_DOMAIN = "https://udantest.nistapp.ai";
-        }
-        this.UDA_API_URL = this.UDA_DOMAIN + "/api";
-    },
-    get Environment() {
-        return this.current;
-    },
-    DEBOUNCE_INTERVAL: 1000,
-    indexInterval: 1000,
-    clickObjects: [],
-    nodeId: 0,
-    isRecording: false,
-    htmlIndex: [],
-    invokeTime: 2000,
-    apiInvokeTime: 300,
-    maxStringLength: 25,
-    playNextAction: true,
-    navigatedToNextPage: { check: false, url: '' },
-    ignoreElements: ["script", "h1", "h2", "h3", "link", "noscript", "style"],
-    ignoreAttributes: [
-        'translate', 'draggable', 'spellcheck', 'tabindex', 'clientHeight', 'clientLeft', 'clientTop', 'clientWidth',
-        'offsetHeight', 'offsetLeft', 'offsetTop', 'offsetWidth', 'scrollHeight', 'scrollLeft', 'scrollTop', 'scrollWidth',
-        'baseURI', 'isConnected', 'ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
-        'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
-        'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y', 'selectionStart', 'selectionEnd', 'required', 'validationMessage', 'selectionDirection',
-        'naturalWidth', 'naturalHeight', 'complete', '_indexOf', 'value', 'defaultValue', 'min', 'max', 'nodeInfo', 'data-tooltip-id', 'addedclickrecord', 'checked', 'data-tribute',
-        'hasclick', 'addedClickRecord', 'hasClick', 'valueAsNumber', 'udaIgnoreChildren', 'udaIgnoreClick', 'udaignorechildren', 'udaignoreclick', 'fdprocessedid', '__ngContext__', 'd', 'text', 'textContent', 'cdk-describedby-host', 'inert', 'fill', 'disabled', 'hidden'
-    ],
-    innerTextWeight: 5,
-    ignoreNodesFromIndexing: ['ng-dropdown-panel', 'ckeditor', 'fusioncharts', 'ngb-datepicker', 'ngx-daterangepicker-material', 'uda-panel', 'mat-datepicker-content', 'ng-select'],
-    ignoreNodesContainingClassNames: ['cke_dialog_container', 'cke_notifications_area', 'gldp-default', 'ajs-layer', 'aui-list', 'herknl', 'jstBlock'],
-    cancelRecordingDuringRecordingNodes: [],
-    addClickToSpecialNodes: ['ng-select', 'ngb-datepicker'],
-    ignoreClicksOnSpecialNodes: ['ngx-daterangepicker-material'],
-    customNameForSpecialNodes: {
-        'ngb-datepicker': 'Date selector',
-        'mat-datepicker-content': 'Date selector',
-        'ngx-daterangepicker-material': 'Date Range Selector'
-    },
-    specialInputClickClassNames: ['ghx-dropdown-trigger', 'aui-list', 'jstBlock', 'mat-form-field-flex', 'mat-select-trigger'],
-    commonTags: ['span', 'div'],
-    tooltipDisplayedNodes: [],
-    // replay variables
-    autoplayCompleted: false,
-    autoplayPaused: false,
-    // manual click variables
-    invokedActionManually: false,
-    // personal node ignore attributes
-    personalNodeIgnoreAttributes: [
-        "innerText",
-        "innerHTML",
-        "outerText",
-        "outerHTML",
-        "nodeValue",
-        "src",
-        "naturalWidth",
-        "naturalHeight",
-        "currentSrc",
-    ],
-    //Azure content moderator attributes
-    profanity: {
-        enabled: true,
-        provider: "azure",
-        config: {
-            key1: "bc015cc4090543d58c3056e8dc98cc9b",
-            key2: "bc015cc4090543d58c3056e8dc98cc9b",
-            endPoint: "https://nistapp-content-moderator.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessText/Screen",
-            region: "eastus",
-        },
-    },
-    multilingual: {
-        enabled: false,
-        searchInLang: "en-US",
-        selectedLang: "en-US",
-        displayText: "",
-        translatedText: "",
-        translate: {
-            provider: "google",
-            apikey: "AIzaSyD3XUOZEMz9Y_e5YpDWZEsQT_7zJPF0H4k",
-            translateTo: "en",
-            apiurl: "https://translation.googleapis.com/language/translate/v2",
-        },
-    },
-    // BCP list of languages
-    bcpLang: [
-        ["Afrikaans", ["af-ZA"]],
-        ["አማርኛ", ["am-ET"]],
-        ["Azərbaycanca", ["az-AZ"]],
-        ["বাংলা", ["bn-BD", "বাংলাদেশ"], ["bn-IN", "ভারত"]],
-        ["Bahasa Indonesia", ["id-ID"]],
-        ["Bahasa Melayu", ["ms-MY"]],
-        ["Català", ["ca-ES"]],
-        ["Čeština", ["cs-CZ"]],
-        ["Dansk", ["da-DK"]],
-        ["Deutsch", ["de-DE"]],
-        [
-            "English",
-            ["en-AU", "Australia"],
-            ["en-CA", "Canada"],
-            ["en-IN", "India"],
-            ["en-KE", "Kenya"],
-            ["en-TZ", "Tanzania"],
-            ["en-GH", "Ghana"],
-            ["en-NZ", "New Zealand"],
-            ["en-NG", "Nigeria"],
-            ["en-ZA", "South Africa"],
-            ["en-PH", "Philippines"],
-            ["en-GB", "United Kingdom"],
-            ["en-US", "United States"],
-        ],
-        [
-            "Español",
-            ["es-AR", "Argentina"],
-            ["es-BO", "Bolivia"],
-            ["es-CL", "Chile"],
-            ["es-CO", "Colombia"],
-            ["es-CR", "Costa Rica"],
-            ["es-EC", "Ecuador"],
-            ["es-SV", "El Salvador"],
-            ["es-ES", "España"],
-            ["es-US", "Estados Unidos"],
-            ["es-GT", "Guatemala"],
-            ["es-HN", "Honduras"],
-            ["es-MX", "México"],
-            ["es-NI", "Nicaragua"],
-            ["es-PA", "Panamá"],
-            ["es-PY", "Paraguay"],
-            ["es-PE", "Perú"],
-            ["es-PR", "Puerto Rico"],
-            ["es-DO", "República Dominicana"],
-            ["es-UY", "Uruguay"],
-            ["es-VE", "Venezuela"],
-        ],
-        ["Euskara", ["eu-ES"]],
-        ["Filipino", ["fil-PH"]],
-        ["Français", ["fr-FR"]],
-        ["Basa Jawa", ["jv-ID"]],
-        ["Galego", ["gl-ES"]],
-        ["ગુજરાતી", ["gu-IN"]],
-        ["Hrvatski", ["hr-HR"]],
-        ["IsiZulu", ["zu-ZA"]],
-        ["Íslenska", ["is-IS"]],
-        ["Italiano", ["it-IT", "Italia"], ["it-CH", "Svizzera"]],
-        ["ಕನ್ನಡ", ["kn-IN"]],
-        ["ភាសាខ្មែរ", ["km-KH"]],
-        ["Latviešu", ["lv-LV"]],
-        ["Lietuvių", ["lt-LT"]],
-        ["മലയാളം", ["ml-IN"]],
-        ["मराठी", ["mr-IN"]],
-        ["Magyar", ["hu-HU"]],
-        ["ລາວ", ["lo-LA"]],
-        ["Nederlands", ["nl-NL"]],
-        ["नेपाली भाषा", ["ne-NP"]],
-        ["Norsk bokmål", ["nb-NO"]],
-        ["Polski", ["pl-PL"]],
-        ["Português", ["pt-BR", "Brasil"], ["pt-PT", "Portugal"]],
-        ["Română", ["ro-RO"]],
-        ["සිංහල", ["si-LK"]],
-        ["Slovenščina", ["sl-SI"]],
-        ["Basa Sunda", ["su-ID"]],
-        ["Slovenčina", ["sk-SK"]],
-        ["Suomi", ["fi-FI"]],
-        ["Svenska", ["sv-SE"]],
-        ["Kiswahili", ["sw-TZ", "Tanzania"], ["sw-KE", "Kenya"]],
-        ["ქართული", ["ka-GE"]],
-        ["Հայերեն", ["hy-AM"]],
-        [
-            "தமிழ்",
-            ["ta-IN", "இந்தியா"],
-            ["ta-SG", "சிங்கப்பூர்"],
-            ["ta-LK", "இலங்கை"],
-            ["ta-MY", "மலேசியா"],
-        ],
-        ["తెలుగు", ["te-IN"]],
-        ["Tiếng Việt", ["vi-VN"]],
-        ["Türkçe", ["tr-TR"]],
-        ["اُردُو", ["ur-PK", "پاکستان"], ["ur-IN", "بھارت"]],
-        ["Ελληνικά", ["el-GR"]],
-        ["български", ["bg-BG"]],
-        ["Pусский", ["ru-RU"]],
-        ["Српски", ["sr-RS"]],
-        ["Українська", ["uk-UA"]],
-        ["한국어", ["ko-KR"]],
-        [
-            "中文",
-            ["cmn-Hans-CN", "普通话 (中国大陆)"],
-            ["cmn-Hans-HK", "普通话 (香港)"],
-            ["cmn-Hant-TW", "中文 (台灣)"],
-            ["yue-Hant-HK", "粵語 (香港)"],
-        ],
-        ["日本語", ["ja-JP"]],
-        ["हिन्दी", ["hi-IN"]],
-        ["ภาษาไทย", ["th-TH"]],
-    ],
-    // Flag to enable node type detection
-    enableNodeTypeChangeSelection: true,
-    set enableNodeTypeSelection(val) {
-        this.enableNodeTypeChangeSelection = val;
-        // this.showhtml();
-    },
-    get enableNodeTypeSelection() {
-        return CONFIG.multilingual.enabled;
-    },
-    cspUserAcceptance: {
-        storageName: "uda-csp-enabled",
-        data: { proceed: true },
-    },
-    screenAcceptance: {
-        storageName: "uda-user-screen-consent",
-        data: { proceed: true },
-    },
-    ignoreDynamicAttributeText: ['_ng', '__context', '__zone_symbol']
-};
-
-
-/***/ }),
-
-/***/ "./src/services/index.ts":
-/*!*******************************!*\
-  !*** ./src/services/index.ts ***!
-  \*******************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   REST: () => (/* binding */ REST),
-/* harmony export */   apiCal: () => (/* binding */ apiCal),
-/* harmony export */   getHTTPHeaders: () => (/* binding */ getHTTPHeaders),
-/* harmony export */   postRecordSequenceData: () => (/* reexport safe */ _recordService__WEBPACK_IMPORTED_MODULE_5__.postRecordSequenceData),
-/* harmony export */   processArgs1: () => (/* binding */ processArgs1),
-/* harmony export */   recordUserClickData: () => (/* reexport safe */ _recordService__WEBPACK_IMPORTED_MODULE_5__.recordUserClickData),
-/* harmony export */   saveClickData: () => (/* reexport safe */ _recordService__WEBPACK_IMPORTED_MODULE_5__.saveClickData),
-/* harmony export */   syncApiCal: () => (/* binding */ syncApiCal)
-/* harmony export */ });
-/* harmony import */ var typescript_json__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! typescript-json */ "./node_modules/typescript-json/lib/index.js");
-/* harmony import */ var typescript_json__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(typescript_json__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _config_CustomConfig__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config/CustomConfig */ "./src/config/CustomConfig.ts");
-/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util */ "./src/util/index.ts");
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config */ "./src/config/index.ts");
-/* harmony import */ var _util_events__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../util/events */ "./src/util/events.ts");
-/* harmony import */ var _recordService__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./recordService */ "./src/services/recordService.ts");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-
-
-__webpack_require__.g.UDAGlobalConfig = _config_CustomConfig__WEBPACK_IMPORTED_MODULE_1__.CustomConfig;
-/**
- * common REST call
- * @options : object (properties needed for REST call)
- */
-const apiCal = (options) => {
-    const requestOptions = {
-        method: options.method,
-        headers: getHTTPHeaders("json", options === null || options === void 0 ? void 0 : options.headers),
-        body: options.body ? (input => {
-            return undefined !== input ? JSON.stringify(input) : undefined;
-        })(options.body) : null,
-    };
-    const baseProdURL = "https://udantest.nistapp.com/api";
-    const baseTestURL = "https://udantest.nistapp.com/api";
-    let baseURL = baseProdURL;
-    let url;
-    if (options.url.indexOf("http") === -1) {
-        if (__webpack_require__.g.UDAGlobalConfig.environment === 'TEST') {
-            baseURL = baseTestURL;
-        }
-        url = baseURL + options.url;
-    }
-    else {
-        url = options.url;
-    }
-    return fetch(url, requestOptions)
-        .then((response) => {
-        switch (response === null || response === void 0 ? void 0 : response.status) {
-            case 200:
-                return (options === null || options === void 0 ? void 0 : options.responseType) == "text" ? response.text() : response.json();
-            case 201:
-                return (options === null || options === void 0 ? void 0 : options.responseType) == "text" ? response.text() : response.json();
-            case 204:
-                return null;
-            case 400:
-                throw new Error('Bad Request - The request was malformed or invalid');
-            case 401:
-                (0,_util_events__WEBPACK_IMPORTED_MODULE_4__.trigger)('UDAGetNewToken', { detail: { data: "UDAGetNewToken" } });
-                throw new Error('Unauthorized - Authentication required');
-            case 403:
-                throw new Error('Forbidden - You do not have permission to access this resource');
-            case 404:
-                throw new Error('Not Found - The requested resource does not exist');
-            case 408:
-                throw new Error('Request Timeout - The server timed out waiting for the request');
-            case 429:
-                throw new Error('Too Many Requests - Rate limit exceeded');
-            case 500:
-                throw new Error('Internal Server Error - Something went wrong on the server');
-            case 502:
-                throw new Error('Bad Gateway - Invalid response from upstream server');
-            case 503:
-                throw new Error('Service Unavailable - The server is temporarily unavailable');
-            case 504:
-                throw new Error('Gateway Timeout - The upstream server timed out');
-            default:
-                throw new Error(`Unexpected status code: ${response.status}`);
-        }
-    })
-        .then((json) => {
-        return json;
-    })
-        .catch((error) => {
-        throw error;
-    });
-};
-/**
- * common sync REST call
- * @options : object (properties needed for REST call)
- */
-const syncApiCal = (options) => __awaiter(void 0, void 0, void 0, function* () {
-    const requestOptions = {
-        method: options.method,
-        headers: getHTTPHeaders("json"),
-        body: options.body ? (input => {
-            return undefined !== input ? JSON.stringify(input) : undefined;
-        })(options.body) : null,
-    };
-    let response = {};
-    try {
-        response = yield fetch(options.url, requestOptions);
-        return yield (response === null || response === void 0 ? void 0 : response.json());
-    }
-    catch (e) { }
-});
-/**
- * @objective To set autherization token for all outgoing REST calls
- * @param contentType
- * @param additionalHeaders
- * @returns HTTP headers
- */
-const getHTTPHeaders = (contentType, additionalHeaders = null) => {
-    let userAuthData = (0,_util__WEBPACK_IMPORTED_MODULE_2__.getFromStore)(_config__WEBPACK_IMPORTED_MODULE_3__.CONFIG.USER_AUTH_DATA_KEY, false);
-    const headers = new Headers();
-    if (contentType === "json")
-        headers.append("Content-Type", "application/json");
-    if (userAuthData && userAuthData.authData.token) {
-        headers.append("Authorization", `Bearer ${userAuthData.authData.token}`);
-    }
-    if (__webpack_require__.g.UDAGlobalConfig.realm !== 'UDAN') {
-        headers.append("UDAN-Realm", `${__webpack_require__.g.UDAGlobalConfig.realm}`);
-    }
-    if (additionalHeaders) {
-        return additionalHeaders;
-    }
-    return headers;
-};
-/**
- * @obective to replace static query params with dynamic values
- * @param url
- * @param val
- * @returns reconstructed url
- */
-const processArgs1 = (url, val) => {
-    return url === null || url === void 0 ? void 0 : url.replace(/#([^#]+)#/g, (_, key) => val[key] !== undefined ? val[key] : "");
-};
-
-
-
-const REST = {
-    apiCal,
-    syncApiCal,
-    processArgs: processArgs1,
-};
-
-
-/***/ }),
-
-/***/ "./src/services/recordService.ts":
-/*!***************************************!*\
-  !*** ./src/services/recordService.ts ***!
-  \***************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   deleteRecording: () => (/* binding */ deleteRecording),
-/* harmony export */   fetchStatuses: () => (/* binding */ fetchStatuses),
-/* harmony export */   postRecordSequenceData: () => (/* binding */ postRecordSequenceData),
-/* harmony export */   profanityCheck: () => (/* binding */ profanityCheck),
-/* harmony export */   recordClicks: () => (/* binding */ recordClicks),
-/* harmony export */   recordSequence: () => (/* binding */ recordSequence),
-/* harmony export */   recordUserClickData: () => (/* binding */ recordUserClickData),
-/* harmony export */   saveClickData: () => (/* binding */ saveClickData),
-/* harmony export */   updateRecordClicks: () => (/* binding */ updateRecordClicks),
-/* harmony export */   updateRecordSequenceData: () => (/* binding */ updateRecordSequenceData),
-/* harmony export */   updateRecording: () => (/* binding */ updateRecording),
-/* harmony export */   updateSequnceIndex: () => (/* binding */ updateSequnceIndex),
-/* harmony export */   userClick: () => (/* binding */ userClick)
-/* harmony export */ });
-/* harmony import */ var _config_endpoints__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config/endpoints */ "./src/config/endpoints.ts");
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! . */ "./src/services/index.ts");
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config */ "./src/config/index.ts");
-/* harmony import */ var _userService__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./userService */ "./src/services/userService.ts");
-/* harmony import */ var _util_nodeInfo__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../util/nodeInfo */ "./src/util/nodeInfo.ts");
-/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../util */ "./src/util/index.ts");
-/* harmony import */ var domjson__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! domjson */ "./node_modules/domjson/dist/domJSON.js");
-/* harmony import */ var domjson__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(domjson__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _util_recording_utils_mapClickedElementToHtmlFormElement__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../util/recording-utils/mapClickedElementToHtmlFormElement */ "./src/util/recording-utils/mapClickedElementToHtmlFormElement.ts");
-/* harmony import */ var _config_error_log__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../config/error-log */ "./src/config/error-log.ts");
-/* harmony import */ var _util_fetchDomain__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../util/fetchDomain */ "./src/util/fetchDomain.ts");
-/* harmony import */ var react_ga4__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-ga4 */ "./node_modules/react-ga4/dist/index.js");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-/**
- * This code imports various modules and utilities used throughout the application, including:
- * - ENDPOINT: configuration for API endpoints
- * - REST: a utility for making API calls
- * - CONFIG: general application configuration
- * - userService: functions for getting the user's session key and user ID
- * - nodeInfo: a utility for getting information about DOM nodes
- * - TSON: a library for serializing TypeScript objects to JSON
- * - various utility functions for working with DOM elements and data storage
- * - a function for mapping clicked elements to HTML form elements
- * - logging utilities for console and error logging
- * - a function for fetching the current domain
- */
-
-
-
-
-
-
-
-
-
-
- // @ts-ignore
-/**
- * To record each action/event
- * @param request
- * @returns promise
- */
-/**
- * Records a set of clicks or other user interactions.
- *
- * @param {any} request - An object containing the details of the user interactions to be recorded.
- * @returns {Promise<any>} A promise that resolves with the result of the API call to record the interactions.
- */
-/**
- * Records a set of clicks or other user interactions.
- *
- * @param {any} [request] - An object containing the details of the user interactions to be recorded.
- * @returns {Promise<any>} A promise that resolves with the result of the API call to record the interactions.
- */
-const recordClicks = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        // Retrieve the user's session key
-        request.sessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getSessionKey)();
-        // Prepare the request parameters
-        const parameters = {
-            // The URL for the API call
-            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.Record,
-            // The HTTP method to use
-            method: "POST",
-            // The request body
-            body: request,
-        };
-        // Call the API
-        return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
-    }
-    catch (error) {
-        // Handle any errors that occurred during the API call
-        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in recordClicks: ${error.message}`, error);
-        throw error;
-    }
-});
-/**
- * Updates the record clicks.
- *
- * @param {any} request - The request object.
- * @return {Promise<any>} A promise that resolves with the result of the API call.
- */
-const updateRecordClicks = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        // Prepare the request parameters
-        const parameters = {
-            // The URL for the API call
-            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.UpdateRecord,
-            // The HTTP method to use
-            method: "POST",
-            // The request body
-            body: request,
-        };
-        // Call the API
-        return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
-    }
-    catch (error) {
-        // Handle any errors that occurred during the API call
-        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in updateRecordClicks: ${error.message}`, error);
-        throw error;
-    }
-});
-/**
- * Updates the record clicks.
- *
- * @return {Promise<any>} A promise that resolves with the result of the API call.
- * @param id
- */
-const updateSequnceIndex = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        // Prepare the request parameters
-        const parameters = {
-            // The URL for the API call
-            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.updateSequenceIndex + id,
-            // The HTTP method to use
-            method: "POST"
-        };
-        // Call the API
-        return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
-    }
-    catch (error) {
-        // Handle any errors that occurred during the API call
-        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in updateRecordClicks: ${error.message}`, error);
-        throw error;
-    }
-});
-/**
- * Records a sequence of user interactions.
- *
- * @param request - An object containing the data required to record the sequence of user interactions.
- * @returns A promise that resolves when the sequence of user interactions has been recorded.
- */
-const recordSequence = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        if (!request) {
-            throw new Error('Request object is required');
-        }
-        request.usersessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
-        if (!request.usersessionid) {
-            throw new Error('User session ID could not be retrieved');
-        }
-        const parameters = {
-            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.RecordSequence,
-            method: "POST",
-            body: request,
-        };
-        const response = yield ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
-        if (!response) {
-            throw new Error('No response received from record sequence API');
-        }
-        return response;
-    }
-    catch (error) {
-        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAConsoleLogger.info('Record Sequence Error:', error);
-        throw error;
-        return false;
-    }
-});
-/**
- * Records a user click event.
- *
- * @param request - An object containing the data required to record the user click event.
- * @returns A promise that resolves when the user click event has been recorded.
- */
-const userClick = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        if (!request) {
-            // Request object is required
-            throw new Error("Request object is required");
-        }
-        // Get the user's ID
-        request.usersessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
-        // Set the clicked name to the host of the current page
-        request.clickedname = window.location.host;
-        // Prepare the request parameters
-        const parameters = {
-            // The URL for the API call
-            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.UserClick,
-            // The HTTP method to use
-            method: "PUT",
-            // The request body
-            body: request,
-        };
-        // Call the API
-        return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
-    }
-    catch (error) {
-        // Handle any errors that occurred during the API call
-        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in userClick: ${error.message}`, error);
-        // Re-throw the error so it can be handled by the caller
-        throw error;
-    }
-});
-/**
- * Deletes a recording sequence.
- *
- * @param request - An object containing the data required to delete the recording sequence.
- * @returns A promise that resolves when the recording sequence has been deleted.
- */
-const deleteRecording = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        if (!request) {
-            // Request object is required
-            throw new Error("Request object is required");
-        }
-        // Add the user session ID to the request object
-        request.usersessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
-        // Prepare the request parameters
-        const parameters = {
-            // The URL for the API call
-            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.DeleteSequence,
-            // The HTTP method to use
-            method: "POST",
-            // The request body
-            body: request,
-        };
-        // Call the API
-        return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
-    }
-    catch (error) {
-        // Handle any errors that occurred during the API call
-        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in deleteRecording: ${error.message}`, error);
-        // Re-throw the error so it can be handled by the caller
-        throw error;
-    }
-});
-/**
- * Updates an existing recording session.
- *
- * @param request - An object containing the data to update the recording session.
- * @returns A promise that resolves when the recording session has been updated.
- */
-const updateRecording = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        if (!request) {
-            // Request object is required
-            throw new Error("Request object is required");
-        }
-        // Get the user's ID and add it to the request object
-        request.usersessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
-        // Prepare the request parameters
-        const parameters = {
-            // The URL for the API call
-            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.updateRecordSequence,
-            // The HTTP method to use
-            method: "POST",
-            // The request body
-            body: request,
-        };
-        // Call the API
-        return yield ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
-    }
-    catch (error) {
-        // Handle any errors that occurred during the API call
-        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in updateRecording: ${error.message}`, error);
-        // Re-throw the error so it can be handled by the caller
-        throw error;
-    }
-});
-/**
- * Checks for profanity in the provided request object.
- *
- * @param request - The request object containing the text to be checked for profanity.
- * @returns A promise that resolves with the profanity check result.
- */
-const profanityCheck = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        if (!request) {
-            // Request object is required for the profanity check
-            throw new Error("Request object is required");
-        }
-        // Set the Content-Type header to text/plain
-        const headers = new Headers();
-        headers.append("Content-Type", "text/plain");
-        // Set the Ocp-Apim-Subscription-Key header to the profanity API key
-        headers.append("Ocp-Apim-Subscription-Key", _config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.profanity.config.key1);
-        // Prepare the request parameters
-        const parameters = {
-            // The URL for the API call
-            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.ProfanityCheck,
-            // The HTTP method to use
-            method: "POST",
-            // The request body
-            body: request,
-            // The headers to include in the request
-            headers,
-        };
-        // Call the API
-        return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
-    }
-    catch (error) {
-        // Handle any errors that occurred during the API call
-        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in profanityCheck: ${error.message}`, error);
-        // Re-throw the error so it can be handled by the caller
-        throw error;
-    }
-});
-/**
- * Saves click data to a REST service.
- *
- * @param node - The clicked HTML element.
- * @param text - The text content of the clicked element.
- * @param meta - The metadata associated with the clicked element.
- * @returns A promise that resolves when the click data has been saved.
- */
-const saveClickData = (node, text, meta) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        // Check if all the required parameters are provided
-        if (!node || !text || !meta) {
-            throw new Error("Required parameters are missing");
-        }
-        // node: The clicked HTML element
-        // text: The text content of the clicked element
-        // meta: The metadata associated with the clicked element
-        // removing circular reference before converting to json with deep clone.
-        /**
-         * Processes the clicked node and creates a JSON representation of it, including its metadata.
-         * - Clones the clicked node to create a new node object.
-         * - Logs the absolute offsets of the processed node.
-         * - Converts the processed node to a JSON object using the `domJSON.toJSON` function, with the `serialProperties` option set to `true`.
-         * - Assigns the provided `meta` object to the `meta` property of the JSON object.
-         *
-         * @param {any} node - The clicked node.
-         * @param {string} text - The text content of the clicked node.
-         * @param {any} meta - The metadata associated with the clicked node.
-         * @returns {any} - The processed JSON object containing the node information and metadata.
-         */
-        // Clone the clicked node to create a new node object.
-        const processedNode = yield node.cloneNode(true);
-        // Log the absolute offsets of the processed node.
-        const absoluteOffsets = (0,_util__WEBPACK_IMPORTED_MODULE_5__.getAbsoluteOffsets)(processedNode);
-        if (absoluteOffsets) {
-            console.log(absoluteOffsets);
-        }
-        // Convert the processed node to a JSON object using the `domJSON.toJSON` function, with the `serialProperties` option set to `true`.
-        let objectData = domjson__WEBPACK_IMPORTED_MODULE_6___default().toJSON(processedNode, {
-            serialProperties: true,
-        });
-        // Assign the provided `meta` object to the `meta` property of the JSON object.
-        if (objectData.meta) {
-            objectData.meta = meta;
-        }
-        else {
-            objectData.meta = meta;
-        }
-        //removing the unwanted attributes which were added while processing click objects.
-        /**
-         * Removes certain properties from the `objectData.node` object before saving the click data.
-         * - `addedClickRecord`: This property is removed to prevent duplicate click data from being saved.
-         * - `hasClick`: This property is removed as it is no longer needed after the click data has been saved.
-         * - `udaIgnoreChildren`: This property is removed as it is no longer needed after the click data has been saved.
-         * - `udaIgnoreClick`: This property is removed as it is no longer needed after the click data has been saved.
-         */
-        // Remove `addedClickRecord` property from the `objectData.node` object.
-        // This property is no longer needed after the click data has been saved.
-        delete objectData.node.addedClickRecord;
-        // Remove `hasClick` property from the `objectData.node` object.
-        // This property is no longer needed after the click data has been saved.
-        delete objectData.node.hasClick;
-        // Remove `udaIgnoreChildren` property from the `objectData.node` object.
-        // This property is no longer needed after the click data has been saved.
-        delete objectData.node.udaIgnoreChildren;
-        // Remove `udaIgnoreClick` property from the `objectData.node` object.
-        // This property is no longer needed after the click data has been saved.
-        delete objectData.node.udaIgnoreClick;
-        /**
-         * Processes the clicked node before saving the click data.
-         * - If the clicked node's name is in the `CONFIG.ignoreNodesFromIndexing` list and has a custom name in `CONFIG.customNameForSpecialNodes`, the `displayText` property of the `meta` object is set to the custom name.
-         * - If the `outerHTML` property of the `node` object is not set, it is set to the actual outer HTML of the clicked node.
-         * - The `offset` property of the `objectData` object is set to the absolute offsets of the clicked node.
-         * - The `nodeInfo` property of the `node` object is set to the result of calling the `getNodeInfo` function with the clicked node.
-         */
-        // If the clicked node is in the ignoreNodesFromIndexing list and has a custom name in customNameForSpecialNodes,
-        // set the displayText property of the meta object to the custom name.
-        if ((0,_util__WEBPACK_IMPORTED_MODULE_5__.inArray)(node.nodeName.toLowerCase(), _config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.ignoreNodesFromIndexing) !==
-            -1 &&
-            _config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.customNameForSpecialNodes.hasOwnProperty(node.nodeName.toLowerCase())) {
-            // Set the displayText property to the custom name for special nodes.
-            objectData.meta.displayText =
-                _config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.customNameForSpecialNodes[node.nodeName.toLowerCase()];
-        }
-        // If the outerHTML property of the node object is not set, set it to the actual outer HTML of the clicked node.
-        if (!objectData.node.outerHTML) {
-            // Set the outerHTML property to the actual outer HTML of the clicked node.
-            objectData.node.outerHTML = node.outerHTML;
-        }
-        // Set the offset property of the objectData object to the absolute offsets of the clicked node.
-        objectData.offset = (0,_util__WEBPACK_IMPORTED_MODULE_5__.getAbsoluteOffsets)(node);
-        // Set the nodeInfo property of the node object to the result of calling the getNodeInfo function with the clicked node.
-        objectData.node.nodeInfo = (0,_util_nodeInfo__WEBPACK_IMPORTED_MODULE_4__.getNodeInfo)(node);
-        // Added to handle the case where screen size is not available
-        /**
-         * Handles the case where the screen size information is not available in the node's metadata.
-         * If the screen size is not available, the function returns `false` to indicate that the click data should not be saved.
-         * Otherwise, it checks if the `enableNodeTypeChangeSelection` configuration is enabled, and if so, it maps the clicked element to an HTML form element and updates the `meta` object accordingly.
-         * Finally, it logs the `objectData` to the console with a log level of 3.
-         *
-         * @param {any} objectData - The object containing the data to be saved, including the node information and metadata.
-         * @returns {boolean} - `false` if the screen size information is not available, `true` otherwise.
-         */
-        // If the screen size information is not available in the node's metadata, return false to indicate that the click data should not be saved.
-        if (objectData.node.nodeInfo &&
-            (!objectData.node.nodeInfo.screenSize.screen.width ||
-                !objectData.node.nodeInfo.screenSize.screen.height)) {
-            return false;
-        }
-        const { enableNodeTypeChangeSelection } = _config__WEBPACK_IMPORTED_MODULE_2__.CONFIG;
-        // If the enableNodeTypeChangeSelection configuration is enabled, map the clicked element to an HTML form element and update the meta object accordingly.
-        if (enableNodeTypeChangeSelection) {
-            objectData.meta.systemDetected = (0,_util_recording_utils_mapClickedElementToHtmlFormElement__WEBPACK_IMPORTED_MODULE_7__["default"])(node);
-            // If the system detected input element is not "others", set the selected element to the system detected input element.
-            if (objectData.meta.systemDetected.inputElement !== "others") {
-                objectData.meta.selectedElement = objectData.meta.systemDetected;
-            }
-        }
-        // Log the object data to the console with a log level of 3.
-        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAConsoleLogger.info(objectData, 3);
-        // let domain = fetchDomain();
-        /**
-         * To save the user's click data to a REST endpoint.
-         * @param clickType - The type of click event being recorded (e.g. "sequencerecord").
-         * @param clickedName - The name or text content of the clicked element.
-         * @param recordId - The ID of the record being updated (default is 0).
-         * @returns An object containing the domain, URL path, clicked node name, HTML5 flag, clicked path, and the serialized object data.
-         * @throws An error if there is a problem saving the click data.
-         */
-        // Get the domain from the window's location object.
-        let domain = window.location.host;
-        // Serialize the object data to a JSON string using JSON.stringify.
-        const jsonString = JSON.stringify(objectData);
-        // Log the JSON string to the console with a log level of 1.
-        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAConsoleLogger.info(jsonString, 1);
-        // Return an object containing the domain, URL path, clicked node name, HTML5 flag, clicked path, and the serialized object data.
-        return {
-            // The domain of the current web page.
-            domain: domain,
-            // The URL path of the current web page.
-            urlpath: window.location.pathname,
-            // The name or text content of the clicked node.
-            clickednodename: text,
-            // A flag indicating whether the clicked node is an HTML5 element.
-            html5: 0,
-            // The path of the clicked node (empty string by default).
-            clickedpath: "",
-            // The serialized object data as a JSON string.
-            objectdata: jsonString,
-        };
-    }
-    catch (error) {
-        // Log any errors that occur during the saving process to the console with a log level of 1.
-        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in saveClickData: ${error.message}`, error);
-        // Rethrow the error to allow the calling code to handle it.
-        throw error;
-    }
-});
-/**
- * To post the recorded user click sequence data to a REST endpoint.
- * @param request - An object containing the data to be sent in the request payload.
- * @returns A promise that resolves with the response from the REST endpoint.
- */
-const postRecordSequenceData = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        // Throw an error if the request object is undefined or null.
-        if (!request) {
-            throw new Error("Request object is required");
-        }
-        // Clear the udanSelectedNodes array at the beginning of each call.
-        window.udanSelectedNodes = [];
-        // Retrieve the user click node set from the store.
-        const userclicknodesSet = (0,_util__WEBPACK_IMPORTED_MODULE_5__.getFromStore)(_config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.RECORDING_SEQUENCE, false);
-        // Get the IDs of the user click nodes and join them into a comma-separated string.
-        const ids = userclicknodesSet.map((item) => item.id);
-        // Get the domain of the current web page.
-        let domain = (0,_util_fetchDomain__WEBPACK_IMPORTED_MODULE_9__.fetchDomain)();
-        // Construct the payload object by merging the request object and the other properties.
-        const payload = Object.assign(Object.assign({}, request), { domain: domain, 
-            // Set the ignored status to 0 (false) by default.
-            isIgnored: 0, 
-            // Set the validity status to 1 (true) by default.
-            isValid: 1, 
-            // Use the comma-separated string of user click node IDs.
-            userclicknodelist: ids.join(","), 
-            // Pass the user click node set as an array of objects.
-            userclicknodesSet });
-        // Call the recordSequence function with the constructed payload and return the result.
-        return yield recordSequence(payload);
-    }
-    catch (error) {
-        // Log any errors that occur to the console with a log level of 1.
-        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in postRecordSequenceData: ${error.message}`, error);
-        // Rethrow the error to allow the calling code to handle it.
-        throw error;
-    }
-});
-/**
- * To update the recorded user click sequence data to a REST endpoint.
- * @param request - An object containing the data to be sent in the request payload.
- * @returns A promise that resolves with the response from the REST endpoint.
- */
-const updateRecordSequenceData = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        // Throw an error if the request object is undefined or null.
-        if (!request) {
-            throw new Error("Request object is required");
-        }
-        // Clear the udanSelectedNodes array at the beginning of each call.
-        window.udanSelectedNodes = [];
-        // Retrieve the user click node set from the store.
-        const userclicknodesSet = (0,_util__WEBPACK_IMPORTED_MODULE_5__.getFromStore)(_config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.RECORDING_SEQUENCE, false);
-        // Get the IDs of the user click nodes and join them into a comma-separated string.
-        const ids = userclicknodesSet.map((item) => item.id);
-        // Get the domain of the current web page.
-        let domain = (0,_util_fetchDomain__WEBPACK_IMPORTED_MODULE_9__.fetchDomain)();
-        // Construct the payload object by merging the request object and the other properties.
-        const payload = Object.assign(Object.assign({}, request), { domain: domain, 
-            // Set the ignored status to 0 (false) by default.
-            isIgnored: 0, 
-            // Set the validity status to 1 (true) by default.
-            isValid: 1, 
-            // Use the comma-separated string of user click node IDs.
-            userclicknodelist: ids.join(","), 
-            // Pass the user click node set as an array of objects.
-            userclicknodesSet });
-        // Call the recordSequence function with the constructed payload and return the result.
-        return yield recordSequence(payload);
-    }
-    catch (error) {
-        // Log any errors that occur to the console with a log level of 1.
-        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in postRecordSequenceData: ${error.message}`, error);
-        // Rethrow the error to allow the calling code to handle it.
-        throw error;
-    }
-});
-/**
- * To update click data to REST
- * @returns  promise
- * @param request
- */
-const recordUserClickData = (clickType = "sequencerecord", clickedName = "", recordId = 0) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const payload = {
-            usersessionid: yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getSessionKey)(),
-            clickedname: clickedName,
-            clicktype: clickType,
-            recordid: recordId,
-        };
-        // Sending events to google analytics
-        react_ga4__WEBPACK_IMPORTED_MODULE_10__["default"].event({
-            category: clickType,
-            action: clickType,
-            label: clickedName,
-            value: recordId,
-            nonInteraction: true,
-            transport: "xhr",
-        });
-        return yield userClick(payload);
-    }
-    catch (error) {
-        // Log any errors that occur to the console with a log level of 1.
-        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in recordUserClickData: ${error.message}`, error);
-        // Rethrow the error to allow the calling code to handle it.
-        throw error;
-    }
-});
-/**
- * Fetches status options from the API
- * @param {Object} request - The request object containing category
- * @param {string} request.category - Category for status filtering, defaults to 'sequenceList'
- * @returns {Promise} API response containing status options
- */
-const fetchStatuses = (request = { category: 'sequenceList' }) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        if (!request.category) {
-            throw new Error('Category is required');
-        }
-        const parameters = {
-            url: ___WEBPACK_IMPORTED_MODULE_1__.REST.processArgs(_config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.statuses, request),
-            method: "GET"
-        };
-        const response = yield ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
-        if (!response) {
-            throw new Error('No response received from status API');
-        }
-        return response;
-    }
-    catch (error) {
-        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAConsoleLogger.info('Fetch Status Error:', error);
-        console.log(error);
-        return Promise.reject(error);
-    }
-});
-
-
-/***/ }),
-
-/***/ "./src/services/searchService.ts":
-/*!***************************************!*\
-  !*** ./src/services/searchService.ts ***!
-  \***************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   fetchRecord: () => (/* binding */ fetchRecord),
-/* harmony export */   fetchSearchResults: () => (/* binding */ fetchSearchResults),
-/* harmony export */   fetchSpecialNodes: () => (/* binding */ fetchSpecialNodes)
-/* harmony export */ });
-/* harmony import */ var _config_endpoints__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config/endpoints */ "./src/config/endpoints.ts");
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! . */ "./src/services/index.ts");
-/* harmony import */ var _util_specialNodes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util/specialNodes */ "./src/util/specialNodes.ts");
-/* harmony import */ var _userService__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./userService */ "./src/services/userService.ts");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-/**
- * Imports various utility functions and constants used in the search service.
- * - `ENDPOINT`: Provides the endpoint URLs for the search-related API calls.
- * - `recordUserClickData`: Records user click data for search-related actions.
- * - `REST`: Provides utility functions for processing API request parameters.
- * - `specialNodes`: Provides a list of special node types used in the application.
- * - `getUserId`: Retrieves the user's session ID.
- */
-
-
-
-
-/**
- * Fetches search results from the backend with error handling.
- *
- * @param request - An optional object containing the following properties:
- *   - keyword: The search keyword to record user click data.
- *   - page: The page number for the search results.
- *   - domain: The domain to filter the search results.
- *   - additionalParams: Any additional parameters to include in the search request.
- *   - userSessionId: The user's session ID.
- * @returns A promise that resolves to the search results.
- */
-const fetchSearchResults = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        // If the keyword is not empty, record user click data.
-        if ((request === null || request === void 0 ? void 0 : request.keyword) && request.keyword !== "") {
-            (0,___WEBPACK_IMPORTED_MODULE_1__.recordUserClickData)("search", request.keyword);
-        }
-        // Retrieve the user's session ID.
-        request.userSessionId = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
-        // If additionalParams is null, delete it from the request object.
-        if (request.additionalParams === null) {
-            delete request.additionalParams;
-        }
-        // Construct the API call parameters based on whether additionalParams is present.
-        let parameters;
-        if (request.additionalParams != null) {
-            parameters = {
-                // Use the SearchWithPermissions endpoint when additionalParams is present.
-                url: ___WEBPACK_IMPORTED_MODULE_1__.REST.processArgs(_config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.SearchWithPermissions, request),
-                // Use the GET method.
-                method: "GET",
-            };
-        }
-        else {
-            parameters = {
-                // Use the Search endpoint when additionalParams is not present.
-                url: ___WEBPACK_IMPORTED_MODULE_1__.REST.processArgs(_config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.Search, request),
-                // Use the GET method.
-                method: "GET",
-            };
-        }
-        const response = yield ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
-        if (response !== undefined) {
-            return response;
-        }
-        else {
-            return [];
-        }
-    }
-    catch (error) {
-        // Type guard to check if error is an instance of Error
-        const errorMessage = error instanceof Error ? error.message : 'Unknown search error';
-        // Log the error for debugging
-        console.error('Search service error:', errorMessage);
-        // You can customize the error response based on your needs
-        throw new Error(`Failed to perform search: ${errorMessage}`);
-        return [];
-    }
-});
-/**
- * Fetch a record from the backend with optional additional parameters and error handling.
- * @param request - An optional object containing the following properties:
- *   - id: The ID of the record to fetch.
- *   - domain: The domain to filter the record.
- *   - additionalParams: Any additional parameters to include in the record fetch request.
- *   - userSessionId: The user's session ID.
- * @returns A promise that resolves to the fetched record.
- */
-const fetchRecord = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        // If additionalParams is null, remove it from the request object
-        if (request.additionalParams === null) {
-            delete request.additionalParams;
-        }
-        else {
-            // If additionalParams is present, add the userSessionId to the request object
-            request.userSessionId = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
-        }
-        let parameters;
-        let url = _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.fetchRecord;
-        // Determine which endpoint to use based on whether additionalParams is present
-        if (request.additionalParams != null) {
-            url += "/withPermissions";
-        }
-        // Construct the full URL by appending the id and domain to the endpoint URL
-        url += "/" + request.id + "?domain=" + request.domain;
-        // If additionalParams is present, append it to the URL
-        if (request.additionalParams != null) {
-            url +=
-                "&additionalParams=" +
-                    request.additionalParams +
-                    "&userSessionId=" +
-                    request.userSessionId;
-        }
-        // Construct the API call parameters
-        parameters = {
-            url,
-            method: "GET",
-        };
-        // Make the API call and return the result
-        return yield ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
-    }
-    catch (error) {
-        // Log the error and throw a new error with a user-friendly message
-        console.error("Error fetching record:", error);
-        throw new Error(`Failed to fetch record: ${error.message}`);
-    }
-});
-/**
- * Fetch special nodes processing from backend with error handling
- * @param request - An optional object containing parameters for the special nodes request
- * @returns A promise that resolves to the fetched special nodes
- */
-const fetchSpecialNodes = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        // Construct the API call parameters by processing the request using the REST.processArgs function
-        const parameters = {
-            url: ___WEBPACK_IMPORTED_MODULE_1__.REST.processArgs(_config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.SpecialNodes, request),
-            method: "GET",
-        };
-        return _util_specialNodes__WEBPACK_IMPORTED_MODULE_2__.specialNodes;
-    }
-    catch (error) {
-        // Log the error and throw a new error with a user-friendly message
-        console.error("Error fetching special nodes:", error);
-        throw new Error(`Failed to fetch special nodes: ${error.message}`);
-    }
-});
-
-
-/***/ }),
-
-/***/ "./src/services/userService.ts":
-/*!*************************************!*\
-  !*** ./src/services/userService.ts ***!
-  \*************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   getSessionKey: () => (/* binding */ getSessionKey),
-/* harmony export */   getUserId: () => (/* binding */ getUserId)
-/* harmony export */ });
-/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util */ "./src/util/index.ts");
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config */ "./src/config/index.ts");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-/**
- * Imports the `getFromStore` utility function from the "../util" module.
- * Imports the `CONFIG` object from the "../config" module.
- */
-
-
-/**
- * Retrieves the user's ID from the application's storage.
- *
- * @returns {Promise<string | null>} The user's ID, or `null` if it could not be retrieved.
- * @throws {Error} If there was an error retrieving the user's ID.
- */
-const getUserId = () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        // Retrieve user session data from the store using the key defined in CONFIG.USER_AUTH_DATA_KEY
-        const userSessionData = yield (0,_util__WEBPACK_IMPORTED_MODULE_0__.getFromStore)(_config__WEBPACK_IMPORTED_MODULE_1__.CONFIG.USER_AUTH_DATA_KEY, false);
-        // Check if the userSessionData object exists, has an authData property, and the authData has an id property
-        if (userSessionData && userSessionData.authData && userSessionData.authData.id) {
-            // Return the user's ID from the authData object
-            return userSessionData.authData.id;
-        }
-        // If the user's ID could not be found, return null
-        return null;
-    }
-    catch (error) {
-        // Log the error to the console
-        console.log("Error retrieving user ID:", error);
-        // Throw a new Error with a custom message
-        throw new Error("Failed to retrieve user ID");
-    }
-});
-/**
- * Retrieves the user's session key from the application's storage.
- *
- * @returns {Promise<string | null>} The user's session key, or `null` if it could not be retrieved.
- * @throws {Error} If there was an error retrieving the user's session key.
- */
-const getSessionKey = () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        // Retrieve user session data from the store using the key defined in CONFIG.USER_AUTH_DATA_KEY
-        const userSessionData = yield (0,_util__WEBPACK_IMPORTED_MODULE_0__.getFromStore)(_config__WEBPACK_IMPORTED_MODULE_1__.CONFIG.USER_AUTH_DATA_KEY, false);
-        // Check if the userSessionData object exists and has a sessionKey property
-        if (userSessionData && userSessionData.sessionKey) {
-            // Return the user's session key
-            return userSessionData.sessionKey;
-        }
-        /**
-         * Handles the case where the user's session key could not be retrieved from the application's storage.
-         *
-         * @returns {Promise<string | null>} `null` if the session key could not be retrieved.
-         * @throws {Error} If there was an error retrieving the session key.
-         */
-        // If the user's session key could not be found, return null
-        return null;
-    }
-    catch (error) {
-        // Log the error to the console
-        console.log("Error retrieving session key:", error);
-        // Throw a new Error with a custom message
-        throw new Error("Failed to retrieve session key");
-    }
-});
-
-
-/***/ }),
-
-/***/ "./src/util/addBodyEvents.ts":
-/*!***********************************!*\
-  !*** ./src/util/addBodyEvents.ts ***!
-  \***********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   addBodyEvents: () => (/* binding */ addBodyEvents)
-/* harmony export */ });
-/* harmony import */ var _addClickToNode__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./addClickToNode */ "./src/util/addClickToNode.ts");
-/* harmony import */ var _isClickableNode__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./isClickableNode */ "./src/util/isClickableNode.ts");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-/**
- * Add events to body elements
- */
-const addBodyEvents = () => __awaiter(void 0, void 0, void 0, function* () {
-    //exclude content-serving elements from click objects
-    let els = document.body.querySelectorAll("*"), len = els === null || els === void 0 ? void 0 : els.length, i = 0;
-    for (; i < len; i++) {
-        try {
-            /**exclude event attachment for selective elements  */
-            if (els[i] && (0,_isClickableNode__WEBPACK_IMPORTED_MODULE_1__.isClickableNode)(els[i])) {
-                (0,_addClickToNode__WEBPACK_IMPORTED_MODULE_0__.addClickToNode)(els[i]);
-            }
-        }
-        catch (e) {
-        }
-    }
-});
-
-
-/***/ }),
-
-/***/ "./src/util/addClickToNode.ts":
-/*!************************************!*\
-  !*** ./src/util/addClickToNode.ts ***!
-  \************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   addClickToNode: () => (/* binding */ addClickToNode)
-/* harmony export */ });
-/* harmony import */ var _config_error_log__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config/error-log */ "./src/config/error-log.ts");
-/* harmony import */ var _addEvent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./addEvent */ "./src/util/addEvent.ts");
-
-
-const addClickToNode = (node) => {
-    try {
-        if (node.classList && node.classList.contains('uda_exclude')) {
-            return;
-        }
-        if (node.hasOwnProperty("addedClickRecord") && node.addedClickRecord === true) {
-            return;
-        }
-        let clickableNode = node;
-        let recordNode = node;
-        const nodeName = clickableNode.nodeName.toLowerCase();
-        // fix for select2 library
-        if (node.classList && node.classList.contains('select2-selection')) {
-            (0,_addEvent__WEBPACK_IMPORTED_MODULE_1__.addEvent)(node, 'focus');
-            node.addedClickRecord = true;
-            return;
-        }
-        switch (nodeName) {
-            case "a":
-                (0,_addEvent__WEBPACK_IMPORTED_MODULE_1__.addEvent)(clickableNode, 'click');
-                break;
-            case "select":
-                (0,_addEvent__WEBPACK_IMPORTED_MODULE_1__.addEvent)(clickableNode, 'click');
-                break;
-            case "input":
-                if (!clickableNode.hasAttribute("type")) {
-                    (0,_addEvent__WEBPACK_IMPORTED_MODULE_1__.addEvent)(clickableNode, 'click');
-                    return node;
-                }
-                const inputType = clickableNode.getAttribute("type").toLowerCase();
-                switch (inputType) {
-                    case "email":
-                    case "text":
-                    case "button":
-                    case "color":
-                    case "date":
-                    case "datetime-local":
-                    case "file":
-                    case "hidden":
-                    case "image":
-                    case "month":
-                    case "number":
-                    case "password":
-                    case "range":
-                    case "reset":
-                    case "search":
-                    case "submit":
-                    case "tel":
-                    case "time":
-                    case "url":
-                    case "textarea":
-                    case "week":
-                        (0,_addEvent__WEBPACK_IMPORTED_MODULE_1__.addEvent)(clickableNode, 'click');
-                        break;
-                    case "checkbox":
-                    case "radio":
-                        (0,_addEvent__WEBPACK_IMPORTED_MODULE_1__.addEvent)(clickableNode, 'click');
-                        break;
-                    default:
-                        (0,_addEvent__WEBPACK_IMPORTED_MODULE_1__.addEvent)(clickableNode, 'click');
-                        break;
-                }
-                break;
-            case "mat-select":
-            case "textarea":
-            case "button":
-            case "tr":
-                (0,_addEvent__WEBPACK_IMPORTED_MODULE_1__.addEvent)(clickableNode, 'click');
-                break;
-            default:
-                (0,_addEvent__WEBPACK_IMPORTED_MODULE_1__.addEvent)(clickableNode, 'click');
-                break;
-        }
-        clickableNode.addedClickRecord = true;
-        return node;
-    }
-    catch (e) {
-        _config_error_log__WEBPACK_IMPORTED_MODULE_0__.UDAErrorLogger.error("Unable to add click to node " + node.outerHTML + " " + e);
-    }
-};
-
-
-/***/ }),
-
-/***/ "./src/util/addEvent.ts":
-/*!******************************!*\
-  !*** ./src/util/addEvent.ts ***!
-  \******************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   addEvent: () => (/* binding */ addEvent)
-/* harmony export */ });
-/* harmony import */ var _recordUserClick__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./recordUserClick */ "./src/util/recordUserClick.ts");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-/**
- * Adds event to an element
- * @param node
- * @param eventType
- * @param callback
- * @returns void
- */
-const addEvent = (node, eventType, callback = null) => {
-    if (callback !== null) {
-        node.addEventListener(eventType, callback, { once: false });
-    }
-    else {
-        node.addEventListener(eventType, function (event) {
-            return __awaiter(this, void 0, void 0, function* () {
-                yield (0,_recordUserClick__WEBPACK_IMPORTED_MODULE_0__.recordUserClick)(node, event);
-            });
-        }, { once: false });
-    }
-};
-
-
-/***/ }),
-
-/***/ "./src/util/addNotification.ts":
-/*!*************************************!*\
-  !*** ./src/util/addNotification.ts ***!
-  \*************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   addNotification: () => (/* binding */ addNotification)
-/* harmony export */ });
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/notification/index.js");
-
-/**
- *
- * @param title
- * @param description
- * @param status
- * @param placement
- */
-const addNotification = (title = '', description = '', status = 'info', placement = 'top') => {
-    const args = {
-        message: title,
-        description: description,
-        placement: placement,
-        getContainer: () => {
-            return document.getElementById('udan-react-root').shadowRoot;
-        }
-    };
-    antd__WEBPACK_IMPORTED_MODULE_0__["default"][status](args);
-};
-
-
-/***/ }),
-
-/***/ "./src/util/checkBrowser.ts":
-/*!**********************************!*\
-  !*** ./src/util/checkBrowser.ts ***!
-  \**********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   checkBrowser: () => (/* binding */ checkBrowser)
-/* harmony export */ });
-/* harmony import */ var detect_browser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! detect-browser */ "./node_modules/detect-browser/es/index.js");
-
-const checkBrowser = () => {
-    const udaIdentifiedBrowser = (0,detect_browser__WEBPACK_IMPORTED_MODULE_0__.detect)();
-    let enableUDAPlugin = false;
-    let udaBrowserVar;
-    switch (udaIdentifiedBrowser && udaIdentifiedBrowser.name) {
-        case 'edge-chromium':
-        case 'edge':
-        case 'edge-ios':
-        case 'chrome':
-            enableUDAPlugin = true;
-            udaBrowserVar = chrome;
-            break;
-        default:
-            if (typeof browser !== "undefined") {
-                udaBrowserVar = browser;
-            }
-            break;
-    }
-    return { enableUDAPlugin: enableUDAPlugin, udaBrowserVar: udaBrowserVar, udaIdentifiedBrowser: udaIdentifiedBrowser };
-};
-
-
-/***/ }),
-
-/***/ "./src/util/checkNodeObjectKeyValue.ts":
-/*!*********************************************!*\
-  !*** ./src/util/checkNodeObjectKeyValue.ts ***!
-  \*********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   checkNodeObjectKeyValue: () => (/* binding */ checkNodeObjectKeyValue)
-/* harmony export */ });
-/* harmony import */ var _hasClass__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./hasClass */ "./src/util/hasClass.ts");
-
-const checkNodeObjectKeyValue = (node, key, objectValues, checkType) => {
-    var _a;
-    let exists = false;
-    switch (key.toLowerCase()) {
-        case 'tags':
-            if (objectValues.includes((_a = node === null || node === void 0 ? void 0 : node.tagName) === null || _a === void 0 ? void 0 : _a.trim().toLowerCase())) {
-                exists = true;
-            }
-            break;
-        case 'classes':
-            if ((0,_hasClass__WEBPACK_IMPORTED_MODULE_0__.hasClass)(node, objectValues)) {
-                exists = true;
-            }
-            break;
-        case 'attributes':
-            attributeLoop: for (const attribute of objectValues) {
-                if (node.hasAttribute(attribute)) {
-                    exists = true;
-                    break attributeLoop;
-                }
-            }
-            break;
-        case 'ids':
-            if (node.id && objectValues.includes(node.id.trim().toLowerCase())) {
-                exists = true;
-            }
-            break;
-    }
-    return exists;
-};
-
-
-/***/ }),
-
-/***/ "./src/util/checkNodeValues.ts":
-/*!*************************************!*\
-  !*** ./src/util/checkNodeValues.ts ***!
-  \*************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   checkNodeValues: () => (/* binding */ checkNodeValues)
-/* harmony export */ });
-/* harmony import */ var _checkNodeObjectKeyValue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./checkNodeObjectKeyValue */ "./src/util/checkNodeObjectKeyValue.ts");
-
-const checkNodeValues = (node, checkType) => {
-    let exists = false;
-    if (udaSpecialNodes[checkType] && node) {
-        checkNodeLoop: for (const key in udaSpecialNodes[checkType]) {
-            if ((0,_checkNodeObjectKeyValue__WEBPACK_IMPORTED_MODULE_0__.checkNodeObjectKeyValue)(node, key, udaSpecialNodes[checkType][key], checkType)) {
-                exists = true;
-                break checkNodeLoop;
-            }
-        }
-    }
-    return exists;
-};
-
-
-/***/ }),
-
-/***/ "./src/util/checkScreenSize.ts":
-/*!*************************************!*\
-  !*** ./src/util/checkScreenSize.ts ***!
-  \*************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   checkScreenSize: () => (/* binding */ checkScreenSize)
-/* harmony export */ });
-/* harmony import */ var _config_error_log__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config/error-log */ "./src/config/error-log.ts");
-
-/**
- * Checks the screen size and determines plugin compatibility and alert status
- * based on effective resolution calculations.
- *
- * Minimum requirements:
- * - Height: 720px (optimal: 1080px)
- * - Width: 1280px (optimal: 1920px)
- *
- * @returns {Object} Object containing:
- *   - enablePluginForScreen: boolean - Whether the plugin should be enabled
- *   - showScreenAlert: boolean - Whether to show resolution warning
- */
-const checkScreenSize = () => {
-    try {
-        // Verify browser environment
-        /*if (typeof window === 'undefined') {
-            throw new Error('Window object is not available');
-        }
-
-        // Get current screen dimensions
-        const screenSize = getScreenSize();
-
-        // Validate screen size data structure
-        if (!screenSize || !screenSize.resolution) {
-            throw new Error('Invalid screen size object');
-        }
-
-        // Ensure resolution values are valid numbers
-        if (typeof screenSize.resolution.width !== 'number' ||
-            typeof screenSize.resolution.height !== 'number' ||
-            screenSize.resolution.width <= 0 ||
-            screenSize.resolution.height <= 0) {
-            throw new Error('Invalid resolution values');
-        }
-
-        // Get device pixel ratio for high DPI displays
-        const devicePixelRatio = window.devicePixelRatio || 1;
-
-        // Validate device pixel ratio
-        if (devicePixelRatio <= 0) {
-            throw new Error('Invalid device pixel ratio');
-        }
-
-        // Calculate effective dimensions accounting for pixel ratio
-        const effectiveHeight = screenSize.resolution.height * devicePixelRatio;
-        const effectiveWidth = screenSize.resolution.width * devicePixelRatio;
-
-        // Initialize status flags
-        let enablePluginForScreen = true;
-        let showScreenAlert = false;
-
-        // Check height requirements
-        if (effectiveHeight < 720) {
-            enablePluginForScreen = false;
-        } else if (effectiveHeight < 1080) {
-            showScreenAlert = true;
-        }
-
-        // Check width requirements
-        if (effectiveWidth < 1280) {
-            enablePluginForScreen = false;
-        } else if (effectiveWidth < 1920) {
-            showScreenAlert = true;
-        }
-
-        // Log resolution information
-        UDAConsoleLogger.info(`System given resolution is: ${screenSize.resolution.width}x${screenSize.resolution.height}`);
-        UDAConsoleLogger.info(`Current resolution is: ${effectiveWidth}x${effectiveHeight}`);
-
-        return { enablePluginForScreen, showScreenAlert };*/
-        return { enablePluginForScreen: true, showScreenAlert: false };
-    }
-    catch (error) {
-        // Log error and return safe defaults
-        _config_error_log__WEBPACK_IMPORTED_MODULE_0__.UDAErrorLogger.error(`Screen size check failed: ${error.message}`);
-        return {
-            enablePluginForScreen: false,
-            showScreenAlert: true
-        };
-    }
-};
-
-
-/***/ }),
-
-/***/ "./src/util/domChanges.ts":
-/*!********************************!*\
-  !*** ./src/util/domChanges.ts ***!
-  \********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   timer: () => (/* binding */ timer)
-/* harmony export */ });
-/* harmony import */ var _addBodyEvents__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./addBodyEvents */ "./src/util/addBodyEvents.ts");
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config */ "./src/config/index.ts");
-/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index */ "./src/util/index.ts");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-let timer = null;
-const observer = new MutationObserver((mutationList, observer) => __awaiter(void 0, void 0, void 0, function* () {
-    if (timer) {
-        clearTimeout(timer);
-    }
-    timer = setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
-        const isRecording = (0,_index__WEBPACK_IMPORTED_MODULE_2__.getFromStore)(_config__WEBPACK_IMPORTED_MODULE_1__.CONFIG.RECORDING_SWITCH_KEY, true) == "true";
-        if (isRecording) {
-            yield (0,_addBodyEvents__WEBPACK_IMPORTED_MODULE_0__.addBodyEvents)();
-        }
-    }), _config__WEBPACK_IMPORTED_MODULE_1__.CONFIG.indexInterval);
-}));
-observer.observe(document.body, { attributes: true, childList: true, subtree: true });
-
-
-/***/ }),
-
-/***/ "./src/util/events.ts":
-/*!****************************!*\
-  !*** ./src/util/events.ts ***!
-  \****************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   off: () => (/* binding */ off),
-/* harmony export */   on: () => (/* binding */ on),
-/* harmony export */   once: () => (/* binding */ once),
-/* harmony export */   trigger: () => (/* binding */ trigger)
-/* harmony export */ });
-const on = (eventType, listener) => {
-    document.addEventListener(eventType, listener);
-};
-const off = (eventType, listener) => {
-    document.removeEventListener(eventType, listener);
-};
-const once = (eventType, listener) => {
-    on(eventType, handleEventOnce);
-    function handleEventOnce(event) {
-        listener(event);
-        off(eventType, handleEventOnce);
-    }
-};
-const trigger = (eventType, data) => {
-    const event = new CustomEvent(eventType, data);
-    document.dispatchEvent(event);
-};
-
-
-/***/ }),
-
-/***/ "./src/util/fetchDomain.ts":
-/*!*********************************!*\
-  !*** ./src/util/fetchDomain.ts ***!
-  \*********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   fetchDomain: () => (/* binding */ fetchDomain)
-/* harmony export */ });
-/* harmony import */ var parse_domain__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! parse-domain */ "./node_modules/parse-domain/build/parse-domain.js");
-
-const fetchDomain = () => {
-    let finalDomain = window.location.host;
-    // fetching top level domain based on the flag provided.
-    if (__webpack_require__.g.UDAGlobalConfig.enableForAllDomains) {
-        const parseResult = (0,parse_domain__WEBPACK_IMPORTED_MODULE_0__.parseDomain)(finalDomain);
-        switch (parseResult.type) {
-            case parse_domain__WEBPACK_IMPORTED_MODULE_0__.ParseResultType.Listed: {
-                const { hostname, domain, subDomains, topLevelDomains } = parseResult;
-                finalDomain = domain + '.' + topLevelDomains.join('.');
-                break;
-            }
-            case parse_domain__WEBPACK_IMPORTED_MODULE_0__.ParseResultType.Reserved:
-            case parse_domain__WEBPACK_IMPORTED_MODULE_0__.ParseResultType.NotListed: {
-                const { hostname } = parseResult;
-                console.log(`${hostname} is a reserved or unknown domain`);
-                break;
-            }
-            default:
-                const { hostname } = parseResult;
-                console.log(hostname);
-        }
-    }
-    return finalDomain;
-};
-
-
-/***/ }),
-
-/***/ "./src/util/getClickedInputLabels.ts":
-/*!*******************************************!*\
-  !*** ./src/util/getClickedInputLabels.ts ***!
-  \*******************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   getClickedInputLabels: () => (/* binding */ getClickedInputLabels)
-/* harmony export */ });
-/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index */ "./src/util/index.ts");
-//getting input label for the clicked node
-
-const getClickedInputLabels = (node, fromDocument = false, selectchange = false) => {
-    var _a, _b, _c, _d;
-    if (!node) {
-        return null;
-    }
-    let inputLabels = "";
-    let nodeName = node.nodeName.toLowerCase();
-    let textLabels = [];
-    try {
-        inputLabels = (0,_index__WEBPACK_IMPORTED_MODULE_0__.getLabelsForInputElement)(node);
-        if (inputLabels)
-            return inputLabels;
-    }
-    catch (e) {
-    }
-    switch (nodeName) {
-        case "select":
-            if (selectchange) {
-                inputLabels = (0,_index__WEBPACK_IMPORTED_MODULE_0__.getSelectedTextFromSelectBox)(node);
-            }
-            else {
-                textLabels = (0,_index__WEBPACK_IMPORTED_MODULE_0__.getNodeLabels)(node, [], 1, true, false, true);
-                if (textLabels.length > 0) {
-                    let labels = [];
-                    for (let j = 0; j < textLabels.length; j++) {
-                        labels.push(textLabels[j].text);
-                    }
-                    inputLabels = labels.toString();
-                }
-            }
-            break;
-        case "input":
-            if (!node.hasAttribute("type")) {
-                textLabels = (0,_index__WEBPACK_IMPORTED_MODULE_0__.getNodeLabels)(node, [], 1, true, true, true);
-                if (textLabels.length > 0) {
-                    let labels = [];
-                    for (let j = 0; j < textLabels.length; j++) {
-                        labels.push(textLabels[j].text);
-                    }
-                    inputLabels = labels.toString();
-                }
-            }
-            else {
-                switch ((_a = node === null || node === void 0 ? void 0 : node.getAttribute("type")) === null || _a === void 0 ? void 0 : _a.toLowerCase()) {
-                    default:
-                        textLabels = (0,_index__WEBPACK_IMPORTED_MODULE_0__.getNodeLabels)(node, [], 1, true, true, true);
-                        if (textLabels.length > 0) {
-                            let labels = [];
-                            for (let j = 0; j < textLabels.length; j++) {
-                                labels.push(textLabels[j].text);
-                            }
-                            inputLabels = labels.toString();
-                        }
-                }
-                break;
-            }
-            break;
-        case "textarea":
-            textLabels = (0,_index__WEBPACK_IMPORTED_MODULE_0__.getNodeLabels)(node, [], 1, true, true, true);
-            if (textLabels.length > 0) {
-                let labels = [];
-                for (let j = 0; j < textLabels.length; j++) {
-                    labels.push(textLabels[j].text);
-                }
-                inputLabels = labels.toString();
-            }
-            break;
-        case "img":
-            textLabels = (0,_index__WEBPACK_IMPORTED_MODULE_0__.getNodeLabels)(node, [], 1, true, false, true);
-            if (textLabels.length > 0) {
-                let labels = [];
-                for (let j = 0; j < textLabels.length; j++) {
-                    labels.push(textLabels[j].text);
-                }
-                inputLabels = labels.toString();
-            }
-            break;
-        default:
-            if (!((_b = node === null || node === void 0 ? void 0 : node.children) === null || _b === void 0 ? void 0 : _b.length) && ((_d = (_c = node === null || node === void 0 ? void 0 : node.innerText) === null || _c === void 0 ? void 0 : _c.trim()) === null || _d === void 0 ? void 0 : _d.length) > 0) {
-                return node === null || node === void 0 ? void 0 : node.innerText;
-            }
-            textLabels = (0,_index__WEBPACK_IMPORTED_MODULE_0__.getNodeLabels)(node, [], 1, false, true, true);
-            if (textLabels.length > 0) {
-                let labels = [];
-                for (let j = 0; j < textLabels.length; j++) {
-                    labels.push(textLabels[j].text);
-                }
-                inputLabels = labels.toString();
-            }
-    }
-    return inputLabels;
-};
-
-
-/***/ }),
-
-/***/ "./src/util/hasClass.ts":
-/*!******************************!*\
-  !*** ./src/util/hasClass.ts ***!
-  \******************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   hasClass: () => (/* binding */ hasClass)
-/* harmony export */ });
-/**
- * To find an dom object has a given class
- * @param element
- * @param classList
- * @returns
- */
-const hasClass = (element, classList) => {
-    let existsFlag = false;
-    classList === null || classList === void 0 ? void 0 : classList.forEach(cls => {
-        var _a;
-        try {
-            if (((_a = element === null || element === void 0 ? void 0 : element.className) === null || _a === void 0 ? void 0 : _a.indexOf(cls)) > -1) {
-                existsFlag = true;
-                return existsFlag;
-            }
-        }
-        catch (e) {
-            return false;
-        }
-    });
-    return existsFlag;
-};
-
-
-/***/ }),
-
-/***/ "./src/util/index.ts":
-/*!***************************!*\
-  !*** ./src/util/index.ts ***!
-  \***************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   clickableElementExists: () => (/* binding */ clickableElementExists),
-/* harmony export */   compareNodes: () => (/* binding */ compareNodes),
-/* harmony export */   delayLink: () => (/* binding */ delayLink),
-/* harmony export */   errorLog: () => (/* binding */ errorLog),
-/* harmony export */   generateUUID: () => (/* binding */ generateUUID),
-/* harmony export */   getAbsoluteOffsets: () => (/* binding */ getAbsoluteOffsets),
-/* harmony export */   getAllChildren: () => (/* binding */ getAllChildren),
-/* harmony export */   getAllClickableElements: () => (/* binding */ getAllClickableElements),
-/* harmony export */   getCurrentPlayItem: () => (/* binding */ getCurrentPlayItem),
-/* harmony export */   getDirectInnerText: () => (/* binding */ getDirectInnerText),
-/* harmony export */   getFromStore: () => (/* binding */ getFromStore),
-/* harmony export */   getLabelsForInputElement: () => (/* binding */ getLabelsForInputElement),
-/* harmony export */   getNodeLabels: () => (/* binding */ getNodeLabels),
-/* harmony export */   getObjData: () => (/* binding */ getObjData),
-/* harmony export */   getSelectedTextFromSelectBox: () => (/* binding */ getSelectedTextFromSelectBox),
-/* harmony export */   inArray: () => (/* binding */ inArray),
-/* harmony export */   logInfo: () => (/* binding */ logInfo),
-/* harmony export */   parentUpTo: () => (/* binding */ parentUpTo),
-/* harmony export */   removeFromStore: () => (/* binding */ removeFromStore),
-/* harmony export */   setToStore: () => (/* binding */ setToStore),
-/* harmony export */   squeezeBody: () => (/* binding */ squeezeBody)
-/* harmony export */ });
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config */ "./src/config/index.ts");
-/* harmony import */ var jaro_winkler_typescript__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! jaro-winkler-typescript */ "./node_modules/jaro-winkler-typescript/lib/index.js");
-/* harmony import */ var typescript_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! typescript-json */ "./node_modules/typescript-json/lib/index.js");
-/* harmony import */ var typescript_json__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(typescript_json__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _initSpecialNodes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./initSpecialNodes */ "./src/util/initSpecialNodes.ts");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-
-__webpack_require__(/*! ./domChanges */ "./src/util/domChanges.ts");
-/**
- *
- * @param data
- * @param key
- * @param isRaw - is raw data or json
- */
-const setToStore = (data, key, isRaw) => {
-    localStorage.setItem(key, !isRaw ? (input => {
-        return undefined !== input ? JSON.stringify(input) : undefined;
-    })(data) : data);
-};
-/**
- *
- * @param key
- * @param isRaw - is raw data or json
- * @returns
- */
-const getFromStore = (key, isRaw) => {
-    const data = localStorage.getItem(key);
-    if (data)
-        return !isRaw ? JSON.parse(data) : data;
-};
-/**
- *
- * @param key
- * @returns
- */
-const removeFromStore = (key) => {
-    localStorage.removeItem(key);
-};
-/**
- * Generates random unique UUID
- * @returns UUID
- */
-const generateUUID = () => {
-    let d = new Date().getTime();
-    let uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-        let r = (d + Math.random() * 16) % 16 | 0;
-        d = Math.floor(d / 16);
-        return (c == "x" ? r : (r & 0x7) | 0x8).toString(16);
-    });
-    return uuid.toUpperCase();
-};
-/**
- * Toggles(squeeze) content body element width
- * @param hide
- */
-const squeezeBody = (hide) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0,_initSpecialNodes__WEBPACK_IMPORTED_MODULE_3__.initSpecialNodes)();
-    if (!__webpack_require__.g.UDAGlobalConfig.enableOverlay) {
-        let documentBody = document.body;
-        if (!hide) {
-            documentBody.style.maxWidth = '77%';
-            documentBody.style.minWidth = '77%';
-            documentBody.style.float = 'left';
-        }
-        else {
-            documentBody.style.maxWidth = '100%';
-            documentBody.style.minWidth = '100%';
-            documentBody.style.float = 'none';
-        }
-    }
-});
-/**
- * Returns index if an element in given array found
- * @param elem
- * @param array
- * @returns index
- */
-const inArray = (elem, array) => {
-    if (array.indexOf) {
-        return array.indexOf(elem);
-    }
-    for (let i = 0, length = array === null || array === void 0 ? void 0 : array.length; i < length; i++) {
-        if (array[i] === elem) {
-            return i;
-        }
-    }
-    return -1;
-};
-const errorLog = (err) => {
-    console.log(err);
-};
-const logInfo = (info) => {
-    console.log(info);
-};
-/**
- * To delay Hyperlink click navitaion
- * @param node
- */
-const delayLink = (node) => {
-    const _href = node.getAttribute("href");
-    if (_href) {
-        node.setAttribute("data-href", _href);
-    }
-};
-/**
- * return parent element
- * @param el target element
- * @param tagName tag name to be matched
- * @returns
- */
-const parentUpTo = (el, tagName) => {
-    tagName = tagName.toLowerCase();
-    if (el.tagName && el.tagName.toLowerCase() == tagName)
-        return el;
-    let depth = 0;
-    while (el && el.parentNode && depth <= 6) {
-        el = el.parentNode;
-        if (el.tagName && el.tagName.toLowerCase() == tagName) {
-            return el;
-        }
-        depth++;
-    }
-    // Many DOM methods return null if they don't
-    // find the element they are searching for
-    // It would be OK to omit the following and just
-    // return undefined
-    return null;
-};
-/**
- * compares current playable node from storage based on status "completed"
- * @returns object with index and node
- */
-const getCurrentPlayItem = () => {
-    var _a;
-    const elementsFromStore = getFromStore(_config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.SELECTED_RECORDING, false);
-    const retObj = { index: 0, node: null };
-    for (let i = 0; i < ((_a = elementsFromStore === null || elementsFromStore === void 0 ? void 0 : elementsFromStore.userclicknodesSet) === null || _a === void 0 ? void 0 : _a.length); i++) {
-        if ((elementsFromStore === null || elementsFromStore === void 0 ? void 0 : elementsFromStore.userclicknodesSet[i].status) != "completed") {
-            retObj.index = i;
-            retObj.node = elementsFromStore === null || elementsFromStore === void 0 ? void 0 : elementsFromStore.userclicknodesSet[i];
-            retObj.additionalParams = elementsFromStore === null || elementsFromStore === void 0 ? void 0 : elementsFromStore.additionalParams;
-            break;
-        }
-    }
-    return retObj;
-};
-// getting the text for the clicknodes.
-const getNodeLabels = (node, inputlabels, iterationno, iterate = true, getchildlabels = true, fromclick = false, iteratelimit = 3, ignorenode = []) => {
-    if (!node)
-        return inputlabels;
-    try {
-        if (Array.isArray(ignorenode)) {
-            ignorenode = node;
-        }
-        if ((node.nodeName.toLowerCase() === "select" ||
-            node.nodeName.toLowerCase() === "checkbox") &&
-            iterate &&
-            inputlabels.length === 0) {
-            iterationno++;
-            inputlabels = getNodeLabels(node === null || node === void 0 ? void 0 : node.parentNode, inputlabels, iterationno, iterate, true, fromclick, iteratelimit, ignorenode);
-            if (fromclick) {
-                //todo need to rework
-            }
-        }
-        if (node.nodeName.toLowerCase() === "input" ||
-            node.nodeName.toLowerCase() === "textarea" ||
-            node.nodeName.toLowerCase() === "img") {
-            if (node.getAttribute("placeholder") &&
-                node.getAttribute("placeholder") !== "") {
-                inputlabels.push({
-                    text: node.getAttribute("placeholder").toString(),
-                    match: false,
-                });
-            }
-            if (node.getAttribute("type") &&
-                (node.getAttribute("type").toLowerCase() === "submit" ||
-                    node.getAttribute("type").toLowerCase() === "file")) {
-                if (node.getAttribute("value")) {
-                    inputlabels.push({
-                        text: node.getAttribute("value").toString(),
-                        match: false,
-                    });
-                    iterate = false;
-                }
-            }
-            if (node.getAttribute("alt")) {
-                inputlabels.push({
-                    text: node.getAttribute("alt").toString(),
-                    match: false,
-                });
-            }
-        }
-        if (getchildlabels && node.childNodes.length > 0) {
-            let childNodes = node.childNodes;
-            childNodes === null || childNodes === void 0 ? void 0 : childNodes.forEach(function (childNode) {
-                if (childNode.nodeName.toLowerCase() !== "script" &&
-                    childNode.nodeName.toLowerCase() !== "select" &&
-                    childNode.nodeName.toLowerCase() !== "#comment") {
-                    let textcontent = childNode.textContent
-                        .replace(/[\n\r]+|[\s]{2,}/g, " ")
-                        .trim();
-                    if (textcontent !== "" &&
-                        typeof (ignorenode === null || ignorenode === void 0 ? void 0 : ignorenode.isSameNode) === "function" &&
-                        (ignorenode === null || ignorenode === void 0 ? void 0 : ignorenode.isSameNode(childNode)) === false) {
-                        inputlabels.push({ text: textcontent, match: false });
-                    }
-                }
-            });
-        }
-        if (inputlabels.length === 0 && node.getAttribute("data-tooltip")) {
-            inputlabels.push({
-                text: node.getAttribute("data-tooltip").toString(),
-                match: false,
-            });
-        }
-        if (inputlabels.length === 0 && node.getAttribute("aria-label")) {
-            inputlabels.push({
-                text: node.getAttribute("aria-label").toString(),
-                match: false,
-            });
-        }
-        //todo fix for image tags
-        if (iterate &&
-            node.nodeName.toLowerCase() !== "img" &&
-            inputlabels.length === 0 &&
-            iterationno <= iteratelimit) {
-            iterationno++;
-            inputlabels = getNodeLabels(node.parentNode, [], iterationno, iterate, getchildlabels, fromclick, iteratelimit, null);
-        }
-        if (inputlabels.length === 0 && node.id !== "") {
-            inputlabels.push({
-                text: node.nodeName.toLowerCase() + "-" + node.id,
-                match: false,
-            });
-        }
-        else if (inputlabels.length === 0 &&
-            node.hasAttribute("class") &&
-            node.className &&
-            node.className !== "") {
-            let classname = node.className.toString();
-            inputlabels.push({
-                text: node.nodeName.toLowerCase() + "-" + classname.replace(" ", "-"),
-                match: false,
-            });
-        }
-        else if (inputlabels.length === 0) {
-            inputlabels.push({ text: node.nodeName.toLowerCase(), match: false });
-        }
-    }
-    catch (e) {
-        // console.log(e);
-    }
-    return inputlabels;
-};
-const getDirectInnerText = (element) => {
-    const x = [];
-    let child = element.firstChild;
-    while (child) {
-        if (child.nodeType == 3) {
-            x.push(child.nodeValue);
-        }
-        else if (child.nodeType == 1) {
-            let ii = getDirectInnerText(child);
-            if (ii.length > 0)
-                x.push(ii);
-        }
-        child = child.nextSibling;
-    }
-    return x.join(" ");
-};
-/**
- * To get selected text from list options
- * @param node
- * @returns
- */
-const getSelectedTextFromSelectBox = (node) => {
-    var _a;
-    try {
-        return (_a = node === null || node === void 0 ? void 0 : node.options) === null || _a === void 0 ? void 0 : _a[node === null || node === void 0 ? void 0 : node.selectedIndex].text;
-    }
-    catch (e) {
-    }
-};
-const getLabelsForInputElement = (element) => {
-    var _a;
-    let labels = [], id = element.id, name = element.name, elements = [];
-    if (id)
-        elements = document.querySelector("label[for='" + id + "']");
-    if (name && !element)
-        elements = document.querySelector("label[for='" + name + "']");
-    if (elements) {
-        labels = getDirectInnerText(elements);
-        if (labels)
-            return labels === null || labels === void 0 ? void 0 : labels.trim();
-    }
-    while ((element = element.parentNode)) {
-        if (((_a = element === null || element === void 0 ? void 0 : element.tagName) === null || _a === void 0 ? void 0 : _a.toLowerCase()) == "label") {
-            labels.push(element === null || element === void 0 ? void 0 : element.innerText());
-        }
-    }
-    return labels === null || labels === void 0 ? void 0 : labels.trim();
-};
-/**
- * To get all the children of a given parent
- * @param htmlElement
- * @returns HTMLElements Collection
- */
-const getAllChildren = (htmlElement) => {
-    var _a, _b;
-    let allChildElements = [];
-    try {
-        if (((_a = htmlElement === null || htmlElement === void 0 ? void 0 : htmlElement.children) === null || _a === void 0 ? void 0 : _a.length) === 0)
-            return [htmlElement];
-        for (let i = 0; i < ((_b = htmlElement === null || htmlElement === void 0 ? void 0 : htmlElement.children) === null || _b === void 0 ? void 0 : _b.length); i++) {
-            let children = getAllChildren(htmlElement.children[i]);
-            if (children)
-                allChildElements.push(...children);
-        }
-        allChildElements.push(htmlElement);
-    }
-    catch (e) {
-    }
-    return allChildElements;
-};
-/**
- * To recorded meta data
- * @param obj
- * @returns
- */
-const getObjData = (obj) => {
-    try {
-        const _objData = JSON.parse(obj);
-        if (_objData && _objData.meta === undefined)
-            _objData.meta = {};
-        return _objData;
-    }
-    catch (e) {
-        console.log(e);
-        return {};
-    }
-};
-/**
- * To check if a given element is already captured / recorded
- * @returns boolean
- * @param compareNode
- */
-const clickableElementExists = (compareNode) => {
-    var _a;
-    let existFlag = false;
-    if (!window.udanSelectedNodes)
-        window.udanSelectedNodes = [];
-    (_a = window === null || window === void 0 ? void 0 : window.udanSelectedNodes) === null || _a === void 0 ? void 0 : _a.forEach((element) => {
-        if (element.isSameNode(compareNode))
-            existFlag = true;
-    });
-    return existFlag;
-};
-/**
- * To compare two nodes equality
- * @param comparenode
- * @param originalnode
- * @param isPersonalNode
- * @param match
- * @returns
- */
-const compareNodes = (comparenode, originalnode, isPersonalNode = false, match = {
-    count: 0,
-    matched: 0,
-    unmatched: [],
-    innerTextFlag: false,
-    innerChildNodes: 0,
-}) => {
-    // sum the childnodes
-    if (comparenode.hasOwnProperty("childNodes")) {
-        match.innerChildNodes =
-            match.innerChildNodes + comparenode.childNodes.length;
-    }
-    for (let key in originalnode) {
-        if (_config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.ignoreAttributes.indexOf(key) !== -1) {
-            continue;
-        }
-        else if (key.indexOf("_ngcontent") !== -1 ||
-            key.indexOf("jQuery") !== -1 ||
-            key.indexOf("__zone_symbol__") !== -1) {
-            continue;
-        }
-        else {
-            match.count++;
-        }
-        if (comparenode.hasOwnProperty(key) &&
-            typeof originalnode[key] === "object" &&
-            typeof comparenode[key] === "object") {
-            match.matched++;
-            match = compareNodes(comparenode[key], originalnode[key], isPersonalNode, match);
-        }
-        else if (comparenode.hasOwnProperty(key) &&
-            Array.isArray(originalnode[key]) &&
-            originalnode[key].length > 0 &&
-            Array.isArray(comparenode[key]) &&
-            comparenode[key].length > 0) {
-            match.matched++;
-            if (comparenode[key].length === originalnode[key].length) {
-                match.matched++;
-                for (let i = 0; i < originalnode[key].length; i++) {
-                    match = compareNodes(comparenode[key][i], originalnode[key][i], isPersonalNode, match);
-                }
-            }
-        }
-        else if ((key === "class" || key === "className") &&
-            originalnode.hasOwnProperty(key) &&
-            comparenode.hasOwnProperty(key)) {
-            // fix for calendar issue
-            comparenode[key] = comparenode[key].replace(" ng-star-inserted", "");
-            originalnode[key] = originalnode[key].replace(" ng-star-inserted", "");
-            if (comparenode[key] === originalnode[key]) {
-                match.matched++;
-            }
-            else {
-                // jaro wrinker comparision for classname
-                let weight = (0,jaro_winkler_typescript__WEBPACK_IMPORTED_MODULE_1__.jaroWinkler)(originalnode[key], comparenode[key]);
-                if (weight > 0.9) {
-                    match.matched++;
-                }
-                else {
-                    match.unmatched.push({
-                        key: key,
-                        compareNodeValues: comparenode[key],
-                        recordedNodeValues: originalnode[key],
-                    });
-                }
-            }
-        }
-        else if (key === "innerText" &&
-            originalnode.hasOwnProperty(key) &&
-            comparenode.hasOwnProperty(key) &&
-            comparenode[key].trim() === originalnode[key].trim()) {
-            // matching inner text should be weighted more. We will add an arbitrarily large number - innerTextWeight.
-            // since this will match for every child node, we need to accommodate this logic whenever 'compareNodes' is called
-            // UDAConsoleLogger.info(comparenode[key].trim());
-            // UDAConsoleLogger.info(originalnode[key].trim());
-            match.innerTextFlag = true;
-            match.matched = match.matched + _config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.innerTextWeight;
-            // match.matched++;
-        }
-        else if (comparenode.hasOwnProperty(key) &&
-            comparenode[key] === originalnode[key]) {
-            match.matched++;
-        }
-        else if (comparenode.hasOwnProperty(key) &&
-            comparenode[key] !== originalnode[key] &&
-            key === "href" &&
-            originalnode[key].indexOf(comparenode[key]) !== -1) {
-            match.matched++;
-        }
-        else if (comparenode.hasOwnProperty(key) &&
-            (key === "id" || key === "name") &&
-            comparenode[key] !== originalnode[key]) {
-            let weight = (0,jaro_winkler_typescript__WEBPACK_IMPORTED_MODULE_1__.jaroWinkler)(originalnode[key], comparenode[key]);
-            if (weight > 0.9) {
-                match.matched++;
-            }
-        }
-        // matching personal node key value pairs for personal tag true
-        else if (isPersonalNode &&
-            _config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.personalNodeIgnoreAttributes.indexOf(key) !== -1) {
-            // make inner text flag to true if personal tag is true
-            if (key === "innerText") {
-                match.innerTextFlag = true;
-                match.matched = match.matched + _config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.innerTextWeight;
-            }
-            else {
-                match.matched++;
-            }
-        }
-        else {
-            match.unmatched.push({
-                key: key,
-                compareNodeValues: comparenode[key],
-                recordedNodeValues: originalnode[key],
-            });
-        }
-    }
-    return match;
-};
-/**
- * to get all clickable elements
- * @returns HTMLElements collection
- */
-const getAllClickableElements = () => {
-    window.scrollTo(0, 0);
-    let bodyRect = document.body.getBoundingClientRect();
-    let items = Array.prototype.slice
-        .call(document.querySelectorAll("*"))
-        .map(function (element) {
-        let rect = element === null || element === void 0 ? void 0 : element.getBoundingClientRect();
-        return {
-            element: element,
-            include: element.tagName.toLowerCase() === "button" ||
-                element.tagName.toLowerCase() === "a" ||
-                element.tagName.toLowerCase() === "input" ||
-                element.tagName.toLowerCase() === "select" ||
-                element.tagName.toLowerCase() === "img" ||
-                element.onclick != null ||
-                element.addEventListener != null ||
-                window.getComputedStyle(element).cursor == "pointer",
-            rect: {
-                left: Math.max(rect.left - bodyRect.x, 0),
-                top: Math.max(rect.top - bodyRect.y, 0),
-                right: Math.min(rect.right - bodyRect.x, document.body.clientWidth),
-                bottom: Math.min(rect.bottom - bodyRect.y, document.body.clientHeight),
-            },
-            text: element.textContent.trim().replace(/\s{2,}/g, " "),
-        };
-    })
-        .filter((item) => item.include &&
-        (item.rect.right - item.rect.left) * (item.rect.bottom - item.rect.top) >=
-            20);
-    // Only keep inner clickable items
-    return items.filter((x) => !items.some((y) => x.element.contains(y.element) && !(x == y)));
-};
-const getAbsoluteOffsets = (element) => {
-    let cords = { x: 0, y: 0 };
-    try {
-        let currentElement = element;
-        while (currentElement !== null) {
-            cords.x += currentElement.offsetLeft;
-            cords.x -= currentElement.scrollLeft;
-            cords.y += currentElement.offsetTop;
-            cords.y -= currentElement.scrollTop;
-            currentElement = currentElement.offsetParent;
-        }
-    }
-    catch (e) {
-        console.log(e);
-    }
-    return cords;
-};
-
-
-/***/ }),
-
-/***/ "./src/util/initSpecialNodes.ts":
-/*!**************************************!*\
-  !*** ./src/util/initSpecialNodes.ts ***!
-  \**************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   initSpecialNodes: () => (/* binding */ initSpecialNodes)
-/* harmony export */ });
-/* harmony import */ var _services_searchService__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../services/searchService */ "./src/services/searchService.ts");
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config */ "./src/config/index.ts");
-/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index */ "./src/util/index.ts");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-__webpack_require__.g.udaSpecialNodes;
-/**
- * Initialize special nodes for Udan con.
- * Fetches special nodes for the REST service and sets ignorable classes.
- */
-const initSpecialNodes = () => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c, _d, _e, _f;
-    // Fetch special nodes for REST service
-    __webpack_require__.g.udaSpecialNodes = yield (0,_services_searchService__WEBPACK_IMPORTED_MODULE_0__.fetchSpecialNodes)();
-    // Get all children of Uda container
-    const children = (0,_index__WEBPACK_IMPORTED_MODULE_2__.getAllChildren)(document.querySelector(`.${_config__WEBPACK_IMPORTED_MODULE_1__.CONFIG.UDA_CONTAINER_CLASS}`));
-    // Iterate through each child
-    for (let i = 0; i < (children === null || children === void 0 ? void 0 : children.length); i++) {
-        try {
-            // Check if the child is not excluded and not already ignored
-            if (children[i] &&
-                !((_c = (_b = (_a = __webpack_require__.g.udaSpecialNodes) === null || _a === void 0 ? void 0 : _a.exclude) === null || _b === void 0 ? void 0 : _b.tags) === null || _c === void 0 ? void 0 : _c.includes((_f = (_e = (_d = children[i]) === null || _d === void 0 ? void 0 : _d.tagName) === null || _e === void 0 ? void 0 : _e.trim()) === null || _f === void 0 ? void 0 : _f.toLocaleLowerCase())) &&
-                children[i].className.indexOf(_config__WEBPACK_IMPORTED_MODULE_1__.CONFIG.UDA_CLICK_IGNORE_CLASS) == -1) {
-                // Add UDA click ignore class to the child
-                children[i].className += " " + _config__WEBPACK_IMPORTED_MODULE_1__.CONFIG.UDA_CLICK_IGNORE_CLASS;
-            }
-        }
-        catch (e) {
-            // Handle any errors
-        }
-    }
-});
-
-
-/***/ }),
-
-/***/ "./src/util/isClickableNode.ts":
-/*!*************************************!*\
-  !*** ./src/util/isClickableNode.ts ***!
-  \*************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   isClickableNode: () => (/* binding */ isClickableNode)
-/* harmony export */ });
-/* harmony import */ var _checkNodeValues__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./checkNodeValues */ "./src/util/checkNodeValues.ts");
-
-const isClickableNode = (element) => {
-    if (!element)
-        return false;
-    /*if(element.hasAttribute("udaIgnoreChildren")) {
-      element.removeAttribute("udaIgnoreChildren");
-    }
-  
-    if(element.hasAttribute("udaIgnoreNode")) {
-      element.removeAttribute("udaIgnoreNode");
-    }*/
-    const isUdaPanel = element.closest('#udan-react-root');
-    if (isUdaPanel) {
-        return false;
-    }
-    //add the record click for parent element and ignore the children
-    const closestParent = element.closest('[udaIgnoreChildren]');
-    if (closestParent) {
-        return false;
-    }
-    let isAllowedElement = window.getComputedStyle(element).cursor == "pointer";
-    // checking the node exists in the included list for further processing.
-    if ((0,_checkNodeValues__WEBPACK_IMPORTED_MODULE_0__.checkNodeValues)(element, 'include')) {
-        isAllowedElement = true;
-    }
-    //Check the clickable element exists in clickable objects
-    if (!isAllowedElement) {
-        clickObjectLoop: for (let i = 0; i < (UDAClickObjects === null || UDAClickObjects === void 0 ? void 0 : UDAClickObjects.length); i++) {
-            if (element.isSameNode(UDAClickObjects[i].element)) {
-                isAllowedElement = true;
-                break clickObjectLoop;
-            }
-        }
-    }
-    // checking the node exists in the children ignore list for further processing.
-    if ((0,_checkNodeValues__WEBPACK_IMPORTED_MODULE_0__.checkNodeValues)(element, 'ignoreChildren')) {
-        if (!element.hasAttribute('udaIgnoreChildren')) {
-            element.setAttribute('udaIgnoreChildren', String(true));
-            isAllowedElement = true;
-        }
-    }
-    if ((0,_checkNodeValues__WEBPACK_IMPORTED_MODULE_0__.checkNodeValues)(element, 'ignoreClicksOnNodes')) {
-        if (!element.hasAttribute('udaIgnoreClick')) {
-            element.setAttribute('udaIgnoreClick', String(true));
-            isAllowedElement = false;
-        }
-    }
-    // checking the node exists in the excluded list for further processing.
-    if (isAllowedElement && (0,_checkNodeValues__WEBPACK_IMPORTED_MODULE_0__.checkNodeValues)(element, 'exclude')) {
-        isAllowedElement = false;
-    }
-    return isAllowedElement;
-};
-
-
-/***/ }),
-
-/***/ "./src/util/nodeInfo.ts":
-/*!******************************!*\
-  !*** ./src/util/nodeInfo.ts ***!
-  \******************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   getNodeCoordinates: () => (/* binding */ getNodeCoordinates),
-/* harmony export */   getNodeInfo: () => (/* binding */ getNodeInfo),
-/* harmony export */   getScreenSize: () => (/* binding */ getScreenSize)
-/* harmony export */ });
-const getNodeInfo = (node) => {
-    const screenSize = getScreenSize();
-    const nodePosition = node.getBoundingClientRect();
-    const pagePosition = getNodeCoordinates(node, screenSize);
-    const nodeInfo = { nodePosition: nodePosition, screenSize: screenSize, nodePagePosition: pagePosition };
-    return nodeInfo;
-};
-const getScreenSize = () => {
-    let page = { height: 0, width: 0 };
-    let screen = {};
-    let body = document.body, html = document.documentElement;
-    const docEl = document.documentElement;
-    const scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
-    const scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
-    page.height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
-    page.width = Math.max(body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth);
-    screen = window.screen;
-    let windowProperties = { page: page, screen: screen, scrollInfo: { scrollTop: scrollTop, scrollLeft: scrollLeft } };
-    return windowProperties;
-};
-const getNodeCoordinates = (element, windowSize) => {
-    const x = element.getBoundingClientRect();
-    let result = {
-        top: x.top + windowSize.scrollInfo.scrollTop,
-        width: x.width,
-        height: x.height,
-        left: x.left + windowSize.scrollInfo.scrollLeft,
-        actualPos: x
-    };
-    return result;
-};
-
-
-/***/ }),
-
-/***/ "./src/util/recordUserClick.ts":
-/*!*************************************!*\
-  !*** ./src/util/recordUserClick.ts ***!
-  \*************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   recordUserClick: () => (/* binding */ recordUserClick)
-/* harmony export */ });
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config */ "./src/config/index.ts");
-/* harmony import */ var _getClickedInputLabels__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getClickedInputLabels */ "./src/util/getClickedInputLabels.ts");
-/* harmony import */ var _config_error_log__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config/error-log */ "./src/config/error-log.ts");
-/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./index */ "./src/util/index.ts");
-/* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../services */ "./src/services/index.ts");
-/* harmony import */ var _checkNodeValues__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./checkNodeValues */ "./src/util/checkNodeValues.ts");
-/* harmony import */ var _recording_utils_mapClickedElementToHtmlFormElement__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./recording-utils/mapClickedElementToHtmlFormElement */ "./src/util/recording-utils/mapClickedElementToHtmlFormElement.ts");
-/* harmony import */ var _addNotification__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./addNotification */ "./src/util/addNotification.ts");
-/* harmony import */ var _translation__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./translation */ "./src/util/translation.ts");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-// add jsdocs
-
-
-
-
-
-
-
-
-
-__webpack_require__.g.udanSelectedNodes = [];
-__webpack_require__.g.clickedNode = null;
-/**
- *
- * @param node
- * @param fromDocument
- * @param selectChange
- * @param event
- * @returns
- */
-const recordUserClick = (node, event) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    if (!node)
-        return false;
-    const isRecording = (0,_index__WEBPACK_IMPORTED_MODULE_3__.getFromStore)(_config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.RECORDING_SWITCH_KEY, true) == "true";
-    if (!isRecording) {
-        return;
-    }
-    if (node.isSameNode(window.clickedNode)) {
-        return;
-    }
-    if (_config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.lastClickedTime && (_config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.lastClickedTime === Date.now() || ((_config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.lastClickedTime + 300) >= Date.now()))) {
-        return;
-    }
-    //should not record untrusted clicks
-    if (!event.isTrusted) {
-        return;
-    }
-    // node = event.target;
-    let recordingNode = node;
-    let addIsPersonal = false;
-    //add the record click for parent element and ignore the children
-    const closestParent = node.closest('[udaIgnoreChildren]');
-    if (closestParent) {
-        recordingNode = closestParent;
-        addIsPersonal = true;
-    }
-    if (recordingNode.isSameNode(window.clickedNode)) {
-        return;
-    }
-    // ignore click on unwanted node
-    if (recordingNode.hasAttribute('udaIgnoreClick')) {
-        return;
-    }
-    if ((0,_checkNodeValues__WEBPACK_IMPORTED_MODULE_5__.checkNodeValues)(recordingNode, 'exclude')) {
-        return;
-    }
-    if ((0,_index__WEBPACK_IMPORTED_MODULE_3__.clickableElementExists)(recordingNode) || (0,_index__WEBPACK_IMPORTED_MODULE_3__.clickableElementExists)(node)) {
-        return;
-    }
-    __webpack_require__.g.clickedNode = recordingNode;
-    let meta = {};
-    let _text = (0,_getClickedInputLabels__WEBPACK_IMPORTED_MODULE_1__.getClickedInputLabels)(recordingNode);
-    if (addIsPersonal) {
-        meta.isPersonal = true;
-    }
-    // adding default system detected html element type in metadata
-    if (UDAGlobalConfig.enableNodeTypeSelection) {
-        meta.systemDetected = (0,_recording_utils_mapClickedElementToHtmlFormElement__WEBPACK_IMPORTED_MODULE_6__["default"])(node);
-        if (meta.systemDetected.inputElement !== 'others') {
-            meta.selectedElement = meta.systemDetected;
-        }
-    }
-    if (!_text || (_text === null || _text === void 0 ? void 0 : _text.length) > 100 || !((_a = _text === null || _text === void 0 ? void 0 : _text.trim()) === null || _a === void 0 ? void 0 : _a.length)) {
-        meta.isPersonal = true;
-        _text = recordingNode.nodeName;
-    }
-    // adding personal flag to icon elements
-    if ((0,_checkNodeValues__WEBPACK_IMPORTED_MODULE_5__.checkNodeValues)(recordingNode, 'iconNodes')) {
-        meta.isPersonal = true;
-    }
-    // adding text editor name for the recording
-    if ((0,_checkNodeValues__WEBPACK_IMPORTED_MODULE_5__.checkNodeValues)(recordingNode, 'textEditors')) {
-        meta.displayText = 'Text Editor';
-    }
-    // adding drop down name for the recording
-    if ((0,_checkNodeValues__WEBPACK_IMPORTED_MODULE_5__.checkNodeValues)(recordingNode, 'dropDowns')) {
-        meta.displayText = 'Drop Down';
-    }
-    // adding Date selector for the recording
-    if ((0,_checkNodeValues__WEBPACK_IMPORTED_MODULE_5__.checkNodeValues)(recordingNode, 'datePicker')) {
-        meta.displayText = 'Date Selector';
-    }
-    const resp = yield (0,_services__WEBPACK_IMPORTED_MODULE_4__.saveClickData)(recordingNode, _text, meta);
-    if (resp) {
-        if (!__webpack_require__.g.udanSelectedNodes) {
-            __webpack_require__.g.udanSelectedNodes = [];
-        }
-        __webpack_require__.g.udanSelectedNodes.push(recordingNode);
-        if (!recordingNode.isSameNode(node))
-            __webpack_require__.g.udanSelectedNodes.push(node);
-        _config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.lastClickedTime = Date.now();
-        const activeRecordingData = (0,_index__WEBPACK_IMPORTED_MODULE_3__.getFromStore)(_config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.RECORDING_SEQUENCE, false);
-        if (activeRecordingData) {
-            activeRecordingData.push(resp);
-            (0,_index__WEBPACK_IMPORTED_MODULE_3__.setToStore)(activeRecordingData, _config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.RECORDING_SEQUENCE, false);
-        }
-        else {
-            (0,_index__WEBPACK_IMPORTED_MODULE_3__.setToStore)([resp], _config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.RECORDING_SEQUENCE, false);
-        }
-        (0,_addNotification__WEBPACK_IMPORTED_MODULE_7__.addNotification)((0,_translation__WEBPACK_IMPORTED_MODULE_8__.translate)('clickAdded'), (0,_translation__WEBPACK_IMPORTED_MODULE_8__.translate)('clickAddedDescription'), 'success');
-    }
-    else {
-        (0,_addNotification__WEBPACK_IMPORTED_MODULE_7__.addNotification)((0,_translation__WEBPACK_IMPORTED_MODULE_8__.translate)('clickAddError'), (0,_translation__WEBPACK_IMPORTED_MODULE_8__.translate)('clickAddErrorDescription'), 'error');
-        _config_error_log__WEBPACK_IMPORTED_MODULE_2__.UDAErrorLogger.error("Unable save record click " + node.outerHTML);
-    }
-    return;
-});
-
-
-/***/ }),
-
-/***/ "./src/util/recording-utils/fetchHtmlFormElements.ts":
-/*!***********************************************************!*\
-  !*** ./src/util/recording-utils/fetchHtmlFormElements.ts ***!
-  \***********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-const fetchHtmlFormElements = () => {
-    return [
-        {
-            inputElement: "input",
-            inputType: ["text", "search", "url"],
-            displayName: "Simple Text",
-            systemTag: "text",
-        },
-        {
-            inputElement: "input",
-            inputType: "checkbox",
-            displayName: "Multiple Select",
-            systemTag: "multipleChoice",
-        },
-        {
-            inputElement: "input",
-            inputType: "radio",
-            displayName: "Single Select",
-            systemTag: "singleChoice",
-        },
-        {
-            inputElement: "input",
-            inputType: "number",
-            displayName: "Number Field",
-            systemTag: "number",
-        },
-        {
-            inputElement: "input",
-            inputType: ["date", "time"],
-            displayName: "Date and/or Time Field",
-            systemTag: "date",
-        },
-        {
-            inputElement: "input",
-            inputType: "email",
-            displayName: "Email Field",
-            systemTag: "email",
-        },
-        {
-            inputElement: "input",
-            inputType: "password",
-            displayName: "Password Field",
-            systemTag: "password",
-        },
-        {
-            inputElement: "input",
-            inputType: "range",
-            displayName: "Range Field",
-            systemTag: "range",
-        },
-        {
-            inputElement: "input",
-            inputType: "tel",
-            displayName: "Telephone Field",
-            systemTag: "telephone",
-        },
-        {
-            inputElement: "input",
-            inputType: "file",
-            displayName: "File Selection",
-            systemTag: "file",
-        },
-        // {inputElement: 'input', inputType: 'color', displayName: 'Color Selection'},
-        // {inputElement: 'input', inputType: 'datetime-local', displayName: 'Local Date Selection'},
-        // {inputElement: 'input', inputType: 'hidden', displayName: 'Hidden Field'},
-        // {inputElement: 'input', inputType: 'image', displayName: 'Image Field'},
-        // {inputElement: 'input', inputType: 'month', displayName: 'Month Field'},
-        // {inputElement: 'input', inputType: 'reset', displayName: 'Reset Field'},
-        // {inputElement: 'input', inputType: 'search', displayName: 'Search Field'},
-        // {inputElement: 'input', inputType: 'time', displayName: 'Time Field'},
-        // {inputElement: 'input', inputType: 'url', displayName: 'URL Field'},
-        // {inputElement: 'input', inputType: 'week', displayName: 'Week Field'},
-        {
-            inputElement: ["select", "option", "optgroup"],
-            inputType: "select",
-            displayName: "Dropdown Field",
-            systemTag: "dropDown",
-        },
-        // {inputElement: 'option', inputType: 'option', displayName: 'Dropdown Option'},
-        // {inputElement: 'optgroup', inputType: 'optgroup', displayName: 'Dropdown Option Group'},
-        {
-            inputElement: "textarea",
-            inputType: "textarea",
-            displayName: "Large Text Area",
-            systemTag: "textArea",
-        },
-        {
-            inputElement: ["input", "button"],
-            inputType: ["button", "submit"],
-            displayName: "Button",
-            systemTag: "button",
-        },
-        // {inputElement: 'button', inputType: 'submit', displayName: 'Submit Field'},
-        // {inputElement: 'input', inputType: 'button', displayName: 'Button Field'},
-        // {inputElement: 'input', inputType: 'submit', displayName: 'Submit Field'},
-        // {inputElement: 'output', inputType: 'output', displayName: 'Output Field'},
-        // {inputElement: 'datalist ', inputType: 'datalist', displayName: 'Datalist Field'},
-        {
-            inputElement: "a",
-            inputType: "href",
-            displayName: "Link",
-            systemTag: "link",
-        },
-        {
-            inputElement: "others",
-            inputType: "others",
-            displayName: "Unrecognized",
-            systemTag: "others",
-        },
-        {
-            inputElement: "highlight",
-            inputType: "highlight",
-            displayName: "Highlight",
-            systemTag: "highlight",
-        }
-    ];
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (fetchHtmlFormElements);
-
-
-/***/ }),
-
-/***/ "./src/util/recording-utils/mapClickedElementToHtmlFormElement.ts":
-/*!************************************************************************!*\
-  !*** ./src/util/recording-utils/mapClickedElementToHtmlFormElement.ts ***!
-  \************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _fetchHtmlFormElements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./fetchHtmlFormElements */ "./src/util/recording-utils/fetchHtmlFormElements.ts");
-
-const mapClickedElementToHtmlFormElement = (node) => {
-    let htmlFormElements = (0,_fetchHtmlFormElements__WEBPACK_IMPORTED_MODULE_0__["default"])();
-    let selectedFormElement = { inputElement: 'others', inputType: 'others', displayName: 'Other HTML Element', systemTag: '' };
-    for (let htmlFormElement of htmlFormElements) {
-        if (Array.isArray(htmlFormElement.inputElement) && htmlFormElement.inputElement.indexOf(node.nodeName.toLowerCase()) != -1) {
-            if (Array.isArray(htmlFormElement.inputType) && node.hasAttribute('type') && htmlFormElement.inputType.indexOf(node.getAttribute('type')) !== -1) {
-                selectedFormElement = htmlFormElement;
-            }
-            else if (!Array.isArray(htmlFormElement.inputType) && htmlFormElement.inputElement.indexOf(node.nodeName.toLowerCase()) != -1) {
-                selectedFormElement = htmlFormElement;
-            }
-        }
-        else if (htmlFormElement.inputElement === 'input') {
-            if (Array.isArray(htmlFormElement.inputType) && node.hasAttribute('type') && htmlFormElement.inputType.indexOf(node.getAttribute('type')) !== -1) {
-                selectedFormElement = htmlFormElement;
-            }
-            else if (!Array.isArray(htmlFormElement.inputType) && htmlFormElement.inputElement === node.nodeName.toLowerCase() && node.hasAttribute('type') && node.getAttribute('type') === htmlFormElement.inputType) {
-                selectedFormElement = htmlFormElement;
-            }
-        }
-        else if (htmlFormElement.inputElement === node.nodeName.toLowerCase()) {
-            selectedFormElement = htmlFormElement;
-        }
-    }
-    return selectedFormElement;
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (mapClickedElementToHtmlFormElement);
-
-
-/***/ }),
-
-/***/ "./src/util/specialNodes.ts":
-/*!**********************************!*\
-  !*** ./src/util/specialNodes.ts ***!
-  \**********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   specialNodes: () => (/* binding */ specialNodes)
-/* harmony export */ });
-/**
- * Special nodes identifications for recording.
- * These will be used for identification of node elements during recording and will resolve the bugs for unwanted clicks.
- * @returns specialNodes
- */
-const specialNodes = {
-    // list of including nodes for attaching events
-    "include": {
-        "tags": ['a', 'button', 'input', 'textarea', 'select', 'option', 'mat-select', 'ckeditor', 'ng-select', 'ngb-datepicker'],
-        "classes": ['ng-select', 'ngb-datepicker', 'dropdown-toggle', 'expand-button', 'btn-pill', 'radio', 'replacement', 'select-dropdown', 'datepicker', 'fa-calendar', 'select2-selection', 'css-atn8fj-control'],
-        "attributes": ['ng-click', 'onclick', 'contenteditable']
-    },
-    // list of excluding nodes from attaching events
-    "exclude": {
-        "tags": ['body', 'link', 'meta', 'script', 'svg', 'style', 'path', 'circle', 'g', 'rect', 'stop', 'defs', 'linearGradient', 'mat-checkbox', 'table'],
-        "classes": ['uda_exclude', 'datepicker-modal'],
-        "attributes": ['uib-datepicker-popup-wrap', 'data-exclude'],
-        "ids": ['content']
-    },
-    // ignore clickable nodes while attaching event listeners
-    "ignoreChildren": {
-        "tags": ['ng-select', 'ngb-datepicker', 'ng-dropdown-panel', 'ckeditor', 'fusioncharts', 'ngb-datepicker', 'ngx-daterangepicker-material', 'mat-datepicker-content'],
-        "classes": ['cke_dialog_container', 'cke_notifications_area', 'gldp-default', 'ajs-layer', 'aui-list', 'herknl', 'uda_exclude', 'jstBlock', 'datepicker', 'fa-calendar', 'drdn-content', 'dropdown-button', 'dropdown-trigger1', 'select2-selection', 'select2-container--open', 'module-item', 'css-atn8fj-control', 'e-multiselect', 'e-input-group', 'e-ddl'],
-        "attributes": ['uib-datepicker-popup-wrap']
-    },
-    // ignore clicks on special nodes
-    "ignoreClicksOnNodes": {
-        "tags": ['ngx-daterangepicker-material'],
-        "classes": ['drdn-content', 'datepicker-modal', 'parallel', 'tabs', 'dropdown-content', 'select2-container--open', 'modal-overlay', 'e-popup', 'e-query-builder'],
-        "attributes": ['uib-datepicker-popup-wrap'],
-        "ids": ['content']
-    },
-    // list of attributes to ignore while comparing
-    "ignoreDuringCompare": {
-        "tags": [],
-        "classes": [],
-        "attributes": [
-            'translate', 'draggable', 'spellcheck', 'tabindex', 'clientHeight', 'clientLeft', 'clientTop', 'clientWidth',
-            'offsetHeight', 'offsetLeft', 'offsetTop', 'offsetWidth', 'scrollHeight', 'scrollLeft', 'scrollTop', 'scrollWidth',
-            'baseURI', 'isConnected', 'ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
-            'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
-            'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y', 'selectionStart', 'selectionEnd',
-            'required', 'validationMessage', 'selectionDirection', 'naturalWidth', 'naturalHeight', 'complete', '_indexOf',
-            'value', 'defaultValue', 'min', 'max', 'nodeInfo', 'data-tooltip-id', 'addedclickrecord', 'checked', 'data-tribute',
-            'hasclick', 'addedClickRecord', 'hasClick', 'valueAsNumber', 'udaIgnoreChildren', 'udaIgnoreClick', 'udaignorechildren',
-            'udaignoreclick', 'fdprocessedid', '__ngContext__', 'd', 'text', 'textContent', 'cdk-describedby-host', 'inert', 'fill', 'disabled', 'hidden',
-            'aria-autocomplete', 'ariaAutoComplete'
-        ],
-        "ids": []
-    },
-    // personal node ignore attributes
-    personalNodeIgnoreAttributes: [
-        "innerText",
-        "innerHTML",
-        "outerText",
-        "outerHTML",
-        "nodeValue",
-        "src",
-        "naturalWidth",
-        "naturalHeight",
-        "currentSrc",
-    ],
-    // list of text editor identifications
-    "textEditors": {
-        "tags": ['ckeditor'],
-        "classes": ['jstBlock'],
-        "attributes": []
-    },
-    // list of dropdown identifications
-    "dropDowns": {
-        "tags": ['ng-select', 'ng-dropdown-panel'],
-        "classes": ['cke_notifications_area', 'aui-list', 'herknl', 'ghx-dropdown-trigger', 'select-wrapper', 'select2', 'select-dropdown', 'drdn-trigger', 'css-atn8fj-control', 'e-multiselect', 'e-ddl'],
-        "attributes": []
-    },
-    // list of datepicker identifications
-    "datePicker": {
-        "tags": ['ngb-datepicker', 'ngb-datepicker', 'ngx-daterangepicker-material', 'mat-datepicker-content', 'datepicker-modal'],
-        "classes": ['fa-calendar'],
-        "attributes": ['uib-datepicker-popup-wrap']
-    },
-    // list of special nodes which should not be recorded
-    "specialNodes": {
-        "tags": ['fusioncharts'],
-        "classes": ['gldp-default', 'ajs-layer', 'herknl'],
-        "attributes": []
-    },
-    // list of pausable elements for stopping click for recording
-    "preventDefault": {
-        "tags": ['a', 'button'],
-        "classes": [],
-        "attributes": ['href']
-    },
-    "iconNodes": {
-        "tags": ['i'],
-        "classes": [],
-        "attributes": []
-    }
-};
-
-
-/***/ }),
-
-/***/ "./src/util/translation.ts":
-/*!*********************************!*\
-  !*** ./src/util/translation.ts ***!
-  \*********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   translate: () => (/* binding */ translate)
-/* harmony export */ });
-/* harmony import */ var i18next__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! i18next */ "./node_modules/i18next/dist/esm/i18next.js");
-
-const translate = (attr) => {
-    return i18next__WEBPACK_IMPORTED_MODULE_0__["default"].t(attr);
-};
-
-
-/***/ }),
-
 /***/ "./node_modules/typescript-json/lib/index.js":
 /*!***************************************************!*\
   !*** ./node_modules/typescript-json/lib/index.js ***!
@@ -42448,7 +43509,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/*! https://mths.be/punycode v1.4.1 by @mathia
 			return punycode;
 		}).call(exports, __webpack_require__, exports, module),
 		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	} else {}
+	} else // removed by dead control flow
+{}
 
 }(this));
 
@@ -44419,8 +45481,8 @@ var availableTypedArrays = __webpack_require__(/*! available-typed-arrays */ "./
 var callBind = __webpack_require__(/*! call-bind */ "./node_modules/call-bind/index.js");
 var callBound = __webpack_require__(/*! call-bound */ "./node_modules/call-bound/index.js");
 var gOPD = __webpack_require__(/*! gopd */ "./node_modules/gopd/index.js");
+var getProto = __webpack_require__(/*! get-proto */ "./node_modules/get-proto/index.js");
 
-/** @type {(O: object) => string} */
 var $toString = callBound('Object.prototype.toString');
 var hasToStringTag = __webpack_require__(/*! has-tostringtag/shams */ "./node_modules/has-tostringtag/shams.js")();
 
@@ -44428,7 +45490,6 @@ var g = typeof globalThis === 'undefined' ? __webpack_require__.g : globalThis;
 var typedArrays = availableTypedArrays();
 
 var $slice = callBound('String.prototype.slice');
-var getPrototypeOf = Object.getPrototypeOf; // require('getprototypeof');
 
 /** @type {<T = unknown>(array: readonly T[], value: unknown) => number} */
 var $indexOf = callBound('Array.prototype.indexOf', true) || function indexOf(array, value) {
@@ -44440,18 +45501,18 @@ var $indexOf = callBound('Array.prototype.indexOf', true) || function indexOf(ar
 	return -1;
 };
 
-/** @typedef {(receiver: import('.').TypedArray) => string | typeof Uint8Array.prototype.slice.call | typeof Uint8Array.prototype.set.call} Getter */
-/** @type {{ [k in `\$${import('.').TypedArrayName}`]?: Getter } & { __proto__: null }} */
+/** @typedef {import('./types').Getter} Getter */
+/** @type {import('./types').Cache} */
 var cache = { __proto__: null };
-if (hasToStringTag && gOPD && getPrototypeOf) {
+if (hasToStringTag && gOPD && getProto) {
 	forEach(typedArrays, function (typedArray) {
 		var arr = new g[typedArray]();
-		if (Symbol.toStringTag in arr) {
-			var proto = getPrototypeOf(arr);
+		if (Symbol.toStringTag in arr && getProto) {
+			var proto = getProto(arr);
 			// @ts-expect-error TS won't narrow inside a closure
 			var descriptor = gOPD(proto, Symbol.toStringTag);
-			if (!descriptor) {
-				var superProto = getPrototypeOf(proto);
+			if (!descriptor && proto) {
+				var superProto = getProto(proto);
 				// @ts-expect-error TS won't narrow inside a closure
 				descriptor = gOPD(superProto, Symbol.toStringTag);
 			}
@@ -44464,8 +45525,12 @@ if (hasToStringTag && gOPD && getPrototypeOf) {
 		var arr = new g[typedArray]();
 		var fn = arr.slice || arr.set;
 		if (fn) {
-			// @ts-expect-error TODO: fix
-			cache['$' + typedArray] = callBind(fn);
+			cache[
+				/** @type {`$${import('.').TypedArrayName}`} */ ('$' + typedArray)
+			] = /** @type {import('./types').BoundSlice | import('./types').BoundSet} */ (
+				// @ts-expect-error TODO FIXME
+				callBind(fn)
+			);
 		}
 	});
 }
@@ -44474,15 +45539,14 @@ if (hasToStringTag && gOPD && getPrototypeOf) {
 var tryTypedArrays = function tryAllTypedArrays(value) {
 	/** @type {ReturnType<typeof tryAllTypedArrays>} */ var found = false;
 	forEach(
-		// eslint-disable-next-line no-extra-parens
-		/** @type {Record<`\$${TypedArrayName}`, Getter>} */ /** @type {any} */ (cache),
+		/** @type {Record<`\$${import('.').TypedArrayName}`, Getter>} */ (cache),
 		/** @type {(getter: Getter, name: `\$${import('.').TypedArrayName}`) => void} */
 		function (getter, typedArray) {
 			if (!found) {
 				try {
-				// @ts-expect-error TODO: fix
+					// @ts-expect-error a throw is fine here
 					if ('$' + getter(value) === typedArray) {
-						found = $slice(typedArray, 1);
+						found = /** @type {import('.').TypedArrayName} */ ($slice(typedArray, 1));
 					}
 				} catch (e) { /**/ }
 			}
@@ -44495,14 +45559,13 @@ var tryTypedArrays = function tryAllTypedArrays(value) {
 var trySlices = function tryAllSlices(value) {
 	/** @type {ReturnType<typeof tryAllSlices>} */ var found = false;
 	forEach(
-		// eslint-disable-next-line no-extra-parens
-		/** @type {Record<`\$${TypedArrayName}`, Getter>} */ /** @type {any} */ (cache),
-		/** @type {(getter: typeof cache, name: `\$${import('.').TypedArrayName}`) => void} */ function (getter, name) {
+		/** @type {Record<`\$${import('.').TypedArrayName}`, Getter>} */(cache),
+		/** @type {(getter: Getter, name: `\$${import('.').TypedArrayName}`) => void} */ function (getter, name) {
 			if (!found) {
 				try {
-					// @ts-expect-error TODO: fix
+					// @ts-expect-error a throw is fine here
 					getter(value);
-					found = $slice(name, 1);
+					found = /** @type {import('.').TypedArrayName} */ ($slice(name, 1));
 				} catch (e) { /**/ }
 			}
 		}
@@ -48828,6 +49891,17 @@ module.exports = /*#__PURE__*/function (_TransportStream) {
 
 /***/ }),
 
+/***/ "./node_modules/winston/package.json":
+/*!*******************************************!*\
+  !*** ./node_modules/winston/package.json ***!
+  \*******************************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = /*#__PURE__*/JSON.parse('{"name":"winston","description":"A logger for just about everything.","version":"3.17.0","author":"Charlie Robbins <charlie.robbins@gmail.com>","maintainers":["David Hyde <dabh@alumni.stanford.edu>"],"repository":{"type":"git","url":"https://github.com/winstonjs/winston.git"},"keywords":["winston","logger","logging","logs","sysadmin","bunyan","pino","loglevel","tools","json","stream"],"dependencies":{"@dabh/diagnostics":"^2.0.2","@colors/colors":"^1.6.0","async":"^3.2.3","is-stream":"^2.0.0","logform":"^2.7.0","one-time":"^1.0.0","readable-stream":"^3.4.0","safe-stable-stringify":"^2.3.1","stack-trace":"0.0.x","triple-beam":"^1.3.0","winston-transport":"^4.9.0"},"devDependencies":{"@babel/cli":"^7.23.9","@babel/core":"^7.24.0","@babel/preset-env":"^7.24.0","@dabh/eslint-config-populist":"^4.4.0","@types/node":"^20.11.24","abstract-winston-transport":"^0.5.1","assume":"^2.2.0","cross-spawn-async":"^2.2.5","eslint":"^8.57.0","hock":"^1.4.1","mocha":"^10.3.0","nyc":"^17.1.0","rimraf":"5.0.1","split2":"^4.1.0","std-mocks":"^2.0.0","through2":"^4.0.2","winston-compat":"^0.1.5"},"main":"./lib/winston.js","browser":"./dist/winston","types":"./index.d.ts","scripts":{"lint":"eslint lib/*.js lib/winston/*.js lib/winston/**/*.js --resolve-plugins-relative-to ./node_modules/@dabh/eslint-config-populist","test":"rimraf test/fixtures/logs/* && mocha","test:coverage":"nyc npm run test:unit","test:unit":"mocha test/unit","test:integration":"mocha test/integration","build":"rimraf dist && babel lib -d dist","prepublishOnly":"npm run build"},"engines":{"node":">= 12.0.0"},"license":"MIT"}');
+
+/***/ }),
+
 /***/ "./node_modules/xtend/immutable.js":
 /*!*****************************************!*\
   !*** ./node_modules/xtend/immutable.js ***!
@@ -48857,30 +49931,3413 @@ function extend() {
 
 /***/ }),
 
+/***/ "./src/config/CustomConfig.ts":
+/*!************************************!*\
+  !*** ./src/config/CustomConfig.ts ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CustomConfig: () => (/* binding */ CustomConfig)
+/* harmony export */ });
+/**
+ * Author: Yureswar Ravuri
+ * Type: MAP
+ * Objective: Config Objects
+ */
+// assigning default values to the default configuration
+const CustomConfig = {
+    enableEditClickedName: false,
+    enableSkipDuringPlay: false,
+    enableTooltipAddition: true,
+    enableMultilingual: false,
+    enableNodeTypeSelection: true,
+    enablePermissions: false,
+    permissions: {},
+    enableProfanity: false,
+    enableRecording: true,
+    enableOverlay: true,
+    environment: 'PROD',
+    enableUdaIcon: true,
+    udaDivId: 'uda-nistapp-logo',
+    enableForAllDomains: false,
+    enableSpeechToText: false,
+    enableSlowReplay: false,
+    enableCustomIcon: false,
+    customIcon: 'https://udan.nistapp.com/uda-logo.jpg',
+    realm: "UDAN",
+    clientId: "backend-service",
+    clientSecret: "cXA2yFTq3ORQfrio2mGXttFaOTfvIC7N",
+    enableHidePanelAfterCompletion: false,
+    enableStatusSelection: false,
+    enableUDAIconDuringRecording: false,
+    enableEditingOfRecordings: true // Flag to enable editing of recordings
+};
+
+
+/***/ }),
+
+/***/ "./src/config/endpoints.ts":
+/*!*********************************!*\
+  !*** ./src/config/endpoints.ts ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ENDPOINT: () => (/* binding */ ENDPOINT)
+/* harmony export */ });
+/**
+ * Author: Lakshman Veti
+ * Type: MAP
+ * Objective: HTTP Endpoints
+ */
+const ENDPOINT = {
+    CheckUserId: `/user/checkauthid`,
+    GetSessionKey: `/user/getsessionkey`,
+    CheckUserSession: `/user/checkusersession`,
+    Search: `/search/all?query=#keyword#&domain=#domain#&page=#page#&userSessionId=#userSessionId#`,
+    SearchWithPermissionsOld: `/clickevents/sequence/search?query=#keyword#&domain=#domain#&page=#page#&additionalParams=#additionalParams#`,
+    SearchWithPermissions: `/search/withPermissions?query=#keyword#&domain=#domain#&page=#page#&additionalParams=#additionalParams#&userSessionId=#userSessionId#`,
+    ProfanityCheck: `https://nistapp-content-moderator.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessText/Screen`,
+    SpecialNodes: `/clickevents`,
+    Record: `/clickevents/clickednode`,
+    UpdateRecord: `/clickevents/updateclickednode`,
+    RecordSequence: `/clickevents/recordsequencedata`,
+    // updateRecordSequence: `/clickevents/updatesequencedata`,
+    updateRecordSequence: `/sequence/update`,
+    updateSequenceIndex: `/sequence/reindex/`,
+    UserClick: `/clickevents/userclick`,
+    DeleteSequence: `/clickevents/sequence/delete`,
+    fetchRecord: '/search',
+    VoteRecord: `/votes/addVote`,
+    fetchVoteRecord: `/votes/`,
+    tokenUrl: 'user/token',
+    statuses: '/status/category/#category#'
+};
+
+
+/***/ }),
+
+/***/ "./src/config/error-log.ts":
+/*!*********************************!*\
+  !*** ./src/config/error-log.ts ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UDAConsoleLogger: () => (/* binding */ UDAConsoleLogger),
+/* harmony export */   UDAErrorLogger: () => (/* binding */ UDAErrorLogger),
+/* harmony export */   UDALogLevel: () => (/* binding */ UDALogLevel)
+/* harmony export */ });
+/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index */ "./src/config/index.ts");
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util */ "./src/util/index.ts");
+const winston = __webpack_require__(/*! winston */ "./node_modules/winston/dist/winston.js");
+const { format } = winston;
+const { combine, label, json } = format;
+// const winstonRemoteTransport = require('winston-remote').Transport;
+
+
+const UDALogLevel = 0;
+const UDA_LOG_URL = "https://authenticatetest.nistapp.com/";
+const UDAConsoleLogger = {
+    info: function (mes, level = 1) {
+        if (UDALogLevel === level) {
+            console.log(mes);
+        }
+    },
+};
+const UDAErrorLogger = {
+    error: function (message, exception = { message: "Error" }) {
+        var _a;
+        try {
+            const UDAUserAuthData = (0,_util__WEBPACK_IMPORTED_MODULE_1__.getFromStore)(_index__WEBPACK_IMPORTED_MODULE_0__.CONFIG.USER_AUTH_DATA_KEY, false);
+            message =
+                "UserID: " + ((_a = UDAUserAuthData === null || UDAUserAuthData === void 0 ? void 0 : UDAUserAuthData.authdata) === null || _a === void 0 ? void 0 : _a.id) + " Error: " + message;
+        }
+        catch (e) {
+            message = "Error: " + message;
+        }
+        let logger = winston.createLogger({
+            transports: [
+                new winston.transports.Http({
+                    // ssl: true,
+                    host: UDA_LOG_URL,
+                    port: 443,
+                    path: "logging/error",
+                }),
+            ],
+        });
+        logger.log("error", message);
+    },
+};
+
+
+/***/ }),
+
+/***/ "./src/config/index.ts":
+/*!*****************************!*\
+  !*** ./src/config/index.ts ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CONFIG: () => (/* binding */ CONFIG)
+/* harmony export */ });
+/**
+ * Author: Lakshman Veti
+ * Type: MAP
+ * Objective: Config Objects
+ */
+const CONFIG = {
+    current: "TEST",
+    UDADebug: false,
+    UDA_CONTAINER_CLASS: "udan-main-panel",
+    UDA_CLICK_IGNORE_CLASS: "uda_exclude",
+    UDA_DOMAIN: "https://udantest.nistapp.com/api",
+    UDA_API_URL: "https://udantest.nistapp.com/api" + "/api",
+    UDASessionID: (Math.random().toString(36).substring(2, 15) +
+        Math.random().toString(36).substring(2, 15)),
+    UDA_POST_INTERVAL: 1000,
+    UDALastMutationTime: 0,
+    UDALogLevel: 0,
+    RECORDING_IS_PLAYING: "UDAIsPlaying",
+    RECORDING_MANUAL_PLAY: "UDAManualPlay",
+    RECORDING_SWITCH_KEY: "UDARecordingSwitch",
+    RECORDING_SEQUENCE: "UDAActiveRecordingData",
+    SELECTED_RECORDING: "UDASelectedRecordedItem",
+    USER_AUTH_DATA_KEY: "udaUserData",
+    UserScreenAcceptance: "udaUserScreenAcceptance",
+    USER_SESSION_KEY: "UDASessionKey",
+    UDAKeyCloakKey: "UDAKeyCloak",
+    USER_SESSION_ID: "UDASessionId",
+    SYNC_INTERVAL: 1000,
+    AUTO_PLAY_SLEEP_TIME: 2000,
+    JARO_WEIGHT: 0.95,
+    JARO_WEIGHT_PERSONAL: 0.90,
+    lastClickedTime: null,
+    specialNodeKey: "UDASpecialNodes",
+    enableInfiniteScroll: true,
+    enableInfiniteScrollPageLength: 10,
+    UDA_URL_Param: 'UDA_Sequence_id',
+    set Environment(value) {
+        this.current = value.toString().toUpperCase();
+        if (this.current === "PROD") {
+            this.UDA_DOMAIN = "https://udan.nistapp.ai";
+        }
+        else {
+            this.UDA_DOMAIN = "https://udantest.nistapp.ai";
+        }
+        this.UDA_API_URL = this.UDA_DOMAIN + "/api";
+    },
+    get Environment() {
+        return this.current;
+    },
+    DEBOUNCE_INTERVAL: 1000,
+    indexInterval: 1000,
+    clickObjects: [],
+    nodeId: 0,
+    isRecording: false,
+    htmlIndex: [],
+    invokeTime: 2000,
+    apiInvokeTime: 300,
+    maxStringLength: 25,
+    playNextAction: true,
+    navigatedToNextPage: { check: false, url: '' },
+    ignoreElements: ["script", "h1", "h2", "h3", "link", "noscript", "style"],
+    ignoreAttributes: [
+        'translate', 'draggable', 'spellcheck', 'tabindex', 'clientHeight', 'clientLeft', 'clientTop', 'clientWidth',
+        'offsetHeight', 'offsetLeft', 'offsetTop', 'offsetWidth', 'scrollHeight', 'scrollLeft', 'scrollTop', 'scrollWidth',
+        'baseURI', 'isConnected', 'ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
+        'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
+        'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y', 'selectionStart', 'selectionEnd', 'required', 'validationMessage', 'selectionDirection',
+        'naturalWidth', 'naturalHeight', 'complete', '_indexOf', 'value', 'defaultValue', 'min', 'max', 'nodeInfo', 'data-tooltip-id', 'addedclickrecord', 'checked', 'data-tribute',
+        'hasclick', 'addedClickRecord', 'hasClick', 'valueAsNumber', 'udaIgnoreChildren', 'udaIgnoreClick', 'udaignorechildren', 'udaignoreclick', 'fdprocessedid', '__ngContext__', 'd', 'text', 'textContent', 'cdk-describedby-host', 'inert', 'fill', 'disabled', 'hidden'
+    ],
+    innerTextWeight: 5,
+    ignoreNodesFromIndexing: ['ng-dropdown-panel', 'ckeditor', 'fusioncharts', 'ngb-datepicker', 'ngx-daterangepicker-material', 'uda-panel', 'mat-datepicker-content', 'ng-select'],
+    ignoreNodesContainingClassNames: ['cke_dialog_container', 'cke_notifications_area', 'gldp-default', 'ajs-layer', 'aui-list', 'herknl', 'jstBlock'],
+    cancelRecordingDuringRecordingNodes: [],
+    addClickToSpecialNodes: ['ng-select', 'ngb-datepicker'],
+    ignoreClicksOnSpecialNodes: ['ngx-daterangepicker-material'],
+    customNameForSpecialNodes: {
+        'ngb-datepicker': 'Date selector',
+        'mat-datepicker-content': 'Date selector',
+        'ngx-daterangepicker-material': 'Date Range Selector'
+    },
+    specialInputClickClassNames: ['ghx-dropdown-trigger', 'aui-list', 'jstBlock', 'mat-form-field-flex', 'mat-select-trigger'],
+    commonTags: ['span', 'div'],
+    tooltipDisplayedNodes: [],
+    // replay variables
+    autoplayCompleted: false,
+    autoplayPaused: false,
+    // manual click variables
+    invokedActionManually: false,
+    // personal node ignore attributes
+    personalNodeIgnoreAttributes: [
+        "innerText",
+        "innerHTML",
+        "outerText",
+        "outerHTML",
+        "nodeValue",
+        "src",
+        "naturalWidth",
+        "naturalHeight",
+        "currentSrc",
+    ],
+    //Azure content moderator attributes
+    profanity: {
+        enabled: true,
+        provider: "azure",
+        config: {
+            key1: "bc015cc4090543d58c3056e8dc98cc9b",
+            key2: "bc015cc4090543d58c3056e8dc98cc9b",
+            endPoint: "https://nistapp-content-moderator.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessText/Screen",
+            region: "eastus",
+        },
+    },
+    multilingual: {
+        enabled: false,
+        searchInLang: "en-US",
+        selectedLang: "en-US",
+        displayText: "",
+        translatedText: "",
+        translate: {
+            provider: "google",
+            apikey: "AIzaSyD3XUOZEMz9Y_e5YpDWZEsQT_7zJPF0H4k",
+            translateTo: "en",
+            apiurl: "https://translation.googleapis.com/language/translate/v2",
+        },
+    },
+    // BCP list of languages
+    bcpLang: [
+        ["Afrikaans", ["af-ZA"]],
+        ["አማርኛ", ["am-ET"]],
+        ["Azərbaycanca", ["az-AZ"]],
+        ["বাংলা", ["bn-BD", "বাংলাদেশ"], ["bn-IN", "ভারত"]],
+        ["Bahasa Indonesia", ["id-ID"]],
+        ["Bahasa Melayu", ["ms-MY"]],
+        ["Català", ["ca-ES"]],
+        ["Čeština", ["cs-CZ"]],
+        ["Dansk", ["da-DK"]],
+        ["Deutsch", ["de-DE"]],
+        [
+            "English",
+            ["en-AU", "Australia"],
+            ["en-CA", "Canada"],
+            ["en-IN", "India"],
+            ["en-KE", "Kenya"],
+            ["en-TZ", "Tanzania"],
+            ["en-GH", "Ghana"],
+            ["en-NZ", "New Zealand"],
+            ["en-NG", "Nigeria"],
+            ["en-ZA", "South Africa"],
+            ["en-PH", "Philippines"],
+            ["en-GB", "United Kingdom"],
+            ["en-US", "United States"],
+        ],
+        [
+            "Español",
+            ["es-AR", "Argentina"],
+            ["es-BO", "Bolivia"],
+            ["es-CL", "Chile"],
+            ["es-CO", "Colombia"],
+            ["es-CR", "Costa Rica"],
+            ["es-EC", "Ecuador"],
+            ["es-SV", "El Salvador"],
+            ["es-ES", "España"],
+            ["es-US", "Estados Unidos"],
+            ["es-GT", "Guatemala"],
+            ["es-HN", "Honduras"],
+            ["es-MX", "México"],
+            ["es-NI", "Nicaragua"],
+            ["es-PA", "Panamá"],
+            ["es-PY", "Paraguay"],
+            ["es-PE", "Perú"],
+            ["es-PR", "Puerto Rico"],
+            ["es-DO", "República Dominicana"],
+            ["es-UY", "Uruguay"],
+            ["es-VE", "Venezuela"],
+        ],
+        ["Euskara", ["eu-ES"]],
+        ["Filipino", ["fil-PH"]],
+        ["Français", ["fr-FR"]],
+        ["Basa Jawa", ["jv-ID"]],
+        ["Galego", ["gl-ES"]],
+        ["ગુજરાતી", ["gu-IN"]],
+        ["Hrvatski", ["hr-HR"]],
+        ["IsiZulu", ["zu-ZA"]],
+        ["Íslenska", ["is-IS"]],
+        ["Italiano", ["it-IT", "Italia"], ["it-CH", "Svizzera"]],
+        ["ಕನ್ನಡ", ["kn-IN"]],
+        ["ភាសាខ្មែរ", ["km-KH"]],
+        ["Latviešu", ["lv-LV"]],
+        ["Lietuvių", ["lt-LT"]],
+        ["മലയാളം", ["ml-IN"]],
+        ["मराठी", ["mr-IN"]],
+        ["Magyar", ["hu-HU"]],
+        ["ລາວ", ["lo-LA"]],
+        ["Nederlands", ["nl-NL"]],
+        ["नेपाली भाषा", ["ne-NP"]],
+        ["Norsk bokmål", ["nb-NO"]],
+        ["Polski", ["pl-PL"]],
+        ["Português", ["pt-BR", "Brasil"], ["pt-PT", "Portugal"]],
+        ["Română", ["ro-RO"]],
+        ["සිංහල", ["si-LK"]],
+        ["Slovenščina", ["sl-SI"]],
+        ["Basa Sunda", ["su-ID"]],
+        ["Slovenčina", ["sk-SK"]],
+        ["Suomi", ["fi-FI"]],
+        ["Svenska", ["sv-SE"]],
+        ["Kiswahili", ["sw-TZ", "Tanzania"], ["sw-KE", "Kenya"]],
+        ["ქართული", ["ka-GE"]],
+        ["Հայերեն", ["hy-AM"]],
+        [
+            "தமிழ்",
+            ["ta-IN", "இந்தியா"],
+            ["ta-SG", "சிங்கப்பூர்"],
+            ["ta-LK", "இலங்கை"],
+            ["ta-MY", "மலேசியா"],
+        ],
+        ["తెలుగు", ["te-IN"]],
+        ["Tiếng Việt", ["vi-VN"]],
+        ["Türkçe", ["tr-TR"]],
+        ["اُردُو", ["ur-PK", "پاکستان"], ["ur-IN", "بھارت"]],
+        ["Ελληνικά", ["el-GR"]],
+        ["български", ["bg-BG"]],
+        ["Pусский", ["ru-RU"]],
+        ["Српски", ["sr-RS"]],
+        ["Українська", ["uk-UA"]],
+        ["한국어", ["ko-KR"]],
+        [
+            "中文",
+            ["cmn-Hans-CN", "普通话 (中国大陆)"],
+            ["cmn-Hans-HK", "普通话 (香港)"],
+            ["cmn-Hant-TW", "中文 (台灣)"],
+            ["yue-Hant-HK", "粵語 (香港)"],
+        ],
+        ["日本語", ["ja-JP"]],
+        ["हिन्दी", ["hi-IN"]],
+        ["ภาษาไทย", ["th-TH"]],
+    ],
+    // Flag to enable node type detection
+    enableNodeTypeChangeSelection: true,
+    set enableNodeTypeSelection(val) {
+        this.enableNodeTypeChangeSelection = val;
+        // this.showhtml();
+    },
+    get enableNodeTypeSelection() {
+        return CONFIG.multilingual.enabled;
+    },
+    cspUserAcceptance: {
+        storageName: "uda-csp-enabled",
+        data: { proceed: true },
+    },
+    screenAcceptance: {
+        storageName: "uda-user-screen-consent",
+        data: { proceed: true },
+    },
+    ignoreDynamicAttributeText: ['_ng', '__context', '__zone_symbol']
+};
+
+
+/***/ }),
+
+/***/ "./src/services/index.ts":
+/*!*******************************!*\
+  !*** ./src/services/index.ts ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   REST: () => (/* binding */ REST),
+/* harmony export */   apiCal: () => (/* binding */ apiCal),
+/* harmony export */   getHTTPHeaders: () => (/* binding */ getHTTPHeaders),
+/* harmony export */   postRecordSequenceData: () => (/* reexport safe */ _recordService__WEBPACK_IMPORTED_MODULE_5__.postRecordSequenceData),
+/* harmony export */   processArgs1: () => (/* binding */ processArgs1),
+/* harmony export */   recordUserClickData: () => (/* reexport safe */ _recordService__WEBPACK_IMPORTED_MODULE_5__.recordUserClickData),
+/* harmony export */   saveClickData: () => (/* reexport safe */ _recordService__WEBPACK_IMPORTED_MODULE_5__.saveClickData),
+/* harmony export */   syncApiCal: () => (/* binding */ syncApiCal)
+/* harmony export */ });
+/* harmony import */ var typescript_json__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! typescript-json */ "./node_modules/typescript-json/lib/index.js");
+/* harmony import */ var typescript_json__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(typescript_json__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _config_CustomConfig__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config/CustomConfig */ "./src/config/CustomConfig.ts");
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util */ "./src/util/index.ts");
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config */ "./src/config/index.ts");
+/* harmony import */ var _util_events__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../util/events */ "./src/util/events.ts");
+/* harmony import */ var _recordService__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./recordService */ "./src/services/recordService.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+
+
+__webpack_require__.g.UDAGlobalConfig = _config_CustomConfig__WEBPACK_IMPORTED_MODULE_1__.CustomConfig;
+/**
+ * common REST call
+ * @options : object (properties needed for REST call)
+ */
+const apiCal = (options) => {
+    const requestOptions = {
+        method: options.method,
+        headers: getHTTPHeaders("json", options === null || options === void 0 ? void 0 : options.headers),
+        body: options.body ? (input => {
+            return undefined !== input ? JSON.stringify(input) : undefined;
+        })(options.body) : null,
+    };
+    const baseProdURL = "https://udantest.nistapp.com/api";
+    const baseTestURL = "https://udantest.nistapp.com/api";
+    let baseURL = baseProdURL;
+    let url;
+    if (options.url.indexOf("http") === -1) {
+        if (__webpack_require__.g.UDAGlobalConfig.environment === 'TEST') {
+            baseURL = baseTestURL;
+        }
+        url = baseURL + options.url;
+    }
+    else {
+        url = options.url;
+    }
+    return fetch(url, requestOptions)
+        .then((response) => {
+        switch (response === null || response === void 0 ? void 0 : response.status) {
+            case 200:
+                return (options === null || options === void 0 ? void 0 : options.responseType) == "text" ? response.text() : response.json();
+            case 201:
+                return (options === null || options === void 0 ? void 0 : options.responseType) == "text" ? response.text() : response.json();
+            case 204:
+                return null;
+            case 400:
+                throw new Error('Bad Request - The request was malformed or invalid');
+            case 401:
+                (0,_util_events__WEBPACK_IMPORTED_MODULE_4__.trigger)('UDAGetNewToken', { detail: { data: "UDAGetNewToken" } });
+                throw new Error('Unauthorized - Authentication required');
+            case 403:
+                throw new Error('Forbidden - You do not have permission to access this resource');
+            case 404:
+                throw new Error('Not Found - The requested resource does not exist');
+            case 408:
+                throw new Error('Request Timeout - The server timed out waiting for the request');
+            case 429:
+                throw new Error('Too Many Requests - Rate limit exceeded');
+            case 500:
+                throw new Error('Internal Server Error - Something went wrong on the server');
+            case 502:
+                throw new Error('Bad Gateway - Invalid response from upstream server');
+            case 503:
+                throw new Error('Service Unavailable - The server is temporarily unavailable');
+            case 504:
+                throw new Error('Gateway Timeout - The upstream server timed out');
+            default:
+                throw new Error(`Unexpected status code: ${response.status}`);
+        }
+    })
+        .then((json) => {
+        return json;
+    })
+        .catch((error) => {
+        throw error;
+    });
+};
+/**
+ * common sync REST call
+ * @options : object (properties needed for REST call)
+ */
+const syncApiCal = (options) => __awaiter(void 0, void 0, void 0, function* () {
+    const requestOptions = {
+        method: options.method,
+        headers: getHTTPHeaders("json"),
+        body: options.body ? (input => {
+            return undefined !== input ? JSON.stringify(input) : undefined;
+        })(options.body) : null,
+    };
+    let response = {};
+    try {
+        response = yield fetch(options.url, requestOptions);
+        return yield (response === null || response === void 0 ? void 0 : response.json());
+    }
+    catch (e) { }
+});
+/**
+ * @objective To set autherization token for all outgoing REST calls
+ * @param contentType
+ * @param additionalHeaders
+ * @returns HTTP headers
+ */
+const getHTTPHeaders = (contentType, additionalHeaders = null) => {
+    let userAuthData = (0,_util__WEBPACK_IMPORTED_MODULE_2__.getFromStore)(_config__WEBPACK_IMPORTED_MODULE_3__.CONFIG.USER_AUTH_DATA_KEY, false);
+    const headers = new Headers();
+    if (contentType === "json")
+        headers.append("Content-Type", "application/json");
+    if (userAuthData && userAuthData.authData.token) {
+        headers.append("Authorization", `Bearer ${userAuthData.authData.token}`);
+    }
+    if (__webpack_require__.g.UDAGlobalConfig.realm !== 'UDAN') {
+        headers.append("UDAN-Realm", `${__webpack_require__.g.UDAGlobalConfig.realm}`);
+    }
+    if (additionalHeaders) {
+        return additionalHeaders;
+    }
+    return headers;
+};
+/**
+ * @obective to replace static query params with dynamic values
+ * @param url
+ * @param val
+ * @returns reconstructed url
+ */
+const processArgs1 = (url, val) => {
+    return url === null || url === void 0 ? void 0 : url.replace(/#([^#]+)#/g, (_, key) => val[key] !== undefined ? val[key] : "");
+};
+
+
+
+const REST = {
+    apiCal,
+    syncApiCal,
+    processArgs: processArgs1,
+};
+
+
+/***/ }),
+
+/***/ "./src/services/recordService.ts":
+/*!***************************************!*\
+  !*** ./src/services/recordService.ts ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   deleteRecording: () => (/* binding */ deleteRecording),
+/* harmony export */   fetchStatuses: () => (/* binding */ fetchStatuses),
+/* harmony export */   postRecordSequenceData: () => (/* binding */ postRecordSequenceData),
+/* harmony export */   profanityCheck: () => (/* binding */ profanityCheck),
+/* harmony export */   recordClicks: () => (/* binding */ recordClicks),
+/* harmony export */   recordSequence: () => (/* binding */ recordSequence),
+/* harmony export */   recordUserClickData: () => (/* binding */ recordUserClickData),
+/* harmony export */   saveClickData: () => (/* binding */ saveClickData),
+/* harmony export */   updateRecordClicks: () => (/* binding */ updateRecordClicks),
+/* harmony export */   updateRecordSequenceData: () => (/* binding */ updateRecordSequenceData),
+/* harmony export */   updateRecording: () => (/* binding */ updateRecording),
+/* harmony export */   updateSequnceIndex: () => (/* binding */ updateSequnceIndex),
+/* harmony export */   userClick: () => (/* binding */ userClick)
+/* harmony export */ });
+/* harmony import */ var _config_endpoints__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config/endpoints */ "./src/config/endpoints.ts");
+/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! . */ "./src/services/index.ts");
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config */ "./src/config/index.ts");
+/* harmony import */ var _userService__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./userService */ "./src/services/userService.ts");
+/* harmony import */ var _util_nodeInfo__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../util/nodeInfo */ "./src/util/nodeInfo.ts");
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../util */ "./src/util/index.ts");
+/* harmony import */ var domjson__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! domjson */ "./node_modules/domjson/dist/domJSON.js");
+/* harmony import */ var domjson__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(domjson__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _util_recording_utils_mapClickedElementToHtmlFormElement__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../util/recording-utils/mapClickedElementToHtmlFormElement */ "./src/util/recording-utils/mapClickedElementToHtmlFormElement.ts");
+/* harmony import */ var _config_error_log__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../config/error-log */ "./src/config/error-log.ts");
+/* harmony import */ var _util_fetchDomain__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../util/fetchDomain */ "./src/util/fetchDomain.ts");
+/* harmony import */ var react_ga4__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-ga4 */ "./node_modules/react-ga4/dist/index.js");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+/**
+ * This code imports various modules and utilities used throughout the application, including:
+ * - ENDPOINT: configuration for API endpoints
+ * - REST: a utility for making API calls
+ * - CONFIG: general application configuration
+ * - userService: functions for getting the user's session key and user ID
+ * - nodeInfo: a utility for getting information about DOM nodes
+ * - TSON: a library for serializing TypeScript objects to JSON
+ * - various utility functions for working with DOM elements and data storage
+ * - a function for mapping clicked elements to HTML form elements
+ * - logging utilities for console and error logging
+ * - a function for fetching the current domain
+ */
+
+
+
+
+
+
+
+
+
+
+ // @ts-ignore
+/**
+ * To record each action/event
+ * @param request
+ * @returns promise
+ */
+/**
+ * Records a set of clicks or other user interactions.
+ *
+ * @param {any} request - An object containing the details of the user interactions to be recorded.
+ * @returns {Promise<any>} A promise that resolves with the result of the API call to record the interactions.
+ */
+/**
+ * Records a set of clicks or other user interactions.
+ *
+ * @param {any} [request] - An object containing the details of the user interactions to be recorded.
+ * @returns {Promise<any>} A promise that resolves with the result of the API call to record the interactions.
+ */
+const recordClicks = (request) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Retrieve the user's session key
+        request.sessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getSessionKey)();
+        // Prepare the request parameters
+        const parameters = {
+            // The URL for the API call
+            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.Record,
+            // The HTTP method to use
+            method: "POST",
+            // The request body
+            body: request,
+        };
+        // Call the API
+        return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+    }
+    catch (error) {
+        // Handle any errors that occurred during the API call
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in recordClicks: ${error.message}`, error);
+        throw error;
+    }
+});
+/**
+ * Updates the record clicks.
+ *
+ * @param {any} request - The request object.
+ * @return {Promise<any>} A promise that resolves with the result of the API call.
+ */
+const updateRecordClicks = (request) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Prepare the request parameters
+        const parameters = {
+            // The URL for the API call
+            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.UpdateRecord,
+            // The HTTP method to use
+            method: "POST",
+            // The request body
+            body: request,
+        };
+        // Call the API
+        return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+    }
+    catch (error) {
+        // Handle any errors that occurred during the API call
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in updateRecordClicks: ${error.message}`, error);
+        throw error;
+    }
+});
+/**
+ * Updates the record clicks.
+ *
+ * @return {Promise<any>} A promise that resolves with the result of the API call.
+ * @param id
+ */
+const updateSequnceIndex = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Prepare the request parameters
+        const parameters = {
+            // The URL for the API call
+            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.updateSequenceIndex + id,
+            // The HTTP method to use
+            method: "POST"
+        };
+        // Call the API
+        return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+    }
+    catch (error) {
+        // Handle any errors that occurred during the API call
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in updateRecordClicks: ${error.message}`, error);
+        throw error;
+    }
+});
+/**
+ * Records a sequence of user interactions.
+ *
+ * @param request - An object containing the data required to record the sequence of user interactions.
+ * @returns A promise that resolves when the sequence of user interactions has been recorded.
+ */
+const recordSequence = (request) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (!request) {
+            throw new Error('Request object is required');
+        }
+        request.usersessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
+        if (!request.usersessionid) {
+            throw new Error('User session ID could not be retrieved');
+        }
+        const parameters = {
+            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.RecordSequence,
+            method: "POST",
+            body: request,
+        };
+        const response = yield ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+        if (!response) {
+            throw new Error('No response received from record sequence API');
+        }
+        return response;
+    }
+    catch (error) {
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAConsoleLogger.info('Record Sequence Error:', error);
+        throw error;
+        // removed by dead control flow
+{}
+    }
+});
+/**
+ * Records a user click event.
+ *
+ * @param request - An object containing the data required to record the user click event.
+ * @returns A promise that resolves when the user click event has been recorded.
+ */
+const userClick = (request) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (!request) {
+            // Request object is required
+            throw new Error("Request object is required");
+        }
+        // Get the user's ID
+        request.usersessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
+        // Set the clicked name to the host of the current page
+        request.clickedname = window.location.host;
+        // Prepare the request parameters
+        const parameters = {
+            // The URL for the API call
+            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.UserClick,
+            // The HTTP method to use
+            method: "PUT",
+            // The request body
+            body: request,
+        };
+        // Call the API
+        return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+    }
+    catch (error) {
+        // Handle any errors that occurred during the API call
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in userClick: ${error.message}`, error);
+        // Re-throw the error so it can be handled by the caller
+        throw error;
+    }
+});
+/**
+ * Deletes a recording sequence.
+ *
+ * @param request - An object containing the data required to delete the recording sequence.
+ * @returns A promise that resolves when the recording sequence has been deleted.
+ */
+const deleteRecording = (request) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (!request) {
+            // Request object is required
+            throw new Error("Request object is required");
+        }
+        // Add the user session ID to the request object
+        request.usersessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
+        // Prepare the request parameters
+        const parameters = {
+            // The URL for the API call
+            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.DeleteSequence,
+            // The HTTP method to use
+            method: "POST",
+            // The request body
+            body: request,
+        };
+        // Call the API
+        return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+    }
+    catch (error) {
+        // Handle any errors that occurred during the API call
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in deleteRecording: ${error.message}`, error);
+        // Re-throw the error so it can be handled by the caller
+        throw error;
+    }
+});
+/**
+ * Updates an existing recording session.
+ *
+ * @param request - An object containing the data to update the recording session.
+ * @returns A promise that resolves when the recording session has been updated.
+ */
+const updateRecording = (request) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (!request) {
+            // Request object is required
+            throw new Error("Request object is required");
+        }
+        // Get the user's ID and add it to the request object
+        request.usersessionid = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
+        // Prepare the request parameters
+        const parameters = {
+            // The URL for the API call
+            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.updateRecordSequence,
+            // The HTTP method to use
+            method: "POST",
+            // The request body
+            body: request,
+        };
+        // Call the API
+        return yield ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+    }
+    catch (error) {
+        // Handle any errors that occurred during the API call
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in updateRecording: ${error.message}`, error);
+        // Re-throw the error so it can be handled by the caller
+        throw error;
+    }
+});
+/**
+ * Checks for profanity in the provided request object.
+ *
+ * @param request - The request object containing the text to be checked for profanity.
+ * @returns A promise that resolves with the profanity check result.
+ */
+const profanityCheck = (request) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (!request) {
+            // Request object is required for the profanity check
+            throw new Error("Request object is required");
+        }
+        // Set the Content-Type header to text/plain
+        const headers = new Headers();
+        headers.append("Content-Type", "text/plain");
+        // Set the Ocp-Apim-Subscription-Key header to the profanity API key
+        headers.append("Ocp-Apim-Subscription-Key", _config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.profanity.config.key1);
+        // Prepare the request parameters
+        const parameters = {
+            // The URL for the API call
+            url: _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.ProfanityCheck,
+            // The HTTP method to use
+            method: "POST",
+            // The request body
+            body: request,
+            // The headers to include in the request
+            headers,
+        };
+        // Call the API
+        return ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+    }
+    catch (error) {
+        // Handle any errors that occurred during the API call
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in profanityCheck: ${error.message}`, error);
+        // Re-throw the error so it can be handled by the caller
+        throw error;
+    }
+});
+/**
+ * Saves click data to a REST service.
+ *
+ * @param node - The clicked HTML element.
+ * @param text - The text content of the clicked element.
+ * @param meta - The metadata associated with the clicked element.
+ * @returns A promise that resolves when the click data has been saved.
+ */
+const saveClickData = (node, text, meta) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Check if all the required parameters are provided
+        if (!node || !text || !meta) {
+            throw new Error("Required parameters are missing");
+        }
+        // node: The clicked HTML element
+        // text: The text content of the clicked element
+        // meta: The metadata associated with the clicked element
+        // removing circular reference before converting to json with deep clone.
+        /**
+         * Processes the clicked node and creates a JSON representation of it, including its metadata.
+         * - Clones the clicked node to create a new node object.
+         * - Logs the absolute offsets of the processed node.
+         * - Converts the processed node to a JSON object using the `domJSON.toJSON` function, with the `serialProperties` option set to `true`.
+         * - Assigns the provided `meta` object to the `meta` property of the JSON object.
+         *
+         * @param {any} node - The clicked node.
+         * @param {string} text - The text content of the clicked node.
+         * @param {any} meta - The metadata associated with the clicked node.
+         * @returns {any} - The processed JSON object containing the node information and metadata.
+         */
+        // Clone the clicked node to create a new node object.
+        const processedNode = yield node.cloneNode(true);
+        // Log the absolute offsets of the processed node.
+        const absoluteOffsets = (0,_util__WEBPACK_IMPORTED_MODULE_5__.getAbsoluteOffsets)(processedNode);
+        if (absoluteOffsets) {
+            console.log(absoluteOffsets);
+        }
+        // Convert the processed node to a JSON object using the `domJSON.toJSON` function, with the `serialProperties` option set to `true`.
+        let objectData = domjson__WEBPACK_IMPORTED_MODULE_6___default().toJSON(processedNode, {
+            serialProperties: true,
+        });
+        // Assign the provided `meta` object to the `meta` property of the JSON object.
+        if (objectData.meta) {
+            objectData.meta = meta;
+        }
+        else {
+            objectData.meta = meta;
+        }
+        //removing the unwanted attributes which were added while processing click objects.
+        /**
+         * Removes certain properties from the `objectData.node` object before saving the click data.
+         * - `addedClickRecord`: This property is removed to prevent duplicate click data from being saved.
+         * - `hasClick`: This property is removed as it is no longer needed after the click data has been saved.
+         * - `udaIgnoreChildren`: This property is removed as it is no longer needed after the click data has been saved.
+         * - `udaIgnoreClick`: This property is removed as it is no longer needed after the click data has been saved.
+         */
+        // Remove `addedClickRecord` property from the `objectData.node` object.
+        // This property is no longer needed after the click data has been saved.
+        delete objectData.node.addedClickRecord;
+        // Remove `hasClick` property from the `objectData.node` object.
+        // This property is no longer needed after the click data has been saved.
+        delete objectData.node.hasClick;
+        // Remove `udaIgnoreChildren` property from the `objectData.node` object.
+        // This property is no longer needed after the click data has been saved.
+        delete objectData.node.udaIgnoreChildren;
+        // Remove `udaIgnoreClick` property from the `objectData.node` object.
+        // This property is no longer needed after the click data has been saved.
+        delete objectData.node.udaIgnoreClick;
+        /**
+         * Processes the clicked node before saving the click data.
+         * - If the clicked node's name is in the `CONFIG.ignoreNodesFromIndexing` list and has a custom name in `CONFIG.customNameForSpecialNodes`, the `displayText` property of the `meta` object is set to the custom name.
+         * - If the `outerHTML` property of the `node` object is not set, it is set to the actual outer HTML of the clicked node.
+         * - The `offset` property of the `objectData` object is set to the absolute offsets of the clicked node.
+         * - The `nodeInfo` property of the `node` object is set to the result of calling the `getNodeInfo` function with the clicked node.
+         */
+        // If the clicked node is in the ignoreNodesFromIndexing list and has a custom name in customNameForSpecialNodes,
+        // set the displayText property of the meta object to the custom name.
+        if ((0,_util__WEBPACK_IMPORTED_MODULE_5__.inArray)(node.nodeName.toLowerCase(), _config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.ignoreNodesFromIndexing) !==
+            -1 &&
+            _config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.customNameForSpecialNodes.hasOwnProperty(node.nodeName.toLowerCase())) {
+            // Set the displayText property to the custom name for special nodes.
+            objectData.meta.displayText =
+                _config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.customNameForSpecialNodes[node.nodeName.toLowerCase()];
+        }
+        // If the outerHTML property of the node object is not set, set it to the actual outer HTML of the clicked node.
+        if (!objectData.node.outerHTML) {
+            // Set the outerHTML property to the actual outer HTML of the clicked node.
+            objectData.node.outerHTML = node.outerHTML;
+        }
+        // Set the offset property of the objectData object to the absolute offsets of the clicked node.
+        objectData.offset = (0,_util__WEBPACK_IMPORTED_MODULE_5__.getAbsoluteOffsets)(node);
+        // Set the nodeInfo property of the node object to the result of calling the getNodeInfo function with the clicked node.
+        objectData.node.nodeInfo = (0,_util_nodeInfo__WEBPACK_IMPORTED_MODULE_4__.getNodeInfo)(node);
+        // Added to handle the case where screen size is not available
+        /**
+         * Handles the case where the screen size information is not available in the node's metadata.
+         * If the screen size is not available, the function returns `false` to indicate that the click data should not be saved.
+         * Otherwise, it checks if the `enableNodeTypeChangeSelection` configuration is enabled, and if so, it maps the clicked element to an HTML form element and updates the `meta` object accordingly.
+         * Finally, it logs the `objectData` to the console with a log level of 3.
+         *
+         * @param {any} objectData - The object containing the data to be saved, including the node information and metadata.
+         * @returns {boolean} - `false` if the screen size information is not available, `true` otherwise.
+         */
+        // If the screen size information is not available in the node's metadata, return false to indicate that the click data should not be saved.
+        if (objectData.node.nodeInfo &&
+            (!objectData.node.nodeInfo.screenSize.screen.width ||
+                !objectData.node.nodeInfo.screenSize.screen.height)) {
+            return false;
+        }
+        const { enableNodeTypeChangeSelection } = _config__WEBPACK_IMPORTED_MODULE_2__.CONFIG;
+        // If the enableNodeTypeChangeSelection configuration is enabled, map the clicked element to an HTML form element and update the meta object accordingly.
+        if (enableNodeTypeChangeSelection) {
+            objectData.meta.systemDetected = (0,_util_recording_utils_mapClickedElementToHtmlFormElement__WEBPACK_IMPORTED_MODULE_7__["default"])(node);
+            // If the system detected input element is not "others", set the selected element to the system detected input element.
+            if (objectData.meta.systemDetected.inputElement !== "others") {
+                objectData.meta.selectedElement = objectData.meta.systemDetected;
+            }
+        }
+        // Log the object data to the console with a log level of 3.
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAConsoleLogger.info(objectData, 3);
+        // let domain = fetchDomain();
+        /**
+         * To save the user's click data to a REST endpoint.
+         * @param clickType - The type of click event being recorded (e.g. "sequencerecord").
+         * @param clickedName - The name or text content of the clicked element.
+         * @param recordId - The ID of the record being updated (default is 0).
+         * @returns An object containing the domain, URL path, clicked node name, HTML5 flag, clicked path, and the serialized object data.
+         * @throws An error if there is a problem saving the click data.
+         */
+        // Get the domain from the window's location object.
+        let domain = window.location.host;
+        // Serialize the object data to a JSON string using JSON.stringify.
+        const jsonString = JSON.stringify(objectData);
+        // Log the JSON string to the console with a log level of 1.
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAConsoleLogger.info(jsonString, 1);
+        // Return an object containing the domain, URL path, clicked node name, HTML5 flag, clicked path, and the serialized object data.
+        return {
+            // The domain of the current web page.
+            domain: domain,
+            // The URL path of the current web page.
+            urlpath: window.location.pathname,
+            // The name or text content of the clicked node.
+            clickednodename: text,
+            // A flag indicating whether the clicked node is an HTML5 element.
+            html5: 0,
+            // The path of the clicked node (empty string by default).
+            clickedpath: "",
+            // The serialized object data as a JSON string.
+            objectdata: jsonString,
+        };
+    }
+    catch (error) {
+        // Log any errors that occur during the saving process to the console with a log level of 1.
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in saveClickData: ${error.message}`, error);
+        // Rethrow the error to allow the calling code to handle it.
+        throw error;
+    }
+});
+/**
+ * To post the recorded user click sequence data to a REST endpoint.
+ * @param request - An object containing the data to be sent in the request payload.
+ * @returns A promise that resolves with the response from the REST endpoint.
+ */
+const postRecordSequenceData = (request) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Throw an error if the request object is undefined or null.
+        if (!request) {
+            throw new Error("Request object is required");
+        }
+        // Clear the udanSelectedNodes array at the beginning of each call.
+        window.udanSelectedNodes = [];
+        // Retrieve the user click node set from the store.
+        const userclicknodesSet = (0,_util__WEBPACK_IMPORTED_MODULE_5__.getFromStore)(_config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.RECORDING_SEQUENCE, false);
+        // Get the IDs of the user click nodes and join them into a comma-separated string.
+        const ids = userclicknodesSet.map((item) => item.id);
+        // Get the domain of the current web page.
+        let domain = (0,_util_fetchDomain__WEBPACK_IMPORTED_MODULE_9__.fetchDomain)();
+        // Construct the payload object by merging the request object and the other properties.
+        const payload = Object.assign(Object.assign({}, request), { domain: domain, 
+            // Set the ignored status to 0 (false) by default.
+            isIgnored: 0, 
+            // Set the validity status to 1 (true) by default.
+            isValid: 1, 
+            // Use the comma-separated string of user click node IDs.
+            userclicknodelist: ids.join(","), 
+            // Pass the user click node set as an array of objects.
+            userclicknodesSet });
+        // Call the recordSequence function with the constructed payload and return the result.
+        return yield recordSequence(payload);
+    }
+    catch (error) {
+        // Log any errors that occur to the console with a log level of 1.
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in postRecordSequenceData: ${error.message}`, error);
+        // Rethrow the error to allow the calling code to handle it.
+        throw error;
+    }
+});
+/**
+ * To update the recorded user click sequence data to a REST endpoint.
+ * @param request - An object containing the data to be sent in the request payload.
+ * @returns A promise that resolves with the response from the REST endpoint.
+ */
+const updateRecordSequenceData = (request) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Throw an error if the request object is undefined or null.
+        if (!request) {
+            throw new Error("Request object is required");
+        }
+        // Clear the udanSelectedNodes array at the beginning of each call.
+        window.udanSelectedNodes = [];
+        // Retrieve the user click node set from the store.
+        const userclicknodesSet = (0,_util__WEBPACK_IMPORTED_MODULE_5__.getFromStore)(_config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.RECORDING_SEQUENCE, false);
+        // Get the IDs of the user click nodes and join them into a comma-separated string.
+        const ids = userclicknodesSet.map((item) => item.id);
+        // Get the domain of the current web page.
+        let domain = (0,_util_fetchDomain__WEBPACK_IMPORTED_MODULE_9__.fetchDomain)();
+        // Construct the payload object by merging the request object and the other properties.
+        const payload = Object.assign(Object.assign({}, request), { domain: domain, 
+            // Set the ignored status to 0 (false) by default.
+            isIgnored: 0, 
+            // Set the validity status to 1 (true) by default.
+            isValid: 1, 
+            // Use the comma-separated string of user click node IDs.
+            userclicknodelist: ids.join(","), 
+            // Pass the user click node set as an array of objects.
+            userclicknodesSet });
+        // Call the recordSequence function with the constructed payload and return the result.
+        return yield recordSequence(payload);
+    }
+    catch (error) {
+        // Log any errors that occur to the console with a log level of 1.
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in postRecordSequenceData: ${error.message}`, error);
+        // Rethrow the error to allow the calling code to handle it.
+        throw error;
+    }
+});
+/**
+ * To update click data to REST
+ * @returns  promise
+ * @param request
+ */
+const recordUserClickData = (clickType = "sequencerecord", clickedName = "", recordId = 0) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const payload = {
+            usersessionid: yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getSessionKey)(),
+            clickedname: clickedName,
+            clicktype: clickType,
+            recordid: recordId,
+        };
+        // Sending events to google analytics
+        react_ga4__WEBPACK_IMPORTED_MODULE_10__["default"].event({
+            category: clickType,
+            action: clickType,
+            label: clickedName,
+            value: recordId,
+            nonInteraction: true,
+            transport: "xhr",
+        });
+        return yield userClick(payload);
+    }
+    catch (error) {
+        // Log any errors that occur to the console with a log level of 1.
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAErrorLogger.error(`Error in recordUserClickData: ${error.message}`, error);
+        // Rethrow the error to allow the calling code to handle it.
+        throw error;
+    }
+});
+/**
+ * Fetches status options from the API
+ * @param {Object} request - The request object containing category
+ * @param {string} request.category - Category for status filtering, defaults to 'sequenceList'
+ * @returns {Promise} API response containing status options
+ */
+const fetchStatuses = (request = { category: 'sequenceList' }) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (!request.category) {
+            throw new Error('Category is required');
+        }
+        const parameters = {
+            url: ___WEBPACK_IMPORTED_MODULE_1__.REST.processArgs(_config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.statuses, request),
+            method: "GET"
+        };
+        const response = yield ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+        if (!response) {
+            throw new Error('No response received from status API');
+        }
+        return response;
+    }
+    catch (error) {
+        _config_error_log__WEBPACK_IMPORTED_MODULE_8__.UDAConsoleLogger.info('Fetch Status Error:', error);
+        console.log(error);
+        return Promise.reject(error);
+    }
+});
+
+
+/***/ }),
+
+/***/ "./src/services/searchService.ts":
+/*!***************************************!*\
+  !*** ./src/services/searchService.ts ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   fetchRecord: () => (/* binding */ fetchRecord),
+/* harmony export */   fetchSearchResults: () => (/* binding */ fetchSearchResults),
+/* harmony export */   fetchSpecialNodes: () => (/* binding */ fetchSpecialNodes)
+/* harmony export */ });
+/* harmony import */ var _config_endpoints__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config/endpoints */ "./src/config/endpoints.ts");
+/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! . */ "./src/services/index.ts");
+/* harmony import */ var _util_specialNodes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util/specialNodes */ "./src/util/specialNodes.ts");
+/* harmony import */ var _userService__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./userService */ "./src/services/userService.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+/**
+ * Imports various utility functions and constants used in the search service.
+ * - `ENDPOINT`: Provides the endpoint URLs for the search-related API calls.
+ * - `recordUserClickData`: Records user click data for search-related actions.
+ * - `REST`: Provides utility functions for processing API request parameters.
+ * - `specialNodes`: Provides a list of special node types used in the application.
+ * - `getUserId`: Retrieves the user's session ID.
+ */
+
+
+
+
+/**
+ * Fetches search results from the backend with error handling.
+ *
+ * @param request - An optional object containing the following properties:
+ *   - keyword: The search keyword to record user click data.
+ *   - page: The page number for the search results.
+ *   - domain: The domain to filter the search results.
+ *   - additionalParams: Any additional parameters to include in the search request.
+ *   - userSessionId: The user's session ID.
+ * @returns A promise that resolves to the search results.
+ */
+const fetchSearchResults = (request) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // If the keyword is not empty, record user click data.
+        if ((request === null || request === void 0 ? void 0 : request.keyword) && request.keyword !== "") {
+            (0,___WEBPACK_IMPORTED_MODULE_1__.recordUserClickData)("search", request.keyword);
+        }
+        // Retrieve the user's session ID.
+        request.userSessionId = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
+        // If additionalParams is null, delete it from the request object.
+        if (request.additionalParams === null) {
+            delete request.additionalParams;
+        }
+        // Construct the API call parameters based on whether additionalParams is present.
+        let parameters;
+        if (request.additionalParams != null) {
+            parameters = {
+                // Use the SearchWithPermissions endpoint when additionalParams is present.
+                url: ___WEBPACK_IMPORTED_MODULE_1__.REST.processArgs(_config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.SearchWithPermissions, request),
+                // Use the GET method.
+                method: "GET",
+            };
+        }
+        else {
+            parameters = {
+                // Use the Search endpoint when additionalParams is not present.
+                url: ___WEBPACK_IMPORTED_MODULE_1__.REST.processArgs(_config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.Search, request),
+                // Use the GET method.
+                method: "GET",
+            };
+        }
+        const response = yield ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+        if (response !== undefined) {
+            return response;
+        }
+        else {
+            return [];
+        }
+    }
+    catch (error) {
+        // Type guard to check if error is an instance of Error
+        const errorMessage = error instanceof Error ? error.message : 'Unknown search error';
+        // Log the error for debugging
+        console.error('Search service error:', errorMessage);
+        // You can customize the error response based on your needs
+        throw new Error(`Failed to perform search: ${errorMessage}`);
+        // removed by dead control flow
+{}
+    }
+});
+/**
+ * Fetch a record from the backend with optional additional parameters and error handling.
+ * @param request - An optional object containing the following properties:
+ *   - id: The ID of the record to fetch.
+ *   - domain: The domain to filter the record.
+ *   - additionalParams: Any additional parameters to include in the record fetch request.
+ *   - userSessionId: The user's session ID.
+ * @returns A promise that resolves to the fetched record.
+ */
+const fetchRecord = (request) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // If additionalParams is null, remove it from the request object
+        if (request.additionalParams === null) {
+            delete request.additionalParams;
+        }
+        else {
+            // If additionalParams is present, add the userSessionId to the request object
+            request.userSessionId = yield (0,_userService__WEBPACK_IMPORTED_MODULE_3__.getUserId)();
+        }
+        let parameters;
+        let url = _config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.fetchRecord;
+        // Determine which endpoint to use based on whether additionalParams is present
+        if (request.additionalParams != null) {
+            url += "/withPermissions";
+        }
+        // Construct the full URL by appending the id and domain to the endpoint URL
+        url += "/" + request.id + "?domain=" + request.domain;
+        // If additionalParams is present, append it to the URL
+        if (request.additionalParams != null) {
+            url +=
+                "&additionalParams=" +
+                    request.additionalParams +
+                    "&userSessionId=" +
+                    request.userSessionId;
+        }
+        // Construct the API call parameters
+        parameters = {
+            url,
+            method: "GET",
+        };
+        // Make the API call and return the result
+        return yield ___WEBPACK_IMPORTED_MODULE_1__.REST.apiCal(parameters);
+    }
+    catch (error) {
+        // Log the error and throw a new error with a user-friendly message
+        console.error("Error fetching record:", error);
+        throw new Error(`Failed to fetch record: ${error.message}`);
+    }
+});
+/**
+ * Fetch special nodes processing from backend with error handling
+ * @param request - An optional object containing parameters for the special nodes request
+ * @returns A promise that resolves to the fetched special nodes
+ */
+const fetchSpecialNodes = (request) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Construct the API call parameters by processing the request using the REST.processArgs function
+        const parameters = {
+            url: ___WEBPACK_IMPORTED_MODULE_1__.REST.processArgs(_config_endpoints__WEBPACK_IMPORTED_MODULE_0__.ENDPOINT.SpecialNodes, request),
+            method: "GET",
+        };
+        return _util_specialNodes__WEBPACK_IMPORTED_MODULE_2__.specialNodes;
+    }
+    catch (error) {
+        // Log the error and throw a new error with a user-friendly message
+        console.error("Error fetching special nodes:", error);
+        throw new Error(`Failed to fetch special nodes: ${error.message}`);
+    }
+});
+
+
+/***/ }),
+
+/***/ "./src/services/userService.ts":
+/*!*************************************!*\
+  !*** ./src/services/userService.ts ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getSessionKey: () => (/* binding */ getSessionKey),
+/* harmony export */   getUserId: () => (/* binding */ getUserId)
+/* harmony export */ });
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util */ "./src/util/index.ts");
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config */ "./src/config/index.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+/**
+ * Imports the `getFromStore` utility function from the "../util" module.
+ * Imports the `CONFIG` object from the "../config" module.
+ */
+
+
+/**
+ * Retrieves the user's ID from the application's storage.
+ *
+ * @returns {Promise<string | null>} The user's ID, or `null` if it could not be retrieved.
+ * @throws {Error} If there was an error retrieving the user's ID.
+ */
+const getUserId = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Retrieve user session data from the store using the key defined in CONFIG.USER_AUTH_DATA_KEY
+        const userSessionData = yield (0,_util__WEBPACK_IMPORTED_MODULE_0__.getFromStore)(_config__WEBPACK_IMPORTED_MODULE_1__.CONFIG.USER_AUTH_DATA_KEY, false);
+        // Check if the userSessionData object exists, has an authData property, and the authData has an id property
+        if (userSessionData && userSessionData.authData && userSessionData.authData.id) {
+            // Return the user's ID from the authData object
+            return userSessionData.authData.id;
+        }
+        // If the user's ID could not be found, return null
+        return null;
+    }
+    catch (error) {
+        // Log the error to the console
+        console.log("Error retrieving user ID:", error);
+        // Throw a new Error with a custom message
+        throw new Error("Failed to retrieve user ID");
+    }
+});
+/**
+ * Retrieves the user's session key from the application's storage.
+ *
+ * @returns {Promise<string | null>} The user's session key, or `null` if it could not be retrieved.
+ * @throws {Error} If there was an error retrieving the user's session key.
+ */
+const getSessionKey = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Retrieve user session data from the store using the key defined in CONFIG.USER_AUTH_DATA_KEY
+        const userSessionData = yield (0,_util__WEBPACK_IMPORTED_MODULE_0__.getFromStore)(_config__WEBPACK_IMPORTED_MODULE_1__.CONFIG.USER_AUTH_DATA_KEY, false);
+        // Check if the userSessionData object exists and has a sessionKey property
+        if (userSessionData && userSessionData.sessionKey) {
+            // Return the user's session key
+            return userSessionData.sessionKey;
+        }
+        /**
+         * Handles the case where the user's session key could not be retrieved from the application's storage.
+         *
+         * @returns {Promise<string | null>} `null` if the session key could not be retrieved.
+         * @throws {Error} If there was an error retrieving the session key.
+         */
+        // If the user's session key could not be found, return null
+        return null;
+    }
+    catch (error) {
+        // Log the error to the console
+        console.log("Error retrieving session key:", error);
+        // Throw a new Error with a custom message
+        throw new Error("Failed to retrieve session key");
+    }
+});
+
+
+/***/ }),
+
+/***/ "./src/util/addBodyEvents.ts":
+/*!***********************************!*\
+  !*** ./src/util/addBodyEvents.ts ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   addBodyEvents: () => (/* binding */ addBodyEvents)
+/* harmony export */ });
+/* harmony import */ var _addClickToNode__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./addClickToNode */ "./src/util/addClickToNode.ts");
+/* harmony import */ var _isClickableNode__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./isClickableNode */ "./src/util/isClickableNode.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+/**
+ * Add events to body elements
+ */
+const addBodyEvents = () => __awaiter(void 0, void 0, void 0, function* () {
+    //exclude content-serving elements from click objects
+    let els = document.body.querySelectorAll("*"), len = els === null || els === void 0 ? void 0 : els.length, i = 0;
+    for (; i < len; i++) {
+        try {
+            /**exclude event attachment for selective elements  */
+            if (els[i] && (0,_isClickableNode__WEBPACK_IMPORTED_MODULE_1__.isClickableNode)(els[i])) {
+                (0,_addClickToNode__WEBPACK_IMPORTED_MODULE_0__.addClickToNode)(els[i]);
+            }
+        }
+        catch (e) {
+        }
+    }
+});
+
+
+/***/ }),
+
+/***/ "./src/util/addClickToNode.ts":
+/*!************************************!*\
+  !*** ./src/util/addClickToNode.ts ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   addClickToNode: () => (/* binding */ addClickToNode)
+/* harmony export */ });
+/* harmony import */ var _config_error_log__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config/error-log */ "./src/config/error-log.ts");
+/* harmony import */ var _addEvent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./addEvent */ "./src/util/addEvent.ts");
+
+
+const addClickToNode = (node) => {
+    try {
+        if (node.classList && node.classList.contains('uda_exclude')) {
+            return;
+        }
+        if (node.hasOwnProperty("addedClickRecord") && node.addedClickRecord === true) {
+            return;
+        }
+        let clickableNode = node;
+        let recordNode = node;
+        const nodeName = clickableNode.nodeName.toLowerCase();
+        // fix for select2 library
+        if (node.classList && node.classList.contains('select2-selection')) {
+            (0,_addEvent__WEBPACK_IMPORTED_MODULE_1__.addEvent)(node, 'focus');
+            node.addedClickRecord = true;
+            return;
+        }
+        switch (nodeName) {
+            case "a":
+                (0,_addEvent__WEBPACK_IMPORTED_MODULE_1__.addEvent)(clickableNode, 'click');
+                break;
+            case "select":
+                (0,_addEvent__WEBPACK_IMPORTED_MODULE_1__.addEvent)(clickableNode, 'click');
+                break;
+            case "input":
+                if (!clickableNode.hasAttribute("type")) {
+                    (0,_addEvent__WEBPACK_IMPORTED_MODULE_1__.addEvent)(clickableNode, 'click');
+                    return node;
+                }
+                const inputType = clickableNode.getAttribute("type").toLowerCase();
+                switch (inputType) {
+                    case "email":
+                    case "text":
+                    case "button":
+                    case "color":
+                    case "date":
+                    case "datetime-local":
+                    case "file":
+                    case "hidden":
+                    case "image":
+                    case "month":
+                    case "number":
+                    case "password":
+                    case "range":
+                    case "reset":
+                    case "search":
+                    case "submit":
+                    case "tel":
+                    case "time":
+                    case "url":
+                    case "textarea":
+                    case "week":
+                        (0,_addEvent__WEBPACK_IMPORTED_MODULE_1__.addEvent)(clickableNode, 'click');
+                        break;
+                    case "checkbox":
+                    case "radio":
+                        (0,_addEvent__WEBPACK_IMPORTED_MODULE_1__.addEvent)(clickableNode, 'click');
+                        break;
+                    default:
+                        (0,_addEvent__WEBPACK_IMPORTED_MODULE_1__.addEvent)(clickableNode, 'click');
+                        break;
+                }
+                break;
+            case "mat-select":
+            case "textarea":
+            case "button":
+            case "tr":
+                (0,_addEvent__WEBPACK_IMPORTED_MODULE_1__.addEvent)(clickableNode, 'click');
+                break;
+            default:
+                (0,_addEvent__WEBPACK_IMPORTED_MODULE_1__.addEvent)(clickableNode, 'click');
+                break;
+        }
+        clickableNode.addedClickRecord = true;
+        return node;
+    }
+    catch (e) {
+        _config_error_log__WEBPACK_IMPORTED_MODULE_0__.UDAErrorLogger.error("Unable to add click to node " + node.outerHTML + " " + e);
+    }
+};
+
+
+/***/ }),
+
+/***/ "./src/util/addEvent.ts":
+/*!******************************!*\
+  !*** ./src/util/addEvent.ts ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   addEvent: () => (/* binding */ addEvent)
+/* harmony export */ });
+/* harmony import */ var _recordUserClick__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./recordUserClick */ "./src/util/recordUserClick.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+/**
+ * Adds event to an element
+ * @param node
+ * @param eventType
+ * @param callback
+ * @returns void
+ */
+const addEvent = (node, eventType, callback = null) => {
+    if (callback !== null) {
+        node.addEventListener(eventType, callback, { once: false });
+    }
+    else {
+        node.addEventListener(eventType, function (event) {
+            return __awaiter(this, void 0, void 0, function* () {
+                yield (0,_recordUserClick__WEBPACK_IMPORTED_MODULE_0__.recordUserClick)(node, event);
+            });
+        }, { once: false });
+    }
+};
+
+
+/***/ }),
+
+/***/ "./src/util/addNotification.ts":
+/*!*************************************!*\
+  !*** ./src/util/addNotification.ts ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   addNotification: () => (/* binding */ addNotification)
+/* harmony export */ });
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/notification/index.js");
+
+/**
+ *
+ * @param title
+ * @param description
+ * @param status
+ * @param placement
+ */
+const addNotification = (title = '', description = '', status = 'info', placement = 'top') => {
+    const args = {
+        message: title,
+        description: description,
+        placement: placement,
+        getContainer: () => {
+            return document.getElementById('udan-react-root').shadowRoot;
+        }
+    };
+    antd__WEBPACK_IMPORTED_MODULE_0__["default"][status](args);
+};
+
+
+/***/ }),
+
+/***/ "./src/util/checkBrowser.ts":
+/*!**********************************!*\
+  !*** ./src/util/checkBrowser.ts ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   checkBrowser: () => (/* binding */ checkBrowser)
+/* harmony export */ });
+/* harmony import */ var detect_browser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! detect-browser */ "./node_modules/detect-browser/es/index.js");
+
+const checkBrowser = () => {
+    const udaIdentifiedBrowser = (0,detect_browser__WEBPACK_IMPORTED_MODULE_0__.detect)();
+    let enableUDAPlugin = false;
+    let udaBrowserVar;
+    switch (udaIdentifiedBrowser && udaIdentifiedBrowser.name) {
+        case 'edge-chromium':
+        case 'edge':
+        case 'edge-ios':
+        case 'chrome':
+            enableUDAPlugin = true;
+            udaBrowserVar = chrome;
+            break;
+        default:
+            if (typeof browser !== "undefined") {
+                udaBrowserVar = browser;
+            }
+            break;
+    }
+    return { enableUDAPlugin: enableUDAPlugin, udaBrowserVar: udaBrowserVar, udaIdentifiedBrowser: udaIdentifiedBrowser };
+};
+
+
+/***/ }),
+
+/***/ "./src/util/checkNodeObjectKeyValue.ts":
+/*!*********************************************!*\
+  !*** ./src/util/checkNodeObjectKeyValue.ts ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   checkNodeObjectKeyValue: () => (/* binding */ checkNodeObjectKeyValue)
+/* harmony export */ });
+/* harmony import */ var _hasClass__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./hasClass */ "./src/util/hasClass.ts");
+
+const checkNodeObjectKeyValue = (node, key, objectValues, checkType) => {
+    var _a;
+    let exists = false;
+    switch (key.toLowerCase()) {
+        case 'tags':
+            if (objectValues.includes((_a = node === null || node === void 0 ? void 0 : node.tagName) === null || _a === void 0 ? void 0 : _a.trim().toLowerCase())) {
+                exists = true;
+            }
+            break;
+        case 'classes':
+            if ((0,_hasClass__WEBPACK_IMPORTED_MODULE_0__.hasClass)(node, objectValues)) {
+                exists = true;
+            }
+            break;
+        case 'attributes':
+            attributeLoop: for (const attribute of objectValues) {
+                if (node.hasAttribute(attribute)) {
+                    exists = true;
+                    break attributeLoop;
+                }
+            }
+            break;
+        case 'ids':
+            if (node.id && objectValues.includes(node.id.trim().toLowerCase())) {
+                exists = true;
+            }
+            break;
+    }
+    return exists;
+};
+
+
+/***/ }),
+
+/***/ "./src/util/checkNodeValues.ts":
+/*!*************************************!*\
+  !*** ./src/util/checkNodeValues.ts ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   checkNodeValues: () => (/* binding */ checkNodeValues)
+/* harmony export */ });
+/* harmony import */ var _checkNodeObjectKeyValue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./checkNodeObjectKeyValue */ "./src/util/checkNodeObjectKeyValue.ts");
+
+const checkNodeValues = (node, checkType) => {
+    let exists = false;
+    if (udaSpecialNodes[checkType] && node) {
+        checkNodeLoop: for (const key in udaSpecialNodes[checkType]) {
+            if ((0,_checkNodeObjectKeyValue__WEBPACK_IMPORTED_MODULE_0__.checkNodeObjectKeyValue)(node, key, udaSpecialNodes[checkType][key], checkType)) {
+                exists = true;
+                break checkNodeLoop;
+            }
+        }
+    }
+    return exists;
+};
+
+
+/***/ }),
+
+/***/ "./src/util/checkScreenSize.ts":
+/*!*************************************!*\
+  !*** ./src/util/checkScreenSize.ts ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   checkScreenSize: () => (/* binding */ checkScreenSize)
+/* harmony export */ });
+/* harmony import */ var _config_error_log__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config/error-log */ "./src/config/error-log.ts");
+
+/**
+ * Checks the screen size and determines plugin compatibility and alert status
+ * based on effective resolution calculations.
+ *
+ * Minimum requirements:
+ * - Height: 720px (optimal: 1080px)
+ * - Width: 1280px (optimal: 1920px)
+ *
+ * @returns {Object} Object containing:
+ *   - enablePluginForScreen: boolean - Whether the plugin should be enabled
+ *   - showScreenAlert: boolean - Whether to show resolution warning
+ */
+const checkScreenSize = () => {
+    try {
+        // Verify browser environment
+        /*if (typeof window === 'undefined') {
+            throw new Error('Window object is not available');
+        }
+
+        // Get current screen dimensions
+        const screenSize = getScreenSize();
+
+        // Validate screen size data structure
+        if (!screenSize || !screenSize.resolution) {
+            throw new Error('Invalid screen size object');
+        }
+
+        // Ensure resolution values are valid numbers
+        if (typeof screenSize.resolution.width !== 'number' ||
+            typeof screenSize.resolution.height !== 'number' ||
+            screenSize.resolution.width <= 0 ||
+            screenSize.resolution.height <= 0) {
+            throw new Error('Invalid resolution values');
+        }
+
+        // Get device pixel ratio for high DPI displays
+        const devicePixelRatio = window.devicePixelRatio || 1;
+
+        // Validate device pixel ratio
+        if (devicePixelRatio <= 0) {
+            throw new Error('Invalid device pixel ratio');
+        }
+
+        // Calculate effective dimensions accounting for pixel ratio
+        const effectiveHeight = screenSize.resolution.height * devicePixelRatio;
+        const effectiveWidth = screenSize.resolution.width * devicePixelRatio;
+
+        // Initialize status flags
+        let enablePluginForScreen = true;
+        let showScreenAlert = false;
+
+        // Check height requirements
+        if (effectiveHeight < 720) {
+            enablePluginForScreen = false;
+        } else if (effectiveHeight < 1080) {
+            showScreenAlert = true;
+        }
+
+        // Check width requirements
+        if (effectiveWidth < 1280) {
+            enablePluginForScreen = false;
+        } else if (effectiveWidth < 1920) {
+            showScreenAlert = true;
+        }
+
+        // Log resolution information
+        UDAConsoleLogger.info(`System given resolution is: ${screenSize.resolution.width}x${screenSize.resolution.height}`);
+        UDAConsoleLogger.info(`Current resolution is: ${effectiveWidth}x${effectiveHeight}`);
+
+        return { enablePluginForScreen, showScreenAlert };*/
+        return { enablePluginForScreen: true, showScreenAlert: false };
+    }
+    catch (error) {
+        // Log error and return safe defaults
+        _config_error_log__WEBPACK_IMPORTED_MODULE_0__.UDAErrorLogger.error(`Screen size check failed: ${error.message}`);
+        return {
+            enablePluginForScreen: false,
+            showScreenAlert: true
+        };
+    }
+};
+
+
+/***/ }),
+
+/***/ "./src/util/domChanges.ts":
+/*!********************************!*\
+  !*** ./src/util/domChanges.ts ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   timer: () => (/* binding */ timer)
+/* harmony export */ });
+/* harmony import */ var _addBodyEvents__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./addBodyEvents */ "./src/util/addBodyEvents.ts");
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config */ "./src/config/index.ts");
+/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index */ "./src/util/index.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+let timer = null;
+const observer = new MutationObserver((mutationList, observer) => __awaiter(void 0, void 0, void 0, function* () {
+    if (timer) {
+        clearTimeout(timer);
+    }
+    timer = setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
+        const isRecording = (0,_index__WEBPACK_IMPORTED_MODULE_2__.getFromStore)(_config__WEBPACK_IMPORTED_MODULE_1__.CONFIG.RECORDING_SWITCH_KEY, true) == "true";
+        if (isRecording) {
+            yield (0,_addBodyEvents__WEBPACK_IMPORTED_MODULE_0__.addBodyEvents)();
+        }
+    }), _config__WEBPACK_IMPORTED_MODULE_1__.CONFIG.indexInterval);
+}));
+observer.observe(document.body, { attributes: true, childList: true, subtree: true });
+
+
+/***/ }),
+
+/***/ "./src/util/events.ts":
+/*!****************************!*\
+  !*** ./src/util/events.ts ***!
+  \****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   off: () => (/* binding */ off),
+/* harmony export */   on: () => (/* binding */ on),
+/* harmony export */   once: () => (/* binding */ once),
+/* harmony export */   trigger: () => (/* binding */ trigger)
+/* harmony export */ });
+const on = (eventType, listener) => {
+    document.addEventListener(eventType, listener);
+};
+const off = (eventType, listener) => {
+    document.removeEventListener(eventType, listener);
+};
+const once = (eventType, listener) => {
+    on(eventType, handleEventOnce);
+    function handleEventOnce(event) {
+        listener(event);
+        off(eventType, handleEventOnce);
+    }
+};
+const trigger = (eventType, data) => {
+    const event = new CustomEvent(eventType, data);
+    document.dispatchEvent(event);
+};
+
+
+/***/ }),
+
+/***/ "./src/util/fetchDomain.ts":
+/*!*********************************!*\
+  !*** ./src/util/fetchDomain.ts ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   fetchDomain: () => (/* binding */ fetchDomain)
+/* harmony export */ });
+/* harmony import */ var parse_domain__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! parse-domain */ "./node_modules/parse-domain/build/parse-domain.js");
+
+const fetchDomain = () => {
+    let finalDomain = window.location.host;
+    // fetching top level domain based on the flag provided.
+    if (__webpack_require__.g.UDAGlobalConfig.enableForAllDomains) {
+        const parseResult = (0,parse_domain__WEBPACK_IMPORTED_MODULE_0__.parseDomain)(finalDomain);
+        switch (parseResult.type) {
+            case parse_domain__WEBPACK_IMPORTED_MODULE_0__.ParseResultType.Listed: {
+                const { hostname, domain, subDomains, topLevelDomains } = parseResult;
+                finalDomain = domain + '.' + topLevelDomains.join('.');
+                break;
+            }
+            case parse_domain__WEBPACK_IMPORTED_MODULE_0__.ParseResultType.Reserved:
+            case parse_domain__WEBPACK_IMPORTED_MODULE_0__.ParseResultType.NotListed: {
+                const { hostname } = parseResult;
+                console.log(`${hostname} is a reserved or unknown domain`);
+                break;
+            }
+            default:
+                const { hostname } = parseResult;
+                console.log(hostname);
+        }
+    }
+    return finalDomain;
+};
+
+
+/***/ }),
+
+/***/ "./src/util/getClickedInputLabels.ts":
+/*!*******************************************!*\
+  !*** ./src/util/getClickedInputLabels.ts ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getClickedInputLabels: () => (/* binding */ getClickedInputLabels)
+/* harmony export */ });
+/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index */ "./src/util/index.ts");
+//getting input label for the clicked node
+
+const getClickedInputLabels = (node, fromDocument = false, selectchange = false) => {
+    var _a, _b, _c, _d;
+    if (!node) {
+        return null;
+    }
+    let inputLabels = "";
+    let nodeName = node.nodeName.toLowerCase();
+    let textLabels = [];
+    try {
+        inputLabels = (0,_index__WEBPACK_IMPORTED_MODULE_0__.getLabelsForInputElement)(node);
+        if (inputLabels)
+            return inputLabels;
+    }
+    catch (e) {
+    }
+    switch (nodeName) {
+        case "select":
+            if (selectchange) {
+                inputLabels = (0,_index__WEBPACK_IMPORTED_MODULE_0__.getSelectedTextFromSelectBox)(node);
+            }
+            else {
+                textLabels = (0,_index__WEBPACK_IMPORTED_MODULE_0__.getNodeLabels)(node, [], 1, true, false, true);
+                if (textLabels.length > 0) {
+                    let labels = [];
+                    for (let j = 0; j < textLabels.length; j++) {
+                        labels.push(textLabels[j].text);
+                    }
+                    inputLabels = labels.toString();
+                }
+            }
+            break;
+        case "input":
+            if (!node.hasAttribute("type")) {
+                textLabels = (0,_index__WEBPACK_IMPORTED_MODULE_0__.getNodeLabels)(node, [], 1, true, true, true);
+                if (textLabels.length > 0) {
+                    let labels = [];
+                    for (let j = 0; j < textLabels.length; j++) {
+                        labels.push(textLabels[j].text);
+                    }
+                    inputLabels = labels.toString();
+                }
+            }
+            else {
+                switch ((_a = node === null || node === void 0 ? void 0 : node.getAttribute("type")) === null || _a === void 0 ? void 0 : _a.toLowerCase()) {
+                    default:
+                        textLabels = (0,_index__WEBPACK_IMPORTED_MODULE_0__.getNodeLabels)(node, [], 1, true, true, true);
+                        if (textLabels.length > 0) {
+                            let labels = [];
+                            for (let j = 0; j < textLabels.length; j++) {
+                                labels.push(textLabels[j].text);
+                            }
+                            inputLabels = labels.toString();
+                        }
+                }
+                break;
+            }
+            break;
+        case "textarea":
+            textLabels = (0,_index__WEBPACK_IMPORTED_MODULE_0__.getNodeLabels)(node, [], 1, true, true, true);
+            if (textLabels.length > 0) {
+                let labels = [];
+                for (let j = 0; j < textLabels.length; j++) {
+                    labels.push(textLabels[j].text);
+                }
+                inputLabels = labels.toString();
+            }
+            break;
+        case "img":
+            textLabels = (0,_index__WEBPACK_IMPORTED_MODULE_0__.getNodeLabels)(node, [], 1, true, false, true);
+            if (textLabels.length > 0) {
+                let labels = [];
+                for (let j = 0; j < textLabels.length; j++) {
+                    labels.push(textLabels[j].text);
+                }
+                inputLabels = labels.toString();
+            }
+            break;
+        default:
+            if (!((_b = node === null || node === void 0 ? void 0 : node.children) === null || _b === void 0 ? void 0 : _b.length) && ((_d = (_c = node === null || node === void 0 ? void 0 : node.innerText) === null || _c === void 0 ? void 0 : _c.trim()) === null || _d === void 0 ? void 0 : _d.length) > 0) {
+                return node === null || node === void 0 ? void 0 : node.innerText;
+            }
+            textLabels = (0,_index__WEBPACK_IMPORTED_MODULE_0__.getNodeLabels)(node, [], 1, false, true, true);
+            if (textLabels.length > 0) {
+                let labels = [];
+                for (let j = 0; j < textLabels.length; j++) {
+                    labels.push(textLabels[j].text);
+                }
+                inputLabels = labels.toString();
+            }
+    }
+    return inputLabels;
+};
+
+
+/***/ }),
+
+/***/ "./src/util/hasClass.ts":
+/*!******************************!*\
+  !*** ./src/util/hasClass.ts ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   hasClass: () => (/* binding */ hasClass)
+/* harmony export */ });
+/**
+ * To find an dom object has a given class
+ * @param element
+ * @param classList
+ * @returns
+ */
+const hasClass = (element, classList) => {
+    let existsFlag = false;
+    classList === null || classList === void 0 ? void 0 : classList.forEach(cls => {
+        var _a;
+        try {
+            if (((_a = element === null || element === void 0 ? void 0 : element.className) === null || _a === void 0 ? void 0 : _a.indexOf(cls)) > -1) {
+                existsFlag = true;
+                return existsFlag;
+            }
+        }
+        catch (e) {
+            return false;
+        }
+    });
+    return existsFlag;
+};
+
+
+/***/ }),
+
+/***/ "./src/util/index.ts":
+/*!***************************!*\
+  !*** ./src/util/index.ts ***!
+  \***************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   clickableElementExists: () => (/* binding */ clickableElementExists),
+/* harmony export */   compareNodes: () => (/* binding */ compareNodes),
+/* harmony export */   delayLink: () => (/* binding */ delayLink),
+/* harmony export */   errorLog: () => (/* binding */ errorLog),
+/* harmony export */   generateUUID: () => (/* binding */ generateUUID),
+/* harmony export */   getAbsoluteOffsets: () => (/* binding */ getAbsoluteOffsets),
+/* harmony export */   getAllChildren: () => (/* binding */ getAllChildren),
+/* harmony export */   getAllClickableElements: () => (/* binding */ getAllClickableElements),
+/* harmony export */   getCurrentPlayItem: () => (/* binding */ getCurrentPlayItem),
+/* harmony export */   getDirectInnerText: () => (/* binding */ getDirectInnerText),
+/* harmony export */   getFromStore: () => (/* binding */ getFromStore),
+/* harmony export */   getLabelsForInputElement: () => (/* binding */ getLabelsForInputElement),
+/* harmony export */   getNodeLabels: () => (/* binding */ getNodeLabels),
+/* harmony export */   getObjData: () => (/* binding */ getObjData),
+/* harmony export */   getSelectedTextFromSelectBox: () => (/* binding */ getSelectedTextFromSelectBox),
+/* harmony export */   inArray: () => (/* binding */ inArray),
+/* harmony export */   logInfo: () => (/* binding */ logInfo),
+/* harmony export */   parentUpTo: () => (/* binding */ parentUpTo),
+/* harmony export */   removeFromStore: () => (/* binding */ removeFromStore),
+/* harmony export */   setToStore: () => (/* binding */ setToStore),
+/* harmony export */   squeezeBody: () => (/* binding */ squeezeBody)
+/* harmony export */ });
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config */ "./src/config/index.ts");
+/* harmony import */ var jaro_winkler_typescript__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! jaro-winkler-typescript */ "./node_modules/jaro-winkler-typescript/lib/index.js");
+/* harmony import */ var typescript_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! typescript-json */ "./node_modules/typescript-json/lib/index.js");
+/* harmony import */ var typescript_json__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(typescript_json__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _initSpecialNodes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./initSpecialNodes */ "./src/util/initSpecialNodes.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+
+__webpack_require__(/*! ./domChanges */ "./src/util/domChanges.ts");
+/**
+ *
+ * @param data
+ * @param key
+ * @param isRaw - is raw data or json
+ */
+const setToStore = (data, key, isRaw) => {
+    localStorage.setItem(key, !isRaw ? (input => {
+        return undefined !== input ? JSON.stringify(input) : undefined;
+    })(data) : data);
+};
+/**
+ *
+ * @param key
+ * @param isRaw - is raw data or json
+ * @returns
+ */
+const getFromStore = (key, isRaw) => {
+    const data = localStorage.getItem(key);
+    if (data)
+        return !isRaw ? JSON.parse(data) : data;
+};
+/**
+ *
+ * @param key
+ * @returns
+ */
+const removeFromStore = (key) => {
+    localStorage.removeItem(key);
+};
+/**
+ * Generates random unique UUID
+ * @returns UUID
+ */
+const generateUUID = () => {
+    let d = new Date().getTime();
+    let uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+        let r = (d + Math.random() * 16) % 16 | 0;
+        d = Math.floor(d / 16);
+        return (c == "x" ? r : (r & 0x7) | 0x8).toString(16);
+    });
+    return uuid.toUpperCase();
+};
+/**
+ * Toggles(squeeze) content body element width
+ * @param hide
+ */
+const squeezeBody = (hide) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0,_initSpecialNodes__WEBPACK_IMPORTED_MODULE_3__.initSpecialNodes)();
+    if (!__webpack_require__.g.UDAGlobalConfig.enableOverlay) {
+        let documentBody = document.body;
+        if (!hide) {
+            documentBody.style.maxWidth = '77%';
+            documentBody.style.minWidth = '77%';
+            documentBody.style.float = 'left';
+        }
+        else {
+            documentBody.style.maxWidth = '100%';
+            documentBody.style.minWidth = '100%';
+            documentBody.style.float = 'none';
+        }
+    }
+});
+/**
+ * Returns index if an element in given array found
+ * @param elem
+ * @param array
+ * @returns index
+ */
+const inArray = (elem, array) => {
+    if (array.indexOf) {
+        return array.indexOf(elem);
+    }
+    for (let i = 0, length = array === null || array === void 0 ? void 0 : array.length; i < length; i++) {
+        if (array[i] === elem) {
+            return i;
+        }
+    }
+    return -1;
+};
+const errorLog = (err) => {
+    console.log(err);
+};
+const logInfo = (info) => {
+    console.log(info);
+};
+/**
+ * To delay Hyperlink click navitaion
+ * @param node
+ */
+const delayLink = (node) => {
+    const _href = node.getAttribute("href");
+    if (_href) {
+        node.setAttribute("data-href", _href);
+    }
+};
+/**
+ * return parent element
+ * @param el target element
+ * @param tagName tag name to be matched
+ * @returns
+ */
+const parentUpTo = (el, tagName) => {
+    tagName = tagName.toLowerCase();
+    if (el.tagName && el.tagName.toLowerCase() == tagName)
+        return el;
+    let depth = 0;
+    while (el && el.parentNode && depth <= 6) {
+        el = el.parentNode;
+        if (el.tagName && el.tagName.toLowerCase() == tagName) {
+            return el;
+        }
+        depth++;
+    }
+    // Many DOM methods return null if they don't
+    // find the element they are searching for
+    // It would be OK to omit the following and just
+    // return undefined
+    return null;
+};
+/**
+ * compares current playable node from storage based on status "completed"
+ * @returns object with index and node
+ */
+const getCurrentPlayItem = () => {
+    var _a;
+    const elementsFromStore = getFromStore(_config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.SELECTED_RECORDING, false);
+    const retObj = { index: 0, node: null };
+    for (let i = 0; i < ((_a = elementsFromStore === null || elementsFromStore === void 0 ? void 0 : elementsFromStore.userclicknodesSet) === null || _a === void 0 ? void 0 : _a.length); i++) {
+        if ((elementsFromStore === null || elementsFromStore === void 0 ? void 0 : elementsFromStore.userclicknodesSet[i].status) != "completed") {
+            retObj.index = i;
+            retObj.node = elementsFromStore === null || elementsFromStore === void 0 ? void 0 : elementsFromStore.userclicknodesSet[i];
+            retObj.additionalParams = elementsFromStore === null || elementsFromStore === void 0 ? void 0 : elementsFromStore.additionalParams;
+            break;
+        }
+    }
+    return retObj;
+};
+// getting the text for the clicknodes.
+const getNodeLabels = (node, inputlabels, iterationno, iterate = true, getchildlabels = true, fromclick = false, iteratelimit = 3, ignorenode = []) => {
+    if (!node)
+        return inputlabels;
+    try {
+        if (Array.isArray(ignorenode)) {
+            ignorenode = node;
+        }
+        if ((node.nodeName.toLowerCase() === "select" ||
+            node.nodeName.toLowerCase() === "checkbox") &&
+            iterate &&
+            inputlabels.length === 0) {
+            iterationno++;
+            inputlabels = getNodeLabels(node === null || node === void 0 ? void 0 : node.parentNode, inputlabels, iterationno, iterate, true, fromclick, iteratelimit, ignorenode);
+            if (fromclick) {
+                //todo need to rework
+            }
+        }
+        if (node.nodeName.toLowerCase() === "input" ||
+            node.nodeName.toLowerCase() === "textarea" ||
+            node.nodeName.toLowerCase() === "img") {
+            if (node.getAttribute("placeholder") &&
+                node.getAttribute("placeholder") !== "") {
+                inputlabels.push({
+                    text: node.getAttribute("placeholder").toString(),
+                    match: false,
+                });
+            }
+            if (node.getAttribute("type") &&
+                (node.getAttribute("type").toLowerCase() === "submit" ||
+                    node.getAttribute("type").toLowerCase() === "file")) {
+                if (node.getAttribute("value")) {
+                    inputlabels.push({
+                        text: node.getAttribute("value").toString(),
+                        match: false,
+                    });
+                    iterate = false;
+                }
+            }
+            if (node.getAttribute("alt")) {
+                inputlabels.push({
+                    text: node.getAttribute("alt").toString(),
+                    match: false,
+                });
+            }
+        }
+        if (getchildlabels && node.childNodes.length > 0) {
+            let childNodes = node.childNodes;
+            childNodes === null || childNodes === void 0 ? void 0 : childNodes.forEach(function (childNode) {
+                if (childNode.nodeName.toLowerCase() !== "script" &&
+                    childNode.nodeName.toLowerCase() !== "select" &&
+                    childNode.nodeName.toLowerCase() !== "#comment") {
+                    let textcontent = childNode.textContent
+                        .replace(/[\n\r]+|[\s]{2,}/g, " ")
+                        .trim();
+                    if (textcontent !== "" &&
+                        typeof (ignorenode === null || ignorenode === void 0 ? void 0 : ignorenode.isSameNode) === "function" &&
+                        (ignorenode === null || ignorenode === void 0 ? void 0 : ignorenode.isSameNode(childNode)) === false) {
+                        inputlabels.push({ text: textcontent, match: false });
+                    }
+                }
+            });
+        }
+        if (inputlabels.length === 0 && node.getAttribute("data-tooltip")) {
+            inputlabels.push({
+                text: node.getAttribute("data-tooltip").toString(),
+                match: false,
+            });
+        }
+        if (inputlabels.length === 0 && node.getAttribute("aria-label")) {
+            inputlabels.push({
+                text: node.getAttribute("aria-label").toString(),
+                match: false,
+            });
+        }
+        //todo fix for image tags
+        if (iterate &&
+            node.nodeName.toLowerCase() !== "img" &&
+            inputlabels.length === 0 &&
+            iterationno <= iteratelimit) {
+            iterationno++;
+            inputlabels = getNodeLabels(node.parentNode, [], iterationno, iterate, getchildlabels, fromclick, iteratelimit, null);
+        }
+        if (inputlabels.length === 0 && node.id !== "") {
+            inputlabels.push({
+                text: node.nodeName.toLowerCase() + "-" + node.id,
+                match: false,
+            });
+        }
+        else if (inputlabels.length === 0 &&
+            node.hasAttribute("class") &&
+            node.className &&
+            node.className !== "") {
+            let classname = node.className.toString();
+            inputlabels.push({
+                text: node.nodeName.toLowerCase() + "-" + classname.replace(" ", "-"),
+                match: false,
+            });
+        }
+        else if (inputlabels.length === 0) {
+            inputlabels.push({ text: node.nodeName.toLowerCase(), match: false });
+        }
+    }
+    catch (e) {
+        // console.log(e);
+    }
+    return inputlabels;
+};
+const getDirectInnerText = (element) => {
+    const x = [];
+    let child = element.firstChild;
+    while (child) {
+        if (child.nodeType == 3) {
+            x.push(child.nodeValue);
+        }
+        else if (child.nodeType == 1) {
+            let ii = getDirectInnerText(child);
+            if (ii.length > 0)
+                x.push(ii);
+        }
+        child = child.nextSibling;
+    }
+    return x.join(" ");
+};
+/**
+ * To get selected text from list options
+ * @param node
+ * @returns
+ */
+const getSelectedTextFromSelectBox = (node) => {
+    var _a;
+    try {
+        return (_a = node === null || node === void 0 ? void 0 : node.options) === null || _a === void 0 ? void 0 : _a[node === null || node === void 0 ? void 0 : node.selectedIndex].text;
+    }
+    catch (e) {
+    }
+};
+const getLabelsForInputElement = (element) => {
+    var _a;
+    let labels = [], id = element.id, name = element.name, elements = [];
+    if (id)
+        elements = document.querySelector("label[for='" + id + "']");
+    if (name && !element)
+        elements = document.querySelector("label[for='" + name + "']");
+    if (elements) {
+        labels = getDirectInnerText(elements);
+        if (labels)
+            return labels === null || labels === void 0 ? void 0 : labels.trim();
+    }
+    while ((element = element.parentNode)) {
+        if (((_a = element === null || element === void 0 ? void 0 : element.tagName) === null || _a === void 0 ? void 0 : _a.toLowerCase()) == "label") {
+            labels.push(element === null || element === void 0 ? void 0 : element.innerText());
+        }
+    }
+    return labels === null || labels === void 0 ? void 0 : labels.trim();
+};
+/**
+ * To get all the children of a given parent
+ * @param htmlElement
+ * @returns HTMLElements Collection
+ */
+const getAllChildren = (htmlElement) => {
+    var _a, _b;
+    let allChildElements = [];
+    try {
+        if (((_a = htmlElement === null || htmlElement === void 0 ? void 0 : htmlElement.children) === null || _a === void 0 ? void 0 : _a.length) === 0)
+            return [htmlElement];
+        for (let i = 0; i < ((_b = htmlElement === null || htmlElement === void 0 ? void 0 : htmlElement.children) === null || _b === void 0 ? void 0 : _b.length); i++) {
+            let children = getAllChildren(htmlElement.children[i]);
+            if (children)
+                allChildElements.push(...children);
+        }
+        allChildElements.push(htmlElement);
+    }
+    catch (e) {
+    }
+    return allChildElements;
+};
+/**
+ * To recorded meta data
+ * @param obj
+ * @returns
+ */
+const getObjData = (obj) => {
+    try {
+        const _objData = JSON.parse(obj);
+        if (_objData && _objData.meta === undefined)
+            _objData.meta = {};
+        return _objData;
+    }
+    catch (e) {
+        console.log(e);
+        return {};
+    }
+};
+/**
+ * To check if a given element is already captured / recorded
+ * @returns boolean
+ * @param compareNode
+ */
+const clickableElementExists = (compareNode) => {
+    var _a;
+    let existFlag = false;
+    if (!window.udanSelectedNodes)
+        window.udanSelectedNodes = [];
+    (_a = window === null || window === void 0 ? void 0 : window.udanSelectedNodes) === null || _a === void 0 ? void 0 : _a.forEach((element) => {
+        if (element.isSameNode(compareNode))
+            existFlag = true;
+    });
+    return existFlag;
+};
+/**
+ * To compare two nodes equality
+ * @param comparenode
+ * @param originalnode
+ * @param isPersonalNode
+ * @param match
+ * @returns
+ */
+const compareNodes = (comparenode, originalnode, isPersonalNode = false, match = {
+    count: 0,
+    matched: 0,
+    unmatched: [],
+    innerTextFlag: false,
+    innerChildNodes: 0,
+}) => {
+    // sum the childnodes
+    if (comparenode.hasOwnProperty("childNodes")) {
+        match.innerChildNodes =
+            match.innerChildNodes + comparenode.childNodes.length;
+    }
+    for (let key in originalnode) {
+        if (_config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.ignoreAttributes.indexOf(key) !== -1) {
+            continue;
+        }
+        else if (key.indexOf("_ngcontent") !== -1 ||
+            key.indexOf("jQuery") !== -1 ||
+            key.indexOf("__zone_symbol__") !== -1) {
+            continue;
+        }
+        else {
+            match.count++;
+        }
+        if (comparenode.hasOwnProperty(key) &&
+            typeof originalnode[key] === "object" &&
+            typeof comparenode[key] === "object") {
+            match.matched++;
+            match = compareNodes(comparenode[key], originalnode[key], isPersonalNode, match);
+        }
+        else if (comparenode.hasOwnProperty(key) &&
+            Array.isArray(originalnode[key]) &&
+            originalnode[key].length > 0 &&
+            Array.isArray(comparenode[key]) &&
+            comparenode[key].length > 0) {
+            match.matched++;
+            if (comparenode[key].length === originalnode[key].length) {
+                match.matched++;
+                for (let i = 0; i < originalnode[key].length; i++) {
+                    match = compareNodes(comparenode[key][i], originalnode[key][i], isPersonalNode, match);
+                }
+            }
+        }
+        else if ((key === "class" || key === "className") &&
+            originalnode.hasOwnProperty(key) &&
+            comparenode.hasOwnProperty(key)) {
+            // fix for calendar issue
+            comparenode[key] = comparenode[key].replace(" ng-star-inserted", "");
+            originalnode[key] = originalnode[key].replace(" ng-star-inserted", "");
+            if (comparenode[key] === originalnode[key]) {
+                match.matched++;
+            }
+            else {
+                // jaro wrinker comparision for classname
+                let weight = (0,jaro_winkler_typescript__WEBPACK_IMPORTED_MODULE_1__.jaroWinkler)(originalnode[key], comparenode[key]);
+                if (weight > 0.9) {
+                    match.matched++;
+                }
+                else {
+                    match.unmatched.push({
+                        key: key,
+                        compareNodeValues: comparenode[key],
+                        recordedNodeValues: originalnode[key],
+                    });
+                }
+            }
+        }
+        else if (key === "innerText" &&
+            originalnode.hasOwnProperty(key) &&
+            comparenode.hasOwnProperty(key) &&
+            comparenode[key].trim() === originalnode[key].trim()) {
+            // matching inner text should be weighted more. We will add an arbitrarily large number - innerTextWeight.
+            // since this will match for every child node, we need to accommodate this logic whenever 'compareNodes' is called
+            // UDAConsoleLogger.info(comparenode[key].trim());
+            // UDAConsoleLogger.info(originalnode[key].trim());
+            match.innerTextFlag = true;
+            match.matched = match.matched + _config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.innerTextWeight;
+            // match.matched++;
+        }
+        else if (comparenode.hasOwnProperty(key) &&
+            comparenode[key] === originalnode[key]) {
+            match.matched++;
+        }
+        else if (comparenode.hasOwnProperty(key) &&
+            comparenode[key] !== originalnode[key] &&
+            key === "href" &&
+            originalnode[key].indexOf(comparenode[key]) !== -1) {
+            match.matched++;
+        }
+        else if (comparenode.hasOwnProperty(key) &&
+            (key === "id" || key === "name") &&
+            comparenode[key] !== originalnode[key]) {
+            let weight = (0,jaro_winkler_typescript__WEBPACK_IMPORTED_MODULE_1__.jaroWinkler)(originalnode[key], comparenode[key]);
+            if (weight > 0.9) {
+                match.matched++;
+            }
+        }
+        // matching personal node key value pairs for personal tag true
+        else if (isPersonalNode &&
+            _config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.personalNodeIgnoreAttributes.indexOf(key) !== -1) {
+            // make inner text flag to true if personal tag is true
+            if (key === "innerText") {
+                match.innerTextFlag = true;
+                match.matched = match.matched + _config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.innerTextWeight;
+            }
+            else {
+                match.matched++;
+            }
+        }
+        else {
+            match.unmatched.push({
+                key: key,
+                compareNodeValues: comparenode[key],
+                recordedNodeValues: originalnode[key],
+            });
+        }
+    }
+    return match;
+};
+/**
+ * to get all clickable elements
+ * @returns HTMLElements collection
+ */
+const getAllClickableElements = () => {
+    window.scrollTo(0, 0);
+    let bodyRect = document.body.getBoundingClientRect();
+    let items = Array.prototype.slice
+        .call(document.querySelectorAll("*"))
+        .map(function (element) {
+        let rect = element === null || element === void 0 ? void 0 : element.getBoundingClientRect();
+        return {
+            element: element,
+            include: element.tagName.toLowerCase() === "button" ||
+                element.tagName.toLowerCase() === "a" ||
+                element.tagName.toLowerCase() === "input" ||
+                element.tagName.toLowerCase() === "select" ||
+                element.tagName.toLowerCase() === "img" ||
+                element.onclick != null ||
+                element.addEventListener != null ||
+                window.getComputedStyle(element).cursor == "pointer",
+            rect: {
+                left: Math.max(rect.left - bodyRect.x, 0),
+                top: Math.max(rect.top - bodyRect.y, 0),
+                right: Math.min(rect.right - bodyRect.x, document.body.clientWidth),
+                bottom: Math.min(rect.bottom - bodyRect.y, document.body.clientHeight),
+            },
+            text: element.textContent.trim().replace(/\s{2,}/g, " "),
+        };
+    })
+        .filter((item) => item.include &&
+        (item.rect.right - item.rect.left) * (item.rect.bottom - item.rect.top) >=
+            20);
+    // Only keep inner clickable items
+    return items.filter((x) => !items.some((y) => x.element.contains(y.element) && !(x == y)));
+};
+const getAbsoluteOffsets = (element) => {
+    let cords = { x: 0, y: 0 };
+    try {
+        let currentElement = element;
+        while (currentElement !== null) {
+            cords.x += currentElement.offsetLeft;
+            cords.x -= currentElement.scrollLeft;
+            cords.y += currentElement.offsetTop;
+            cords.y -= currentElement.scrollTop;
+            currentElement = currentElement.offsetParent;
+        }
+    }
+    catch (e) {
+        console.log(e);
+    }
+    return cords;
+};
+
+
+/***/ }),
+
+/***/ "./src/util/initSpecialNodes.ts":
+/*!**************************************!*\
+  !*** ./src/util/initSpecialNodes.ts ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   initSpecialNodes: () => (/* binding */ initSpecialNodes)
+/* harmony export */ });
+/* harmony import */ var _services_searchService__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../services/searchService */ "./src/services/searchService.ts");
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config */ "./src/config/index.ts");
+/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index */ "./src/util/index.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+__webpack_require__.g.udaSpecialNodes;
+/**
+ * Initialize special nodes for Udan con.
+ * Fetches special nodes for the REST service and sets ignorable classes.
+ */
+const initSpecialNodes = () => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b, _c, _d, _e, _f;
+    // Fetch special nodes for REST service
+    __webpack_require__.g.udaSpecialNodes = yield (0,_services_searchService__WEBPACK_IMPORTED_MODULE_0__.fetchSpecialNodes)();
+    // Get all children of Uda container
+    const children = (0,_index__WEBPACK_IMPORTED_MODULE_2__.getAllChildren)(document.querySelector(`.${_config__WEBPACK_IMPORTED_MODULE_1__.CONFIG.UDA_CONTAINER_CLASS}`));
+    // Iterate through each child
+    for (let i = 0; i < (children === null || children === void 0 ? void 0 : children.length); i++) {
+        try {
+            // Check if the child is not excluded and not already ignored
+            if (children[i] &&
+                !((_c = (_b = (_a = __webpack_require__.g.udaSpecialNodes) === null || _a === void 0 ? void 0 : _a.exclude) === null || _b === void 0 ? void 0 : _b.tags) === null || _c === void 0 ? void 0 : _c.includes((_f = (_e = (_d = children[i]) === null || _d === void 0 ? void 0 : _d.tagName) === null || _e === void 0 ? void 0 : _e.trim()) === null || _f === void 0 ? void 0 : _f.toLocaleLowerCase())) &&
+                children[i].className.indexOf(_config__WEBPACK_IMPORTED_MODULE_1__.CONFIG.UDA_CLICK_IGNORE_CLASS) == -1) {
+                // Add UDA click ignore class to the child
+                children[i].className += " " + _config__WEBPACK_IMPORTED_MODULE_1__.CONFIG.UDA_CLICK_IGNORE_CLASS;
+            }
+        }
+        catch (e) {
+            // Handle any errors
+        }
+    }
+});
+
+
+/***/ }),
+
+/***/ "./src/util/isClickableNode.ts":
+/*!*************************************!*\
+  !*** ./src/util/isClickableNode.ts ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   isClickableNode: () => (/* binding */ isClickableNode)
+/* harmony export */ });
+/* harmony import */ var _checkNodeValues__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./checkNodeValues */ "./src/util/checkNodeValues.ts");
+
+const isClickableNode = (element) => {
+    if (!element)
+        return false;
+    /*if(element.hasAttribute("udaIgnoreChildren")) {
+      element.removeAttribute("udaIgnoreChildren");
+    }
+  
+    if(element.hasAttribute("udaIgnoreNode")) {
+      element.removeAttribute("udaIgnoreNode");
+    }*/
+    const isUdaPanel = element.closest('#udan-react-root');
+    if (isUdaPanel) {
+        return false;
+    }
+    //add the record click for parent element and ignore the children
+    const closestParent = element.closest('[udaIgnoreChildren]');
+    if (closestParent) {
+        return false;
+    }
+    let isAllowedElement = window.getComputedStyle(element).cursor == "pointer";
+    // checking the node exists in the included list for further processing.
+    if ((0,_checkNodeValues__WEBPACK_IMPORTED_MODULE_0__.checkNodeValues)(element, 'include')) {
+        isAllowedElement = true;
+    }
+    //Check the clickable element exists in clickable objects
+    if (!isAllowedElement) {
+        clickObjectLoop: for (let i = 0; i < (UDAClickObjects === null || UDAClickObjects === void 0 ? void 0 : UDAClickObjects.length); i++) {
+            if (element.isSameNode(UDAClickObjects[i].element)) {
+                isAllowedElement = true;
+                break clickObjectLoop;
+            }
+        }
+    }
+    // checking the node exists in the children ignore list for further processing.
+    if ((0,_checkNodeValues__WEBPACK_IMPORTED_MODULE_0__.checkNodeValues)(element, 'ignoreChildren')) {
+        if (!element.hasAttribute('udaIgnoreChildren')) {
+            element.setAttribute('udaIgnoreChildren', String(true));
+            isAllowedElement = true;
+        }
+    }
+    if ((0,_checkNodeValues__WEBPACK_IMPORTED_MODULE_0__.checkNodeValues)(element, 'ignoreClicksOnNodes')) {
+        if (!element.hasAttribute('udaIgnoreClick')) {
+            element.setAttribute('udaIgnoreClick', String(true));
+            isAllowedElement = false;
+        }
+    }
+    // checking the node exists in the excluded list for further processing.
+    if (isAllowedElement && (0,_checkNodeValues__WEBPACK_IMPORTED_MODULE_0__.checkNodeValues)(element, 'exclude')) {
+        isAllowedElement = false;
+    }
+    return isAllowedElement;
+};
+
+
+/***/ }),
+
+/***/ "./src/util/nodeInfo.ts":
+/*!******************************!*\
+  !*** ./src/util/nodeInfo.ts ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getNodeCoordinates: () => (/* binding */ getNodeCoordinates),
+/* harmony export */   getNodeInfo: () => (/* binding */ getNodeInfo),
+/* harmony export */   getScreenSize: () => (/* binding */ getScreenSize)
+/* harmony export */ });
+const getNodeInfo = (node) => {
+    const screenSize = getScreenSize();
+    const nodePosition = node.getBoundingClientRect();
+    const pagePosition = getNodeCoordinates(node, screenSize);
+    const nodeInfo = { nodePosition: nodePosition, screenSize: screenSize, nodePagePosition: pagePosition };
+    return nodeInfo;
+};
+const getScreenSize = () => {
+    let page = { height: 0, width: 0 };
+    let screen = {};
+    let body = document.body, html = document.documentElement;
+    const docEl = document.documentElement;
+    const scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+    const scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+    page.height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+    page.width = Math.max(body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth);
+    screen = window.screen;
+    let windowProperties = { page: page, screen: screen, scrollInfo: { scrollTop: scrollTop, scrollLeft: scrollLeft } };
+    return windowProperties;
+};
+const getNodeCoordinates = (element, windowSize) => {
+    const x = element.getBoundingClientRect();
+    let result = {
+        top: x.top + windowSize.scrollInfo.scrollTop,
+        width: x.width,
+        height: x.height,
+        left: x.left + windowSize.scrollInfo.scrollLeft,
+        actualPos: x
+    };
+    return result;
+};
+
+
+/***/ }),
+
+/***/ "./src/util/recordUserClick.ts":
+/*!*************************************!*\
+  !*** ./src/util/recordUserClick.ts ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   recordUserClick: () => (/* binding */ recordUserClick)
+/* harmony export */ });
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config */ "./src/config/index.ts");
+/* harmony import */ var _getClickedInputLabels__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getClickedInputLabels */ "./src/util/getClickedInputLabels.ts");
+/* harmony import */ var _config_error_log__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config/error-log */ "./src/config/error-log.ts");
+/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./index */ "./src/util/index.ts");
+/* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../services */ "./src/services/index.ts");
+/* harmony import */ var _checkNodeValues__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./checkNodeValues */ "./src/util/checkNodeValues.ts");
+/* harmony import */ var _recording_utils_mapClickedElementToHtmlFormElement__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./recording-utils/mapClickedElementToHtmlFormElement */ "./src/util/recording-utils/mapClickedElementToHtmlFormElement.ts");
+/* harmony import */ var _addNotification__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./addNotification */ "./src/util/addNotification.ts");
+/* harmony import */ var _translation__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./translation */ "./src/util/translation.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+// add jsdocs
+
+
+
+
+
+
+
+
+
+__webpack_require__.g.udanSelectedNodes = [];
+__webpack_require__.g.clickedNode = null;
+/**
+ *
+ * @param node
+ * @param fromDocument
+ * @param selectChange
+ * @param event
+ * @returns
+ */
+const recordUserClick = (node, event) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    if (!node)
+        return false;
+    const isRecording = (0,_index__WEBPACK_IMPORTED_MODULE_3__.getFromStore)(_config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.RECORDING_SWITCH_KEY, true) == "true";
+    if (!isRecording) {
+        return;
+    }
+    if (node.isSameNode(window.clickedNode)) {
+        return;
+    }
+    if (_config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.lastClickedTime && (_config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.lastClickedTime === Date.now() || ((_config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.lastClickedTime + 300) >= Date.now()))) {
+        return;
+    }
+    //should not record untrusted clicks
+    if (!event.isTrusted) {
+        return;
+    }
+    // node = event.target;
+    let recordingNode = node;
+    let addIsPersonal = false;
+    //add the record click for parent element and ignore the children
+    const closestParent = node.closest('[udaIgnoreChildren]');
+    if (closestParent) {
+        recordingNode = closestParent;
+        addIsPersonal = true;
+    }
+    if (recordingNode.isSameNode(window.clickedNode)) {
+        return;
+    }
+    // ignore click on unwanted node
+    if (recordingNode.hasAttribute('udaIgnoreClick')) {
+        return;
+    }
+    if ((0,_checkNodeValues__WEBPACK_IMPORTED_MODULE_5__.checkNodeValues)(recordingNode, 'exclude')) {
+        return;
+    }
+    if ((0,_index__WEBPACK_IMPORTED_MODULE_3__.clickableElementExists)(recordingNode) || (0,_index__WEBPACK_IMPORTED_MODULE_3__.clickableElementExists)(node)) {
+        return;
+    }
+    __webpack_require__.g.clickedNode = recordingNode;
+    let meta = {};
+    let _text = (0,_getClickedInputLabels__WEBPACK_IMPORTED_MODULE_1__.getClickedInputLabels)(recordingNode);
+    if (addIsPersonal) {
+        meta.isPersonal = true;
+    }
+    // adding default system detected html element type in metadata
+    if (UDAGlobalConfig.enableNodeTypeSelection) {
+        meta.systemDetected = (0,_recording_utils_mapClickedElementToHtmlFormElement__WEBPACK_IMPORTED_MODULE_6__["default"])(node);
+        if (meta.systemDetected.inputElement !== 'others') {
+            meta.selectedElement = meta.systemDetected;
+        }
+    }
+    if (!_text || (_text === null || _text === void 0 ? void 0 : _text.length) > 100 || !((_a = _text === null || _text === void 0 ? void 0 : _text.trim()) === null || _a === void 0 ? void 0 : _a.length)) {
+        meta.isPersonal = true;
+        _text = recordingNode.nodeName;
+    }
+    // adding personal flag to icon elements
+    if ((0,_checkNodeValues__WEBPACK_IMPORTED_MODULE_5__.checkNodeValues)(recordingNode, 'iconNodes')) {
+        meta.isPersonal = true;
+    }
+    // adding text editor name for the recording
+    if ((0,_checkNodeValues__WEBPACK_IMPORTED_MODULE_5__.checkNodeValues)(recordingNode, 'textEditors')) {
+        meta.displayText = 'Text Editor';
+    }
+    // adding drop down name for the recording
+    if ((0,_checkNodeValues__WEBPACK_IMPORTED_MODULE_5__.checkNodeValues)(recordingNode, 'dropDowns')) {
+        meta.displayText = 'Drop Down';
+    }
+    // adding Date selector for the recording
+    if ((0,_checkNodeValues__WEBPACK_IMPORTED_MODULE_5__.checkNodeValues)(recordingNode, 'datePicker')) {
+        meta.displayText = 'Date Selector';
+    }
+    const resp = yield (0,_services__WEBPACK_IMPORTED_MODULE_4__.saveClickData)(recordingNode, _text, meta);
+    if (resp) {
+        if (!__webpack_require__.g.udanSelectedNodes) {
+            __webpack_require__.g.udanSelectedNodes = [];
+        }
+        __webpack_require__.g.udanSelectedNodes.push(recordingNode);
+        if (!recordingNode.isSameNode(node))
+            __webpack_require__.g.udanSelectedNodes.push(node);
+        _config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.lastClickedTime = Date.now();
+        const activeRecordingData = (0,_index__WEBPACK_IMPORTED_MODULE_3__.getFromStore)(_config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.RECORDING_SEQUENCE, false);
+        if (activeRecordingData) {
+            activeRecordingData.push(resp);
+            (0,_index__WEBPACK_IMPORTED_MODULE_3__.setToStore)(activeRecordingData, _config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.RECORDING_SEQUENCE, false);
+        }
+        else {
+            (0,_index__WEBPACK_IMPORTED_MODULE_3__.setToStore)([resp], _config__WEBPACK_IMPORTED_MODULE_0__.CONFIG.RECORDING_SEQUENCE, false);
+        }
+        (0,_addNotification__WEBPACK_IMPORTED_MODULE_7__.addNotification)((0,_translation__WEBPACK_IMPORTED_MODULE_8__.translate)('clickAdded'), (0,_translation__WEBPACK_IMPORTED_MODULE_8__.translate)('clickAddedDescription'), 'success');
+    }
+    else {
+        (0,_addNotification__WEBPACK_IMPORTED_MODULE_7__.addNotification)((0,_translation__WEBPACK_IMPORTED_MODULE_8__.translate)('clickAddError'), (0,_translation__WEBPACK_IMPORTED_MODULE_8__.translate)('clickAddErrorDescription'), 'error');
+        _config_error_log__WEBPACK_IMPORTED_MODULE_2__.UDAErrorLogger.error("Unable save record click " + node.outerHTML);
+    }
+    return;
+});
+
+
+/***/ }),
+
+/***/ "./src/util/recording-utils/fetchHtmlFormElements.ts":
+/*!***********************************************************!*\
+  !*** ./src/util/recording-utils/fetchHtmlFormElements.ts ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+const fetchHtmlFormElements = () => {
+    return [
+        {
+            inputElement: "input",
+            inputType: ["text", "search", "url"],
+            displayName: "Simple Text",
+            systemTag: "text",
+        },
+        {
+            inputElement: "input",
+            inputType: "checkbox",
+            displayName: "Multiple Select",
+            systemTag: "multipleChoice",
+        },
+        {
+            inputElement: "input",
+            inputType: "radio",
+            displayName: "Single Select",
+            systemTag: "singleChoice",
+        },
+        {
+            inputElement: "input",
+            inputType: "number",
+            displayName: "Number Field",
+            systemTag: "number",
+        },
+        {
+            inputElement: "input",
+            inputType: ["date", "time"],
+            displayName: "Date and/or Time Field",
+            systemTag: "date",
+        },
+        {
+            inputElement: "input",
+            inputType: "email",
+            displayName: "Email Field",
+            systemTag: "email",
+        },
+        {
+            inputElement: "input",
+            inputType: "password",
+            displayName: "Password Field",
+            systemTag: "password",
+        },
+        {
+            inputElement: "input",
+            inputType: "range",
+            displayName: "Range Field",
+            systemTag: "range",
+        },
+        {
+            inputElement: "input",
+            inputType: "tel",
+            displayName: "Telephone Field",
+            systemTag: "telephone",
+        },
+        {
+            inputElement: "input",
+            inputType: "file",
+            displayName: "File Selection",
+            systemTag: "file",
+        },
+        // {inputElement: 'input', inputType: 'color', displayName: 'Color Selection'},
+        // {inputElement: 'input', inputType: 'datetime-local', displayName: 'Local Date Selection'},
+        // {inputElement: 'input', inputType: 'hidden', displayName: 'Hidden Field'},
+        // {inputElement: 'input', inputType: 'image', displayName: 'Image Field'},
+        // {inputElement: 'input', inputType: 'month', displayName: 'Month Field'},
+        // {inputElement: 'input', inputType: 'reset', displayName: 'Reset Field'},
+        // {inputElement: 'input', inputType: 'search', displayName: 'Search Field'},
+        // {inputElement: 'input', inputType: 'time', displayName: 'Time Field'},
+        // {inputElement: 'input', inputType: 'url', displayName: 'URL Field'},
+        // {inputElement: 'input', inputType: 'week', displayName: 'Week Field'},
+        {
+            inputElement: ["select", "option", "optgroup"],
+            inputType: "select",
+            displayName: "Dropdown Field",
+            systemTag: "dropDown",
+        },
+        // {inputElement: 'option', inputType: 'option', displayName: 'Dropdown Option'},
+        // {inputElement: 'optgroup', inputType: 'optgroup', displayName: 'Dropdown Option Group'},
+        {
+            inputElement: "textarea",
+            inputType: "textarea",
+            displayName: "Large Text Area",
+            systemTag: "textArea",
+        },
+        {
+            inputElement: ["input", "button"],
+            inputType: ["button", "submit"],
+            displayName: "Button",
+            systemTag: "button",
+        },
+        // {inputElement: 'button', inputType: 'submit', displayName: 'Submit Field'},
+        // {inputElement: 'input', inputType: 'button', displayName: 'Button Field'},
+        // {inputElement: 'input', inputType: 'submit', displayName: 'Submit Field'},
+        // {inputElement: 'output', inputType: 'output', displayName: 'Output Field'},
+        // {inputElement: 'datalist ', inputType: 'datalist', displayName: 'Datalist Field'},
+        {
+            inputElement: "a",
+            inputType: "href",
+            displayName: "Link",
+            systemTag: "link",
+        },
+        {
+            inputElement: "others",
+            inputType: "others",
+            displayName: "Unrecognized",
+            systemTag: "others",
+        },
+        {
+            inputElement: "highlight",
+            inputType: "highlight",
+            displayName: "Highlight",
+            systemTag: "highlight",
+        }
+    ];
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (fetchHtmlFormElements);
+
+
+/***/ }),
+
+/***/ "./src/util/recording-utils/mapClickedElementToHtmlFormElement.ts":
+/*!************************************************************************!*\
+  !*** ./src/util/recording-utils/mapClickedElementToHtmlFormElement.ts ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _fetchHtmlFormElements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./fetchHtmlFormElements */ "./src/util/recording-utils/fetchHtmlFormElements.ts");
+
+const mapClickedElementToHtmlFormElement = (node) => {
+    let htmlFormElements = (0,_fetchHtmlFormElements__WEBPACK_IMPORTED_MODULE_0__["default"])();
+    let selectedFormElement = { inputElement: 'others', inputType: 'others', displayName: 'Other HTML Element', systemTag: '' };
+    for (let htmlFormElement of htmlFormElements) {
+        if (Array.isArray(htmlFormElement.inputElement) && htmlFormElement.inputElement.indexOf(node.nodeName.toLowerCase()) != -1) {
+            if (Array.isArray(htmlFormElement.inputType) && node.hasAttribute('type') && htmlFormElement.inputType.indexOf(node.getAttribute('type')) !== -1) {
+                selectedFormElement = htmlFormElement;
+            }
+            else if (!Array.isArray(htmlFormElement.inputType) && htmlFormElement.inputElement.indexOf(node.nodeName.toLowerCase()) != -1) {
+                selectedFormElement = htmlFormElement;
+            }
+        }
+        else if (htmlFormElement.inputElement === 'input') {
+            if (Array.isArray(htmlFormElement.inputType) && node.hasAttribute('type') && htmlFormElement.inputType.indexOf(node.getAttribute('type')) !== -1) {
+                selectedFormElement = htmlFormElement;
+            }
+            else if (!Array.isArray(htmlFormElement.inputType) && htmlFormElement.inputElement === node.nodeName.toLowerCase() && node.hasAttribute('type') && node.getAttribute('type') === htmlFormElement.inputType) {
+                selectedFormElement = htmlFormElement;
+            }
+        }
+        else if (htmlFormElement.inputElement === node.nodeName.toLowerCase()) {
+            selectedFormElement = htmlFormElement;
+        }
+    }
+    return selectedFormElement;
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (mapClickedElementToHtmlFormElement);
+
+
+/***/ }),
+
+/***/ "./src/util/specialNodes.ts":
+/*!**********************************!*\
+  !*** ./src/util/specialNodes.ts ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   specialNodes: () => (/* binding */ specialNodes)
+/* harmony export */ });
+/**
+ * Special nodes identifications for recording.
+ * These will be used for identification of node elements during recording and will resolve the bugs for unwanted clicks.
+ * @returns specialNodes
+ */
+const specialNodes = {
+    // list of including nodes for attaching events
+    "include": {
+        "tags": ['a', 'button', 'input', 'textarea', 'select', 'option', 'mat-select', 'ckeditor', 'ng-select', 'ngb-datepicker'],
+        "classes": ['ng-select', 'ngb-datepicker', 'dropdown-toggle', 'expand-button', 'btn-pill', 'radio', 'replacement', 'select-dropdown', 'datepicker', 'fa-calendar', 'select2-selection', 'css-atn8fj-control'],
+        "attributes": ['ng-click', 'onclick', 'contenteditable']
+    },
+    // list of excluding nodes from attaching events
+    "exclude": {
+        "tags": ['body', 'link', 'meta', 'script', 'svg', 'style', 'path', 'circle', 'g', 'rect', 'stop', 'defs', 'linearGradient', 'mat-checkbox', 'table'],
+        "classes": ['uda_exclude', 'datepicker-modal'],
+        "attributes": ['uib-datepicker-popup-wrap', 'data-exclude'],
+        "ids": ['content']
+    },
+    // ignore clickable nodes while attaching event listeners
+    "ignoreChildren": {
+        "tags": ['ng-select', 'ngb-datepicker', 'ng-dropdown-panel', 'ckeditor', 'fusioncharts', 'ngb-datepicker', 'ngx-daterangepicker-material', 'mat-datepicker-content'],
+        "classes": ['cke_dialog_container', 'cke_notifications_area', 'gldp-default', 'ajs-layer', 'aui-list', 'herknl', 'uda_exclude', 'jstBlock', 'datepicker', 'fa-calendar', 'drdn-content', 'dropdown-button', 'dropdown-trigger1', 'select2-selection', 'select2-container--open', 'module-item', 'css-atn8fj-control', 'e-multiselect', 'e-input-group', 'e-ddl'],
+        "attributes": ['uib-datepicker-popup-wrap']
+    },
+    // ignore clicks on special nodes
+    "ignoreClicksOnNodes": {
+        "tags": ['ngx-daterangepicker-material'],
+        "classes": ['drdn-content', 'datepicker-modal', 'parallel', 'tabs', 'dropdown-content', 'select2-container--open', 'modal-overlay', 'e-popup', 'e-query-builder'],
+        "attributes": ['uib-datepicker-popup-wrap'],
+        "ids": ['content']
+    },
+    // list of attributes to ignore while comparing
+    "ignoreDuringCompare": {
+        "tags": [],
+        "classes": [],
+        "attributes": [
+            'translate', 'draggable', 'spellcheck', 'tabindex', 'clientHeight', 'clientLeft', 'clientTop', 'clientWidth',
+            'offsetHeight', 'offsetLeft', 'offsetTop', 'offsetWidth', 'scrollHeight', 'scrollLeft', 'scrollTop', 'scrollWidth',
+            'baseURI', 'isConnected', 'ariaPressed', 'aria-pressed', 'nodePosition', 'outerHTML', 'innerHTML', 'style',
+            'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
+            'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y', 'selectionStart', 'selectionEnd',
+            'required', 'validationMessage', 'selectionDirection', 'naturalWidth', 'naturalHeight', 'complete', '_indexOf',
+            'value', 'defaultValue', 'min', 'max', 'nodeInfo', 'data-tooltip-id', 'addedclickrecord', 'checked', 'data-tribute',
+            'hasclick', 'addedClickRecord', 'hasClick', 'valueAsNumber', 'udaIgnoreChildren', 'udaIgnoreClick', 'udaignorechildren',
+            'udaignoreclick', 'fdprocessedid', '__ngContext__', 'd', 'text', 'textContent', 'cdk-describedby-host', 'inert', 'fill', 'disabled', 'hidden',
+            'aria-autocomplete', 'ariaAutoComplete'
+        ],
+        "ids": []
+    },
+    // personal node ignore attributes
+    personalNodeIgnoreAttributes: [
+        "innerText",
+        "innerHTML",
+        "outerText",
+        "outerHTML",
+        "nodeValue",
+        "src",
+        "naturalWidth",
+        "naturalHeight",
+        "currentSrc",
+    ],
+    // list of text editor identifications
+    "textEditors": {
+        "tags": ['ckeditor'],
+        "classes": ['jstBlock'],
+        "attributes": []
+    },
+    // list of dropdown identifications
+    "dropDowns": {
+        "tags": ['ng-select', 'ng-dropdown-panel'],
+        "classes": ['cke_notifications_area', 'aui-list', 'herknl', 'ghx-dropdown-trigger', 'select-wrapper', 'select2', 'select-dropdown', 'drdn-trigger', 'css-atn8fj-control', 'e-multiselect', 'e-ddl'],
+        "attributes": []
+    },
+    // list of datepicker identifications
+    "datePicker": {
+        "tags": ['ngb-datepicker', 'ngb-datepicker', 'ngx-daterangepicker-material', 'mat-datepicker-content', 'datepicker-modal'],
+        "classes": ['fa-calendar'],
+        "attributes": ['uib-datepicker-popup-wrap']
+    },
+    // list of special nodes which should not be recorded
+    "specialNodes": {
+        "tags": ['fusioncharts'],
+        "classes": ['gldp-default', 'ajs-layer', 'herknl'],
+        "attributes": []
+    },
+    // list of pausable elements for stopping click for recording
+    "preventDefault": {
+        "tags": ['a', 'button'],
+        "classes": [],
+        "attributes": ['href']
+    },
+    "iconNodes": {
+        "tags": ['i'],
+        "classes": [],
+        "attributes": []
+    }
+};
+
+
+/***/ }),
+
+/***/ "./src/util/translation.ts":
+/*!*********************************!*\
+  !*** ./src/util/translation.ts ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   translate: () => (/* binding */ translate)
+/* harmony export */ });
+/* harmony import */ var i18next__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! i18next */ "./node_modules/i18next/dist/esm/i18next.js");
+
+const translate = (attr) => {
+    return i18next__WEBPACK_IMPORTED_MODULE_0__["default"].t(attr);
+};
+
+
+/***/ }),
+
+/***/ "?0ee7":
+/*!********************!*\
+  !*** fs (ignored) ***!
+  \********************/
+/***/ (() => {
+
+/* (ignored) */
+
+/***/ }),
+
 /***/ "?4f7e":
 /*!********************************!*\
   !*** ./util.inspect (ignored) ***!
   \********************************/
-/***/ (() => {
-
-/* (ignored) */
-
-/***/ }),
-
-/***/ "?ed1b":
-/*!**********************!*\
-  !*** util (ignored) ***!
-  \**********************/
-/***/ (() => {
-
-/* (ignored) */
-
-/***/ }),
-
-/***/ "?d17e":
-/*!**********************!*\
-  !*** util (ignored) ***!
-  \**********************/
 /***/ (() => {
 
 /* (ignored) */
@@ -48897,4344 +53354,23 @@ function extend() {
 
 /***/ }),
 
-/***/ "?0ee7":
-/*!********************!*\
-  !*** fs (ignored) ***!
-  \********************/
+/***/ "?d17e":
+/*!**********************!*\
+  !*** util (ignored) ***!
+  \**********************/
 /***/ (() => {
 
 /* (ignored) */
 
 /***/ }),
 
-/***/ "./node_modules/available-typed-arrays/index.js":
-/*!******************************************************!*\
-  !*** ./node_modules/available-typed-arrays/index.js ***!
-  \******************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var possibleNames = __webpack_require__(/*! possible-typed-array-names */ "./node_modules/possible-typed-array-names/index.js");
-
-var g = typeof globalThis === 'undefined' ? __webpack_require__.g : globalThis;
-
-/** @type {import('.')} */
-module.exports = function availableTypedArrays() {
-	var /** @type {ReturnType<typeof availableTypedArrays>} */ out = [];
-	for (var i = 0; i < possibleNames.length; i++) {
-		if (typeof g[possibleNames[i]] === 'function') {
-			// @ts-expect-error
-			out[out.length] = possibleNames[i];
-		}
-	}
-	return out;
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/classnames/index.js":
-/*!******************************************!*\
-  !*** ./node_modules/classnames/index.js ***!
-  \******************************************/
-/***/ ((module, exports) => {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	Copyright (c) 2018 Jed Watson.
-	Licensed under the MIT License (MIT), see
-	http://jedwatson.github.io/classnames
-*/
-/* global define */
-
-(function () {
-	'use strict';
-
-	var hasOwn = {}.hasOwnProperty;
-
-	function classNames () {
-		var classes = '';
-
-		for (var i = 0; i < arguments.length; i++) {
-			var arg = arguments[i];
-			if (arg) {
-				classes = appendClass(classes, parseValue(arg));
-			}
-		}
-
-		return classes;
-	}
-
-	function parseValue (arg) {
-		if (typeof arg === 'string' || typeof arg === 'number') {
-			return arg;
-		}
-
-		if (typeof arg !== 'object') {
-			return '';
-		}
-
-		if (Array.isArray(arg)) {
-			return classNames.apply(null, arg);
-		}
-
-		if (arg.toString !== Object.prototype.toString && !arg.toString.toString().includes('[native code]')) {
-			return arg.toString();
-		}
-
-		var classes = '';
-
-		for (var key in arg) {
-			if (hasOwn.call(arg, key) && arg[key]) {
-				classes = appendClass(classes, key);
-			}
-		}
-
-		return classes;
-	}
-
-	function appendClass (value, newClass) {
-		if (!newClass) {
-			return value;
-		}
-	
-		if (value) {
-			return value + ' ' + newClass;
-		}
-	
-		return value + newClass;
-	}
-
-	if ( true && module.exports) {
-		classNames.default = classNames;
-		module.exports = classNames;
-	} else if (true) {
-		// register as 'classnames', consistent with npm package name
-		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {
-			return classNames;
-		}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	} else {}
-}());
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js ***!
-  \*********************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _arrayLikeToArray)
-/* harmony export */ });
-function _arrayLikeToArray(r, a) {
-  (null == a || a > r.length) && (a = r.length);
-  for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
-  return n;
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js ***!
-  \*******************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _arrayWithHoles)
-/* harmony export */ });
-function _arrayWithHoles(r) {
-  if (Array.isArray(r)) return r;
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js ***!
-  \**********************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _arrayWithoutHoles)
-/* harmony export */ });
-/* harmony import */ var _arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./arrayLikeToArray.js */ "./node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js");
-
-function _arrayWithoutHoles(r) {
-  if (Array.isArray(r)) return (0,_arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__["default"])(r);
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js":
-/*!**************************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js ***!
-  \**************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _assertThisInitialized)
-/* harmony export */ });
-function _assertThisInitialized(e) {
-  if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-  return e;
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js ***!
-  \*********************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _asyncToGenerator)
-/* harmony export */ });
-function asyncGeneratorStep(n, t, e, r, o, a, c) {
-  try {
-    var i = n[a](c),
-      u = i.value;
-  } catch (n) {
-    return void e(n);
-  }
-  i.done ? t(u) : Promise.resolve(u).then(r, o);
-}
-function _asyncToGenerator(n) {
-  return function () {
-    var t = this,
-      e = arguments;
-    return new Promise(function (r, o) {
-      var a = n.apply(t, e);
-      function _next(n) {
-        asyncGeneratorStep(a, r, o, _next, _throw, "next", n);
-      }
-      function _throw(n) {
-        asyncGeneratorStep(a, r, o, _next, _throw, "throw", n);
-      }
-      _next(void 0);
-    });
-  };
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/classCallCheck.js ***!
-  \*******************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _classCallCheck)
-/* harmony export */ });
-function _classCallCheck(a, n) {
-  if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/createClass.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/createClass.js ***!
-  \****************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _createClass)
-/* harmony export */ });
-/* harmony import */ var _toPropertyKey_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./toPropertyKey.js */ "./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js");
-
-function _defineProperties(e, r) {
-  for (var t = 0; t < r.length; t++) {
-    var o = r[t];
-    o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, (0,_toPropertyKey_js__WEBPACK_IMPORTED_MODULE_0__["default"])(o.key), o);
-  }
-}
-function _createClass(e, r, t) {
-  return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", {
-    writable: !1
-  }), e;
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/createSuper.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/createSuper.js ***!
-  \****************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _createSuper)
-/* harmony export */ });
-/* harmony import */ var _getPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getPrototypeOf.js */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
-/* harmony import */ var _isNativeReflectConstruct_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./isNativeReflectConstruct.js */ "./node_modules/@babel/runtime/helpers/esm/isNativeReflectConstruct.js");
-/* harmony import */ var _possibleConstructorReturn_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./possibleConstructorReturn.js */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
-
-
-
-function _createSuper(t) {
-  var r = (0,_isNativeReflectConstruct_js__WEBPACK_IMPORTED_MODULE_1__["default"])();
-  return function () {
-    var e,
-      o = (0,_getPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__["default"])(t);
-    if (r) {
-      var s = (0,_getPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__["default"])(this).constructor;
-      e = Reflect.construct(o, arguments, s);
-    } else e = o.apply(this, arguments);
-    return (0,_possibleConstructorReturn_js__WEBPACK_IMPORTED_MODULE_2__["default"])(this, e);
-  };
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/defineProperty.js ***!
-  \*******************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _defineProperty)
-/* harmony export */ });
-/* harmony import */ var _toPropertyKey_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./toPropertyKey.js */ "./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js");
-
-function _defineProperty(e, r, t) {
-  return (r = (0,_toPropertyKey_js__WEBPACK_IMPORTED_MODULE_0__["default"])(r)) in e ? Object.defineProperty(e, r, {
-    value: t,
-    enumerable: !0,
-    configurable: !0,
-    writable: !0
-  }) : e[r] = t, e;
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/extends.js":
-/*!************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/extends.js ***!
-  \************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _extends)
-/* harmony export */ });
-function _extends() {
-  return _extends = Object.assign ? Object.assign.bind() : function (n) {
-    for (var e = 1; e < arguments.length; e++) {
-      var t = arguments[e];
-      for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);
-    }
-    return n;
-  }, _extends.apply(null, arguments);
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js ***!
-  \*******************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _getPrototypeOf)
-/* harmony export */ });
-function _getPrototypeOf(t) {
-  return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) {
-    return t.__proto__ || Object.getPrototypeOf(t);
-  }, _getPrototypeOf(t);
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/inherits.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/inherits.js ***!
-  \*************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _inherits)
-/* harmony export */ });
-/* harmony import */ var _setPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./setPrototypeOf.js */ "./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js");
-
-function _inherits(t, e) {
-  if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function");
-  t.prototype = Object.create(e && e.prototype, {
-    constructor: {
-      value: t,
-      writable: !0,
-      configurable: !0
-    }
-  }), Object.defineProperty(t, "prototype", {
-    writable: !1
-  }), e && (0,_setPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__["default"])(t, e);
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/isNativeReflectConstruct.js":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/isNativeReflectConstruct.js ***!
-  \*****************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _isNativeReflectConstruct)
-/* harmony export */ });
-function _isNativeReflectConstruct() {
-  try {
-    var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
-  } catch (t) {}
-  return (_isNativeReflectConstruct = function _isNativeReflectConstruct() {
-    return !!t;
-  })();
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/iterableToArray.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/iterableToArray.js ***!
-  \********************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _iterableToArray)
-/* harmony export */ });
-function _iterableToArray(r) {
-  if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r);
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js":
-/*!*************************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js ***!
-  \*************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _iterableToArrayLimit)
-/* harmony export */ });
-function _iterableToArrayLimit(r, l) {
-  var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
-  if (null != t) {
-    var e,
-      n,
-      i,
-      u,
-      a = [],
-      f = !0,
-      o = !1;
-    try {
-      if (i = (t = t.call(r)).next, 0 === l) {
-        if (Object(t) !== t) return;
-        f = !1;
-      } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);
-    } catch (r) {
-      o = !0, n = r;
-    } finally {
-      try {
-        if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return;
-      } finally {
-        if (o) throw n;
-      }
-    }
-    return a;
-  }
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/nonIterableRest.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/nonIterableRest.js ***!
-  \********************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _nonIterableRest)
-/* harmony export */ });
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js ***!
-  \**********************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _nonIterableSpread)
-/* harmony export */ });
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/objectSpread2.js":
-/*!******************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/objectSpread2.js ***!
-  \******************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _objectSpread2)
-/* harmony export */ });
-/* harmony import */ var _defineProperty_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./defineProperty.js */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
-
-function ownKeys(e, r) {
-  var t = Object.keys(e);
-  if (Object.getOwnPropertySymbols) {
-    var o = Object.getOwnPropertySymbols(e);
-    r && (o = o.filter(function (r) {
-      return Object.getOwnPropertyDescriptor(e, r).enumerable;
-    })), t.push.apply(t, o);
-  }
-  return t;
-}
-function _objectSpread2(e) {
-  for (var r = 1; r < arguments.length; r++) {
-    var t = null != arguments[r] ? arguments[r] : {};
-    r % 2 ? ownKeys(Object(t), !0).forEach(function (r) {
-      (0,_defineProperty_js__WEBPACK_IMPORTED_MODULE_0__["default"])(e, r, t[r]);
-    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) {
-      Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r));
-    });
-  }
-  return e;
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/objectWithoutProperties.js":
-/*!****************************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/objectWithoutProperties.js ***!
-  \****************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _objectWithoutProperties)
-/* harmony export */ });
-/* harmony import */ var _objectWithoutPropertiesLoose_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./objectWithoutPropertiesLoose.js */ "./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js");
-
-function _objectWithoutProperties(e, t) {
-  if (null == e) return {};
-  var o,
-    r,
-    i = (0,_objectWithoutPropertiesLoose_js__WEBPACK_IMPORTED_MODULE_0__["default"])(e, t);
-  if (Object.getOwnPropertySymbols) {
-    var s = Object.getOwnPropertySymbols(e);
-    for (r = 0; r < s.length; r++) o = s[r], t.includes(o) || {}.propertyIsEnumerable.call(e, o) && (i[o] = e[o]);
-  }
-  return i;
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js":
-/*!*********************************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js ***!
-  \*********************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _objectWithoutPropertiesLoose)
-/* harmony export */ });
-function _objectWithoutPropertiesLoose(r, e) {
-  if (null == r) return {};
-  var t = {};
-  for (var n in r) if ({}.hasOwnProperty.call(r, n)) {
-    if (e.includes(n)) continue;
-    t[n] = r[n];
-  }
-  return t;
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js":
-/*!******************************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js ***!
-  \******************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _possibleConstructorReturn)
-/* harmony export */ });
-/* harmony import */ var _typeof_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./typeof.js */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
-/* harmony import */ var _assertThisInitialized_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./assertThisInitialized.js */ "./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js");
-
-
-function _possibleConstructorReturn(t, e) {
-  if (e && ("object" == (0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(e) || "function" == typeof e)) return e;
-  if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined");
-  return (0,_assertThisInitialized_js__WEBPACK_IMPORTED_MODULE_1__["default"])(t);
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/regeneratorRuntime.js":
-/*!***********************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/regeneratorRuntime.js ***!
-  \***********************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _regeneratorRuntime)
-/* harmony export */ });
-/* harmony import */ var _typeof_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./typeof.js */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
-
-function _regeneratorRuntime() {
-  "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
-  _regeneratorRuntime = function _regeneratorRuntime() {
-    return e;
-  };
-  var t,
-    e = {},
-    r = Object.prototype,
-    n = r.hasOwnProperty,
-    o = Object.defineProperty || function (t, e, r) {
-      t[e] = r.value;
-    },
-    i = "function" == typeof Symbol ? Symbol : {},
-    a = i.iterator || "@@iterator",
-    c = i.asyncIterator || "@@asyncIterator",
-    u = i.toStringTag || "@@toStringTag";
-  function define(t, e, r) {
-    return Object.defineProperty(t, e, {
-      value: r,
-      enumerable: !0,
-      configurable: !0,
-      writable: !0
-    }), t[e];
-  }
-  try {
-    define({}, "");
-  } catch (t) {
-    define = function define(t, e, r) {
-      return t[e] = r;
-    };
-  }
-  function wrap(t, e, r, n) {
-    var i = e && e.prototype instanceof Generator ? e : Generator,
-      a = Object.create(i.prototype),
-      c = new Context(n || []);
-    return o(a, "_invoke", {
-      value: makeInvokeMethod(t, r, c)
-    }), a;
-  }
-  function tryCatch(t, e, r) {
-    try {
-      return {
-        type: "normal",
-        arg: t.call(e, r)
-      };
-    } catch (t) {
-      return {
-        type: "throw",
-        arg: t
-      };
-    }
-  }
-  e.wrap = wrap;
-  var h = "suspendedStart",
-    l = "suspendedYield",
-    f = "executing",
-    s = "completed",
-    y = {};
-  function Generator() {}
-  function GeneratorFunction() {}
-  function GeneratorFunctionPrototype() {}
-  var p = {};
-  define(p, a, function () {
-    return this;
-  });
-  var d = Object.getPrototypeOf,
-    v = d && d(d(values([])));
-  v && v !== r && n.call(v, a) && (p = v);
-  var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p);
-  function defineIteratorMethods(t) {
-    ["next", "throw", "return"].forEach(function (e) {
-      define(t, e, function (t) {
-        return this._invoke(e, t);
-      });
-    });
-  }
-  function AsyncIterator(t, e) {
-    function invoke(r, o, i, a) {
-      var c = tryCatch(t[r], t, o);
-      if ("throw" !== c.type) {
-        var u = c.arg,
-          h = u.value;
-        return h && "object" == (0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) {
-          invoke("next", t, i, a);
-        }, function (t) {
-          invoke("throw", t, i, a);
-        }) : e.resolve(h).then(function (t) {
-          u.value = t, i(u);
-        }, function (t) {
-          return invoke("throw", t, i, a);
-        });
-      }
-      a(c.arg);
-    }
-    var r;
-    o(this, "_invoke", {
-      value: function value(t, n) {
-        function callInvokeWithMethodAndArg() {
-          return new e(function (e, r) {
-            invoke(t, n, e, r);
-          });
-        }
-        return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg();
-      }
-    });
-  }
-  function makeInvokeMethod(e, r, n) {
-    var o = h;
-    return function (i, a) {
-      if (o === f) throw Error("Generator is already running");
-      if (o === s) {
-        if ("throw" === i) throw a;
-        return {
-          value: t,
-          done: !0
-        };
-      }
-      for (n.method = i, n.arg = a;;) {
-        var c = n.delegate;
-        if (c) {
-          var u = maybeInvokeDelegate(c, n);
-          if (u) {
-            if (u === y) continue;
-            return u;
-          }
-        }
-        if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) {
-          if (o === h) throw o = s, n.arg;
-          n.dispatchException(n.arg);
-        } else "return" === n.method && n.abrupt("return", n.arg);
-        o = f;
-        var p = tryCatch(e, r, n);
-        if ("normal" === p.type) {
-          if (o = n.done ? s : l, p.arg === y) continue;
-          return {
-            value: p.arg,
-            done: n.done
-          };
-        }
-        "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg);
-      }
-    };
-  }
-  function maybeInvokeDelegate(e, r) {
-    var n = r.method,
-      o = e.iterator[n];
-    if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y;
-    var i = tryCatch(o, e.iterator, r.arg);
-    if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y;
-    var a = i.arg;
-    return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y);
-  }
-  function pushTryEntry(t) {
-    var e = {
-      tryLoc: t[0]
-    };
-    1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e);
-  }
-  function resetTryEntry(t) {
-    var e = t.completion || {};
-    e.type = "normal", delete e.arg, t.completion = e;
-  }
-  function Context(t) {
-    this.tryEntries = [{
-      tryLoc: "root"
-    }], t.forEach(pushTryEntry, this), this.reset(!0);
-  }
-  function values(e) {
-    if (e || "" === e) {
-      var r = e[a];
-      if (r) return r.call(e);
-      if ("function" == typeof e.next) return e;
-      if (!isNaN(e.length)) {
-        var o = -1,
-          i = function next() {
-            for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next;
-            return next.value = t, next.done = !0, next;
-          };
-        return i.next = i;
-      }
-    }
-    throw new TypeError((0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(e) + " is not iterable");
-  }
-  return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", {
-    value: GeneratorFunctionPrototype,
-    configurable: !0
-  }), o(GeneratorFunctionPrototype, "constructor", {
-    value: GeneratorFunction,
-    configurable: !0
-  }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) {
-    var e = "function" == typeof t && t.constructor;
-    return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name));
-  }, e.mark = function (t) {
-    return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t;
-  }, e.awrap = function (t) {
-    return {
-      __await: t
-    };
-  }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () {
-    return this;
-  }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) {
-    void 0 === i && (i = Promise);
-    var a = new AsyncIterator(wrap(t, r, n, o), i);
-    return e.isGeneratorFunction(r) ? a : a.next().then(function (t) {
-      return t.done ? t.value : a.next();
-    });
-  }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () {
-    return this;
-  }), define(g, "toString", function () {
-    return "[object Generator]";
-  }), e.keys = function (t) {
-    var e = Object(t),
-      r = [];
-    for (var n in e) r.push(n);
-    return r.reverse(), function next() {
-      for (; r.length;) {
-        var t = r.pop();
-        if (t in e) return next.value = t, next.done = !1, next;
-      }
-      return next.done = !0, next;
-    };
-  }, e.values = values, Context.prototype = {
-    constructor: Context,
-    reset: function reset(e) {
-      if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t);
-    },
-    stop: function stop() {
-      this.done = !0;
-      var t = this.tryEntries[0].completion;
-      if ("throw" === t.type) throw t.arg;
-      return this.rval;
-    },
-    dispatchException: function dispatchException(e) {
-      if (this.done) throw e;
-      var r = this;
-      function handle(n, o) {
-        return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o;
-      }
-      for (var o = this.tryEntries.length - 1; o >= 0; --o) {
-        var i = this.tryEntries[o],
-          a = i.completion;
-        if ("root" === i.tryLoc) return handle("end");
-        if (i.tryLoc <= this.prev) {
-          var c = n.call(i, "catchLoc"),
-            u = n.call(i, "finallyLoc");
-          if (c && u) {
-            if (this.prev < i.catchLoc) return handle(i.catchLoc, !0);
-            if (this.prev < i.finallyLoc) return handle(i.finallyLoc);
-          } else if (c) {
-            if (this.prev < i.catchLoc) return handle(i.catchLoc, !0);
-          } else {
-            if (!u) throw Error("try statement without catch or finally");
-            if (this.prev < i.finallyLoc) return handle(i.finallyLoc);
-          }
-        }
-      }
-    },
-    abrupt: function abrupt(t, e) {
-      for (var r = this.tryEntries.length - 1; r >= 0; --r) {
-        var o = this.tryEntries[r];
-        if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) {
-          var i = o;
-          break;
-        }
-      }
-      i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null);
-      var a = i ? i.completion : {};
-      return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a);
-    },
-    complete: function complete(t, e) {
-      if ("throw" === t.type) throw t.arg;
-      return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y;
-    },
-    finish: function finish(t) {
-      for (var e = this.tryEntries.length - 1; e >= 0; --e) {
-        var r = this.tryEntries[e];
-        if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y;
-      }
-    },
-    "catch": function _catch(t) {
-      for (var e = this.tryEntries.length - 1; e >= 0; --e) {
-        var r = this.tryEntries[e];
-        if (r.tryLoc === t) {
-          var n = r.completion;
-          if ("throw" === n.type) {
-            var o = n.arg;
-            resetTryEntry(r);
-          }
-          return o;
-        }
-      }
-      throw Error("illegal catch attempt");
-    },
-    delegateYield: function delegateYield(e, r, n) {
-      return this.delegate = {
-        iterator: values(e),
-        resultName: r,
-        nextLoc: n
-      }, "next" === this.method && (this.arg = t), y;
-    }
-  }, e;
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js ***!
-  \*******************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _setPrototypeOf)
-/* harmony export */ });
-function _setPrototypeOf(t, e) {
-  return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) {
-    return t.__proto__ = e, t;
-  }, _setPrototypeOf(t, e);
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/slicedToArray.js":
-/*!******************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/slicedToArray.js ***!
-  \******************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _slicedToArray)
-/* harmony export */ });
-/* harmony import */ var _arrayWithHoles_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./arrayWithHoles.js */ "./node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js");
-/* harmony import */ var _iterableToArrayLimit_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./iterableToArrayLimit.js */ "./node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js");
-/* harmony import */ var _unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./unsupportedIterableToArray.js */ "./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js");
-/* harmony import */ var _nonIterableRest_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./nonIterableRest.js */ "./node_modules/@babel/runtime/helpers/esm/nonIterableRest.js");
-
-
-
-
-function _slicedToArray(r, e) {
-  return (0,_arrayWithHoles_js__WEBPACK_IMPORTED_MODULE_0__["default"])(r) || (0,_iterableToArrayLimit_js__WEBPACK_IMPORTED_MODULE_1__["default"])(r, e) || (0,_unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__["default"])(r, e) || (0,_nonIterableRest_js__WEBPACK_IMPORTED_MODULE_3__["default"])();
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/toArray.js":
-/*!************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/toArray.js ***!
-  \************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _toArray)
-/* harmony export */ });
-/* harmony import */ var _arrayWithHoles_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./arrayWithHoles.js */ "./node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js");
-/* harmony import */ var _iterableToArray_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./iterableToArray.js */ "./node_modules/@babel/runtime/helpers/esm/iterableToArray.js");
-/* harmony import */ var _unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./unsupportedIterableToArray.js */ "./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js");
-/* harmony import */ var _nonIterableRest_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./nonIterableRest.js */ "./node_modules/@babel/runtime/helpers/esm/nonIterableRest.js");
-
-
-
-
-function _toArray(r) {
-  return (0,_arrayWithHoles_js__WEBPACK_IMPORTED_MODULE_0__["default"])(r) || (0,_iterableToArray_js__WEBPACK_IMPORTED_MODULE_1__["default"])(r) || (0,_unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__["default"])(r) || (0,_nonIterableRest_js__WEBPACK_IMPORTED_MODULE_3__["default"])();
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js ***!
-  \**********************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _toConsumableArray)
-/* harmony export */ });
-/* harmony import */ var _arrayWithoutHoles_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./arrayWithoutHoles.js */ "./node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js");
-/* harmony import */ var _iterableToArray_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./iterableToArray.js */ "./node_modules/@babel/runtime/helpers/esm/iterableToArray.js");
-/* harmony import */ var _unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./unsupportedIterableToArray.js */ "./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js");
-/* harmony import */ var _nonIterableSpread_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./nonIterableSpread.js */ "./node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js");
-
-
-
-
-function _toConsumableArray(r) {
-  return (0,_arrayWithoutHoles_js__WEBPACK_IMPORTED_MODULE_0__["default"])(r) || (0,_iterableToArray_js__WEBPACK_IMPORTED_MODULE_1__["default"])(r) || (0,_unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__["default"])(r) || (0,_nonIterableSpread_js__WEBPACK_IMPORTED_MODULE_3__["default"])();
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/toPrimitive.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/toPrimitive.js ***!
-  \****************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ toPrimitive)
-/* harmony export */ });
-/* harmony import */ var _typeof_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./typeof.js */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
-
-function toPrimitive(t, r) {
-  if ("object" != (0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(t) || !t) return t;
-  var e = t[Symbol.toPrimitive];
-  if (void 0 !== e) {
-    var i = e.call(t, r || "default");
-    if ("object" != (0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(i)) return i;
-    throw new TypeError("@@toPrimitive must return a primitive value.");
-  }
-  return ("string" === r ? String : Number)(t);
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js":
-/*!******************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js ***!
-  \******************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ toPropertyKey)
-/* harmony export */ });
-/* harmony import */ var _typeof_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./typeof.js */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
-/* harmony import */ var _toPrimitive_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./toPrimitive.js */ "./node_modules/@babel/runtime/helpers/esm/toPrimitive.js");
-
-
-function toPropertyKey(t) {
-  var i = (0,_toPrimitive_js__WEBPACK_IMPORTED_MODULE_1__["default"])(t, "string");
-  return "symbol" == (0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(i) ? i : i + "";
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/typeof.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/typeof.js ***!
-  \***********************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _typeof)
-/* harmony export */ });
-function _typeof(o) {
-  "@babel/helpers - typeof";
-
-  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
-    return typeof o;
-  } : function (o) {
-    return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-  }, _typeof(o);
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js":
-/*!*******************************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js ***!
-  \*******************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _unsupportedIterableToArray)
-/* harmony export */ });
-/* harmony import */ var _arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./arrayLikeToArray.js */ "./node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js");
-
-function _unsupportedIterableToArray(r, a) {
-  if (r) {
-    if ("string" == typeof r) return (0,_arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__["default"])(r, a);
-    var t = {}.toString.call(r).slice(8, -1);
-    return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? (0,_arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__["default"])(r, a) : void 0;
-  }
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/i18next/dist/esm/i18next.js":
-/*!**************************************************!*\
-  !*** ./node_modules/i18next/dist/esm/i18next.js ***!
-  \**************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   changeLanguage: () => (/* binding */ changeLanguage),
-/* harmony export */   createInstance: () => (/* binding */ createInstance),
-/* harmony export */   "default": () => (/* binding */ instance),
-/* harmony export */   dir: () => (/* binding */ dir),
-/* harmony export */   exists: () => (/* binding */ exists),
-/* harmony export */   getFixedT: () => (/* binding */ getFixedT),
-/* harmony export */   hasLoadedNamespace: () => (/* binding */ hasLoadedNamespace),
-/* harmony export */   init: () => (/* binding */ init),
-/* harmony export */   loadLanguages: () => (/* binding */ loadLanguages),
-/* harmony export */   loadNamespaces: () => (/* binding */ loadNamespaces),
-/* harmony export */   loadResources: () => (/* binding */ loadResources),
-/* harmony export */   reloadResources: () => (/* binding */ reloadResources),
-/* harmony export */   setDefaultNamespace: () => (/* binding */ setDefaultNamespace),
-/* harmony export */   t: () => (/* binding */ t),
-/* harmony export */   use: () => (/* binding */ use)
-/* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/typeof */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
-/* harmony import */ var _babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/esm/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/esm/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
-/* harmony import */ var _babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/esm/assertThisInitialized */ "./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js");
-/* harmony import */ var _babel_runtime_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/esm/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
-/* harmony import */ var _babel_runtime_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/esm/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
-/* harmony import */ var _babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/esm/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
-/* harmony import */ var _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @babel/runtime/helpers/esm/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
-/* harmony import */ var _babel_runtime_helpers_esm_toArray__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @babel/runtime/helpers/esm/toArray */ "./node_modules/@babel/runtime/helpers/esm/toArray.js");
-
-
-
-
-
-
-
-
-
-
-function ownKeys$6(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread$6(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$6(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$6(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-var consoleLogger = {
-  type: 'logger',
-  log: function log(args) {
-    this.output('log', args);
-  },
-  warn: function warn(args) {
-    this.output('warn', args);
-  },
-  error: function error(args) {
-    this.output('error', args);
-  },
-  output: function output(type, args) {
-    if (console && console[type]) console[type].apply(console, args);
-  }
-};
-var Logger = function () {
-  function Logger(concreteLogger) {
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    (0,_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, Logger);
-    this.init(concreteLogger, options);
-  }
-  (0,_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(Logger, [{
-    key: "init",
-    value: function init(concreteLogger) {
-      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      this.prefix = options.prefix || 'i18next:';
-      this.logger = concreteLogger || consoleLogger;
-      this.options = options;
-      this.debug = options.debug;
-    }
-  }, {
-    key: "setDebug",
-    value: function setDebug(bool) {
-      this.debug = bool;
-    }
-  }, {
-    key: "log",
-    value: function log() {
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
-      return this.forward(args, 'log', '', true);
-    }
-  }, {
-    key: "warn",
-    value: function warn() {
-      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        args[_key2] = arguments[_key2];
-      }
-      return this.forward(args, 'warn', '', true);
-    }
-  }, {
-    key: "error",
-    value: function error() {
-      for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-        args[_key3] = arguments[_key3];
-      }
-      return this.forward(args, 'error', '');
-    }
-  }, {
-    key: "deprecate",
-    value: function deprecate() {
-      for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-        args[_key4] = arguments[_key4];
-      }
-      return this.forward(args, 'warn', 'WARNING DEPRECATED: ', true);
-    }
-  }, {
-    key: "forward",
-    value: function forward(args, lvl, prefix, debugOnly) {
-      if (debugOnly && !this.debug) return null;
-      if (typeof args[0] === 'string') args[0] = "".concat(prefix).concat(this.prefix, " ").concat(args[0]);
-      return this.logger[lvl](args);
-    }
-  }, {
-    key: "create",
-    value: function create(moduleName) {
-      return new Logger(this.logger, _objectSpread$6(_objectSpread$6({}, {
-        prefix: "".concat(this.prefix, ":").concat(moduleName, ":")
-      }), this.options));
-    }
-  }, {
-    key: "clone",
-    value: function clone(options) {
-      options = options || this.options;
-      options.prefix = options.prefix || this.prefix;
-      return new Logger(this.logger, options);
-    }
-  }]);
-  return Logger;
-}();
-var baseLogger = new Logger();
-
-var EventEmitter = function () {
-  function EventEmitter() {
-    (0,_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, EventEmitter);
-    this.observers = {};
-  }
-  (0,_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(EventEmitter, [{
-    key: "on",
-    value: function on(events, listener) {
-      var _this = this;
-      events.split(' ').forEach(function (event) {
-        _this.observers[event] = _this.observers[event] || [];
-        _this.observers[event].push(listener);
-      });
-      return this;
-    }
-  }, {
-    key: "off",
-    value: function off(event, listener) {
-      if (!this.observers[event]) return;
-      if (!listener) {
-        delete this.observers[event];
-        return;
-      }
-      this.observers[event] = this.observers[event].filter(function (l) {
-        return l !== listener;
-      });
-    }
-  }, {
-    key: "emit",
-    value: function emit(event) {
-      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        args[_key - 1] = arguments[_key];
-      }
-      if (this.observers[event]) {
-        var cloned = [].concat(this.observers[event]);
-        cloned.forEach(function (observer) {
-          observer.apply(void 0, args);
-        });
-      }
-      if (this.observers['*']) {
-        var _cloned = [].concat(this.observers['*']);
-        _cloned.forEach(function (observer) {
-          observer.apply(observer, [event].concat(args));
-        });
-      }
-    }
-  }]);
-  return EventEmitter;
-}();
-
-function defer() {
-  var res;
-  var rej;
-  var promise = new Promise(function (resolve, reject) {
-    res = resolve;
-    rej = reject;
-  });
-  promise.resolve = res;
-  promise.reject = rej;
-  return promise;
-}
-function makeString(object) {
-  if (object == null) return '';
-  return '' + object;
-}
-function copy(a, s, t) {
-  a.forEach(function (m) {
-    if (s[m]) t[m] = s[m];
-  });
-}
-function getLastOfPath(object, path, Empty) {
-  function cleanKey(key) {
-    return key && key.indexOf('###') > -1 ? key.replace(/###/g, '.') : key;
-  }
-  function canNotTraverseDeeper() {
-    return !object || typeof object === 'string';
-  }
-  var stack = typeof path !== 'string' ? [].concat(path) : path.split('.');
-  while (stack.length > 1) {
-    if (canNotTraverseDeeper()) return {};
-    var key = cleanKey(stack.shift());
-    if (!object[key] && Empty) object[key] = new Empty();
-    if (Object.prototype.hasOwnProperty.call(object, key)) {
-      object = object[key];
-    } else {
-      object = {};
-    }
-  }
-  if (canNotTraverseDeeper()) return {};
-  return {
-    obj: object,
-    k: cleanKey(stack.shift())
-  };
-}
-function setPath(object, path, newValue) {
-  var _getLastOfPath = getLastOfPath(object, path, Object),
-    obj = _getLastOfPath.obj,
-    k = _getLastOfPath.k;
-  obj[k] = newValue;
-}
-function pushPath(object, path, newValue, concat) {
-  var _getLastOfPath2 = getLastOfPath(object, path, Object),
-    obj = _getLastOfPath2.obj,
-    k = _getLastOfPath2.k;
-  obj[k] = obj[k] || [];
-  if (concat) obj[k] = obj[k].concat(newValue);
-  if (!concat) obj[k].push(newValue);
-}
-function getPath(object, path) {
-  var _getLastOfPath3 = getLastOfPath(object, path),
-    obj = _getLastOfPath3.obj,
-    k = _getLastOfPath3.k;
-  if (!obj) return undefined;
-  return obj[k];
-}
-function getPathWithDefaults(data, defaultData, key) {
-  var value = getPath(data, key);
-  if (value !== undefined) {
-    return value;
-  }
-  return getPath(defaultData, key);
-}
-function deepExtend(target, source, overwrite) {
-  for (var prop in source) {
-    if (prop !== '__proto__' && prop !== 'constructor') {
-      if (prop in target) {
-        if (typeof target[prop] === 'string' || target[prop] instanceof String || typeof source[prop] === 'string' || source[prop] instanceof String) {
-          if (overwrite) target[prop] = source[prop];
-        } else {
-          deepExtend(target[prop], source[prop], overwrite);
-        }
-      } else {
-        target[prop] = source[prop];
-      }
-    }
-  }
-  return target;
-}
-function regexEscape(str) {
-  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
-}
-var _entityMap = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  '"': '&quot;',
-  "'": '&#39;',
-  '/': '&#x2F;'
-};
-function escape(data) {
-  if (typeof data === 'string') {
-    return data.replace(/[&<>"'\/]/g, function (s) {
-      return _entityMap[s];
-    });
-  }
-  return data;
-}
-var isIE10 = typeof window !== 'undefined' && window.navigator && typeof window.navigator.userAgentData === 'undefined' && window.navigator.userAgent && window.navigator.userAgent.indexOf('MSIE') > -1;
-var chars = [' ', ',', '?', '!', ';'];
-function looksLikeObjectPath(key, nsSeparator, keySeparator) {
-  nsSeparator = nsSeparator || '';
-  keySeparator = keySeparator || '';
-  var possibleChars = chars.filter(function (c) {
-    return nsSeparator.indexOf(c) < 0 && keySeparator.indexOf(c) < 0;
-  });
-  if (possibleChars.length === 0) return true;
-  var r = new RegExp("(".concat(possibleChars.map(function (c) {
-    return c === '?' ? '\\?' : c;
-  }).join('|'), ")"));
-  var matched = !r.test(key);
-  if (!matched) {
-    var ki = key.indexOf(keySeparator);
-    if (ki > 0 && !r.test(key.substring(0, ki))) {
-      matched = true;
-    }
-  }
-  return matched;
-}
-function deepFind(obj, path) {
-  var keySeparator = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '.';
-  if (!obj) return undefined;
-  if (obj[path]) return obj[path];
-  var paths = path.split(keySeparator);
-  var current = obj;
-  for (var i = 0; i < paths.length; ++i) {
-    if (!current) return undefined;
-    if (typeof current[paths[i]] === 'string' && i + 1 < paths.length) {
-      return undefined;
-    }
-    if (current[paths[i]] === undefined) {
-      var j = 2;
-      var p = paths.slice(i, i + j).join(keySeparator);
-      var mix = current[p];
-      while (mix === undefined && paths.length > i + j) {
-        j++;
-        p = paths.slice(i, i + j).join(keySeparator);
-        mix = current[p];
-      }
-      if (mix === undefined) return undefined;
-      if (mix === null) return null;
-      if (path.endsWith(p)) {
-        if (typeof mix === 'string') return mix;
-        if (p && typeof mix[p] === 'string') return mix[p];
-      }
-      var joinedPath = paths.slice(i + j).join(keySeparator);
-      if (joinedPath) return deepFind(mix, joinedPath, keySeparator);
-      return undefined;
-    }
-    current = current[paths[i]];
-  }
-  return current;
-}
-
-function ownKeys$5(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread$5(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$5(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$5(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-function _createSuper$3(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$3(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5__["default"])(this, result); }; }
-function _isNativeReflectConstruct$3() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-var ResourceStore = function (_EventEmitter) {
-  (0,_babel_runtime_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(ResourceStore, _EventEmitter);
-  var _super = _createSuper$3(ResourceStore);
-  function ResourceStore(data) {
-    var _this;
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
-      ns: ['translation'],
-      defaultNS: 'translation'
-    };
-    (0,_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, ResourceStore);
-    _this = _super.call(this);
-    if (isIE10) {
-      EventEmitter.call((0,_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
-    }
-    _this.data = data || {};
-    _this.options = options;
-    if (_this.options.keySeparator === undefined) {
-      _this.options.keySeparator = '.';
-    }
-    if (_this.options.ignoreJSONStructure === undefined) {
-      _this.options.ignoreJSONStructure = true;
-    }
-    return _this;
-  }
-  (0,_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(ResourceStore, [{
-    key: "addNamespaces",
-    value: function addNamespaces(ns) {
-      if (this.options.ns.indexOf(ns) < 0) {
-        this.options.ns.push(ns);
-      }
-    }
-  }, {
-    key: "removeNamespaces",
-    value: function removeNamespaces(ns) {
-      var index = this.options.ns.indexOf(ns);
-      if (index > -1) {
-        this.options.ns.splice(index, 1);
-      }
-    }
-  }, {
-    key: "getResource",
-    value: function getResource(lng, ns, key) {
-      var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-      var keySeparator = options.keySeparator !== undefined ? options.keySeparator : this.options.keySeparator;
-      var ignoreJSONStructure = options.ignoreJSONStructure !== undefined ? options.ignoreJSONStructure : this.options.ignoreJSONStructure;
-      var path = [lng, ns];
-      if (key && typeof key !== 'string') path = path.concat(key);
-      if (key && typeof key === 'string') path = path.concat(keySeparator ? key.split(keySeparator) : key);
-      if (lng.indexOf('.') > -1) {
-        path = lng.split('.');
-      }
-      var result = getPath(this.data, path);
-      if (result || !ignoreJSONStructure || typeof key !== 'string') return result;
-      return deepFind(this.data && this.data[lng] && this.data[lng][ns], key, keySeparator);
-    }
-  }, {
-    key: "addResource",
-    value: function addResource(lng, ns, key, value) {
-      var options = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {
-        silent: false
-      };
-      var keySeparator = options.keySeparator !== undefined ? options.keySeparator : this.options.keySeparator;
-      var path = [lng, ns];
-      if (key) path = path.concat(keySeparator ? key.split(keySeparator) : key);
-      if (lng.indexOf('.') > -1) {
-        path = lng.split('.');
-        value = ns;
-        ns = path[1];
-      }
-      this.addNamespaces(ns);
-      setPath(this.data, path, value);
-      if (!options.silent) this.emit('added', lng, ns, key, value);
-    }
-  }, {
-    key: "addResources",
-    value: function addResources(lng, ns, resources) {
-      var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {
-        silent: false
-      };
-      for (var m in resources) {
-        if (typeof resources[m] === 'string' || Object.prototype.toString.apply(resources[m]) === '[object Array]') this.addResource(lng, ns, m, resources[m], {
-          silent: true
-        });
-      }
-      if (!options.silent) this.emit('added', lng, ns, resources);
-    }
-  }, {
-    key: "addResourceBundle",
-    value: function addResourceBundle(lng, ns, resources, deep, overwrite) {
-      var options = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {
-        silent: false
-      };
-      var path = [lng, ns];
-      if (lng.indexOf('.') > -1) {
-        path = lng.split('.');
-        deep = resources;
-        resources = ns;
-        ns = path[1];
-      }
-      this.addNamespaces(ns);
-      var pack = getPath(this.data, path) || {};
-      if (deep) {
-        deepExtend(pack, resources, overwrite);
-      } else {
-        pack = _objectSpread$5(_objectSpread$5({}, pack), resources);
-      }
-      setPath(this.data, path, pack);
-      if (!options.silent) this.emit('added', lng, ns, resources);
-    }
-  }, {
-    key: "removeResourceBundle",
-    value: function removeResourceBundle(lng, ns) {
-      if (this.hasResourceBundle(lng, ns)) {
-        delete this.data[lng][ns];
-      }
-      this.removeNamespaces(ns);
-      this.emit('removed', lng, ns);
-    }
-  }, {
-    key: "hasResourceBundle",
-    value: function hasResourceBundle(lng, ns) {
-      return this.getResource(lng, ns) !== undefined;
-    }
-  }, {
-    key: "getResourceBundle",
-    value: function getResourceBundle(lng, ns) {
-      if (!ns) ns = this.options.defaultNS;
-      if (this.options.compatibilityAPI === 'v1') return _objectSpread$5(_objectSpread$5({}, {}), this.getResource(lng, ns));
-      return this.getResource(lng, ns);
-    }
-  }, {
-    key: "getDataByLanguage",
-    value: function getDataByLanguage(lng) {
-      return this.data[lng];
-    }
-  }, {
-    key: "hasLanguageSomeTranslations",
-    value: function hasLanguageSomeTranslations(lng) {
-      var data = this.getDataByLanguage(lng);
-      var n = data && Object.keys(data) || [];
-      return !!n.find(function (v) {
-        return data[v] && Object.keys(data[v]).length > 0;
-      });
-    }
-  }, {
-    key: "toJSON",
-    value: function toJSON() {
-      return this.data;
-    }
-  }]);
-  return ResourceStore;
-}(EventEmitter);
-
-var postProcessor = {
-  processors: {},
-  addPostProcessor: function addPostProcessor(module) {
-    this.processors[module.name] = module;
-  },
-  handle: function handle(processors, value, key, options, translator) {
-    var _this = this;
-    processors.forEach(function (processor) {
-      if (_this.processors[processor]) value = _this.processors[processor].process(value, key, options, translator);
-    });
-    return value;
-  }
-};
-
-function ownKeys$4(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread$4(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$4(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$4(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-function _createSuper$2(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$2(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5__["default"])(this, result); }; }
-function _isNativeReflectConstruct$2() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-var checkedLoadedFor = {};
-var Translator = function (_EventEmitter) {
-  (0,_babel_runtime_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(Translator, _EventEmitter);
-  var _super = _createSuper$2(Translator);
-  function Translator(services) {
-    var _this;
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    (0,_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, Translator);
-    _this = _super.call(this);
-    if (isIE10) {
-      EventEmitter.call((0,_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
-    }
-    copy(['resourceStore', 'languageUtils', 'pluralResolver', 'interpolator', 'backendConnector', 'i18nFormat', 'utils'], services, (0,_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
-    _this.options = options;
-    if (_this.options.keySeparator === undefined) {
-      _this.options.keySeparator = '.';
-    }
-    _this.logger = baseLogger.create('translator');
-    return _this;
-  }
-  (0,_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(Translator, [{
-    key: "changeLanguage",
-    value: function changeLanguage(lng) {
-      if (lng) this.language = lng;
-    }
-  }, {
-    key: "exists",
-    value: function exists(key) {
-      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
-        interpolation: {}
-      };
-      if (key === undefined || key === null) {
-        return false;
-      }
-      var resolved = this.resolve(key, options);
-      return resolved && resolved.res !== undefined;
-    }
-  }, {
-    key: "extractFromKey",
-    value: function extractFromKey(key, options) {
-      var nsSeparator = options.nsSeparator !== undefined ? options.nsSeparator : this.options.nsSeparator;
-      if (nsSeparator === undefined) nsSeparator = ':';
-      var keySeparator = options.keySeparator !== undefined ? options.keySeparator : this.options.keySeparator;
-      var namespaces = options.ns || this.options.defaultNS || [];
-      var wouldCheckForNsInKey = nsSeparator && key.indexOf(nsSeparator) > -1;
-      var seemsNaturalLanguage = !this.options.userDefinedKeySeparator && !options.keySeparator && !this.options.userDefinedNsSeparator && !options.nsSeparator && !looksLikeObjectPath(key, nsSeparator, keySeparator);
-      if (wouldCheckForNsInKey && !seemsNaturalLanguage) {
-        var m = key.match(this.interpolator.nestingRegexp);
-        if (m && m.length > 0) {
-          return {
-            key: key,
-            namespaces: namespaces
-          };
-        }
-        var parts = key.split(nsSeparator);
-        if (nsSeparator !== keySeparator || nsSeparator === keySeparator && this.options.ns.indexOf(parts[0]) > -1) namespaces = parts.shift();
-        key = parts.join(keySeparator);
-      }
-      if (typeof namespaces === 'string') namespaces = [namespaces];
-      return {
-        key: key,
-        namespaces: namespaces
-      };
-    }
-  }, {
-    key: "translate",
-    value: function translate(keys, options, lastKey) {
-      var _this2 = this;
-      if ((0,_babel_runtime_helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_0__["default"])(options) !== 'object' && this.options.overloadTranslationOptionHandler) {
-        options = this.options.overloadTranslationOptionHandler(arguments);
-      }
-      if ((0,_babel_runtime_helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_0__["default"])(options) === 'object') options = _objectSpread$4({}, options);
-      if (!options) options = {};
-      if (keys === undefined || keys === null) return '';
-      if (!Array.isArray(keys)) keys = [String(keys)];
-      var returnDetails = options.returnDetails !== undefined ? options.returnDetails : this.options.returnDetails;
-      var keySeparator = options.keySeparator !== undefined ? options.keySeparator : this.options.keySeparator;
-      var _this$extractFromKey = this.extractFromKey(keys[keys.length - 1], options),
-        key = _this$extractFromKey.key,
-        namespaces = _this$extractFromKey.namespaces;
-      var namespace = namespaces[namespaces.length - 1];
-      var lng = options.lng || this.language;
-      var appendNamespaceToCIMode = options.appendNamespaceToCIMode || this.options.appendNamespaceToCIMode;
-      if (lng && lng.toLowerCase() === 'cimode') {
-        if (appendNamespaceToCIMode) {
-          var nsSeparator = options.nsSeparator || this.options.nsSeparator;
-          if (returnDetails) {
-            return {
-              res: "".concat(namespace).concat(nsSeparator).concat(key),
-              usedKey: key,
-              exactUsedKey: key,
-              usedLng: lng,
-              usedNS: namespace
-            };
-          }
-          return "".concat(namespace).concat(nsSeparator).concat(key);
-        }
-        if (returnDetails) {
-          return {
-            res: key,
-            usedKey: key,
-            exactUsedKey: key,
-            usedLng: lng,
-            usedNS: namespace
-          };
-        }
-        return key;
-      }
-      var resolved = this.resolve(keys, options);
-      var res = resolved && resolved.res;
-      var resUsedKey = resolved && resolved.usedKey || key;
-      var resExactUsedKey = resolved && resolved.exactUsedKey || key;
-      var resType = Object.prototype.toString.apply(res);
-      var noObject = ['[object Number]', '[object Function]', '[object RegExp]'];
-      var joinArrays = options.joinArrays !== undefined ? options.joinArrays : this.options.joinArrays;
-      var handleAsObjectInI18nFormat = !this.i18nFormat || this.i18nFormat.handleAsObject;
-      var handleAsObject = typeof res !== 'string' && typeof res !== 'boolean' && typeof res !== 'number';
-      if (handleAsObjectInI18nFormat && res && handleAsObject && noObject.indexOf(resType) < 0 && !(typeof joinArrays === 'string' && resType === '[object Array]')) {
-        if (!options.returnObjects && !this.options.returnObjects) {
-          if (!this.options.returnedObjectHandler) {
-            this.logger.warn('accessing an object - but returnObjects options is not enabled!');
-          }
-          var r = this.options.returnedObjectHandler ? this.options.returnedObjectHandler(resUsedKey, res, _objectSpread$4(_objectSpread$4({}, options), {}, {
-            ns: namespaces
-          })) : "key '".concat(key, " (").concat(this.language, ")' returned an object instead of string.");
-          if (returnDetails) {
-            resolved.res = r;
-            return resolved;
-          }
-          return r;
-        }
-        if (keySeparator) {
-          var resTypeIsArray = resType === '[object Array]';
-          var copy = resTypeIsArray ? [] : {};
-          var newKeyToUse = resTypeIsArray ? resExactUsedKey : resUsedKey;
-          for (var m in res) {
-            if (Object.prototype.hasOwnProperty.call(res, m)) {
-              var deepKey = "".concat(newKeyToUse).concat(keySeparator).concat(m);
-              copy[m] = this.translate(deepKey, _objectSpread$4(_objectSpread$4({}, options), {
-                joinArrays: false,
-                ns: namespaces
-              }));
-              if (copy[m] === deepKey) copy[m] = res[m];
-            }
-          }
-          res = copy;
-        }
-      } else if (handleAsObjectInI18nFormat && typeof joinArrays === 'string' && resType === '[object Array]') {
-        res = res.join(joinArrays);
-        if (res) res = this.extendTranslation(res, keys, options, lastKey);
-      } else {
-        var usedDefault = false;
-        var usedKey = false;
-        var needsPluralHandling = options.count !== undefined && typeof options.count !== 'string';
-        var hasDefaultValue = Translator.hasDefaultValue(options);
-        var defaultValueSuffix = needsPluralHandling ? this.pluralResolver.getSuffix(lng, options.count, options) : '';
-        var defaultValue = options["defaultValue".concat(defaultValueSuffix)] || options.defaultValue;
-        if (!this.isValidLookup(res) && hasDefaultValue) {
-          usedDefault = true;
-          res = defaultValue;
-        }
-        if (!this.isValidLookup(res)) {
-          usedKey = true;
-          res = key;
-        }
-        var missingKeyNoValueFallbackToKey = options.missingKeyNoValueFallbackToKey || this.options.missingKeyNoValueFallbackToKey;
-        var resForMissing = missingKeyNoValueFallbackToKey && usedKey ? undefined : res;
-        var updateMissing = hasDefaultValue && defaultValue !== res && this.options.updateMissing;
-        if (usedKey || usedDefault || updateMissing) {
-          this.logger.log(updateMissing ? 'updateKey' : 'missingKey', lng, namespace, key, updateMissing ? defaultValue : res);
-          if (keySeparator) {
-            var fk = this.resolve(key, _objectSpread$4(_objectSpread$4({}, options), {}, {
-              keySeparator: false
-            }));
-            if (fk && fk.res) this.logger.warn('Seems the loaded translations were in flat JSON format instead of nested. Either set keySeparator: false on init or make sure your translations are published in nested format.');
-          }
-          var lngs = [];
-          var fallbackLngs = this.languageUtils.getFallbackCodes(this.options.fallbackLng, options.lng || this.language);
-          if (this.options.saveMissingTo === 'fallback' && fallbackLngs && fallbackLngs[0]) {
-            for (var i = 0; i < fallbackLngs.length; i++) {
-              lngs.push(fallbackLngs[i]);
-            }
-          } else if (this.options.saveMissingTo === 'all') {
-            lngs = this.languageUtils.toResolveHierarchy(options.lng || this.language);
-          } else {
-            lngs.push(options.lng || this.language);
-          }
-          var send = function send(l, k, specificDefaultValue) {
-            var defaultForMissing = hasDefaultValue && specificDefaultValue !== res ? specificDefaultValue : resForMissing;
-            if (_this2.options.missingKeyHandler) {
-              _this2.options.missingKeyHandler(l, namespace, k, defaultForMissing, updateMissing, options);
-            } else if (_this2.backendConnector && _this2.backendConnector.saveMissing) {
-              _this2.backendConnector.saveMissing(l, namespace, k, defaultForMissing, updateMissing, options);
-            }
-            _this2.emit('missingKey', l, namespace, k, res);
-          };
-          if (this.options.saveMissing) {
-            if (this.options.saveMissingPlurals && needsPluralHandling) {
-              lngs.forEach(function (language) {
-                _this2.pluralResolver.getSuffixes(language, options).forEach(function (suffix) {
-                  send([language], key + suffix, options["defaultValue".concat(suffix)] || defaultValue);
-                });
-              });
-            } else {
-              send(lngs, key, defaultValue);
-            }
-          }
-        }
-        res = this.extendTranslation(res, keys, options, resolved, lastKey);
-        if (usedKey && res === key && this.options.appendNamespaceToMissingKey) res = "".concat(namespace, ":").concat(key);
-        if ((usedKey || usedDefault) && this.options.parseMissingKeyHandler) {
-          if (this.options.compatibilityAPI !== 'v1') {
-            res = this.options.parseMissingKeyHandler(this.options.appendNamespaceToMissingKey ? "".concat(namespace, ":").concat(key) : key, usedDefault ? res : undefined);
-          } else {
-            res = this.options.parseMissingKeyHandler(res);
-          }
-        }
-      }
-      if (returnDetails) {
-        resolved.res = res;
-        return resolved;
-      }
-      return res;
-    }
-  }, {
-    key: "extendTranslation",
-    value: function extendTranslation(res, key, options, resolved, lastKey) {
-      var _this3 = this;
-      if (this.i18nFormat && this.i18nFormat.parse) {
-        res = this.i18nFormat.parse(res, _objectSpread$4(_objectSpread$4({}, this.options.interpolation.defaultVariables), options), resolved.usedLng, resolved.usedNS, resolved.usedKey, {
-          resolved: resolved
-        });
-      } else if (!options.skipInterpolation) {
-        if (options.interpolation) this.interpolator.init(_objectSpread$4(_objectSpread$4({}, options), {
-          interpolation: _objectSpread$4(_objectSpread$4({}, this.options.interpolation), options.interpolation)
-        }));
-        var skipOnVariables = typeof res === 'string' && (options && options.interpolation && options.interpolation.skipOnVariables !== undefined ? options.interpolation.skipOnVariables : this.options.interpolation.skipOnVariables);
-        var nestBef;
-        if (skipOnVariables) {
-          var nb = res.match(this.interpolator.nestingRegexp);
-          nestBef = nb && nb.length;
-        }
-        var data = options.replace && typeof options.replace !== 'string' ? options.replace : options;
-        if (this.options.interpolation.defaultVariables) data = _objectSpread$4(_objectSpread$4({}, this.options.interpolation.defaultVariables), data);
-        res = this.interpolator.interpolate(res, data, options.lng || this.language, options);
-        if (skipOnVariables) {
-          var na = res.match(this.interpolator.nestingRegexp);
-          var nestAft = na && na.length;
-          if (nestBef < nestAft) options.nest = false;
-        }
-        if (!options.lng && this.options.compatibilityAPI !== 'v1' && resolved && resolved.res) options.lng = resolved.usedLng;
-        if (options.nest !== false) res = this.interpolator.nest(res, function () {
-          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-          }
-          if (lastKey && lastKey[0] === args[0] && !options.context) {
-            _this3.logger.warn("It seems you are nesting recursively key: ".concat(args[0], " in key: ").concat(key[0]));
-            return null;
-          }
-          return _this3.translate.apply(_this3, args.concat([key]));
-        }, options);
-        if (options.interpolation) this.interpolator.reset();
-      }
-      var postProcess = options.postProcess || this.options.postProcess;
-      var postProcessorNames = typeof postProcess === 'string' ? [postProcess] : postProcess;
-      if (res !== undefined && res !== null && postProcessorNames && postProcessorNames.length && options.applyPostProcessor !== false) {
-        res = postProcessor.handle(postProcessorNames, res, key, this.options && this.options.postProcessPassResolved ? _objectSpread$4({
-          i18nResolved: resolved
-        }, options) : options, this);
-      }
-      return res;
-    }
-  }, {
-    key: "resolve",
-    value: function resolve(keys) {
-      var _this4 = this;
-      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      var found;
-      var usedKey;
-      var exactUsedKey;
-      var usedLng;
-      var usedNS;
-      if (typeof keys === 'string') keys = [keys];
-      keys.forEach(function (k) {
-        if (_this4.isValidLookup(found)) return;
-        var extracted = _this4.extractFromKey(k, options);
-        var key = extracted.key;
-        usedKey = key;
-        var namespaces = extracted.namespaces;
-        if (_this4.options.fallbackNS) namespaces = namespaces.concat(_this4.options.fallbackNS);
-        var needsPluralHandling = options.count !== undefined && typeof options.count !== 'string';
-        var needsZeroSuffixLookup = needsPluralHandling && !options.ordinal && options.count === 0 && _this4.pluralResolver.shouldUseIntlApi();
-        var needsContextHandling = options.context !== undefined && (typeof options.context === 'string' || typeof options.context === 'number') && options.context !== '';
-        var codes = options.lngs ? options.lngs : _this4.languageUtils.toResolveHierarchy(options.lng || _this4.language, options.fallbackLng);
-        namespaces.forEach(function (ns) {
-          if (_this4.isValidLookup(found)) return;
-          usedNS = ns;
-          if (!checkedLoadedFor["".concat(codes[0], "-").concat(ns)] && _this4.utils && _this4.utils.hasLoadedNamespace && !_this4.utils.hasLoadedNamespace(usedNS)) {
-            checkedLoadedFor["".concat(codes[0], "-").concat(ns)] = true;
-            _this4.logger.warn("key \"".concat(usedKey, "\" for languages \"").concat(codes.join(', '), "\" won't get resolved as namespace \"").concat(usedNS, "\" was not yet loaded"), 'This means something IS WRONG in your setup. You access the t function before i18next.init / i18next.loadNamespace / i18next.changeLanguage was done. Wait for the callback or Promise to resolve before accessing it!!!');
-          }
-          codes.forEach(function (code) {
-            if (_this4.isValidLookup(found)) return;
-            usedLng = code;
-            var finalKeys = [key];
-            if (_this4.i18nFormat && _this4.i18nFormat.addLookupKeys) {
-              _this4.i18nFormat.addLookupKeys(finalKeys, key, code, ns, options);
-            } else {
-              var pluralSuffix;
-              if (needsPluralHandling) pluralSuffix = _this4.pluralResolver.getSuffix(code, options.count, options);
-              var zeroSuffix = "".concat(_this4.options.pluralSeparator, "zero");
-              if (needsPluralHandling) {
-                finalKeys.push(key + pluralSuffix);
-                if (needsZeroSuffixLookup) {
-                  finalKeys.push(key + zeroSuffix);
-                }
-              }
-              if (needsContextHandling) {
-                var contextKey = "".concat(key).concat(_this4.options.contextSeparator).concat(options.context);
-                finalKeys.push(contextKey);
-                if (needsPluralHandling) {
-                  finalKeys.push(contextKey + pluralSuffix);
-                  if (needsZeroSuffixLookup) {
-                    finalKeys.push(contextKey + zeroSuffix);
-                  }
-                }
-              }
-            }
-            var possibleKey;
-            while (possibleKey = finalKeys.pop()) {
-              if (!_this4.isValidLookup(found)) {
-                exactUsedKey = possibleKey;
-                found = _this4.getResource(code, ns, possibleKey, options);
-              }
-            }
-          });
-        });
-      });
-      return {
-        res: found,
-        usedKey: usedKey,
-        exactUsedKey: exactUsedKey,
-        usedLng: usedLng,
-        usedNS: usedNS
-      };
-    }
-  }, {
-    key: "isValidLookup",
-    value: function isValidLookup(res) {
-      return res !== undefined && !(!this.options.returnNull && res === null) && !(!this.options.returnEmptyString && res === '');
-    }
-  }, {
-    key: "getResource",
-    value: function getResource(code, ns, key) {
-      var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-      if (this.i18nFormat && this.i18nFormat.getResource) return this.i18nFormat.getResource(code, ns, key, options);
-      return this.resourceStore.getResource(code, ns, key, options);
-    }
-  }], [{
-    key: "hasDefaultValue",
-    value: function hasDefaultValue(options) {
-      var prefix = 'defaultValue';
-      for (var option in options) {
-        if (Object.prototype.hasOwnProperty.call(options, option) && prefix === option.substring(0, prefix.length) && undefined !== options[option]) {
-          return true;
-        }
-      }
-      return false;
-    }
-  }]);
-  return Translator;
-}(EventEmitter);
-
-function capitalize(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-var LanguageUtil = function () {
-  function LanguageUtil(options) {
-    (0,_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, LanguageUtil);
-    this.options = options;
-    this.supportedLngs = this.options.supportedLngs || false;
-    this.logger = baseLogger.create('languageUtils');
-  }
-  (0,_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(LanguageUtil, [{
-    key: "getScriptPartFromCode",
-    value: function getScriptPartFromCode(code) {
-      if (!code || code.indexOf('-') < 0) return null;
-      var p = code.split('-');
-      if (p.length === 2) return null;
-      p.pop();
-      if (p[p.length - 1].toLowerCase() === 'x') return null;
-      return this.formatLanguageCode(p.join('-'));
-    }
-  }, {
-    key: "getLanguagePartFromCode",
-    value: function getLanguagePartFromCode(code) {
-      if (!code || code.indexOf('-') < 0) return code;
-      var p = code.split('-');
-      return this.formatLanguageCode(p[0]);
-    }
-  }, {
-    key: "formatLanguageCode",
-    value: function formatLanguageCode(code) {
-      if (typeof code === 'string' && code.indexOf('-') > -1) {
-        var specialCases = ['hans', 'hant', 'latn', 'cyrl', 'cans', 'mong', 'arab'];
-        var p = code.split('-');
-        if (this.options.lowerCaseLng) {
-          p = p.map(function (part) {
-            return part.toLowerCase();
-          });
-        } else if (p.length === 2) {
-          p[0] = p[0].toLowerCase();
-          p[1] = p[1].toUpperCase();
-          if (specialCases.indexOf(p[1].toLowerCase()) > -1) p[1] = capitalize(p[1].toLowerCase());
-        } else if (p.length === 3) {
-          p[0] = p[0].toLowerCase();
-          if (p[1].length === 2) p[1] = p[1].toUpperCase();
-          if (p[0] !== 'sgn' && p[2].length === 2) p[2] = p[2].toUpperCase();
-          if (specialCases.indexOf(p[1].toLowerCase()) > -1) p[1] = capitalize(p[1].toLowerCase());
-          if (specialCases.indexOf(p[2].toLowerCase()) > -1) p[2] = capitalize(p[2].toLowerCase());
-        }
-        return p.join('-');
-      }
-      return this.options.cleanCode || this.options.lowerCaseLng ? code.toLowerCase() : code;
-    }
-  }, {
-    key: "isSupportedCode",
-    value: function isSupportedCode(code) {
-      if (this.options.load === 'languageOnly' || this.options.nonExplicitSupportedLngs) {
-        code = this.getLanguagePartFromCode(code);
-      }
-      return !this.supportedLngs || !this.supportedLngs.length || this.supportedLngs.indexOf(code) > -1;
-    }
-  }, {
-    key: "getBestMatchFromCodes",
-    value: function getBestMatchFromCodes(codes) {
-      var _this = this;
-      if (!codes) return null;
-      var found;
-      codes.forEach(function (code) {
-        if (found) return;
-        var cleanedLng = _this.formatLanguageCode(code);
-        if (!_this.options.supportedLngs || _this.isSupportedCode(cleanedLng)) found = cleanedLng;
-      });
-      if (!found && this.options.supportedLngs) {
-        codes.forEach(function (code) {
-          if (found) return;
-          var lngOnly = _this.getLanguagePartFromCode(code);
-          if (_this.isSupportedCode(lngOnly)) return found = lngOnly;
-          found = _this.options.supportedLngs.find(function (supportedLng) {
-            if (supportedLng === lngOnly) return supportedLng;
-            if (supportedLng.indexOf('-') < 0 && lngOnly.indexOf('-') < 0) return;
-            if (supportedLng.indexOf(lngOnly) === 0) return supportedLng;
-          });
-        });
-      }
-      if (!found) found = this.getFallbackCodes(this.options.fallbackLng)[0];
-      return found;
-    }
-  }, {
-    key: "getFallbackCodes",
-    value: function getFallbackCodes(fallbacks, code) {
-      if (!fallbacks) return [];
-      if (typeof fallbacks === 'function') fallbacks = fallbacks(code);
-      if (typeof fallbacks === 'string') fallbacks = [fallbacks];
-      if (Object.prototype.toString.apply(fallbacks) === '[object Array]') return fallbacks;
-      if (!code) return fallbacks["default"] || [];
-      var found = fallbacks[code];
-      if (!found) found = fallbacks[this.getScriptPartFromCode(code)];
-      if (!found) found = fallbacks[this.formatLanguageCode(code)];
-      if (!found) found = fallbacks[this.getLanguagePartFromCode(code)];
-      if (!found) found = fallbacks["default"];
-      return found || [];
-    }
-  }, {
-    key: "toResolveHierarchy",
-    value: function toResolveHierarchy(code, fallbackCode) {
-      var _this2 = this;
-      var fallbackCodes = this.getFallbackCodes(fallbackCode || this.options.fallbackLng || [], code);
-      var codes = [];
-      var addCode = function addCode(c) {
-        if (!c) return;
-        if (_this2.isSupportedCode(c)) {
-          codes.push(c);
-        } else {
-          _this2.logger.warn("rejecting language code not found in supportedLngs: ".concat(c));
-        }
-      };
-      if (typeof code === 'string' && code.indexOf('-') > -1) {
-        if (this.options.load !== 'languageOnly') addCode(this.formatLanguageCode(code));
-        if (this.options.load !== 'languageOnly' && this.options.load !== 'currentOnly') addCode(this.getScriptPartFromCode(code));
-        if (this.options.load !== 'currentOnly') addCode(this.getLanguagePartFromCode(code));
-      } else if (typeof code === 'string') {
-        addCode(this.formatLanguageCode(code));
-      }
-      fallbackCodes.forEach(function (fc) {
-        if (codes.indexOf(fc) < 0) addCode(_this2.formatLanguageCode(fc));
-      });
-      return codes;
-    }
-  }]);
-  return LanguageUtil;
-}();
-
-var sets = [{
-  lngs: ['ach', 'ak', 'am', 'arn', 'br', 'fil', 'gun', 'ln', 'mfe', 'mg', 'mi', 'oc', 'pt', 'pt-BR', 'tg', 'tl', 'ti', 'tr', 'uz', 'wa'],
-  nr: [1, 2],
-  fc: 1
-}, {
-  lngs: ['af', 'an', 'ast', 'az', 'bg', 'bn', 'ca', 'da', 'de', 'dev', 'el', 'en', 'eo', 'es', 'et', 'eu', 'fi', 'fo', 'fur', 'fy', 'gl', 'gu', 'ha', 'hi', 'hu', 'hy', 'ia', 'it', 'kk', 'kn', 'ku', 'lb', 'mai', 'ml', 'mn', 'mr', 'nah', 'nap', 'nb', 'ne', 'nl', 'nn', 'no', 'nso', 'pa', 'pap', 'pms', 'ps', 'pt-PT', 'rm', 'sco', 'se', 'si', 'so', 'son', 'sq', 'sv', 'sw', 'ta', 'te', 'tk', 'ur', 'yo'],
-  nr: [1, 2],
-  fc: 2
-}, {
-  lngs: ['ay', 'bo', 'cgg', 'fa', 'ht', 'id', 'ja', 'jbo', 'ka', 'km', 'ko', 'ky', 'lo', 'ms', 'sah', 'su', 'th', 'tt', 'ug', 'vi', 'wo', 'zh'],
-  nr: [1],
-  fc: 3
-}, {
-  lngs: ['be', 'bs', 'cnr', 'dz', 'hr', 'ru', 'sr', 'uk'],
-  nr: [1, 2, 5],
-  fc: 4
-}, {
-  lngs: ['ar'],
-  nr: [0, 1, 2, 3, 11, 100],
-  fc: 5
-}, {
-  lngs: ['cs', 'sk'],
-  nr: [1, 2, 5],
-  fc: 6
-}, {
-  lngs: ['csb', 'pl'],
-  nr: [1, 2, 5],
-  fc: 7
-}, {
-  lngs: ['cy'],
-  nr: [1, 2, 3, 8],
-  fc: 8
-}, {
-  lngs: ['fr'],
-  nr: [1, 2],
-  fc: 9
-}, {
-  lngs: ['ga'],
-  nr: [1, 2, 3, 7, 11],
-  fc: 10
-}, {
-  lngs: ['gd'],
-  nr: [1, 2, 3, 20],
-  fc: 11
-}, {
-  lngs: ['is'],
-  nr: [1, 2],
-  fc: 12
-}, {
-  lngs: ['jv'],
-  nr: [0, 1],
-  fc: 13
-}, {
-  lngs: ['kw'],
-  nr: [1, 2, 3, 4],
-  fc: 14
-}, {
-  lngs: ['lt'],
-  nr: [1, 2, 10],
-  fc: 15
-}, {
-  lngs: ['lv'],
-  nr: [1, 2, 0],
-  fc: 16
-}, {
-  lngs: ['mk'],
-  nr: [1, 2],
-  fc: 17
-}, {
-  lngs: ['mnk'],
-  nr: [0, 1, 2],
-  fc: 18
-}, {
-  lngs: ['mt'],
-  nr: [1, 2, 11, 20],
-  fc: 19
-}, {
-  lngs: ['or'],
-  nr: [2, 1],
-  fc: 2
-}, {
-  lngs: ['ro'],
-  nr: [1, 2, 20],
-  fc: 20
-}, {
-  lngs: ['sl'],
-  nr: [5, 1, 2, 3],
-  fc: 21
-}, {
-  lngs: ['he', 'iw'],
-  nr: [1, 2, 20, 21],
-  fc: 22
-}];
-var _rulesPluralsTypes = {
-  1: function _(n) {
-    return Number(n > 1);
-  },
-  2: function _(n) {
-    return Number(n != 1);
-  },
-  3: function _(n) {
-    return 0;
-  },
-  4: function _(n) {
-    return Number(n % 10 == 1 && n % 100 != 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
-  },
-  5: function _(n) {
-    return Number(n == 0 ? 0 : n == 1 ? 1 : n == 2 ? 2 : n % 100 >= 3 && n % 100 <= 10 ? 3 : n % 100 >= 11 ? 4 : 5);
-  },
-  6: function _(n) {
-    return Number(n == 1 ? 0 : n >= 2 && n <= 4 ? 1 : 2);
-  },
-  7: function _(n) {
-    return Number(n == 1 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
-  },
-  8: function _(n) {
-    return Number(n == 1 ? 0 : n == 2 ? 1 : n != 8 && n != 11 ? 2 : 3);
-  },
-  9: function _(n) {
-    return Number(n >= 2);
-  },
-  10: function _(n) {
-    return Number(n == 1 ? 0 : n == 2 ? 1 : n < 7 ? 2 : n < 11 ? 3 : 4);
-  },
-  11: function _(n) {
-    return Number(n == 1 || n == 11 ? 0 : n == 2 || n == 12 ? 1 : n > 2 && n < 20 ? 2 : 3);
-  },
-  12: function _(n) {
-    return Number(n % 10 != 1 || n % 100 == 11);
-  },
-  13: function _(n) {
-    return Number(n !== 0);
-  },
-  14: function _(n) {
-    return Number(n == 1 ? 0 : n == 2 ? 1 : n == 3 ? 2 : 3);
-  },
-  15: function _(n) {
-    return Number(n % 10 == 1 && n % 100 != 11 ? 0 : n % 10 >= 2 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
-  },
-  16: function _(n) {
-    return Number(n % 10 == 1 && n % 100 != 11 ? 0 : n !== 0 ? 1 : 2);
-  },
-  17: function _(n) {
-    return Number(n == 1 || n % 10 == 1 && n % 100 != 11 ? 0 : 1);
-  },
-  18: function _(n) {
-    return Number(n == 0 ? 0 : n == 1 ? 1 : 2);
-  },
-  19: function _(n) {
-    return Number(n == 1 ? 0 : n == 0 || n % 100 > 1 && n % 100 < 11 ? 1 : n % 100 > 10 && n % 100 < 20 ? 2 : 3);
-  },
-  20: function _(n) {
-    return Number(n == 1 ? 0 : n == 0 || n % 100 > 0 && n % 100 < 20 ? 1 : 2);
-  },
-  21: function _(n) {
-    return Number(n % 100 == 1 ? 1 : n % 100 == 2 ? 2 : n % 100 == 3 || n % 100 == 4 ? 3 : 0);
-  },
-  22: function _(n) {
-    return Number(n == 1 ? 0 : n == 2 ? 1 : (n < 0 || n > 10) && n % 10 == 0 ? 2 : 3);
-  }
-};
-var deprecatedJsonVersions = ['v1', 'v2', 'v3'];
-var suffixesOrder = {
-  zero: 0,
-  one: 1,
-  two: 2,
-  few: 3,
-  many: 4,
-  other: 5
-};
-function createRules() {
-  var rules = {};
-  sets.forEach(function (set) {
-    set.lngs.forEach(function (l) {
-      rules[l] = {
-        numbers: set.nr,
-        plurals: _rulesPluralsTypes[set.fc]
-      };
-    });
-  });
-  return rules;
-}
-var PluralResolver = function () {
-  function PluralResolver(languageUtils) {
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    (0,_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, PluralResolver);
-    this.languageUtils = languageUtils;
-    this.options = options;
-    this.logger = baseLogger.create('pluralResolver');
-    if ((!this.options.compatibilityJSON || this.options.compatibilityJSON === 'v4') && (typeof Intl === 'undefined' || !Intl.PluralRules)) {
-      this.options.compatibilityJSON = 'v3';
-      this.logger.error('Your environment seems not to be Intl API compatible, use an Intl.PluralRules polyfill. Will fallback to the compatibilityJSON v3 format handling.');
-    }
-    this.rules = createRules();
-  }
-  (0,_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(PluralResolver, [{
-    key: "addRule",
-    value: function addRule(lng, obj) {
-      this.rules[lng] = obj;
-    }
-  }, {
-    key: "getRule",
-    value: function getRule(code) {
-      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      if (this.shouldUseIntlApi()) {
-        try {
-          return new Intl.PluralRules(code, {
-            type: options.ordinal ? 'ordinal' : 'cardinal'
-          });
-        } catch (_unused) {
-          return;
-        }
-      }
-      return this.rules[code] || this.rules[this.languageUtils.getLanguagePartFromCode(code)];
-    }
-  }, {
-    key: "needsPlural",
-    value: function needsPlural(code) {
-      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      var rule = this.getRule(code, options);
-      if (this.shouldUseIntlApi()) {
-        return rule && rule.resolvedOptions().pluralCategories.length > 1;
-      }
-      return rule && rule.numbers.length > 1;
-    }
-  }, {
-    key: "getPluralFormsOfKey",
-    value: function getPluralFormsOfKey(code, key) {
-      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-      return this.getSuffixes(code, options).map(function (suffix) {
-        return "".concat(key).concat(suffix);
-      });
-    }
-  }, {
-    key: "getSuffixes",
-    value: function getSuffixes(code) {
-      var _this = this;
-      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      var rule = this.getRule(code, options);
-      if (!rule) {
-        return [];
-      }
-      if (this.shouldUseIntlApi()) {
-        return rule.resolvedOptions().pluralCategories.sort(function (pluralCategory1, pluralCategory2) {
-          return suffixesOrder[pluralCategory1] - suffixesOrder[pluralCategory2];
-        }).map(function (pluralCategory) {
-          return "".concat(_this.options.prepend).concat(pluralCategory);
-        });
-      }
-      return rule.numbers.map(function (number) {
-        return _this.getSuffix(code, number, options);
-      });
-    }
-  }, {
-    key: "getSuffix",
-    value: function getSuffix(code, count) {
-      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-      var rule = this.getRule(code, options);
-      if (rule) {
-        if (this.shouldUseIntlApi()) {
-          return "".concat(this.options.prepend).concat(rule.select(count));
-        }
-        return this.getSuffixRetroCompatible(rule, count);
-      }
-      this.logger.warn("no plural rule found for: ".concat(code));
-      return '';
-    }
-  }, {
-    key: "getSuffixRetroCompatible",
-    value: function getSuffixRetroCompatible(rule, count) {
-      var _this2 = this;
-      var idx = rule.noAbs ? rule.plurals(count) : rule.plurals(Math.abs(count));
-      var suffix = rule.numbers[idx];
-      if (this.options.simplifyPluralSuffix && rule.numbers.length === 2 && rule.numbers[0] === 1) {
-        if (suffix === 2) {
-          suffix = 'plural';
-        } else if (suffix === 1) {
-          suffix = '';
-        }
-      }
-      var returnSuffix = function returnSuffix() {
-        return _this2.options.prepend && suffix.toString() ? _this2.options.prepend + suffix.toString() : suffix.toString();
-      };
-      if (this.options.compatibilityJSON === 'v1') {
-        if (suffix === 1) return '';
-        if (typeof suffix === 'number') return "_plural_".concat(suffix.toString());
-        return returnSuffix();
-      } else if (this.options.compatibilityJSON === 'v2') {
-        return returnSuffix();
-      } else if (this.options.simplifyPluralSuffix && rule.numbers.length === 2 && rule.numbers[0] === 1) {
-        return returnSuffix();
-      }
-      return this.options.prepend && idx.toString() ? this.options.prepend + idx.toString() : idx.toString();
-    }
-  }, {
-    key: "shouldUseIntlApi",
-    value: function shouldUseIntlApi() {
-      return !deprecatedJsonVersions.includes(this.options.compatibilityJSON);
-    }
-  }]);
-  return PluralResolver;
-}();
-
-function ownKeys$3(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread$3(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$3(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$3(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-function deepFindWithDefaults(data, defaultData, key) {
-  var keySeparator = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '.';
-  var ignoreJSONStructure = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
-  var path = getPathWithDefaults(data, defaultData, key);
-  if (!path && ignoreJSONStructure && typeof key === 'string') {
-    path = deepFind(data, key, keySeparator);
-    if (path === undefined) path = deepFind(defaultData, key, keySeparator);
-  }
-  return path;
-}
-var Interpolator = function () {
-  function Interpolator() {
-    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    (0,_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, Interpolator);
-    this.logger = baseLogger.create('interpolator');
-    this.options = options;
-    this.format = options.interpolation && options.interpolation.format || function (value) {
-      return value;
-    };
-    this.init(options);
-  }
-  (0,_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(Interpolator, [{
-    key: "init",
-    value: function init() {
-      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      if (!options.interpolation) options.interpolation = {
-        escapeValue: true
-      };
-      var iOpts = options.interpolation;
-      this.escape = iOpts.escape !== undefined ? iOpts.escape : escape;
-      this.escapeValue = iOpts.escapeValue !== undefined ? iOpts.escapeValue : true;
-      this.useRawValueToEscape = iOpts.useRawValueToEscape !== undefined ? iOpts.useRawValueToEscape : false;
-      this.prefix = iOpts.prefix ? regexEscape(iOpts.prefix) : iOpts.prefixEscaped || '{{';
-      this.suffix = iOpts.suffix ? regexEscape(iOpts.suffix) : iOpts.suffixEscaped || '}}';
-      this.formatSeparator = iOpts.formatSeparator ? iOpts.formatSeparator : iOpts.formatSeparator || ',';
-      this.unescapePrefix = iOpts.unescapeSuffix ? '' : iOpts.unescapePrefix || '-';
-      this.unescapeSuffix = this.unescapePrefix ? '' : iOpts.unescapeSuffix || '';
-      this.nestingPrefix = iOpts.nestingPrefix ? regexEscape(iOpts.nestingPrefix) : iOpts.nestingPrefixEscaped || regexEscape('$t(');
-      this.nestingSuffix = iOpts.nestingSuffix ? regexEscape(iOpts.nestingSuffix) : iOpts.nestingSuffixEscaped || regexEscape(')');
-      this.nestingOptionsSeparator = iOpts.nestingOptionsSeparator ? iOpts.nestingOptionsSeparator : iOpts.nestingOptionsSeparator || ',';
-      this.maxReplaces = iOpts.maxReplaces ? iOpts.maxReplaces : 1000;
-      this.alwaysFormat = iOpts.alwaysFormat !== undefined ? iOpts.alwaysFormat : false;
-      this.resetRegExp();
-    }
-  }, {
-    key: "reset",
-    value: function reset() {
-      if (this.options) this.init(this.options);
-    }
-  }, {
-    key: "resetRegExp",
-    value: function resetRegExp() {
-      var regexpStr = "".concat(this.prefix, "(.+?)").concat(this.suffix);
-      this.regexp = new RegExp(regexpStr, 'g');
-      var regexpUnescapeStr = "".concat(this.prefix).concat(this.unescapePrefix, "(.+?)").concat(this.unescapeSuffix).concat(this.suffix);
-      this.regexpUnescape = new RegExp(regexpUnescapeStr, 'g');
-      var nestingRegexpStr = "".concat(this.nestingPrefix, "(.+?)").concat(this.nestingSuffix);
-      this.nestingRegexp = new RegExp(nestingRegexpStr, 'g');
-    }
-  }, {
-    key: "interpolate",
-    value: function interpolate(str, data, lng, options) {
-      var _this = this;
-      var match;
-      var value;
-      var replaces;
-      var defaultData = this.options && this.options.interpolation && this.options.interpolation.defaultVariables || {};
-      function regexSafe(val) {
-        return val.replace(/\$/g, '$$$$');
-      }
-      var handleFormat = function handleFormat(key) {
-        if (key.indexOf(_this.formatSeparator) < 0) {
-          var path = deepFindWithDefaults(data, defaultData, key, _this.options.keySeparator, _this.options.ignoreJSONStructure);
-          return _this.alwaysFormat ? _this.format(path, undefined, lng, _objectSpread$3(_objectSpread$3(_objectSpread$3({}, options), data), {}, {
-            interpolationkey: key
-          })) : path;
-        }
-        var p = key.split(_this.formatSeparator);
-        var k = p.shift().trim();
-        var f = p.join(_this.formatSeparator).trim();
-        return _this.format(deepFindWithDefaults(data, defaultData, k, _this.options.keySeparator, _this.options.ignoreJSONStructure), f, lng, _objectSpread$3(_objectSpread$3(_objectSpread$3({}, options), data), {}, {
-          interpolationkey: k
-        }));
-      };
-      this.resetRegExp();
-      var missingInterpolationHandler = options && options.missingInterpolationHandler || this.options.missingInterpolationHandler;
-      var skipOnVariables = options && options.interpolation && options.interpolation.skipOnVariables !== undefined ? options.interpolation.skipOnVariables : this.options.interpolation.skipOnVariables;
-      var todos = [{
-        regex: this.regexpUnescape,
-        safeValue: function safeValue(val) {
-          return regexSafe(val);
-        }
-      }, {
-        regex: this.regexp,
-        safeValue: function safeValue(val) {
-          return _this.escapeValue ? regexSafe(_this.escape(val)) : regexSafe(val);
-        }
-      }];
-      todos.forEach(function (todo) {
-        replaces = 0;
-        while (match = todo.regex.exec(str)) {
-          var matchedVar = match[1].trim();
-          value = handleFormat(matchedVar);
-          if (value === undefined) {
-            if (typeof missingInterpolationHandler === 'function') {
-              var temp = missingInterpolationHandler(str, match, options);
-              value = typeof temp === 'string' ? temp : '';
-            } else if (options && Object.prototype.hasOwnProperty.call(options, matchedVar)) {
-              value = '';
-            } else if (skipOnVariables) {
-              value = match[0];
-              continue;
-            } else {
-              _this.logger.warn("missed to pass in variable ".concat(matchedVar, " for interpolating ").concat(str));
-              value = '';
-            }
-          } else if (typeof value !== 'string' && !_this.useRawValueToEscape) {
-            value = makeString(value);
-          }
-          var safeValue = todo.safeValue(value);
-          str = str.replace(match[0], safeValue);
-          if (skipOnVariables) {
-            todo.regex.lastIndex += value.length;
-            todo.regex.lastIndex -= match[0].length;
-          } else {
-            todo.regex.lastIndex = 0;
-          }
-          replaces++;
-          if (replaces >= _this.maxReplaces) {
-            break;
-          }
-        }
-      });
-      return str;
-    }
-  }, {
-    key: "nest",
-    value: function nest(str, fc) {
-      var _this2 = this;
-      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-      var match;
-      var value;
-      var clonedOptions;
-      function handleHasOptions(key, inheritedOptions) {
-        var sep = this.nestingOptionsSeparator;
-        if (key.indexOf(sep) < 0) return key;
-        var c = key.split(new RegExp("".concat(sep, "[ ]*{")));
-        var optionsString = "{".concat(c[1]);
-        key = c[0];
-        optionsString = this.interpolate(optionsString, clonedOptions);
-        var matchedSingleQuotes = optionsString.match(/'/g);
-        var matchedDoubleQuotes = optionsString.match(/"/g);
-        if (matchedSingleQuotes && matchedSingleQuotes.length % 2 === 0 && !matchedDoubleQuotes || matchedDoubleQuotes.length % 2 !== 0) {
-          optionsString = optionsString.replace(/'/g, '"');
-        }
-        try {
-          clonedOptions = JSON.parse(optionsString);
-          if (inheritedOptions) clonedOptions = _objectSpread$3(_objectSpread$3({}, inheritedOptions), clonedOptions);
-        } catch (e) {
-          this.logger.warn("failed parsing options string in nesting for key ".concat(key), e);
-          return "".concat(key).concat(sep).concat(optionsString);
-        }
-        delete clonedOptions.defaultValue;
-        return key;
-      }
-      while (match = this.nestingRegexp.exec(str)) {
-        var formatters = [];
-        clonedOptions = _objectSpread$3({}, options);
-        clonedOptions = clonedOptions.replace && typeof clonedOptions.replace !== 'string' ? clonedOptions.replace : clonedOptions;
-        clonedOptions.applyPostProcessor = false;
-        delete clonedOptions.defaultValue;
-        var doReduce = false;
-        if (match[0].indexOf(this.formatSeparator) !== -1 && !/{.*}/.test(match[1])) {
-          var r = match[1].split(this.formatSeparator).map(function (elem) {
-            return elem.trim();
-          });
-          match[1] = r.shift();
-          formatters = r;
-          doReduce = true;
-        }
-        value = fc(handleHasOptions.call(this, match[1].trim(), clonedOptions), clonedOptions);
-        if (value && match[0] === str && typeof value !== 'string') return value;
-        if (typeof value !== 'string') value = makeString(value);
-        if (!value) {
-          this.logger.warn("missed to resolve ".concat(match[1], " for nesting ").concat(str));
-          value = '';
-        }
-        if (doReduce) {
-          value = formatters.reduce(function (v, f) {
-            return _this2.format(v, f, options.lng, _objectSpread$3(_objectSpread$3({}, options), {}, {
-              interpolationkey: match[1].trim()
-            }));
-          }, value.trim());
-        }
-        str = str.replace(match[0], value);
-        this.regexp.lastIndex = 0;
-      }
-      return str;
-    }
-  }]);
-  return Interpolator;
-}();
-
-function ownKeys$2(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread$2(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$2(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$2(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-function parseFormatStr(formatStr) {
-  var formatName = formatStr.toLowerCase().trim();
-  var formatOptions = {};
-  if (formatStr.indexOf('(') > -1) {
-    var p = formatStr.split('(');
-    formatName = p[0].toLowerCase().trim();
-    var optStr = p[1].substring(0, p[1].length - 1);
-    if (formatName === 'currency' && optStr.indexOf(':') < 0) {
-      if (!formatOptions.currency) formatOptions.currency = optStr.trim();
-    } else if (formatName === 'relativetime' && optStr.indexOf(':') < 0) {
-      if (!formatOptions.range) formatOptions.range = optStr.trim();
-    } else {
-      var opts = optStr.split(';');
-      opts.forEach(function (opt) {
-        if (!opt) return;
-        var _opt$split = opt.split(':'),
-          _opt$split2 = (0,_babel_runtime_helpers_esm_toArray__WEBPACK_IMPORTED_MODULE_8__["default"])(_opt$split),
-          key = _opt$split2[0],
-          rest = _opt$split2.slice(1);
-        var val = rest.join(':').trim().replace(/^'+|'+$/g, '');
-        if (!formatOptions[key.trim()]) formatOptions[key.trim()] = val;
-        if (val === 'false') formatOptions[key.trim()] = false;
-        if (val === 'true') formatOptions[key.trim()] = true;
-        if (!isNaN(val)) formatOptions[key.trim()] = parseInt(val, 10);
-      });
-    }
-  }
-  return {
-    formatName: formatName,
-    formatOptions: formatOptions
-  };
-}
-function createCachedFormatter(fn) {
-  var cache = {};
-  return function invokeFormatter(val, lng, options) {
-    var key = lng + JSON.stringify(options);
-    var formatter = cache[key];
-    if (!formatter) {
-      formatter = fn(lng, options);
-      cache[key] = formatter;
-    }
-    return formatter(val);
-  };
-}
-var Formatter = function () {
-  function Formatter() {
-    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    (0,_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, Formatter);
-    this.logger = baseLogger.create('formatter');
-    this.options = options;
-    this.formats = {
-      number: createCachedFormatter(function (lng, opt) {
-        var formatter = new Intl.NumberFormat(lng, _objectSpread$2({}, opt));
-        return function (val) {
-          return formatter.format(val);
-        };
-      }),
-      currency: createCachedFormatter(function (lng, opt) {
-        var formatter = new Intl.NumberFormat(lng, _objectSpread$2(_objectSpread$2({}, opt), {}, {
-          style: 'currency'
-        }));
-        return function (val) {
-          return formatter.format(val);
-        };
-      }),
-      datetime: createCachedFormatter(function (lng, opt) {
-        var formatter = new Intl.DateTimeFormat(lng, _objectSpread$2({}, opt));
-        return function (val) {
-          return formatter.format(val);
-        };
-      }),
-      relativetime: createCachedFormatter(function (lng, opt) {
-        var formatter = new Intl.RelativeTimeFormat(lng, _objectSpread$2({}, opt));
-        return function (val) {
-          return formatter.format(val, opt.range || 'day');
-        };
-      }),
-      list: createCachedFormatter(function (lng, opt) {
-        var formatter = new Intl.ListFormat(lng, _objectSpread$2({}, opt));
-        return function (val) {
-          return formatter.format(val);
-        };
-      })
-    };
-    this.init(options);
-  }
-  (0,_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(Formatter, [{
-    key: "init",
-    value: function init(services) {
-      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
-        interpolation: {}
-      };
-      var iOpts = options.interpolation;
-      this.formatSeparator = iOpts.formatSeparator ? iOpts.formatSeparator : iOpts.formatSeparator || ',';
-    }
-  }, {
-    key: "add",
-    value: function add(name, fc) {
-      this.formats[name.toLowerCase().trim()] = fc;
-    }
-  }, {
-    key: "addCached",
-    value: function addCached(name, fc) {
-      this.formats[name.toLowerCase().trim()] = createCachedFormatter(fc);
-    }
-  }, {
-    key: "format",
-    value: function format(value, _format, lng) {
-      var _this = this;
-      var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-      var formats = _format.split(this.formatSeparator);
-      var result = formats.reduce(function (mem, f) {
-        var _parseFormatStr = parseFormatStr(f),
-          formatName = _parseFormatStr.formatName,
-          formatOptions = _parseFormatStr.formatOptions;
-        if (_this.formats[formatName]) {
-          var formatted = mem;
-          try {
-            var valOptions = options && options.formatParams && options.formatParams[options.interpolationkey] || {};
-            var l = valOptions.locale || valOptions.lng || options.locale || options.lng || lng;
-            formatted = _this.formats[formatName](mem, l, _objectSpread$2(_objectSpread$2(_objectSpread$2({}, formatOptions), options), valOptions));
-          } catch (error) {
-            _this.logger.warn(error);
-          }
-          return formatted;
-        } else {
-          _this.logger.warn("there was no format function for ".concat(formatName));
-        }
-        return mem;
-      }, value);
-      return result;
-    }
-  }]);
-  return Formatter;
-}();
-
-function ownKeys$1(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread$1(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$1(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$1(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-function _createSuper$1(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$1(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5__["default"])(this, result); }; }
-function _isNativeReflectConstruct$1() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-function removePending(q, name) {
-  if (q.pending[name] !== undefined) {
-    delete q.pending[name];
-    q.pendingCount--;
-  }
-}
-var Connector = function (_EventEmitter) {
-  (0,_babel_runtime_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(Connector, _EventEmitter);
-  var _super = _createSuper$1(Connector);
-  function Connector(backend, store, services) {
-    var _this;
-    var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-    (0,_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, Connector);
-    _this = _super.call(this);
-    if (isIE10) {
-      EventEmitter.call((0,_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
-    }
-    _this.backend = backend;
-    _this.store = store;
-    _this.services = services;
-    _this.languageUtils = services.languageUtils;
-    _this.options = options;
-    _this.logger = baseLogger.create('backendConnector');
-    _this.waitingReads = [];
-    _this.maxParallelReads = options.maxParallelReads || 10;
-    _this.readingCalls = 0;
-    _this.maxRetries = options.maxRetries >= 0 ? options.maxRetries : 5;
-    _this.retryTimeout = options.retryTimeout >= 1 ? options.retryTimeout : 350;
-    _this.state = {};
-    _this.queue = [];
-    if (_this.backend && _this.backend.init) {
-      _this.backend.init(services, options.backend, options);
-    }
-    return _this;
-  }
-  (0,_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(Connector, [{
-    key: "queueLoad",
-    value: function queueLoad(languages, namespaces, options, callback) {
-      var _this2 = this;
-      var toLoad = {};
-      var pending = {};
-      var toLoadLanguages = {};
-      var toLoadNamespaces = {};
-      languages.forEach(function (lng) {
-        var hasAllNamespaces = true;
-        namespaces.forEach(function (ns) {
-          var name = "".concat(lng, "|").concat(ns);
-          if (!options.reload && _this2.store.hasResourceBundle(lng, ns)) {
-            _this2.state[name] = 2;
-          } else if (_this2.state[name] < 0) ; else if (_this2.state[name] === 1) {
-            if (pending[name] === undefined) pending[name] = true;
-          } else {
-            _this2.state[name] = 1;
-            hasAllNamespaces = false;
-            if (pending[name] === undefined) pending[name] = true;
-            if (toLoad[name] === undefined) toLoad[name] = true;
-            if (toLoadNamespaces[ns] === undefined) toLoadNamespaces[ns] = true;
-          }
-        });
-        if (!hasAllNamespaces) toLoadLanguages[lng] = true;
-      });
-      if (Object.keys(toLoad).length || Object.keys(pending).length) {
-        this.queue.push({
-          pending: pending,
-          pendingCount: Object.keys(pending).length,
-          loaded: {},
-          errors: [],
-          callback: callback
-        });
-      }
-      return {
-        toLoad: Object.keys(toLoad),
-        pending: Object.keys(pending),
-        toLoadLanguages: Object.keys(toLoadLanguages),
-        toLoadNamespaces: Object.keys(toLoadNamespaces)
-      };
-    }
-  }, {
-    key: "loaded",
-    value: function loaded(name, err, data) {
-      var s = name.split('|');
-      var lng = s[0];
-      var ns = s[1];
-      if (err) this.emit('failedLoading', lng, ns, err);
-      if (data) {
-        this.store.addResourceBundle(lng, ns, data);
-      }
-      this.state[name] = err ? -1 : 2;
-      var loaded = {};
-      this.queue.forEach(function (q) {
-        pushPath(q.loaded, [lng], ns);
-        removePending(q, name);
-        if (err) q.errors.push(err);
-        if (q.pendingCount === 0 && !q.done) {
-          Object.keys(q.loaded).forEach(function (l) {
-            if (!loaded[l]) loaded[l] = {};
-            var loadedKeys = q.loaded[l];
-            if (loadedKeys.length) {
-              loadedKeys.forEach(function (n) {
-                if (loaded[l][n] === undefined) loaded[l][n] = true;
-              });
-            }
-          });
-          q.done = true;
-          if (q.errors.length) {
-            q.callback(q.errors);
-          } else {
-            q.callback();
-          }
-        }
-      });
-      this.emit('loaded', loaded);
-      this.queue = this.queue.filter(function (q) {
-        return !q.done;
-      });
-    }
-  }, {
-    key: "read",
-    value: function read(lng, ns, fcName) {
-      var _this3 = this;
-      var tried = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
-      var wait = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : this.retryTimeout;
-      var callback = arguments.length > 5 ? arguments[5] : undefined;
-      if (!lng.length) return callback(null, {});
-      if (this.readingCalls >= this.maxParallelReads) {
-        this.waitingReads.push({
-          lng: lng,
-          ns: ns,
-          fcName: fcName,
-          tried: tried,
-          wait: wait,
-          callback: callback
-        });
-        return;
-      }
-      this.readingCalls++;
-      var resolver = function resolver(err, data) {
-        _this3.readingCalls--;
-        if (_this3.waitingReads.length > 0) {
-          var next = _this3.waitingReads.shift();
-          _this3.read(next.lng, next.ns, next.fcName, next.tried, next.wait, next.callback);
-        }
-        if (err && data && tried < _this3.maxRetries) {
-          setTimeout(function () {
-            _this3.read.call(_this3, lng, ns, fcName, tried + 1, wait * 2, callback);
-          }, wait);
-          return;
-        }
-        callback(err, data);
-      };
-      var fc = this.backend[fcName].bind(this.backend);
-      if (fc.length === 2) {
-        try {
-          var r = fc(lng, ns);
-          if (r && typeof r.then === 'function') {
-            r.then(function (data) {
-              return resolver(null, data);
-            })["catch"](resolver);
-          } else {
-            resolver(null, r);
-          }
-        } catch (err) {
-          resolver(err);
-        }
-        return;
-      }
-      return fc(lng, ns, resolver);
-    }
-  }, {
-    key: "prepareLoading",
-    value: function prepareLoading(languages, namespaces) {
-      var _this4 = this;
-      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-      var callback = arguments.length > 3 ? arguments[3] : undefined;
-      if (!this.backend) {
-        this.logger.warn('No backend was added via i18next.use. Will not load resources.');
-        return callback && callback();
-      }
-      if (typeof languages === 'string') languages = this.languageUtils.toResolveHierarchy(languages);
-      if (typeof namespaces === 'string') namespaces = [namespaces];
-      var toLoad = this.queueLoad(languages, namespaces, options, callback);
-      if (!toLoad.toLoad.length) {
-        if (!toLoad.pending.length) callback();
-        return null;
-      }
-      toLoad.toLoad.forEach(function (name) {
-        _this4.loadOne(name);
-      });
-    }
-  }, {
-    key: "load",
-    value: function load(languages, namespaces, callback) {
-      this.prepareLoading(languages, namespaces, {}, callback);
-    }
-  }, {
-    key: "reload",
-    value: function reload(languages, namespaces, callback) {
-      this.prepareLoading(languages, namespaces, {
-        reload: true
-      }, callback);
-    }
-  }, {
-    key: "loadOne",
-    value: function loadOne(name) {
-      var _this5 = this;
-      var prefix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-      var s = name.split('|');
-      var lng = s[0];
-      var ns = s[1];
-      this.read(lng, ns, 'read', undefined, undefined, function (err, data) {
-        if (err) _this5.logger.warn("".concat(prefix, "loading namespace ").concat(ns, " for language ").concat(lng, " failed"), err);
-        if (!err && data) _this5.logger.log("".concat(prefix, "loaded namespace ").concat(ns, " for language ").concat(lng), data);
-        _this5.loaded(name, err, data);
-      });
-    }
-  }, {
-    key: "saveMissing",
-    value: function saveMissing(languages, namespace, key, fallbackValue, isUpdate) {
-      var options = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
-      var clb = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : function () {};
-      if (this.services.utils && this.services.utils.hasLoadedNamespace && !this.services.utils.hasLoadedNamespace(namespace)) {
-        this.logger.warn("did not save key \"".concat(key, "\" as the namespace \"").concat(namespace, "\" was not yet loaded"), 'This means something IS WRONG in your setup. You access the t function before i18next.init / i18next.loadNamespace / i18next.changeLanguage was done. Wait for the callback or Promise to resolve before accessing it!!!');
-        return;
-      }
-      if (key === undefined || key === null || key === '') return;
-      if (this.backend && this.backend.create) {
-        var opts = _objectSpread$1(_objectSpread$1({}, options), {}, {
-          isUpdate: isUpdate
-        });
-        var fc = this.backend.create.bind(this.backend);
-        if (fc.length < 6) {
-          try {
-            var r;
-            if (fc.length === 5) {
-              r = fc(languages, namespace, key, fallbackValue, opts);
-            } else {
-              r = fc(languages, namespace, key, fallbackValue);
-            }
-            if (r && typeof r.then === 'function') {
-              r.then(function (data) {
-                return clb(null, data);
-              })["catch"](clb);
-            } else {
-              clb(null, r);
-            }
-          } catch (err) {
-            clb(err);
-          }
-        } else {
-          fc(languages, namespace, key, fallbackValue, clb, opts);
-        }
-      }
-      if (!languages || !languages[0]) return;
-      this.store.addResource(languages[0], namespace, key, fallbackValue);
-    }
-  }]);
-  return Connector;
-}(EventEmitter);
-
-function get() {
-  return {
-    debug: false,
-    initImmediate: true,
-    ns: ['translation'],
-    defaultNS: ['translation'],
-    fallbackLng: ['dev'],
-    fallbackNS: false,
-    supportedLngs: false,
-    nonExplicitSupportedLngs: false,
-    load: 'all',
-    preload: false,
-    simplifyPluralSuffix: true,
-    keySeparator: '.',
-    nsSeparator: ':',
-    pluralSeparator: '_',
-    contextSeparator: '_',
-    partialBundledLanguages: false,
-    saveMissing: false,
-    updateMissing: false,
-    saveMissingTo: 'fallback',
-    saveMissingPlurals: true,
-    missingKeyHandler: false,
-    missingInterpolationHandler: false,
-    postProcess: false,
-    postProcessPassResolved: false,
-    returnNull: true,
-    returnEmptyString: true,
-    returnObjects: false,
-    joinArrays: false,
-    returnedObjectHandler: false,
-    parseMissingKeyHandler: false,
-    appendNamespaceToMissingKey: false,
-    appendNamespaceToCIMode: false,
-    overloadTranslationOptionHandler: function handle(args) {
-      var ret = {};
-      if ((0,_babel_runtime_helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_0__["default"])(args[1]) === 'object') ret = args[1];
-      if (typeof args[1] === 'string') ret.defaultValue = args[1];
-      if (typeof args[2] === 'string') ret.tDescription = args[2];
-      if ((0,_babel_runtime_helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_0__["default"])(args[2]) === 'object' || (0,_babel_runtime_helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_0__["default"])(args[3]) === 'object') {
-        var options = args[3] || args[2];
-        Object.keys(options).forEach(function (key) {
-          ret[key] = options[key];
-        });
-      }
-      return ret;
-    },
-    interpolation: {
-      escapeValue: true,
-      format: function format(value, _format, lng, options) {
-        return value;
-      },
-      prefix: '{{',
-      suffix: '}}',
-      formatSeparator: ',',
-      unescapePrefix: '-',
-      nestingPrefix: '$t(',
-      nestingSuffix: ')',
-      nestingOptionsSeparator: ',',
-      maxReplaces: 1000,
-      skipOnVariables: true
-    }
-  };
-}
-function transformOptions(options) {
-  if (typeof options.ns === 'string') options.ns = [options.ns];
-  if (typeof options.fallbackLng === 'string') options.fallbackLng = [options.fallbackLng];
-  if (typeof options.fallbackNS === 'string') options.fallbackNS = [options.fallbackNS];
-  if (options.supportedLngs && options.supportedLngs.indexOf('cimode') < 0) {
-    options.supportedLngs = options.supportedLngs.concat(['cimode']);
-  }
-  return options;
-}
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5__["default"])(this, result); }; }
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-function noop() {}
-function bindMemberFunctions(inst) {
-  var mems = Object.getOwnPropertyNames(Object.getPrototypeOf(inst));
-  mems.forEach(function (mem) {
-    if (typeof inst[mem] === 'function') {
-      inst[mem] = inst[mem].bind(inst);
-    }
-  });
-}
-var I18n = function (_EventEmitter) {
-  (0,_babel_runtime_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(I18n, _EventEmitter);
-  var _super = _createSuper(I18n);
-  function I18n() {
-    var _this;
-    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    var callback = arguments.length > 1 ? arguments[1] : undefined;
-    (0,_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, I18n);
-    _this = _super.call(this);
-    if (isIE10) {
-      EventEmitter.call((0,_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
-    }
-    _this.options = transformOptions(options);
-    _this.services = {};
-    _this.logger = baseLogger;
-    _this.modules = {
-      external: []
-    };
-    bindMemberFunctions((0,_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
-    if (callback && !_this.isInitialized && !options.isClone) {
-      if (!_this.options.initImmediate) {
-        _this.init(options, callback);
-        return (0,_babel_runtime_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5__["default"])(_this, (0,_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
-      }
-      setTimeout(function () {
-        _this.init(options, callback);
-      }, 0);
-    }
-    return _this;
-  }
-  (0,_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(I18n, [{
-    key: "init",
-    value: function init() {
-      var _this2 = this;
-      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      var callback = arguments.length > 1 ? arguments[1] : undefined;
-      if (typeof options === 'function') {
-        callback = options;
-        options = {};
-      }
-      if (!options.defaultNS && options.defaultNS !== false && options.ns) {
-        if (typeof options.ns === 'string') {
-          options.defaultNS = options.ns;
-        } else if (options.ns.indexOf('translation') < 0) {
-          options.defaultNS = options.ns[0];
-        }
-      }
-      var defOpts = get();
-      this.options = _objectSpread(_objectSpread(_objectSpread({}, defOpts), this.options), transformOptions(options));
-      if (this.options.compatibilityAPI !== 'v1') {
-        this.options.interpolation = _objectSpread(_objectSpread({}, defOpts.interpolation), this.options.interpolation);
-      }
-      if (options.keySeparator !== undefined) {
-        this.options.userDefinedKeySeparator = options.keySeparator;
-      }
-      if (options.nsSeparator !== undefined) {
-        this.options.userDefinedNsSeparator = options.nsSeparator;
-      }
-      function createClassOnDemand(ClassOrObject) {
-        if (!ClassOrObject) return null;
-        if (typeof ClassOrObject === 'function') return new ClassOrObject();
-        return ClassOrObject;
-      }
-      if (!this.options.isClone) {
-        if (this.modules.logger) {
-          baseLogger.init(createClassOnDemand(this.modules.logger), this.options);
-        } else {
-          baseLogger.init(null, this.options);
-        }
-        var formatter;
-        if (this.modules.formatter) {
-          formatter = this.modules.formatter;
-        } else if (typeof Intl !== 'undefined') {
-          formatter = Formatter;
-        }
-        var lu = new LanguageUtil(this.options);
-        this.store = new ResourceStore(this.options.resources, this.options);
-        var s = this.services;
-        s.logger = baseLogger;
-        s.resourceStore = this.store;
-        s.languageUtils = lu;
-        s.pluralResolver = new PluralResolver(lu, {
-          prepend: this.options.pluralSeparator,
-          compatibilityJSON: this.options.compatibilityJSON,
-          simplifyPluralSuffix: this.options.simplifyPluralSuffix
-        });
-        if (formatter && (!this.options.interpolation.format || this.options.interpolation.format === defOpts.interpolation.format)) {
-          s.formatter = createClassOnDemand(formatter);
-          s.formatter.init(s, this.options);
-          this.options.interpolation.format = s.formatter.format.bind(s.formatter);
-        }
-        s.interpolator = new Interpolator(this.options);
-        s.utils = {
-          hasLoadedNamespace: this.hasLoadedNamespace.bind(this)
-        };
-        s.backendConnector = new Connector(createClassOnDemand(this.modules.backend), s.resourceStore, s, this.options);
-        s.backendConnector.on('*', function (event) {
-          for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-            args[_key - 1] = arguments[_key];
-          }
-          _this2.emit.apply(_this2, [event].concat(args));
-        });
-        if (this.modules.languageDetector) {
-          s.languageDetector = createClassOnDemand(this.modules.languageDetector);
-          if (s.languageDetector.init) s.languageDetector.init(s, this.options.detection, this.options);
-        }
-        if (this.modules.i18nFormat) {
-          s.i18nFormat = createClassOnDemand(this.modules.i18nFormat);
-          if (s.i18nFormat.init) s.i18nFormat.init(this);
-        }
-        this.translator = new Translator(this.services, this.options);
-        this.translator.on('*', function (event) {
-          for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-            args[_key2 - 1] = arguments[_key2];
-          }
-          _this2.emit.apply(_this2, [event].concat(args));
-        });
-        this.modules.external.forEach(function (m) {
-          if (m.init) m.init(_this2);
-        });
-      }
-      this.format = this.options.interpolation.format;
-      if (!callback) callback = noop;
-      if (this.options.fallbackLng && !this.services.languageDetector && !this.options.lng) {
-        var codes = this.services.languageUtils.getFallbackCodes(this.options.fallbackLng);
-        if (codes.length > 0 && codes[0] !== 'dev') this.options.lng = codes[0];
-      }
-      if (!this.services.languageDetector && !this.options.lng) {
-        this.logger.warn('init: no languageDetector is used and no lng is defined');
-      }
-      var storeApi = ['getResource', 'hasResourceBundle', 'getResourceBundle', 'getDataByLanguage'];
-      storeApi.forEach(function (fcName) {
-        _this2[fcName] = function () {
-          var _this2$store;
-          return (_this2$store = _this2.store)[fcName].apply(_this2$store, arguments);
-        };
-      });
-      var storeApiChained = ['addResource', 'addResources', 'addResourceBundle', 'removeResourceBundle'];
-      storeApiChained.forEach(function (fcName) {
-        _this2[fcName] = function () {
-          var _this2$store2;
-          (_this2$store2 = _this2.store)[fcName].apply(_this2$store2, arguments);
-          return _this2;
-        };
-      });
-      var deferred = defer();
-      var load = function load() {
-        var finish = function finish(err, t) {
-          if (_this2.isInitialized && !_this2.initializedStoreOnce) _this2.logger.warn('init: i18next is already initialized. You should call init just once!');
-          _this2.isInitialized = true;
-          if (!_this2.options.isClone) _this2.logger.log('initialized', _this2.options);
-          _this2.emit('initialized', _this2.options);
-          deferred.resolve(t);
-          callback(err, t);
-        };
-        if (_this2.languages && _this2.options.compatibilityAPI !== 'v1' && !_this2.isInitialized) return finish(null, _this2.t.bind(_this2));
-        _this2.changeLanguage(_this2.options.lng, finish);
-      };
-      if (this.options.resources || !this.options.initImmediate) {
-        load();
-      } else {
-        setTimeout(load, 0);
-      }
-      return deferred;
-    }
-  }, {
-    key: "loadResources",
-    value: function loadResources(language) {
-      var _this3 = this;
-      var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop;
-      var usedCallback = callback;
-      var usedLng = typeof language === 'string' ? language : this.language;
-      if (typeof language === 'function') usedCallback = language;
-      if (!this.options.resources || this.options.partialBundledLanguages) {
-        if (usedLng && usedLng.toLowerCase() === 'cimode') return usedCallback();
-        var toLoad = [];
-        var append = function append(lng) {
-          if (!lng) return;
-          var lngs = _this3.services.languageUtils.toResolveHierarchy(lng);
-          lngs.forEach(function (l) {
-            if (toLoad.indexOf(l) < 0) toLoad.push(l);
-          });
-        };
-        if (!usedLng) {
-          var fallbacks = this.services.languageUtils.getFallbackCodes(this.options.fallbackLng);
-          fallbacks.forEach(function (l) {
-            return append(l);
-          });
-        } else {
-          append(usedLng);
-        }
-        if (this.options.preload) {
-          this.options.preload.forEach(function (l) {
-            return append(l);
-          });
-        }
-        this.services.backendConnector.load(toLoad, this.options.ns, function (e) {
-          if (!e && !_this3.resolvedLanguage && _this3.language) _this3.setResolvedLanguage(_this3.language);
-          usedCallback(e);
-        });
-      } else {
-        usedCallback(null);
-      }
-    }
-  }, {
-    key: "reloadResources",
-    value: function reloadResources(lngs, ns, callback) {
-      var deferred = defer();
-      if (!lngs) lngs = this.languages;
-      if (!ns) ns = this.options.ns;
-      if (!callback) callback = noop;
-      this.services.backendConnector.reload(lngs, ns, function (err) {
-        deferred.resolve();
-        callback(err);
-      });
-      return deferred;
-    }
-  }, {
-    key: "use",
-    value: function use(module) {
-      if (!module) throw new Error('You are passing an undefined module! Please check the object you are passing to i18next.use()');
-      if (!module.type) throw new Error('You are passing a wrong module! Please check the object you are passing to i18next.use()');
-      if (module.type === 'backend') {
-        this.modules.backend = module;
-      }
-      if (module.type === 'logger' || module.log && module.warn && module.error) {
-        this.modules.logger = module;
-      }
-      if (module.type === 'languageDetector') {
-        this.modules.languageDetector = module;
-      }
-      if (module.type === 'i18nFormat') {
-        this.modules.i18nFormat = module;
-      }
-      if (module.type === 'postProcessor') {
-        postProcessor.addPostProcessor(module);
-      }
-      if (module.type === 'formatter') {
-        this.modules.formatter = module;
-      }
-      if (module.type === '3rdParty') {
-        this.modules.external.push(module);
-      }
-      return this;
-    }
-  }, {
-    key: "setResolvedLanguage",
-    value: function setResolvedLanguage(l) {
-      if (!l || !this.languages) return;
-      if (['cimode', 'dev'].indexOf(l) > -1) return;
-      for (var li = 0; li < this.languages.length; li++) {
-        var lngInLngs = this.languages[li];
-        if (['cimode', 'dev'].indexOf(lngInLngs) > -1) continue;
-        if (this.store.hasLanguageSomeTranslations(lngInLngs)) {
-          this.resolvedLanguage = lngInLngs;
-          break;
-        }
-      }
-    }
-  }, {
-    key: "changeLanguage",
-    value: function changeLanguage(lng, callback) {
-      var _this4 = this;
-      this.isLanguageChangingTo = lng;
-      var deferred = defer();
-      this.emit('languageChanging', lng);
-      var setLngProps = function setLngProps(l) {
-        _this4.language = l;
-        _this4.languages = _this4.services.languageUtils.toResolveHierarchy(l);
-        _this4.resolvedLanguage = undefined;
-        _this4.setResolvedLanguage(l);
-      };
-      var done = function done(err, l) {
-        if (l) {
-          setLngProps(l);
-          _this4.translator.changeLanguage(l);
-          _this4.isLanguageChangingTo = undefined;
-          _this4.emit('languageChanged', l);
-          _this4.logger.log('languageChanged', l);
-        } else {
-          _this4.isLanguageChangingTo = undefined;
-        }
-        deferred.resolve(function () {
-          return _this4.t.apply(_this4, arguments);
-        });
-        if (callback) callback(err, function () {
-          return _this4.t.apply(_this4, arguments);
-        });
-      };
-      var setLng = function setLng(lngs) {
-        if (!lng && !lngs && _this4.services.languageDetector) lngs = [];
-        var l = typeof lngs === 'string' ? lngs : _this4.services.languageUtils.getBestMatchFromCodes(lngs);
-        if (l) {
-          if (!_this4.language) {
-            setLngProps(l);
-          }
-          if (!_this4.translator.language) _this4.translator.changeLanguage(l);
-          if (_this4.services.languageDetector && _this4.services.languageDetector.cacheUserLanguage) _this4.services.languageDetector.cacheUserLanguage(l);
-        }
-        _this4.loadResources(l, function (err) {
-          done(err, l);
-        });
-      };
-      if (!lng && this.services.languageDetector && !this.services.languageDetector.async) {
-        setLng(this.services.languageDetector.detect());
-      } else if (!lng && this.services.languageDetector && this.services.languageDetector.async) {
-        if (this.services.languageDetector.detect.length === 0) {
-          this.services.languageDetector.detect().then(setLng);
-        } else {
-          this.services.languageDetector.detect(setLng);
-        }
-      } else {
-        setLng(lng);
-      }
-      return deferred;
-    }
-  }, {
-    key: "getFixedT",
-    value: function getFixedT(lng, ns, keyPrefix) {
-      var _this5 = this;
-      var fixedT = function fixedT(key, opts) {
-        var options;
-        if ((0,_babel_runtime_helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_0__["default"])(opts) !== 'object') {
-          for (var _len3 = arguments.length, rest = new Array(_len3 > 2 ? _len3 - 2 : 0), _key3 = 2; _key3 < _len3; _key3++) {
-            rest[_key3 - 2] = arguments[_key3];
-          }
-          options = _this5.options.overloadTranslationOptionHandler([key, opts].concat(rest));
-        } else {
-          options = _objectSpread({}, opts);
-        }
-        options.lng = options.lng || fixedT.lng;
-        options.lngs = options.lngs || fixedT.lngs;
-        options.ns = options.ns || fixedT.ns;
-        options.keyPrefix = options.keyPrefix || keyPrefix || fixedT.keyPrefix;
-        var keySeparator = _this5.options.keySeparator || '.';
-        var resultKey;
-        if (options.keyPrefix && Array.isArray(key)) {
-          resultKey = key.map(function (k) {
-            return "".concat(options.keyPrefix).concat(keySeparator).concat(k);
-          });
-        } else {
-          resultKey = options.keyPrefix ? "".concat(options.keyPrefix).concat(keySeparator).concat(key) : key;
-        }
-        return _this5.t(resultKey, options);
-      };
-      if (typeof lng === 'string') {
-        fixedT.lng = lng;
-      } else {
-        fixedT.lngs = lng;
-      }
-      fixedT.ns = ns;
-      fixedT.keyPrefix = keyPrefix;
-      return fixedT;
-    }
-  }, {
-    key: "t",
-    value: function t() {
-      var _this$translator;
-      return this.translator && (_this$translator = this.translator).translate.apply(_this$translator, arguments);
-    }
-  }, {
-    key: "exists",
-    value: function exists() {
-      var _this$translator2;
-      return this.translator && (_this$translator2 = this.translator).exists.apply(_this$translator2, arguments);
-    }
-  }, {
-    key: "setDefaultNamespace",
-    value: function setDefaultNamespace(ns) {
-      this.options.defaultNS = ns;
-    }
-  }, {
-    key: "hasLoadedNamespace",
-    value: function hasLoadedNamespace(ns) {
-      var _this6 = this;
-      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      if (!this.isInitialized) {
-        this.logger.warn('hasLoadedNamespace: i18next was not initialized', this.languages);
-        return false;
-      }
-      if (!this.languages || !this.languages.length) {
-        this.logger.warn('hasLoadedNamespace: i18n.languages were undefined or empty', this.languages);
-        return false;
-      }
-      var lng = options.lng || this.resolvedLanguage || this.languages[0];
-      var fallbackLng = this.options ? this.options.fallbackLng : false;
-      var lastLng = this.languages[this.languages.length - 1];
-      if (lng.toLowerCase() === 'cimode') return true;
-      var loadNotPending = function loadNotPending(l, n) {
-        var loadState = _this6.services.backendConnector.state["".concat(l, "|").concat(n)];
-        return loadState === -1 || loadState === 2;
-      };
-      if (options.precheck) {
-        var preResult = options.precheck(this, loadNotPending);
-        if (preResult !== undefined) return preResult;
-      }
-      if (this.hasResourceBundle(lng, ns)) return true;
-      if (!this.services.backendConnector.backend || this.options.resources && !this.options.partialBundledLanguages) return true;
-      if (loadNotPending(lng, ns) && (!fallbackLng || loadNotPending(lastLng, ns))) return true;
-      return false;
-    }
-  }, {
-    key: "loadNamespaces",
-    value: function loadNamespaces(ns, callback) {
-      var _this7 = this;
-      var deferred = defer();
-      if (!this.options.ns) {
-        if (callback) callback();
-        return Promise.resolve();
-      }
-      if (typeof ns === 'string') ns = [ns];
-      ns.forEach(function (n) {
-        if (_this7.options.ns.indexOf(n) < 0) _this7.options.ns.push(n);
-      });
-      this.loadResources(function (err) {
-        deferred.resolve();
-        if (callback) callback(err);
-      });
-      return deferred;
-    }
-  }, {
-    key: "loadLanguages",
-    value: function loadLanguages(lngs, callback) {
-      var deferred = defer();
-      if (typeof lngs === 'string') lngs = [lngs];
-      var preloaded = this.options.preload || [];
-      var newLngs = lngs.filter(function (lng) {
-        return preloaded.indexOf(lng) < 0;
-      });
-      if (!newLngs.length) {
-        if (callback) callback();
-        return Promise.resolve();
-      }
-      this.options.preload = preloaded.concat(newLngs);
-      this.loadResources(function (err) {
-        deferred.resolve();
-        if (callback) callback(err);
-      });
-      return deferred;
-    }
-  }, {
-    key: "dir",
-    value: function dir(lng) {
-      if (!lng) lng = this.resolvedLanguage || (this.languages && this.languages.length > 0 ? this.languages[0] : this.language);
-      if (!lng) return 'rtl';
-      var rtlLngs = ['ar', 'shu', 'sqr', 'ssh', 'xaa', 'yhd', 'yud', 'aao', 'abh', 'abv', 'acm', 'acq', 'acw', 'acx', 'acy', 'adf', 'ads', 'aeb', 'aec', 'afb', 'ajp', 'apc', 'apd', 'arb', 'arq', 'ars', 'ary', 'arz', 'auz', 'avl', 'ayh', 'ayl', 'ayn', 'ayp', 'bbz', 'pga', 'he', 'iw', 'ps', 'pbt', 'pbu', 'pst', 'prp', 'prd', 'ug', 'ur', 'ydd', 'yds', 'yih', 'ji', 'yi', 'hbo', 'men', 'xmn', 'fa', 'jpr', 'peo', 'pes', 'prs', 'dv', 'sam', 'ckb'];
-      var languageUtils = this.services && this.services.languageUtils || new LanguageUtil(get());
-      return rtlLngs.indexOf(languageUtils.getLanguagePartFromCode(lng)) > -1 || lng.toLowerCase().indexOf('-arab') > 1 ? 'rtl' : 'ltr';
-    }
-  }, {
-    key: "cloneInstance",
-    value: function cloneInstance() {
-      var _this8 = this;
-      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop;
-      var mergedOptions = _objectSpread(_objectSpread(_objectSpread({}, this.options), options), {
-        isClone: true
-      });
-      var clone = new I18n(mergedOptions);
-      if (options.debug !== undefined || options.prefix !== undefined) {
-        clone.logger = clone.logger.clone(options);
-      }
-      var membersToCopy = ['store', 'services', 'language'];
-      membersToCopy.forEach(function (m) {
-        clone[m] = _this8[m];
-      });
-      clone.services = _objectSpread({}, this.services);
-      clone.services.utils = {
-        hasLoadedNamespace: clone.hasLoadedNamespace.bind(clone)
-      };
-      clone.translator = new Translator(clone.services, clone.options);
-      clone.translator.on('*', function (event) {
-        for (var _len4 = arguments.length, args = new Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
-          args[_key4 - 1] = arguments[_key4];
-        }
-        clone.emit.apply(clone, [event].concat(args));
-      });
-      clone.init(mergedOptions, callback);
-      clone.translator.options = clone.options;
-      clone.translator.backendConnector.services.utils = {
-        hasLoadedNamespace: clone.hasLoadedNamespace.bind(clone)
-      };
-      return clone;
-    }
-  }, {
-    key: "toJSON",
-    value: function toJSON() {
-      return {
-        options: this.options,
-        store: this.store,
-        language: this.language,
-        languages: this.languages,
-        resolvedLanguage: this.resolvedLanguage
-      };
-    }
-  }]);
-  return I18n;
-}(EventEmitter);
-(0,_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(I18n, "createInstance", function () {
-  var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var callback = arguments.length > 1 ? arguments[1] : undefined;
-  return new I18n(options, callback);
-});
-var instance = I18n.createInstance();
-instance.createInstance = I18n.createInstance;
-
-var createInstance = instance.createInstance;
-var dir = instance.dir;
-var init = instance.init;
-var loadResources = instance.loadResources;
-var reloadResources = instance.reloadResources;
-var use = instance.use;
-var changeLanguage = instance.changeLanguage;
-var getFixedT = instance.getFixedT;
-var t = instance.t;
-var exists = instance.exists;
-var setDefaultNamespace = instance.setDefaultNamespace;
-var hasLoadedNamespace = instance.hasLoadedNamespace;
-var loadNamespaces = instance.loadNamespaces;
-var loadLanguages = instance.loadLanguages;
-
-
-
-
-/***/ }),
-
-/***/ "./node_modules/ip-regex/index.js":
-/*!****************************************!*\
-  !*** ./node_modules/ip-regex/index.js ***!
-  \****************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-const word = '[a-fA-F\\d:]';
-
-const boundry = options => options && options.includeBoundaries
-	? `(?:(?<=\\s|^)(?=${word})|(?<=${word})(?=\\s|$))`
-	: '';
-
-const v4 = '(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]\\d|\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]\\d|\\d)){3}';
-
-const v6segment = '[a-fA-F\\d]{1,4}';
-
-const v6 = `
-(?:
-(?:${v6segment}:){7}(?:${v6segment}|:)|                                    // 1:2:3:4:5:6:7::  1:2:3:4:5:6:7:8
-(?:${v6segment}:){6}(?:${v4}|:${v6segment}|:)|                             // 1:2:3:4:5:6::    1:2:3:4:5:6::8   1:2:3:4:5:6::8  1:2:3:4:5:6::1.2.3.4
-(?:${v6segment}:){5}(?::${v4}|(?::${v6segment}){1,2}|:)|                   // 1:2:3:4:5::      1:2:3:4:5::7:8   1:2:3:4:5::8    1:2:3:4:5::7:1.2.3.4
-(?:${v6segment}:){4}(?:(?::${v6segment}){0,1}:${v4}|(?::${v6segment}){1,3}|:)| // 1:2:3:4::        1:2:3:4::6:7:8   1:2:3:4::8      1:2:3:4::6:7:1.2.3.4
-(?:${v6segment}:){3}(?:(?::${v6segment}){0,2}:${v4}|(?::${v6segment}){1,4}|:)| // 1:2:3::          1:2:3::5:6:7:8   1:2:3::8        1:2:3::5:6:7:1.2.3.4
-(?:${v6segment}:){2}(?:(?::${v6segment}){0,3}:${v4}|(?::${v6segment}){1,5}|:)| // 1:2::            1:2::4:5:6:7:8   1:2::8          1:2::4:5:6:7:1.2.3.4
-(?:${v6segment}:){1}(?:(?::${v6segment}){0,4}:${v4}|(?::${v6segment}){1,6}|:)| // 1::              1::3:4:5:6:7:8   1::8            1::3:4:5:6:7:1.2.3.4
-(?::(?:(?::${v6segment}){0,5}:${v4}|(?::${v6segment}){1,7}|:))             // ::2:3:4:5:6:7:8  ::2:3:4:5:6:7:8  ::8             ::1.2.3.4
-)(?:%[0-9a-zA-Z]{1,})?                                             // %eth0            %1
-`.replace(/\s*\/\/.*$/gm, '').replace(/\n/g, '').trim();
-
-// Pre-compile only the exact regexes because adding a global flag make regexes stateful
-const v46Exact = new RegExp(`(?:^${v4}$)|(?:^${v6}$)`);
-const v4exact = new RegExp(`^${v4}$`);
-const v6exact = new RegExp(`^${v6}$`);
-
-const ipRegex = options => options && options.exact
-	? v46Exact
-	: new RegExp(`(?:${boundry(options)}${v4}${boundry(options)})|(?:${boundry(options)}${v6}${boundry(options)})`, 'g');
-
-ipRegex.v4 = options => options && options.exact ? v4exact : new RegExp(`${boundry(options)}${v4}${boundry(options)}`, 'g');
-ipRegex.v6 = options => options && options.exact ? v6exact : new RegExp(`${boundry(options)}${v6}${boundry(options)}`, 'g');
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ipRegex);
-
-
-/***/ }),
-
-/***/ "./node_modules/is-ip/index.js":
-/*!*************************************!*\
-  !*** ./node_modules/is-ip/index.js ***!
-  \*************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   ipVersion: () => (/* binding */ ipVersion),
-/* harmony export */   isIP: () => (/* binding */ isIP),
-/* harmony export */   isIPv4: () => (/* binding */ isIPv4),
-/* harmony export */   isIPv6: () => (/* binding */ isIPv6)
-/* harmony export */ });
-/* harmony import */ var ip_regex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ip-regex */ "./node_modules/ip-regex/index.js");
-
-
-function isIP(string) {
-	return (0,ip_regex__WEBPACK_IMPORTED_MODULE_0__["default"])({exact: true}).test(string);
-}
-
-function isIPv6(string) {
-	return ip_regex__WEBPACK_IMPORTED_MODULE_0__["default"].v6({exact: true}).test(string);
-}
-
-function isIPv4(string) {
-	return ip_regex__WEBPACK_IMPORTED_MODULE_0__["default"].v4({exact: true}).test(string);
-}
-
-function ipVersion(string) {
-	return isIP(string) ? (isIPv6(string) ? 6 : 4) : undefined;
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/parse-domain/build/parse-domain.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/parse-domain/build/parse-domain.js ***!
-  \*********************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   ParseResultType: () => (/* binding */ ParseResultType),
-/* harmony export */   RESERVED_TOP_LEVEL_DOMAINS: () => (/* binding */ RESERVED_TOP_LEVEL_DOMAINS),
-/* harmony export */   parseDomain: () => (/* binding */ parseDomain)
-/* harmony export */ });
-/* harmony import */ var _serialized_tries_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./serialized-tries.js */ "./node_modules/parse-domain/serialized-tries/icann.js");
-/* harmony import */ var _serialized_tries_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./serialized-tries.js */ "./node_modules/parse-domain/serialized-tries/private.js");
-/* harmony import */ var _trie_look_up_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./trie/look-up.js */ "./node_modules/parse-domain/build/trie/look-up.js");
-/* harmony import */ var _sanitize_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./sanitize.js */ "./node_modules/parse-domain/build/sanitize.js");
-/* harmony import */ var _trie_parse_trie_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./trie/parse-trie.js */ "./node_modules/parse-domain/build/trie/parse-trie.js");
-
-
-
-
-const RESERVED_TOP_LEVEL_DOMAINS = [
-    "localhost",
-    "local",
-    "example",
-    "invalid",
-    "test",
-];
-var ParseResultType;
-(function (ParseResultType) {
-    /**
-     * This parse result is returned in case the given hostname does not adhere to [RFC 1034](https://tools.ietf.org/html/rfc1034).
-     */
-    ParseResultType["Invalid"] = "INVALID";
-    /**
-     * This parse result is returned if the given hostname was an IPv4 or IPv6.
-     */
-    ParseResultType["Ip"] = "IP";
-    /**
-     * This parse result is returned when the given hostname
-     * - is the root domain (the empty string `""`)
-     * - belongs to the top-level domain `localhost`, `local`, `example`, `invalid` or `test`
-     */
-    ParseResultType["Reserved"] = "RESERVED";
-    /**
-     * This parse result is returned when the given hostname is valid and does not belong to a reserved top-level domain, but is not listed in the public suffix list.
-     */
-    ParseResultType["NotListed"] = "NOT_LISTED";
-    /**
-     * This parse result is returned when the given hostname belongs to a top-level domain that is listed in the public suffix list.
-     */
-    ParseResultType["Listed"] = "LISTED";
-})(ParseResultType || (ParseResultType = {}));
-const getAtIndex = (array, index) => {
-    return index >= 0 && index < array.length ? array[index] : undefined;
-};
-const splitLabelsIntoDomains = (labels, index) => {
-    return {
-        subDomains: labels.slice(0, Math.max(0, index)),
-        domain: getAtIndex(labels, index),
-        topLevelDomains: labels.slice(index + 1),
-    };
-};
-let parsedIcannTrie;
-let parsedPrivateTrie;
-/**
- * Splits the given hostname in topLevelDomains, a domain and subDomains.
- */
-const parseDomain = (hostname, options) => {
-    const sanitizationResult = (0,_sanitize_js__WEBPACK_IMPORTED_MODULE_0__.sanitize)(hostname, options);
-    if (sanitizationResult.type === _sanitize_js__WEBPACK_IMPORTED_MODULE_0__.SanitizationResultType.Error) {
-        return {
-            type: ParseResultType.Invalid,
-            hostname,
-            errors: sanitizationResult.errors,
-        };
-    }
-    if (sanitizationResult.type === _sanitize_js__WEBPACK_IMPORTED_MODULE_0__.SanitizationResultType.ValidIp) {
-        return {
-            type: ParseResultType.Ip,
-            hostname: sanitizationResult.ip,
-            ipVersion: sanitizationResult.ipVersion,
-        };
-    }
-    const { labels, domain } = sanitizationResult;
-    if (hostname === "" ||
-        RESERVED_TOP_LEVEL_DOMAINS.includes(labels[labels.length - 1])) {
-        return {
-            type: ParseResultType.Reserved,
-            hostname: domain,
-            labels,
-        };
-    }
-    // Parse the serialized trie lazily
-    parsedIcannTrie = parsedIcannTrie !== null && parsedIcannTrie !== void 0 ? parsedIcannTrie : (0,_trie_parse_trie_js__WEBPACK_IMPORTED_MODULE_1__.parseTrie)(_serialized_tries_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
-    parsedPrivateTrie = parsedPrivateTrie !== null && parsedPrivateTrie !== void 0 ? parsedPrivateTrie : (0,_trie_parse_trie_js__WEBPACK_IMPORTED_MODULE_1__.parseTrie)(_serialized_tries_js__WEBPACK_IMPORTED_MODULE_3__["default"]);
-    const icannTlds = (0,_trie_look_up_js__WEBPACK_IMPORTED_MODULE_4__.lookUpTldsInTrie)(labels, parsedIcannTrie);
-    const privateTlds = (0,_trie_look_up_js__WEBPACK_IMPORTED_MODULE_4__.lookUpTldsInTrie)(labels, parsedPrivateTrie);
-    if (icannTlds.length === 0 && privateTlds.length === 0) {
-        return {
-            type: ParseResultType.NotListed,
-            hostname: domain,
-            labels,
-        };
-    }
-    const indexOfPublicSuffixDomain = labels.length - Math.max(privateTlds.length, icannTlds.length) - 1;
-    const indexOfIcannDomain = labels.length - icannTlds.length - 1;
-    return Object.assign({ type: ParseResultType.Listed, hostname: domain, labels, icann: splitLabelsIntoDomains(labels, indexOfIcannDomain) }, splitLabelsIntoDomains(labels, indexOfPublicSuffixDomain));
-};
-//# sourceMappingURL=parse-domain.js.map
-
-/***/ }),
-
-/***/ "./node_modules/parse-domain/build/sanitize.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/parse-domain/build/sanitize.js ***!
-  \*****************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   SanitizationResultType: () => (/* binding */ SanitizationResultType),
-/* harmony export */   Validation: () => (/* binding */ Validation),
-/* harmony export */   ValidationErrorType: () => (/* binding */ ValidationErrorType),
-/* harmony export */   sanitize: () => (/* binding */ sanitize)
-/* harmony export */ });
-/* harmony import */ var is_ip__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! is-ip */ "./node_modules/is-ip/index.js");
-
-// See https://en.wikipedia.org/wiki/Domain_name
-// See https://tools.ietf.org/html/rfc1034
-const LABEL_SEPARATOR = ".";
-const LABEL_LENGTH_MIN = 1;
-const LABEL_LENGTH_MAX = 63;
-/**
- * 255 octets - 2 octets if you remove the last dot
- * @see https://devblogs.microsoft.com/oldnewthing/20120412-00/?p=7873
- */
-const DOMAIN_LENGTH_MAX = 253;
-const textEncoder = new TextEncoder();
-var Validation;
-(function (Validation) {
-    /**
-     * Allows any octets as labels
-     * but still restricts the length of labels and the overall domain.
-     *
-     * @see https://www.rfc-editor.org/rfc/rfc2181#section-11
-     **/
-    Validation["Lax"] = "LAX";
-    /**
-     * Only allows ASCII letters, digits and hyphens (aka LDH),
-     * forbids hyphens at the beginning or end of a label
-     * and requires top-level domain names not to be all-numeric.
-     *
-     * This is the default if no validation is configured.
-     *
-     * @see https://datatracker.ietf.org/doc/html/rfc3696#section-2
-     */
-    Validation["Strict"] = "STRICT";
-})(Validation || (Validation = {}));
-var ValidationErrorType;
-(function (ValidationErrorType) {
-    ValidationErrorType["NoHostname"] = "NO_HOSTNAME";
-    ValidationErrorType["DomainMaxLength"] = "DOMAIN_MAX_LENGTH";
-    ValidationErrorType["LabelMinLength"] = "LABEL_MIN_LENGTH";
-    ValidationErrorType["LabelMaxLength"] = "LABEL_MAX_LENGTH";
-    ValidationErrorType["LabelInvalidCharacter"] = "LABEL_INVALID_CHARACTER";
-    ValidationErrorType["LastLabelInvalid"] = "LAST_LABEL_INVALID";
-})(ValidationErrorType || (ValidationErrorType = {}));
-var SanitizationResultType;
-(function (SanitizationResultType) {
-    SanitizationResultType["ValidIp"] = "VALID_IP";
-    SanitizationResultType["ValidDomain"] = "VALID_DOMAIN";
-    SanitizationResultType["Error"] = "ERROR";
-})(SanitizationResultType || (SanitizationResultType = {}));
-const createNoHostnameError = (input) => {
-    return {
-        type: ValidationErrorType.NoHostname,
-        message: `The given input ${String(input)} does not look like a hostname.`,
-        column: 1,
-    };
-};
-const createDomainMaxLengthError = (domain, length) => {
-    return {
-        type: ValidationErrorType.DomainMaxLength,
-        message: `Domain "${domain}" is too long. Domain is ${length} octets long but should not be longer than ${DOMAIN_LENGTH_MAX}.`,
-        column: length,
-    };
-};
-const createLabelMinLengthError = (label, column) => {
-    const length = label.length;
-    return {
-        type: ValidationErrorType.LabelMinLength,
-        message: `Label "${label}" is too short. Label is ${length} octets long but should be at least ${LABEL_LENGTH_MIN}.`,
-        column,
-    };
-};
-const createLabelMaxLengthError = (label, column) => {
-    const length = label.length;
-    return {
-        type: ValidationErrorType.LabelMaxLength,
-        message: `Label "${label}" is too long. Label is ${length} octets long but should not be longer than ${LABEL_LENGTH_MAX}.`,
-        column,
-    };
-};
-const createLabelInvalidCharacterError = (label, invalidCharacter, column) => {
-    return {
-        type: ValidationErrorType.LabelInvalidCharacter,
-        message: `Label "${label}" contains invalid character "${invalidCharacter}" at column ${column}.`,
-        column,
-    };
-};
-const createLastLabelInvalidError = (label, column) => {
-    return {
-        type: ValidationErrorType.LabelInvalidCharacter,
-        message: `Last label "${label}" must not be all-numeric.`,
-        column,
-    };
-};
-const sanitize = (input, options = {}) => {
-    // Extra check for non-TypeScript users
-    if (typeof input !== "string") {
-        return {
-            type: SanitizationResultType.Error,
-            errors: [createNoHostnameError(input)],
-        };
-    }
-    if (input === "") {
-        return {
-            type: SanitizationResultType.ValidDomain,
-            domain: input,
-            labels: [],
-        };
-    }
-    // IPv6 addresses are surrounded by square brackets in URLs
-    // See https://tools.ietf.org/html/rfc3986#section-3.2.2
-    const inputTrimmedAsIp = input.replace(/^\[|]$/g, "");
-    const ipVersionOfInput = (0,is_ip__WEBPACK_IMPORTED_MODULE_0__.ipVersion)(inputTrimmedAsIp);
-    if (ipVersionOfInput !== undefined) {
-        return {
-            type: SanitizationResultType.ValidIp,
-            ip: inputTrimmedAsIp,
-            ipVersion: ipVersionOfInput,
-        };
-    }
-    const lastChar = input.charAt(input.length - 1);
-    const canonicalInput = lastChar === LABEL_SEPARATOR ? input.slice(0, -1) : input;
-    const octets = new TextEncoder().encode(canonicalInput);
-    if (octets.length > DOMAIN_LENGTH_MAX) {
-        return {
-            type: SanitizationResultType.Error,
-            errors: [createDomainMaxLengthError(input, octets.length)],
-        };
-    }
-    const labels = canonicalInput.split(LABEL_SEPARATOR);
-    const { validation = Validation.Strict } = options;
-    const labelValidationErrors = validateLabels[validation](labels);
-    if (labelValidationErrors.length > 0) {
-        return {
-            type: SanitizationResultType.Error,
-            errors: labelValidationErrors,
-        };
-    }
-    return {
-        type: SanitizationResultType.ValidDomain,
-        domain: input,
-        labels,
-    };
-};
-const validateLabels = {
-    [Validation.Lax]: (labels) => {
-        const labelValidationErrors = [];
-        let column = 1;
-        for (const label of labels) {
-            const octets = textEncoder.encode(label);
-            if (octets.length < LABEL_LENGTH_MIN) {
-                labelValidationErrors.push(createLabelMinLengthError(label, column));
-            }
-            else if (octets.length > LABEL_LENGTH_MAX) {
-                labelValidationErrors.push(createLabelMaxLengthError(label, column));
-            }
-            column += label.length + LABEL_SEPARATOR.length;
-        }
-        return labelValidationErrors;
-    },
-    [Validation.Strict]: (labels) => {
-        const labelValidationErrors = [];
-        let column = 1;
-        let lastLabel;
-        for (const label of labels) {
-            // According to https://tools.ietf.org/html/rfc6761 labels should
-            // only contain ASCII letters, digits and hyphens (LDH).
-            const invalidCharacter = /[^\da-z-]/i.exec(label);
-            if (invalidCharacter) {
-                labelValidationErrors.push(createLabelInvalidCharacterError(label, invalidCharacter[0], invalidCharacter.index + 1));
-            }
-            if (label.startsWith("-")) {
-                labelValidationErrors.push(createLabelInvalidCharacterError(label, "-", column));
-            }
-            else if (label.endsWith("-")) {
-                labelValidationErrors.push(createLabelInvalidCharacterError(label, "-", column + label.length - 1));
-            }
-            if (
-            // We can use .length here to check for the octet size because
-            // label can only contain ASCII LDH characters at this point.
-            label.length < LABEL_LENGTH_MIN) {
-                labelValidationErrors.push(createLabelMinLengthError(label, column));
-            }
-            else if (label.length > LABEL_LENGTH_MAX) {
-                labelValidationErrors.push(createLabelMaxLengthError(label, column));
-            }
-            column += label.length + LABEL_SEPARATOR.length;
-            lastLabel = label;
-        }
-        if (lastLabel !== undefined && /[a-z-]/iu.test(lastLabel) === false) {
-            labelValidationErrors.push(createLastLabelInvalidError(lastLabel, column - lastLabel.length - LABEL_SEPARATOR.length));
-        }
-        return labelValidationErrors;
-    },
-};
-//# sourceMappingURL=sanitize.js.map
-
-/***/ }),
-
-/***/ "./node_modules/parse-domain/build/trie/characters.js":
-/*!************************************************************!*\
-  !*** ./node_modules/parse-domain/build/trie/characters.js ***!
-  \************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   DOWN: () => (/* binding */ DOWN),
-/* harmony export */   EXCEPTION: () => (/* binding */ EXCEPTION),
-/* harmony export */   RESET: () => (/* binding */ RESET),
-/* harmony export */   SAME: () => (/* binding */ SAME),
-/* harmony export */   UP: () => (/* binding */ UP),
-/* harmony export */   WILDCARD: () => (/* binding */ WILDCARD)
-/* harmony export */ });
-// UP, SAME, DOWN, RESET should not be special regex characters in a character class.
-const UP = "<"; // one level up
-const SAME = ","; // same level
-const DOWN = ">"; // one level down
-const RESET = "|"; // reset level index and start new
-const WILDCARD = "*"; // as defined by publicsuffix.org
-const EXCEPTION = "!"; // as defined by publicsuffix.org
-//# sourceMappingURL=characters.js.map
-
-/***/ }),
-
-/***/ "./node_modules/parse-domain/build/trie/look-up.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/parse-domain/build/trie/look-up.js ***!
-  \*********************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   lookUpTldsInTrie: () => (/* binding */ lookUpTldsInTrie)
-/* harmony export */ });
-/* harmony import */ var _characters_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./characters.js */ "./node_modules/parse-domain/build/trie/characters.js");
-
-const lookUpTldsInTrie = (labels, trie) => {
-    const labelsToCheck = labels.slice();
-    const tlds = [];
-    let node = trie;
-    while (labelsToCheck.length !== 0) {
-        const label = labelsToCheck.pop();
-        const labelLowerCase = label.toLowerCase();
-        if (node.children.has(_characters_js__WEBPACK_IMPORTED_MODULE_0__.WILDCARD)) {
-            if (node.children.has(_characters_js__WEBPACK_IMPORTED_MODULE_0__.EXCEPTION + labelLowerCase)) {
-                break;
-            }
-            node = node.children.get(_characters_js__WEBPACK_IMPORTED_MODULE_0__.WILDCARD);
-        }
-        else {
-            if (node.children.has(labelLowerCase) === false) {
-                break;
-            }
-            node = node.children.get(labelLowerCase);
-        }
-        tlds.unshift(label);
-    }
-    return tlds;
-};
-//# sourceMappingURL=look-up.js.map
-
-/***/ }),
-
-/***/ "./node_modules/parse-domain/build/trie/nodes.js":
-/*!*******************************************************!*\
-  !*** ./node_modules/parse-domain/build/trie/nodes.js ***!
-  \*******************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   NODE_TYPE_CHILD: () => (/* binding */ NODE_TYPE_CHILD),
-/* harmony export */   NODE_TYPE_ROOT: () => (/* binding */ NODE_TYPE_ROOT),
-/* harmony export */   createOrGetChild: () => (/* binding */ createOrGetChild),
-/* harmony export */   createRootNode: () => (/* binding */ createRootNode)
-/* harmony export */ });
-const NODE_TYPE_ROOT = Symbol("ROOT");
-const NODE_TYPE_CHILD = Symbol("CHILD");
-const createRootNode = () => {
-    return {
-        type: NODE_TYPE_ROOT,
-        children: new Map(),
-    };
-};
-const createOrGetChild = (parent, label) => {
-    let child = parent.children.get(label);
-    if (child === undefined) {
-        child = {
-            type: NODE_TYPE_CHILD,
-            label,
-            children: new Map(),
-            parent,
-        };
-        parent.children.set(label, child);
-    }
-    return child;
-};
-//# sourceMappingURL=nodes.js.map
-
-/***/ }),
-
-/***/ "./node_modules/parse-domain/build/trie/parse-trie.js":
-/*!************************************************************!*\
-  !*** ./node_modules/parse-domain/build/trie/parse-trie.js ***!
-  \************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   parseTrie: () => (/* binding */ parseTrie)
-/* harmony export */ });
-/* harmony import */ var _characters_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./characters.js */ "./node_modules/parse-domain/build/trie/characters.js");
-/* harmony import */ var _nodes_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./nodes.js */ "./node_modules/parse-domain/build/trie/nodes.js");
-
-
-const parseTrie = (serializedTrie) => {
-    const rootNode = (0,_nodes_js__WEBPACK_IMPORTED_MODULE_0__.createRootNode)();
-    let domain = "";
-    let parentNode = rootNode;
-    // Type assertion necessary here due to a TypeScript unsoundness
-    // https://github.com/microsoft/TypeScript/issues/9998#issuecomment-235963457
-    let node = rootNode;
-    const addDomain = () => {
-        node = (0,_nodes_js__WEBPACK_IMPORTED_MODULE_0__.createOrGetChild)(parentNode, domain);
-        domain = "";
-    };
-    for (let i = 0; i < serializedTrie.length; i++) {
-        const char = serializedTrie.charAt(i);
-        switch (char) {
-            case _characters_js__WEBPACK_IMPORTED_MODULE_1__.SAME: {
-                addDomain();
-                continue;
-            }
-            case _characters_js__WEBPACK_IMPORTED_MODULE_1__.DOWN: {
-                addDomain();
-                parentNode = node;
-                continue;
-            }
-            case _characters_js__WEBPACK_IMPORTED_MODULE_1__.RESET: {
-                addDomain();
-                parentNode = rootNode;
-                continue;
-            }
-            case _characters_js__WEBPACK_IMPORTED_MODULE_1__.UP: {
-                if (parentNode.type === _nodes_js__WEBPACK_IMPORTED_MODULE_0__.NODE_TYPE_ROOT) {
-                    throw new Error(`Error in serialized trie at position ${i}: Cannot go up, current parent node is already root`);
-                }
-                addDomain();
-                parentNode = parentNode.parent;
-                continue;
-            }
-        }
-        domain += char;
-    }
-    if (domain !== "") {
-        addDomain();
-    }
-    return rootNode;
-};
-//# sourceMappingURL=parse-trie.js.map
-
-/***/ }),
-
-/***/ "./node_modules/parse-domain/serialized-tries/icann.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/parse-domain/serialized-tries/icann.js ***!
-  \*************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("ac>com,edu,gov,net,mil,org<ad>nom<ae>co,net,org,sch,ac,gov,mil<aero>accident-investigation,accident-prevention,aerobatic,aeroclub,aerodrome,agents,aircraft,airline,airport,air-surveillance,airtraffic,air-traffic-control,ambulance,amusement,association,author,ballooning,broker,caa,cargo,catering,certification,championship,charter,civilaviation,club,conference,consultant,consulting,control,council,crew,design,dgca,educator,emergency,engine,engineer,entertainment,equipment,exchange,express,federation,flight,fuel,gliding,government,groundhandling,group,hanggliding,homebuilt,insurance,journal,journalist,leasing,logistics,magazine,maintenance,media,microlight,modelling,navigation,parachuting,paragliding,passenger-association,pilot,press,production,recreation,repbody,res,research,rotorcraft,safety,scientist,services,show,skydiving,software,student,trader,trading,trainer,union,workinggroup,works<af>gov,com,org,net,edu<ag>com,org,net,co,nom<ai>off,com,net,org<al>com,edu,gov,mil,net,org<am>co,com,commune,net,org<ao>ed,gv,og,co,pb,it<aq,ar>bet,com,coop,edu,gob,gov,int,mil,musica,mutual,net,org,senasa,tur<arpa>e164,in-addr,ip6,iris,uri,urn<as>gov<asia,at>ac>sth<co,gv,or<au>com,net,org,edu>act,catholic,nsw>schools<nt,qld,sa,tas,vic,wa<gov>qld,sa,tas,vic,wa<asn,id,info,conf,oz,act,nsw,nt,qld,sa,tas,vic,wa<aw>com<ax,az>com,net,int,gov,org,edu,info,pp,mil,name,pro,biz<ba>com,edu,gov,mil,net,org<bb>biz,co,com,edu,gov,info,net,org,store,tv<bd>*<be>ac<bf>gov<bg>a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,0,1,2,3,4,5,6,7,8,9<bh>com,edu,net,org,gov<bi>co,com,edu,or,org<biz,bj>asso,barreau,gouv<bm>com,edu,gov,net,org<bn>com,edu,gov,net,org<bo>com,edu,gob,int,org,net,mil,tv,web,academia,agro,arte,blog,bolivia,ciencia,cooperativa,democracia,deporte,ecologia,economia,empresa,indigena,industria,info,medicina,movimiento,musica,natural,nombre,noticias,patria,politica,profesional,plurinacional,pueblo,revista,salud,tecnologia,tksat,transporte,wiki<br>9guacu,abc,adm,adv,agr,aju,am,anani,aparecida,app,arq,art,ato,b,barueri,belem,bhz,bib,bio,blog,bmd,boavista,bsb,campinagrande,campinas,caxias,cim,cng,cnt,com,contagem,coop,coz,cri,cuiaba,curitiba,def,des,det,dev,ecn,eco,edu,emp,enf,eng,esp,etc,eti,far,feira,flog,floripa,fm,fnd,fortal,fot,foz,fst,g12,geo,ggf,goiania,gov>ac,al,am,ap,ba,ce,df,es,go,ma,mg,ms,mt,pa,pb,pe,pi,pr,rj,rn,ro,rr,rs,sc,se,sp,to<gru,imb,ind,inf,jab,jampa,jdf,joinville,jor,jus,leg,lel,log,londrina,macapa,maceio,manaus,maringa,mat,med,mil,morena,mp,mus,natal,net,niteroi,nom>*<not,ntr,odo,ong,org,osasco,palmas,poa,ppg,pro,psc,psi,pvh,qsl,radio,rec,recife,rep,ribeirao,rio,riobranco,riopreto,salvador,sampa,santamaria,santoandre,saobernardo,saogonca,seg,sjc,slg,slz,sorocaba,srv,taxi,tc,tec,teo,the,tmp,trd,tur,tv,udi,vet,vix,vlog,wiki,zlg<bs>com,net,org,edu,gov<bt>com,edu,gov,net,org<bv,bw>co,org<by>gov,mil,com,of<bz>com,net,org,edu,gov<ca>ab,bc,mb,nb,nf,nl,ns,nt,nu,on,pe,qc,sk,yk,gc<cat,cc,cd>gov<cf,cg,ch,ci>org,or,com,co,edu,ed,ac,net,go,asso,xn--aroport-bya,int,presse,md,gouv<ck>*,!www<cl>co,gob,gov,mil<cm>co,com,gov,net<cn>ac,com,edu,gov,net,org,mil,xn--55qx5d,xn--io0a7i,xn--od0alg,ah,bj,cq,fj,gd,gs,gz,gx,ha,hb,he,hi,hl,hn,jl,js,jx,ln,nm,nx,qh,sc,sd,sh,sn,sx,tj,xj,xz,yn,zj,hk,mo,tw<co>arts,com,edu,firm,gov,info,int,mil,net,nom,org,rec,web<com,coop,cr>ac,co,ed,fi,go,or,sa<cu>com,edu,org,net,gov,inf<cv>com,edu,int,nome,org<cw>com,edu,net,org<cx>gov<cy>ac,biz,com,ekloges,gov,ltd,mil,net,org,press,pro,tm<cz,de,dj,dk,dm>com,net,org,edu,gov<do>art,com,edu,gob,gov,mil,net,org,sld,web<dz>art,asso,com,edu,gov,org,net,pol,soc,tm<ec>com,info,net,fin,k12,med,pro,org,edu,gov,gob,mil<edu,ee>edu,gov,riik,lib,med,com,pri,aip,org,fie<eg>com,edu,eun,gov,mil,name,net,org,sci<er>*<es>com,nom,org,gob,edu<et>com,gov,org,edu,biz,name,info,net<eu,fi>aland<fj>ac,biz,com,gov,info,mil,name,net,org,pro<fk>*<fm>com,edu,net,org<fo,fr>asso,com,gouv,nom,prd,tm,aeroport,avocat,avoues,cci,chambagri,chirurgiens-dentistes,experts-comptables,geometre-expert,greta,huissier-justice,medecin,notaires,pharmacien,port,veterinaire<ga,gb,gd>edu,gov<ge>com,edu,gov,org,mil,net,pvt<gf,gg>co,net,org<gh>com,edu,gov,org,mil<gi>com,ltd,gov,mod,edu,org<gl>co,com,edu,net,org<gm,gn>ac,com,edu,gov,org,net<gov,gp>com,net,mobi,edu,org,asso<gq,gr>com,edu,net,org,gov<gs,gt>com,edu,gob,ind,mil,net,org<gu>com,edu,gov,guam,info,net,org,web<gw,gy>co,com,edu,gov,net,org<hk>com,edu,gov,idv,net,org,xn--55qx5d,xn--wcvs22d,xn--lcvr32d,xn--mxtq1m,xn--gmqw5a,xn--ciqpn,xn--gmq050i,xn--zf0avx,xn--io0a7i,xn--mk0axi,xn--od0alg,xn--od0aq3b,xn--tn0ag,xn--uc0atv,xn--uc0ay4a<hm,hn>com,edu,org,net,mil,gob<hr>iz,from,name,com<ht>com,shop,firm,info,adult,net,pro,org,med,art,coop,pol,asso,edu,rel,gouv,perso<hu>co,info,org,priv,sport,tm,2000,agrar,bolt,casino,city,erotica,erotika,film,forum,games,hotel,ingatlan,jogasz,konyvelo,lakas,media,news,reklam,sex,shop,suli,szex,tozsde,utazas,video<id>ac,biz,co,desa,go,mil,my,net,or,ponpes,sch,web<ie>gov<il>ac,co,gov,idf,k12,muni,net,org<im>ac,co>ltd,plc<com,net,org,tt,tv<in>co,firm,net,org,gen,ind,nic,ac,edu,res,gov,mil<info,int>eu<io>com<iq>gov,edu,mil,com,org,net<ir>ac,co,gov,id,net,org,sch,xn--mgba3a4f16a,xn--mgba3a4fra<is>net,com,edu,gov,org,int<it>gov,edu,abr,abruzzo,aosta-valley,aostavalley,bas,basilicata,cal,calabria,cam,campania,emilia-romagna,emiliaromagna,emr,friuli-v-giulia,friuli-ve-giulia,friuli-vegiulia,friuli-venezia-giulia,friuli-veneziagiulia,friuli-vgiulia,friuliv-giulia,friulive-giulia,friulivegiulia,friulivenezia-giulia,friuliveneziagiulia,friulivgiulia,fvg,laz,lazio,lig,liguria,lom,lombardia,lombardy,lucania,mar,marche,mol,molise,piedmont,piemonte,pmn,pug,puglia,sar,sardegna,sardinia,sic,sicilia,sicily,taa,tos,toscana,trentin-sud-tirol,xn--trentin-sd-tirol-rzb,trentin-sudtirol,xn--trentin-sdtirol-7vb,trentin-sued-tirol,trentin-suedtirol,trentino-a-adige,trentino-aadige,trentino-alto-adige,trentino-altoadige,trentino-s-tirol,trentino-stirol,trentino-sud-tirol,xn--trentino-sd-tirol-c3b,trentino-sudtirol,xn--trentino-sdtirol-szb,trentino-sued-tirol,trentino-suedtirol,trentino,trentinoa-adige,trentinoaadige,trentinoalto-adige,trentinoaltoadige,trentinos-tirol,trentinostirol,trentinosud-tirol,xn--trentinosd-tirol-rzb,trentinosudtirol,xn--trentinosdtirol-7vb,trentinosued-tirol,trentinosuedtirol,trentinsud-tirol,xn--trentinsd-tirol-6vb,trentinsudtirol,xn--trentinsdtirol-nsb,trentinsued-tirol,trentinsuedtirol,tuscany,umb,umbria,val-d-aosta,val-daosta,vald-aosta,valdaosta,valle-aosta,valle-d-aosta,valle-daosta,valleaosta,valled-aosta,valledaosta,vallee-aoste,xn--valle-aoste-ebb,vallee-d-aoste,xn--valle-d-aoste-ehb,valleeaoste,xn--valleaoste-e7a,valleedaoste,xn--valledaoste-ebb,vao,vda,ven,veneto,ag,agrigento,al,alessandria,alto-adige,altoadige,an,ancona,andria-barletta-trani,andria-trani-barletta,andriabarlettatrani,andriatranibarletta,ao,aosta,aoste,ap,aq,aquila,ar,arezzo,ascoli-piceno,ascolipiceno,asti,at,av,avellino,ba,balsan-sudtirol,xn--balsan-sdtirol-nsb,balsan-suedtirol,balsan,bari,barletta-trani-andria,barlettatraniandria,belluno,benevento,bergamo,bg,bi,biella,bl,bn,bo,bologna,bolzano-altoadige,bolzano,bozen-sudtirol,xn--bozen-sdtirol-2ob,bozen-suedtirol,bozen,br,brescia,brindisi,bs,bt,bulsan-sudtirol,xn--bulsan-sdtirol-nsb,bulsan-suedtirol,bulsan,bz,ca,cagliari,caltanissetta,campidano-medio,campidanomedio,campobasso,carbonia-iglesias,carboniaiglesias,carrara-massa,carraramassa,caserta,catania,catanzaro,cb,ce,cesena-forli,xn--cesena-forl-mcb,cesenaforli,xn--cesenaforl-i8a,ch,chieti,ci,cl,cn,co,como,cosenza,cr,cremona,crotone,cs,ct,cuneo,cz,dell-ogliastra,dellogliastra,en,enna,fc,fe,fermo,ferrara,fg,fi,firenze,florence,fm,foggia,forli-cesena,xn--forl-cesena-fcb,forlicesena,xn--forlcesena-c8a,fr,frosinone,ge,genoa,genova,go,gorizia,gr,grosseto,iglesias-carbonia,iglesiascarbonia,im,imperia,is,isernia,kr,la-spezia,laquila,laspezia,latina,lc,le,lecce,lecco,li,livorno,lo,lodi,lt,lu,lucca,macerata,mantova,massa-carrara,massacarrara,matera,mb,mc,me,medio-campidano,mediocampidano,messina,mi,milan,milano,mn,mo,modena,monza-brianza,monza-e-della-brianza,monza,monzabrianza,monzaebrianza,monzaedellabrianza,ms,mt,na,naples,napoli,no,novara,nu,nuoro,og,ogliastra,olbia-tempio,olbiatempio,or,oristano,ot,pa,padova,padua,palermo,parma,pavia,pc,pd,pe,perugia,pesaro-urbino,pesarourbino,pescara,pg,pi,piacenza,pisa,pistoia,pn,po,pordenone,potenza,pr,prato,pt,pu,pv,pz,ra,ragusa,ravenna,rc,re,reggio-calabria,reggio-emilia,reggiocalabria,reggioemilia,rg,ri,rieti,rimini,rm,rn,ro,roma,rome,rovigo,sa,salerno,sassari,savona,si,siena,siracusa,so,sondrio,sp,sr,ss,suedtirol,xn--sdtirol-n2a,sv,ta,taranto,te,tempio-olbia,tempioolbia,teramo,terni,tn,to,torino,tp,tr,trani-andria-barletta,trani-barletta-andria,traniandriabarletta,tranibarlettaandria,trapani,trento,treviso,trieste,ts,turin,tv,ud,udine,urbino-pesaro,urbinopesaro,va,varese,vb,vc,ve,venezia,venice,verbania,vercelli,verona,vi,vibo-valentia,vibovalentia,vicenza,viterbo,vr,vs,vt,vv<je>co,net,org<jm>*<jo>com,org,net,edu,sch,gov,mil,name<jobs,jp>ac,ad,co,ed,go,gr,lg,ne,or,aichi>aisai,ama,anjo,asuke,chiryu,chita,fuso,gamagori,handa,hazu,hekinan,higashiura,ichinomiya,inazawa,inuyama,isshiki,iwakura,kanie,kariya,kasugai,kira,kiyosu,komaki,konan,kota,mihama,miyoshi,nishio,nisshin,obu,oguchi,oharu,okazaki,owariasahi,seto,shikatsu,shinshiro,shitara,tahara,takahama,tobishima,toei,togo,tokai,tokoname,toyoake,toyohashi,toyokawa,toyone,toyota,tsushima,yatomi<akita>akita,daisen,fujisato,gojome,hachirogata,happou,higashinaruse,honjo,honjyo,ikawa,kamikoani,kamioka,katagami,kazuno,kitaakita,kosaka,kyowa,misato,mitane,moriyoshi,nikaho,noshiro,odate,oga,ogata,semboku,yokote,yurihonjo<aomori>aomori,gonohe,hachinohe,hashikami,hiranai,hirosaki,itayanagi,kuroishi,misawa,mutsu,nakadomari,noheji,oirase,owani,rokunohe,sannohe,shichinohe,shingo,takko,towada,tsugaru,tsuruta<chiba>abiko,asahi,chonan,chosei,choshi,chuo,funabashi,futtsu,hanamigawa,ichihara,ichikawa,ichinomiya,inzai,isumi,kamagaya,kamogawa,kashiwa,katori,katsuura,kimitsu,kisarazu,kozaki,kujukuri,kyonan,matsudo,midori,mihama,minamiboso,mobara,mutsuzawa,nagara,nagareyama,narashino,narita,noda,oamishirasato,omigawa,onjuku,otaki,sakae,sakura,shimofusa,shirako,shiroi,shisui,sodegaura,sosa,tako,tateyama,togane,tohnosho,tomisato,urayasu,yachimata,yachiyo,yokaichiba,yokoshibahikari,yotsukaido<ehime>ainan,honai,ikata,imabari,iyo,kamijima,kihoku,kumakogen,masaki,matsuno,matsuyama,namikata,niihama,ozu,saijo,seiyo,shikokuchuo,tobe,toon,uchiko,uwajima,yawatahama<fukui>echizen,eiheiji,fukui,ikeda,katsuyama,mihama,minamiechizen,obama,ohi,ono,sabae,sakai,takahama,tsuruga,wakasa<fukuoka>ashiya,buzen,chikugo,chikuho,chikujo,chikushino,chikuzen,chuo,dazaifu,fukuchi,hakata,higashi,hirokawa,hisayama,iizuka,inatsuki,kaho,kasuga,kasuya,kawara,keisen,koga,kurate,kurogi,kurume,minami,miyako,miyama,miyawaka,mizumaki,munakata,nakagawa,nakama,nishi,nogata,ogori,okagaki,okawa,oki,omuta,onga,onojo,oto,saigawa,sasaguri,shingu,shinyoshitomi,shonai,soeda,sue,tachiarai,tagawa,takata,toho,toyotsu,tsuiki,ukiha,umi,usui,yamada,yame,yanagawa,yukuhashi<fukushima>aizubange,aizumisato,aizuwakamatsu,asakawa,bandai,date,fukushima,furudono,futaba,hanawa,higashi,hirata,hirono,iitate,inawashiro,ishikawa,iwaki,izumizaki,kagamiishi,kaneyama,kawamata,kitakata,kitashiobara,koori,koriyama,kunimi,miharu,mishima,namie,nango,nishiaizu,nishigo,okuma,omotego,ono,otama,samegawa,shimogo,shirakawa,showa,soma,sukagawa,taishin,tamakawa,tanagura,tenei,yabuki,yamato,yamatsuri,yanaizu,yugawa<gifu>anpachi,ena,gifu,ginan,godo,gujo,hashima,hichiso,hida,higashishirakawa,ibigawa,ikeda,kakamigahara,kani,kasahara,kasamatsu,kawaue,kitagata,mino,minokamo,mitake,mizunami,motosu,nakatsugawa,ogaki,sakahogi,seki,sekigahara,shirakawa,tajimi,takayama,tarui,toki,tomika,wanouchi,yamagata,yaotsu,yoro<gunma>annaka,chiyoda,fujioka,higashiagatsuma,isesaki,itakura,kanna,kanra,katashina,kawaba,kiryu,kusatsu,maebashi,meiwa,midori,minakami,naganohara,nakanojo,nanmoku,numata,oizumi,ora,ota,shibukawa,shimonita,shinto,showa,takasaki,takayama,tamamura,tatebayashi,tomioka,tsukiyono,tsumagoi,ueno,yoshioka<hiroshima>asaminami,daiwa,etajima,fuchu,fukuyama,hatsukaichi,higashihiroshima,hongo,jinsekikogen,kaita,kui,kumano,kure,mihara,miyoshi,naka,onomichi,osakikamijima,otake,saka,sera,seranishi,shinichi,shobara,takehara<hokkaido>abashiri,abira,aibetsu,akabira,akkeshi,asahikawa,ashibetsu,ashoro,assabu,atsuma,bibai,biei,bifuka,bihoro,biratori,chippubetsu,chitose,date,ebetsu,embetsu,eniwa,erimo,esan,esashi,fukagawa,fukushima,furano,furubira,haboro,hakodate,hamatonbetsu,hidaka,higashikagura,higashikawa,hiroo,hokuryu,hokuto,honbetsu,horokanai,horonobe,ikeda,imakane,ishikari,iwamizawa,iwanai,kamifurano,kamikawa,kamishihoro,kamisunagawa,kamoenai,kayabe,kembuchi,kikonai,kimobetsu,kitahiroshima,kitami,kiyosato,koshimizu,kunneppu,kuriyama,kuromatsunai,kushiro,kutchan,kyowa,mashike,matsumae,mikasa,minamifurano,mombetsu,moseushi,mukawa,muroran,naie,nakagawa,nakasatsunai,nakatombetsu,nanae,nanporo,nayoro,nemuro,niikappu,niki,nishiokoppe,noboribetsu,numata,obihiro,obira,oketo,okoppe,otaru,otobe,otofuke,otoineppu,oumu,ozora,pippu,rankoshi,rebun,rikubetsu,rishiri,rishirifuji,saroma,sarufutsu,shakotan,shari,shibecha,shibetsu,shikabe,shikaoi,shimamaki,shimizu,shimokawa,shinshinotsu,shintoku,shiranuka,shiraoi,shiriuchi,sobetsu,sunagawa,taiki,takasu,takikawa,takinoue,teshikaga,tobetsu,tohma,tomakomai,tomari,toya,toyako,toyotomi,toyoura,tsubetsu,tsukigata,urakawa,urausu,uryu,utashinai,wakkanai,wassamu,yakumo,yoichi<hyogo>aioi,akashi,ako,amagasaki,aogaki,asago,ashiya,awaji,fukusaki,goshiki,harima,himeji,ichikawa,inagawa,itami,kakogawa,kamigori,kamikawa,kasai,kasuga,kawanishi,miki,minamiawaji,nishinomiya,nishiwaki,ono,sanda,sannan,sasayama,sayo,shingu,shinonsen,shiso,sumoto,taishi,taka,takarazuka,takasago,takino,tamba,tatsuno,toyooka,yabu,yashiro,yoka,yokawa<ibaraki>ami,asahi,bando,chikusei,daigo,fujishiro,hitachi,hitachinaka,hitachiomiya,hitachiota,ibaraki,ina,inashiki,itako,iwama,joso,kamisu,kasama,kashima,kasumigaura,koga,miho,mito,moriya,naka,namegata,oarai,ogawa,omitama,ryugasaki,sakai,sakuragawa,shimodate,shimotsuma,shirosato,sowa,suifu,takahagi,tamatsukuri,tokai,tomobe,tone,toride,tsuchiura,tsukuba,uchihara,ushiku,yachiyo,yamagata,yawara,yuki<ishikawa>anamizu,hakui,hakusan,kaga,kahoku,kanazawa,kawakita,komatsu,nakanoto,nanao,nomi,nonoichi,noto,shika,suzu,tsubata,tsurugi,uchinada,wajima<iwate>fudai,fujisawa,hanamaki,hiraizumi,hirono,ichinohe,ichinoseki,iwaizumi,iwate,joboji,kamaishi,kanegasaki,karumai,kawai,kitakami,kuji,kunohe,kuzumaki,miyako,mizusawa,morioka,ninohe,noda,ofunato,oshu,otsuchi,rikuzentakata,shiwa,shizukuishi,sumita,tanohata,tono,yahaba,yamada<kagawa>ayagawa,higashikagawa,kanonji,kotohira,manno,marugame,mitoyo,naoshima,sanuki,tadotsu,takamatsu,tonosho,uchinomi,utazu,zentsuji<kagoshima>akune,amami,hioki,isa,isen,izumi,kagoshima,kanoya,kawanabe,kinko,kouyama,makurazaki,matsumoto,minamitane,nakatane,nishinoomote,satsumasendai,soo,tarumizu,yusui<kanagawa>aikawa,atsugi,ayase,chigasaki,ebina,fujisawa,hadano,hakone,hiratsuka,isehara,kaisei,kamakura,kiyokawa,matsuda,minamiashigara,miura,nakai,ninomiya,odawara,oi,oiso,sagamihara,samukawa,tsukui,yamakita,yamato,yokosuka,yugawara,zama,zushi<kochi>aki,geisei,hidaka,higashitsuno,ino,kagami,kami,kitagawa,kochi,mihara,motoyama,muroto,nahari,nakamura,nankoku,nishitosa,niyodogawa,ochi,okawa,otoyo,otsuki,sakawa,sukumo,susaki,tosa,tosashimizu,toyo,tsuno,umaji,yasuda,yusuhara<kumamoto>amakusa,arao,aso,choyo,gyokuto,kamiamakusa,kikuchi,kumamoto,mashiki,mifune,minamata,minamioguni,nagasu,nishihara,oguni,ozu,sumoto,takamori,uki,uto,yamaga,yamato,yatsushiro<kyoto>ayabe,fukuchiyama,higashiyama,ide,ine,joyo,kameoka,kamo,kita,kizu,kumiyama,kyotamba,kyotanabe,kyotango,maizuru,minami,minamiyamashiro,miyazu,muko,nagaokakyo,nakagyo,nantan,oyamazaki,sakyo,seika,tanabe,uji,ujitawara,wazuka,yamashina,yawata<mie>asahi,inabe,ise,kameyama,kawagoe,kiho,kisosaki,kiwa,komono,kumano,kuwana,matsusaka,meiwa,mihama,minamiise,misugi,miyama,nabari,shima,suzuka,tado,taiki,taki,tamaki,toba,tsu,udono,ureshino,watarai,yokkaichi<miyagi>furukawa,higashimatsushima,ishinomaki,iwanuma,kakuda,kami,kawasaki,marumori,matsushima,minamisanriku,misato,murata,natori,ogawara,ohira,onagawa,osaki,rifu,semine,shibata,shichikashuku,shikama,shiogama,shiroishi,tagajo,taiwa,tome,tomiya,wakuya,watari,yamamoto,zao<miyazaki>aya,ebino,gokase,hyuga,kadogawa,kawaminami,kijo,kitagawa,kitakata,kitaura,kobayashi,kunitomi,kushima,mimata,miyakonojo,miyazaki,morotsuka,nichinan,nishimera,nobeoka,saito,shiiba,shintomi,takaharu,takanabe,takazaki,tsuno<nagano>achi,agematsu,anan,aoki,asahi,azumino,chikuhoku,chikuma,chino,fujimi,hakuba,hara,hiraya,iida,iijima,iiyama,iizuna,ikeda,ikusaka,ina,karuizawa,kawakami,kiso,kisofukushima,kitaaiki,komagane,komoro,matsukawa,matsumoto,miasa,minamiaiki,minamimaki,minamiminowa,minowa,miyada,miyota,mochizuki,nagano,nagawa,nagiso,nakagawa,nakano,nozawaonsen,obuse,ogawa,okaya,omachi,omi,ookuwa,ooshika,otaki,otari,sakae,sakaki,saku,sakuho,shimosuwa,shinanomachi,shiojiri,suwa,suzaka,takagi,takamori,takayama,tateshina,tatsuno,togakushi,togura,tomi,ueda,wada,yamagata,yamanouchi,yasaka,yasuoka<nagasaki>chijiwa,futsu,goto,hasami,hirado,iki,isahaya,kawatana,kuchinotsu,matsuura,nagasaki,obama,omura,oseto,saikai,sasebo,seihi,shimabara,shinkamigoto,togitsu,tsushima,unzen<nara>ando,gose,heguri,higashiyoshino,ikaruga,ikoma,kamikitayama,kanmaki,kashiba,kashihara,katsuragi,kawai,kawakami,kawanishi,koryo,kurotaki,mitsue,miyake,nara,nosegawa,oji,ouda,oyodo,sakurai,sango,shimoichi,shimokitayama,shinjo,soni,takatori,tawaramoto,tenkawa,tenri,uda,yamatokoriyama,yamatotakada,yamazoe,yoshino<niigata>aga,agano,gosen,itoigawa,izumozaki,joetsu,kamo,kariwa,kashiwazaki,minamiuonuma,mitsuke,muika,murakami,myoko,nagaoka,niigata,ojiya,omi,sado,sanjo,seiro,seirou,sekikawa,shibata,tagami,tainai,tochio,tokamachi,tsubame,tsunan,uonuma,yahiko,yoita,yuzawa<oita>beppu,bungoono,bungotakada,hasama,hiji,himeshima,hita,kamitsue,kokonoe,kuju,kunisaki,kusu,oita,saiki,taketa,tsukumi,usa,usuki,yufu<okayama>akaiwa,asakuchi,bizen,hayashima,ibara,kagamino,kasaoka,kibichuo,kumenan,kurashiki,maniwa,misaki,nagi,niimi,nishiawakura,okayama,satosho,setouchi,shinjo,shoo,soja,takahashi,tamano,tsuyama,wake,yakage<okinawa>aguni,ginowan,ginoza,gushikami,haebaru,higashi,hirara,iheya,ishigaki,ishikawa,itoman,izena,kadena,kin,kitadaito,kitanakagusuku,kumejima,kunigami,minamidaito,motobu,nago,naha,nakagusuku,nakijin,nanjo,nishihara,ogimi,okinawa,onna,shimoji,taketomi,tarama,tokashiki,tomigusuku,tonaki,urasoe,uruma,yaese,yomitan,yonabaru,yonaguni,zamami<osaka>abeno,chihayaakasaka,chuo,daito,fujiidera,habikino,hannan,higashiosaka,higashisumiyoshi,higashiyodogawa,hirakata,ibaraki,ikeda,izumi,izumiotsu,izumisano,kadoma,kaizuka,kanan,kashiwara,katano,kawachinagano,kishiwada,kita,kumatori,matsubara,minato,minoh,misaki,moriguchi,neyagawa,nishi,nose,osakasayama,sakai,sayama,sennan,settsu,shijonawate,shimamoto,suita,tadaoka,taishi,tajiri,takaishi,takatsuki,tondabayashi,toyonaka,toyono,yao<saga>ariake,arita,fukudomi,genkai,hamatama,hizen,imari,kamimine,kanzaki,karatsu,kashima,kitagata,kitahata,kiyama,kouhoku,kyuragi,nishiarita,ogi,omachi,ouchi,saga,shiroishi,taku,tara,tosu,yoshinogari<saitama>arakawa,asaka,chichibu,fujimi,fujimino,fukaya,hanno,hanyu,hasuda,hatogaya,hatoyama,hidaka,higashichichibu,higashimatsuyama,honjo,ina,iruma,iwatsuki,kamiizumi,kamikawa,kamisato,kasukabe,kawagoe,kawaguchi,kawajima,kazo,kitamoto,koshigaya,kounosu,kuki,kumagaya,matsubushi,minano,misato,miyashiro,miyoshi,moroyama,nagatoro,namegawa,niiza,ogano,ogawa,ogose,okegawa,omiya,otaki,ranzan,ryokami,saitama,sakado,satte,sayama,shiki,shiraoka,soka,sugito,toda,tokigawa,tokorozawa,tsurugashima,urawa,warabi,yashio,yokoze,yono,yorii,yoshida,yoshikawa,yoshimi<shiga>aisho,gamo,higashiomi,hikone,koka,konan,kosei,koto,kusatsu,maibara,moriyama,nagahama,nishiazai,notogawa,omihachiman,otsu,ritto,ryuoh,takashima,takatsuki,torahime,toyosato,yasu<shimane>akagi,ama,gotsu,hamada,higashiizumo,hikawa,hikimi,izumo,kakinoki,masuda,matsue,misato,nishinoshima,ohda,okinoshima,okuizumo,shimane,tamayu,tsuwano,unnan,yakumo,yasugi,yatsuka<shizuoka>arai,atami,fuji,fujieda,fujikawa,fujinomiya,fukuroi,gotemba,haibara,hamamatsu,higashiizu,ito,iwata,izu,izunokuni,kakegawa,kannami,kawanehon,kawazu,kikugawa,kosai,makinohara,matsuzaki,minamiizu,mishima,morimachi,nishiizu,numazu,omaezaki,shimada,shimizu,shimoda,shizuoka,susono,yaizu,yoshida<tochigi>ashikaga,bato,haga,ichikai,iwafune,kaminokawa,kanuma,karasuyama,kuroiso,mashiko,mibu,moka,motegi,nasu,nasushiobara,nikko,nishikata,nogi,ohira,ohtawara,oyama,sakura,sano,shimotsuke,shioya,takanezawa,tochigi,tsuga,ujiie,utsunomiya,yaita<tokushima>aizumi,anan,ichiba,itano,kainan,komatsushima,matsushige,mima,minami,miyoshi,mugi,nakagawa,naruto,sanagochi,shishikui,tokushima,wajiki<tokyo>adachi,akiruno,akishima,aogashima,arakawa,bunkyo,chiyoda,chofu,chuo,edogawa,fuchu,fussa,hachijo,hachioji,hamura,higashikurume,higashimurayama,higashiyamato,hino,hinode,hinohara,inagi,itabashi,katsushika,kita,kiyose,kodaira,koganei,kokubunji,komae,koto,kouzushima,kunitachi,machida,meguro,minato,mitaka,mizuho,musashimurayama,musashino,nakano,nerima,ogasawara,okutama,ome,oshima,ota,setagaya,shibuya,shinagawa,shinjuku,suginami,sumida,tachikawa,taito,tama,toshima<tottori>chizu,hino,kawahara,koge,kotoura,misasa,nanbu,nichinan,sakaiminato,tottori,wakasa,yazu,yonago<toyama>asahi,fuchu,fukumitsu,funahashi,himi,imizu,inami,johana,kamiichi,kurobe,nakaniikawa,namerikawa,nanto,nyuzen,oyabe,taira,takaoka,tateyama,toga,tonami,toyama,unazuki,uozu,yamada<wakayama>arida,aridagawa,gobo,hashimoto,hidaka,hirogawa,inami,iwade,kainan,kamitonda,katsuragi,kimino,kinokawa,kitayama,koya,koza,kozagawa,kudoyama,kushimoto,mihama,misato,nachikatsuura,shingu,shirahama,taiji,tanabe,wakayama,yuasa,yura<yamagata>asahi,funagata,higashine,iide,kahoku,kaminoyama,kaneyama,kawanishi,mamurogawa,mikawa,murayama,nagai,nakayama,nanyo,nishikawa,obanazawa,oe,oguni,ohkura,oishida,sagae,sakata,sakegawa,shinjo,shirataka,shonai,takahata,tendo,tozawa,tsuruoka,yamagata,yamanobe,yonezawa,yuza<yamaguchi>abu,hagi,hikari,hofu,iwakuni,kudamatsu,mitou,nagato,oshima,shimonoseki,shunan,tabuse,tokuyama,toyota,ube,yuu<yamanashi>chuo,doshi,fuefuki,fujikawa,fujikawaguchiko,fujiyoshida,hayakawa,hokuto,ichikawamisato,kai,kofu,koshu,kosuge,minami-alps,minobu,nakamichi,nanbu,narusawa,nirasaki,nishikatsura,oshino,otsuki,showa,tabayama,tsuru,uenohara,yamanakako,yamanashi<xn--4pvxs,xn--vgu402c,xn--c3s14m,xn--f6qx53a,xn--8pvr4u,xn--uist22h,xn--djrs72d6uy,xn--mkru45i,xn--0trq7p7nn,xn--8ltr62k,xn--2m4a15e,xn--efvn9s,xn--32vp30h,xn--4it797k,xn--1lqs71d,xn--5rtp49c,xn--5js045d,xn--ehqz56n,xn--1lqs03n,xn--qqqt11m,xn--kbrq7o,xn--pssu33l,xn--ntsq17g,xn--uisz3g,xn--6btw5a,xn--1ctwo,xn--6orx2r,xn--rht61e,xn--rht27z,xn--djty4k,xn--nit225k,xn--rht3d,xn--klty5x,xn--kltx9a,xn--kltp7d,xn--uuwu58a,xn--zbx025d,xn--ntso0iqx3a,xn--elqq16h,xn--4it168d,xn--klt787d,xn--rny31h,xn--7t0a264c,xn--5rtq34k,xn--k7yn95e,xn--tor131o,xn--d5qv7z876c,kawasaki>*,!city<kitakyushu>*,!city<kobe>*,!city<nagoya>*,!city<sapporo>*,!city<sendai>*,!city<yokohama>*,!city<<ke>ac,co,go,info,me,mobi,ne,or,sc<kg>org,net,com,edu,gov,mil<kh>*<ki>edu,biz,net,org,gov,info,com<km>org,nom,gov,prd,tm,edu,mil,ass,com,coop,asso,presse,medecin,notaires,pharmaciens,veterinaire,gouv<kn>net,org,edu,gov<kp>com,edu,gov,org,rep,tra<kr>ac,co,es,go,hs,kg,mil,ms,ne,or,pe,re,sc,busan,chungbuk,chungnam,daegu,daejeon,gangwon,gwangju,gyeongbuk,gyeonggi,gyeongnam,incheon,jeju,jeonbuk,jeonnam,seoul,ulsan<kw>com,edu,emb,gov,ind,net,org<ky>com,edu,net,org<kz>org,edu,net,gov,mil,com<la>int,net,info,edu,gov,per,com,org<lb>com,edu,gov,net,org<lc>com,net,co,org,edu,gov<li,lk>gov,sch,net,int,com,org,edu,ngo,soc,web,ltd,assn,grp,hotel,ac<lr>com,edu,gov,org,net<ls>ac,biz,co,edu,gov,info,net,org,sc<lt>gov<lu,lv>com,edu,gov,org,mil,id,net,asn,conf<ly>com,net,gov,plc,edu,sch,med,org,id<ma>co,net,gov,org,ac,press<mc>tm,asso<md,me>co,net,org,edu,ac,gov,its,priv<mg>org,nom,gov,prd,tm,edu,mil,com,co<mh,mil,mk>com,org,net,edu,gov,inf,name<ml>com,edu,gouv,gov,net,org,presse<mm>*<mn>gov,edu,org<mo>com,net,org,edu,gov<mobi,mp,mq,mr>gov<ms>com,edu,gov,net,org<mt>com,edu,net,org<mu>com,net,org,gov,ac,co,or<museum>academy,agriculture,air,airguard,alabama,alaska,amber,ambulance,american,americana,americanantiques,americanart,amsterdam,and,annefrank,anthro,anthropology,antiques,aquarium,arboretum,archaeological,archaeology,architecture,art,artanddesign,artcenter,artdeco,arteducation,artgallery,arts,artsandcrafts,asmatart,assassination,assisi,association,astronomy,atlanta,austin,australia,automotive,aviation,axis,badajoz,baghdad,bahn,bale,baltimore,barcelona,baseball,basel,baths,bauern,beauxarts,beeldengeluid,bellevue,bergbau,berkeley,berlin,bern,bible,bilbao,bill,birdart,birthplace,bonn,boston,botanical,botanicalgarden,botanicgarden,botany,brandywinevalley,brasil,bristol,british,britishcolumbia,broadcast,brunel,brussel,brussels,bruxelles,building,burghof,bus,bushey,cadaques,california,cambridge,can,canada,capebreton,carrier,cartoonart,casadelamoneda,castle,castres,celtic,center,chattanooga,cheltenham,chesapeakebay,chicago,children,childrens,childrensgarden,chiropractic,chocolate,christiansburg,cincinnati,cinema,circus,civilisation,civilization,civilwar,clinton,clock,coal,coastaldefence,cody,coldwar,collection,colonialwilliamsburg,coloradoplateau,columbia,columbus,communication,communications,community,computer,computerhistory,xn--comunicaes-v6a2o,contemporary,contemporaryart,convent,copenhagen,corporation,xn--correios-e-telecomunicaes-ghc29a,corvette,costume,countryestate,county,crafts,cranbrook,creation,cultural,culturalcenter,culture,cyber,cymru,dali,dallas,database,ddr,decorativearts,delaware,delmenhorst,denmark,depot,design,detroit,dinosaur,discovery,dolls,donostia,durham,eastafrica,eastcoast,education,educational,egyptian,eisenbahn,elburg,elvendrell,embroidery,encyclopedic,england,entomology,environment,environmentalconservation,epilepsy,essex,estate,ethnology,exeter,exhibition,family,farm,farmequipment,farmers,farmstead,field,figueres,filatelia,film,fineart,finearts,finland,flanders,florida,force,fortmissoula,fortworth,foundation,francaise,frankfurt,franziskaner,freemasonry,freiburg,fribourg,frog,fundacio,furniture,gallery,garden,gateway,geelvinck,gemological,geology,georgia,giessen,glas,glass,gorge,grandrapids,graz,guernsey,halloffame,hamburg,handson,harvestcelebration,hawaii,health,heimatunduhren,hellas,helsinki,hembygdsforbund,heritage,histoire,historical,historicalsociety,historichouses,historisch,historisches,history,historyofscience,horology,house,humanities,illustration,imageandsound,indian,indiana,indianapolis,indianmarket,intelligence,interactive,iraq,iron,isleofman,jamison,jefferson,jerusalem,jewelry,jewish,jewishart,jfk,journalism,judaica,judygarland,juedisches,juif,karate,karikatur,kids,koebenhavn,koeln,kunst,kunstsammlung,kunstunddesign,labor,labour,lajolla,lancashire,landes,lans,xn--lns-qla,larsson,lewismiller,lincoln,linz,living,livinghistory,localhistory,london,losangeles,louvre,loyalist,lucerne,luxembourg,luzern,mad,madrid,mallorca,manchester,mansion,mansions,manx,marburg,maritime,maritimo,maryland,marylhurst,media,medical,medizinhistorisches,meeres,memorial,mesaverde,michigan,midatlantic,military,mill,miners,mining,minnesota,missile,missoula,modern,moma,money,monmouth,monticello,montreal,moscow,motorcycle,muenchen,muenster,mulhouse,muncie,museet,museumcenter,museumvereniging,music,national,nationalfirearms,nationalheritage,nativeamerican,naturalhistory,naturalhistorymuseum,naturalsciences,nature,naturhistorisches,natuurwetenschappen,naumburg,naval,nebraska,neues,newhampshire,newjersey,newmexico,newport,newspaper,newyork,niepce,norfolk,north,nrw,nyc,nyny,oceanographic,oceanographique,omaha,online,ontario,openair,oregon,oregontrail,otago,oxford,pacific,paderborn,palace,paleo,palmsprings,panama,paris,pasadena,pharmacy,philadelphia,philadelphiaarea,philately,phoenix,photography,pilots,pittsburgh,planetarium,plantation,plants,plaza,portal,portland,portlligat,posts-and-telecommunications,preservation,presidio,press,project,public,pubol,quebec,railroad,railway,research,resistance,riodejaneiro,rochester,rockart,roma,russia,saintlouis,salem,salvadordali,salzburg,sandiego,sanfrancisco,santabarbara,santacruz,santafe,saskatchewan,satx,savannahga,schlesisches,schoenbrunn,schokoladen,school,schweiz,science,scienceandhistory,scienceandindustry,sciencecenter,sciencecenters,science-fiction,sciencehistory,sciences,sciencesnaturelles,scotland,seaport,settlement,settlers,shell,sherbrooke,sibenik,silk,ski,skole,society,sologne,soundandvision,southcarolina,southwest,space,spy,square,stadt,stalbans,starnberg,state,stateofdelaware,station,steam,steiermark,stjohn,stockholm,stpetersburg,stuttgart,suisse,surgeonshall,surrey,svizzera,sweden,sydney,tank,tcm,technology,telekommunikation,television,texas,textile,theater,time,timekeeping,topology,torino,touch,town,transport,tree,trolley,trust,trustee,uhren,ulm,undersea,university,usa,usantiques,usarts,uscountryestate,usculture,usdecorativearts,usgarden,ushistory,ushuaia,uslivinghistory,utah,uvic,valley,vantaa,versailles,viking,village,virginia,virtual,virtuel,vlaanderen,volkenkunde,wales,wallonie,war,washingtondc,watchandclock,watch-and-clock,western,westfalen,whaling,wildlife,williamsburg,windmill,workshop,york,yorkshire,yosemite,youth,zoological,zoology,xn--9dbhblg6di,xn--h1aegh<mv>aero,biz,com,coop,edu,gov,info,int,mil,museum,name,net,org,pro<mw>ac,biz,co,com,coop,edu,gov,int,museum,net,org<mx>com,org,gob,edu,net<my>biz,com,edu,gov,mil,name,net,org<mz>ac,adv,co,edu,gov,mil,net,org<na>info,pro,name,school,or,dr,us,mx,ca,in,cc,tv,ws,mobi,co,com,org<name,nc>asso,nom<ne,net,nf>com,net,per,rec,web,arts,firm,info,other,store<ng>com,edu,gov,i,mil,mobi,name,net,org,sch<ni>ac,biz,co,com,edu,gob,in,info,int,mil,net,nom,org,web<nl,no>fhs,vgs,fylkesbibl,folkebibl,museum,idrett,priv,mil,stat,dep,kommune,herad,aa>gs<ah>gs<bu>gs<fm>gs<hl>gs<hm>gs<jan-mayen>gs<mr>gs<nl>gs<nt>gs<of>gs<ol>gs<oslo>gs<rl>gs<sf>gs<st>gs<svalbard>gs<tm>gs<tr>gs<va>gs<vf>gs<akrehamn,xn--krehamn-dxa,algard,xn--lgrd-poac,arna,brumunddal,bryne,bronnoysund,xn--brnnysund-m8ac,drobak,xn--drbak-wua,egersund,fetsund,floro,xn--flor-jra,fredrikstad,hokksund,honefoss,xn--hnefoss-q1a,jessheim,jorpeland,xn--jrpeland-54a,kirkenes,kopervik,krokstadelva,langevag,xn--langevg-jxa,leirvik,mjondalen,xn--mjndalen-64a,mo-i-rana,mosjoen,xn--mosjen-eya,nesoddtangen,orkanger,osoyro,xn--osyro-wua,raholt,xn--rholt-mra,sandnessjoen,xn--sandnessjen-ogb,skedsmokorset,slattum,spjelkavik,stathelle,stavern,stjordalshalsen,xn--stjrdalshalsen-sqb,tananger,tranby,vossevangen,afjord,xn--fjord-lra,agdenes,al,xn--l-1fa,alesund,xn--lesund-hua,alstahaug,alta,xn--lt-liac,alaheadju,xn--laheadju-7ya,alvdal,amli,xn--mli-tla,amot,xn--mot-tla,andebu,andoy,xn--andy-ira,andasuolo,ardal,xn--rdal-poa,aremark,arendal,xn--s-1fa,aseral,xn--seral-lra,asker,askim,askvoll,askoy,xn--asky-ira,asnes,xn--snes-poa,audnedaln,aukra,aure,aurland,aurskog-holand,xn--aurskog-hland-jnb,austevoll,austrheim,averoy,xn--avery-yua,balestrand,ballangen,balat,xn--blt-elab,balsfjord,bahccavuotna,xn--bhccavuotna-k7a,bamble,bardu,beardu,beiarn,bajddar,xn--bjddar-pta,baidar,xn--bidr-5nac,berg,bergen,berlevag,xn--berlevg-jxa,bearalvahki,xn--bearalvhki-y4a,bindal,birkenes,bjarkoy,xn--bjarky-fya,bjerkreim,bjugn,bodo,xn--bod-2na,badaddja,xn--bdddj-mrabd,budejju,bokn,bremanger,bronnoy,xn--brnny-wuac,bygland,bykle,barum,xn--brum-voa,telemark>bo,xn--b-5ga<nordland>bo,xn--b-5ga,heroy,xn--hery-ira<bievat,xn--bievt-0qa,bomlo,xn--bmlo-gra,batsfjord,xn--btsfjord-9za,bahcavuotna,xn--bhcavuotna-s4a,dovre,drammen,drangedal,dyroy,xn--dyry-ira,donna,xn--dnna-gra,eid,eidfjord,eidsberg,eidskog,eidsvoll,eigersund,elverum,enebakk,engerdal,etne,etnedal,evenes,evenassi,xn--eveni-0qa01ga,evje-og-hornnes,farsund,fauske,fuossko,fuoisku,fedje,fet,finnoy,xn--finny-yua,fitjar,fjaler,fjell,flakstad,flatanger,flekkefjord,flesberg,flora,fla,xn--fl-zia,folldal,forsand,fosnes,frei,frogn,froland,frosta,frana,xn--frna-woa,froya,xn--frya-hra,fusa,fyresdal,forde,xn--frde-gra,gamvik,gangaviika,xn--ggaviika-8ya47h,gaular,gausdal,gildeskal,xn--gildeskl-g0a,giske,gjemnes,gjerdrum,gjerstad,gjesdal,gjovik,xn--gjvik-wua,gloppen,gol,gran,grane,granvin,gratangen,grimstad,grong,kraanghke,xn--kranghke-b0a,grue,gulen,hadsel,halden,halsa,hamar,hamaroy,habmer,xn--hbmer-xqa,hapmir,xn--hpmir-xqa,hammerfest,hammarfeasta,xn--hmmrfeasta-s4ac,haram,hareid,harstad,hasvik,aknoluokta,xn--koluokta-7ya57h,hattfjelldal,aarborte,haugesund,hemne,hemnes,hemsedal,more-og-romsdal>heroy,sande<xn--mre-og-romsdal-qqb>xn--hery-ira,sande<hitra,hjartdal,hjelmeland,hobol,xn--hobl-ira,hof,hol,hole,holmestrand,holtalen,xn--holtlen-hxa,hornindal,horten,hurdal,hurum,hvaler,hyllestad,hagebostad,xn--hgebostad-g3a,hoyanger,xn--hyanger-q1a,hoylandet,xn--hylandet-54a,ha,xn--h-2fa,ibestad,inderoy,xn--indery-fya,iveland,jevnaker,jondal,jolster,xn--jlster-bya,karasjok,karasjohka,xn--krjohka-hwab49j,karlsoy,galsa,xn--gls-elac,karmoy,xn--karmy-yua,kautokeino,guovdageaidnu,klepp,klabu,xn--klbu-woa,kongsberg,kongsvinger,kragero,xn--krager-gya,kristiansand,kristiansund,krodsherad,xn--krdsherad-m8a,kvalsund,rahkkeravju,xn--rhkkervju-01af,kvam,kvinesdal,kvinnherad,kviteseid,kvitsoy,xn--kvitsy-fya,kvafjord,xn--kvfjord-nxa,giehtavuoatna,kvanangen,xn--kvnangen-k0a,navuotna,xn--nvuotna-hwa,kafjord,xn--kfjord-iua,gaivuotna,xn--givuotna-8ya,larvik,lavangen,lavagis,loabat,xn--loabt-0qa,lebesby,davvesiida,leikanger,leirfjord,leka,leksvik,lenvik,leangaviika,xn--leagaviika-52b,lesja,levanger,lier,lierne,lillehammer,lillesand,lindesnes,lindas,xn--linds-pra,lom,loppa,lahppi,xn--lhppi-xqa,lund,lunner,luroy,xn--lury-ira,luster,lyngdal,lyngen,ivgu,lardal,lerdal,xn--lrdal-sra,lodingen,xn--ldingen-q1a,lorenskog,xn--lrenskog-54a,loten,xn--lten-gra,malvik,masoy,xn--msy-ula0h,muosat,xn--muost-0qa,mandal,marker,marnardal,masfjorden,meland,meldal,melhus,meloy,xn--mely-ira,meraker,xn--merker-kua,moareke,xn--moreke-jua,midsund,midtre-gauldal,modalen,modum,molde,moskenes,moss,mosvik,malselv,xn--mlselv-iua,malatvuopmi,xn--mlatvuopmi-s4a,namdalseid,aejrie,namsos,namsskogan,naamesjevuemie,xn--nmesjevuemie-tcba,laakesvuemie,nannestad,narvik,narviika,naustdal,nedre-eiker,akershus>nes<buskerud>nes<nesna,nesodden,nesseby,unjarga,xn--unjrga-rta,nesset,nissedal,nittedal,nord-aurdal,nord-fron,nord-odal,norddal,nordkapp,davvenjarga,xn--davvenjrga-y4a,nordre-land,nordreisa,raisa,xn--risa-5na,nore-og-uvdal,notodden,naroy,xn--nry-yla5g,notteroy,xn--nttery-byae,odda,oksnes,xn--ksnes-uua,oppdal,oppegard,xn--oppegrd-ixa,orkdal,orland,xn--rland-uua,orskog,xn--rskog-uua,orsta,xn--rsta-fra,hedmark>os,valer,xn--vler-qoa<hordaland>os<osen,osteroy,xn--ostery-fya,ostre-toten,xn--stre-toten-zcb,overhalla,ovre-eiker,xn--vre-eiker-k8a,oyer,xn--yer-zna,oygarden,xn--ygarden-p1a,oystre-slidre,xn--ystre-slidre-ujb,porsanger,porsangu,xn--porsgu-sta26f,porsgrunn,radoy,xn--rady-ira,rakkestad,rana,ruovat,randaberg,rauma,rendalen,rennebu,rennesoy,xn--rennesy-v1a,rindal,ringebu,ringerike,ringsaker,rissa,risor,xn--risr-ira,roan,rollag,rygge,ralingen,xn--rlingen-mxa,rodoy,xn--rdy-0nab,romskog,xn--rmskog-bya,roros,xn--rros-gra,rost,xn--rst-0na,royken,xn--ryken-vua,royrvik,xn--ryrvik-bya,rade,xn--rde-ula,salangen,siellak,saltdal,salat,xn--slt-elab,xn--slat-5na,samnanger,vestfold>sande<sandefjord,sandnes,sandoy,xn--sandy-yua,sarpsborg,sauda,sauherad,sel,selbu,selje,seljord,sigdal,siljan,sirdal,skaun,skedsmo,ski,skien,skiptvet,skjervoy,xn--skjervy-v1a,skierva,xn--skierv-uta,skjak,xn--skjk-soa,skodje,skanland,xn--sknland-fxa,skanit,xn--sknit-yqa,smola,xn--smla-hra,snillfjord,snasa,xn--snsa-roa,snoasa,snaase,xn--snase-nra,sogndal,sokndal,sola,solund,songdalen,sortland,spydeberg,stange,stavanger,steigen,steinkjer,stjordal,xn--stjrdal-s1a,stokke,stor-elvdal,stord,stordal,storfjord,omasvuotna,strand,stranda,stryn,sula,suldal,sund,sunndal,surnadal,sveio,svelvik,sykkylven,sogne,xn--sgne-gra,somna,xn--smna-gra,sondre-land,xn--sndre-land-0cb,sor-aurdal,xn--sr-aurdal-l8a,sor-fron,xn--sr-fron-q1a,sor-odal,xn--sr-odal-q1a,sor-varanger,xn--sr-varanger-ggb,matta-varjjat,xn--mtta-vrjjat-k7af,sorfold,xn--srfold-bya,sorreisa,xn--srreisa-q1a,sorum,xn--srum-gra,tana,deatnu,time,tingvoll,tinn,tjeldsund,dielddanuorri,tjome,xn--tjme-hra,tokke,tolga,torsken,tranoy,xn--trany-yua,tromso,xn--troms-zua,tromsa,romsa,trondheim,troandin,trysil,trana,xn--trna-woa,trogstad,xn--trgstad-r1a,tvedestrand,tydal,tynset,tysfjord,divtasvuodna,divttasvuotna,tysnes,tysvar,xn--tysvr-vra,tonsberg,xn--tnsberg-q1a,ullensaker,ullensvang,ulvik,utsira,vadso,xn--vads-jra,cahcesuolo,xn--hcesuolo-7ya35b,vaksdal,valle,vang,vanylven,vardo,xn--vard-jra,varggat,xn--vrggt-xqad,vefsn,vaapste,vega,vegarshei,xn--vegrshei-c0a,vennesla,verdal,verran,vestby,vestnes,vestre-slidre,vestre-toten,vestvagoy,xn--vestvgy-ixa6o,vevelstad,vik,vikna,vindafjord,volda,voss,varoy,xn--vry-yla5g,vagan,xn--vgan-qoa,voagat,vagsoy,xn--vgsy-qoa0j,vaga,xn--vg-yiab,ostfold>valer<xn--stfold-9xa>xn--vler-qoa<<np>*<nr>biz,info,gov,edu,org,net,com<nu,nz>ac,co,cri,geek,gen,govt,health,iwi,kiwi,maori,mil,xn--mori-qsa,net,org,parliament,school<om>co,com,edu,gov,med,museum,net,org,pro<onion,org,pa>ac,gob,com,org,sld,edu,net,ing,abo,med,nom<pe>edu,gob,nom,mil,org,com,net<pf>com,org,edu<pg>*<ph>com,net,org,gov,edu,ngo,mil,i<pk>com,net,edu,org,fam,biz,web,gov,gob,gok,gon,gop,gos,info<pl>com,net,org,aid,agro,atm,auto,biz,edu,gmina,gsm,info,mail,miasta,media,mil,nieruchomosci,nom,pc,powiat,priv,realestate,rel,sex,shop,sklep,sos,szkola,targi,tm,tourism,travel,turystyka,gov>ap,ic,is,us,kmpsp,kppsp,kwpsp,psp,wskr,kwp,mw,ug,um,umig,ugim,upow,uw,starostwo,pa,po,psse,pup,rzgw,sa,so,sr,wsa,sko,uzs,wiih,winb,pinb,wios,witd,wzmiuw,piw,wiw,griw,wif,oum,sdn,zp,uppo,mup,wuoz,konsulat,oirm<augustow,babia-gora,bedzin,beskidy,bialowieza,bialystok,bielawa,bieszczady,boleslawiec,bydgoszcz,bytom,cieszyn,czeladz,czest,dlugoleka,elblag,elk,glogow,gniezno,gorlice,grajewo,ilawa,jaworzno,jelenia-gora,jgora,kalisz,kazimierz-dolny,karpacz,kartuzy,kaszuby,katowice,kepno,ketrzyn,klodzko,kobierzyce,kolobrzeg,konin,konskowola,kutno,lapy,lebork,legnica,lezajsk,limanowa,lomza,lowicz,lubin,lukow,malbork,malopolska,mazowsze,mazury,mielec,mielno,mragowo,naklo,nowaruda,nysa,olawa,olecko,olkusz,olsztyn,opoczno,opole,ostroda,ostroleka,ostrowiec,ostrowwlkp,pila,pisz,podhale,podlasie,polkowice,pomorze,pomorskie,prochowice,pruszkow,przeworsk,pulawy,radom,rawa-maz,rybnik,rzeszow,sanok,sejny,slask,slupsk,sosnowiec,stalowa-wola,skoczow,starachowice,stargard,suwalki,swidnica,swiebodzin,swinoujscie,szczecin,szczytno,tarnobrzeg,tgory,turek,tychy,ustka,walbrzych,warmia,warszawa,waw,wegrow,wielun,wlocl,wloclawek,wodzislaw,wolomin,wroclaw,zachpomor,zagan,zarow,zgora,zgorzelec<pm,pn>gov,co,org,edu,net<post,pr>com,net,org,gov,edu,isla,pro,biz,info,name,est,prof,ac<pro>aaa,aca,acct,avocat,bar,cpa,eng,jur,law,med,recht<ps>edu,gov,sec,plo,com,org,net<pt>net,gov,org,edu,int,publ,com,nome<pw>co,ne,or,ed,go,belau<py>com,coop,edu,gov,mil,net,org<qa>com,edu,gov,mil,name,net,org,sch<re>asso,com,nom<ro>arts,com,firm,info,nom,nt,org,rec,store,tm,www<rs>ac,co,edu,gov,in,org<ru,rw>ac,co,coop,gov,mil,net,org<sa>com,net,org,gov,med,pub,edu,sch<sb>com,edu,gov,net,org<sc>com,gov,net,org,edu<sd>com,net,org,edu,med,tv,gov,info<se>a,ac,b,bd,brand,c,d,e,f,fh,fhsk,fhv,g,h,i,k,komforb,kommunalforbund,komvux,l,lanbib,m,n,naturbruksgymn,o,org,p,parti,pp,press,r,s,t,tm,u,w,x,y,z<sg>com,net,org,gov,edu,per<sh>com,net,gov,org,mil<si,sj,sk,sl>com,net,edu,gov,org<sm,sn>art,com,edu,gouv,org,perso,univ<so>com,edu,gov,me,net,org<sr,ss>biz,com,edu,gov,me,net,org,sch<st>co,com,consulado,edu,embaixada,mil,net,org,principe,saotome,store<su,sv>com,edu,gob,org,red<sx>gov<sy>edu,gov,net,mil,com,org<sz>co,ac,org<tc,td,tel,tf,tg,th>ac,co,go,in,mi,net,or<tj>ac,biz,co,com,edu,go,gov,int,mil,name,net,nic,org,test,web<tk,tl>gov<tm>com,co,org,net,nom,gov,mil,edu<tn>com,ens,fin,gov,ind,info,intl,mincom,nat,net,org,perso,tourism<to>com,gov,net,org,edu,mil<tr>av,bbs,bel,biz,com,dr,edu,gen,gov,info,mil,k12,kep,name,net,org,pol,tel,tsk,tv,web,nc>gov<<tt>co,com,org,net,biz,info,pro,int,coop,jobs,mobi,travel,museum,aero,name,gov,edu<tv,tw>edu,gov,mil,com,net,org,idv,game,ebiz,club,xn--zf0ao64a,xn--uc0atv,xn--czrw28b<tz>ac,co,go,hotel,info,me,mil,mobi,ne,or,sc,tv<ua>com,edu,gov,in,net,org,cherkassy,cherkasy,chernigov,chernihiv,chernivtsi,chernovtsy,ck,cn,cr,crimea,cv,dn,dnepropetrovsk,dnipropetrovsk,donetsk,dp,if,ivano-frankivsk,kh,kharkiv,kharkov,kherson,khmelnitskiy,khmelnytskyi,kiev,kirovograd,km,kr,krym,ks,kv,kyiv,lg,lt,lugansk,lutsk,lv,lviv,mk,mykolaiv,nikolaev,od,odesa,odessa,pl,poltava,rivne,rovno,rv,sb,sebastopol,sevastopol,sm,sumy,te,ternopil,uz,uzhgorod,vinnica,vinnytsia,vn,volyn,yalta,zaporizhzhe,zaporizhzhia,zhitomir,zhytomyr,zp,zt<ug>co,or,ac,sc,go,ne,com,org<uk>ac,co,gov,ltd,me,net,nhs,org,plc,police,sch>*<<us>dni,fed,isa,kids,nsn,ak>k12,cc,lib<al>k12,cc,lib<ar>k12,cc,lib<as>k12,cc,lib<az>k12,cc,lib<ca>k12,cc,lib<co>k12,cc,lib<ct>k12,cc,lib<dc>k12,cc,lib<de>k12,cc<fl>k12,cc,lib<ga>k12,cc,lib<gu>k12,cc,lib<hi>cc,lib<ia>k12,cc,lib<id>k12,cc,lib<il>k12,cc,lib<in>k12,cc,lib<ks>k12,cc,lib<ky>k12,cc,lib<la>k12,cc,lib<ma>k12>pvt,chtr,paroch<cc,lib<md>k12,cc,lib<me>k12,cc,lib<mi>k12,cc,lib,ann-arbor,cog,dst,eaton,gen,mus,tec,washtenaw<mn>k12,cc,lib<mo>k12,cc,lib<ms>k12,cc,lib<mt>k12,cc,lib<nc>k12,cc,lib<nd>cc,lib<ne>k12,cc,lib<nh>k12,cc,lib<nj>k12,cc,lib<nm>k12,cc,lib<nv>k12,cc,lib<ny>k12,cc,lib<oh>k12,cc,lib<ok>k12,cc,lib<or>k12,cc,lib<pa>k12,cc,lib<pr>k12,cc,lib<ri>cc,lib<sc>k12,cc,lib<sd>cc,lib<tn>k12,cc,lib<tx>k12,cc,lib<ut>k12,cc,lib<vi>k12,cc,lib<vt>k12,cc,lib<va>k12,cc,lib<wa>k12,cc,lib<wi>k12,cc,lib<wv>cc<wy>k12,cc,lib<<uy>com,edu,gub,mil,net,org<uz>co,com,net,org<va,vc>com,net,org,gov,mil,edu<ve>arts,bib,co,com,e12,edu,firm,gob,gov,info,int,mil,net,nom,org,rar,rec,store,tec,web<vg,vi>co,com,k12,net,org<vn>com,net,org,edu,gov,int,ac,biz,info,name,pro,health<vu>com,edu,net,org<wf,ws>com,net,org,gov,edu<yt,xn--mgbaam7a8h,xn--y9a3aq,xn--54b7fta0cc,xn--90ae,xn--mgbcpq6gpa1a,xn--90ais,xn--fiqs8s,xn--fiqz9s,xn--lgbbat1ad8j,xn--wgbh1c,xn--e1a4c,xn--qxa6a,xn--mgbah1a3hjkrd,xn--node,xn--qxam,xn--j6w193g>xn--55qx5d,xn--wcvs22d,xn--mxtq1m,xn--gmqw5a,xn--od0alg,xn--uc0atv<xn--2scrj9c,xn--3hcrj9c,xn--45br5cyl,xn--h2breg3eve,xn--h2brj9c8c,xn--mgbgu82a,xn--rvc1e0am3e,xn--h2brj9c,xn--mgbbh1a,xn--mgbbh1a71e,xn--fpcrj9c3d,xn--gecrj9c,xn--s9brj9c,xn--45brj9c,xn--xkc2dl3a5ee0h,xn--mgba3a4f16a,xn--mgba3a4fra,xn--mgbtx2b,xn--mgbayh7gpa,xn--3e0b707e,xn--80ao21a,xn--q7ce6a,xn--fzc2c9e2c,xn--xkc2al3hye2a,xn--mgbc0a9azcg,xn--d1alf,xn--l1acc,xn--mix891f,xn--mix082f,xn--mgbx4cd0ab,xn--mgb9awbf,xn--mgbai9azgqp6j,xn--mgbai9a5eva00b,xn--ygbi2ammx,xn--90a3ac>xn--o1ac,xn--c1avg,xn--90azh,xn--d1at,xn--o1ach,xn--80au<xn--p1ai,xn--wgbl6a,xn--mgberp4a5d4ar,xn--mgberp4a5d4a87g,xn--mgbqly7c0a67fbc,xn--mgbqly7cvafr,xn--mgbpl2fh,xn--yfro4i67o,xn--clchc0ea0b2g2a9gcd,xn--ogbpf8fl,xn--mgbtf8fl,xn--o3cw4h>xn--12c1fe0br,xn--12co0c3b4eva,xn--h3cuzk1di,xn--o3cyx2a,xn--m3ch0j3a,xn--12cfi8ixb8l<xn--pgbs0dh,xn--kpry57d,xn--kprw13d,xn--nnx388a,xn--j1amh,xn--mgb2ddes,xxx,ye>com,edu,gov,net,mil,org<za>ac,agric,alt,co,edu,gov,grondar,law,mil,net,ngo,nic,nis,nom,org,school,tm,web<zm>ac,biz,co,com,edu,gov,info,mil,net,org,sch<zw>ac,co,gov,mil,org<aaa,aarp,abarth,abb,abbott,abbvie,abc,able,abogado,abudhabi,academy,accenture,accountant,accountants,aco,actor,adac,ads,adult,aeg,aetna,afl,africa,agakhan,agency,aig,airbus,airforce,airtel,akdn,alfaromeo,alibaba,alipay,allfinanz,allstate,ally,alsace,alstom,amazon,americanexpress,americanfamily,amex,amfam,amica,amsterdam,analytics,android,anquan,anz,aol,apartments,app,apple,aquarelle,arab,aramco,archi,army,art,arte,asda,associates,athleta,attorney,auction,audi,audible,audio,auspost,author,auto,autos,avianca,aws,axa,azure,baby,baidu,banamex,bananarepublic,band,bank,bar,barcelona,barclaycard,barclays,barefoot,bargains,baseball,basketball,bauhaus,bayern,bbc,bbt,bbva,bcg,bcn,beats,beauty,beer,bentley,berlin,best,bestbuy,bet,bharti,bible,bid,bike,bing,bingo,bio,black,blackfriday,blockbuster,blog,bloomberg,blue,bms,bmw,bnpparibas,boats,boehringer,bofa,bom,bond,boo,book,booking,bosch,bostik,boston,bot,boutique,box,bradesco,bridgestone,broadway,broker,brother,brussels,bugatti,build,builders,business,buy,buzz,bzh,cab,cafe,cal,call,calvinklein,cam,camera,camp,cancerresearch,canon,capetown,capital,capitalone,car,caravan,cards,care,career,careers,cars,casa,case,cash,casino,catering,catholic,cba,cbn,cbre,cbs,center,ceo,cern,cfa,cfd,chanel,channel,charity,chase,chat,cheap,chintai,christmas,chrome,church,cipriani,circle,cisco,citadel,citi,citic,city,cityeats,claims,cleaning,click,clinic,clinique,clothing,cloud,club,clubmed,coach,codes,coffee,college,cologne,comcast,commbank,community,company,compare,computer,comsec,condos,construction,consulting,contact,contractors,cooking,cookingchannel,cool,corsica,country,coupon,coupons,courses,cpa,credit,creditcard,creditunion,cricket,crown,crs,cruise,cruises,cuisinella,cymru,cyou,dabur,dad,dance,data,date,dating,datsun,day,dclk,dds,deal,dealer,deals,degree,delivery,dell,deloitte,delta,democrat,dental,dentist,desi,design,dev,dhl,diamonds,diet,digital,direct,directory,discount,discover,dish,diy,dnp,docs,doctor,dog,domains,dot,download,drive,dtv,dubai,dunlop,dupont,durban,dvag,dvr,earth,eat,eco,edeka,education,email,emerck,energy,engineer,engineering,enterprises,epson,equipment,ericsson,erni,esq,estate,etisalat,eurovision,eus,events,exchange,expert,exposed,express,extraspace,fage,fail,fairwinds,faith,family,fan,fans,farm,farmers,fashion,fast,fedex,feedback,ferrari,ferrero,fiat,fidelity,fido,film,final,finance,financial,fire,firestone,firmdale,fish,fishing,fit,fitness,flickr,flights,flir,florist,flowers,fly,foo,food,foodnetwork,football,ford,forex,forsale,forum,foundation,fox,free,fresenius,frl,frogans,frontdoor,frontier,ftr,fujitsu,fun,fund,furniture,futbol,fyi,gal,gallery,gallo,gallup,game,games,gap,garden,gay,gbiz,gdn,gea,gent,genting,george,ggee,gift,gifts,gives,giving,glass,gle,global,globo,gmail,gmbh,gmo,gmx,godaddy,gold,goldpoint,golf,goo,goodyear,goog,google,gop,got,grainger,graphics,gratis,green,gripe,grocery,group,guardian,gucci,guge,guide,guitars,guru,hair,hamburg,hangout,haus,hbo,hdfc,hdfcbank,health,healthcare,help,helsinki,here,hermes,hgtv,hiphop,hisamitsu,hitachi,hiv,hkt,hockey,holdings,holiday,homedepot,homegoods,homes,homesense,honda,horse,hospital,host,hosting,hot,hoteles,hotels,hotmail,house,how,hsbc,hughes,hyatt,hyundai,ibm,icbc,ice,icu,ieee,ifm,ikano,imamat,imdb,immo,immobilien,inc,industries,infiniti,ing,ink,institute,insurance,insure,international,intuit,investments,ipiranga,irish,ismaili,ist,istanbul,itau,itv,jaguar,java,jcb,jeep,jetzt,jewelry,jio,jll,jmp,jnj,joburg,jot,joy,jpmorgan,jprs,juegos,juniper,kaufen,kddi,kerryhotels,kerrylogistics,kerryproperties,kfh,kia,kids,kim,kinder,kindle,kitchen,kiwi,koeln,komatsu,kosher,kpmg,kpn,krd,kred,kuokgroup,kyoto,lacaixa,lamborghini,lamer,lancaster,lancia,land,landrover,lanxess,lasalle,lat,latino,latrobe,law,lawyer,lds,lease,leclerc,lefrak,legal,lego,lexus,lgbt,lidl,life,lifeinsurance,lifestyle,lighting,like,lilly,limited,limo,lincoln,linde,link,lipsy,live,living,llc,llp,loan,loans,locker,locus,loft,lol,london,lotte,lotto,love,lpl,lplfinancial,ltd,ltda,lundbeck,luxe,luxury,macys,madrid,maif,maison,makeup,man,management,mango,map,market,marketing,markets,marriott,marshalls,maserati,mattel,mba,mckinsey,med,media,meet,melbourne,meme,memorial,men,menu,merckmsd,miami,microsoft,mini,mint,mit,mitsubishi,mlb,mls,mma,mobile,moda,moe,moi,mom,monash,money,monster,mormon,mortgage,moscow,moto,motorcycles,mov,movie,msd,mtn,mtr,music,mutual,nab,nagoya,natura,navy,nba,nec,netbank,netflix,network,neustar,new,news,next,nextdirect,nexus,nfl,ngo,nhk,nico,nike,nikon,ninja,nissan,nissay,nokia,northwesternmutual,norton,now,nowruz,nowtv,nra,nrw,ntt,nyc,obi,observer,office,okinawa,olayan,olayangroup,oldnavy,ollo,omega,one,ong,onl,online,ooo,open,oracle,orange,organic,origins,osaka,otsuka,ott,ovh,page,panasonic,paris,pars,partners,parts,party,passagens,pay,pccw,pet,pfizer,pharmacy,phd,philips,phone,photo,photography,photos,physio,pics,pictet,pictures,pid,pin,ping,pink,pioneer,pizza,place,play,playstation,plumbing,plus,pnc,pohl,poker,politie,porn,pramerica,praxi,press,prime,prod,productions,prof,progressive,promo,properties,property,protection,pru,prudential,pub,pwc,qpon,quebec,quest,racing,radio,read,realestate,realtor,realty,recipes,red,redstone,redumbrella,rehab,reise,reisen,reit,reliance,ren,rent,rentals,repair,report,republican,rest,restaurant,review,reviews,rexroth,rich,richardli,ricoh,ril,rio,rip,rocher,rocks,rodeo,rogers,room,rsvp,rugby,ruhr,run,rwe,ryukyu,saarland,safe,safety,sakura,sale,salon,samsclub,samsung,sandvik,sandvikcoromant,sanofi,sap,sarl,sas,save,saxo,sbi,sbs,sca,scb,schaeffler,schmidt,scholarships,school,schule,schwarz,science,scot,search,seat,secure,security,seek,select,sener,services,ses,seven,sew,sex,sexy,sfr,shangrila,sharp,shaw,shell,shia,shiksha,shoes,shop,shopping,shouji,show,showtime,silk,sina,singles,site,ski,skin,sky,skype,sling,smart,smile,sncf,soccer,social,softbank,software,sohu,solar,solutions,song,sony,soy,spa,space,sport,spot,srl,stada,staples,star,statebank,statefarm,stc,stcgroup,stockholm,storage,store,stream,studio,study,style,sucks,supplies,supply,support,surf,surgery,suzuki,swatch,swiss,sydney,systems,tab,taipei,talk,taobao,target,tatamotors,tatar,tattoo,tax,taxi,tci,tdk,team,tech,technology,temasek,tennis,teva,thd,theater,theatre,tiaa,tickets,tienda,tiffany,tips,tires,tirol,tjmaxx,tjx,tkmaxx,tmall,today,tokyo,tools,top,toray,toshiba,total,tours,town,toyota,toys,trade,trading,training,travel,travelchannel,travelers,travelersinsurance,trust,trv,tube,tui,tunes,tushu,tvs,ubank,ubs,unicom,university,uno,uol,ups,vacations,vana,vanguard,vegas,ventures,verisign,versicherung,vet,viajes,video,vig,viking,villas,vin,vip,virgin,visa,vision,viva,vivo,vlaanderen,vodka,volkswagen,volvo,vote,voting,voto,voyage,vuelos,wales,walmart,walter,wang,wanggou,watch,watches,weather,weatherchannel,webcam,weber,website,wedding,weibo,weir,whoswho,wien,wiki,williamhill,win,windows,wine,winners,wme,wolterskluwer,woodside,work,works,world,wow,wtc,wtf,xbox,xerox,xfinity,xihuan,xin,xn--11b4c3d,xn--1ck2e1b,xn--1qqw23a,xn--30rr7y,xn--3bst00m,xn--3ds443g,xn--3pxu8k,xn--42c2d9a,xn--45q11c,xn--4gbrim,xn--55qw42g,xn--55qx5d,xn--5su34j936bgsg,xn--5tzm5g,xn--6frz82g,xn--6qq986b3xl,xn--80adxhks,xn--80aqecdr1a,xn--80asehdb,xn--80aswg,xn--8y0a063a,xn--9dbq2a,xn--9et52u,xn--9krt00a,xn--b4w605ferd,xn--bck1b9a5dre4c,xn--c1avg,xn--c2br7g,xn--cck2b3b,xn--cckwcxetd,xn--cg4bki,xn--czr694b,xn--czrs0t,xn--czru2d,xn--d1acj3b,xn--eckvdtc9d,xn--efvy88h,xn--fct429k,xn--fhbei,xn--fiq228c5hs,xn--fiq64b,xn--fjq720a,xn--flw351e,xn--fzys8d69uvgm,xn--g2xx48c,xn--gckr3f0f,xn--gk3at1e,xn--hxt814e,xn--i1b6b1a6a2e,xn--imr513n,xn--io0a7i,xn--j1aef,xn--jlq480n2rg,xn--jlq61u9w7b,xn--jvr189m,xn--kcrx77d1x4a,xn--kput3i,xn--mgba3a3ejt,xn--mgba7c0bbn0a,xn--mgbaakc7dvf,xn--mgbab2bd,xn--mgbca7dzdo,xn--mgbi4ecexp,xn--mgbt3dhd,xn--mk1bu44c,xn--mxtq1m,xn--ngbc5azd,xn--ngbe9e0a,xn--ngbrx,xn--nqv7f,xn--nqv7fs00ema,xn--nyqy26a,xn--otu796d,xn--p1acf,xn--pssy2u,xn--q9jyb4c,xn--qcka1pmc,xn--rhqv96g,xn--rovu88b,xn--ses554g,xn--t60b56a,xn--tckwe,xn--tiq49xqyj,xn--unup4y,xn--vermgensberater-ctb,xn--vermgensberatung-pwb,xn--vhquv,xn--vuq861b,xn--w4r85el8fhu5dnra,xn--w4rs40l,xn--xhq521b,xn--zfr164b,xyz,yachts,yahoo,yamaxun,yandex,yodobashi,yoga,yokohama,you,youtube,yun,zappos,zara,zero,zip,zone,zuerich");
-
-/***/ }),
-
-/***/ "./node_modules/parse-domain/serialized-tries/private.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/parse-domain/serialized-tries/private.js ***!
-  \***************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("ua>cc,inf,ltd,cx,biz,co,pp,v<to>611,oya,rdv,vpnplus,quickconnect>direct<nyan<us>graphox,cloudns,drud,is-by,land-4-sale,stuff-4-sale,enscaled>phx<mircloud,freeddns,golffan,noip,pointto,platterp,de>lib<<com>devcdnaccesso>*<adobeaemcloud>dev>*<<airkitapps,airkitapps-au,aivencloud,kasserver,amazonaws>compute>*<compute-1>*<us-east-1>dualstack>s3<<elb>*<s3,s3-ap-northeast-1,s3-ap-northeast-2,s3-ap-south-1,s3-ap-southeast-1,s3-ap-southeast-2,s3-ca-central-1,s3-eu-central-1,s3-eu-west-1,s3-eu-west-2,s3-eu-west-3,s3-external-1,s3-fips-us-gov-west-1,s3-sa-east-1,s3-us-gov-west-1,s3-us-east-2,s3-us-west-1,s3-us-west-2,ap-northeast-2>s3,dualstack>s3<s3-website<ap-south-1>s3,dualstack>s3<s3-website<ca-central-1>s3,dualstack>s3<s3-website<eu-central-1>s3,dualstack>s3<s3-website<eu-west-2>s3,dualstack>s3<s3-website<eu-west-3>s3,dualstack>s3<s3-website<us-east-2>s3,dualstack>s3<s3-website<ap-northeast-1>dualstack>s3<<ap-southeast-1>dualstack>s3<<ap-southeast-2>dualstack>s3<<eu-west-1>dualstack>s3<<sa-east-1>dualstack>s3<<s3-website-us-east-1,s3-website-us-west-1,s3-website-us-west-2,s3-website-ap-northeast-1,s3-website-ap-southeast-1,s3-website-ap-southeast-2,s3-website-eu-west-1,s3-website-sa-east-1<elasticbeanstalk>ap-northeast-1,ap-northeast-2,ap-northeast-3,ap-south-1,ap-southeast-1,ap-southeast-2,ca-central-1,eu-central-1,eu-west-1,eu-west-2,eu-west-3,sa-east-1,us-east-1,us-east-2,us-gov-west-1,us-west-1,us-west-2<awsglobalaccelerator,siiites,appspacehosted,appspaceusercontent,on-aptible,myasustor,balena-devices,betainabox,boutir,bplaced,cafjs,br,cn,de,eu,jpn,mex,ru,sa,uk,us,za,ar,hu,kr,no,qc,uy,africa,gr,co,jdevcloud,wpdevcloud,cloudcontrolled,cloudcontrolapp,trycloudflare,customer-oci>*,oci>*<ocp>*<ocs>*<<dattolocal,dattorelay,dattoweb,mydatto,builtwithdark,datadetect>demo,instance<ddns5,discordsays,discordsez,drayddns,dreamhosters,mydrobo,dyndns-at-home,dyndns-at-work,dyndns-blog,dyndns-free,dyndns-home,dyndns-ip,dyndns-mail,dyndns-office,dyndns-pics,dyndns-remote,dyndns-server,dyndns-web,dyndns-wiki,dyndns-work,blogdns,cechire,dnsalias,dnsdojo,doesntexist,dontexist,doomdns,dyn-o-saur,dynalias,est-a-la-maison,est-a-la-masion,est-le-patron,est-mon-blogueur,from-ak,from-al,from-ar,from-ca,from-ct,from-dc,from-de,from-fl,from-ga,from-hi,from-ia,from-id,from-il,from-in,from-ks,from-ky,from-ma,from-md,from-mi,from-mn,from-mo,from-ms,from-mt,from-nc,from-nd,from-ne,from-nh,from-nj,from-nm,from-nv,from-oh,from-ok,from-or,from-pa,from-pr,from-ri,from-sc,from-sd,from-tn,from-tx,from-ut,from-va,from-vt,from-wa,from-wi,from-wv,from-wy,getmyip,gotdns,hobby-site,homelinux,homeunix,iamallama,is-a-anarchist,is-a-blogger,is-a-bookkeeper,is-a-bulls-fan,is-a-caterer,is-a-chef,is-a-conservative,is-a-cpa,is-a-cubicle-slave,is-a-democrat,is-a-designer,is-a-doctor,is-a-financialadvisor,is-a-geek,is-a-green,is-a-guru,is-a-hard-worker,is-a-hunter,is-a-landscaper,is-a-lawyer,is-a-liberal,is-a-libertarian,is-a-llama,is-a-musician,is-a-nascarfan,is-a-nurse,is-a-painter,is-a-personaltrainer,is-a-photographer,is-a-player,is-a-republican,is-a-rockstar,is-a-socialist,is-a-student,is-a-teacher,is-a-techie,is-a-therapist,is-an-accountant,is-an-actor,is-an-actress,is-an-anarchist,is-an-artist,is-an-engineer,is-an-entertainer,is-certified,is-gone,is-into-anime,is-into-cars,is-into-cartoons,is-into-games,is-leet,is-not-certified,is-slick,is-uberleet,is-with-theband,isa-geek,isa-hockeynut,issmarterthanyou,likes-pie,likescandy,neat-url,saves-the-whales,selfip,sells-for-less,sells-for-u,servebbs,simple-url,space-to-rent,teaches-yoga,writesthisblog,digitaloceanspaces>*<ddnsfree,ddnsgeek,giize,gleeze,kozow,loseyourip,ooguy,theworkpc,mytuleap,tuleap-partners,encoreapi,evennode>eu-1,eu-2,eu-3,eu-4,us-1,us-2,us-3,us-4<onfabrica,fbsbx>apps<fastly-terrarium,fastvps-server,mydobiss,firebaseapp,fldrv,forgeblocks,framercanvas,freebox-os,freeboxos,freemyip,gentapps,gentlentapis,githubusercontent,0emm>*<appspot>r>*<<codespot,googleapis,googlecode,pagespeedmobilizer,publishproxy,withgoogle,withyoutube,blogspot,awsmppl,herokuapp,herokussl,myravendb,impertrixcdn,impertrix,smushcdn,wphostedmail,wpmucdn,pixolino,amscompute,clicketcloud,dopaas,hidora,hosted-by-previder>paas<hosteur>rag-cloud,rag-cloud-ch<ik-server>jcloud,jcloud-ver-jpc<jelastic>demo<kilatiron,massivegrid>paas<wafaicloud>jed,lon,ryd<joyent>cns>*<<ktistory,lpusercontent,lmpm>app<linode>members,nodebalancer>*<<linodeobjects>*<linodeusercontent>ip<barsycenter,barsyonline,mazeplay,miniserver,meteorapp>eu<hostedpi,mythic-beasts>customer,caracal,fentiger,lynx,ocelot,oncilla,onza,sphinx,vs,x,yali<nospamproxy>cloud<4u,nfshost,001www,ddnslive,myiphost,blogsyte,ciscofreak,damnserver,ditchyourip,dnsiskinky,dynns,geekgalaxy,health-carereform,homesecuritymac,homesecuritypc,myactivedirectory,mysecuritycamera,net-freaks,onthewifi,point2this,quicksytes,securitytactics,serveexchange,servehumour,servep2p,servesarcasm,stufftoread,unusualperson,workisboring,3utilities,ddnsking,myvnc,servebeer,servecounterstrike,serveftp,servegame,servehalflife,servehttp,serveirc,servemp3,servepics,servequake,observableusercontent>static<orsites,operaunite,authgear-staging,authgearapps,skygearapp,outsystemscloud,ownprovider,pgfog,pagefrontapp,pagexl,paywhirl>*<gotpantheon,platter-app,pleskns,postman-echo,prgmr>xen<pythonanywhere>eu<qualifioapp,qbuser,qa2,dev-myqnapcloud,alpha-myqnapcloud,myqnapcloud,quipelements>*<rackmaze,rhcloud,render>app<onrender,code>builder>*<dev-builder>*<stg-builder>*<<logoip,scrysec,firewall-gateway,myshopblocks,myshopify,shopitsite,1kapp,appchizi,applinzi,sinaapp,vipsinaapp,bounty-full>alpha,beta<try-snowplow,stackhero-network,playstation-cloud,myspreadshop,stdlib>api<temp-dns,dsmynas,familyds,tb-hosting>site<reservd,thingdustdata,bloxcms,townnews-staging,typeform>pro<hk,vultrobjects>*<wafflecell,reserve-online,hotelwithflight,remotewd,wiardweb>pages<messwithdns,woltlab-demo,wpenginepowered>js<wixsite,xnbay>u2,u2-local<yolasite<live>hlx<net>adobeaemcloud,alwaysdata,cloudfront,t3l3p0rt,appudo,atlassian-dev>prod>cdn<<myfritz,onavstack,shopselect,blackbaudcdn,boomla,bplaced,square7,gb,hu,jp,se,uk,in,clickrising,cloudaccess,cdn77-ssl,cdn77>r<feste-ip,knx-server,static-access,cryptonomic>*<dattolocal,mydatto,debian,bitbridge,at-band-camp,blogdns,broke-it,buyshouses,dnsalias,dnsdojo,does-it,dontexist,dynalias,dynathome,endofinternet,from-az,from-co,from-la,from-ny,gets-it,ham-radio-op,homeftp,homeip,homelinux,homeunix,in-the-band,is-a-chef,is-a-geek,isa-geek,kicks-ass,office-on-the,podzone,scrapper-site,selfip,sells-it,servebbs,serveftp,thruhere,webhop,definima,casacam,dynu,dynv6,twmail,ru,channelsdvr>u<fastlylb>map<fastly>freetls,map,prod>a,global<ssl>a,b,global<<edgeapp,flynnhosting,cdn-edges,heteml,cloudfunctions,moonscale,in-dsl,in-vpn,ipifony,iobb,cloudjiffy>fra1-de,west1-us<elastx>jls-sto1,jls-sto2,jls-sto3<faststacks,massivegrid>paas>fr-1,lon-1,lon-2,ny-1,ny-2,sg-1<<saveincloud>jelastic,nordeste-idc<scaleforce>j<tsukaeru>jelastic<kinghost,uni5,krellian,barsy,memset,azurewebsites,azure-mobile,cloudapp,azurestaticapps>1,centralus,eastasia,eastus2,westeurope,westus2<dnsup,hicam,now-dns,ownip,vpndns,eating-organic,mydissent,myeffect,mymediapc,mypsx,mysecuritycamera,nhlfan,no-ip,pgafan,privatizehealthinsurance,bounceme,ddns,redirectme,serveblog,serveminecraft,sytes,cloudycluster,ovh>webpaas>*<hosting>*<<bar0,bar1,bar2,rackmaze,schokokeks,firewall-gateway,seidat,senseering,siteleaf,vps-host>jelastic>atl,njs,ric<<myspreadshop,srcf>soc,user<supabase,dsmynas,familyds,tailscale>beta<ts,torproject>pages<reserve-online,community-pro,meinforum,yandexcloud>storage,website<za<page>hlx,hlx3,translated,codeberg,pdns,plesk,prvcy,rocky,magnet<pl>beep,ecommerce-shop,shoparena,homesklep,sdscloud,unicloud,krasnik,leczna,lubartow,lublin,poniatowa,swidnik,co,art,gliwice,krakow,poznan,wroc,zakopane,myspreadshop,gda,gdansk,gdynia,med,sopot<eu>airkitapps,mycd,cloudns,dogado>jelastic<barsy,wellbeingzone,spdns,transurl>*<diskstation<ca>barsy,awdev>*<co,blogspot,no-ip,myspreadshop<estate>compute>*<<network>alces>*<co,arvo,azimuth,tlon<org>altervista,amune>tele<pimienta,poivron,potager,sweetpepper,ae,us,certmgr,cdn77>c,rsc<cdn77-secure>origin>ssl<<cloudns,duckdns,tunk,dyndns>go,home<blogdns,blogsite,boldlygoingnowhere,dnsalias,dnsdojo,doesntexist,dontexist,doomdns,dvrdns,dynalias,endofinternet,endoftheinternet,from-me,game-host,gotdns,hobby-site,homedns,homeftp,homelinux,homeunix,is-a-bruinsfan,is-a-candidate,is-a-celticsfan,is-a-chef,is-a-geek,is-a-knight,is-a-linux-user,is-a-patsfan,is-a-soxfan,is-found,is-lost,is-saved,is-very-bad,is-very-evil,is-very-good,is-very-nice,is-very-sweet,isa-geek,kicks-ass,misconfused,podzone,readmyblog,selfip,sellsyourhome,servebbs,serveftp,servegame,stuff-4-sale,webhop,ddnss,accesscam,camdvr,freeddns,mywire,webredirect,eu>al,asso,at,au,be,bg,ca,cd,ch,cn,cy,cz,de,dk,edu,ee,es,fi,fr,gr,hr,hu,ie,il,in,int,is,it,jp,kr,lt,lu,lv,mc,me,mk,mt,my,net,ng,nl,no,nz,paris,pl,pt,q-a,ro,ru,se,si,sk,tr,uk,us<twmail,fedorainfracloud,fedorapeople,fedoraproject>cloud,os>app<stg>os>app<<<freedesktop,hepforge,in-dsl,in-vpn,js,barsy,mayfirst,mozilla-iot,bmoattachments,dynserv,now-dns,cable-modem,collegefan,couchpotatofries,mlbfan,mysecuritycamera,nflfan,read-books,ufcfan,hopto,myftp,no-ip,zapto,httpbin,pubtls,my-firewall,myfirewall,spdns,small-web,dsmynas,familyds,teckids>s3<tuxfamily,diskstation,hk,wmflabs,toolforge,wmcloud,za<cn>com>amazonaws>compute>*<eb>cn-north-1,cn-northwest-1<elb>*<cn-north-1>s3<<<instantcloud,quickconnect>direct<<io>apigee,b-data,backplaneapp,banzaicloud>app,backyards>*<<bitbucket,bluebite,boxfuse,browsersafetymark,bigv>uk0<cleverapps,dappnode>dyndns<dedyn,drud,definima,fh-muenster,shw,forgerock>id<ghost,github,gitlab,lolipop,hasura-app,hostyhosting,moonscale>*<beebyte>paas<beebyteapp>sekd1<jele,unispace>cloud-fr1<webthings,loginline,barsy,azurecontainer>*<ngrok,nodeart>stage<nid,pantheonsite,dyn53,pstmn>mock<protonet,qoto,qcx>sys>*<<vaporcloud,vbrplsbx>g<on-k3s>*<on-rio>*<readthedocs,resindevice,resinstaging>devices<hzc,sandcats,shiftcrypto,shiftedit,mo-siemens,musician,lair>apps<stolos>*<spacekit,utwente,s5y>*<edugit,telebit,thingdust>dev>cust,reservd<disrec>cust,reservd<prod>cust<testing>cust,reservd<<tickets,upli,2038,wedeploy,editorx,basicserver,virtualserver<jp>ne>aseinet>user<gehirn<buyshop,fashionstore,handcrafted,kawaiishop,supersale,theshop,usercontent,angry,babyblue,babymilk,backdrop,bambina,bitter,blush,boo,boy,boyfriend,but,candypop,capoo,catfood,cheap,chicappa,chillout,chips,chowder,chu,ciao,cocotte,coolblog,cranky,cutegirl,daa,deca,deci,digick,egoism,fakefur,fem,flier,floppy,fool,frenchkiss,girlfriend,girly,gloomy,gonna,greater,hacca,heavy,her,hiho,hippy,holy,hungry,icurus,itigo,jellybean,kikirara,kill,kilo,kuron,littlestar,lolipopmc,lolitapunk,lomo,lovepop,lovesick,main,mods,mond,mongolian,moo,namaste,nikita,nobushi,noor,oops,parallel,parasite,pecori,peewee,penne,pepper,perma,pigboat,pinoko,punyu,pupu,pussycat,pya,raindrop,readymade,sadist,schoolbus,secret,staba,stripper,sub,sunnyday,thick,tonkotsu,under,upper,velvet,verse,versus,vivian,watson,weblike,whitesnow,zombie,blogspot<vc>gv>d<0e<eus>party>user<<ws>advisor>*<cloud66,dyndns,mypets<ba>rs,blogspot<cloud>banzai>*<elementor,encoway>eu<statics>*<ravendb,axarnet>es-1<diadem,jelastic>vip<jele,jenv-aruba>aruba>eur>it1<<it1<keliweb>cs<oxa>tn,uk<primetel>uk<reclaim>ca,uk,us<trendhosting>ch,de<jotelulu,kuleuven,linkyard,magentosite>*<perspecta,vapor,on-rancher>*<scw>baremetal>fr-par-1,fr-par-2,nl-ams-1<fr-par>fnc>functions<k8s>nodes<s3,s3-website,whm<instances>priv,pub<k8s,nl-ams>k8s>nodes<s3,s3-website,whm<pl-waw>k8s>nodes<s3,s3-website<scalebook,smartlabeling<sensiosite>*<trafficplex,urown,voorloper<ec>base,official<shop>base,hoplix,barsy<app>beget>*<clerk,clerkstage,wnext,platform0,deta,ondigitalocean,encr,edgecompute,fireweb,onflashdrive,framer,run>a<web,hasura,loginline,messerli,netlify,developer>*<noop,northflank>*<telebit,typedream,vercel,bookonline<la>bnr,c<je>of<ch>square7,blogspot,flow>ae>alp1<appengine<linkyard-cloud,dnsking,gotdns,myspreadshop,firenet>*,svc>*<<12hp,2ix,4lima,lima-city<de>bplaced,square7,com,cosidns>dyn<dynamisches-dns,dnsupdater,internet-dns,l-o-g-i-n,dnshome,fuettertdasnetz,isteingeek,istmein,lebtimnetz,leitungsen,traeumtgerade,ddnss>dyn,dyndns<dyndns1,dyn-ip24,home-webserver>dyn<myhome-server,frusky>*<goip,blogspot,xn--gnstigbestellen-zvb,xn--gnstigliefern-wob,hs-heilbronn>it>pages<<dyn-berlin,in-berlin,in-brb,in-butter,in-dsl,in-vpn,iservschule,mein-iserv,schulplattform,schulserver,test-iserv,keymachine,git-repos,lcube-server,svn-repos,barsy,logoip,firewall-gateway,my-gateway,my-router,spdns,speedpartner>customer<myspreadshop,taifun-dns,12hp,2ix,4lima,lima-city,dd-dns,dray-dns,draydns,dyn-vpn,dynvpn,mein-vigor,my-vigor,my-wan,syno-ds,synology-diskstation,synology-ds,uberspace>*<virtualuser,virtual-user,community-pro,diskussionsbereich<rs>brendly>shop<blogspot,ua,ox<uk>co>bytemark>dh,vm<blogspot,layershift>j<barsy,barsyonline,retrosnub>cust<nh-serv,no-ip,wellbeingzone,adimo,myspreadshop,gwiddle<conn,copro,hosp,independent-commission,independent-inquest,independent-inquiry,independent-panel,independent-review,public-inquiry,royal-commission,gov>campaign,service,api,homeoffice<pymnt,org>glug,lug,lugs,affinitylottery,raffleentry,weeklylottery<barsy<ac>drr<ai>uwu<co>carrd,crd,otap>*<com>blogspot<leadpages,lpages,mypi,n4t,repl>id<supabase<mp>ju<se>com,blogspot,conf,iopsys,itcouldbewor,myspreadshop,paba>su<<bz>za,gsj<in>web,cloudns,blogspot,barsy,supabase<basketball>aus,nz<am>radio,blogspot,neko,nyaa<fm>radio<group>discourse<team>discourse,jelastic<dev>lcl>*<lclstage>*<stg>*<stgstage>*<pages,workers,curv,deno,deno-staging,deta,fly,githubpreview,gateway>*<iserv,localcert>user>*<<loginline,mediatech,platter-app,shiftcrypto,vercel,webhare>*<<me>c66,daplie>localhost<edgestack,filegear,filegear-au,filegear-de,filegear-gb,filegear-ie,filegear-jp,filegear-sg,glitch,ravendb,lohmus,barsy,mcpe,mcdir,soundcast,tcp4,brasilia,ddns,dnsfor,hopto,loginto,noip,webhop,vp4,diskstation,dscloud,i234,myds,synology,tbits,transip>site<wedeploy,yombo,nohost<zone>cloud66,hs,triton>*<lima<host>cloudaccess,freesite,fastvps,myfast,tempurl,wpmudev,jele,mircloud,pcloud,half<site>cloudera>*<cyon,fnwk,folionetwork,fastvps,jele,lelux,loginline,barsy,mintere,omniwe,opensocial,platformsh>*<tst>*<byen,srht,novecore<cz>co,realm,e4,blogspot,metacentrum>cloud>*<custom<muni>cloud>flt,usr<<<asia>cloudns<biz>cloudns,jozi,dyndns,for-better,for-more,for-some,for-the,selfip,webhop,orx,mmafan,myftp,no-ip,dscloud<club>cloudns,jele,barsy,pony<cc>cloudns,ftpaccess,game-server,myphotos,scrapping,twmail,csx,fantasyleague,spawn>instances<<info>cloudns,dynamic-dns,dyndns,barrel-of-knowledge,barrell-of-knowledge,for-our,groks-the,groks-this,here-for-more,knowsitall,selfip,webhop,barsy,mayfirst,forumz,nsupdate,dvrcam,ilovecollege,no-ip,dnsupdate,v-info<pro>cloudns,dnstrace>bci<barsy<pw>cloudns,x443<gdn>cnpy<nl>co,hosting-cluster,blogspot,gov,khplay,myspreadshop,transurl>*<cistron,demon<no>co,blogspot,myspreadshop<be>webhosting,blogspot,interhostsolutions>cloud<kuleuven>ezproxy<myspreadshop,transurl>*<<ru>ac,edu,gov,int,mil,test,eurodir,adygeya,bashkiria,bir,cbg,com,dagestan,grozny,kalmykia,kustanai,marine,mordovia,msk,mytis,nalchik,nov,pyatigorsk,spb,vladikavkaz,vladimir,blogspot,na4u,mircloud,regruhosting>jelastic<myjino>hosting>*<landing>*<spectrum>*<vps>*<<cldmail>hb<mcdir>vps<mcpre,net,org,pp,lk3,ras<is>cupcake,blogspot<link>cyon,mypep,dweb>*<<dk>biz,co,firm,reg,store,blogspot,myspreadshop<earth>dapps>*,bzz>*<<<id>my>rss>*<<flap,co>blogspot<forte<solutions>diher>*<<th>online,shop<sh>bip,hashbang,platform>bc,ent,eu,us<now,vxl,wedeploy<fi>dy,blogspot,xn--hkkinen-5wa,iki,cloudplatform>fi<datacenter>demo,paas<kapsi,myspreadshop<tv>dyndns,better-than,on-the-web,worse-than<cx>ath,info<name>her>forgot<his>forgot<<nu>merseine,mine,shacknet,enterprisecloud<rocks>myddns,lima-city,webspace<xyz>blogsite,localzone,crafting,zapto,telebit>*<<online>eero,eero-stage,barsy<cool>elementor,de<fr>en-root,fbx-os,fbxos,freebox-os,freeboxos,blogspot,goupile,on-web,chirurgiens-dentistes-en-france,dedibox,myspreadshop,ynh<one>onred>staging<for,under,service,homelink<tw>com>mymailer<url,blogspot<su>abkhazia,adygeya,aktyubinsk,arkhangelsk,armenia,ashgabad,azerbaijan,balashov,bashkiria,bryansk,bukhara,chimkent,dagestan,east-kazakhstan,exnet,georgia,grozny,ivanovo,jambyl,kalmykia,kaluga,karacol,karaganda,karelia,khakassia,krasnodar,kurgan,kustanai,lenug,mangyshlak,mordovia,msk,murmansk,nalchik,navoi,north-kazakhstan,nov,obninsk,penza,pokrovsk,sochi,spb,tashkent,termez,togliatti,troitsk,tselinograd,tula,tuva,vladikavkaz,vladimir,vologda<space>myfast,uber,xs4all<il>co>ravpage,blogspot,tabitorder<<at>funkfeuer>wien<futurecms>*,ex>*<in>*<<futurehosting,futuremailing,ortsinfo>ex>*<kunden>*<<co>blogspot<biz,info,priv,myspreadshop,12hp,2ix,4lima,lima-city<ms>lab,minisite<si>gitapp,gitpage,blogspot<community>nog,ravendb,myforum<ro>co,shop,blogspot,barsy<digital>cloudapps>london<<im>ro<goog>cloud,translate,usercontent>*<<ae>blogspot<al>blogspot<bg>blogspot,barsy<bj>blogspot<cf>blogspot<cl>blogspot<ke>co>blogspot<<nz>co>blogspot<<za>co>blogspot<<ar>com>blogspot<<au>com>blogspot,cloudlets>mel<myspreadshop<<br>com>blogspot,virtualcloud>scale>users<<<leg>ac,al,am,ap,ba,ce,df,es,go,ma,mg,ms,mt,pa,pb,pe,pi,pr,rj,rn,ro,rr,rs,sc,se,sp,to<<by>com>blogspot<mycloud,mediatech<cy>com>blogspot,scaleforce>j<<<ee>com>blogspot<<eg>com>blogspot<<es>com>blogspot<myspreadshop<mt>com>blogspot<<ng>com>blogspot<col,firm,gen,ltd,ngo<tr>com>blogspot<<uy>com>blogspot<<cv>blogspot<gr>blogspot<hk>blogspot,secaas,ltd,inc<hr>blogspot,free<hu>blogspot<ie>blogspot,myspreadshop<it>blogspot,ibxos,iliadboxos,neen>jc<tim>open>jelastic>cloud<<<16-b,32-b,64-b,myspreadshop,syncloud<kr>blogspot<li>blogspot,caa<lt>blogspot<lu>blogspot<md>blogspot,at,de,jp,to<mk>blogspot<mr>blogspot<mx>blogspot<my>blogspot<pe>blogspot<pt>blogspot<qa>blogspot<re>blogspot<sg>blogspot,enscaled<sk>blogspot<sn>blogspot<td>blogspot<ug>blogspot<vn>blogspot<ci>fin,nl<run>hs,development,ravendb,servers,build>*<code>*<database>*<migration>*<onporter,repl<gl>biz,xx<scot>edu,gov>service<<so>sch<kz>jcloud,kazteleport>upaas<<tn>orangecloud<gg>kaas,cya,panel>daemon<<systems>knightpoint<events>koobin,co<krd>co,edu<business>co<education>co<financial>co<place>co<technology>co<bs>we<services>loginline<menu>barsy<mobi>barsy,dscloud<pub>barsy<support>barsy<vu>cn,blog,dev,me<health>hra<casa>nabu>ui<<fashion>of<london>in,of<marketing>from,with<men>for,repair<mom>and,for<sale>for<win>that<work>from,to<news>noticeable<top>now-dns,ntdll<ovh>nerdpol<mn>nyc<lol>omg<hosting>opencraft<orange>tech<pm>own,name<codes>owo>*<<lc>oy<bn>co<today>prequalifyme<builders>cloudsite<edu>rit>git-pages<<xn--p1acf>xn--90amc,xn--j1aef,xn--j1ael8b,xn--h1ahn,xn--j1adp,xn--c1avg,xn--80aaa0cvac,xn--h1aliz,xn--90a1af,xn--41a<store>sellfy,shopware,storebase<land>static>dev,sites<<farm>storj<pictures>1337<rip>clan<tf>sch<wf>biz,sch<yt>org<management>router<ax>be,cat,es,eu,gg,mc,us,xy<gp>app<gt>blog,de,to<gy>be<hn>cc<kg>blog,io,jp,tv,uk,us<ls>de<porn>indie<tc>ch,me,we<vg>at<academy>official<faith>ybo<party>ybo<review>ybo<science>ybo<trade>ybo<st>noho<design>bss");
-
-/***/ }),
-
-/***/ "./node_modules/winston/package.json":
-/*!*******************************************!*\
-  !*** ./node_modules/winston/package.json ***!
-  \*******************************************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"name":"winston","description":"A logger for just about everything.","version":"3.17.0","author":"Charlie Robbins <charlie.robbins@gmail.com>","maintainers":["David Hyde <dabh@alumni.stanford.edu>"],"repository":{"type":"git","url":"https://github.com/winstonjs/winston.git"},"keywords":["winston","logger","logging","logs","sysadmin","bunyan","pino","loglevel","tools","json","stream"],"dependencies":{"@dabh/diagnostics":"^2.0.2","@colors/colors":"^1.6.0","async":"^3.2.3","is-stream":"^2.0.0","logform":"^2.7.0","one-time":"^1.0.0","readable-stream":"^3.4.0","safe-stable-stringify":"^2.3.1","stack-trace":"0.0.x","triple-beam":"^1.3.0","winston-transport":"^4.9.0"},"devDependencies":{"@babel/cli":"^7.23.9","@babel/core":"^7.24.0","@babel/preset-env":"^7.24.0","@dabh/eslint-config-populist":"^4.4.0","@types/node":"^20.11.24","abstract-winston-transport":"^0.5.1","assume":"^2.2.0","cross-spawn-async":"^2.2.5","eslint":"^8.57.0","hock":"^1.4.1","mocha":"^10.3.0","nyc":"^17.1.0","rimraf":"5.0.1","split2":"^4.1.0","std-mocks":"^2.0.0","through2":"^4.0.2","winston-compat":"^0.1.5"},"main":"./lib/winston.js","browser":"./dist/winston","types":"./index.d.ts","scripts":{"lint":"eslint lib/*.js lib/winston/*.js lib/winston/**/*.js --resolve-plugins-relative-to ./node_modules/@dabh/eslint-config-populist","test":"rimraf test/fixtures/logs/* && mocha","test:coverage":"nyc npm run test:unit","test:unit":"mocha test/unit","test:integration":"mocha test/integration","build":"rimraf dist && babel lib -d dist","prepublishOnly":"npm run build"},"engines":{"node":">= 12.0.0"},"license":"MIT"}');
+/***/ "?ed1b":
+/*!**********************!*\
+  !*** util (ignored) ***!
+  \**********************/
+/***/ (() => {
+
+/* (ignored) */
 
 /***/ })
 
