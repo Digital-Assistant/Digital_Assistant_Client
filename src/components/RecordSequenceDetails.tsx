@@ -289,7 +289,9 @@ export const RecordSequenceDetails = (props: MProps) => {
     recordUserClickData('validate', '', selectedRecordingDetails.id);
     if(resetStatus()) {
       if (props.playHandler) {
+        trigger("closePanel", {action: 'closePanel'});
         props.playHandler("on");
+        autoPlay();
       }
     }
   };
