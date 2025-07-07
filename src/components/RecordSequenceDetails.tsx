@@ -83,7 +83,6 @@ export const RecordSequenceDetails = (props: MProps) => {
   const editingState= useAppSelector(state => state.editingStep);
 
   useEffect(() => {
-    console.log(editingState);
     if(editingState && editingState.editingStepId != null){
       setEditRecording(true);
       setEditingStepIndex(editingState.editingStepId);
@@ -208,13 +207,15 @@ export const RecordSequenceDetails = (props: MProps) => {
    * Updates all recorded nodes status to 'none'
    */
   const resetStatus = () => {
-    for (let i = 0; i < selectedRecordingDetails?.userclicknodesSet?.length; i++) {
-      if(selectedRecordingDetails.userclicknodesSet[i]?.status) {
-        delete selectedRecordingDetails.userclicknodesSet[i].status;
+    const updatedRecordingDetails = { ...selectedRecordingDetails };
+    for (let i = 0; i < updatedRecordingDetails?.userclicknodesSet?.length; i++) {
+      if(updatedRecordingDetails.userclicknodesSet[i]?.status) {
+        console.log("removed");
+        delete updatedRecordingDetails.userclicknodesSet[i].status;
       }
     }
-    setToStore(selectedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
-    setSelectedRecordingDetails({...selectedRecordingDetails});
+    setToStore(updatedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
+    setSelectedRecordingDetails(updatedRecordingDetails);
     setUserVote({upvote: 0, downvote: 0});
     return true;
   };
@@ -287,6 +288,7 @@ export const RecordSequenceDetails = (props: MProps) => {
    */
   const validateStepEdit = async () => {
     recordUserClickData('validate', '', selectedRecordingDetails.id);
+    console.log('validateStepEdit');
     if(resetStatus()) {
       if (props.playHandler) {
         trigger("closePanel", {action: 'closePanel'});
@@ -367,7 +369,7 @@ export const RecordSequenceDetails = (props: MProps) => {
   }, []);
 
   const addSkipClass = (item) => {
-    if (item.status !== 'completed') {
+    if (item.status && item.status !== 'completed') {
       return 'uda_exclude';
     }
     let nodeData = getObjData(item.objectdata);
@@ -755,7 +757,7 @@ export const RecordSequenceDetails = (props: MProps) => {
 
           <hr/>
           <ul className="uda-suggestion-list" id="uda-sequence-steps">
-            {props?.data && (
+            {selectedRecordingDetails && (
                 <List
                     itemLayout="horizontal"
                     dataSource={selectedRecordingDetails?.userclicknodesSet}
