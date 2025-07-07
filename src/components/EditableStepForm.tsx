@@ -127,6 +127,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
     const checkProfanityForStep = async (value: string): Promise<boolean> => {
         if (!config.enableProfanity || !value.trim()) {
             updateFormState({ stepProfanityError: false });
+            handleStepNameChange(value);
             return false;
         }
 
@@ -138,6 +139,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
                 return true;
             } else {
                 updateFormState({ stepProfanityError: false });
+                handleStepNameChange(value);
                 return false;
             }
         } catch (error) {
@@ -297,16 +299,16 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
     /**
      * Handle Step Name change
      */
-    const handleStepNameChange = (e) => {
-        e.stopPropagation();
-
+    const handleStepNameChange = (value) => {
         let updatedRecordData = [...recordData];
         let nodeData = getObjData(updatedRecordData[index].objectdata);
         if (!nodeData.meta) {
             nodeData.meta = {};
         }
-        nodeData.meta.displayText = formState.stepEditValue;
-        // updatedRecordData[index].objectdata = JSON.stringify(nodeData);
+        nodeData.meta.displayText = value;
+
+        updateFormState({ stepEditValue: value });
+
         updatedRecordData[index] = {
             ...updatedRecordData[index],
             objectdata: JSON.stringify(nodeData)
@@ -337,6 +339,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
             if (!nodeData.meta) {
                 nodeData.meta = {};
             }
+
             nodeData.meta.displayText = formState.stepEditValue;
 
             // Convert back to string and update the objectdata
@@ -355,9 +358,6 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
 
             // Store the updated data
             storeRecording(updatedRecordData);
-
-            // Add explicit local storage saving
-            localStorage.setItem('recordedData', JSON.stringify(updatedRecordData));
 
             // If in update mode, update the record in the backend
             if (isUpdateMode && recordingId) {
@@ -398,13 +398,8 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
                 placeholder="Enter Name"
                 onChange={handleInputChange}
                 onBlur={async (e) => {
-                    e.persist(); // Keep the event around for async processing
-                    const hasProfanity = await checkProfanityForStep(e.target.value);
-
-                    // Check for errors using the returned value rather than state
-                    if (!formState.stepInputError && !hasProfanity) {
-                        handleStepNameChange(e);
-                    }
+                    e.stopPropagation();
+                    checkProfanityForStep(e.target.value);
                 }}
                 style={{width: "85%"}}
                 onClick={(e) => e.stopPropagation()}

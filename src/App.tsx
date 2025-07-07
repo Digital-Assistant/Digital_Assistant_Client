@@ -397,7 +397,6 @@ function App(props) {
             getSearchResults(0, true);
         }
 
-        console.log(reFetchSearch);
         if (reFetchSearch === "on") {
             getSearchResults(0,true);
         }
@@ -454,16 +453,13 @@ function App(props) {
                     await addBodyEvents();
                     return;
                 }
-                if(_page===0 &&searchResults.length > 0 && !refetch) {
+                if(_page===0 && searchResults.length > 0 && !refetch) {
                     setShowLoader(false);
                     return;
-                }/* else if (!_.isEmpty(selectedRecordingDetails)) {
+                } else if (!_.isEmpty(selectedRecordingDetails) && !refetch) {
                     setShowLoader(false);
                     return;
-                }*/
-                /*if(selectedRecordingDetails){
-                    return;
-                }*/
+                }
                 if(_page===0 && refetch) {
                     setShowLoader(true);
                 }
