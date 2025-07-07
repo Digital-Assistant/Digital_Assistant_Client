@@ -84,7 +84,7 @@ export const RecordSequenceDetails = (props: MProps) => {
 
   useEffect(() => {
     console.log(editingState);
-    if(editingState && editingState.editingStepId){
+    if(editingState && editingState.editingStepId != null){
       setEditRecording(true);
       setEditingStepIndex(editingState.editingStepId);
     }
@@ -244,7 +244,7 @@ export const RecordSequenceDetails = (props: MProps) => {
     if (props.data) {
       try {
         // name = JSON.parse(props?.data?.name)?.join(",");
-        let names = JSON.parse(props?.data?.name);
+        let names = JSON.parse(selectedRecordingDetails?.name);
         // name = names[0] ? names[0] : 'NA';
         if (typeof names[0] === 'object' && 'label' in names[0]) {
           name = names[0].label;
@@ -479,7 +479,7 @@ export const RecordSequenceDetails = (props: MProps) => {
   const getAllLabels = () => {
     try {
       // Parse the name from props
-      const names = JSON.parse(props?.data?.name || '[]');
+      const names = JSON.parse(selectedRecordingDetails?.name || '[]');
       // Ensure it's an array and each item has the expected structure
       return Array.isArray(names)
           ? names.map(item => {
@@ -557,6 +557,10 @@ export const RecordSequenceDetails = (props: MProps) => {
 
       // Exit editing mode
       setIsEditingLabels(false);
+
+      if(props.refetchSearch){
+        props.refetchSearch("on");
+      }
 
       // Show success notification
       addNotification(translate('labelsUpdated'), translate('labelsUpdatedDescription'), 'success');
@@ -689,12 +693,14 @@ export const RecordSequenceDetails = (props: MProps) => {
                                 }}
                                 value={item.label}
                             />
-                            <Button
-                                type="text"
-                                icon={<DeleteOutlined />}
-                                className="delete-btn uda-remove-row uda_exclude"
-                                onClick={() => removeLabel(index)}
-                            />
+                            {(index > 0) &&
+                              <Button
+                                  type="text"
+                                  icon={<DeleteOutlined />}
+                                  className="delete-btn uda-remove-row uda_exclude"
+                                  onClick={() => removeLabel(index)}
+                              />
+                            }
                           </div>
                           <div className="flex-card flex-center">
                             {item.profanity && (
@@ -792,6 +798,7 @@ export const RecordSequenceDetails = (props: MProps) => {
                                           // Exit edit mode
                                           setEditingStepIndex(null);
                                           dispatch(resetValidationState());
+                                          if (props.refetchSearch) props.refetchSearch("on");
                                         } catch (error) {
                                           console.error("Error updating step:", error);
                                           addNotification(translate('stepUpdateError'), translate('stepUpdateErrorDescription'), 'error');

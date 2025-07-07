@@ -122,11 +122,12 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
     /**
      * Check for profanity in step name
      * @param value - The value to check for profanity
+     * @returns {Promise<boolean>} - Returns true if profanity was found
      */
-    const checkProfanityForStep = async (value: string) => {
+    const checkProfanityForStep = async (value: string): Promise<boolean> => {
         if (!config.enableProfanity || !value.trim()) {
             updateFormState({ stepProfanityError: false });
-            return;
+            return false;
         }
 
         try {
@@ -134,12 +135,15 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
 
             if (response.Terms && response.Terms.length > 0) {
                 updateFormState({ stepProfanityError: true });
+                return true;
             } else {
                 updateFormState({ stepProfanityError: false });
+                return false;
             }
         } catch (error) {
             console.error("Error checking profanity:", error);
             updateFormState({ stepProfanityError: false });
+            return false;
         }
     };
 
@@ -291,6 +295,27 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
     };
 
     /**
+     * Handle Step Name change
+     */
+    const handleStepNameChange = (e) => {
+        e.stopPropagation();
+
+        let updatedRecordData = [...recordData];
+        let nodeData = getObjData(updatedRecordData[index].objectdata);
+        if (!nodeData.meta) {
+            nodeData.meta = {};
+        }
+        nodeData.meta.displayText = formState.stepEditValue;
+        // updatedRecordData[index].objectdata = JSON.stringify(nodeData);
+        updatedRecordData[index] = {
+            ...updatedRecordData[index],
+            objectdata: JSON.stringify(nodeData)
+        };
+
+        storeRecording(updatedRecordData);
+    };
+
+    /**
      * Save the edited step
      */
     const saveStep = async () => {
@@ -372,10 +397,13 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
                 }`}
                 placeholder="Enter Name"
                 onChange={handleInputChange}
-                onBlur={(e) => {
-                    checkProfanityForStep(e.target.value);
-                    if (!formState.stepInputError && !formState.stepProfanityError) {
-                        saveStep();
+                onBlur={async (e) => {
+                    e.persist(); // Keep the event around for async processing
+                    const hasProfanity = await checkProfanityForStep(e.target.value);
+
+                    // Check for errors using the returned value rather than state
+                    if (!formState.stepInputError && !hasProfanity) {
+                        handleStepNameChange(e);
                     }
                 }}
                 style={{width: "85%"}}
