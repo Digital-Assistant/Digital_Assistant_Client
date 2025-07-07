@@ -397,9 +397,9 @@ function App(props) {
             getSearchResults(0, true);
         }
 
+        console.log(reFetchSearch);
         if (reFetchSearch === "on") {
             getSearchResults(0,true);
-            setReFetchSearch("off");
         }
     }, [searchKeyword, reFetchSearch]);
 
@@ -457,10 +457,10 @@ function App(props) {
                 if(_page===0 &&searchResults.length > 0 && !refetch) {
                     setShowLoader(false);
                     return;
-                } else if (!_.isEmpty(selectedRecordingDetails)) {
+                }/* else if (!_.isEmpty(selectedRecordingDetails)) {
                     setShowLoader(false);
                     return;
-                }
+                }*/
                 /*if(selectedRecordingDetails){
                     return;
                 }*/
@@ -476,7 +476,12 @@ function App(props) {
                         ? encodeURI(JSON.stringify(global.UDAGlobalConfig.permissions))
                         : null,
                 });
-                setTimeout(() => setShowLoader(false), 500);
+                setTimeout(() => {
+                    setShowLoader(false);
+                    if(refetch) {
+                        setReFetchSearch("off");
+                    }
+                }, 500);
                 if (_searchResults.length > 0) {
                     setPage(_page);
                     if(_searchResults.length===10){
@@ -751,6 +756,7 @@ function App(props) {
                                       key={"rSD" + recordSequenceDetailsVisibility}
                                       config={global.UDAGlobalConfig}
                                       showLoader={setShowLoader}
+                                      refetchSearch={setReFetchSearch}
                                   />
                               )}
                           </>

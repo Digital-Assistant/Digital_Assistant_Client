@@ -5,7 +5,6 @@
  * - CONFIG: general application configuration
  * - userService: functions for getting the user's session key and user ID
  * - nodeInfo: a utility for getting information about DOM nodes
- * - TSON: a library for serializing TypeScript objects to JSON
  * - various utility functions for working with DOM elements and data storage
  * - a function for mapping clicked elements to HTML form elements
  * - logging utilities for console and error logging
@@ -16,7 +15,6 @@ import { REST } from ".";
 import { CONFIG } from "../config";
 import { getSessionKey, getUserId } from "./userService";
 import { getNodeInfo } from "../util/nodeInfo";
-import TSON from "typescript-json";
 import { getAbsoluteOffsets, getFromStore, inArray } from "../util";
 import domJSON from "domjson";
 import mapClickedElementToHtmlFormElement from "../util/recording-utils/mapClickedElementToHtmlFormElement";
@@ -45,21 +43,38 @@ declare global {
      * This property is used to serialize the currently selected element when the user clicks on it.
      */
     domJSON: any;
+    /**
+     * Array to store selected nodes during recording
+     */
+    udanSelectedNodes: any;
   }
 }
 
 /**
- * To record each action/event
- * @param request
- * @returns promise
- */
-
-/**
- * Records a set of clicks or other user interactions.
+ * Makes an API call with the given parameters
  *
- * @param {any} request - An object containing the details of the user interactions to be recorded.
- * @returns {Promise<any>} A promise that resolves with the result of the API call to record the interactions.
+ * @param url - The endpoint URL
+ * @param method - The HTTP method
+ * @param body - Optional request body
+ * @param headers - Optional request headers
+ * @returns Promise with API response
  */
+const makeApiCall = async (url: string, method: string, body?: any, headers?: Headers) => {
+  try {
+    const parameters = {
+      url,
+      method,
+      ...(body && { body }),
+      ...(headers && { headers })
+    };
+
+    return REST.apiCal(parameters);
+  } catch (error) {
+    UDAErrorLogger.error(`Error in API call to ${url}: ${error.message}`, error);
+    throw error;
+  }
+};
+
 /**
  * Records a set of clicks or other user interactions.
  *
@@ -71,20 +86,8 @@ export const recordClicks = async (request?: any) => {
     // Retrieve the user's session key
     request.sessionid = await getSessionKey();
 
-    // Prepare the request parameters
-    const parameters = {
-      // The URL for the API call
-      url: ENDPOINT.Record,
-      // The HTTP method to use
-      method: "POST",
-      // The request body
-      body: request,
-    };
-
-    // Call the API
-    return REST.apiCal(parameters);
+    return makeApiCall(ENDPOINT.Record, "POST", request);
   } catch (error) {
-    // Handle any errors that occurred during the API call
     UDAErrorLogger.error(`Error in recordClicks: ${error.message}`, error);
     throw error;
   }
@@ -96,59 +99,26 @@ export const recordClicks = async (request?: any) => {
  * @param {any} request - The request object.
  * @return {Promise<any>} A promise that resolves with the result of the API call.
  */
-
 export const updateRecordClicks = async (request?: any) => {
   try {
-
-    // Prepare the request parameters
-    const parameters = {
-      // The URL for the API call
-      url: ENDPOINT.UpdateRecord,
-      // The HTTP method to use
-      method: "POST",
-      // The request body
-      body: request,
-    };
-
-    // Call the API
-    return REST.apiCal(parameters);
+    return makeApiCall(ENDPOINT.UpdateRecord, "POST", request);
   } catch (error) {
-    // Handle any errors that occurred during the API call
-    UDAErrorLogger.error(
-      `Error in updateRecordClicks: ${error.message}`,
-      error
-    );
+    UDAErrorLogger.error(`Error in updateRecordClicks: ${error.message}`, error);
     throw error;
   }
 };
 
-
 /**
- * Updates the record clicks.
+ * Updates the sequence index.
  *
  * @return {Promise<any>} A promise that resolves with the result of the API call.
- * @param id
+ * @param id - The sequence ID to update
  */
-
 export const updateSequnceIndex = async (id: number) => {
   try {
-
-    // Prepare the request parameters
-    const parameters = {
-      // The URL for the API call
-      url: ENDPOINT.updateSequenceIndex+id,
-      // The HTTP method to use
-      method: "POST"
-    };
-
-    // Call the API
-    return REST.apiCal(parameters);
+    return makeApiCall(ENDPOINT.updateSequenceIndex + id, "POST");
   } catch (error) {
-    // Handle any errors that occurred during the API call
-    UDAErrorLogger.error(
-        `Error in updateRecordClicks: ${error.message}`,
-        error
-    );
+    UDAErrorLogger.error(`Error in updateSequnceIndex: ${error.message}`, error);
     throw error;
   }
 };
@@ -171,26 +141,17 @@ export const recordSequence = async (request?: any) => {
       throw new Error('User session ID could not be retrieved');
     }
 
-    const parameters = {
-      url: ENDPOINT.RecordSequence,
-      method: "POST",
-      body: request,
-    };
-
-    const response = await REST.apiCal(parameters);
+    const response = await makeApiCall(ENDPOINT.RecordSequence, "POST", request);
     if (!response) {
       throw new Error('No response received from record sequence API');
     }
 
     return response;
-
   } catch (error) {
     UDAConsoleLogger.info('Record Sequence Error:', error);
-    throw error;
     return false;
   }
-}
-
+};
 
 /**
  * Records a user click event.
@@ -201,32 +162,15 @@ export const recordSequence = async (request?: any) => {
 export const userClick = async (request?: any) => {
   try {
     if (!request) {
-      // Request object is required
       throw new Error("Request object is required");
     }
 
-    // Get the user's ID
     request.usersessionid = await getUserId();
-
-    // Set the clicked name to the host of the current page
     request.clickedname = window.location.host;
 
-    // Prepare the request parameters
-    const parameters = {
-      // The URL for the API call
-      url: ENDPOINT.UserClick,
-      // The HTTP method to use
-      method: "PUT",
-      // The request body
-      body: request,
-    };
-
-    // Call the API
-    return REST.apiCal(parameters);
+    return makeApiCall(ENDPOINT.UserClick, "PUT", request);
   } catch (error) {
-    // Handle any errors that occurred during the API call
     UDAErrorLogger.error(`Error in userClick: ${error.message}`, error);
-    // Re-throw the error so it can be handled by the caller
     throw error;
   }
 };
@@ -240,29 +184,14 @@ export const userClick = async (request?: any) => {
 export const deleteRecording = async (request?: any) => {
   try {
     if (!request) {
-      // Request object is required
       throw new Error("Request object is required");
     }
 
-    // Add the user session ID to the request object
     request.usersessionid = await getUserId();
 
-    // Prepare the request parameters
-    const parameters = {
-      // The URL for the API call
-      url: ENDPOINT.DeleteSequence,
-      // The HTTP method to use
-      method: "POST",
-      // The request body
-      body: request,
-    };
-
-    // Call the API
-    return REST.apiCal(parameters);
+    return makeApiCall(ENDPOINT.DeleteSequence, "POST", request);
   } catch (error) {
-    // Handle any errors that occurred during the API call
     UDAErrorLogger.error(`Error in deleteRecording: ${error.message}`, error);
-    // Re-throw the error so it can be handled by the caller
     throw error;
   }
 };
@@ -276,29 +205,14 @@ export const deleteRecording = async (request?: any) => {
 export const updateRecording = async (request?: any) => {
   try {
     if (!request) {
-      // Request object is required
       throw new Error("Request object is required");
     }
 
-    // Get the user's ID and add it to the request object
     request.usersessionid = await getUserId();
 
-    // Prepare the request parameters
-    const parameters = {
-      // The URL for the API call
-      url: ENDPOINT.updateRecordSequence,
-      // The HTTP method to use
-      method: "POST",
-      // The request body
-      body: request,
-    };
-
-    // Call the API
-    return await REST.apiCal(parameters);
+    return makeApiCall(ENDPOINT.updateRecordSequence, "POST", request);
   } catch (error) {
-    // Handle any errors that occurred during the API call
     UDAErrorLogger.error(`Error in updateRecording: ${error.message}`, error);
-    // Re-throw the error so it can be handled by the caller
     throw error;
   }
 };
@@ -312,37 +226,42 @@ export const updateRecording = async (request?: any) => {
 export const profanityCheck = async (request?: any) => {
   try {
     if (!request) {
-      // Request object is required for the profanity check
       throw new Error("Request object is required");
     }
 
-    // Set the Content-Type header to text/plain
     const headers = new Headers();
     headers.append("Content-Type", "text/plain");
-
-    // Set the Ocp-Apim-Subscription-Key header to the profanity API key
     headers.append("Ocp-Apim-Subscription-Key", CONFIG.profanity.config.key1);
 
-    // Prepare the request parameters
-    const parameters = {
-      // The URL for the API call
-      url: ENDPOINT.ProfanityCheck,
-      // The HTTP method to use
-      method: "POST",
-      // The request body
-      body: request,
-      // The headers to include in the request
-      headers,
-    };
-
-    // Call the API
-    return REST.apiCal(parameters);
+    return makeApiCall(ENDPOINT.ProfanityCheck, "POST", request, headers);
   } catch (error) {
-    // Handle any errors that occurred during the API call
     UDAErrorLogger.error(`Error in profanityCheck: ${error.message}`, error);
-    // Re-throw the error so it can be handled by the caller
     throw error;
   }
+};
+
+/**
+ * Processes a node for click data recording
+ *
+ * @param node - The DOM node to process
+ * @returns The processed node data object
+ */
+const processNodeForClickData = async (node: any) => {
+  // Clone the clicked node to create a new node object.
+  const processedNode = await node.cloneNode(true);
+
+  // Log the absolute offsets of the processed node.
+  const absoluteOffsets = getAbsoluteOffsets(processedNode);
+  if (absoluteOffsets) {
+    console.log(absoluteOffsets);
+  }
+
+  // Convert the processed node to a JSON object
+  let objectData: any = domJSON.toJSON(processedNode, {
+    serialProperties: true,
+  });
+
+  return objectData;
 };
 
 /**
@@ -355,171 +274,104 @@ export const profanityCheck = async (request?: any) => {
  */
 export const saveClickData = async (node: any, text: string, meta: any) => {
   try {
-    // Check if all the required parameters are provided
     if (!node || !text || !meta) {
       throw new Error("Required parameters are missing");
     }
 
-    // node: The clicked HTML element
-    // text: The text content of the clicked element
-    // meta: The metadata associated with the clicked element
-    // removing circular reference before converting to json with deep clone.
-    /**
-     * Processes the clicked node and creates a JSON representation of it, including its metadata.
-     * - Clones the clicked node to create a new node object.
-     * - Logs the absolute offsets of the processed node.
-     * - Converts the processed node to a JSON object using the `domJSON.toJSON` function, with the `serialProperties` option set to `true`.
-     * - Assigns the provided `meta` object to the `meta` property of the JSON object.
-     *
-     * @param {any} node - The clicked node.
-     * @param {string} text - The text content of the clicked node.
-     * @param {any} meta - The metadata associated with the clicked node.
-     * @returns {any} - The processed JSON object containing the node information and metadata.
-     */
-    // Clone the clicked node to create a new node object.
-    const processedNode = await node.cloneNode(true);
+    let objectData = await processNodeForClickData(node);
 
-    // Log the absolute offsets of the processed node.
-    const absoluteOffsets = getAbsoluteOffsets(processedNode);
-    if (absoluteOffsets) {
-      console.log(absoluteOffsets);
-    }
+    // Assign the provided meta object
+    objectData.meta = meta;
 
-    // Convert the processed node to a JSON object using the `domJSON.toJSON` function, with the `serialProperties` option set to `true`.
-    let objectData: any = domJSON.toJSON(processedNode, {
-      serialProperties: true,
-    });
-
-    // Assign the provided `meta` object to the `meta` property of the JSON object.
-    if (objectData.meta) {
-      objectData.meta = meta;
-    } else {
-      objectData.meta = meta;
-    }
-
-    //removing the unwanted attributes which were added while processing click objects.
-    /**
-     * Removes certain properties from the `objectData.node` object before saving the click data.
-     * - `addedClickRecord`: This property is removed to prevent duplicate click data from being saved.
-     * - `hasClick`: This property is removed as it is no longer needed after the click data has been saved.
-     * - `udaIgnoreChildren`: This property is removed as it is no longer needed after the click data has been saved.
-     * - `udaIgnoreClick`: This property is removed as it is no longer needed after the click data has been saved.
-     */
-    // Remove `addedClickRecord` property from the `objectData.node` object.
-    // This property is no longer needed after the click data has been saved.
+    // Remove unwanted attributes
     delete objectData.node.addedClickRecord;
-    // Remove `hasClick` property from the `objectData.node` object.
-    // This property is no longer needed after the click data has been saved.
     delete objectData.node.hasClick;
-    // Remove `udaIgnoreChildren` property from the `objectData.node` object.
-    // This property is no longer needed after the click data has been saved.
     delete objectData.node.udaIgnoreChildren;
-    // Remove `udaIgnoreClick` property from the `objectData.node` object.
-    // This property is no longer needed after the click data has been saved.
     delete objectData.node.udaIgnoreClick;
-    /**
-     * Processes the clicked node before saving the click data.
-     * - If the clicked node's name is in the `CONFIG.ignoreNodesFromIndexing` list and has a custom name in `CONFIG.customNameForSpecialNodes`, the `displayText` property of the `meta` object is set to the custom name.
-     * - If the `outerHTML` property of the `node` object is not set, it is set to the actual outer HTML of the clicked node.
-     * - The `offset` property of the `objectData` object is set to the absolute offsets of the clicked node.
-     * - The `nodeInfo` property of the `node` object is set to the result of calling the `getNodeInfo` function with the clicked node.
-     */
-    // If the clicked node is in the ignoreNodesFromIndexing list and has a custom name in customNameForSpecialNodes,
-    // set the displayText property of the meta object to the custom name.
+
+    // Handle special nodes
     if (
-      inArray(node.nodeName.toLowerCase(), CONFIG.ignoreNodesFromIndexing) !==
-        -1 &&
-      CONFIG.customNameForSpecialNodes.hasOwnProperty(
-        node.nodeName.toLowerCase()
-      )
+        inArray(node.nodeName.toLowerCase(), CONFIG.ignoreNodesFromIndexing) !== -1 &&
+        CONFIG.customNameForSpecialNodes.hasOwnProperty(node.nodeName.toLowerCase())
     ) {
-      // Set the displayText property to the custom name for special nodes.
-      objectData.meta.displayText =
-        CONFIG.customNameForSpecialNodes[node.nodeName.toLowerCase()];
+      objectData.meta.displayText = CONFIG.customNameForSpecialNodes[node.nodeName.toLowerCase()];
     }
 
-    // If the outerHTML property of the node object is not set, set it to the actual outer HTML of the clicked node.
+    // Set additional properties
     if (!objectData.node.outerHTML) {
-      // Set the outerHTML property to the actual outer HTML of the clicked node.
       objectData.node.outerHTML = node.outerHTML;
     }
 
-    // Set the offset property of the objectData object to the absolute offsets of the clicked node.
     objectData.offset = getAbsoluteOffsets(node);
-    // Set the nodeInfo property of the node object to the result of calling the getNodeInfo function with the clicked node.
     objectData.node.nodeInfo = getNodeInfo(node);
 
-    // Added to handle the case where screen size is not available
-    /**
-     * Handles the case where the screen size information is not available in the node's metadata.
-     * If the screen size is not available, the function returns `false` to indicate that the click data should not be saved.
-     * Otherwise, it checks if the `enableNodeTypeChangeSelection` configuration is enabled, and if so, it maps the clicked element to an HTML form element and updates the `meta` object accordingly.
-     * Finally, it logs the `objectData` to the console with a log level of 3.
-     *
-     * @param {any} objectData - The object containing the data to be saved, including the node information and metadata.
-     * @returns {boolean} - `false` if the screen size information is not available, `true` otherwise.
-     */
-    // If the screen size information is not available in the node's metadata, return false to indicate that the click data should not be saved.
+    // Check screen size information
     if (
-      objectData.node.nodeInfo &&
-      (!objectData.node.nodeInfo.screenSize.screen.width ||
-        !objectData.node.nodeInfo.screenSize.screen.height)
+        objectData.node.nodeInfo &&
+        (!objectData.node.nodeInfo.screenSize.screen.width ||
+            !objectData.node.nodeInfo.screenSize.screen.height)
     ) {
       return false;
     }
 
+    // Handle node type detection if enabled
     const { enableNodeTypeChangeSelection } = CONFIG;
-
-    // If the enableNodeTypeChangeSelection configuration is enabled, map the clicked element to an HTML form element and update the meta object accordingly.
     if (enableNodeTypeChangeSelection) {
       objectData.meta.systemDetected = mapClickedElementToHtmlFormElement(node);
-      // If the system detected input element is not "others", set the selected element to the system detected input element.
       if (objectData.meta.systemDetected.inputElement !== "others") {
         objectData.meta.selectedElement = objectData.meta.systemDetected;
       }
     }
 
-    // Log the object data to the console with a log level of 3.
     UDAConsoleLogger.info(objectData, 3);
 
-    // let domain = fetchDomain();
-    /**
-     * To save the user's click data to a REST endpoint.
-     * @param clickType - The type of click event being recorded (e.g. "sequencerecord").
-     * @param clickedName - The name or text content of the clicked element.
-     * @param recordId - The ID of the record being updated (default is 0).
-     * @returns An object containing the domain, URL path, clicked node name, HTML5 flag, clicked path, and the serialized object data.
-     * @throws An error if there is a problem saving the click data.
-     */
-    // Get the domain from the window's location object.
-    let domain = window.location.host;
-    // Serialize the object data to a JSON string using JSON.stringify.
+    // Serialize the data
     const jsonString = JSON.stringify(objectData);
-
-    // Log the JSON string to the console with a log level of 1.
     UDAConsoleLogger.info(jsonString, 1);
 
-    // Return an object containing the domain, URL path, clicked node name, HTML5 flag, clicked path, and the serialized object data.
+    // Return the formatted data
     return {
-      // The domain of the current web page.
-      domain: domain,
-      // The URL path of the current web page.
+      domain: window.location.host,
       urlpath: window.location.pathname,
-      // The name or text content of the clicked node.
       clickednodename: text,
-      // A flag indicating whether the clicked node is an HTML5 element.
       html5: 0,
-      // The path of the clicked node (empty string by default).
       clickedpath: "",
-      // The serialized object data as a JSON string.
       objectdata: jsonString,
     };
   } catch (error) {
-    // Log any errors that occur during the saving process to the console with a log level of 1.
     UDAErrorLogger.error(`Error in saveClickData: ${error.message}`, error);
-    // Rethrow the error to allow the calling code to handle it.
     throw error;
   }
+};
+
+/**
+ * Prepares record sequence data payload
+ *
+ * @param request - Base request data
+ * @returns Prepared payload with user click nodes
+ */
+const prepareRecordSequencePayload = async (request: any) => {
+  if (!request) {
+    throw new Error("Request object is required");
+  }
+
+  // Clear the udanSelectedNodes array
+  window.udanSelectedNodes = [];
+
+  // Retrieve user click nodes
+  const userclicknodesSet = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
+  const ids = userclicknodesSet.map((item: any) => item.id);
+  const domain = fetchDomain();
+
+  // Construct and return the payload
+  return {
+    ...request,
+    domain,
+    isIgnored: 0,
+    isValid: 1,
+    userclicknodelist: ids.join(","),
+    userclicknodesSet,
+  };
 };
 
 /**
@@ -529,41 +381,10 @@ export const saveClickData = async (node: any, text: string, meta: any) => {
  */
 export const postRecordSequenceData = async (request: any) => {
   try {
-    // Throw an error if the request object is undefined or null.
-    if (!request) {
-      throw new Error("Request object is required");
-    }
-
-    // Clear the udanSelectedNodes array at the beginning of each call.
-    window.udanSelectedNodes = [];
-    // Retrieve the user click node set from the store.
-    const userclicknodesSet = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
-    // Get the IDs of the user click nodes and join them into a comma-separated string.
-    const ids = userclicknodesSet.map((item: any) => item.id);
-    // Get the domain of the current web page.
-    let domain = fetchDomain();
-    // Construct the payload object by merging the request object and the other properties.
-    const payload = {
-      ...request,
-      domain: domain,
-      // Set the ignored status to 0 (false) by default.
-      isIgnored: 0,
-      // Set the validity status to 1 (true) by default.
-      isValid: 1,
-      // Use the comma-separated string of user click node IDs.
-      userclicknodelist: ids.join(","),
-      // Pass the user click node set as an array of objects.
-      userclicknodesSet,
-    };
-    // Call the recordSequence function with the constructed payload and return the result.
+    const payload = await prepareRecordSequencePayload(request);
     return await recordSequence(payload);
   } catch (error) {
-    // Log any errors that occur to the console with a log level of 1.
-    UDAErrorLogger.error(
-      `Error in postRecordSequenceData: ${error.message}`,
-      error
-    );
-    // Rethrow the error to allow the calling code to handle it.
+    UDAErrorLogger.error(`Error in postRecordSequenceData: ${error.message}`, error);
     throw error;
   }
 };
@@ -575,55 +396,25 @@ export const postRecordSequenceData = async (request: any) => {
  */
 export const updateRecordSequenceData = async (request: any) => {
   try {
-    // Throw an error if the request object is undefined or null.
-    if (!request) {
-      throw new Error("Request object is required");
-    }
-
-    // Clear the udanSelectedNodes array at the beginning of each call.
-    window.udanSelectedNodes = [];
-    // Retrieve the user click node set from the store.
-    const userclicknodesSet = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
-    // Get the IDs of the user click nodes and join them into a comma-separated string.
-    const ids = userclicknodesSet.map((item: any) => item.id);
-    // Get the domain of the current web page.
-    let domain = fetchDomain();
-    // Construct the payload object by merging the request object and the other properties.
-    const payload = {
-      ...request,
-      domain: domain,
-      // Set the ignored status to 0 (false) by default.
-      isIgnored: 0,
-      // Set the validity status to 1 (true) by default.
-      isValid: 1,
-      // Use the comma-separated string of user click node IDs.
-      userclicknodelist: ids.join(","),
-      // Pass the user click node set as an array of objects.
-      userclicknodesSet,
-    };
-    // Call the recordSequence function with the constructed payload and return the result.
+    const payload = await prepareRecordSequencePayload(request);
     return await recordSequence(payload);
   } catch (error) {
-    // Log any errors that occur to the console with a log level of 1.
-    UDAErrorLogger.error(
-        `Error in postRecordSequenceData: ${error.message}`,
-        error
-    );
-    // Rethrow the error to allow the calling code to handle it.
+    UDAErrorLogger.error(`Error in updateRecordSequenceData: ${error.message}`, error);
     throw error;
   }
 };
 
-
 /**
  * To update click data to REST
  * @returns  promise
- * @param request
+ * @param clickType - Type of click event
+ * @param clickedName - Name of clicked element
+ * @param recordId - Record ID
  */
 export const recordUserClickData = async (
-  clickType = "sequencerecord",
-  clickedName = "",
-  recordId: number = 0
+    clickType = "sequencerecord",
+    clickedName = "",
+    recordId: number = 0
 ) => {
   try {
     const payload = {
@@ -645,12 +436,7 @@ export const recordUserClickData = async (
 
     return await userClick(payload);
   } catch (error) {
-    // Log any errors that occur to the console with a log level of 1.
-    UDAErrorLogger.error(
-      `Error in recordUserClickData: ${error.message}`,
-      error
-    );
-    // Rethrow the error to allow the calling code to handle it.
+    UDAErrorLogger.error(`Error in recordUserClickData: ${error.message}`, error);
     throw error;
   }
 };
@@ -667,18 +453,16 @@ export const fetchStatuses = async (request: {category: string} = {category: 'se
       throw new Error('Category is required');
     }
 
-    const parameters = {
-      url: REST.processArgs(ENDPOINT.statuses, request),
-      method: "GET"
-    };
+    const response = await makeApiCall(
+        REST.processArgs(ENDPOINT.statuses, request),
+        "GET"
+    );
 
-    const response = await REST.apiCal(parameters);
     if (!response) {
       throw new Error('No response received from status API');
     }
 
     return response;
-
   } catch (error) {
     UDAConsoleLogger.info('Fetch Status Error:', error);
     console.log(error);
