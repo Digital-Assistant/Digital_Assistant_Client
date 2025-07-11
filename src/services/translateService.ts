@@ -44,6 +44,9 @@ export const translateText = async (
     switch (provider) {
       case "google":
         // Build the Google Translate API URL with the provided parameters
+        if(!apikey) {
+          throw new Error(`Key not available for: ${provider}`);
+        }
         posturl = `${apiurl}?key=${encodeURIComponent(
           apikey
         )}&source=${sourceLang}&target=${targetLang}&q=${encodeURIComponent(

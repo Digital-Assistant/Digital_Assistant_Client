@@ -229,6 +229,10 @@ export const profanityCheck = async (request?: any) => {
       throw new Error("Request object is required");
     }
 
+    if(!CONFIG.profanity.config.key1){
+      return request;
+    }
+
     const headers = new Headers();
     headers.append("Content-Type", "text/plain");
     headers.append("Ocp-Apim-Subscription-Key", CONFIG.profanity.config.key1);
