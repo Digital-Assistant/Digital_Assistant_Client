@@ -49967,9 +49967,9 @@ const CustomConfig = {
     enableSlowReplay: false,
     enableCustomIcon: false,
     customIcon: 'https://udan.nistapp.com/uda-logo.jpg',
-    realm: "UDAN",
+    realm: "UDAN-Plugin",
     clientId: "backend-service",
-    clientSecret: "cXA2yFTq3ORQfrio2mGXttFaOTfvIC7N",
+    clientSecret: "lf55acXW38Tvea5Qt1931AyWRaDYtCLL",
     enableHidePanelAfterCompletion: false,
     enableStatusSelection: false,
     enableUDAIconDuringRecording: false,
@@ -50159,7 +50159,8 @@ const CONFIG = {
         'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
         'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y', 'selectionStart', 'selectionEnd', 'required', 'validationMessage', 'selectionDirection',
         'naturalWidth', 'naturalHeight', 'complete', '_indexOf', 'value', 'defaultValue', 'min', 'max', 'nodeInfo', 'data-tooltip-id', 'addedclickrecord', 'checked', 'data-tribute',
-        'hasclick', 'addedClickRecord', 'hasClick', 'valueAsNumber', 'udaIgnoreChildren', 'udaIgnoreClick', 'udaignorechildren', 'udaignoreclick', 'fdprocessedid', '__ngContext__', 'd', 'text', 'textContent', 'cdk-describedby-host', 'inert', 'fill', 'disabled', 'hidden'
+        'hasclick', 'addedClickRecord', 'hasClick', 'valueAsNumber', 'udaIgnoreChildren', 'udaIgnoreClick', 'udaignorechildren', 'udaignoreclick', 'fdprocessedid', '__ngContext__',
+        'd', 'text', 'textContent', 'cdk-describedby-host', 'inert', 'fill', 'disabled', 'hidden', 'data-activates'
     ],
     innerTextWeight: 5,
     ignoreNodesFromIndexing: ['ng-dropdown-panel', 'ckeditor', 'fusioncharts', 'ngb-datepicker', 'ngx-daterangepicker-material', 'uda-panel', 'mat-datepicker-content', 'ng-select'],
@@ -50344,7 +50345,7 @@ const CONFIG = {
         storageName: "uda-user-screen-consent",
         data: { proceed: true },
     },
-    ignoreDynamicAttributeText: ['_ng', '__context', '__zone_symbol']
+    ignoreDynamicAttributeText: ['_ng', '__context', '__zone_symbol', '']
 };
 
 
@@ -50746,6 +50747,9 @@ const profanityCheck = (request) => __awaiter(void 0, void 0, void 0, function* 
     try {
         if (!request) {
             throw new Error("Request object is required");
+        }
+        if (!_config__WEBPACK_IMPORTED_MODULE_2__.CONFIG.profanity.config.key1) {
+            return request;
         }
         const headers = new Headers();
         headers.append("Content-Type", "text/plain");
@@ -53052,7 +53056,7 @@ const specialNodes = {
             'value', 'defaultValue', 'min', 'max', 'nodeInfo', 'data-tooltip-id', 'addedclickrecord', 'checked', 'data-tribute',
             'hasclick', 'addedClickRecord', 'hasClick', 'valueAsNumber', 'udaIgnoreChildren', 'udaIgnoreClick', 'udaignorechildren',
             'udaignoreclick', 'fdprocessedid', '__ngContext__', 'd', 'text', 'textContent', 'cdk-describedby-host', 'inert', 'fill', 'disabled', 'hidden',
-            'aria-autocomplete', 'ariaAutoComplete'
+            'aria-autocomplete', 'ariaAutoComplete', 'data-activates'
         ],
         "ids": []
     },
