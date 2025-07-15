@@ -1,5 +1,5 @@
 import {hasValidScreenInfo} from "./hasValidScreenInfo";
-import {UDAConsoleLogger} from "@/config/error-log";
+import {UDAConsoleLogger} from "../config/error-log";
 
 /**
  * Calculates the distance between two nodes, normalizing their positions
