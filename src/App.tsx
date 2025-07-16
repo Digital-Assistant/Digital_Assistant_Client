@@ -26,8 +26,6 @@ import { addBodyEvents } from "./util/addBodyEvents";
 import { initSpecialNodes } from "./util/initSpecialNodes";
 import {fetchDomain} from "./util/fetchDomain";
 
-import ReactGA from 'react-ga4';
-
 // adding global variable declaration for exposing react custom configuration
 global.UDAPluginSDK = AppConfig;
 global.UDAGlobalConfig = CustomConfig;
@@ -362,12 +360,13 @@ function App(props) {
             init();
 
             // Send pageview with a custom path
-            ReactGA.send({ hitType: "pageView", page: "/", title: "Loaded Plugin" });
+            // ReactGA.send({ hitType: "pageView", page: "/", title: "Loaded Plugin" });
+            /* Todo Need to record the initial loading of the page */
 
         }
 
         // Initializing google analytics
-        ReactGA.initialize(process.env.googleAnalyticsMeasurementId, {testMode: ((process.env.enableGoogleAnalytics === 'false') ? true : false)});
+        /* Todo Need to add the Analytics */
 
         initialInvoke();
 
