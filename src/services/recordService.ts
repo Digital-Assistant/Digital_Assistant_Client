@@ -20,7 +20,7 @@ import domJSON from "domjson";
 import mapClickedElementToHtmlFormElement from "../util/recording-utils/mapClickedElementToHtmlFormElement";
 import { UDAConsoleLogger, UDAErrorLogger } from "../config/error-log";
 import { fetchDomain } from "../util/fetchDomain";
-import ReactGA from "react-ga4"; // @ts-ignore
+
 /**
  * Extends the global `Window` interface to include two properties:
  * - `isRecording`: a boolean indicating whether recording is currently in progress
@@ -423,14 +423,15 @@ export const recordUserClickData = async (
     };
 
     // Sending events to google analytics
-    ReactGA.event({
+    /*ReactGA.event({
       category: clickType,
       action: clickType,
       label: clickedName,
       value: recordId,
       nonInteraction: true,
       transport: "xhr",
-    });
+    });*/
+    /* Todo Need to add the Analytics recording event */
 
     return await userClick(payload);
   } catch (error) {
