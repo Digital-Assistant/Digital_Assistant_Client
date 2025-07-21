@@ -20,6 +20,7 @@ import {Alert, Progress, Space, Switch} from "antd";
 import {UDAConsoleLogger, UDAErrorLogger} from "../config/error-log";
 import {addNotification} from "../util/addNotification";
 import EditableStepForm from "./EditableStepForm";
+import {hasValidScreenInfo} from "../util/hasValidScreenInfo";
 
 export interface MProps {
     sequenceName?: string;
@@ -56,21 +57,64 @@ export const RecordedData = (props: MProps) => {
     const [savingError, setSavingError] = useState<boolean>(false);
     const [slowPlayback, setSlowPlayback] = useState<boolean>(false);
     const [delayPlaybackTime, setDelayPlaybackTime] = useState<number>(1);
-    //variables for slow playback time for each click
-    const [slowPlaybackTime, setSlowPlaybackTime] = useState<number>(0);
+
+    // variable for setting screen information availability
+    const [screenInfoNotAvailable, setScreenInfoNotAvailable] = useState<boolean>(false);
 
     useEffect(() => {
         setRecordData([...(props.data || [])]);
     }, [props.data]);
 
-    /**
-     * @param data
-     */
-
     useEffect(() => {
         let permissions = {...props?.config?.permissions};
         setTmpPermissionsObj(permissions);
     }, [props.config.permissions]);
+
+    /**
+     * Effect hook to validate screen information availability in recorded data
+     *
+     * This effect monitors changes to the recordData array and performs validation
+     * on the most recent record to determine if valid screen information is available.
+     * It extracts the object data from the latest record and validates the screen
+     * information using the hasValidScreenInfo utility function.
+     *
+     * The effect will:
+     * 1. Check if recordData contains any records
+     * 2. Extract object data from the most recent record
+     * 3. Validate screen information in the node data
+     * 4. Update the screenInfoNotAvailable state accordingly
+     *
+     * @dependencies [recordData] - Effect re-runs when recordData array changes
+     */
+    useEffect(() => {
+        // Primary validation: Ensure recordData array exists and contains at least one record
+        // This prevents accessing undefined array elements and ensures we have data to process
+        if (recordData && recordData.length > 0) {
+
+            // Extract object data from the most recent record (last item in array)
+            // Using length-1 to get the latest recorded data entry for validation
+            const originalNode = getObjData(recordData[recordData.length - 1]?.objectdata);
+
+            // Debug logging: Output node information for development and troubleshooting
+            // This helps developers understand the structure of the node data being processed
+            UDAConsoleLogger.info(originalNode.node.nodeInfo, 4);
+
+            // Screen information validation: Check if the extracted node contains valid screen data
+            // Uses the hasValidScreenInfo utility to perform comprehensive validation
+            // of screen size information including width, height, and nested object structure
+            if (!hasValidScreenInfo(originalNode.node.nodeInfo)) {
+                // State update: Set flag to indicate screen information is not available
+                // This will likely trigger UI changes to handle the missing screen data scenario
+                // The true value indicates that valid screen information is NOT available
+                setScreenInfoNotAvailable(true);
+            }
+            // Note: If screen info IS valid, we don't explicitly set the state to false here
+            // This suggests the state might be managed elsewhere or has a different default behavior
+        }
+        // Effect dependency: Re-run this effect whenever recordData changes
+        // This ensures validation occurs whenever new records are added or the array is modified
+    }, [recordData]);
+
 
     const storeRecording = (data: any) => {
         setRecordData([...data]);
@@ -649,6 +693,7 @@ export const RecordedData = (props: MProps) => {
             <>
                 <div className="uda-card-details">
                     {savingError && <Alert message={translate('savingError')} type="error"/>}
+                    {screenInfoNotAvailable && <Alert message={translate('screenInfoError')} type="error"/>}
                     <h5>
                         <Space><span className="pulse"><InfoCircleOutlined /></span></Space>
                         {translate('recordSequenceHeading')}
@@ -812,10 +857,10 @@ export const RecordedData = (props: MProps) => {
                             <div className="flex-card flex-end" style={{flex: 1}}>
                                 <button
                                     className={`uda-tutorial-btn uda_exclude ${
-                                        disableForm ? "disabled" : ""
+                                        (disableForm || screenInfoNotAvailable) ? "disabled" : ""
                                     }`}
                                     onClick={() => submitRecording()}
-                                    disabled={disableForm}
+                                    disabled={disableForm || screenInfoNotAvailable}
 
                                     style={{flex: 1, marginLeft: "5px"}}
                                 >

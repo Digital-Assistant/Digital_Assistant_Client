@@ -65,5 +65,6 @@ export const TRANSLATIONS_EN = {
   labelsUpdated: "Labels Updated",
   labelsUpdatedDescription: "The sequence labels have been updated successfully.",
   labelsUpdateError: "Labels Update Error",
-  labelsUpdateErrorDescription: "Failed to update the labels. Please try again."
+  labelsUpdateErrorDescription: "Failed to update the labels. Please try again.",
+  screenInfoError: "Screen Information not available. We cannot allow if screenInfo is not available. Please try again.",
 };

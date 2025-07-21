@@ -254,12 +254,6 @@ const processNodeForClickData = async (node: any) => {
   // Clone the clicked node to create a new node object.
   const processedNode = await node.cloneNode(true);
 
-  // Log the absolute offsets of the processed node.
-  const absoluteOffsets = getAbsoluteOffsets(processedNode);
-  if (absoluteOffsets) {
-    console.log(absoluteOffsets);
-  }
-
   // Convert the processed node to a JSON object
   let objectData: any = domJSON.toJSON(processedNode, {
     serialProperties: true,
