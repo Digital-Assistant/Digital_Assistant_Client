@@ -2,12 +2,13 @@
  * React app bootstrap & Page Injection
  */
 import React from "react";
-
-import {createRoot} from "react-dom/client";
+import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
+import { store } from "./redux";
 
 import "./util/i18n";
 import App from "./App";
-import {ConfigProvider} from "antd";
+import { ConfigProvider } from "antd";
 
 /**
  * creating shadow root element for UDAN plugin
@@ -48,9 +49,15 @@ reactDiv.setAttribute('id', 'udan-react-app-root');
 shadowRoot.appendChild(reactDiv);
 
 const reactRoot = createRoot(shadowRoot);
-reactRoot.render(<ConfigProvider getPopupContainer = { (node: any) => {
-  if (node) {
-    return node.parentNode;
-  }
-  return shadowRoot;
-}}><App /> </ConfigProvider>);
+reactRoot.render(
+    <Provider store={store}>
+      <ConfigProvider getPopupContainer={(node: any) => {
+        if (node) {
+          return node.parentNode;
+        }
+        return shadowRoot;
+      }}>
+        <App />
+      </ConfigProvider>
+    </Provider>
+);

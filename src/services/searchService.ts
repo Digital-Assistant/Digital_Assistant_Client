@@ -10,46 +10,69 @@ import {getUserId} from "./userService";
  */
 
 export const fetchSearchResults = async (request?: {
-  keyword?: string,
-  page: number,
-  domain?: string,
-  additionalParams?: any
-  userSessionId?: any
+    // The search keyword to record user click data.
+    keyword?: string;
+    // The page number for the search results.
+    page: number;
+    // The domain to filter the search results.
+    domain?: string;
+    // Any additional parameters to include in the search request.
+    additionalParams?: any;
+    // The user's session ID.
+    userSessionId?: any;
 }) => {
+    try {
+      if(request?.keyword && request.keyword !== '') {
+        recordUserClickData('search', request.keyword);
+      }
 
-  if(request?.keyword && request.keyword !== '') {
-    recordUserClickData('search', request.keyword);
-  }
+      request.userSessionId = await getUserId();
+      if (request.additionalParams === null) {
+        delete request.additionalParams;
+      }
+      let parameters: any;
+      let url=ENDPOINT.Search;
+      if (request.additionalParams != null) {
+        if(global.UDAGlobalConfig.enableAISearch){
+          url = process.env.tokenUrl+ENDPOINT.AISearchWithPermissions;
+        } else {
+          url = ENDPOINT.SearchWithPermissions;
+        }
+        parameters = {
+          url: REST.processArgs(url, request),
+          method: "GET",
+        };
+      } else {
+        if(global.UDAGlobalConfig.enableAISearch){
+          url = process.env.tokenUrl+ENDPOINT.AISearch;
+        } else {
+          url = ENDPOINT.Search;
+        }
+        parameters = {
+          url: REST.processArgs(url, request),
+          method: "GET",
+        };
+      }
 
-  request.userSessionId = await getUserId();
-  if (request.additionalParams === null) {
-    delete request.additionalParams;
-  }
-  let parameters: any;
-  let url=ENDPOINT.Search;
-  if (request.additionalParams != null) {
-    if(global.UDAGlobalConfig.enableAISearch){
-      url = process.env.tokenUrl+ENDPOINT.AISearchWithPermissions;
+    const response = await REST.apiCal(parameters);
+    if(response !== undefined) {
+      return response;
     } else {
-      url = ENDPOINT.SearchWithPermissions;
+      return [];
     }
-    parameters = {
-      url: REST.processArgs(url, request),
-      method: "GET",
-    };
-  } else {
-    if(global.UDAGlobalConfig.enableAISearch){
-      url = process.env.tokenUrl+ENDPOINT.AISearch;
-    } else {
-      url = ENDPOINT.Search;
-    }
-    parameters = {
-      url: REST.processArgs(url, request),
-      method: "GET",
-    };
+
+  } catch (error) {
+    // Type guard to check if error is an instance of Error
+    const errorMessage = error instanceof Error ? error.message : 'Unknown search error';
+
+    // Log the error for debugging
+    console.error('Search service error:', errorMessage);
+
+    // You can customize the error response based on your needs
+    throw new Error(`Failed to perform search: ${errorMessage}`);
+    return [];
   }
 
-  return REST.apiCal(parameters);
 };
 
 /**

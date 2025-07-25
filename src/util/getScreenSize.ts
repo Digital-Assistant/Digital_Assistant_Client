@@ -1,10 +1,13 @@
 /**
- * To get screen/window size
+ * To get screen/window size and other related properties,
+ * including the full viewport and the available content area
+ * after accounting for a 25% width plugin (for tooltip placement, etc.).
  * @returns object
  */
 export const getScreenSize = () => {
   let page = {height: 0, width: 0};
-  let screen = {height: 0, width: 0};
+  let viewport = {height: 0, width: 0}; // Original, unscaled viewport dimensions
+  let availableContentArea = {height: 0, width: 0}; // Viewport adjusted for plugin
   let body = document.body,
       html = document.documentElement;
 
@@ -12,8 +15,9 @@ export const getScreenSize = () => {
   const scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
   const scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
 
-  let resolution = {height: 0, width: 0};
+  let physicalScreen = {height: 0, width: 0}; // Physical screen resolution
 
+  // Calculate full document size (including scrollable content)
   page.height = Math.max(
       body.scrollHeight,
       body.offsetHeight,
@@ -28,21 +32,32 @@ export const getScreenSize = () => {
       html.scrollWidth,
       html.offsetWidth
   );
+
+  // Get original viewport size (visible window area)
   if (window.innerWidth !== undefined) {
-    screen.width = window.innerWidth * 0.75;
-    screen.height = window.innerHeight;
+    viewport.width = window.innerWidth;
+    viewport.height = window.innerHeight;
   } else {
     const D = document.documentElement;
-    screen.width = D.clientWidth;
-    screen.height = D.clientHeight * 0.75;
+    viewport.width = D.clientWidth;
+    viewport.height = D.clientHeight;
   }
-  resolution.height = window.screen.height;
-  resolution.width = window.screen.width;
+
+  // Calculate available content area (viewport minus plugin space)
+  // This is derived from the original viewport, applying the 0.75 width scaling.
+  availableContentArea.width = viewport.width * 0.75;
+  availableContentArea.height = viewport.height; // Height is NOT scaled
+
+  // Get physical screen resolution
+  physicalScreen.height = window.screen.height;
+  physicalScreen.width = window.screen.width;
+
   const windowProperties = {
-    page: page,
-    screen: screen,
+    page: page, // Full document size (including scrollable content)
+    viewport: viewport, // Original, unscaled visible window area
+    availableContentArea: availableContentArea, // Viewport adjusted for plugin (width scaled by 0.75)
     scrollInfo: {scrollTop: scrollTop, scrollLeft: scrollLeft},
-    resolution,
+    screen: physicalScreen, // Physical screen resolution
   };
   return windowProperties;
 };

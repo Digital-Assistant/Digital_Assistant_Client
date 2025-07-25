@@ -9,6 +9,7 @@ export interface MProps {
   enableUdaIcon?: boolean;
   userContent?: any;
   hide?: boolean;
+  closeHandler?: Function;
 }
 
 export interface HeaderProps extends MProps {

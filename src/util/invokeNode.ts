@@ -1,5 +1,4 @@
 import {getAbsoluteOffsets, getFromStore, getObjData, setToStore} from "./index";
-import {jaroWinkler} from "jaro-winkler-typescript";
 import {CONFIG} from "../config";
 import {trigger} from "./events";
 import {translate} from "./translation";
@@ -9,6 +8,8 @@ import {removeToolTip} from "./addToolTip";
 import {searchNodes} from "./searchNodes";
 import {UDAConsoleLogger} from "../config/error-log";
 import {addNotification} from "./addNotification";
+import {delay} from "./delay";
+declare const UDAGlobalConfig;
 
 /**
  * Get selected record from storage
@@ -40,7 +41,7 @@ export const playNextNode = () => {
  * Matching the clickable node.
  * @param recordedNode
  */
-export const matchNode = (recordedNode: any) => {
+export const matchNode = async (recordedNode: any) => {
 
   if(!recordedNode.node){
     return true;
@@ -52,6 +53,11 @@ export const matchNode = (recordedNode: any) => {
   if (originalNode.meta.hasOwnProperty('skipDuringPlay') && originalNode.meta.skipDuringPlay) {
     playNextNode();
     return true;
+  }
+
+  // waiting for the page to get loaded based on the time given during recording
+  if(UDAGlobalConfig.enableSlowReplay && originalNode.hasOwnProperty('meta') && originalNode.meta.hasOwnProperty('slowPlaybackTime') && parseInt(originalNode.meta.slowPlaybackTime) > 0) {
+    await delay(parseInt(originalNode.meta.slowPlaybackTime)*1000);
   }
 
   let clickObjects: any = [];

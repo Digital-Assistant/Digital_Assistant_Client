@@ -26,8 +26,6 @@ import { addBodyEvents } from "./util/addBodyEvents";
 import { initSpecialNodes } from "./util/initSpecialNodes";
 import {fetchDomain} from "./util/fetchDomain";
 
-import ReactGA from 'react-ga4';
-
 // adding global variable declaration for exposing react custom configuration
 global.UDAPluginSDK = AppConfig;
 global.UDAGlobalConfig = CustomConfig;
@@ -256,6 +254,7 @@ function App(props) {
     const clearSession = useCallback(() => {
         removeFromStore(CONFIG.USER_AUTH_DATA_KEY);
         removeFromStore(CONFIG.UDAKeyCloakKey);
+        removeFromStore(CONFIG.SELECTED_RECORDING);
         setAuthenticated(false);
         setInvokeKeycloak(true);
         setKeycloakSessionData(null);
@@ -310,6 +309,11 @@ function App(props) {
         }
     };
 
+    const logout = async () => {
+        removeFromStore(CONFIG.USER_AUTH_DATA_KEY);
+        setAuthenticated(false);
+    }
+
     const updateRecordedData = async () => {
         let recordingData = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
         // console.log(recordingData);
@@ -332,6 +336,7 @@ function App(props) {
         on("UDAClearSessionData", clearSession);
         on("openPanel", openPanel);
         on("closePanel", closePanel);
+        on("UDAGetNewToken", logout);
         on("updateRecordedData", updateRecordedData);
 
         /**
@@ -366,12 +371,13 @@ function App(props) {
             init();
 
             // Send pageview with a custom path
-            ReactGA.send({ hitType: "pageView", page: "/", title: "Loaded Plugin" });
+            // ReactGA.send({ hitType: "pageView", page: "/", title: "Loaded Plugin" });
+            /* Todo Need to record the initial loading of the page */
 
         }
 
         // Initializing google analytics
-        ReactGA.initialize(process.env.googleAnalyticsMeasurementId, {testMode: ((process.env.enableGoogleAnalytics === 'false') ? true : false)});
+        /* Todo Need to add the Analytics */
 
         initialInvoke();
 
@@ -404,7 +410,6 @@ function App(props) {
 
         if (reFetchSearch === "on") {
             getSearchResults(0,true);
-            setReFetchSearch("off");
         }
     }, [searchKeyword, reFetchSearch]);
 
@@ -463,16 +468,13 @@ function App(props) {
                     await addBodyEvents();
                     return;
                 }
-                if(_page===0 &&searchResults.length > 0 && !refetch) {
+                if(_page===0 && searchResults.length > 0 && !refetch) {
                     setShowLoader(false);
                     return;
-                } else if (!_.isEmpty(selectedRecordingDetails)) {
+                } else if (!_.isEmpty(selectedRecordingDetails) && !refetch) {
                     setShowLoader(false);
                     return;
                 }
-                /*if(selectedRecordingDetails){
-                    return;
-                }*/
                 if(_page===0 && refetch) {
                     setShowLoader(true);
                 }
@@ -485,8 +487,13 @@ function App(props) {
                         ? encodeURI(JSON.stringify(global.UDAGlobalConfig.permissions))
                         : null,
                 });
-                setTimeout(() => setShowLoader(false), 500);
-                if (_searchResults.length) {
+                setTimeout(() => {
+                    setShowLoader(false);
+                    if(refetch) {
+                        setReFetchSearch("off");
+                    }
+                }, 500);
+                if (_searchResults.length > 0) {
                     setPage(_page);
                     if(_searchResults.length===10){
                         setHasMorePages(true);
@@ -500,7 +507,6 @@ function App(props) {
                     }
                 } else {
                     setHasMorePages(false);
-                    setSearchResults([]);
                 }
             }, CONFIG.apiInvokeTime)
         );
@@ -572,6 +578,16 @@ function App(props) {
         } else {
             await togglePanel();
         }
+    };
+
+    /**
+     * common close callback function
+     * @param hideFlag
+     * @param type
+     */
+    const closeHandler = async (hideFlag: boolean, type: string) => {
+        cancel();
+        await togglePanel();
     };
 
     /**
@@ -648,6 +664,7 @@ function App(props) {
                       toggleFlag={hide}
                       toggleHandler={toggleHandler}
                       config={global.UDAGlobalConfig}
+                      closeHandler={closeHandler}
                   />
                   <Body
                       content={
@@ -751,6 +768,7 @@ function App(props) {
                                       key={"rSD" + recordSequenceDetailsVisibility}
                                       config={global.UDAGlobalConfig}
                                       showLoader={setShowLoader}
+                                      refetchSearch={setReFetchSearch}
                                       searchKeyword={searchKeyword}
                                   />
                               )}
@@ -809,7 +827,7 @@ function App(props) {
             </div>
             <Toggler toggleFlag={hide} userContent={userContent} toggleHandler={togglePanel}
                      udaDivId={global.UDAGlobalConfig.udaDivId} enableUdaIcon={global.UDAGlobalConfig.enableUdaIcon}
-                     config={global.UDAGlobalConfig}/>
+                     config={global.UDAGlobalConfig} isRecording={isRecording} />
         </UserDataContext.Provider>
     );
 }

@@ -27,6 +27,9 @@ export interface CustomConfigPropTypes {
   clientId: string,
   clientSecret: string,
   enableHidePanelAfterCompletion: boolean,
+  enableStatusSelection: boolean,
+  enableUDAIconDuringRecording: boolean,
+  enableEditingOfRecordings: boolean
   enableAISearch: boolean
 }
 
@@ -43,16 +46,19 @@ export const CustomConfig: CustomConfigPropTypes = {
   enableRecording: true, // Flag for enabling recording functionality
   enableOverlay: true, // Flag for enabling overlay functionality or enabling squeeze functionality
   environment: 'PROD', // Environment variable
-  enableUdaIcon: true,
+  enableUdaIcon: true, // Flag for enabling UDA icon
   udaDivId: 'uda-nistapp-logo',
   enableForAllDomains: false, // Flag to enable all the recording to be visible across all domains
   enableSpeechToText: true, // Flag to enable speech to text
   enableSlowReplay: true, // Flag to enable slow playback
   enableCustomIcon: false, // Flag to enable custom icon
-  customIcon: 'https://udan.nistapp.com/uda-logo.jpg',
-  realm: process.env.keycloakRealm,
-  clientId: process.env.keycloakClientId,
-  clientSecret: process.env.keycloakClientSecret,
-  enableHidePanelAfterCompletion: false,
+  customIcon: 'https://udan.nistapp.com/uda-logo.jpg', // Custom icon URL
+  realm: process.env.keycloakRealm, // Realm name to be used for authentication
+  clientId: process.env.keycloakClientId, // Client ID to be used for authentication
+  clientSecret: process.env.keycloakClientSecret, // Client secret to be used for authentication
+  enableHidePanelAfterCompletion: false, // Flag to enable hiding the panel after completion
+  enableStatusSelection: false, // Flag to enable status selection
+  enableUDAIconDuringRecording: false, // Flag to enable UDA icon during recording
+  enableEditingOfRecordings: true, // Flag to enable editing of recordings
   enableAISearch: true
 };

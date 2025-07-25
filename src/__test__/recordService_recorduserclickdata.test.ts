@@ -14,15 +14,8 @@
 import { recordUserClickData } from "../services/recordService";
 import { getSessionKey } from "../services/userService";
 import { userClick } from "../services/recordService";
-import ReactGA from "react-ga4";
-import { UDAErrorLogger } from "../config/error-log";
-import { UDAConsoleLogger } from "../config/error-log";
 import * as userService from "../services/userService";
-import { REST } from "../services";
-import { ENDPOINT } from "../config/endpoints";
 import domJSON from "domjson";
-import TSON from "typescript-json";
-import { fetchDomain } from "@/util/fetchDomain";
 import { getUserId } from "../services/userService";
 /**
  * This code sets up mocks for various modules and functions used in the `recordService_recordUserClickData.test.ts` file. The mocks include:
@@ -73,13 +66,6 @@ jest.mock("../services/recordService", () => {
           recordid: recordId,
         });
       }),
-  };
-});
-
-// Mocks the event function from the `react-ga4` module
-jest.mock("react-ga4", () => {
-  return {
-    event: jest.fn(), // Mocks the event function
   };
 });
 

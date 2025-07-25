@@ -62,9 +62,14 @@ const SelectedElement = ({
             nodeData.meta = {};
             nodeData.meta.selectedElement = valueSelected;
         }
-        data.objectdata = JSON.stringify(nodeData);
-        recordData[index].objectdata = data.objectdata;
-        storeRecording(recordData);
+        // data.objectdata = JSON.stringify(nodeData);
+        // recordData[index].objectdata = JSON.stringify(nodeData);
+        let newRecordData = [...recordData];
+        newRecordData[index] = {
+            ...newRecordData[index],
+            objectdata: JSON.stringify(nodeData),
+        };
+        storeRecording(newRecordData);
     };
 
     return enableNodeTypeSelection ? (
