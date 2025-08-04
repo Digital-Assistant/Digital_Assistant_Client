@@ -44,7 +44,7 @@ export const fetchSearchResults = async (request?: {
         };
       } else {
         if(global.UDAGlobalConfig.enableAISearch){
-          url = process.env.tokenUrl+ENDPOINT.AISearch;
+          url = process.env.llmUrl+ENDPOINT.AISearch;
         } else {
           url = ENDPOINT.Search;
         }

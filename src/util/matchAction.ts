@@ -15,8 +15,6 @@ declare const UDAGlobalConfig;
 
 export const matchAction = (node, selectedNode, selectedRecordingDetails) => {
 
-  const recordedNodeData = JSON.parse(selectedNode.objectdata);
-
   let playBackDelayTime = 2;
   if(selectedRecordingDetails?.additionalParams?.slowPlaybackTime){
     playBackDelayTime = selectedRecordingDetails?.additionalParams?.slowPlaybackTime;
