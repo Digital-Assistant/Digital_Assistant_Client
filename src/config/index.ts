@@ -57,7 +57,7 @@ export const CONFIG = {
   htmlIndex: [],
   invokeTime: 2000,
   apiInvokeTime: 300,
-  maxStringLength: 40,
+  maxStringLength: 25,
   playNextAction: true,
   navigatedToNextPage: {check: false, url: ''},
   ignoreElements: ["script", "h1", "h2", "h3", "link", "noscript", "style"],
@@ -68,7 +68,8 @@ export const CONFIG = {
     'aria-controls', 'aria-activedescendant', 'ariaExpanded', 'autocomplete', 'aria-expanded', 'aria-owns', 'formAction',
     'ng-star-inserted', 'ng-star', 'aria-describedby', 'width', 'height', 'x', 'y', 'selectionStart', 'selectionEnd', 'required', 'validationMessage', 'selectionDirection',
     'naturalWidth', 'naturalHeight', 'complete', '_indexOf', 'value', 'defaultValue', 'min', 'max', 'nodeInfo', 'data-tooltip-id', 'addedclickrecord', 'checked', 'data-tribute',
-    'hasclick', 'addedClickRecord', 'hasClick', 'valueAsNumber', 'udaIgnoreChildren', 'udaIgnoreClick', 'udaignorechildren', 'udaignoreclick', 'fdprocessedid', '__ngContext__', 'd', 'text', 'textContent', 'cdk-describedby-host', 'inert', 'fill', 'disabled', 'hidden'
+    'hasclick', 'addedClickRecord', 'hasClick', 'valueAsNumber', 'udaIgnoreChildren', 'udaIgnoreClick', 'udaignorechildren', 'udaignoreclick', 'fdprocessedid', '__ngContext__',
+    'd', 'text', 'textContent', 'cdk-describedby-host', 'inert', 'fill', 'disabled', 'hidden', 'data-activates'
   ],
   innerTextWeight: 5,
   ignoreNodesFromIndexing: ['ng-dropdown-panel', 'ckeditor', 'fusioncharts', 'ngb-datepicker', 'ngx-daterangepicker-material', 'uda-panel', 'mat-datepicker-content', 'ng-select'],
@@ -253,5 +254,5 @@ export const CONFIG = {
     storageName: "uda-user-screen-consent",
     data: {proceed: true},
   },
-  ignoreDynamicAttributeText: ['_ng','__context', '__zone_symbol']
+  ignoreDynamicAttributeText: ['_ng','__context', '__zone_symbol','']
 };

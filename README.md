@@ -2,16 +2,18 @@
 
 Client for Universal Digital Assistant
 
-**Update - We are working on upgrading this to an 'AI agent'. Integrating this into your website should automatically help LLMs like chatGPT, Claude, Gemini etc interface with your website with minimal effort.**
+**Update - We are working on upgrading this to an 'AI agent'. Integrating this into your website should automatically
+help LLMs like chatGPT, Claude, Gemini etc interface with your website with minimal effort. Expect to see a POC by end
+of October 2025**
 
-World's first and only Open Source Digital Adoption Platform !!
-Concept video: https://youtu.be/yEPGWexvpL8 
+World's first and only AI driven Open Source Digital Adoption Platform !!
+Concept video: https://youtu.be/yEPGWexvpL8
 
 Assistant in Action: https://youtu.be/Iz2WgKY0fhc
 
 (You will need the server too: https://github.com/Digital-Assistant/digital-assistant-server)
 
-Telegram: https://t.me/UniDigitalAssistant
+~Telegram: https://t.me/UniDigitalAssistant~
 Discord: https://discord.gg/92NqDEUbxV
 
 Preamble: The explosion of web/browser (and digital) applications has come with the problem of users having to learn how
@@ -24,6 +26,8 @@ our world of continuous integration. We need a self learning assistant which wil
 continuously evolving applications.
 
 Universal Digital Assistant (UDA):
+![Agentic UDAN_white](https://github.com/user-attachments/assets/52d996fe-10e7-42ce-90e1-4fdd67ef0077)
+
 UDA is a Digital Assistant which helps you accomplish tasks in any (currently) browser based application. A ‘task’ is
 accomplished in an application via a sequence of clicks (and other user inputs) to achieve a particular objective.
 Examples Create a new issue (in a proj. Mgmt. tool)
@@ -55,45 +59,54 @@ We solicit and welcome comments, help, documentation in improving the client.
     ```
     <script src="https://udan-sdk.nistapp.com/dist/assets/UDAHeaders.js"></script>
     ```
-2. Add the below script to the bottom of the page to load the SDK
-    ```
-    <script type="text/javascript">
-        (function ()
-         {
-             var uda = document.createElement('script');
-             uda.type = 'text/javascript';
-             uda.src = 'https://udan-sdk.nistapp.com/dist/assets/UDALoad.js';
-             uda.onload = () =>
-             {
-                 if (typeof UDAAuthDataConfig !== 'undefined')
-                 {
-                     UDAAuthDataConfig(
-                     {
-                         id: '123456789', // Pass the unique reference id of the user
-                         email: 'dummy@dummy.com' // optional pass the email address of the user
-                     });
-                     // Additional parameters that can be passed.
-                     UDAPluginSDK(
-                     {
-                         enableEditClickedName: false, // Flag for editing the clicked element
-                         enableSkipDuringPlay: false, // Flag for enabling skip functionality
-                         enableTooltipAddition: false, // Flag for adding custom tooltip information
-                         enableNodeTypeSelection: false, // Flag for enabling node type selection
-                         enableProfanity: false, // Flag for enabling profanity check
-                         enableRecording: true, // Flag for enabling recording functionality
-                         enableOverlay: true, // Flag for enabling overlay functionality or enabling squeeze functionality
-                         enableUdaIcon: true, // Flag for enabling UdaIcon to appear on the screen
-                         udaDivId: 'id of the document element', // Flag for attaching click event to open uda panel
-                         enableForAllDomains: false, // Flag to enable all the recording to be visible across all domains
-                         enableSpeechToText: false, // Flag to enable speech to text on the search bar.
-                         enableSlowReplay: false // Flag to enable slow playback
+   2. Add the below script to the bottom of the page to load the SDK
+       ```
+       <script type="text/javascript">
+           (function ()
+            {
+                var uda = document.createElement('script');
+                uda.type = 'text/javascript';
+                uda.src = 'https://udan-sdk.nistapp.com/dist/assets/UDALoad.js';
+                uda.onload = () =>
+                {
+                    if (typeof UDAAuthDataConfig !== 'undefined')
+                    {
+                        UDAAuthDataConfig(
+                        {
+                            id: '123456789', // Pass the unique reference id of the user
+                            email: 'dummy@dummy.com' // optional pass the email address of the user
+                        });
+                        // Additional parameters that can be passed.
+                        UDAPluginSDK(
+                        {
+                            enableEditClickedName: false, // Flag for editing the clicked element
+                            enableSkipDuringPlay: false, // Flag for enabling skip functionality
+                            enableTooltipAddition: false, // Flag for adding custom tooltip information
+                            enableNodeTypeSelection: false, // Flag for enabling node type selection
+                            enableProfanity: false, // Flag for enabling profanity check
+                            enableRecording: true, // Flag for enabling recording functionality
+                            enableOverlay: true, // Flag for enabling overlay functionality or enabling squeeze functionality
+                            enableUdaIcon: true, // Flag for enabling UdaIcon to appear on the screen
+                            udaDivId: 'id of the document element', // Flag for attaching click event to open uda panel
+                            enableForAllDomains: false, // Flag to enable all the recording to be visible across all domains
+                            enableSpeechToText: false, // Flag to enable speech to text on the search bar.
+                            enableSlowReplay: false // Flag to enable slow playback
+                            enableCustomIcon: false, // Flag to enable custom icon
+                            customIcon: 'https://udan.nistapp.com/uda-logo.jpg', // Custom icon URL
+                            realm: RealmName, // Realm name to be used for authentication
+                            clientId: ClientId, // Client ID to be used for authentication
+                            clientSecret: ClientSecret, // Client secret to be used for authentication
+                            enableHidePanelAfterCompletion: false, // Flag to enable hiding the panel after completion
+                            enableStatusSelection: false, // Flag to enable status selection
+                            enableUDAIconDuringRecording: false // Flag to enable UDA icon during recording
                      });
                  }
              }
              document.body.appendChild(uda);
          })();
     </script>
-    ```
+
+```
 
 ## Installation instructions for developers
 
@@ -110,7 +123,6 @@ To build chrome extension (to build folder)
 ```bash
   npm run build
 ```
-
 
 ## Installing to Chrome as Plugin
 

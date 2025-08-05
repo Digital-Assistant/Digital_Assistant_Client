@@ -44,7 +44,7 @@ export const specialNodes = {
       'value', 'defaultValue', 'min', 'max', 'nodeInfo', 'data-tooltip-id', 'addedclickrecord', 'checked', 'data-tribute',
       'hasclick', 'addedClickRecord', 'hasClick', 'valueAsNumber', 'udaIgnoreChildren', 'udaIgnoreClick', 'udaignorechildren',
       'udaignoreclick', 'fdprocessedid', '__ngContext__', 'd', 'text', 'textContent', 'cdk-describedby-host', 'inert', 'fill', 'disabled', 'hidden',
-      'aria-autocomplete', 'ariaAutoComplete'
+      'aria-autocomplete', 'ariaAutoComplete', 'data-activates'
     ],
     "ids": []
   },
@@ -89,5 +89,10 @@ export const specialNodes = {
     "tags": ['a', 'button'],
     "classes": [],
     "attributes": ['href']
+  },
+  "iconNodes": {
+    "tags": ['i'],
+    "classes": [],
+    "attributes": []
   }
 }

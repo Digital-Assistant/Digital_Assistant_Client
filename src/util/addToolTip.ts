@@ -1,9 +1,16 @@
 import {translate} from "./translation";
 import {createPopperLite as createPopper} from "@popperjs/core";
-import {trigger} from "./events";
+import {trigger, on} from "./events";
 import {CONFIG} from "../config";
 import {getToolTipElement} from "./getToolTipElement";
 import {getTooltipPositionClass} from "./getTooltipPositionClass";
+
+// Store popper instance globally to update it
+let currentPopperInstance = null;
+let currentTooltipNode = null;
+let currentTooltipDivElement = null;
+let currentToolTipPositionClass = null;
+let currentAvailablePositions = [];
 
 /**
  * To add tooltip for target elements
@@ -26,20 +33,19 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
 
   const tooltipDivElement = getToolTipElement(message, showButtons);
 
+  // Store references for later updates
+  currentTooltipNode = tooltipNode;
+  currentTooltipDivElement = tooltipDivElement;
+
   /**
    * calculating node position from here
    */
-  let toolTipPositionClass: any = getTooltipPositionClass(tooltipNode, tooltipDivElement);
+  let {finalCssClass, availablePositions} = getTooltipPositionClass(tooltipNode, tooltipDivElement);
+  currentToolTipPositionClass = finalCssClass;
+  currentAvailablePositions = availablePositions;
 
-  /*if(isNavigating){
-    setTimeout(function () {
-      invokingNode.click();
-      removeToolTip();
-    }, 500);
-  }*/
-
-  let popperInstance = createPopper(tooltipNode, tooltipDivElement, {
-    placement: toolTipPositionClass,
+  currentPopperInstance = createPopper(tooltipNode, tooltipDivElement, {
+    placement: currentToolTipPositionClass,
     modifiers: [
       {
         name: 'popperOffsets',
@@ -48,8 +54,36 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
         options: {
           offset: ({placement, reference, popper}) => [0, 30],
         }
+      },
+      {
+        name: 'offset',
+        options: {
+          offset: [0, 12],
+        },
+      },
+      {
+        name: 'arrow',
+        options: {
+          padding: 5,
+          element: '[data-popper-arrow]',
+        },
+      },
+      {
+        name: 'preventOverflow',
+        options: {
+          boundary: 'viewport',
+          padding: 10,
+        },
       }
     ],
+  });
+
+  // Listen for position change events
+  on("ChangeTooltipPosition", (event) => {
+    console.log(event.detail);
+    if (currentPopperInstance && event.detail && event.detail.position) {
+      updateTooltipPosition(event.detail.position);
+    }
   });
 
   if(showButtons) {
@@ -82,10 +116,35 @@ export const addToolTip = (invokingNode, tooltipNode, recordedData = null, navig
 }
 
 /**
+ * Updates tooltip position based on arrow button selection
+ * @param position - 'top', 'right', 'bottom', or 'left'
+ */
+export const updateTooltipPosition = (position: string) => {
+  if (!currentPopperInstance) return;
+
+  let {finalCssClass, availablePositions} = getTooltipPositionClass(currentTooltipDivElement, currentTooltipDivElement, position, currentToolTipPositionClass, currentAvailablePositions);
+  currentToolTipPositionClass = finalCssClass;
+
+  // Update the placement option
+  currentPopperInstance.setOptions((options) => ({
+    ...options,
+    placement: currentToolTipPositionClass,
+  }));
+
+  // Force update to apply changes immediately
+  currentPopperInstance.update();
+};
+
+/**
  * Removes tooltip element
  * Void()
  */
 export const removeToolTip = () => {
+  // Reset the global references
+  currentPopperInstance = null;
+  currentTooltipNode = null;
+  currentTooltipDivElement = null;
+
   const shadowRoot = document.getElementById('udan-react-root').shadowRoot;
   const toolTipExists = shadowRoot.getElementById("uda-tooltip");
   if (toolTipExists) {

@@ -1,27 +1,34 @@
 /**
- * Author: Lakshman Veti
+ * Author: Yureswar Ravuri
  * Type: Component
  * Objective: To render miscellaneous components
  * Associated Route/Usage: *
  */
 
 import React, {useEffect, useRef, useState} from "react";
-import {Badge, Button, Col, List, Popconfirm, Row, Checkbox} from "antd";
+import {Button, Checkbox, Col, Form, List, Popconfirm, Row, Select} from "antd";
 import {
+  CopyFilled,
   DeleteOutlined,
   DislikeFilled,
   DislikeOutlined,
+  EditOutlined, InfoCircleOutlined,
   LeftOutlined,
   LikeFilled,
   LikeOutlined,
   PauseCircleOutlined,
   PlayCircleOutlined,
-  ShareAltOutlined,
-  CopyFilled,
-  EditFilled
+  ReloadOutlined,
+  ShareAltOutlined
 } from "@ant-design/icons";
 import {getCurrentPlayItem, getFromStore, getObjData, setToStore,} from "../util";
-import {deleteRecording, recordUserClickData, updateRecording} from "../services/recordService";
+import {
+  deleteRecording,
+  fetchStatuses,
+  profanityCheck,
+  recordUserClickData, updateRecordClicks,
+  updateRecording, updateSequnceIndex
+} from "../services/recordService";
 import {getUserId} from "../services/userService";
 import {matchNode} from "../util/invokeNode";
 import {CONFIG} from "../config";
@@ -31,7 +38,16 @@ import {removeToolTip} from "../util/addToolTip";
 import {getClickedNodeLabel} from "../util/getClickedNodeLabel";
 import {getVoteRecord, vote} from "../services/userVote";
 import {addNotification} from "../util/addNotification";
+import EditableStepForm from "./EditableStepForm";
 
+import { useAppSelector, useAppDispatch } from '../redux';
+import {
+  cancelEditingStep,
+  markValidationCompleted,
+  resetValidationState,
+  startEditingStep,
+  startValidation
+} from "../redux/editingStep";
 
 
 interface MProps {
@@ -53,8 +69,25 @@ interface MProps {
 export const RecordSequenceDetails = (props: MProps) => {
   const [advBtnShow, setAdvBtnShow] = useState<boolean>(false);
   const [permissions, setPermissions] = useState<any>({});
-  const [selectedRecordingDetails, setSelectedRecordingDetails] =
-      React.useState<any>(props.data);
+  const [selectedRecordingDetails, setSelectedRecordingDetails] = React.useState<any>(props.data);
+  const [userId, setUserId] = useState<string>(null);
+  const [statusOptions, setStatusOptions] = useState<string[]>([]);
+  const [playStatus, setPlayStatus] = useState<string>("");
+
+  // State for step editing
+  const [editingStepIndex, setEditingStepIndex] = useState<number | null>(null);
+  const [inputError, setInputError] = useState<any>({});
+  const [editRecording, setEditRecording] = useState(false);
+
+  const dispatch = useAppDispatch();
+  const editingState= useAppSelector(state => state.editingStep);
+
+  useEffect(() => {
+    if(editingState && editingState.editingStepId != null){
+      setEditRecording(true);
+      setEditingStepIndex(editingState.editingStepId);
+    }
+  }, [editingState]);
 
   /**
    * Every time isPlaying state changes, and status is "on", play continues
@@ -79,13 +112,49 @@ export const RecordSequenceDetails = (props: MProps) => {
     };
   }, []);
 
+  /**
+   * Fetches available status options from the API
+   * Manages loading state during the fetch operation
+   * Updates the local state with fetched status options
+   * @returns {Promise<void>}
+   */
+  const fetchStatusOptions = async () => {
+    props.showLoader(true);    // Show loading indicator before fetch
+    const response = await fetchStatuses();    // Get statuses from API
+    setStatusOptions(response);    // Update local state with fetched options
+    props.showLoader(false);    // Hide loading indicator after completion
+  };
+
+
   useEffect(()=>{
     if(props.data){
       setSelectedRecordingDetails(props.data);
       setTmpPermissionsObj(props.data.additionalParams);
+      if(props.config.enableStatusSelection && (props.data.usersessionid === userId)){
+        fetchStatusOptions();
+      }
     }
-  },[props.data])
+  },[props.data, userId]);
 
+  useEffect(() => {
+    if(setSelectedRecordingDetails){
+      checkStatus();
+    }
+  }, [selectedRecordingDetails]);
+
+  /**
+   * Effect hook to fetch status options when component mounts
+   * Only fetches if:
+   * 1. Status selection is enabled in config
+   * 2. Current user session matches the userId
+   *
+   * @dependency props.config.enableStatusSelection - Triggers fetch when status selection setting changes
+   */
+  useEffect(() => {
+    if(props?.config?.enableStatusSelection && (props.data.usersessionid === userId)){
+      fetchStatusOptions();
+    }
+  }, [props.config.enableStatusSelection]);
 
   /**
    * Record player(auto play)
@@ -96,23 +165,30 @@ export const RecordSequenceDetails = (props: MProps) => {
     }
     const playItem = getCurrentPlayItem();
     if (playItem.node) {
-      if(matchNode(playItem)) {
+      if(await matchNode(playItem)) {
         updateStatus(playItem.index);
       } else {
-        await recordUserClickData('playBackError', getName(), selectedRecordingDetails.id);
+        recordUserClickData('playBackError', '', selectedRecordingDetails.id);
         pause();
         removeToolTip();
         trigger("openPanel", {action: 'openPanel'});
       }
     } else {
-      await recordUserClickData('playCompleted', getName(), selectedRecordingDetails.id);
+      recordUserClickData('playCompleted', '', selectedRecordingDetails.id);
       pause();
       removeToolTip();
-      if(!props?.config?.enableHidePanelAfterCompletion) {
+      addNotification(translate('autoplayCompletedTitle'), translate('autoplayCompleted'), 'success');
+      setPlayStatus('completed');
+      props.playHandler("off");
+      if(editingState && editingState.validationRequired){
+        dispatch(markValidationCompleted());
         trigger("openPanel", {action: 'openPanel'});
       } else {
-        addNotification(translate('autoplayCompletedTitle'), translate('autoplayCompleted'), 'success');
-        backNav(true, false);
+        if (!props?.config?.enableHidePanelAfterCompletion) {
+          trigger("openPanel", {action: 'openPanel'});
+        } else {
+          backNav(true, false);
+        }
       }
     }
   };
@@ -131,12 +207,33 @@ export const RecordSequenceDetails = (props: MProps) => {
    * Updates all recorded nodes status to 'none'
    */
   const resetStatus = () => {
-    selectedRecordingDetails?.userclicknodesSet?.forEach((element: any) => {
-      element.status = "none";
-    });
-    setToStore(selectedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
-    setSelectedRecordingDetails({...selectedRecordingDetails});
+    const updatedRecordingDetails = { ...selectedRecordingDetails };
+    for (let i = 0; i < updatedRecordingDetails?.userclicknodesSet?.length; i++) {
+      if(updatedRecordingDetails.userclicknodesSet[i]?.status) {
+        console.log("removed");
+        delete updatedRecordingDetails.userclicknodesSet[i].status;
+      }
+    }
+    setToStore(updatedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
+    setSelectedRecordingDetails(updatedRecordingDetails);
     setUserVote({upvote: 0, downvote: 0});
+    return true;
+  };
+
+  /**
+   * check node status(to completed) by index
+   * @param index
+   */
+  const checkStatus = () => {
+    let count = 0;
+    for (let i = 0; i < selectedRecordingDetails?.userclicknodesSet?.length; i++) {
+      if (selectedRecordingDetails.userclicknodesSet[i].status === "completed") {
+        count++;
+      }
+    }
+    if(count === selectedRecordingDetails?.userclicknodesSet?.length) {
+      setPlayStatus('completed');
+    }
   };
 
   /**
@@ -148,8 +245,13 @@ export const RecordSequenceDetails = (props: MProps) => {
     if (props.data) {
       try {
         // name = JSON.parse(props?.data?.name)?.join(",");
-        let names = JSON.parse(props?.data?.name);
-        name = names[0] ? names[0] : 'NA';
+        let names = JSON.parse(selectedRecordingDetails?.name);
+        // name = names[0] ? names[0] : 'NA';
+        if (typeof names[0] === 'object' && 'label' in names[0]) {
+          name = names[0].label;
+        } else {
+          name = names[0] ? names[0] : 'NA';
+        }
       } catch (e) {
       }
     }
@@ -160,12 +262,14 @@ export const RecordSequenceDetails = (props: MProps) => {
    * Navigates back to search results card
    */
   const backNav = async (forceRefresh = false, openPanel = true) => {
-    await recordUserClickData('backToSearchResults', getName(), selectedRecordingDetails.id);
+    recordUserClickData('backToSearchResults', '', selectedRecordingDetails.id);
     if(openPanel) {
       trigger("openPanel", {action: 'openPanel'});
     }
     resetStatus();
     removeToolTip();
+    setEditRecording(false); // Reset edit mode when navigating away
+    dispatch(cancelEditingStep());
     if (props.cancelHandler) props.cancelHandler(forceRefresh);
   };
 
@@ -173,27 +277,57 @@ export const RecordSequenceDetails = (props: MProps) => {
    * Auto play button handler
    */
   const play = async () => {
-    await recordUserClickData('play', getName(), selectedRecordingDetails.id);
+    recordUserClickData('play', '', selectedRecordingDetails.id);
     trigger("closePanel", {action: 'closePanel'});
     if (props.playHandler) props.playHandler("on");
     // autoPlay();
   };
 
   /**
-   * Pause the autoplay
+   * Validate editing of step handler
    */
-  const pause = () => {
-    if (props.playHandler) props.playHandler("off");
+  const validateStepEdit = async () => {
+    recordUserClickData('validate', '', selectedRecordingDetails.id);
+    console.log('validateStepEdit');
+    if(resetStatus()) {
+      if (props.playHandler) {
+        trigger("closePanel", {action: 'closePanel'});
+        props.playHandler("on");
+        autoPlay();
+      }
+    }
   };
 
-  const playNode = (item, index) => {
-    if (matchNode({node: item, index, additionalParams: selectedRecordingDetails?.additionalParams})) {
+  /**
+   * Pause the autoplay
+   */
+  const pause = async () => {
+    if (props.playHandler){
+      props.playHandler("off");
+    }
+  };
+
+  const playNode = async (item, index) => {
+    if (await matchNode({node: item, index, additionalParams: selectedRecordingDetails?.additionalParams})) {
       updateStatus(index);
     }
   }
 
+  /**
+   * Replay the recording
+   */
+  const replay = async () => {
+    recordUserClickData('replay', '', selectedRecordingDetails.id);
+    setPlayStatus('playing');
+    if(resetStatus()) {
+      trigger("closePanel", {action: 'closePanel'});
+      if (props.playHandler) props.playHandler("on");
+      autoPlay();
+    }
+  };
+
   const removeRecording = async () => {
-    await recordUserClickData('delete', getName(), selectedRecordingDetails.id);
+    recordUserClickData('delete', '', selectedRecordingDetails.id);
     props.showLoader(true);
     await deleteRecording({id: selectedRecordingDetails.id});
     setTimeout(() => {
@@ -208,12 +342,12 @@ export const RecordSequenceDetails = (props: MProps) => {
     setSelectedRecordingDetails({...selectedRecordingDetails});
     if (type === 'up') {
       setUserVote({upvote: 1, downvote: 0});
+      recordUserClickData('upVote', '', selectedRecordingDetails.id);
     } else {
       setUserVote({upvote: 0, downvote: 1});
+      recordUserClickData('downVote', '', selectedRecordingDetails.id);
     }
   };
-
-  const [userId, setUserId] = useState<string>(null);
 
   /**
    * setting the user vote record
@@ -235,7 +369,7 @@ export const RecordSequenceDetails = (props: MProps) => {
   }, []);
 
   const addSkipClass = (item) => {
-    if (item.status !== 'completed') {
+    if (item.status && item.status !== 'completed') {
       return 'uda_exclude';
     }
     let nodeData = getObjData(item.objectdata);
@@ -253,7 +387,7 @@ export const RecordSequenceDetails = (props: MProps) => {
     return <span>{key} {value}</span>
   };
 
-  function copy() {
+  const copy = async () => {
     const el = document.createElement("input");
     const searchParams = new URLSearchParams(window.location.search);
     searchParams.set(CONFIG.UDA_URL_Param, selectedRecordingDetails.id);
@@ -264,6 +398,7 @@ export const RecordSequenceDetails = (props: MProps) => {
     document.execCommand("copy");
     document.body.removeChild(el);
     setCopied(true);
+    recordUserClickData('shareLink', '', selectedRecordingDetails.id);
   }
 
   /**
@@ -302,6 +437,179 @@ export const RecordSequenceDetails = (props: MProps) => {
     await setTmpPermissionsObj({...permissions});
   };
 
+
+  /**
+   * Toggles the publish/unpublish state of a recording and updates it in the store
+   * This async function handles the permission changes and persists them
+   * @returns {Promise<void>}
+   */
+  const updateStatusChange = async (newStatus: number) => {
+    // Show loading state while operation is in progress
+    props.showLoader(true);
+
+    // Create a copy of permissions object to avoid direct mutation
+    let permissions = {...tmpPermissionsObj};
+
+    // Toggle published state if it exists, otherwise set it to false
+    if(permissions.hasOwnProperty('status')) {
+      permissions.status = newStatus;
+    } else {
+      permissions.status = 1;
+    }
+
+    // Update the temporary permissions state
+    setTmpPermissionsObj({...permissions});
+
+    // Persist the changes to the recording
+    await updateRecording({id: selectedRecordingDetails.id, additionalParams: permissions});
+
+    // Update the recording details with new permissions
+    selectedRecordingDetails.additionalParams = permissions;
+
+    // Save updated recording details to store
+    setToStore(selectedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
+
+    // Hide loader after operation is complete
+    props.showLoader(false);
+  };
+
+  // Editing labels functionality
+  const [isEditingLabels, setIsEditingLabels] = useState(false);
+  const [labels, setLabels] = useState<Array<{label: string, profanity: boolean}>>([]);
+
+  // Function to get all labels from props.data.name
+  const getAllLabels = () => {
+    try {
+      // Parse the name from props
+      const names = JSON.parse(selectedRecordingDetails?.name || '[]');
+      // Ensure it's an array and each item has the expected structure
+      return Array.isArray(names)
+          ? names.map(item => {
+            // If item is already in the correct format, return it
+            if (typeof item === 'object' && 'label' in item) {
+              return item;
+            }
+            // If item is just a string, convert to the expected format
+            return { label: String(item), profanity: false };
+          })
+          : [];
+    } catch (e) {
+      console.error("Error parsing labels:", e);
+      return [];
+    }
+  };
+
+  // Initialize labels when starting to edit
+  const startEditing = () => {
+    const currentLabels = getAllLabels();
+    setLabels(currentLabels);
+    setIsEditingLabels(true);
+  };
+
+  const onExtraLabelChange = async (index: number, value: string) => {
+    const updatedLabels = [...labels];
+    updatedLabels[index] = { ...updatedLabels[index], label: value };
+    setLabels(updatedLabels);
+  };
+
+  const setInputAt = async (key: string) => {
+    setInputError({ ...inputError, [key]: { error: false } });
+  };
+
+  const checkLabelProfanity = async (index: number, value: string) => {
+    // Implement profanity check similar to RecordedData.tsx
+    // This is a placeholder - implement actual profanity check logic
+    const hasProfanity = false; // Replace with actual check
+
+    const updatedLabels = [...labels];
+    updatedLabels[index] = { ...updatedLabels[index], profanity: hasProfanity };
+    setLabels(updatedLabels);
+  };
+
+  const addLabel = () => {
+    setLabels([...labels, { label: '', profanity: false }]);
+  };
+
+  const removeLabel = (index: number) => {
+    const updatedLabels = [...labels];
+    updatedLabels.splice(index, 1);
+    setLabels(updatedLabels);
+  };
+
+  const saveLabels = async () => {
+    // Convert labels array to the format expected by the API
+    let convertedLabels = [];
+    labels.map((item) => {convertedLabels.push(item.label)});
+
+    // Create updated data object with new labels
+    const updatedData = { ...props.data, name: JSON.stringify(convertedLabels)};
+
+    // Show loader while updating
+    props.showLoader(true);
+
+    try {
+      // Update the recording in the backend
+      await updateRecording(updatedData);
+
+      // Update local state with the updated data
+      setSelectedRecordingDetails(updatedData);
+
+      // Update the data in local storage
+      setToStore(updatedData, CONFIG.SELECTED_RECORDING, false);
+
+      // Exit editing mode
+      setIsEditingLabels(false);
+
+      if(props.refetchSearch){
+        props.refetchSearch("on");
+      }
+
+      // Show success notification
+      addNotification(translate('labelsUpdated'), translate('labelsUpdatedDescription'), 'success');
+    } catch (error) {
+      console.error("Error updating labels:", error);
+      addNotification(translate('labelsUpdateError'), translate('labelsUpdateErrorDescription'), 'error');
+    } finally {
+      props.showLoader(false);
+    }
+  };
+
+  const storeRecording= (data: any, enableValidation: boolean = true) => {
+    const updatedRecordingDetails = { ...selectedRecordingDetails };
+    updatedRecordingDetails.userclicknodesSet = data;
+    setSelectedRecordingDetails(updatedRecordingDetails);
+    setToStore(updatedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
+    if(enableValidation) {
+      dispatch(startValidation(selectedRecordingDetails.id));
+    }
+  };
+
+  const onCancel= () => {
+    const originalData = [...selectedRecordingDetails.userclicknodesSet];
+    originalData[editingState.editingStepId] = {...editingState.editingStepOriginalData};
+    storeRecording(originalData);
+    setEditingStepIndex(null);
+    dispatch(cancelEditingStep());
+  };
+
+  const editStep = (index: number, item: any) => {
+    if(editingState.editingStepId !== null && editingState.editingStepId !== item.id) {
+      const originalData = [...selectedRecordingDetails.userclicknodesSet];
+      originalData[editingState.editingStepId] = {...editingState.editingStepOriginalData};
+      storeRecording(originalData);
+    }
+    resetStatus();
+    setEditingStepIndex(index);
+    dispatch(startEditingStep({recordingId: selectedRecordingDetails.id, editingStepId: index, editingStepData: item}));
+  }
+
+  const toggleEditIcon = () => {
+    if(editingState.editingStepId !== null) {
+      onCancel();
+    }
+    setEditRecording(!editRecording);
+  }
+
   return props?.recordSequenceDetailsVisibility ? (
       <>
         <div
@@ -322,7 +630,7 @@ export const RecordSequenceDetails = (props: MProps) => {
             >
               <LeftOutlined/>
             </Button>
-            {props?.isPlaying == "off" && (
+            {(props?.isPlaying == "off" && playStatus !== "completed") && (
                 <PlayCircleOutlined
                     className="large secondary uda_exclude"
                     onClick={async () => {
@@ -330,32 +638,201 @@ export const RecordSequenceDetails = (props: MProps) => {
                     }}
                 />
             )}
-            {props?.isPlaying == "on" && (
+            {(props?.isPlaying == "on" && playStatus !== "completed") && (
                 <PauseCircleOutlined
                     className="large secondary uda_exclude"
                     onClick={async () => {
-                      await recordUserClickData('stopPlay', getName(), selectedRecordingDetails.id);
+                      recordUserClickData('stopPlay', '', selectedRecordingDetails.id);
                       pause();
                     }}
                 />
             )}
+            {playStatus == "completed" && (
+                <ReloadOutlined
+                    className="large secondary uda_exclude"
+                    onClick={async () => {
+                      recordUserClickData('restartPlay', '', selectedRecordingDetails.id);
+                      replay();
+                    }}
+                />
+            )}
+
+            {/* Add Edit Recording button here */}
+            {(selectedRecordingDetails.usersessionid === userId) && (
+                <Button
+                    className="uda_exclude"
+                    type={editRecording ? "primary" : "default"}
+                    style={{position: "absolute", top: 12, right: 0}}
+                    onClick={toggleEditIcon}
+                >
+                  <EditOutlined className="uda_exclude" />
+                  {editRecording ? "Done" : "Edit"}
+                </Button>
+            )}
           </div>
-          <h5>{getName()}</h5>
+          {/*<h5>{getName()}</h5>*/}
+          <div className="sequence-name-container">
+            {isEditingLabels ? (
+                <div>
+                  <div id="uda-sequence-names">
+                    {labels.map((item, index) => (
+                        <div key={`label-${index}`}>
+                          <div className="flex-card flex-center">
+                            <input
+                                type="text"
+                                id="uda-recorded-name"
+                                name="uda-save-recorded[]"
+                                className={`uda-form-input uda-form-input-reduced uda_exclude ${
+                                    item.profanity ? "profanity" : ""
+                                }`}
+                                placeholder="Enter Label"
+                                onChange={async (e) => {
+                                  await onExtraLabelChange(index, e.target.value);
+                                  await setInputAt('label' + index);
+                                }}
+                                onBlur={async (e) => {
+                                  await checkLabelProfanity(index, e.target.value);
+                                }}
+                                value={item.label}
+                            />
+                            {(index > 0) &&
+                              <Button
+                                  type="text"
+                                  icon={<DeleteOutlined />}
+                                  className="delete-btn uda-remove-row uda_exclude"
+                                  onClick={() => removeLabel(index)}
+                              />
+                            }
+                          </div>
+                          <div className="flex-card flex-center">
+                            {item.profanity && (
+                                <span className="uda-alert">{translate('profanityDetected')}<br/></span>
+                            )}
+                            {(inputError['label' + index] && inputError['label' + index].error) && (
+                                <span className="uda-alert">{translate('inputError')}</span>
+                            )}
+                          </div>
+                        </div>
+                    ))}
+                  </div>
+
+                  <div className="add_lebel_btn_wrap">
+                    <Button className="add-btn uda_exclude" onClick={() => addLabel()}>
+                      + {translate('addLabel')}
+                    </Button>
+                  </div>
+
+                  <div className="action-buttons">
+                    <Button
+                        type="primary"
+                        className="uda_exclude"
+                        onClick={saveLabels}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                        className="uda_exclude"
+                        onClick={() => {
+                          setIsEditingLabels(false);
+                        }}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+            ) : (
+                <div className="flex-card flex-center">
+                  <h5>{getName()}</h5>
+                  {(props?.config?.enableEditingOfRecordings && (selectedRecordingDetails.usersessionid === userId) && editRecording) &&
+                      <Button
+                          type="text"
+                          icon={<EditOutlined />}
+                          className="edit-btn uda_exclude"
+                          onClick={startEditing}
+                      />
+                  }
+                </div>
+            )}
+          </div>
+
           <hr/>
           <ul className="uda-suggestion-list" id="uda-sequence-steps">
-            {/* {renderData()} */}
-            {props?.data && (
+            {selectedRecordingDetails && (
                 <List
                     itemLayout="horizontal"
                     dataSource={selectedRecordingDetails?.userclicknodesSet}
-                    renderItem={(item: any, index: number) => (
-                        <li
-                            className={addSkipClass(item)}
-                            onClick={() => playNode(item, index)}
-                        >
-                          <i>{getClickedNodeLabel(item)}</i>
-                        </li>
-                    )}
+                    renderItem={(item: any, index: number) => {
+                      const objectData = getObjData(item.objectdata);
+                      let nodeData = getObjData(item.objectdata);
+                      let skipItem = false;
+                      if (nodeData.meta.hasOwnProperty('skipDuringPlay') && nodeData.meta.skipDuringPlay && !editRecording) {
+                        skipItem = true;
+                      }
+                      if(skipItem) {
+                        return <></>;
+                      }
+                      return (
+                          <li
+                              className={addSkipClass(item)}
+                              onClick={() => editingStepIndex !== index && playNode(item, index)}
+                          >
+                            {editingStepIndex === index ? (
+                                <div className="step-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                                  <EditableStepForm
+                                      item={item}
+                                      index={index}
+                                      recordData={selectedRecordingDetails.userclicknodesSet}
+                                      config={props.config}
+                                      isUpdateMode={true}
+                                      storeRecording={storeRecording}
+                                      onSave={async () => {
+                                        // Save to API
+                                        props.showLoader(true);
+                                        try {
+                                          await updateRecording(selectedRecordingDetails);
+
+                                          // Record this action
+                                          recordUserClickData('editStep', '', selectedRecordingDetails.id);
+
+                                          // Show success notification
+                                          addNotification(translate('stepUpdated'), translate('stepUpdatedDescription'), 'success');
+
+                                          // Exit edit mode
+                                          setEditingStepIndex(null);
+                                          dispatch(resetValidationState());
+                                          if (props.refetchSearch) props.refetchSearch("on");
+                                        } catch (error) {
+                                          console.error("Error updating step:", error);
+                                          addNotification(translate('stepUpdateError'), translate('stepUpdateErrorDescription'), 'error');
+                                        } finally {
+                                          props.showLoader(false);
+                                        }
+                                      }}
+                                      onCancel={onCancel}
+                                      showLoader={props.showLoader}
+                                      recordingId={selectedRecordingDetails.id}
+                                      autoPlay={validateStepEdit}
+                                  />
+                                </div>
+                            ) : (
+                                <>
+                                  <i>{getClickedNodeLabel(item)}</i>
+                                  {(props?.config?.enableEditingOfRecordings && (selectedRecordingDetails.usersessionid === userId) && editRecording) && (
+                                      <Button
+                                          type="text"
+                                          icon={<EditOutlined />}
+                                          className="edit-btn uda_exclude"
+                                          onClick={(e)=>{
+                                            e.stopPropagation();
+                                            editStep(index, item);
+                                          }}
+                                      />
+                                  )}
+                                </>
+                            )}
+                          </li>
+                      );
+                    }}
                 />
             )}
           </ul>
@@ -370,12 +847,6 @@ export const RecordSequenceDetails = (props: MProps) => {
                 {((userVote && userVote?.upvote === 0) || !userVote) &&
                     <LikeOutlined width={33} className="secondary"/>
                 }
-                {/*<br/>
-                <Badge
-                    className="site-badge-count-109"
-                    count={selectedRecordingDetails.upVoteCount}
-                    style={{ backgroundColor: '#52c41a' }}
-                />*/}
               </Button>
               <Button onClick={() => manageVote("down")} className="uda_exclude">
                 {(userVote && userVote?.downvote === 1) &&
@@ -384,12 +855,6 @@ export const RecordSequenceDetails = (props: MProps) => {
                 {((userVote && userVote?.downvote === 0) || (!userVote)) &&
                     <DislikeOutlined width={33} className="secondary"/>
                 }
-                {/*<br/>
-                <Badge
-                    className="site-badge-count-109"
-                    count={selectedRecordingDetails.downVoteCount}
-                    style={{ backgroundColor: '#faad14' }}
-                />*/}
               </Button>
             </Col>
             <Col span={8}>
@@ -399,46 +864,78 @@ export const RecordSequenceDetails = (props: MProps) => {
             </Col>
             <Col span={8}>
               {(selectedRecordingDetails.usersessionid === userId) &&
-                  <Popconfirm title={translate('deleteRecording')} onConfirm={removeRecording} className="uda_exclude">
+                  <>
+                    <Popconfirm title={translate('deleteRecording')} onConfirm={removeRecording} className="uda_exclude">
                       <Button className="uda_exclude">
-                          <DeleteOutlined width={33} className="secondary uda_exclude"/>
+                        <DeleteOutlined width={33} className="secondary uda_exclude"/>
                       </Button>
-                  </Popconfirm>
+                    </Popconfirm>
+                  </>
               }
             </Col>
           </Row>
+          {/* Row container for publish/unpublish controls */}
+          {(props?.config?.enableStatusSelection && (selectedRecordingDetails.usersessionid === userId) && editRecording) &&
+              <Row>
+                {/* Left column taking up 8/24 of the row width */}
+                <Col span={24}>
+                  {/* Only show publish controls if the current user owns this recording */}
+                  {(selectedRecordingDetails.usersessionid === userId) &&
+                      <>
+                        <Form.Item labelCol={{ span: 8 }}
+                                   label={translate('statusLabel')}
+                                   className="uda_exclude"
+                                   style={{ marginBottom: 0 }}
+                        >
+                          <Select
+                              defaultValue={(tmpPermissionsObj && tmpPermissionsObj.hasOwnProperty('status'))?parseInt(tmpPermissionsObj.status) : 6}
+                              onChange={updateStatusChange}
+                              className="uda_exclude"
+                          >
+                            {statusOptions.map((status: any) => (
+                                <Select.Option key={status.id} value={status.id}>
+                                  {status.name.toUpperCase()}
+                                </Select.Option>
+                            ))}
+                          </Select>
+                        </Form.Item>
+                      </>
+                  }
+                </Col>
+              </Row>
+          }
           {/* enabling update permissions*/}
-          {(props?.config?.enablePermissions && (selectedRecordingDetails.usersessionid === userId)) && (
+          {(props?.config?.enablePermissions && (selectedRecordingDetails.usersessionid === userId) && editRecording) && (
               <div id="uda-permissions-section" style={{padding: "25px", display:'flex'}}>
                 <div>
-                    <button
-                        className="add-btn uda_exclude"
-                        style={{color:'white'}}
-                        onClick={() => toggleAdvanced()}
-                    >
-                        {advBtnShow ? 'Update Permissions' : 'Edit Permissions'}
-                    </button>
+                  <button
+                      className="add-btn uda_exclude"
+                      style={{color:'white'}}
+                      onClick={() => toggleAdvanced()}
+                  >
+                    {advBtnShow ? 'Update Permissions' : 'Edit Permissions'}
+                  </button>
                 </div>
                 <div>
 
-                    { advBtnShow && Object.entries(props?.config?.permissions).map(([key, value]) => {
-                        if(tmpPermissionsObj[key] !== undefined) {
-                          return <div key={key} style={{marginLeft: 30}}>
-                            <Checkbox id="uda-recorded-name" className="uda_exclude" checked={true}
-                                      onChange={handlePermissions({[key]: value, key})}
-                            />
-                            {displayKeyValue(key, value)}
-                          </div>
-                        } else {
-                          return <div key={key} style={{marginLeft: 30}}>
-                            <Checkbox id="uda-recorded-name" className="uda_exclude"
-                                      onChange={handlePermissions({[key]: value, key})}
-                            />
-                            {displayKeyValue(key, value)}
-                          </div>
-                        }
-                    })
+                  { advBtnShow && Object.entries(props?.config?.permissions).map(([key, value]) => {
+                    if(tmpPermissionsObj && typeof tmpPermissionsObj[key] !== "undefined") {
+                      return <div key={key} style={{marginLeft: 30}}>
+                        <Checkbox id="uda-recorded-name" className="uda_exclude" checked={true}
+                                  onChange={handlePermissions({[key]: value, key})}
+                        />
+                        {displayKeyValue(key, value)}
+                      </div>
+                    } else {
+                      return <div key={key} style={{marginLeft: 30}}>
+                        <Checkbox id="uda-recorded-name" className="uda_exclude"
+                                  onChange={handlePermissions({[key]: value, key})}
+                        />
+                        {displayKeyValue(key, value)}
+                      </div>
                     }
+                  })
+                  }
                 </div>
               </div>
           )}

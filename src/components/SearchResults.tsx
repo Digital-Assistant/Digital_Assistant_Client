@@ -7,13 +7,12 @@
 
 import React, {useEffect, useState} from "react";
 import {Button, Empty, List} from "antd";
-import {DoubleRightOutlined, PlayCircleOutlined, EyeOutlined} from "@ant-design/icons";
+import {PlayCircleOutlined, EyeOutlined} from "@ant-design/icons";
 import { setToStore } from "../util";
 import InfiniteScroll from "react-infinite-scroller";
 import {CONFIG} from "../config";
 import {getRowObject} from "../util/getRowObject";
 import {recordUserClickData} from "../services";
-import ReactGA from "react-ga4";
 
 export interface MProps {
   visibility?: boolean;
@@ -41,7 +40,8 @@ export const SearchResults = (props: MProps) => {
 
   useEffect(() => {
     // Send pageview with a custom path
-    ReactGA.send({ hitType: "pageview", page: "/search", title: "Search page loaded" });
+    // ReactGA.send({ hitType: "pageview", page: "/search", title: "Search page loaded" });
+    /* Todo Need to record the initial loading of the page */
   }, []);
 
   useEffect(() => {
@@ -58,12 +58,15 @@ export const SearchResults = (props: MProps) => {
   }, [props]);
 
   const selectItem = async (item: any, play=false) => {
-    await recordUserClickData('viewRecording', '', item.id);
     setToStore(item, CONFIG.SELECTED_RECORDING, false);
-    if (props?.showDetails) props.showDetails(item);
+    if (props?.showDetails){
+      props.showDetails(item);
+      recordUserClickData('viewRecording', '', item.id);
+    }
 
     if(play){
       props.playHandler("on");
+      recordUserClickData('play', '', item.id);
     }
   };
 

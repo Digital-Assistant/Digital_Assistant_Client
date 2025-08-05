@@ -16,11 +16,14 @@ export const ENDPOINT = {
   Record: `/clickevents/clickednode`,
   UpdateRecord: `/clickevents/updateclickednode`,
   RecordSequence: `/clickevents/recordsequencedata`,
-  updateRecordSequence: `/clickevents/updatesequencedata`,
+  // updateRecordSequence: `/clickevents/updatesequencedata`,
+  updateRecordSequence: `/sequence/update`,
+  updateSequenceIndex: `/sequence/reindex/`,
   UserClick: `/clickevents/userclick`,
   DeleteSequence: `/clickevents/sequence/delete`,
   fetchRecord: '/search',
   VoteRecord: `/votes/addVote`,
   fetchVoteRecord: `/votes/`,
-  tokenUrl: 'user/token'
+  tokenUrl: 'user/token',
+  statuses: '/status/category/#category#'
 };

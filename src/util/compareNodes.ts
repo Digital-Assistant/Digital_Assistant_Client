@@ -5,6 +5,7 @@ import {UDAConsoleLogger} from "../config/error-log";
 import {checkNodeValues} from "./checkNodeValues";
 
 declare let udaSpecialNodes;
+declare const UDAGlobalConfig;
 
 export const compareNodes = (compareNode, recordedNode, isPersonalNode = false, match = {
   count: 0,
@@ -66,8 +67,8 @@ export const compareNodes = (compareNode, recordedNode, isPersonalNode = false, 
       }
     } else if ((key === 'class' || key === 'className') && recordedNode.hasOwnProperty(key) && compareNode.hasOwnProperty(key)) {
       // fix for calendar issue
-      compareNode[key] = compareNode[key].replace(' ng-star-inserted', '');
-      recordedNode[key] = recordedNode[key].replace(' ng-star-inserted', '');
+      compareNode[key] = compareNode[key].replace(' ng-star-inserted', '').replace('disabled', '').replace('writeInput', '').replace('undefined','').trim();
+      recordedNode[key] = recordedNode[key].replace(' ng-star-inserted', '').replace('disabled', '').replace('writeInput', '').replace('undefined','').trim();
       if (compareNode[key] === recordedNode[key]) {
         match.matched++;
       } else {
@@ -120,6 +121,10 @@ export const compareNodes = (compareNode, recordedNode, isPersonalNode = false, 
       } else {
         match.matched++;
       }
+    }
+    // ignoring elements if the flag enable for all domains is true
+    else if(UDAGlobalConfig.enableForAllDomains && (key === 'origin' || key === 'href' || key === 'host' || key === 'hostname' || key === 'search')) {
+      match.matched++;
     } else {
       match.unmatched.push({key: key, compareNodeValues: compareNode[key], recordedNodeValues: recordedNode[key]});
     }

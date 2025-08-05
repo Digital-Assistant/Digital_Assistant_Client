@@ -1,12 +1,12 @@
 /**
- * Author: Lakshman Veti
+ * Author: Yureswar Ravuri
  * Type: Component
  * Objective: To render recorded sequences
  * Associated Route/Usage: *
  */
 
 import React, {useEffect, useState} from "react";
-import {DeleteOutlined, InfoCircleOutlined, PauseCircleFilled} from "@ant-design/icons";
+import {DeleteOutlined, InfoCircleOutlined} from "@ant-design/icons";
 import _ from "lodash";
 import {getObjData, setToStore} from "../util";
 import {postRecordSequenceData, profanityCheck, recordClicks} from "../services/recordService";
@@ -16,9 +16,11 @@ import SelectedElement from "./SelectedElement";
 import TSON from "typescript-json";
 import {translate} from "../util/translation";
 import {isHighlightNode} from "../util/checkNode";
-import {Alert, notification, Progress, Space, Switch} from "antd";
-import {UDAErrorLogger} from "../config/error-log";
+import {Alert, Progress, Space, Switch} from "antd";
+import {UDAConsoleLogger, UDAErrorLogger} from "../config/error-log";
 import {addNotification} from "../util/addNotification";
+import EditableStepForm from "./EditableStepForm";
+import {hasValidScreenInfo} from "../util/hasValidScreenInfo";
 
 export interface MProps {
     sequenceName?: string;
@@ -56,18 +58,63 @@ export const RecordedData = (props: MProps) => {
     const [slowPlayback, setSlowPlayback] = useState<boolean>(false);
     const [delayPlaybackTime, setDelayPlaybackTime] = useState<number>(1);
 
+    // variable for setting screen information availability
+    const [screenInfoNotAvailable, setScreenInfoNotAvailable] = useState<boolean>(false);
+
     useEffect(() => {
         setRecordData([...(props.data || [])]);
     }, [props.data]);
-
-    /**
-     * @param data
-     */
 
     useEffect(() => {
         let permissions = {...props?.config?.permissions};
         setTmpPermissionsObj(permissions);
     }, [props.config.permissions]);
+
+    /**
+     * Effect hook to validate screen information availability in recorded data
+     *
+     * This effect monitors changes to the recordData array and performs validation
+     * on the most recent record to determine if valid screen information is available.
+     * It extracts the object data from the latest record and validates the screen
+     * information using the hasValidScreenInfo utility function.
+     *
+     * The effect will:
+     * 1. Check if recordData contains any records
+     * 2. Extract object data from the most recent record
+     * 3. Validate screen information in the node data
+     * 4. Update the screenInfoNotAvailable state accordingly
+     *
+     * @dependencies [recordData] - Effect re-runs when recordData array changes
+     */
+    useEffect(() => {
+        // Primary validation: Ensure recordData array exists and contains at least one record
+        // This prevents accessing undefined array elements and ensures we have data to process
+        if (recordData && recordData.length > 0) {
+
+            // Extract object data from the most recent record (last item in array)
+            // Using length-1 to get the latest recorded data entry for validation
+            const originalNode = getObjData(recordData[recordData.length - 1]?.objectdata);
+
+            // Debug logging: Output node information for development and troubleshooting
+            // This helps developers understand the structure of the node data being processed
+            UDAConsoleLogger.info(originalNode.node.nodeInfo, 4);
+
+            // Screen information validation: Check if the extracted node contains valid screen data
+            // Uses the hasValidScreenInfo utility to perform comprehensive validation
+            // of screen size information including width, height, and nested object structure
+            if (!hasValidScreenInfo(originalNode.node.nodeInfo)) {
+                // State update: Set flag to indicate screen information is not available
+                // This will likely trigger UI changes to handle the missing screen data scenario
+                // The true value indicates that valid screen information is NOT available
+                setScreenInfoNotAvailable(true);
+            }
+            // Note: If screen info IS valid, we don't explicitly set the state to false here
+            // This suggests the state might be managed elsewhere or has a different default behavior
+        }
+        // Effect dependency: Re-run this effect whenever recordData changes
+        // This ensures validation occurs whenever new records are added or the array is modified
+    }, [recordData]);
+
 
     const storeRecording = (data: any) => {
         setRecordData([...data]);
@@ -160,20 +207,30 @@ export const RecordedData = (props: MProps) => {
     };
 
     const handlePersonal = (index: number) => async () => {
-        await updatePersonalOrSkipPlay("isPersonal", index);
+        await updateRecordMetadata("isPersonal", index);
     };
 
     const handleSkipPlay = (index: number) => async () => {
-        await updatePersonalOrSkipPlay("skipDuringPlay", index);
+        await updateRecordMetadata("skipDuringPlay", index);
     };
 
-    const updatePersonalOrSkipPlay = async (key: string, index: number) => {
+    const updateRecordMetadata = async (key: string, index: number, value: any = null) => {
         const _objData = getObjData(recordData[index]?.objectdata);
         if (_objData) {
-            if (_objData.meta[key] === undefined) _objData.meta[key] = false;
-            _objData.meta[key] = !_objData.meta[key];
-            recordData[index].objectdata = TSON.stringify(_objData);
+            if(value === null) {
+                if (_objData.meta[key] === undefined) _objData.meta[key] = false;
+                _objData.meta[key] = !_objData.meta[key];
+                recordData[index].objectdata = TSON.stringify(_objData);
+            } else {
+                if(value === '') {
+                    delete _objData.meta[key];
+                } else {
+                    _objData.meta[key] = value;
+                }
+                recordData[index].objectdata = TSON.stringify(_objData);
+            }
             storeRecording(recordData);
+            setRecordData([...(recordData)]);
         }
     };
 
@@ -194,7 +251,7 @@ export const RecordedData = (props: MProps) => {
         await setDisableForm(false);
         await setName("");
         await setLabels([]);
-        await setToolTip('');
+        await setToolTip("");
         global.udanSelectedNodes = [];
         global.clickedNode = null;
         setSavedClickedDataPercent(0);
@@ -290,6 +347,11 @@ export const RecordedData = (props: MProps) => {
             name: TSON.stringify(_labels),
         };
 
+        //add published status in payload
+        if(global.UDAGlobalConfig.enableStatusSelection && !tmpPermissionsObj.hasOwnProperty('status')) {
+            tmpPermissionsObj.enableStatus = 1;
+        }
+
         //if additional params available send them part of payload
         if (!_.isEmpty(tmpPermissionsObj)) {
             _payload.additionalParams = tmpPermissionsObj;
@@ -297,7 +359,6 @@ export const RecordedData = (props: MProps) => {
 
         // Save the original domain in which the recording has happened if enableForAllDomains flag is true
         if(global.UDAGlobalConfig.enableForAllDomains){
-            console.log('parsing');
             if(_payload.hasOwnProperty('additionalParams')) {
                 _payload.additionalParams = {
                     enableForAllDomains: true,
@@ -357,32 +418,43 @@ export const RecordedData = (props: MProps) => {
             return;
         }
 
-        const instance = await postRecordSequenceData(_payload);
-        await resetForm();
-        await setFormSubmit(false);
-        setSavedClickedDataPercent((prevState) => {
-            return Math.ceil(((savedClicks + 1) / totalClicks) * 100);
-        });
+        try {
+            const instance = await postRecordSequenceData(_payload);
 
-        if (instance && props?.refetchSearch) {
-            addNotification(translate('savedSequence'), translate('savedSequenceDescription'), 'success');
-            setTimeout(() => {
-                props.refetchSearch("on");
-            }, CONFIG.indexInterval);
-        } else {
+            if (instance) {
+                await resetForm();
+                await setFormSubmit(false);
+
+                setSavedClickedDataPercent((prevState) => {
+                    return Math.ceil(((savedClicks + 1) / totalClicks) * 100);
+                });
+
+                addNotification(translate('savedSequence'), translate('savedSequenceDescription'), 'success');
+
+                setTimeout(() => {
+                    props.refetchSearch("on");
+                }, CONFIG.indexInterval);
+            } else {
+                throw new Error('Failed to save sequence');
+            }
+
+            if (props.recordHandler) props.recordHandler("cancel");
+            setToStore(false, CONFIG.RECORDING_SWITCH_KEY, true);
+            setToStore([], CONFIG.RECORDING_SEQUENCE, false);
+
+        } catch (error) {
+            setFormSubmit(false);
+            setDisableForm(false);
+            UDAConsoleLogger.info('Save Sequence Error:', error);
             addNotification(translate('savedSequenceError'), translate('savedSequenceErrorDescription'), 'error');
         }
-
-        if (props.recordHandler) props.recordHandler("cancel");
-        setToStore(false, CONFIG.RECORDING_SWITCH_KEY, true);
-        setToStore([], CONFIG.RECORDING_SEQUENCE, false);
     };
 
     const [timer, setTimer] = useState(null);
 
     /**
      * validate and update of first label
-     * @param e
+     * @param value
      */
     const validateChange = async (value: string) => {
         await setName(value);
@@ -398,7 +470,7 @@ export const RecordedData = (props: MProps) => {
 
     /**
      * validate for profanity words and remove them
-     * @param e
+     * @param value
      */
     const checkMainLabelProfanity = async (value: string) => {
         if (value.trim() === '') {
@@ -495,9 +567,18 @@ export const RecordedData = (props: MProps) => {
         }
     }
 
-    const validateDelayTime = async(value: number) => {
+    const validateDelayTime = async(value: number, category: string = 'overAllDelayTime', index: number = null) => {
         if(!isNaN(value)){
-            setDelayPlaybackTime(value);
+            if(category === 'overAllDelayTime') {
+                setDelayPlaybackTime(value);
+            } else if(category === 'slowPlaybackTime' && index !== null) {
+                updateRecordMetadata('slowPlaybackTime', index, value);
+            }
+        } else {
+            setInputError({...inputError, slowPlayBackTime: true});
+            if(category === 'slowPlaybackTime' && index !== null) {
+                updateRecordMetadata('slowPlaybackTime', index, value);
+            }
         }
     }
 
@@ -509,7 +590,6 @@ export const RecordedData = (props: MProps) => {
     const onChangeTooltip = async (value: string) => {
         let changedName: any = await checkProfanity(value);
         changedName = changedName.trim();
-        await setToolTip(changedName);
         return await validateTooltip(changedName);
     };
 
@@ -519,9 +599,11 @@ export const RecordedData = (props: MProps) => {
      * @param index
      */
     const updateTooltip = async (key: string, index: number) => {
-        if (!validateInput(tooltip)) {
+        if(tooltip ===""){
+            return;
+        }
+        if ((tooltip !== '') && (!validateInput(tooltip))) {
             await setInputError({...inputError, tooltip: true});
-            await setDisableForm(true);
             return;
         }
         props.showLoader(true);
@@ -532,7 +614,7 @@ export const RecordedData = (props: MProps) => {
             _objData.meta[key] = tooltip
             recordData[index].objectdata = TSON.stringify(_objData);
             storeRecording(recordData);
-            setToolTip('');
+            setToolTip("");
         }
         await setDisableTooltipSubmitBtn(false);
         props.showLoader(false);
@@ -544,9 +626,7 @@ export const RecordedData = (props: MProps) => {
             return recordData?.map((item: any, index: number) => {
                 let objectData = getObjData(item?.objectdata);
                 let clickedName = (objectData.meta.hasOwnProperty('displayText')) ? objectData.meta.displayText : item.clickednodename;
-                if (recordData?.length - 1 === index) {
-                    // validateClickedInputName(index, clickedName);
-                }
+
                 return (
                     <li
                         className="uda-recorded-label-editable completed"
@@ -558,132 +638,21 @@ export const RecordedData = (props: MProps) => {
                         >
                             {recordData?.length - 1 != index &&
                                 <span id="uda-display-clicked-text" style={{flex: 2}}>
-                        {(objectData.meta.hasOwnProperty('displayText')) ? objectData.meta.displayText : item.clickednodename}
-                    </span>
+                                    {(objectData.meta.hasOwnProperty('displayText')) ? objectData.meta.displayText : item.clickednodename}
+                                </span>
                             }
-                            {recordData?.length - 1 === index && (
-                                <span id="uda-display-clicked-text" style={{flex: 2}}>
-                    <input
-                        type="text"
-                        id="uda-edited-name"
-                        name="uda-edited-name"
-                        className={`uda-form-input uda_exclude ${
-                            !item.editable ? "non-editable" : ""
-                        } ${item.profanity ? "profanity" : ""}`}
-                        placeholder="Enter Name"
-                        // onChange={onLabelChange(index)}
-                        onChange={async (e: any) => {
-                            await validateClickedInputName(index, e.target.value)
-                        }}
-                        // onChange={updateInput(index)}
-                        onBlur={async (e: any) => {
-                            await checkProfanityForGivenLabel(index, e.target.value);
-                        }}
-                        readOnly={!item.editable}
-                        style={{width: "85%! important"}}
-                        // onKeyDown={handleLabelChange(index)}
-                        onClick={() => {
-                            setEdit(index);
-                        }}
-                        value={(objectData.meta.hasOwnProperty('displayText')) ? objectData.meta.displayText : item.clickednodename}
-                    />
-                                    {(inputAlert.clickedInputNameProfanity) &&
-                                        <span className={`uda-alert`}> {translate('profanityDetected')}</span>}
-                                    {inputError.clickedNodeName &&
-                                        <span className={`uda-alert`}> {translate('inputError')}</span>}
-                  </span>
-                            )}
-                            <br/>
                         </div>
 
                         {recordData?.length - 1 === index && (
-                            <>
-                                {props.config.enableSkipDuringPlay &&
-                                    <>
-                                        <div className="flex-card flex-vcenter small-text">
-                                            <input
-                                                type="checkbox"
-                                                id="UDA-skip-duringPlay"
-                                                className="uda-checkbox flex-vcenter uda_exclude"
-                                                value={(objectData.meta.hasOwnProperty('skipDuringPlay') && objectData.meta.skipDuringPlay) ? 1 : 0}
-                                                checked={(objectData.meta.hasOwnProperty('skipDuringPlay') && objectData.meta.skipDuringPlay)}
-                                                onChange={handleSkipPlay(index)}
-                                            />
-                                            <label className="uda-checkbox-label">Skip during play</label>
-                                            <span
-                                                className="info-icon ms-1 "
-                                                title={translate('skipInfo')}
-                                            >
-                                  <InfoCircleOutlined/>
-                                </span>
-                                        </div>
-                                    </>
-                                }
-                                <>
-                                    <div className="flex-card flex-vcenter small-text">
-                                        <input
-                                            type="checkbox"
-                                            id="isPersonal"
-                                            className="uda-checkbox uda_exclude"
-                                            value={(objectData.meta.hasOwnProperty('isPersonal') && objectData.meta.isPersonal) ? 1 : 0}
-                                            checked={(objectData.meta.hasOwnProperty('isPersonal') && objectData.meta.isPersonal)}
-                                            onChange={handlePersonal(index)}
-                                        />
-                                        <label className="uda-checkbox-label">{translate('personalInfoLabel')}</label>
-                                        <span className="info-icon" title={translate('personalInfoTooltip')}>
-                          <InfoCircleOutlined/>
-                        </span>
-                                    </div>
-                                </>
-                                {(props.config.enableTooltipAddition === true && isHighlightNode(objectData)) &&
-                                    <>
-                                        <div className="uda-recording uda_exclude" style={{textAlign: "center"}}>
-                                            {(objectData.meta?.tooltipInfo && !tooltip) &&
-                                                <>
-                                                    <input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip"
-                                                           className="uda-form-input uda_exclude"
-                                                           placeholder={translate('toolTipPlaceHolder')}
-                                                           style={{width: "68% !important"}}
-                                                           onChange={async (e: any) => {
-                                                               await validateTooltip(e.target.value);
-                                                           }}
-                                                           onBlur={async (e: any) => {
-                                                               await onChangeTooltip(e.target.value);
-                                                           }}
-                                                           value={objectData.meta?.tooltipInfo}/>
-                                                </>
-                                            }
-                                            {(!objectData.meta?.tooltipInfo || tooltip) &&
-                                                <>
-                                                    <input type="text" id="uda-edited-tooltip" name="uda-edited-tooltip"
-                                                           className="uda-form-input uda_exclude"
-                                                           placeholder={translate('toolTipPlaceHolder')}
-                                                           style={{width: "68% !important"}}
-                                                           onChange={async (e: any) => {
-                                                               await validateTooltip(e.target.value);
-                                                           }}
-                                                           onBlur={async (e: any) => {
-                                                               await onChangeTooltip(e.target.value);
-                                                           }}
-                                                           value={tooltip}/>
-                                                </>
-                                            }
-                                            {inputError.tooltip && <span className={`uda-alert`}> {translate('inputError')}</span>}
-                                            <span>
-                                              <button
-                                                  className={`uda-tutorial-btn uda_exclude ${(disableTooltipSubmitBtn) ? "disabled" : ""}`}
-                                                  style={{color: "#fff", marginTop: "10px"}}
-                                                  id="uda-tooltip-save"
-                                                  disabled={disableTooltipSubmitBtn}
-                                                  onClick={async () => {
-                                                      await updateTooltip('tooltipInfo', index)
-                                                  }}>{(!objectData.meta?.tooltipInfo)?translate('submitTooltip'):translate('updateTooltip')}</button>
-                                            </span>
-                                        </div>
-                                    </>
-                                }
-                                <SelectedElement data={item} index={index} recordData={recordData} config={props.config} storeRecording={storeRecording}/>
-                            </>
+                            <EditableStepForm
+                                item={item}
+                                index={index}
+                                recordData={recordData}
+                                config={props.config}
+                                isUpdateMode={false} // No save/cancel buttons in recording mode
+                                storeRecording={storeRecording}
+                                showLoader={props.showLoader}
+                            />
                         )}
                     </li>
                 );
@@ -724,6 +693,7 @@ export const RecordedData = (props: MProps) => {
             <>
                 <div className="uda-card-details">
                     {savingError && <Alert message={translate('savingError')} type="error"/>}
+                    {screenInfoNotAvailable && <Alert message={translate('screenInfoError')} type="error"/>}
                     <h5>
                         <Space><span className="pulse"><InfoCircleOutlined /></span></Space>
                         {translate('recordSequenceHeading')}
@@ -740,7 +710,7 @@ export const RecordedData = (props: MProps) => {
                     <div id="uda-play-slow-section">
                         <div className="flex-card flex-vcenter selectedElement">
                                 <span className="col-6">
-                                   Enable slow replay
+                                   {translate("enableDelayTimeText")}
                                 </span>
                             <span className="uda_exclude col-6">
                                     <Switch defaultChecked={slowPlayback} onChange={()=> {setSlowPlayback(!slowPlayback);}} />
@@ -749,9 +719,9 @@ export const RecordedData = (props: MProps) => {
                         { (slowPlayback === true) &&
                             <div className="flex-card flex-vcenter selectedElement">
                                      <span style={{ marginRight: "4px" }} className="col-6">
-                                        Number of seconds to delay{" "}
+                                        {translate('delayTimePlaceHolder')+" "}
                                     </span>
-                                <input type="text" id="uda-add-slowplay" name="uda-edited-tooltip"
+                                <input type="number" id="uda-add-slowplay" name="uda-edited-tooltip"
                                        className="uda-form-input uda_exclude col-6"
                                        placeholder={translate('delayTimePlaceHolder')}
                                        style={{width: "68% !important"}}
@@ -887,10 +857,10 @@ export const RecordedData = (props: MProps) => {
                             <div className="flex-card flex-end" style={{flex: 1}}>
                                 <button
                                     className={`uda-tutorial-btn uda_exclude ${
-                                        disableForm ? "disabled" : ""
+                                        (disableForm || screenInfoNotAvailable) ? "disabled" : ""
                                     }`}
                                     onClick={() => submitRecording()}
-                                    disabled={disableForm}
+                                    disabled={disableForm || screenInfoNotAvailable}
 
                                     style={{flex: 1, marginLeft: "5px"}}
                                 >
