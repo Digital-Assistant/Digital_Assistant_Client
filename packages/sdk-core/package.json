@@ -1,0 +1,21 @@
+{
+  "name": "@your-org/sdk-core",
+  "version": "0.1.0",
+  "description": "Core functionality for the UDA application",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "jest",
+    "build": "tsc"
+  },
+  "author": "Yureshwar Ravuri",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.4.1",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.2.7",
+    "redux": "^5.0.1"
+  }
+}

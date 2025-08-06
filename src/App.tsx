@@ -6,7 +6,8 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import "./css/UDAN.scss";
 import { Button, Spin } from "antd";
-import {fetchRecord, fetchSearchResults} from "./services/searchService";
+import { fetchSearchResults } from "@your-org/sdk-core";
+import {fetchRecord} from "./services/searchService";
 import _ from "lodash";
 import { squeezeBody, setToStore, getFromStore, removeFromStore } from "./util";
 import { CONFIG } from "./config";
