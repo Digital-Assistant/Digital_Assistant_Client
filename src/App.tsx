@@ -465,7 +465,7 @@ function App(props) {
                     setShowLoader(true);
                 }
                 let domain = fetchDomain();
-                /*const _searchResults = await fetchSearchResults({
+                const _searchResults = await fetchSearchResults({
                     keyword: searchKeyword,
                     page: _page,
                     domain: encodeURI(domain),
@@ -479,10 +479,9 @@ function App(props) {
                         setReFetchSearch("off");
                     }
                 }, 500);
-                if (_searchResults.length > 0) {
-                });*/
-                const additionalParams = global.UDAGlobalConfig.enablePermissions ? encodeURI(JSON.stringify(global.UDAGlobalConfig.permissions)) : null;
-                const _searchResults = await Udan.searchResults(searchKeyword, _page, encodeURI(domain), additionalParams);
+
+                /*const additionalParams = global.UDAGlobalConfig.enablePermissions ? encodeURI(JSON.stringify(global.UDAGlobalConfig.permissions)) : null;
+                const _searchResults = await Udan.searchResults(searchKeyword, _page, encodeURI(domain), additionalParams);*/
 
                 setTimeout(() => setShowLoader(false), 500);
                 if (_searchResults.length) {
