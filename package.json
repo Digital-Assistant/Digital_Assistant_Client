@@ -3,6 +3,9 @@
   "author": "Yureswar Ravuri <yureshwar@gmail.com>",
   "version": "1.0.8.7",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "dependencies": {
     "@popperjs/core": "^2.11.6",
     "@reduxjs/toolkit": "^1.9.7",
