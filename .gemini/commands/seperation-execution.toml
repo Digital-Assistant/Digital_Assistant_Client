@@ -74,15 +74,12 @@ development by integrators.
   permissions, and retrieving feature flags, all with automatic and secure handling of authentication tokens.
 
 * **Task Breakdown for User Story 1.1:**
-    * **Task 1.1.1: Initialize a Monorepo and SDK Workspace**
-        * **Objective:** To create a formal project structure to house multiple packages and establish the SDK's own
-          identity with a `package.json` file.
-        * **Detailed Information:** Configure the root `package.json` for npm/yarn workspaces. Create a `packages/core`
-          directory. `cd` into it, run `npm init -y`, and configure the new `package.json` with the name
-          `@digital-assistant/core` and `main`, `module`, and `types` fields pointing to a `dist/` folder. Create a
-          `packages/core/src` directory. This package should create a distributable package where we can install from the distributed zip file.
-        * **Dependencies:** check the existing package.json and ensure that the libraries that are used have been added to the core package apart from UI libraries.
-        * **Acceptance Criteria:** The root is configured for workspaces, and the `packages/core/src` directory and a
-          valid `package.json` exist and all the packages were used in the existing application has been migrated other than UI libraries.
+    * **Task 1.1.2: Configure TypeScript for the SDK**
+        * **Objective:** To create a dedicated `tsconfig.json` for the SDK that enforces strict coding standards and
+          generates type declaration files (`.d.ts`).
+        * **Detailed Information:** Create `packages/core/tsconfig.json`. Set `compilerOptions.strict` to `true` and
+          `declaration` to `true` to ensure code quality and generate the necessary type files for consumers.
+        * **Dependencies:** Task 1.1.1. check the existing tsconfig.json and ensure all the best configuration has been added.
+        * **Acceptance Criteria:** The `tsconfig.json` file is created with the specified configuration. Ensure that the existing configuration matches our requirement.
 
 """
