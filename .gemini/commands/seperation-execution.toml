@@ -48,18 +48,38 @@ We noticed that each customer is looking to change the UI quite a bit. We decide
 
 ---
 
-### **Your First Task**
+### **Your Task**
 
-Your first assignment is to begin with the first epic and user story and we will complete one task at a time.
+Your first assignment is to begin with the conversion of the actual code file by file one at a time.
 
-**Please start now with Task 1.1.4 from the project plan below.**
+**Please start now with Task as given below.**
 
-* **Task 1.1.4: Implement Code Linting and Formatting**
-        * **Objective:** To enforce a consistent code style and automatically catch common bugs and errors.
-        * **Detailed Information:** Install and configure ESLint and Prettier for TypeScript in the `packages/core`
-          directory. Add `lint` and `format` scripts to the SDK's `package.json` to automate code quality checks.
+**Overall Goal:** Refactor the codebase to separate the core recording/replaying functionality into a framework-agnostic
+SDK. The existing React application will be refactored to become a consumer of this SDK, which will allow for custom UI
+development by integrators.
+
+#### **User Story 1.1: API Service Layer Abstraction**
+
+* **Story:** As a developer, I want to move all backend HTTP request logic (for Flows, Permissions, and Flags) into the
+  SDK, so that the SDK is the single gateway for all backend communication, ensuring consistency and security.
+
+* **Elaboration and Strategic Importance:** This user story consolidates all backend interactions into a single,
+  controlled layer within the SDK. By removing data fetching from the UI, we make the UI simpler and more resilient to
+  API changes. It also enhances security by ensuring that all requests pass through a single, authenticated client that
+  properly manages the user's JWT. This layer becomes the testable, maintainable contract between the frontend and the
+  backend.
+
+* **Desired Outcome:** The SDK will contain a complete set of services for interacting with the backend API. The UI
+  application will no longer contain any `axios` or `fetch` calls. The SDK will be capable of fetching flows, managing
+  permissions, and retrieving feature flags, all with automatic and secure handling of authentication tokens.
+
+* **Task Breakdown for User Story 1.1:**
+    *Task 1.1.2: Configure TypeScript for the SDK**
+        * **Objective:** To create a dedicated `tsconfig.json` for the SDK that enforces strict coding standards and
+          generates type declaration files (`.d.ts`).
+        * **Detailed Information:** Create `packages/core/tsconfig.json`. Set `compilerOptions.strict` to `true` and
+          `declaration` to `true` to ensure code quality and generate the necessary type files for consumers.
         * **Dependencies:** Task 1.1.1.
-        * **Acceptance Criteria:** `npm run lint` checks for code quality issues, and `npm run format` automatically
-          formats all code.
+        * **Acceptance Criteria:** The `tsconfig.json` file is created with the specified configuration.
 
 """
