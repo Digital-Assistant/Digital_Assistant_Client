@@ -74,12 +74,14 @@ development by integrators.
   permissions, and retrieving feature flags, all with automatic and secure handling of authentication tokens.
 
 * **Task Breakdown for User Story 1.1:**
-    * **Task 1.1.2: Configure TypeScript for the SDK**
-        * **Objective:** To create a dedicated `tsconfig.json` for the SDK that enforces strict coding standards and
-          generates type declaration files (`.d.ts`).
-        * **Detailed Information:** Create `packages/core/tsconfig.json`. Set `compilerOptions.strict` to `true` and
-          `declaration` to `true` to ensure code quality and generate the necessary type files for consumers.
-        * **Dependencies:** Task 1.1.1. check the existing tsconfig.json and ensure all the best configuration has been added.
-        * **Acceptance Criteria:** The `tsconfig.json` file is created with the specified configuration. Ensure that the existing configuration matches our requirement.
+    * **Task 1.1.3: Configure Webpack for SDK Bundling**
+        * **Objective:** To set up Webpack to bundle all SDK TypeScript files into multiple distributable JavaScript
+          formats.
+        * **Detailed Information:** In `packages/core`, install `webpack`, `webpack-cli`, and `ts-loader`. Create
+          `webpack.config.js`. Configure it to use `ts-loader` for `.ts` files and to output both a UMD bundle (
+          `index.umd.js`) for maximum compatibility and an ESM bundle (`index.mjs`) for modern applications. Update run scripts in package.json accordingly.
+        * **Dependencies:** check the existing webpack.config.js and ensure all the best configuration has been added. Remember to add the environment based output as provided in the reference.
+        * **Acceptance Criteria:** `npm run build` generates `index.umd.js`, `index.mjs`, and their corresponding
+          `.d.ts` files in the `dist` directory.
 
 """
