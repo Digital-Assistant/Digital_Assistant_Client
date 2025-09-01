@@ -6,25 +6,34 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import "./css/UDAN.scss";
 import { Button, Spin } from "antd";
-import {fetchRecord, fetchSearchResults} from "./services/searchService";
 import _ from "lodash";
-import { squeezeBody, setToStore, getFromStore, removeFromStore } from "./util";
-import { CONFIG } from "./config";
+import {
+    fetchRecord,
+    fetchSearchResults,
+    postRecordSequenceData,
+    recordUserClickData,
+    squeezeBody,
+    setToStore,
+    getFromStore,
+    removeFromStore,
+    off,
+    on,
+    trigger,
+    addBodyEvents,
+    initSpecialNodes,
+    fetchDomain,
+    CONFIG,
+    AppConfig,
+    CustomConfig,
+    keycloak
+} from '@digital-assistant/core';
 import UdanMain from "./components/UdanMain";
 import { Toggler } from "./components/layout/common";
 import Header from "./components/layout/Header";
 import Body from "./components/layout/Body";
 import Footer from "./components/layout/Footer";
 import useInterval from "react-useinterval";
-import keycloak from "./config/keycloak";
-import { off, on, trigger } from "./util/events";
 import { UserDataContext } from "./providers/UserDataContext";
-import { AppConfig } from "./config/AppConfig";
-import { CustomConfig } from "./config/CustomConfig";
-import {postRecordSequenceData, recordUserClickData} from "./services";
-import { addBodyEvents } from "./util/addBodyEvents";
-import { initSpecialNodes } from "./util/initSpecialNodes";
-import {fetchDomain} from "./util/fetchDomain";
 
 import Udan from "installable-poc";
 
