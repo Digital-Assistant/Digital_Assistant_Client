@@ -48,18 +48,41 @@ We noticed that each customer is looking to change the UI quite a bit. We decide
 
 ---
 
-### **Your First Task**
+### **Your Task**
 
-Your first assignment is to begin with the first epic and user story and we will complete one task at a time.
+Your first assignment is to begin with the conversion of the actual code file by file one at a time.
 
-**Please start now with Task 1.1.4 from the project plan below.**
+**Please start now with Task as given below.**
 
-* **Task 1.1.4: Implement Code Linting and Formatting**
-        * **Objective:** To enforce a consistent code style and automatically catch common bugs and errors.
-        * **Detailed Information:** Install and configure ESLint and Prettier for TypeScript in the `packages/core`
-          directory. Add `lint` and `format` scripts to the SDK's `package.json` to automate code quality checks.
-        * **Dependencies:** Task 1.1.1.
-        * **Acceptance Criteria:** `npm run lint` checks for code quality issues, and `npm run format` automatically
-          formats all code.
+**Overall Goal:** Refactor the codebase to separate the core recording/replaying functionality into a framework-agnostic
+SDK. The existing React application will be refactored to become a consumer of this SDK, which will allow for custom UI
+development by integrators.
+
+#### **User Story 1.1: API Service Layer Abstraction**
+
+* **Story:** As a developer, I want to move all backend HTTP request logic (for Flows, Permissions, and Flags) into the
+  SDK, so that the SDK is the single gateway for all backend communication, ensuring consistency and security.
+
+* **Elaboration and Strategic Importance:** This user story consolidates all backend interactions into a single,
+  controlled layer within the SDK. By removing data fetching from the UI, we make the UI simpler and more resilient to
+  API changes. It also enhances security by ensuring that all requests pass through a single, authenticated client that
+  properly manages the user's JWT. This layer becomes the testable, maintainable contract between the frontend and the
+  backend.
+
+* **Desired Outcome:** The SDK will contain a complete set of services for interacting with the backend API. The UI
+  application will no longer contain any `axios` or `fetch` calls. The SDK will be capable of fetching flows, managing
+  permissions, and retrieving feature flags, all with automatic and secure handling of authentication tokens.
+
+* **Task Breakdown for User Story 1.1:**
+    * **Task 1.1.1: Initialize a Monorepo and SDK Workspace**
+        * **Objective:** To create a formal project structure to house multiple packages and establish the SDK's own
+          identity with a `package.json` file.
+        * **Detailed Information:** Configure the root `package.json` for npm/yarn workspaces. Create a `packages/core`
+          directory. `cd` into it, run `npm init -y`, and configure the new `package.json` with the name
+          `@digital-assistant/core` and `main`, `module`, and `types` fields pointing to a `dist/` folder. Create a
+          `packages/core/src` directory. This package should create a distributable package where we can install from the distributed zip file.
+        * **Dependencies:** check the existing package.json and ensure that the libraries that are used have been added to the core package apart from UI libraries.
+        * **Acceptance Criteria:** The root is configured for workspaces, and the `packages/core/src` directory and a
+          valid `package.json` exist and all the packages were used in the existing application has been migrated other than UI libraries.
 
 """
