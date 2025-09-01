@@ -74,14 +74,12 @@ development by integrators.
   permissions, and retrieving feature flags, all with automatic and secure handling of authentication tokens.
 
 * **Task Breakdown for User Story 1.1:**
-    * **Task 1.1.3: Configure Webpack for SDK Bundling**
-        * **Objective:** To set up Webpack to bundle all SDK TypeScript files into multiple distributable JavaScript
-          formats.
-        * **Detailed Information:** In `packages/core`, install `webpack`, `webpack-cli`, and `ts-loader`. Create
-          `webpack.config.js`. Configure it to use `ts-loader` for `.ts` files and to output both a UMD bundle (
-          `index.umd.js`) for maximum compatibility and an ESM bundle (`index.mjs`) for modern applications. Update run scripts in package.json accordingly.
-        * **Dependencies:** check the existing webpack.config.js and ensure all the best configuration has been added. Remember to add the environment based output as provided in the reference.
-        * **Acceptance Criteria:** `npm run build` generates `index.umd.js`, `index.mjs`, and their corresponding
-          `.d.ts` files in the `dist` directory.
+    * **Task 1.1.4: Implement Code Linting and Formatting**
+        * **Objective:** To enforce a consistent code style and automatically catch common bugs and errors.
+        * **Detailed Information:** Install and configure ESLint and Prettier for TypeScript in the `packages/core`
+          directory. Add `lint` and `format` scripts to the SDK's `package.json` to automate code quality checks.
+        * **Dependencies:** check the existing code linters configuration in the codebase and add the best world class configuration.
+        * **Acceptance Criteria:** `npm run lint` checks for code quality issues, and `npm run format` automatically
+          formats all code.
 
 """
