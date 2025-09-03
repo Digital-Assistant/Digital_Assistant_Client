@@ -54,32 +54,72 @@ Your first assignment is to begin with the conversion of the actual code file by
 
 **Please start now with Task as given below.**
 
-**Overall Goal:** Refactor the codebase to separate the core recording/replaying functionality into a framework-agnostic
-SDK. The existing React application will be refactored to become a consumer of this SDK, which will allow for custom UI
-development by integrators.
+### **Epic 1: Core SDK Abstraction & Encapsulation**
 
-#### **User Story 1.1: API Service Layer Abstraction**
+#### **Elaboration and Goal**
 
-* **Story:** As a developer, I want to move all backend HTTP request logic (for Flows, Permissions, and Flags) into the
-  SDK, so that the SDK is the single gateway for all backend communication, ensuring consistency and security.
+The primary goal of this Epic is to perform a major architectural refactoring by decoupling the "brain" of the
+application from its "face." Currently, the core business logic, data fetching, state management, and specialized
+functionalities (like recording and speech processing) are deeply intertwined with the React UI components and browser
+extension APIs. This makes the application difficult to test, maintain, and reuse.
 
-* **Elaboration and Strategic Importance:** This user story consolidates all backend interactions into a single,
-  controlled layer within the SDK. By removing data fetching from the UI, we make the UI simpler and more resilient to
-  API changes. It also enhances security by ensuring that all requests pass through a single, authenticated client that
-  properly manages the user's JWT. This layer becomes the testable, maintainable contract between the frontend and the
-  backend.
+This Epic will create a new, distinct entity: the **`@digital-assistant/core` SDK**. This SDK will be a pure TypeScript
+library, completely independent of React, Chrome APIs, or any other UI framework. It will act as a self-contained "
+engine" that handles every aspect of the application's functionality.
 
-* **Desired Outcome:** The SDK will contain a complete set of services for interacting with the backend API. The UI
-  application will no longer contain any `axios` or `fetch` calls. The SDK will be capable of fetching flows, managing
-  permissions, and retrieving feature flags, all with automatic and secure handling of authentication tokens.
+#### **Rationale and Business Value**
 
-* **Task Breakdown for User Story 1.1:**
-    * **Task 1.1.4: Implement Code Linting and Formatting**
-        * **Objective:** To enforce a consistent code style and automatically catch common bugs and errors.
-        * **Detailed Information:** Install and configure ESLint and Prettier for TypeScript in the `packages/core`
-          directory. Add `lint` and `format` scripts to the SDK's `package.json` to automate code quality checks.
-        * **Dependencies:** check the existing code linters configuration in the codebase and add the best world class configuration.
-        * **Acceptance Criteria:** `npm run lint` checks for code quality issues, and `npm run format` automatically
-          formats all code.
+* **Reusability:** The created SDK can be used to power other applications in the future. A new Vue.js or Angular
+  frontend could be built by simply integrating this SDK, drastically reducing development time for new products.
+* **Maintainability:** By creating a clear separation, developers can work on the UI and the core logic independently. A
+  change in the look and feel of a button (UI) will have zero risk of breaking the flow deletion logic (SDK), and
+  vice-versa.
+* **Testability:** A pure TypeScript library is infinitely easier to test than a UI component. We can write
+  comprehensive unit and integration tests for every service, reducer, and action within the SDK, leading to a much more
+  robust and reliable system.
+* **Clear Ownership:** This architecture allows for clear team ownership. A "platform" or "core" team can own and
+  enhance the SDK, while multiple "product" or "UI" teams can consume it.
+
+#### **Scope of Work**
+
+This Epic covers the complete migration of the following areas into the new SDK:
+
+* All communication with the backend API.
+* The entire Redux store, which will become the SDK's internal state machine.
+* The logic for recording and replaying DOM events.
+* The logic for speech-to-text and profanity filtering.
+* The management and fetching of feature flags.
+* The logic for validating authentication tokens to secure the SDK's operations.
+
+By the end of this Epic, we will have a fully functional, distributable, and testable library that encapsulates the
+entire power of the Digital Assistant application, ready to be "plugged into" any JavaScript front-end.
+
+---
+
+### **User Stories for Epic 1**
+
+#### **User Story 1.3: Centralized State Management**
+
+* **Story:** As a developer, I want to internalize the entire Redux store, including all slices and thunks, within the
+  SDK, so that there is a single, predictable source of truth for all application data, which can be subscribed to by
+  any UI.
+
+* **Elaboration and Strategic Importance:** This is the heart of the refactoring. By moving the Redux store into the
+  SDK, we transform the SDK from a simple collection of services into a true stateful application engine. The UI becomes
+  a "dumb" view that simply reflects the state managed by the SDK. This pattern makes the entire application's data flow
+  predictable and easy to debug. It also allows any UI framework to connect to the SDK and stay in sync through a simple
+  subscription model.
+
+* **Desired Outcome:** The SDK will have its own fully functional, self-contained Redux store. This store will manage
+  all application state, including flows, users, permissions, feature flags, and recording status. The SDK will expose a
+  single `subscribe` method, allowing any consumer to receive real-time updates whenever the state changes.
+
+* **Task Breakdown for User Story 1.3:**
+    * **Task 1.3.1: Migrate Redux Dependencies and Core Slices**
+        * **Objective:** To move the state definition for flows, users, and recordings into the SDK.
+        * **Detailed Information:** In `packages/core`, run `npm install @reduxjs/toolkit redux`. Copy `flowSlice.ts`,
+          `userSlice.ts`, and `recordingSlice.ts` to `packages/core/src/store/slices`.
+        * **Dependencies:** US 1.1.
+        * **Acceptance Criteria:** Core data slices are now part of the SDK.
 
 """

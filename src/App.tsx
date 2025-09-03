@@ -25,6 +25,19 @@ import {postRecordSequenceData, recordUserClickData} from "./services";
 import { addBodyEvents } from "./util/addBodyEvents";
 import { initSpecialNodes } from "./util/initSpecialNodes";
 import {fetchDomain} from "./util/fetchDomain";
+import { 
+    useAppSelector, 
+    useAppDispatch, 
+    setIsRecording as setIsRecordingAction, 
+    setIsPlaying as setIsPlayingAction, 
+    setManualPlay as setManualPlayAction, 
+    setPlayDelay as setPlayDelayAction, 
+    setShowRecord as setShowRecordAction, 
+    setShowLoader as setShowLoaderAction, 
+    setRecSequenceData as setRecSequenceDataAction, 
+    setSelectedRecordingDetails as setSelectedRecordingDetailsAction 
+} from "../packages/core/src/react";
+import { DigitalAssistantProvider } from "../packages/core/src/react/DigitalAssistantProvider";
 
 // adding global variable declaration for exposing react custom configuration
 global.UDAPluginSDK = AppConfig;
@@ -37,34 +50,46 @@ declare global {
     }
 }
 
-function App(props) {
+function AppComponent(props) {
 
-    const [isRecording, setIsRecording] = useState<boolean>(
-        getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true" || false
-    );
+    // Redux state and dispatch for recording
+    const dispatch = useAppDispatch();
+    const isRecording = useAppSelector(state => state.recording.isRecording);
+    const showLoader = useAppSelector(state => state.recording.showLoader);
+    const showRecord = useAppSelector(state => state.recording.showRecord);
+    const playDelay = useAppSelector(state => state.recording.playDelay);
+    const isPlaying = useAppSelector(state => state.recording.isPlaying);
+    const manualPlay = useAppSelector(state => state.recording.manualPlay);
+    const recSequenceData = useAppSelector(state => state.recording.recSequenceData);
+    const selectedRecordingDetails = useAppSelector(state => state.recording.selectedRecordingDetails);
+
+    // Initialize recording state from localStorage on first load
+    useEffect(() => {
+        const storedIsRecording = getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true" || false;
+        const storedIsPlaying = getFromStore(CONFIG.RECORDING_IS_PLAYING, true) || "off";
+        const storedManualPlay = getFromStore(CONFIG.RECORDING_MANUAL_PLAY, true) || "off";
+        const storedSelectedRecording = getFromStore(CONFIG.SELECTED_RECORDING, false) || false;
+
+        dispatch(setIsRecordingAction(storedIsRecording));
+        dispatch(setIsPlayingAction(storedIsPlaying));
+        dispatch(setManualPlayAction(storedManualPlay));
+        if (storedSelectedRecording) {
+            dispatch(setSelectedRecordingDetailsAction(storedSelectedRecording));
+        }
+    }, [dispatch]);
+
+    // Local state for non-recording related functionality
     const [hide, setHide] = useState<boolean>(!isRecording);
-    const [showLoader, setShowLoader] = useState<boolean>(false);
     const [showSearch, setShowSearch] = useState<boolean>(true);
-    const [showRecord, setShowRecord] = useState<boolean>(false);
-    const [playDelay, setPlayDelay] = useState<string>("off");
-    const [isPlaying, setIsPlaying] = useState<string>(
-        getFromStore(CONFIG.RECORDING_IS_PLAYING, true) || "off"
-    );
-    const [manualPlay, setManualPlay] = useState<string>(
-        getFromStore(CONFIG.RECORDING_MANUAL_PLAY, true) || "off"
-    );
     const [searchKeyword, setSearchKeyword] = useState<string>("");
     const [searchResults, setSearchResults] = useState<any>([]);
     const [page, setPage] = useState<number>(0);
     const [hasMorePages, setHasMorePages] = useState<boolean>(true);
     const [reFetchSearch, setReFetchSearch] = useState<string>("off");
-    const [recSequenceData, setRecSequenceData] = useState<any>([]);
     const [
         recordSequenceDetailsVisibility,
         setRecordSequenceDetailsVisibility,
     ] = useState<boolean>(false);
-    const [selectedRecordingDetails, setSelectedRecordingDetails] =
-        useState<any>(getFromStore(CONFIG.SELECTED_RECORDING, false) || false);
 
     /**
      * keycloak integration
@@ -220,7 +245,7 @@ function App(props) {
         if (!_.isEmpty(selectedRecordingDetails)) {
             if (isPlaying == "on") {
                 setTimeout(() => {
-                    setPlayDelay("on");
+                    dispatch(setPlayDelayAction("on"));
                 }, 2000);
             }
             // togglePanel();
@@ -277,7 +302,7 @@ function App(props) {
         if(!authenticated){
             return;
         }
-        setShowLoader(true);
+        dispatch(setShowLoaderAction(true));
         await initSpecialNodes();
         if(searchParams.get(CONFIG.UDA_URL_Param)){
             let searchId = searchParams.get(CONFIG.UDA_URL_Param);
@@ -405,7 +430,7 @@ function App(props) {
      * Sync data with storage
      */
     useInterval(() => {
-        setRecSequenceData(getFromStore(CONFIG.RECORDING_SEQUENCE, false));
+        dispatch(setRecSequenceDataAction(getFromStore(CONFIG.RECORDING_SEQUENCE, false) || []));
     }, CONFIG.SYNC_INTERVAL);
 
     /**
@@ -429,7 +454,7 @@ function App(props) {
     const offSearch = () => {
         setReFetchSearch("off");
         setShowSearch(false);
-        setShowLoader(false);
+        dispatch(setShowLoaderAction(false));
     };
 
     /**
@@ -448,19 +473,19 @@ function App(props) {
         setTimer(
             setTimeout(async () => {
                 if(isRecording){
-                    setShowLoader(false);
+                    dispatch(setShowLoaderAction(false));
                     await addBodyEvents();
                     return;
                 }
                 if(_page===0 && searchResults.length > 0 && !refetch) {
-                    setShowLoader(false);
+                    dispatch(setShowLoaderAction(false));
                     return;
                 } else if (!_.isEmpty(selectedRecordingDetails) && !refetch) {
-                    setShowLoader(false);
+                    dispatch(setShowLoaderAction(false));
                     return;
                 }
                 if(_page===0 && refetch) {
-                    setShowLoader(true);
+                    dispatch(setShowLoaderAction(true));
                 }
                 let domain = fetchDomain();
                 const _searchResults = await fetchSearchResults({
@@ -472,7 +497,7 @@ function App(props) {
                         : null,
                 });
                 setTimeout(() => {
-                    setShowLoader(false);
+                    dispatch(setShowLoaderAction(false));
                     if(refetch) {
                         setReFetchSearch("off");
                     }
@@ -481,7 +506,7 @@ function App(props) {
                 /*const additionalParams = global.UDAGlobalConfig.enablePermissions ? encodeURI(JSON.stringify(global.UDAGlobalConfig.permissions)) : null;
                 const _searchResults = await Udan.searchResults(searchKeyword, _page, encodeURI(domain), additionalParams);*/
 
-                setTimeout(() => setShowLoader(false), 500);
+                setTimeout(() => dispatch(setShowLoaderAction(false)), 500);
                 if (_searchResults.length) {
                     setPage(_page);
                     if(_searchResults.length===10){
@@ -504,8 +529,8 @@ function App(props) {
     /**to enable record sequence card/container */
     const recordSequence = async () => {
         playHandler("off");
-        setIsRecording(true);
-        setShowRecord(false);
+        dispatch(setIsRecordingAction(true));
+        dispatch(setShowRecordAction(false));
         setReFetchSearch("");
         setShowSearch(false);
         recordUserClickData('recordingStart');
@@ -514,15 +539,15 @@ function App(props) {
 
     /**common cancel button handler */
     const cancel = (forceRefresh=false) => {
-        setIsRecording(false);
-        setShowRecord(false);
+        dispatch(setIsRecordingAction(false));
+        dispatch(setShowRecordAction(false));
         setRecordSequenceDetailsVisibility(false);
         playHandler("off");
-        setManualPlay("off");
+        dispatch(setManualPlayAction("off"));
         setToStore("off", CONFIG.RECORDING_MANUAL_PLAY, true);
         setToStore([], CONFIG.RECORDING_SEQUENCE, false);
         setToStore({}, CONFIG.SELECTED_RECORDING, false);
-        setSelectedRecordingDetails({});
+        dispatch(setSelectedRecordingDetailsAction({}));
         if(forceRefresh || searchResults.length === 0) {
             setReFetchSearch("on");
         }
@@ -544,7 +569,7 @@ function App(props) {
                 break;
             case "cancel":
                 recordUserClickData('recordingStop');
-                setIsRecording(false);
+                dispatch(setIsRecordingAction(false));
                 await setSearchKeyword("");
                 break;
         }
@@ -563,7 +588,7 @@ function App(props) {
             setReFetchSearch("off");
             setShowSearch(false);
             setToStore([], CONFIG.RECORDING_SEQUENCE, false);
-            setShowRecord(hideFlag);
+            dispatch(setShowRecordAction(hideFlag));
         } else {
             await togglePanel();
         }
@@ -586,10 +611,10 @@ function App(props) {
     const showRecordHandler = (flag: boolean) => {
         setReFetchSearch("");
         setShowSearch(false);
-        setManualPlay("off");
+        dispatch(setManualPlayAction("off"));
         setToStore("off", CONFIG.RECORDING_MANUAL_PLAY, true);
         playHandler("off");
-        setShowRecord(flag);
+        dispatch(setShowRecordAction(flag));
     };
 
     /**
@@ -629,7 +654,7 @@ function App(props) {
         playHandler("off");
         setReFetchSearch("");
         setShowSearch(false);
-        setSelectedRecordingDetails({ ...data });
+        dispatch(setSelectedRecordingDetailsAction({ ...data }));
         setRecordSequenceDetailsVisibility(true);
     };
 
@@ -638,8 +663,8 @@ function App(props) {
      * @param status
      */
     const playHandler = (status: string) => {
-        setPlayDelay(status);
-        setIsPlaying(status);
+        dispatch(setPlayDelayAction(status));
+        dispatch(setIsPlayingAction(status));
         setToStore(status, CONFIG.RECORDING_IS_PLAYING, true);
     };
 
@@ -703,7 +728,7 @@ function App(props) {
                                                 "search-results"
                                             )}
                                             addRecordHandler={
-                                                setShowRecord
+                                                (value: boolean) => dispatch(setShowRecordAction(value))
                                             }
                                             searchKeyword={
                                                 searchKeyword
@@ -731,7 +756,7 @@ function App(props) {
                                         setReFetchSearch
                                     }
                                     showLoader={
-                                        setShowLoader
+                                        (value: boolean) => dispatch(setShowLoaderAction(value))
                                     }
                                     config={
                                         global.UDAGlobalConfig
@@ -755,7 +780,7 @@ function App(props) {
                                         isPlaying={playDelay}
                                         key={"rSD" + recordSequenceDetailsVisibility}
                                         config={global.UDAGlobalConfig}
-                                        showLoader={setShowLoader}
+                                        showLoader={(value: boolean) => dispatch(setShowLoaderAction(value))}
                                         refetchSearch={setReFetchSearch}
                                     />
                                 )}
@@ -816,6 +841,14 @@ function App(props) {
                      udaDivId={global.UDAGlobalConfig.udaDivId} enableUdaIcon={global.UDAGlobalConfig.enableUdaIcon}
                      config={global.UDAGlobalConfig} isRecording={isRecording} />
         </UserDataContext.Provider>
+    );
+}
+
+function App(props) {
+    return (
+        <DigitalAssistantProvider>
+            <AppComponent {...props} />
+        </DigitalAssistantProvider>
     );
 }
 
