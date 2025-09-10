@@ -53,6 +53,8 @@ UDA-client currently works only with the chrome browser but we will be extending
 
 We solicit and welcome comments, help, documentation in improving the client.
 
+### Chrome store plugin: https://chromewebstore.google.com/detail/jejdickefnhgkhdcjjcmoiiljlkanpln?utm_source=item-share-cb
+
 ### Integrate as sdk into applications
 
 1. Add the below Script in head as first script tag
