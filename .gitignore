@@ -39,3 +39,6 @@ environments/*
 
 # intellij
 .idea/
+
+output/
+execution-logs/
