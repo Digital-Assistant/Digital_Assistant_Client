@@ -1,5 +1,6 @@
 import { store } from './store';
 import type { RootState, AppDispatch } from './store';
+import { apiClient } from './services';
 
 // Export the store and types for external consumption
 export { store } from './store';
@@ -7,6 +8,9 @@ export type { RootState, AppDispatch } from './store';
 
 // Export all slice actions and types
 export * from './store/slices';
+
+// Export API client services
+export * from './services';
 
 /**
  * Digital Assistant Core SDK
@@ -110,6 +114,14 @@ export class DigitalAssistantCore {
      */
     getSliceState<T extends keyof RootState>(sliceName: T): RootState[T] {
         return store.getState()[sliceName];
+    }
+
+    /**
+     * Get the API client instance for making authenticated requests
+     * @returns The central API client with automatic authentication
+     */
+    getApiClient() {
+        return apiClient;
     }
 }
 
