@@ -33,6 +33,9 @@ package-lock.json
 
 #ignore all the configuration values
 environments/*
+!environments/local.env
+
+/packages/core/dist/
 
 # testing
 /coverage
