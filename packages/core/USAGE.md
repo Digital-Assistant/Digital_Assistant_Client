@@ -217,3 +217,256 @@ export class RecordingComponent implements OnInit, OnDestroy {
 - `startValidation(recordingId)`
 - `markValidationCompleted()`
 - `resetValidationState()`
+
+## API Client Usage
+
+The SDK includes a central API client with automatic JWT authentication for making HTTP requests.
+
+### Basic API Client Usage
+
+```typescript
+import DigitalAssistantCore, { apiClient } from '@digital-assistant/core';
+
+// Option 1: Using the SDK instance
+const client = DigitalAssistantCore.getApiClient();
+
+// Option 2: Direct import
+import { apiClient } from '@digital-assistant/core';
+
+// Make authenticated requests
+try {
+    const response = await apiClient.get('/api/user/profile');
+    console.log('User profile:', response.data);
+} catch (error) {
+    console.error('API Error:', error.message);
+}
+```
+
+### Available HTTP Methods
+
+```typescript
+// GET request
+const getResponse = await apiClient.get<UserProfile>('/api/user/123');
+
+// POST request  
+const postResponse = await apiClient.post<CreateUserResponse>('/api/users', {
+    name: 'John Doe',
+    email: 'john@example.com'
+});
+
+// PUT request
+const putResponse = await apiClient.put<UpdateUserResponse>('/api/users/123', {
+    name: 'Jane Doe'
+});
+
+// PATCH request
+const patchResponse = await apiClient.patch<User>('/api/users/123', {
+    status: 'active'
+});
+
+// DELETE request
+const deleteResponse = await apiClient.delete('/api/users/123');
+```
+
+### Custom API Client Configuration
+
+```typescript
+import { ApiClient } from '@digital-assistant/core';
+
+// Create custom client with configuration
+const customClient = new ApiClient({
+    baseURL: 'https://api.example.com',
+    timeout: 60000,
+    additionalHeaders: {
+        'X-Custom-Header': 'value',
+        'X-App-Version': '1.0.0'
+    }
+});
+
+// Update configuration after creation
+customClient.updateBaseURL('https://new-api.example.com');
+customClient.updateHeaders({ 'X-New-Header': 'new-value' });
+```
+
+### Authentication Token Management
+
+The API client automatically:
+- Reads JWT tokens from the Redux store's user state
+- Attaches `Authorization: Bearer <token>` header to all requests
+- Prioritizes tokens in this order:
+  1. `keycloakSessionData.token`
+  2. `userSessionData.authData.token`
+  3. `userData.token`
+
+```typescript
+import { setKeycloakSessionData } from '@digital-assistant/core';
+
+// Set authentication data - API client will automatically use it
+DigitalAssistantCore.dispatch(setKeycloakSessionData({
+    token: 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...',
+    refreshToken: 'refresh-token-here',
+    userInfo: { id: '123', email: 'user@example.com' }
+}));
+
+// All subsequent API calls will be authenticated
+const userProfile = await apiClient.get('/api/user/profile');
+```
+
+### Error Handling
+
+```typescript
+import { ApiError } from '@digital-assistant/core';
+
+try {
+    const response = await apiClient.get('/api/protected-resource');
+    return response.data;
+} catch (error) {
+    const apiError = error as ApiError;
+    
+    switch (apiError.status) {
+        case 401:
+            console.log('User needs to re-authenticate');
+            // Handle token refresh or redirect to login
+            break;
+        case 403:
+            console.log('User lacks permissions');
+            break;
+        case 404:
+            console.log('Resource not found');
+            break;
+        default:
+            console.error('API Error:', apiError.message);
+    }
+}
+```
+
+### Custom Events
+
+The API client dispatches custom events for handling authentication errors:
+
+```typescript
+// Listen for unauthorized events
+window.addEventListener('digital-assistant:unauthorized', (event) => {
+    console.log('Unauthorized API request detected:', event.detail);
+    // Handle token refresh or redirect to login
+});
+```
+
+### Advanced Usage
+
+```typescript
+import { apiClient } from '@digital-assistant/core';
+
+// Access underlying Axios instance for advanced usage
+const axiosInstance = apiClient.getAxiosInstance();
+
+// Add custom interceptors
+axiosInstance.interceptors.request.use((config) => {
+    // Custom request logic
+    config.metadata = { startTime: Date.now() };
+    return config;
+});
+
+// Get current configuration
+const config = apiClient.getConfig();
+console.log('Current timeout:', config.timeout);
+```
+
+### Framework-Specific Examples
+
+#### React Hook for API Calls
+
+```typescript
+import { useState, useEffect } from 'react';
+import { apiClient, ApiError } from '@digital-assistant/core';
+
+function useApiData<T>(url: string) {
+    const [data, setData] = useState<T | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<ApiError | null>(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                const response = await apiClient.get<T>(url);
+                setData(response.data);
+            } catch (err) {
+                setError(err as ApiError);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [url]);
+
+    return { data, loading, error };
+}
+
+// Usage in component
+function UserProfile({ userId }: { userId: string }) {
+    const { data: user, loading, error } = useApiData<User>(`/api/users/${userId}`);
+    
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error.message}</div>;
+    
+    return <div>Welcome, {user?.name}!</div>;
+}
+```
+
+#### Vue Composition API
+
+```typescript
+import { ref, onMounted } from 'vue';
+import { apiClient } from '@digital-assistant/core';
+
+export function useApiData<T>(url: string) {
+    const data = ref<T | null>(null);
+    const loading = ref(true);
+    const error = ref<string | null>(null);
+
+    const fetchData = async () => {
+        try {
+            loading.value = true;
+            const response = await apiClient.get<T>(url);
+            data.value = response.data;
+        } catch (err: any) {
+            error.value = err.message;
+        } finally {
+            loading.value = false;
+        }
+    };
+
+    onMounted(fetchData);
+
+    return { data, loading, error, refetch: fetchData };
+}
+```
+
+## TypeScript Support
+
+The SDK provides full TypeScript support with proper type definitions:
+
+```typescript
+import type { 
+    RootState, 
+    ApiResponse, 
+    ApiError, 
+    ApiClientConfig 
+} from '@digital-assistant/core';
+
+// Type-safe state access
+const state: RootState = DigitalAssistantCore.getState();
+const isRecording: boolean = state.recording.isRecording;
+
+// Type-safe API responses
+interface UserProfile {
+    id: string;
+    name: string;
+    email: string;
+}
+
+const response: ApiResponse<UserProfile> = await apiClient.get('/api/user/profile');
+const user: UserProfile = response.data;
+```
