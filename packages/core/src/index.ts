@@ -12,6 +12,10 @@ export * from './store/slices';
 // Export API client services
 export * from './services';
 
+// Export configurations and utilities
+export * from './config';
+export * from './util';
+
 /**
  * Digital Assistant Core SDK
  * 
