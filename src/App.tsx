@@ -14,7 +14,10 @@ import DigitalAssistantCore, {
     setRecSequenceData, 
     setSelectedRecordingDetails, 
     setShowRecord, 
-    setShowLoader 
+    setShowLoader,
+    fetchSearchResults as fetchSearchResultsSDK,
+    fetchRecord as fetchRecordSDK,
+    apiClient
 } from "@digital-assistant/core";
 import {fetchRecord, fetchSearchResults} from "./services/searchService";
 import _ from "lodash";
@@ -295,12 +298,22 @@ function App(props) {
         if(!authenticated){
             return;
         }
+        
+        // Configure SDK ApiClient with base URL from environment
+        const baseProdURL = process.env.baseProdURL;
+        const baseTestURL = process.env.baseTestURL;
+        const baseURL = global.UDAGlobalConfig.environment === 'TEST' ? baseTestURL : baseProdURL;
+        
+        if (baseURL) {
+            apiClient.updateBaseURL(baseURL);
+        }
+        
         DigitalAssistantCore.dispatch(setShowLoader(true));
         await initSpecialNodes();
         if(searchParams.get(CONFIG.UDA_URL_Param)){
             let searchId = searchParams.get(CONFIG.UDA_URL_Param);
             recordUserClickData('searchRecordingId', '', parseInt(searchId));
-            let recordDetails = await fetchRecord({
+            let recordDetails = await fetchRecordSDK({
                 id: searchParams.get(CONFIG.UDA_URL_Param),
                 domain: encodeURI(fetchDomain()),
                 additionalParams: global.UDAGlobalConfig.enablePermissions
@@ -482,7 +495,7 @@ function App(props) {
                     DigitalAssistantCore.dispatch(setShowLoader(true));
                 }
                 let domain = fetchDomain();
-                const _searchResults = await fetchSearchResults({
+                const _searchResults = await fetchSearchResultsSDK({
                     keyword: searchKeyword,
                     page: _page,
                     domain: encodeURI(domain),

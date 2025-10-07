@@ -2,16 +2,15 @@
 export { ApiClient, apiClient } from './apiClient';
 export type { ApiClientConfig, ApiResponse, ApiError } from './apiClient';
 
-// Export SearchService with dependency injection
+// Export SearchService functions (direct usage)
 export { 
-  SearchService, 
-  createSearchService,
-  createSearchServiceFunctions
+  fetchSearchResults,
+  fetchRecord,
+  fetchSpecialNodes
 } from './SearchService';
 export type { 
   SearchRequest, 
-  RecordRequest, 
-  SearchServiceDependencies 
+  RecordRequest
 } from './SearchService';
 
 // Export user services

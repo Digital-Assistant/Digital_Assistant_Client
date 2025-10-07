@@ -3,9 +3,9 @@ import type { RootState } from '../store';
 
 /**
  * Retrieves the user's ID from the Redux store
- * @returns The user's ID, or null if it could not be retrieved
+ * @returns Promise that resolves to the user's ID, or null if it could not be retrieved
  */
-export const getUserId = (): string | null => {
+export const getUserId = async (): Promise<string | null> => {
   try {
     const state: RootState = (store as any).getState();
     const userState = state.user;
@@ -34,9 +34,9 @@ export const getUserId = (): string | null => {
 
 /**
  * Retrieves the user's session key from the Redux store
- * @returns The user's session key, or null if it could not be retrieved
+ * @returns Promise that resolves to the user's session key, or null if it could not be retrieved
  */
-export const getSessionKey = (): string | null => {
+export const getSessionKey = async (): Promise<string | null> => {
   try {
     const state: RootState = (store as any).getState();
     const userState = state.user;
@@ -63,10 +63,10 @@ export const getSessionKey = (): string | null => {
  * Gets the current user session ID
  * @returns User session ID or null
  */
-export const getUserSessionId = (): string | null => {
+export const getUserSessionId = async (): Promise<string | null> => {
   try {
     const state: RootState = (store as any).getState();
-    return state.user.userSessionId || getUserId();
+    return state.user.userSessionId || await getUserId();
   } catch (error) {
     console.error("Error retrieving user session ID:", error);
     return null;

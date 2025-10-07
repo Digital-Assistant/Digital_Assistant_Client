@@ -15,7 +15,7 @@ export const recordUserClickData = async (
 ): Promise<any> => {
   try {
     const payload = {
-      usersessionid: getSessionKey(),
+      usersessionid: await getSessionKey(),
       clickedname: clickedName,
       clicktype: clickType,
       recordid: recordId,

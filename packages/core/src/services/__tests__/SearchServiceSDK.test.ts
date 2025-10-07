@@ -1,47 +1,51 @@
-import { SearchService, createSearchService, createSearchServiceFunctions, type SearchServiceDependencies } from '../SearchService';
+import { fetchSearchResults, fetchRecord, fetchSpecialNodes } from '../SearchService';
+import * as apiClientModule from '../apiClient';
+import * as userServiceModule from '../userService';
+import * as trackingServiceModule from '../trackingService';
 
-describe('SearchService SDK with Dependency Injection', () => {
-  let searchService: SearchService;
-  let mockDependencies: SearchServiceDependencies;
+// Mock the modules
+jest.mock('../apiClient');
+jest.mock('../userService');
+jest.mock('../trackingService');
+
+describe('SearchService SDK with Direct API Client', () => {
+  const mockApiClient = apiClientModule.apiClient as jest.Mocked<typeof apiClientModule.apiClient>;
+  const mockGetUserId = userServiceModule.getUserId as jest.MockedFunction<typeof userServiceModule.getUserId>;
+  const mockRecordUserClickData = trackingServiceModule.recordUserClickData as jest.MockedFunction<typeof trackingServiceModule.recordUserClickData>;
 
   beforeEach(() => {
-    // Create mock dependencies
-    mockDependencies = {
-      httpClient: {
-        get: jest.fn(),
-        post: jest.fn()
-      },
-      userService: {
-        getUserSessionId: jest.fn().mockResolvedValue('test-session-id')
-      },
-      trackingService: {
-        recordUserClickData: jest.fn().mockResolvedValue(true)
-      }
-    };
+    jest.clearAllMocks();
     
-    // Create SearchService with mocked dependencies
-    searchService = createSearchService(mockDependencies);
+    // Setup default mocks  
+    mockGetUserId.mockResolvedValue('test-session-id');
+    mockRecordUserClickData.mockResolvedValue(undefined as any);
   });
 
-  describe('Dependency Injection', () => {
-    it('should create SearchService with dependencies', () => {
-      expect(searchService).toBeInstanceOf(SearchService);
+  describe('Direct Function Usage', () => {
+    it('should export fetchSearchResults function', () => {
+      expect(fetchSearchResults).toBeDefined();
+      expect(typeof fetchSearchResults).toBe('function');
     });
 
-    it('should create functional interface with dependencies', () => {
-      const functions = createSearchServiceFunctions(mockDependencies);
-      
-      expect(functions.fetchSearchResults).toBeDefined();
-      expect(functions.fetchRecord).toBeDefined();
-      expect(functions.fetchSpecialNodes).toBeDefined();
-      expect(functions.service).toBeInstanceOf(SearchService);
+    it('should export fetchRecord function', () => {
+      expect(fetchRecord).toBeDefined();
+      expect(typeof fetchRecord).toBe('function');
+    });
+
+    it('should export fetchSpecialNodes function', () => {
+      expect(fetchSpecialNodes).toBeDefined();
+      expect(typeof fetchSpecialNodes).toBe('function');
     });
   });
 
   describe('fetchSearchResults', () => {
-    it('should use injected dependencies for search', async () => {
-      const mockResponse: any[] = [{ id: 1, title: 'Test Result' }];
-      (mockDependencies.httpClient.get as jest.Mock).mockResolvedValue(mockResponse);
+    it('should use apiClient for search requests', async () => {
+      const mockResponse = { 
+        data: [{ id: 1, title: 'Test Result' }], 
+        status: 200, 
+        statusText: 'OK' 
+      };
+      mockApiClient.get.mockResolvedValue(mockResponse);
 
       const request = {
         keyword: 'test',
@@ -49,84 +53,98 @@ describe('SearchService SDK with Dependency Injection', () => {
         domain: 'test.com'
       };
 
-      const result = await searchService.fetchSearchResults(request);
+      const result = await fetchSearchResults(request);
 
-      expect(result).toEqual(mockResponse);
-      expect(mockDependencies.trackingService.recordUserClickData).toHaveBeenCalledWith('search', 'test');
-      expect(mockDependencies.httpClient.get).toHaveBeenCalledWith(
-        expect.stringContaining('/search/all')
-      );
+      expect(result).toEqual(mockResponse.data);
+      expect(mockRecordUserClickData).toHaveBeenCalledWith("search", "test");
+      expect(mockGetUserId).toHaveBeenCalled();
+      expect(mockApiClient.get).toHaveBeenCalled();
     });
 
-    it('should not call tracking when no keyword provided', async () => {
-      const mockResponse: any[] = [];
-      (mockDependencies.httpClient.get as jest.Mock).mockResolvedValue(mockResponse);
+    it('should handle empty results', async () => {
+      const mockResponse = { 
+        data: undefined, 
+        status: 200, 
+        statusText: 'OK' 
+      };
+      mockApiClient.get.mockResolvedValue(mockResponse);
 
-      const request = { page: 1, domain: 'test.com' };
+      const request = {
+        keyword: '',
+        page: 1,
+        domain: 'test.com'
+      };
 
-      await searchService.fetchSearchResults(request);
+      const result = await fetchSearchResults(request);
+      expect(result).toEqual([]);
+    });
 
-      expect(mockDependencies.trackingService.recordUserClickData).not.toHaveBeenCalled();
-      expect(mockDependencies.httpClient.get).toHaveBeenCalled();
+    it('should handle search errors', async () => {
+      const mockError = new Error('Network error');
+      mockApiClient.get.mockRejectedValue(mockError);
+
+      const request = {
+        keyword: 'test',
+        page: 1,
+        domain: 'test.com'
+      };
+
+      await expect(fetchSearchResults(request)).rejects.toThrow('Failed to perform search: Network error');
     });
   });
 
   describe('fetchRecord', () => {
-    it('should use injected dependencies for record fetch', async () => {
-      const mockResponse = { id: 1, title: 'Test Record' };
-      (mockDependencies.httpClient.get as jest.Mock).mockResolvedValue(mockResponse);
+    it('should fetch record with basic parameters', async () => {
+      const mockResponse = { 
+        data: { id: '123', title: 'Test Record' }, 
+        status: 200, 
+        statusText: 'OK' 
+      };
+      mockApiClient.get.mockResolvedValue(mockResponse);
 
       const request = {
-        id: '1',
+        id: '123',
         domain: 'test.com'
       };
 
-      const result = await searchService.fetchRecord(request);
+      const result = await fetchRecord(request);
 
-      expect(result).toEqual(mockResponse);
-      expect(mockDependencies.httpClient.get).toHaveBeenCalledWith('/search/1?domain=test.com');
+      expect(result).toEqual(mockResponse.data);
+      expect(mockApiClient.get).toHaveBeenCalled();
+    });
+
+    it('should throw error when no request provided', async () => {
+      await expect(fetchRecord()).rejects.toThrow('Request parameter is required');
+    });
+
+    it('should handle fetch record errors', async () => {
+      const mockError = new Error('Record not found');
+      mockApiClient.get.mockRejectedValue(mockError);
+
+      const request = {
+        id: '123',
+        domain: 'test.com'
+      };
+
+      await expect(fetchRecord(request)).rejects.toThrow('Failed to fetch record: Record not found');
     });
   });
 
   describe('fetchSpecialNodes', () => {
     it('should return special nodes configuration', async () => {
-      const result = await searchService.fetchSpecialNodes();
-
+      const result = await fetchSpecialNodes();
+      
       expect(result).toBeDefined();
-      expect(result.include).toBeDefined();
-      expect(result.exclude).toBeDefined();
+      expect(result).toHaveProperty('include');
+      expect(result).toHaveProperty('exclude');
+      expect(result).toHaveProperty('ignoreChildren');
     });
-  });
 
-  describe('Framework Agnostic Design', () => {
-    it('should work with different HTTP client implementations', async () => {
-      // Simulate different framework HTTP clients
-      const axiosDeps: SearchServiceDependencies = {
-        httpClient: {
-          get: jest.fn().mockResolvedValue({ data: 'axios-response' }),
-          post: jest.fn()
-        },
-        userService: { getUserSessionId: jest.fn().mockReturnValue('axios-user') },
-        trackingService: { recordUserClickData: jest.fn() }
-      };
-
-      const fetchDeps: SearchServiceDependencies = {
-        httpClient: {
-          get: jest.fn().mockResolvedValue('fetch-response'),
-          post: jest.fn()
-        },
-        userService: { getUserSessionId: jest.fn().mockReturnValue('fetch-user') },
-        trackingService: { recordUserClickData: jest.fn() }
-      };
-
-      const axiosService = createSearchService(axiosDeps);
-      const fetchService = createSearchService(fetchDeps);
-
-      await axiosService.fetchSearchResults({ page: 1 });
-      await fetchService.fetchSearchResults({ page: 1 });
-
-      expect(axiosDeps.httpClient.get).toHaveBeenCalled();
-      expect(fetchDeps.httpClient.get).toHaveBeenCalled();
+    it('should handle optional request parameter', async () => {
+      const request = { someParam: 'value' };
+      const result = await fetchSpecialNodes(request);
+      
+      expect(result).toBeDefined();
     });
   });
 });

@@ -78,7 +78,8 @@ export class ApiClient {
     }
 
     /**
-     * Setup request interceptor to automatically attach JWT token
+     * Setup request interceptor to automatically attach JWT token and realm headers
+     * Matches the original getHTTPHeaders functionality from UI services
      */
     private setupRequestInterceptor(): void {
         this.axiosInstance.interceptors.request.use(
@@ -87,16 +88,19 @@ export class ApiClient {
                 const state: RootState = (store as any).getState();
                 const userState = state.user;
 
-                // Extract JWT token from user state
+                // Initialize headers
+                config.headers = config.headers || {};
+
+                // Extract JWT token from user state - match original logic
                 let token: string | null = null;
 
-                // First try Keycloak session data
-                if (userState.keycloakSessionData?.token) {
-                    token = userState.keycloakSessionData.token;
-                }
-                // Fall back to user session data
-                else if (userState.userSessionData?.authData?.token) {
+                // Check userSessionData.authData.token first (matches original)
+                if (userState.userSessionData?.authData?.token) {
                     token = userState.userSessionData.authData.token;
+                }
+                // Fall back to Keycloak session data
+                else if (userState.keycloakSessionData?.token) {
+                    token = userState.keycloakSessionData.token;
                 }
                 // Also check for direct token in userData
                 else if (userState.userData?.token) {
@@ -105,8 +109,16 @@ export class ApiClient {
 
                 // Attach Authorization header if token exists
                 if (token) {
-                    config.headers = config.headers || {};
                     config.headers.Authorization = `Bearer ${token}`;
+                }
+
+                // Add UDAN-Realm header if realm is not default (matches original logic)
+                // Access global UDAGlobalConfig like the original implementation
+                if (typeof window !== 'undefined' && (window as any).UDAGlobalConfig) {
+                    const globalConfig = (window as any).UDAGlobalConfig;
+                    if (globalConfig.realm && globalConfig.realm !== 'UDAN') {
+                        config.headers['UDAN-Realm'] = globalConfig.realm;
+                    }
                 }
 
                 // Add SDK identifier header
