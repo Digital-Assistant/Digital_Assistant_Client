@@ -84,7 +84,7 @@ export class ApiClient {
         this.axiosInstance.interceptors.request.use(
             (config: any) => {
                 // Get current state from Redux store
-                const state: RootState = store.getState();
+                const state: RootState = (store as any).getState();
                 const userState = state.user;
 
                 // Extract JWT token from user state

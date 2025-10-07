@@ -4,7 +4,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
 
-  const baseConfig = {
+  const umdConfig = {
     entry: './src/index.ts',
     module: {
       rules: [
@@ -31,10 +31,6 @@ module.exports = (env, argv) => {
         }),
       ],
     },
-  };
-
-  const umdConfig = {
-    ...baseConfig,
     output: {
       path: path.resolve(__dirname, 'dist'),
       filename: 'index.umd.js',
@@ -46,19 +42,5 @@ module.exports = (env, argv) => {
     },
   };
 
-  const esmConfig = {
-    ...baseConfig,
-    output: {
-      path: path.resolve(__dirname, 'dist'),
-      filename: 'index.mjs',
-      library: {
-        type: 'module',
-      },
-    },
-    experiments: {
-      outputModule: true,
-    },
-  };
-
-  return [umdConfig, esmConfig];
+  return umdConfig;
 };

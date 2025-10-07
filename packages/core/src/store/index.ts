@@ -20,7 +20,7 @@ export const store = configureStore({
     },
 });
 
-// Infer the state type from reducers
+// Infer the state type from the store itself  
 export type RootState = {
     editing: ReturnType<typeof editingReducer>;
     validation: ReturnType<typeof validationReducer>;
@@ -28,6 +28,7 @@ export type RootState = {
     recording: ReturnType<typeof recordingReducer>;
     flow: ReturnType<typeof flowReducer>;
 };
+export type AppStore = typeof store;
 
 export type AppDispatch = typeof store.dispatch;
 

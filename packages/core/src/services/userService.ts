@@ -7,7 +7,7 @@ import type { RootState } from '../store';
  */
 export const getUserId = (): string | null => {
   try {
-    const state: RootState = store.getState();
+    const state: RootState = (store as any).getState();
     const userState = state.user;
 
     // Check userSessionData first
@@ -38,7 +38,7 @@ export const getUserId = (): string | null => {
  */
 export const getSessionKey = (): string | null => {
   try {
-    const state: RootState = store.getState();
+    const state: RootState = (store as any).getState();
     const userState = state.user;
 
     // Check userSessionData for sessionKey
@@ -65,7 +65,7 @@ export const getSessionKey = (): string | null => {
  */
 export const getUserSessionId = (): string | null => {
   try {
-    const state: RootState = store.getState();
+    const state: RootState = (store as any).getState();
     return state.user.userSessionId || getUserId();
   } catch (error) {
     console.error("Error retrieving user session ID:", error);

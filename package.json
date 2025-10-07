@@ -5,6 +5,7 @@
   "private": true,
   
   "dependencies": {
+    "@digital-assistant/core": "file:./packages/core",
     "@popperjs/core": "^2.11.6",
     "@reduxjs/toolkit": "^1.9.7",
     "@types/react-redux": "^7.1.34",

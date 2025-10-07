@@ -40,27 +40,24 @@ export * from './util';
  *    DigitalAssistantCore.dispatch(setIsRecording(true));
  *    ```
  * 
- * 2. React integration:
+ * 2. Framework integration (React example):
  *    ```typescript
  *    // In your App.tsx
- *    import { DigitalAssistantProvider } from '@digital-assistant/core/react';
+ *    import DigitalAssistantCore from '@digital-assistant/core';
+ *    import { setIsRecording } from '@digital-assistant/core';
  *    
  *    function App() {
- *        return (
- *            <DigitalAssistantProvider>
- *                <YourComponents />
- *            </DigitalAssistantProvider>
- *        );
- *    }
- *    
- *    // In your components
- *    import { useAppSelector, useAppDispatch, setIsRecording } from '@digital-assistant/core/react';
- *    
- *    function MyComponent() {
- *        const isRecording = useAppSelector(state => state.recording.isRecording);
- *        const dispatch = useAppDispatch();
+ *        const [sdkState, setSdkState] = useState(DigitalAssistantCore.getState());
  *        
- *        const startRecording = () => dispatch(setIsRecording(true));
+ *        useEffect(() => {
+ *            const unsubscribe = DigitalAssistantCore.subscribe((newState) => {
+ *                setSdkState(newState);
+ *            });
+ *            return unsubscribe;
+ *        }, []);
+ *        
+ *        const startRecording = () => DigitalAssistantCore.dispatch(setIsRecording(true));
+ *        const isRecording = sdkState.recording.isRecording;
  *    }
  *    ```
  */
@@ -77,7 +74,7 @@ export class DigitalAssistantCore {
      * @returns The current state object containing all slice states
      */
     getState(): RootState {
-        return store.getState();
+        return (store as any).getState();
     }
 
     /**
@@ -95,8 +92,8 @@ export class DigitalAssistantCore {
      * @returns Unsubscribe function
      */
     subscribe(callback: (state: RootState) => void): () => void {
-        const unsubscribe = store.subscribe(() => {
-            callback(store.getState());
+        const unsubscribe = (store as any).subscribe(() => {
+            callback((store as any).getState());
         });
         
         return unsubscribe;
@@ -117,7 +114,7 @@ export class DigitalAssistantCore {
      * @param sliceName - Name of the slice to retrieve
      */
     getSliceState<T extends keyof RootState>(sliceName: T): RootState[T] {
-        return store.getState()[sliceName];
+        return (store as any).getState()[sliceName];
     }
 
     /**
