@@ -21,5 +21,6 @@ export {
 export type { EditingStepState } from './editingSlice';
 export type { ValidationState } from './validationSlice';
 export type { UserState } from './userSlice';
+export { setUserData } from './userSlice';
 export type { RecordingState } from './recordingSlice';
 export type { FlowState } from './flowSlice';

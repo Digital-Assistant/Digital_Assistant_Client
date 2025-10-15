@@ -8,7 +8,15 @@ import type { RootState } from '../store';
 export const getUserId = async (): Promise<string | null> => {
   try {
     const state: RootState = (store as any).getState();
-    const userState = state.user;
+    const userState = {...state.user};
+
+    if(userState?.userSessionData?.authData) {
+        // @ts-ignore
+        const authData: any = JSON.parse(userState.userSessionData.authData);
+        if(authData?.authData?.id){
+            return authData?.authData?.id;
+        }
+    }
 
     // Check userSessionData first
     if (userState.userSessionData?.authData?.id) {
@@ -40,6 +48,14 @@ export const getSessionKey = async (): Promise<string | null> => {
   try {
     const state: RootState = (store as any).getState();
     const userState = state.user;
+
+      if(userState?.userSessionData?.authData) {
+          // @ts-ignore
+          const authData: any = JSON.parse(userState.userSessionData.authData);
+          if(authData?.authData?.id){
+              return authData?.authData?.token;
+          }
+      }
 
     // Check userSessionData for sessionKey
     if (userState.userSessionData?.sessionKey) {

@@ -94,9 +94,17 @@ export class ApiClient {
                 // Extract JWT token from user state - match original logic
                 let token: string | null = null;
 
-                // Check userSessionData.authData.token first (matches original)
-                if (userState.userSessionData?.authData?.token) {
-                    token = userState.userSessionData.authData.token;
+                // Check userSessionData.authData first (matches original)
+                // It might be a JSON string, so we need to parse it.
+                if (userState.userSessionData?.authData) {
+                    try {
+                        // Handle case where authData is a stringified JSON
+                        const authData = typeof userState.userSessionData.authData === 'string'
+                            ? JSON.parse(userState.userSessionData.authData)
+                            : userState.userSessionData.authData;
+                        
+                        token = authData?.authData?.token || authData?.token || null;
+                    } catch (e) { /* Ignore parsing errors */ }
                 }
                 // Fall back to Keycloak session data
                 else if (userState.keycloakSessionData?.token) {

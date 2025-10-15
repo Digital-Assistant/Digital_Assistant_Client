@@ -1,23 +1,20 @@
-/**
- * Author: Yureswar Ravuri
- * Type: App Component
- * Objective: To render content script
- */
+// @file:App.tsx
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import "./css/UDAN.scss";
 import { Button, Spin } from "antd";
-import DigitalAssistantCore, { 
-    setIsRecording, 
-    setIsPlaying, 
-    setManualPlay, 
-    setPlayDelay, 
-    setRecSequenceData, 
-    setSelectedRecordingDetails, 
-    setShowRecord, 
+import DigitalAssistantCore, {
+    setIsRecording,
+    setIsPlaying,
+    setManualPlay,
+    setPlayDelay,
+    setRecSequenceData,
+    setSelectedRecordingDetails,
+    setShowRecord,
     setShowLoader,
     fetchSearchResults as fetchSearchResultsSDK,
     fetchRecord as fetchRecordSDK,
-    apiClient
+    apiClient,
+    setUserData
 } from "@digital-assistant/core";
 import {fetchRecord, fetchSearchResults} from "./services/searchService";
 import _ from "lodash";
@@ -54,7 +51,7 @@ function App(props) {
 
     // Subscribe to SDK state changes
     const [sdkState, setSdkState] = useState(DigitalAssistantCore.getState());
-    
+
     useEffect(() => {
         const unsubscribe = DigitalAssistantCore.subscribe((newState) => {
             setSdkState(newState);
@@ -63,15 +60,15 @@ function App(props) {
     }, []);
 
     // Extract recording state from SDK
-    const { 
-        isRecording, 
-        showLoader, 
-        showRecord, 
-        playDelay, 
-        isPlaying, 
-        manualPlay, 
-        recSequenceData, 
-        selectedRecordingDetails 
+    const {
+        isRecording,
+        showLoader,
+        showRecord,
+        playDelay,
+        isPlaying,
+        manualPlay,
+        recSequenceData,
+        selectedRecordingDetails
     } = sdkState.recording;
 
     // Local UI state (not managed by SDK)
@@ -263,6 +260,7 @@ function App(props) {
         setToStore(data.detail.data, CONFIG.USER_AUTH_DATA_KEY, true);
         setAuthenticated(true);
         setUserSessionData(data.detail.data);
+        DigitalAssistantCore.dispatch(setUserData(data.detail.data));
         openUDAPanel();
     }, []);
 
@@ -298,16 +296,16 @@ function App(props) {
         if(!authenticated){
             return;
         }
-        
+
         // Configure SDK ApiClient with base URL from environment
         const baseProdURL = process.env.baseProdURL;
         const baseTestURL = process.env.baseTestURL;
         const baseURL = global.UDAGlobalConfig.environment === 'TEST' ? baseTestURL : baseProdURL;
-        
+
         if (baseURL) {
             apiClient.updateBaseURL(baseURL);
         }
-        
+
         DigitalAssistantCore.dispatch(setShowLoader(true));
         await initSpecialNodes();
         if(searchParams.get(CONFIG.UDA_URL_Param)){

@@ -178,6 +178,7 @@ module.exports = (env, argv) => {
                 path: require.resolve("path-browserify"),
                 os: require.resolve("os-browserify/browser"),
                 assert: require.resolve("assert/"),
+                "process/browser": require.resolve("process/browser")
             },
         },
         optimization: {
