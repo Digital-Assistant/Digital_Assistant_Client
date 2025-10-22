@@ -8,7 +8,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import {getObjData, setToStore} from "../util";
-import { profanityCheck, updateRecordClicks, updateSequnceIndex } from "../services/recordService";
+// import { profanityCheck, updateRecordClicks, updateSequnceIndex } from "../services/recordService";
+import { profanityCheck, updateRecordClicks, updateSequnceIndex } from "@digital-assistant/core";
 import { translate } from "../util/translation";
 import { isHighlightNode } from "../util/checkNode";
 import SelectedElement from "./SelectedElement";

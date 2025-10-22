@@ -13,6 +13,20 @@ export type {
   RecordRequest
 } from './SearchService';
 
+// Export RecordService functions
+export {
+  recordClicks,
+  updateRecordClicks,
+  updateSequnceIndex,
+  recordSequence,
+  postRecordSequenceData,
+  userClick as recordUserClick, // alias to avoid clash with trackingService export name
+  deleteRecording,
+  updateRecording,
+  fetchStatuses,
+  profanityCheck,
+} from './RecordService';
+
 // Export user services
 export { getUserId, getSessionKey, getUserSessionId } from './userService';
 

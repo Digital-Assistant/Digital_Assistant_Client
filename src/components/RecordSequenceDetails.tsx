@@ -22,13 +22,9 @@ import {
   ShareAltOutlined
 } from "@ant-design/icons";
 import {getCurrentPlayItem, getFromStore, getObjData, setToStore,} from "../util";
-import {
-  deleteRecording,
-  fetchStatuses,
-  profanityCheck,
-  recordUserClickData, updateRecordClicks,
-  updateRecording, updateSequnceIndex
-} from "../services/recordService";
+// import { deleteRecording, fetchStatuses, profanityCheck, recordUserClickData, updateRecordClicks, updateRecording, updateSequnceIndex } from "../services/recordService";
+import { recordUserClickData } from "../services/recordService";
+import { deleteRecording, fetchStatuses, profanityCheck, updateRecordClicks, updateRecording, updateSequnceIndex } from "@digital-assistant/core";
 import {getUserId} from "../services/userService";
 import {matchNode} from "../util/invokeNode";
 import {CONFIG} from "../config";
