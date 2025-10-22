@@ -2,6 +2,8 @@ import { apiClient } from './apiClient';
 import { ENDPOINT } from '../config/endpoints';
 import { getSessionKey, getUserId } from './userService';
 import { processUrlArgs } from '../util/urlProcessing';
+import { getFromStore } from '../util/storage';
+import { CONFIG } from '../config/constants';
 
 /**
  * Core RecordService
@@ -14,8 +16,8 @@ import { processUrlArgs } from '../util/urlProcessing';
  * Record a set of clicks or other user interactions.
  */
 export const recordClicks = async (request: any = {}): Promise<any> => {
-  const sessionid = await getSessionKey();
-  const payload = { ...request, sessionid };
+  const sessionId = await getSessionKey();
+  const payload = { ...request, sessionid: sessionId };
   const response = await apiClient.post(ENDPOINT.Record, payload);
   return response.data;
 };
@@ -94,6 +96,7 @@ export const fetchStatuses = async (request: { category: string } = { category: 
   return response.data;
 };
 
+
 /**
  * Profanity check helper (passes text to configured endpoint).
  * Consumers must provide any required headers at gateway; here we only POST the body.
@@ -106,10 +109,56 @@ export const profanityCheck = async (request: any): Promise<any> => {
   return response.data;
 };
 
+/**
+ * Prepare record sequence payload by pulling recorded nodes from storage.
+ * Accepts optional overrides via request: { domain?, userclicknodesSet? }
+ */
+export const prepareRecordSequencePayload = async (request: any): Promise<any> => {
+  if (!request) throw new Error('Request object is required');
+
+  // Prefer provided userclicknodesSet, else read from storage
+  const userclicknodesSet = request.userclicknodesSet ?? getFromStore(CONFIG.RECORDING_SEQUENCE, false) ?? [];
+  const ids: string[] = (userclicknodesSet || []).map((item: any) => String(item.id)).filter(Boolean);
+
+  // Determine domain: prefer explicit request.domain, else window.location.host when available
+  let domain = request.domain;
+  if (!domain && typeof window !== 'undefined' && window.location) {
+    domain = window.location.host;
+  }
+
+  return {
+    ...request,
+    domain: domain || '',
+    isIgnored: 0,
+    isValid: 1,
+    userclicknodelist: ids.join(','),
+    userclicknodesSet,
+  };
+};
+
+/**
+ * Posts a recorded sequence of user interactions to the backend.
+ * @param request - An object containing the data required to record the sequence of user interactions.
+ * @returns A promise that resolves when the sequence of user interactions has been posted.
+ * @throws Error - If no request object is provided.
+ */
 export const postRecordSequenceData = async (request: any): Promise<any> => {
   if (!request) throw new Error('Request object is required');
-  // Delegate to recordSequence to ensure usersessionid handling is consistent
-  return recordSequence(request);
+  const payload = await prepareRecordSequencePayload(request);
+  return recordSequence(payload);
+};
+
+/**
+ * Updates a previously recorded sequence of user interactions.
+ * @param request - An object containing the data required to update the sequence of user interactions.
+ * @returns A promise that resolves when the sequence of user interactions has been updated.
+ * @throws Error - If no request object is provided.
+ */
+export const updateRecordSequenceData = async (request: any): Promise<any> => {
+  if (!request) throw new Error('Request object is required');
+  const payload = await prepareRecordSequencePayload(request);
+  // UI previously called recordSequence for updates as well
+  return recordSequence(payload);
 };
 
 export type RecordService = {
@@ -118,9 +167,11 @@ export type RecordService = {
   updateSequnceIndex: typeof updateSequnceIndex;
   recordSequence: typeof recordSequence;
   postRecordSequenceData: typeof postRecordSequenceData;
+  updateRecordSequenceData: typeof updateRecordSequenceData;
   userClick: typeof userClick;
   deleteRecording: typeof deleteRecording;
   updateRecording: typeof updateRecording;
   fetchStatuses: typeof fetchStatuses;
   profanityCheck: typeof profanityCheck;
+  prepareRecordSequencePayload: typeof prepareRecordSequencePayload;
 };

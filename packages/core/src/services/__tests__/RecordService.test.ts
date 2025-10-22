@@ -8,15 +8,20 @@ import {
   updateRecording,
   fetchStatuses,
   profanityCheck,
+  prepareRecordSequencePayload,
+  postRecordSequenceData,
+  updateRecordSequenceData,
 } from '../RecordService';
 import { apiClient } from '../apiClient';
 import { getSessionKey, getUserId } from '../userService';
 import { ENDPOINT } from '../../config/endpoints';
 import { processUrlArgs } from '../../util/urlProcessing';
+import { getFromStore } from '../../util/storage';
 
 jest.mock('../apiClient');
 jest.mock('../userService');
 jest.mock('../../util/urlProcessing');
+jest.mock('../../util/storage');
 
 const mockGet = apiClient.get as jest.Mock;
 const mockPost = apiClient.post as jest.Mock;
@@ -159,5 +164,104 @@ describe('RecordService (core)', () => {
       expect(mockPost).toHaveBeenCalledWith(ENDPOINT.ProfanityCheck, body);
       expect(res).toEqual({ clean: true });
     });
+  });
+});
+
+
+// New tests for migrated sequence payload helpers
+
+describe('prepareRecordSequencePayload (core)', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    // Stub window.location.host for domain resolution fallback
+    Object.defineProperty(window, 'location', {
+      value: { host: 'test.local' },
+      writable: true,
+    });
+  });
+
+  it('uses provided userclicknodesSet override and preserves domain in request', async () => {
+    (getFromStore as jest.Mock).mockReturnValue([{ id: 1 }]); // should be ignored due to override
+    const res = await prepareRecordSequencePayload({
+      domain: 'my.com',
+      userclicknodesSet: [{ id: 10 }, { id: 11 }],
+      extra: 'x',
+    } as any);
+
+    expect(res.domain).toBe('my.com');
+    expect(res.isIgnored).toBe(0);
+    expect(res.isValid).toBe(1);
+    expect(res.userclicknodelist).toBe('10,11');
+    expect(res.userclicknodesSet).toEqual([{ id: 10 }, { id: 11 }]);
+    expect(res.extra).toBe('x');
+  });
+
+  it('falls back to storage when userclicknodesSet not provided and uses window.location.host for domain', async () => {
+    (getFromStore as jest.Mock).mockReturnValue([{ id: 5 }, { id: 8 }]);
+
+    const res = await prepareRecordSequencePayload({} as any);
+
+    expect(res.domain).toBe('test.local');
+    expect(res.userclicknodelist).toBe('5,8');
+    expect(res.userclicknodesSet).toEqual([{ id: 5 }, { id: 8 }]);
+  });
+
+  it('throws when request is missing', async () => {
+    // @ts-expect-error
+    await expect(prepareRecordSequencePayload()).rejects.toThrow('Request object is required');
+  });
+});
+
+describe('postRecordSequenceData and updateRecordSequenceData (core)', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (getUserId as jest.Mock).mockResolvedValue('user-1');
+    Object.defineProperty(window, 'location', {
+      value: { host: 'host.local' },
+      writable: true,
+    });
+  });
+
+  it('postRecordSequenceData builds payload via prepareRecordSequencePayload and posts to RecordSequence', async () => {
+    (getFromStore as jest.Mock).mockReturnValue([{ id: 2 }]);
+    (apiClient.post as jest.Mock).mockResolvedValue({ data: { ok: true } });
+
+    const req = { domain: 'd.com' } as any;
+    const res = await postRecordSequenceData(req);
+
+    expect(apiClient.post).toHaveBeenCalledWith(
+      ENDPOINT.RecordSequence,
+      expect.objectContaining({
+        domain: 'd.com',
+        userclicknodelist: '2',
+        usersessionid: 'user-1',
+        isIgnored: 0,
+        isValid: 1,
+      })
+    );
+    expect(res).toEqual({ ok: true });
+  });
+
+  it('updateRecordSequenceData builds payload and posts to RecordSequence', async () => {
+    (getFromStore as jest.Mock).mockReturnValue([{ id: 9 }]);
+    (apiClient.post as jest.Mock).mockResolvedValue({ data: { updated: true } });
+
+    const res = await updateRecordSequenceData({} as any);
+
+    expect(apiClient.post).toHaveBeenCalledWith(
+      ENDPOINT.RecordSequence,
+      expect.objectContaining({ userclicknodelist: '9', usersessionid: 'user-1' })
+    );
+    expect(res).toEqual({ updated: true });
+  });
+
+  it('throws when request is missing for postRecordSequenceData', async () => {
+    // @ts-expect-error
+    await expect(postRecordSequenceData()).rejects.toThrow('Request object is required');
+  });
+
+  it('throws when request is missing for updateRecordSequenceData', async () => {
+    // @ts-expect-error
+    await expect(updateRecordSequenceData()).rejects.toThrow('Request object is required');
   });
 });

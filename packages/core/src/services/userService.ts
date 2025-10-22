@@ -156,20 +156,12 @@ export const getSessionKey = async (): Promise<string | null> => {
         const userState = state.user ?? null;
         if (!userState || typeof userState !== 'object') return null;
 
-        // Try to read token from parsed authData first
-        const auth = extractAuthData(userState);
-        const token = normalizeToString(auth?.token);
-        if (token) return token;
-
         // Fallbacks for legacy/session storage keys
         const sessionKey = normalizeToString(userState?.userSessionData?.sessionKey);
-        if (sessionKey) return sessionKey;
+        if (sessionKey)
+            return sessionKey;
 
-        const userSessionId = normalizeToString(userState?.userSessionId);
-        if (userSessionId) return userSessionId;
-
-        // As a final fallback return the user id
-        return await getUserId();
+        return null;
     } catch (error) {
         console.error('getSessionKey error:', error);
         return null;

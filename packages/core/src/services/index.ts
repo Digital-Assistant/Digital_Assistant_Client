@@ -20,6 +20,8 @@ export {
   updateSequnceIndex,
   recordSequence,
   postRecordSequenceData,
+  updateRecordSequenceData,
+  prepareRecordSequencePayload,
   userClick as recordUserClick, // alias to avoid clash with trackingService export name
   deleteRecording,
   updateRecording,
