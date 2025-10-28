@@ -1,11 +1,11 @@
-import { TranslateService } from './TranslateService';
-import { ApiClient } from './apiClient';
-import { DigitalAssistantConfiguration } from '../DigitalAssistantConfiguration';
-import { ErrorLoggerService } from './ErrorLoggerService';
+import { TranslateService } from '../TranslateService';
+import { ApiClient } from '../apiClient';
+import { DigitalAssistantConfiguration } from '../../DigitalAssistantConfiguration';
+import { ErrorLoggerService } from '../ErrorLoggerService';
 
 // Mock the dependencies
-jest.mock('./apiClient');
-jest.mock('./ErrorLoggerService');
+jest.mock('../apiClient');
+jest.mock('../ErrorLoggerService');
 
 describe('TranslateService', () => {
     let translateService: TranslateService;
