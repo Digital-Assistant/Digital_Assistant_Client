@@ -196,3 +196,29 @@ export const getUserSessionId = async (): Promise<string | null> => {
         return null;
     }
 };
+
+export class UserService {
+    /**
+     * Retrieves the current user ID from the application store.
+     * @returns A promise that resolves to the user ID string or null if not found.
+     */
+    public async getUserId(): Promise<string | null> {
+        return getUserId();
+    }
+
+    /**
+     * Retrieves a session key or token from the application store.
+     * @returns A promise that resolves to the session key string or null if not found.
+     */
+    public async getSessionKey(): Promise<string | null> {
+        return getSessionKey();
+    }
+
+    /**
+     * Retrieves the user session ID from the application store.
+     * @returns A promise that resolves to the user session ID string or null if not found.
+     */
+    public async getUserSessionId(): Promise<string | null> {
+        return getUserSessionId();
+    }
+}

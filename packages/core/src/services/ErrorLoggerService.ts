@@ -1,5 +1,5 @@
 import winston from 'winston';
-import { store } from '../store';
+import {type RootState, store} from '../store';
 import { DigitalAssistantConfiguration } from '../DigitalAssistantConfiguration';
 
 /**
@@ -64,7 +64,11 @@ export class ErrorLoggerService {
         let enrichedMessage = message;
         try {
             // Attempt to get user data from the Redux store
-            const state = store.getState();
+            const state: RootState | undefined = (store as any)?.getState?.();
+            if (!state || typeof state !== 'object') {
+                console.error('getUserSessionId: invalid store state');
+                return;
+            }
             const userId = state.user?.userSessionData?.authData?.id;
             if (userId) {
                 enrichedMessage = `UserID: ${userId} | Error: ${message}`;

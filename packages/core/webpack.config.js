@@ -16,7 +16,29 @@ module.exports = (env, argv) => {
       ],
     },
     resolve: {
-      extensions: ['.tsx', '.ts', '.js'],
+        extensions: ['.tsx', '.ts', '.js'],
+        modules: ["./node_modules"], // directories where to look for modules (in order)
+        alias: {
+            // a list of module name aliases
+            // aliases are imported relative to the current context
+            process: "process/browser",
+            utils: path.resolve(__dirname, "./src/config/index"),
+            // alias for antd
+            antd: path.resolve(__dirname, 'node_modules/antd'),
+        },
+        fallback: {
+            //fallback module dependencies
+            fs: false,
+            http: require.resolve("stream-http"),
+            https: require.resolve("https-browserify"),
+            stream: require.resolve("stream-browserify"),
+            zlib: require.resolve("browserify-zlib"),
+            buffer: require.resolve("buffer/"),
+            path: require.resolve("path-browserify"),
+            os: require.resolve("os-browserify/browser"),
+            assert: require.resolve("assert/"),
+            "process/browser": require.resolve("process/browser")
+        },
     },
     devtool: isProduction ? false : 'source-map',
     optimization: {

@@ -1,4 +1,4 @@
-# Junie Development Guidelines
+# Project Development Guidelines
 
 This comprehensive guide provides all essential information for developing the Digital Assistant project, including project context, existing and target architectures, testing procedures, and development workflows.
 
