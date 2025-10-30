@@ -22,8 +22,7 @@ import {
   ShareAltOutlined
 } from "@ant-design/icons";
 import {getCurrentPlayItem, getFromStore, getObjData, setToStore,} from "../util";
-// import { deleteRecording, fetchStatuses, profanityCheck, recordUserClickData, updateRecordClicks, updateRecording, updateSequnceIndex } from "../services/recordService";
-import { recordUserClickData } from "../services/recordService";
+import { recordUserClickData, getVoteRecord, vote } from "@digital-assistant/core";
 import { deleteRecording, fetchStatuses, profanityCheck, updateRecordClicks, updateRecording, updateSequnceIndex } from "@digital-assistant/core";
 import {getUserId} from "../services/userService";
 import {matchNode} from "../util/invokeNode";
@@ -32,7 +31,6 @@ import {off, on, trigger} from "../util/events";
 import {translate} from "../util/translation";
 import {removeToolTip} from "../util/addToolTip";
 import {getClickedNodeLabel} from "../util/getClickedNodeLabel";
-import {getVoteRecord, vote} from "../services/userVote";
 import {addNotification} from "../util/addNotification";
 import EditableStepForm from "./EditableStepForm";
 
@@ -332,7 +330,8 @@ export const RecordSequenceDetails = (props: MProps) => {
   };
 
   const manageVote = async (type: string = 'up') => {
-    let record = await vote({id: selectedRecordingDetails.id}, type);
+    let record: any = await vote({id: selectedRecordingDetails.id}, type);
+    console.log(record);
     selectedRecordingDetails.upVoteCount = record.upVoteCount;
     selectedRecordingDetails.downVoteCount = record.downVoteCount;
     setSelectedRecordingDetails({...selectedRecordingDetails});
@@ -352,6 +351,7 @@ export const RecordSequenceDetails = (props: MProps) => {
 
   const fetchUserVote = async () => {
     let userRecord = await getVoteRecord({id: selectedRecordingDetails.id});
+    console.log(userRecord);
     if (userRecord) {
       setUserVote(userRecord);
     }
