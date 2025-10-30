@@ -34,3 +34,6 @@ export { getUserId, getSessionKey, getUserSessionId } from './userService';
 
 // Export tracking services
 export { recordUserClickData, userClick } from './trackingService';
+
+// Export user vote services
+export * from './UserVote';
