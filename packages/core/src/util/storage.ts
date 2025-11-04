@@ -1,33 +1,81 @@
-// packages/core/src/util/storage.ts
-// Framework-agnostic storage helpers backed by browser storage.
-// These mirror the UI storage helpers so UI and core can share the same keys.
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/**
+ * @file Manages browser storage functionalities, adapting to different browser environments.
+ */
 
-import TSON from 'typescript-json';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { detect } from 'detect-browser';
+
+declare const chrome: any;
+
+const browser = detect();
+let browserVar: any;
+let enablePlugin = false;
+
+if (browser && (browser.name === 'chrome' || browser.name.startsWith('edge'))) {
+  enablePlugin = true;
+  browserVar = chrome;
+} else {
+  browserVar = browser;
+}
 
 /**
- * Persist data into Web Storage (localStorage by default).
- * If isRaw=false, value will be JSON-stringified using TSON to preserve types.
+ * A utility class for handling storage operations in different browser environments.
+ * It abstracts the underlying storage mechanism, allowing for seamless interaction
+ * with either the browser's local storage or a browser extension's storage.
  */
-export const setToStore = (data: any, key: string, isRaw: boolean): void => {
-  if (typeof window === 'undefined' || !window.localStorage) return;
-  window.localStorage.setItem(key, !isRaw ? TSON.stringify(data) : data);
-};
+export class StorageUtil {
+  /**
+   * A flag indicating whether the browser plugin is enabled.
+   */
+  public static UDABrowserPlugin = false;
 
-/**
- * Retrieve data from Web Storage (localStorage by default).
- * If isRaw=false, value will be JSON-parsed.
- */
-export const getFromStore = (key: string, isRaw: boolean): any => {
-  if (typeof window === 'undefined' || !window.localStorage) return undefined;
-  const data = window.localStorage.getItem(key);
-  if (data == null) return undefined;
-  return !isRaw ? JSON.parse(data) : data;
-};
+  /**
+   * Adds data to the storage.
+   *
+   * @param data - The data to be added.
+   * @param key - The key to store the data under.
+   * @returns A Promise that resolves when the data is added to the storage.
+   */
+  public static async add(data: any, key: string): Promise<void> {
+    if (this.UDABrowserPlugin && enablePlugin) {
+      const storageData: { [key: string]: any } = {};
+      storageData[key] = data;
+      return browserVar.storage.local.set(storageData);
+    } else {
+      const storageData = JSON.stringify(data);
+      return window.localStorage.setItem(key, storageData);
+    }
+  }
 
-/**
- * Remove a value from Web Storage
- */
-export const removeFromStore = (key: string): void => {
-  if (typeof window === 'undefined' || !window.localStorage) return;
-  window.localStorage.removeItem(key);
-};
+  /**
+   * Retrieves data from the storage.
+   *
+   * @param key - The key associated with the data to be retrieved.
+   * @returns A Promise that resolves with the retrieved data.
+   */
+  public static async get(key: string): Promise<any> {
+    if (this.UDABrowserPlugin && enablePlugin) {
+      const result = await browserVar.storage.local.get([key]);
+      return result[key];
+    } else {
+      const item = window.localStorage.getItem(key);
+      return item ? JSON.parse(item) : null;
+    }
+  }
+
+  /**
+   * Removes data from the storage.
+   *
+   * @param key - The key associated with the data to be removed.
+   * @returns A Promise that resolves when the data is successfully removed from the storage.
+   */
+  public static async remove(key: string): Promise<void> {
+    if (this.UDABrowserPlugin && enablePlugin) {
+      return browserVar.storage.local.remove([key]);
+    } else {
+      return window.localStorage.removeItem(key);
+    }
+  }
+}
