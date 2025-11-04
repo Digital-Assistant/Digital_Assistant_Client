@@ -16,7 +16,7 @@ import { apiClient } from '../apiClient';
 import { getSessionKey, getUserId } from '../userService';
 import { ENDPOINT } from '../../config/endpoints';
 import { processUrlArgs } from '../../util/urlProcessing';
-import { getFromStore } from '../../util/storage';
+import { StorageUtil } from '../../util/storage';
 
 jest.mock('../apiClient');
 jest.mock('../userService');
@@ -181,7 +181,7 @@ describe('prepareRecordSequencePayload (core)', () => {
   });
 
   it('uses provided userclicknodesSet override and preserves domain in request', async () => {
-    (getFromStore as jest.Mock).mockReturnValue([{ id: 1 }]); // should be ignored due to override
+    (StorageUtil.get as jest.Mock).mockResolvedValue([{ id: 1 }]); // should be ignored due to override
     const res = await prepareRecordSequencePayload({
       domain: 'my.com',
       userclicknodesSet: [{ id: 10 }, { id: 11 }],
@@ -197,7 +197,7 @@ describe('prepareRecordSequencePayload (core)', () => {
   });
 
   it('falls back to storage when userclicknodesSet not provided and uses window.location.host for domain', async () => {
-    (getFromStore as jest.Mock).mockReturnValue([{ id: 5 }, { id: 8 }]);
+    (StorageUtil.get as jest.Mock).mockResolvedValue([{ id: 5 }, { id: 8 }]);
 
     const res = await prepareRecordSequencePayload({} as any);
 
@@ -223,7 +223,7 @@ describe('postRecordSequenceData and updateRecordSequenceData (core)', () => {
   });
 
   it('postRecordSequenceData builds payload via prepareRecordSequencePayload and posts to RecordSequence', async () => {
-    (getFromStore as jest.Mock).mockReturnValue([{ id: 2 }]);
+    (StorageUtil.get as jest.Mock).mockResolvedValue([{ id: 2 }]);
     (apiClient.post as jest.Mock).mockResolvedValue({ data: { ok: true } });
 
     const req = { domain: 'd.com' } as any;
@@ -243,7 +243,7 @@ describe('postRecordSequenceData and updateRecordSequenceData (core)', () => {
   });
 
   it('updateRecordSequenceData builds payload and posts to RecordSequence', async () => {
-    (getFromStore as jest.Mock).mockReturnValue([{ id: 9 }]);
+    (StorageUtil.get as jest.Mock).mockResolvedValue([{ id: 9 }]);
     (apiClient.post as jest.Mock).mockResolvedValue({ data: { updated: true } });
 
     const res = await updateRecordSequenceData({} as any);

@@ -2,7 +2,7 @@ import { apiClient } from './apiClient';
 import { ENDPOINT } from '../config/endpoints';
 import { getSessionKey, getUserId } from './userService';
 import { processUrlArgs } from '../util/urlProcessing';
-import { getFromStore } from '../util/storage';
+import { StorageUtil } from '../util/storage';
 import { CONFIG } from '../config/constants';
 
 /**
@@ -117,7 +117,7 @@ export const prepareRecordSequencePayload = async (request: any): Promise<any> =
   if (!request) throw new Error('Request object is required');
 
   // Prefer provided userclicknodesSet, else read from storage
-  const userclicknodesSet = request.userclicknodesSet ?? getFromStore(CONFIG.RECORDING_SEQUENCE, false) ?? [];
+  const userclicknodesSet = request.userclicknodesSet ?? (await StorageUtil.get(CONFIG.RECORDING_SEQUENCE)) ?? [];
   const ids: string[] = (userclicknodesSet || []).map((item: any) => String(item.id)).filter(Boolean);
 
   // Determine domain: prefer explicit request.domain, else window.location.host when available
