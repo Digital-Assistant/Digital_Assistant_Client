@@ -38,13 +38,13 @@ export class StorageUtil {
    * @param key - The key to store the data under.
    * @returns A Promise that resolves when the data is added to the storage.
    */
-  public static async add(data: any, key: string): Promise<void> {
+  public static async add(data: any, key: string, convertToString: boolean = true): Promise<void> {
     if (this.UDABrowserPlugin && enablePlugin) {
       const storageData: { [key: string]: any } = {};
-      storageData[key] = data;
+      storageData[key] = (convertToString)?JSON.stringify(data):data;
       return browserVar.storage.local.set(storageData);
     } else {
-      const storageData = JSON.stringify(data);
+      const storageData = (convertToString)?JSON.stringify(data):data;
       return window.localStorage.setItem(key, storageData);
     }
   }
@@ -55,13 +55,21 @@ export class StorageUtil {
    * @param key - The key associated with the data to be retrieved.
    * @returns A Promise that resolves with the retrieved data.
    */
-  public static async get(key: string): Promise<any> {
+  public static async get(key: string, parseAsJson: boolean = true): Promise<any> {
     if (this.UDABrowserPlugin && enablePlugin) {
       const result = await browserVar.storage.local.get([key]);
-      return result[key];
+      if(result[key]){
+          return (parseAsJson)?JSON.parse(result[key]):result[key];
+      } else {
+          return null;
+      }
     } else {
       const item = window.localStorage.getItem(key);
-      return item ? JSON.parse(item) : null;
+      if(item){
+          return (parseAsJson)?JSON.parse(item):item;
+      } else {
+          return null;
+      }
     }
   }
 

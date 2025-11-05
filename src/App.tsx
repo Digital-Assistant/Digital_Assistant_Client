@@ -14,7 +14,8 @@ import DigitalAssistantCore, {
     fetchSearchResults as fetchSearchResultsSDK,
     fetchRecord as fetchRecordSDK,
     apiClient,
-    setUserData
+    setUserData,
+    StorageUtil
 } from "@digital-assistant/core";
 import {fetchRecord, fetchSearchResults} from "./services/searchService";
 import _ from "lodash";
@@ -123,7 +124,8 @@ function App(props) {
 
     useEffect(() => {
         if (invokeKeycloak) {
-            let keycloakData = getFromStore(CONFIG.UDAKeyCloakKey, false);
+            // let keycloakData = getFromStore(CONFIG.UDAKeyCloakKey, false);
+            let keycloakData = StorageUtil.get(CONFIG.UDAKeyCloakKey, false);
             if (keycloakData) {
                 setKeycloakSessionData(keycloakData);
                 // setAuthenticated(true);
@@ -163,8 +165,8 @@ function App(props) {
                         };
 
                         // Store user data
-                        setToStore(userData, CONFIG.UDAKeyCloakKey, false);
-
+                        // setToStore(userData, CONFIG.UDAKeyCloakKey, false);
+                        await StorageUtil.add(userData, CONFIG.UDAKeyCloakKey, false);
                         // Set keycloak session data
                         setKeycloakSessionData(userData);
 
@@ -256,8 +258,9 @@ function App(props) {
         }
     };
 
-    const createSession = useCallback((data) => {
-        setToStore(data.detail.data, CONFIG.USER_AUTH_DATA_KEY, true);
+    const createSession = useCallback(async (data) => {
+        // setToStore(data.detail.data, CONFIG.USER_AUTH_DATA_KEY, true);
+        await StorageUtil.add(data.detail.data, CONFIG.USER_AUTH_DATA_KEY);
         setAuthenticated(true);
         setUserSessionData(data.detail.data);
         DigitalAssistantCore.dispatch(setUserData(data.detail.data));
@@ -270,10 +273,13 @@ function App(props) {
         }
     }, []);
 
-    const clearSession = useCallback(() => {
-        removeFromStore(CONFIG.USER_AUTH_DATA_KEY);
-        removeFromStore(CONFIG.UDAKeyCloakKey);
-        removeFromStore(CONFIG.SELECTED_RECORDING);
+    const clearSession = useCallback(async () => {
+        // removeFromStore(CONFIG.USER_AUTH_DATA_KEY);
+        // removeFromStore(CONFIG.UDAKeyCloakKey);
+        // removeFromStore(CONFIG.SELECTED_RECORDING);
+        await StorageUtil.remove(CONFIG.USER_AUTH_DATA_KEY);
+        await StorageUtil.remove(CONFIG.UDAKeyCloakKey);
+        await StorageUtil.remove(CONFIG.SELECTED_RECORDING);
         setAuthenticated(false);
         setInvokeKeycloak(true);
         setKeycloakSessionData(null);
@@ -319,7 +325,8 @@ function App(props) {
                     : null,
             });
             if(recordDetails && recordDetails !== null){
-                setToStore(recordDetails, CONFIG.SELECTED_RECORDING, false);
+                // setToStore(recordDetails, CONFIG.SELECTED_RECORDING, false);
+                await StorageUtil.add(recordDetails, CONFIG.SELECTED_RECORDING, false);
                 DigitalAssistantCore.dispatch(setSelectedRecordingDetails(recordDetails));
                 await showRecordingDetails(recordDetails);
                 await togglePanel();
@@ -340,7 +347,8 @@ function App(props) {
     };
 
     const logout = async () => {
-        removeFromStore(CONFIG.USER_AUTH_DATA_KEY);
+        // removeFromStore(CONFIG.USER_AUTH_DATA_KEY);
+        await StorageUtil.remove(CONFIG.USER_AUTH_DATA_KEY);
         setAuthenticated(false);
     }
 
@@ -363,7 +371,8 @@ function App(props) {
          */
         const initialInvoke = async ()=> {
 
-            let userSessionData = getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
+            // let userSessionData = getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
+            let userSessionData = await StorageUtil.get(CONFIG.USER_AUTH_DATA_KEY, false);
             if (!userSessionData) {
                 trigger("RequestUDASessionData", {
                     detail: { data: "getusersessiondata" },
@@ -413,7 +422,8 @@ function App(props) {
     useEffect(() => {
         window.isRecording = isRecording;
         CONFIG.isRecording = isRecording;
-        setToStore(isRecording, CONFIG.RECORDING_SWITCH_KEY, true);
+        // setToStore(isRecording, CONFIG.RECORDING_SWITCH_KEY, true);
+        StorageUtil.add(isRecording, CONFIG.RECORDING_SWITCH_KEY);
         if (isRecording) {
             setHide(false);
         }
@@ -434,8 +444,9 @@ function App(props) {
     /**
      * Sync data with storage
      */
-    useInterval(() => {
-        DigitalAssistantCore.dispatch(setRecSequenceData(getFromStore(CONFIG.RECORDING_SEQUENCE, false)));
+    useInterval(async () => {
+        // DigitalAssistantCore.dispatch(setRecSequenceData(getFromStore(CONFIG.RECORDING_SEQUENCE, false)));
+        DigitalAssistantCore.dispatch(setRecSequenceData(await StorageUtil.get(CONFIG.RECORDING_SEQUENCE, false)));
     }, CONFIG.SYNC_INTERVAL);
 
     /**
@@ -538,15 +549,18 @@ function App(props) {
     };
 
     /**common cancel button handler */
-    const cancel = (forceRefresh=false) => {
+    const cancel = async (forceRefresh=false) => {
         DigitalAssistantCore.dispatch(setIsRecording(false));
         DigitalAssistantCore.dispatch(setShowRecord(false));
         setRecordSequenceDetailsVisibility(false);
         playHandler("off");
         DigitalAssistantCore.dispatch(setManualPlay("off"));
-        setToStore("off", CONFIG.RECORDING_MANUAL_PLAY, true);
+        /*setToStore("off", CONFIG.RECORDING_MANUAL_PLAY, true);
         setToStore([], CONFIG.RECORDING_SEQUENCE, false);
-        setToStore({}, CONFIG.SELECTED_RECORDING, false);
+        setToStore({}, CONFIG.SELECTED_RECORDING, false);*/
+        await StorageUtil.add("off", CONFIG.RECORDING_MANUAL_PLAY);
+        await StorageUtil.add([], CONFIG.RECORDING_SEQUENCE, false);
+        await StorageUtil.add({}, CONFIG.SELECTED_RECORDING, false);
         DigitalAssistantCore.dispatch(setSelectedRecordingDetails({}));
         if(forceRefresh || searchResults.length === 0) {
             setReFetchSearch("on");
@@ -587,7 +601,8 @@ function App(props) {
         if (type == "footer") {
             setReFetchSearch("off");
             setShowSearch(false);
-            setToStore([], CONFIG.RECORDING_SEQUENCE, false);
+            // setToStore([], CONFIG.RECORDING_SEQUENCE, false);
+            await StorageUtil.add([], CONFIG.RECORDING_SEQUENCE, false);
             DigitalAssistantCore.dispatch(setShowRecord(hideFlag));
         } else {
             await togglePanel();
@@ -608,11 +623,12 @@ function App(props) {
      * to handle record button
      * @param flag
      */
-    const showRecordHandler = (flag: boolean) => {
+    const showRecordHandler = async (flag: boolean) => {
         setReFetchSearch("");
         setShowSearch(false);
         DigitalAssistantCore.dispatch(setManualPlay("off"));
-        setToStore("off", CONFIG.RECORDING_MANUAL_PLAY, true);
+        // setToStore("off", CONFIG.RECORDING_MANUAL_PLAY, true);
+        await StorageUtil.add("off", CONFIG.RECORDING_MANUAL_PLAY);
         playHandler("off");
         DigitalAssistantCore.dispatch(setShowRecord(flag));
     };
@@ -662,10 +678,11 @@ function App(props) {
      * Recording play handler callback
      * @param status
      */
-    const playHandler = (status: string) => {
+    const playHandler = async (status: string) => {
         DigitalAssistantCore.dispatch(setPlayDelay(status));
         DigitalAssistantCore.dispatch(setIsPlaying(status));
-        setToStore(status, CONFIG.RECORDING_IS_PLAYING, true);
+        // setToStore(status, CONFIG.RECORDING_IS_PLAYING, true);
+        await StorageUtil.add(status, CONFIG.RECORDING_IS_PLAYING);
     };
 
     const userContent = () => {
