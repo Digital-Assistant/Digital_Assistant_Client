@@ -1,6 +1,6 @@
 import { apiClient } from './apiClient';
 import { ENDPOINT } from '../config/endpoints';
-import { getSessionKey } from './userService';
+import {getSessionKey, getUserSessionId, getUserId} from './userService';
 
 /**
  * Records user click data for analytics and tracking
@@ -15,14 +15,14 @@ export const recordUserClickData = async (
 ): Promise<any> => {
   try {
     const payload = {
-      usersessionid: await getSessionKey(),
+      usersessionid: await getUserId(),
       clickedname: clickedName,
       clicktype: clickType,
       recordid: recordId,
     };
 
     // Make API call using the core apiClient
-    const response = await apiClient.post(ENDPOINT.UserClick, payload);
+    const response = await apiClient.put(ENDPOINT.UserClick, payload);
     return response.data;
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown tracking error';
@@ -37,7 +37,7 @@ export const recordUserClickData = async (
  */
 export const userClick = async (payload: any): Promise<any> => {
   try {
-    const response = await apiClient.post(ENDPOINT.UserClick, payload);
+    const response = await apiClient.put(ENDPOINT.UserClick, payload);
     return response.data;
   } catch (error) {
     console.error('Error sending user click data:', error);
