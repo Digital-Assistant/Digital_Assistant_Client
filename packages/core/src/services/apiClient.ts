@@ -301,6 +301,15 @@ export class ApiClient {
     }
 
     /**
+     * Mock method to simulate fetching special nodes
+     */
+    public async fetchSpecialNodes(): Promise<any> {
+        // Replace this with an actual API call when the endpoint is available
+        console.warn('API Client: Using mock fetchSpecialNodes. Implement real API call.');
+        return { /* Mock special nodes data */ };
+    }
+
+    /**
      * Get current configuration
      */
     public getConfig(): ApiClientConfig {

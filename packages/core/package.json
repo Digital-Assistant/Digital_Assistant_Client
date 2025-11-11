@@ -25,6 +25,7 @@
     "jwt-decode": "^4.0.0",
     "keycloak-js": "^20.0.0",
     "link-exists": "^1.2.2",
+    "parse-domain": "^7.0.1",
     "lodash": "^4.17.21",
     "parse-domain": "^7.0.1",
     "redux": "^4.2.1",

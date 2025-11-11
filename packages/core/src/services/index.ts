@@ -37,3 +37,6 @@ export { recordUserClickData, userClick } from './trackingService';
 
 // Export user vote services
 export * from './UserVote';
+
+// Export DomService singleton
+export { domService } from './domService';

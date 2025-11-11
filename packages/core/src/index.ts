@@ -19,11 +19,17 @@ export * from './services';
 export * from './config';
 export * from './util/storage';
 export * from './util';
+// Export selectors
+export * from './store/selectors';
 
+// Explicitly re-export frequently used low-level utils to aid IDE/module resolution
+export { hasClass } from './utils/hasClass';
+ 
 export class DigitalAssistantCore {
     private unsubscribeCallback: (() => void) | null = null;
     private translateService: TranslateService;
     private errorLogger: ErrorLoggerService;
+    private lastRecordingRef: any = null;
 
     constructor(config: DigitalAssistantConfiguration) {
         console.log("Digital Assistant SDK Core initialized");
@@ -60,6 +66,27 @@ export class DigitalAssistantCore {
 
     getApiClient() {
         return apiClient;
+    }
+
+    /**
+     * Subscribe to changes of the recording slice only.
+     * The callback is invoked whenever the recording state reference changes.
+     * Returns an unsubscribe function.
+     */
+    onRecordingChange(callback: (recordingState: RootState['recording']) => void): () => void {
+        // initialize previous reference
+        let prev = (store as any).getState().recording;
+        return (store as any).subscribe(() => {
+            const next = (store as any).getState().recording;
+            if (next !== prev) {
+                prev = next;
+                try {
+                    callback(next);
+                } catch {
+                    // ignore callback errors
+                }
+            }
+        });
     }
 
     public async translateText(

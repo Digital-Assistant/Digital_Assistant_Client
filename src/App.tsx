@@ -15,11 +15,15 @@ import DigitalAssistantCore, {
     fetchRecord as fetchRecordSDK,
     apiClient,
     setUserData,
-    StorageUtil
+    StorageUtil,
+    addBodyEvents,
+    initSpecialNodes,
+    fetchDomain,
+    domService
 } from "@digital-assistant/core";
 import {fetchRecord, fetchSearchResults} from "./services/searchService";
 import _ from "lodash";
-import { squeezeBody, setToStore, getFromStore, removeFromStore } from "./util";
+import { setToStore, getFromStore, removeFromStore } from "./util";
 import { CONFIG } from "./config";
 import UdanMain from "./components/UdanMain";
 import { Toggler } from "./components/layout/common";
@@ -33,9 +37,6 @@ import { UserDataContext } from "./providers/UserDataContext";
 import { AppConfig } from "./config/AppConfig";
 import { CustomConfig } from "./config/CustomConfig";
 import {postRecordSequenceData, recordUserClickData} from "./services";
-import { addBodyEvents } from "./util/addBodyEvents";
-import { initSpecialNodes } from "./util/initSpecialNodes";
-import {fetchDomain} from "./util/fetchDomain";
 
 // adding global variable declaration for exposing react custom configuration
 global.UDAPluginSDK = AppConfig;
@@ -342,7 +343,7 @@ function App(props) {
             await getSearchResults(0, true);
         }
         if (hide) {
-            await squeezeBody(true);
+            await domService.squeezeBody(true);
         }
     };
 
@@ -454,17 +455,17 @@ function App(props) {
      */
     const togglePanel = async () => {
         setHide(!hide);
-        await squeezeBody(!hide);
+        await domService.squeezeBody(!hide);
     };
 
     const openPanel = async () => {
         setHide(false);
-        await squeezeBody(true);
+        await domService.squeezeBody(true);
     };
 
     const closePanel = async () => {
         setHide(true);
-        await squeezeBody(false);
+        await domService.squeezeBody(false);
     };
 
     const offSearch = () => {
