@@ -1,7 +1,7 @@
 import { apiClient } from './apiClient';
 import { CONFIG } from '../config';
 import { parseDomain, fromUrl } from 'parse-domain';
-import { checkNodeObjectKeyValue } from '../utils/checkNodeObjectKeyValue';
+import { checkNodeObjectKeyValue } from '../util/checkNodeObjectKeyValue';
 import { store } from '../store';
 import { setRecSequenceData } from '../store/slices';
 

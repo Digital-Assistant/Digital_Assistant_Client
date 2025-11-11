@@ -8,9 +8,8 @@
 import React, {useEffect, useState} from "react";
 import {DeleteOutlined, InfoCircleOutlined} from "@ant-design/icons";
 import _ from "lodash";
-import {getObjData, setToStore} from "../util";
 // import {postRecordSequenceData, profanityCheck, recordClicks} from "../services/recordService";
-import { postRecordSequenceData, profanityCheck, recordClicks } from "@digital-assistant/core";
+import { getObjData, postRecordSequenceData, profanityCheck, recordClicks, setToStore } from "@digital-assistant/core";
 import {CONFIG} from "../config";
 import SelectedElement from "./SelectedElement";
 

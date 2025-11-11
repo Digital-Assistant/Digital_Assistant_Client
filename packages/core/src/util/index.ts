@@ -10,6 +10,7 @@ export { simulateMouseLeave } from './recording/simulateMouseLeave';
 export { addBodyEvents } from './recording/addBodyEvents';
 export { initSpecialNodes } from './recording/initSpecialNodes';
 export { isClickableNode } from './recording/isClickableNode';
+export { getObjData } from './recording/getObjectData';
 
 // Headers click tracking (migrated from src/Headers.js)
 export { initClickTracking, teardownClickTracking } from './headers/initializeClickTracking';
@@ -21,10 +22,14 @@ export { processDistanceOfNodes } from './playback/processDistanceOfNodes';
 export { getClickedInputLabels } from './playback/getClickedInputLabels';
 
 // Node special checks
-export { checkNodeValues } from '../utils/checkNodeValues';
-export { checkNodeObjectKeyValue } from '../utils/checkNodeObjectKeyValue';
-export { hasClass } from '../utils/hasClass';
+export { checkNodeValues } from './checkNodeValues';
+export { checkNodeObjectKeyValue } from './checkNodeObjectKeyValue';
+export { hasClass } from './hasClass';
 
 // Domain and offsets wrappers
 export { fetchDomain } from './fetchDomain';
 export { getAbsoluteOffsets } from './getAbsoluteOffsets';
+
+// Storage utilities
+import { StorageUtil } from './storage';
+export const setToStore = StorageUtil.add;
