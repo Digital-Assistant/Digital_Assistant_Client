@@ -1,16 +1,33 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "declaration": true,
-    "outDir": "./dist",
-    "strict": true,
+    // --- Environment & Module Settings ---
+    "target": "ES2020",         // Output modern JS for better performance and smaller size.
+    "module": "ESNext",         // Let Webpack handle the final module format (UMD).
+    "moduleResolution": "node",
+    "lib": [
+      "DOM",                    // CRITICAL: Adds types for 'window', 'document', etc.
+      "DOM.Iterable",
+      "ES2020"                  // Matches the "target" setting.
+    ],
+
+    // --- Build & Interop Settings ---
+    "declaration": true,        // IMPORTANT: Creates .d.ts files for your users.
+    "outDir": "./dist",         // Specify output directory for the .d.ts files.
     "esModuleInterop": true,
-    "skipLibCheck": true,
+    "sourceMap": true,          // Generate source maps for easier debugging.
+
+    // --- Strictness & Best Practices ---
+    "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "jsx": "react-jsx",
-    "lib": ["dom", "dom.iterable", "es2015"]
+    "skipLibCheck": true,
+    "allowJs": true
+    // REMOVED "jsx": "react-jsx" as you are not using React.
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

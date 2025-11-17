@@ -55,7 +55,7 @@ module.exports = (env, argv) => {
             UDAPluginSDK: "./src/ExtensionSDK.js",
         },
         mode: "development", // "production" | "development" | "none"
-        devtool: "cheap-module-source-map", // enum
+        // devtool: "eval-source-map", // enum
         watch: false,
 
         watchOptions: {
@@ -69,15 +69,22 @@ module.exports = (env, argv) => {
                 {
                     // Conditions:
                     test: /\.(js|jsx)$/,
-                    exclude: /(node_modules|bower_components)/,
+                    exclude: [
+                        /(node_modules|bower_components)/,
+                        path.resolve(__dirname, "packages/core")
+                    ],
                     loader: "babel-loader", // the loader which should be applied, it'll be resolved relative to the context
                     options: { presets: ["@babel/env", "@babel/preset-react"] }, // options for the loader
                 },
                 {
                     test: /\.(ts|tsx)$/,
-                    exclude: /node_modules/,
+                    exclude: [
+                        /node_modules/,
+                        path.resolve(__dirname, "packages/core")
+                    ],
                     loader: "ts-loader",
                     options: {
+                        transpileOnly: true,
                         getCustomTransformers: (program) => ({
                             before: [transform(program)],
                         }),
@@ -166,6 +173,7 @@ module.exports = (env, argv) => {
                 utils: path.resolve(__dirname, "./src/config/index"),
                 // alias for antd
                 antd: path.resolve(__dirname, 'node_modules/antd'),
+                "@digital-assistant/core": path.resolve(__dirname, 'packages/core/dist/index.esm.js'),
             },
             fallback: {
                 //fallback module dependencies
@@ -181,19 +189,6 @@ module.exports = (env, argv) => {
                 "process/browser": require.resolve("process/browser")
             },
         },
-        optimization: {
-            nodeEnv: 'production',
-            minimizer: [
-                new CssMinimizerPlugin(),
-                new TerserPlugin({
-                    terserOptions: {
-                        compress: {
-                            drop_console: true, // remove console statement
-                        },
-                    },
-                }),
-            ],
-        },
         output: {
             // options related to how webpack emits results
             publicPath: "",
@@ -208,8 +203,20 @@ module.exports = (env, argv) => {
 
     if (env.build && env.build === "production") {
         webpackConfig.mode = "production";
-        // webpackConfig.devtool = 'nosources-source-map';
         delete webpackConfig.devtool;
+        webpackConfig.optimization = {
+            nodeEnv: 'production',
+            minimizer: [
+                new CssMinimizerPlugin(),
+                new TerserPlugin({
+                    terserOptions: {
+                        compress: {
+                            drop_console: true, // remove console statement
+                        },
+                    },
+                }),
+            ],
+        };
     }
 
     return webpackConfig;

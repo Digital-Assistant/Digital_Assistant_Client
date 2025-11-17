@@ -464,6 +464,7 @@ export const fetchStatuses = async (request: {category: string} = {category: 'se
     return response;
   } catch (error) {
     UDAConsoleLogger.info('Fetch Status Error:', error);
+    UDAErrorLogger.error('Fetch Status Error:', error);
     console.log(error);
     return Promise.reject(error);
   }

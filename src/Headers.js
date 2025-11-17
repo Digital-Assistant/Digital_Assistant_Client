@@ -2,7 +2,7 @@
 window.UDAClickObjects = [];
 window.UDARemovedClickObjects = [];
 
-import {AddToClickObjects} from "./util/headers/addToClickObject";
+/*import {AddToClickObjects} from "./util/headers/addToClickObject";
 
 EventTarget.prototype.addEventListener = function (addEventListener) {
   return function () {
@@ -11,4 +11,8 @@ EventTarget.prototype.addEventListener = function (addEventListener) {
     }
     addEventListener.call(this, arguments[0], arguments[1], arguments[2]);
   }
-}(EventTarget.prototype.addEventListener);
+}(EventTarget.prototype.addEventListener);*/
+
+import {initializeClickTracking} from "@digital-assistant/core"
+
+initializeClickTracking();

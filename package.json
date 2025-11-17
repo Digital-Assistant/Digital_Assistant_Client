@@ -3,7 +3,6 @@
   "author": "Yureswar Ravuri <yureshwar@gmail.com>",
   "version": "1.0.8.7",
   "private": true,
-  
   "dependencies": {
     "@digital-assistant/core": "file:./packages/core",
     "@popperjs/core": "^2.11.6",

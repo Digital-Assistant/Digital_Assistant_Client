@@ -3,7 +3,7 @@ import {jaroWinkler} from "jaro-winkler-typescript";
 import TSON from "typescript-json";
 import {initSpecialNodes} from "./initSpecialNodes";
 
-require("./domChanges");
+// require("./domChanges");
 
 declare const udaSpecialNodes;
 

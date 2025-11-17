@@ -9,7 +9,7 @@ import React, {useEffect, useState} from "react";
 import {DeleteOutlined, InfoCircleOutlined} from "@ant-design/icons";
 import _ from "lodash";
 // import {postRecordSequenceData, profanityCheck, recordClicks} from "../services/recordService";
-import { getObjData, postRecordSequenceData, profanityCheck, recordClicks, setToStore } from "@digital-assistant/core";
+import { getObjData, postRecordSequenceData, profanityCheck, recordClicks, StorageUtil } from "@digital-assistant/core";
 import {CONFIG} from "../config";
 import SelectedElement from "./SelectedElement";
 
@@ -118,7 +118,7 @@ export const RecordedData = (props: MProps) => {
 
     const storeRecording = (data: any) => {
         setRecordData([...data]);
-        setToStore(data, CONFIG.RECORDING_SEQUENCE, false);
+        StorageUtil.setToStore(data, CONFIG.RECORDING_SEQUENCE, false);
     };
 
     const setEdit = (index: number) => {
@@ -266,7 +266,7 @@ export const RecordedData = (props: MProps) => {
         if (props.recordHandler) {
             props.recordHandler("cancel");
         }
-        setToStore([], CONFIG.RECORDING_SEQUENCE, false);
+        StorageUtil.add([], CONFIG.RECORDING_SEQUENCE, false);
     };
 
     /**
@@ -440,8 +440,8 @@ export const RecordedData = (props: MProps) => {
             }
 
             if (props.recordHandler) props.recordHandler("cancel");
-            setToStore(false, CONFIG.RECORDING_SWITCH_KEY, true);
-            setToStore([], CONFIG.RECORDING_SEQUENCE, false);
+            StorageUtil.add(false, CONFIG.RECORDING_SWITCH_KEY, true);
+            StorageUtil.add([], CONFIG.RECORDING_SEQUENCE, false);
 
         } catch (error) {
             setFormSubmit(false);
@@ -622,8 +622,10 @@ export const RecordedData = (props: MProps) => {
     };
 
     const renderData = () => {
-        if (!props.isShown) return;
-        else
+        if (!props.isShown) {
+            return;
+        } else {
+            console.log(recordData);
             return recordData?.map((item: any, index: number) => {
                 let objectData = getObjData(item?.objectdata);
                 let clickedName = (objectData.meta.hasOwnProperty('displayText')) ? objectData.meta.displayText : item.clickednodename;
@@ -658,6 +660,7 @@ export const RecordedData = (props: MProps) => {
                     </li>
                 );
             });
+        }
     };
 
     const toggleAdvanced = async () => {

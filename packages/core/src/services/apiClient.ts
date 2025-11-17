@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { store } from '../store';
 import type { RootState } from '../store';
+import {specialNodes} from "../util";
 
 /**
  * Configuration options for the API client
@@ -306,7 +307,7 @@ export class ApiClient {
     public async fetchSpecialNodes(): Promise<any> {
         // Replace this with an actual API call when the endpoint is available
         console.warn('API Client: Using mock fetchSpecialNodes. Implement real API call.');
-        return { /* Mock special nodes data */ };
+        return specialNodes;
     }
 
     /**

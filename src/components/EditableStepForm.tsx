@@ -7,11 +7,13 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { InfoCircleOutlined } from "@ant-design/icons";
-import {getObjData, setToStore} from "../util";
+// import {getObjData, setToStore} from "../util";
+import { getObjData, StorageUtil } from "@digital-assistant/core";
 // import { profanityCheck, updateRecordClicks, updateSequnceIndex } from "../services/recordService";
 import { profanityCheck, updateRecordClicks, updateSequnceIndex } from "@digital-assistant/core";
 import { translate } from "../util/translation";
-import { isHighlightNode } from "../util/checkNode";
+// import { isHighlightNode } from "../util/checkNode";
+import { isHighlightNode } from "@digital-assistant/core";
 import SelectedElement from "./SelectedElement";
 import { Button } from "antd";
 import { addNotification } from "../util/addNotification";
@@ -522,7 +524,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
                         type="primary"
                         onClick={(e) => {
                             e.stopPropagation();
-                            setToStore(true, CONFIG.RECORDING_IS_PLAYING, true);
+                            StorageUtil.add(true, CONFIG.RECORDING_IS_PLAYING, true);
                             autoPlay();
                         }}
                         disabled={!validationState.validationRequired}

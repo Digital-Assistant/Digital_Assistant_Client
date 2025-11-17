@@ -1,0 +1,22 @@
+// import {notification} from "antd";
+
+/**
+ *
+ * @param title
+ * @param description
+ * @param status
+ * @param placement
+ */
+export const addNotification = (title = '', description = '', status = 'info', placement='top') => {
+    const args: any = {
+        message: title,
+        description: description,
+        placement: placement,
+        getContainer: () => {
+            // @ts-ignore
+            return document.getElementById('udan-react-root').shadowRoot;
+        }
+    };
+    // @ts-ignore
+    // notification[status](args);
+}

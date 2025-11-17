@@ -1,15 +1,26 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { domService } from '../../services/domService';
+import {addClickToNode} from "./addClickToNode";
+import {isClickableNode} from "../node/isClickableNode";
 
 /**
- * Add click-recording handlers to all clickable nodes in the current document body.
- *
- * This is a thin wrapper around domService.addBodyEvents() so consumers can
- * import a simple function from the SDK utilities:
- *
- * import { addBodyEvents } from '@digital-assistant/core';
- * await addBodyEvents();
+ * Add events to body elements
  */
-export const addBodyEvents = async (): Promise<void> => {
-  await domService.addBodyEvents();
+export const addBodyEvents = async () => {
+  //exclude content-serving elements from click objects
+  let els: any = document.body.querySelectorAll("*"),
+      len = els?.length,
+      i = 0;
+
+  console.log(window.UDAClickObjects);
+  console.log(els);
+
+  for (; i < len; i++) {
+    try {
+      /**exclude event attachment for selective elements  */
+      if (els[i] && isClickableNode(els[i])) {
+        addClickToNode(els[i]);
+      }
+    } catch (e) {
+
+    }
+  }
 };

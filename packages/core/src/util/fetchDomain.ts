@@ -1,13 +1,25 @@
-import { domService } from '../services/domService';
-
-/**
- * Fetches the effective domain for the current page.
- * Wrapper delegating to domService.fetchDomain to preserve original behavior.
- */
-export const fetchDomain = (): string => {
-  try {
-    return domService.fetchDomain();
-  } catch {
-    return (typeof window !== 'undefined' && window.location) ? window.location.hostname : '';
-  }
-};
+import { parseDomain, ParseResultType } from "parse-domain";
+export const fetchDomain = () => {
+    let finalDomain = window.location.host;
+    // fetching top level domain based on the flag provided.
+    if(window.UDAGlobalConfig.enableForAllDomains){
+        const parseResult = parseDomain(finalDomain);
+        switch (parseResult.type) {
+            case ParseResultType.Listed: {
+                const { hostname, domain, subDomains, topLevelDomains } = parseResult;
+                finalDomain = domain+'.'+topLevelDomains.join('.');
+                break;
+            }
+            case ParseResultType.Reserved:
+            case ParseResultType.NotListed: {
+                const { hostname } = parseResult;
+                console.log(`${hostname} is a reserved or unknown domain`);
+                break;
+            }
+            default:
+                const { hostname } = parseResult;
+                console.log(hostname);
+        }
+    }
+    return finalDomain;
+}

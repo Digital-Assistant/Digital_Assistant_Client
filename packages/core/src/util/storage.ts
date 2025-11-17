@@ -86,4 +86,25 @@ export class StorageUtil {
       return window.localStorage.removeItem(key);
     }
   }
+
+    /**
+     *
+     * @param data
+     * @param key
+     * @param isRaw - is raw data or json
+     */
+    public static setToStore = (data: any, key: string, isRaw: boolean) => {
+        localStorage.setItem(key, !isRaw ? JSON.stringify(data) : data);
+    };
+
+    /**
+     *
+     * @param key
+     * @param isRaw - is raw data or json
+     * @returns
+     */
+    public static getFromStore = (key: string, isRaw: boolean) => {
+        const data = localStorage.getItem(key);
+        if (data) return !isRaw ? JSON.parse(data) : data;
+    };
 }

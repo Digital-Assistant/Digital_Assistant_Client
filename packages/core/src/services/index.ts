@@ -22,7 +22,7 @@ export {
   postRecordSequenceData,
   updateRecordSequenceData,
   prepareRecordSequencePayload,
-  userClick as recordUserClick, // alias to avoid clash with trackingService export name
+  // userClick as recordUserClick, // alias to avoid clash with trackingService export name
   deleteRecording,
   updateRecording,
   fetchStatuses,
@@ -37,6 +37,3 @@ export { recordUserClickData, userClick } from './trackingService';
 
 // Export user vote services
 export * from './UserVote';
-
-// Export DomService singleton
-export { domService } from './domService';

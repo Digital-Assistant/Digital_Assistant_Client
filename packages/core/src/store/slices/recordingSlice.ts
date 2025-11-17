@@ -1,4 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {StorageUtil} from "../../util/storage";
+import {CONFIG} from "../../config";
 
 // Define the state interface for recording data
 export interface RecordingState {
@@ -15,7 +17,7 @@ export interface RecordingState {
 // Function to load state from localStorage
 const loadStateFromStorage = (): RecordingState => {
     try {
-        const serializedState = localStorage.getItem('recordingState');
+        const serializedState: RecordingState = StorageUtil.getFromStore(CONFIG.RECORDING_SEQUENCE_REDUX, false);
         if (serializedState === null) {
             return {
                 isRecording: false,
@@ -28,7 +30,7 @@ const loadStateFromStorage = (): RecordingState => {
                 showLoader: false,
             };
         }
-        return JSON.parse(serializedState);
+        return serializedState;
     } catch (err) {
         console.error('Error loading recording state from localStorage:', err);
         return {
@@ -45,10 +47,10 @@ const loadStateFromStorage = (): RecordingState => {
 };
 
 // Function to save state to localStorage
-const saveStateToStorage = (state: RecordingState) => {
+const saveStateToStorage = (state: any) => {
     try {
-        const serializedState = JSON.stringify(state);
-        localStorage.setItem('recordingState', serializedState);
+        console.log({...state});
+        StorageUtil.setToStore({...state}, CONFIG.RECORDING_SEQUENCE_REDUX,false)
     } catch (err) {
         console.error('Error saving recording state to localStorage:', err);
     }
