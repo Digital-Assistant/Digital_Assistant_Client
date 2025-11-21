@@ -43,7 +43,7 @@
     "https-browserify": "^1.0.0",
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",
-    "parse-domain": "^8.2.2",
+    "parse-domain": "7.0.1",
     "redux": "^4.2.1",
     "redux-thunk": "^2.4.2",
     "typescript-json": "^3.3.19",

@@ -55,7 +55,7 @@ module.exports = (env, argv) => {
             UDAPluginSDK: "./src/ExtensionSDK.js",
         },
         mode: "development", // "production" | "development" | "none"
-        // devtool: "eval-source-map", // enum
+        devtool: "cheap-module-source-map", // enum
         watch: false,
 
         watchOptions: {
@@ -84,7 +84,6 @@ module.exports = (env, argv) => {
                     ],
                     loader: "ts-loader",
                     options: {
-                        transpileOnly: true,
                         getCustomTransformers: (program) => ({
                             before: [transform(program)],
                         }),

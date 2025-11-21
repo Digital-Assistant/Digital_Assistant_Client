@@ -4,7 +4,7 @@ import * as winston from "winston";
 
 const { format } = winston;
 const { combine, label, json } = format;
-// const winstonRemoteTransport = require('winston-remote').Transport;
+const winstonRemoteTransport = require('winston-remote').Transport;
 
 
 export const UDALogLevel = 3;
@@ -30,14 +30,12 @@ export const UDAErrorLogger = {
     }
     let logger = winston.createLogger({
       transports: [
-        /*
         new winston.transports.Http({
           // ssl: true,
           host: UDA_LOG_URL, // Remote server ip
           port: 443, // Remote server port
           path: "logging/error",
         }),
-        */
       ],
     });
 

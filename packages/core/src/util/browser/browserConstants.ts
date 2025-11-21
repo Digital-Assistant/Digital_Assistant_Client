@@ -1,18 +1,39 @@
+/**
+ * @file This file contains constants and functions related to browser detection and plugin state.
+ */
 import {CONFIG} from "../../config";
 
-export let UDABrowserPlugin: boolean=false;
+/**
+ * A boolean indicating whether the UDA browser plugin is active.
+ */
+let UDABrowserPlugin: boolean=false;
 
-export let UDASessionName=CONFIG.USER_AUTH_DATA_KEY;
+/**
+ * The session name for UDA.
+ */
+let UDASessionName=CONFIG.USER_AUTH_DATA_KEY;
 
-export let activeTabId: number = -1;
+/**
+ * The ID of the active tab.
+ */
+let activeTabId: number = -1;
 
-export let enablePlugin = false;
+/**
+ * A boolean indicating whether the plugin is enabled for the current browser.
+ */
+let enablePlugin = false;
 
-export let browserVar: any;
+/**
+ * The browser variable (e.g., `chrome` or the detected browser object).
+ */
+let browserVar: any;
 
 const { detect } = require('detect-browser');
 
-export const browser: any = detect();
+/**
+ * The detected browser object.
+ */
+const browser: any = detect();
 declare const chrome: any;
 
 switch (browser && browser.name) {
@@ -20,6 +41,7 @@ switch (browser && browser.name) {
     case 'edge':
     case 'edge-ios':
     case 'chrome':
+    case 'opera':
         enablePlugin = true;
         browserVar = chrome;
         break;
@@ -28,14 +50,33 @@ switch (browser && browser.name) {
         break;
 }
 
+/**
+ * Updates the `UDABrowserPlugin` constant.
+ * @param plugin - The new value.
+ */
 export const updateBrowserPlugin = (plugin: boolean) => {
     UDABrowserPlugin=plugin;
 }
 
+/**
+ * Updates the `UDASessionName` constant.
+ * @param sessionName - The new session name.
+ */
 export const updateSessionName = (sessionName: string) => {
-    UDASessionName=UDASessionName+"-"+sessionName;
+    UDASessionName=CONFIG.USER_AUTH_DATA_KEY+"-"+sessionName;
 }
 
+/**
+ * Updates the `activeTabId` constant.
+ * @param tabId - The new tab ID.
+ */
 export const updateActiveTabId = (tabId: any) =>{
     activeTabId=tabId;
 }
+
+export const getUDABrowserPlugin = () => UDABrowserPlugin;
+export const getUDASessionName = () => UDASessionName;
+export const getActiveTabId = () => activeTabId;
+export const getEnablePlugin = () => enablePlugin;
+export const getBrowserVar = () => browserVar;
+export const getBrowser = () => browser;

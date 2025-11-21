@@ -36,4 +36,13 @@ describe('initializeClickTracking (headers.js migration)', () => {
     const restored = (EventTarget.prototype as any).addEventListener;
     expect(patched).not.toBe(restored);
   });
+
+  it('does not collect elements with non-click event listeners', () => {
+    initClickTracking();
+    const div = document.createElement('div');
+    const handler = jest.fn();
+    div.addEventListener('mouseover', handler);
+
+    expect((window as any).UDAClickObjects.length).toBe(0);
+  });
 });

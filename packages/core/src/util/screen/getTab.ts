@@ -1,4 +1,4 @@
-import {activeTabId, browserVar, UDABrowserPlugin} from "../browser/browserConstants";
+import {getActiveTabId, getBrowserVar, getUDABrowserPlugin} from "../browser";
 
 /**
  * Retrieves the active tab from the browser.
@@ -7,6 +7,10 @@ import {activeTabId, browserVar, UDABrowserPlugin} from "../browser/browserConst
  */
 export const getTab = async () => {
     let queryOptions = {active: true, currentWindow: true};
+    const browserVar = getBrowserVar();
+    const activeTabId = getActiveTabId();
+    const UDABrowserPlugin = getUDABrowserPlugin(); // Although not used in this function, good to update for consistency
+
     let tab = (await browserVar.tabs.query(queryOptions))[0];
     if (tab) {
         return tab;

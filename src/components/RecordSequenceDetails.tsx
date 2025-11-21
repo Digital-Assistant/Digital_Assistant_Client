@@ -22,7 +22,7 @@ import {
     ShareAltOutlined
 } from "@ant-design/icons";
 // import {getCurrentPlayItem, getFromStore, getObjData, setToStore,} from "../util";
-import {getCurrentPlayItem, getFromStore} from "../util";
+// import {getCurrentPlayItem, getFromStore} from "../util";
 import {
     deleteRecording,
     fetchStatuses,
@@ -34,7 +34,8 @@ import {
     StorageUtil,
     recordUserClickData,
     getVoteRecord,
-    vote
+    vote,
+    getCurrentPlayItem
 } from "@digital-assistant/core";
 import {getUserId} from "../services/userService";
 import {matchNode} from "../util/invokeNode";
@@ -166,10 +167,10 @@ export const RecordSequenceDetails = (props: MProps) => {
      * Record player(auto play)
      */
     const autoPlay = async (data = null) => {
-        if (getFromStore(CONFIG.RECORDING_IS_PLAYING, true) !== "on") {
+        if (StorageUtil.getFromStore(CONFIG.RECORDING_IS_PLAYING, true) !== "on") {
             return;
         }
-        const playItem = getCurrentPlayItem();
+        const playItem: any = getCurrentPlayItem();
         if (playItem.node) {
             if (await matchNode(playItem)) {
                 updateStatus(playItem.index);
