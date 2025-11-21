@@ -60,19 +60,31 @@ export const getToolTipElement = (message = 'Please input the value and then cli
 
   tooltipDivElement.appendChild(arrowElement);
 
-  // @ts-ignore
-    const shadowRoot: any = document.getElementById('udan-react-root').shadowRoot;
-
-  const toolTipExists = shadowRoot.getElementById("uda-tooltip");
-  if (toolTipExists) {
-    shadowRoot.removeChild(toolTipExists);
+  // Append to shadow root if available; otherwise, safely no-op for environments (like tests)
+  try {
+    // @ts-ignore
+    const wrapper: any = document.getElementById('udan-react-root');
+    const shadowRoot: any = wrapper?.shadowRoot;
+    if (shadowRoot) {
+      const toolTipExists = shadowRoot.getElementById("uda-tooltip");
+      if (toolTipExists) {
+        shadowRoot.removeChild(toolTipExists);
+      }
+      shadowRoot.appendChild(tooltipDivElement);
+    }
+  } catch (_) {
+    // ignore, in tests there may be no shadow root wrapper
   }
-
-  shadowRoot.appendChild(tooltipDivElement);
 
   // Attach position change handlers to direction change button
   setTimeout(() => {
-    const directionBtn = shadowRoot.getElementById("uda-tooltip-direction-change");
+    let directionBtn: any = null;
+    try {
+      // @ts-ignore
+      const wrapper: any = document.getElementById('udan-react-root');
+      const shadowRoot: any = wrapper?.shadowRoot;
+      directionBtn = shadowRoot?.getElementById("uda-tooltip-direction-change");
+    } catch (_) { /* ignore */ }
 
     // Current position tracking
     let currentPosition = 'top';

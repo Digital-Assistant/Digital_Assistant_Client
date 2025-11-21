@@ -9,24 +9,37 @@
  * @returns Processed URL with placeholders replaced
  */
 export const processUrlArgs = (url: string, request: any = {}): string => {
-  if (!url || !request) {
-    return url;
+  if (!url || !request) return url;
+
+  // Preserve hash fragment while operating on base+query
+  const [baseAndQuery, hash = ''] = url.split('#');
+
+  // First, replace placeholders like #key# in base/query part
+  let processed = baseAndQuery;
+  for (const key of Object.keys(request)) {
+    const value = request[key];
+    if (value !== null && value !== undefined) {
+      const placeholder = new RegExp(`#${key}#`, 'g');
+      processed = processed.replace(placeholder, encodeURIComponent(String(value)));
+    }
   }
 
-  let processedUrl = url;
-  
-  // Replace all placeholders in the format #key# with actual values
-  Object.keys(request).forEach(key => {
-    const placeholder = `#${key}#`;
-    const value = request[key];
-    
-    // Only replace if value is not null or undefined
-    if (value !== null && value !== undefined) {
-      processedUrl = processedUrl.replace(new RegExp(placeholder, 'g'), encodeURIComponent(value.toString()));
-    }
-  });
+  // Apply redaction if requested (request = { param: { redact: true } })
+  const [path, queryString = ''] = processed.split('?');
+  if (!queryString) {
+    // No query to redact; restore hash if any
+    return hash ? `${path}#${hash}` : path;
+  }
 
-  return processedUrl;
+  const params = new URLSearchParams(queryString);
+  for (const [key, meta] of Object.entries(request)) {
+    if (meta && typeof meta === 'object' && (meta as any).redact === true && params.has(key)) {
+      params.set(key, 'REDACTED');
+    }
+  }
+
+  const finalUrl = `${path}?${params.toString()}`;
+  return hash ? `${finalUrl}#${hash}` : finalUrl;
 };
 
 /**

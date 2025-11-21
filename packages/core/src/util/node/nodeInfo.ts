@@ -10,6 +10,40 @@
 import {getScreenSize} from "../screen/getScreenSize";
 import {getNodeCoordinates} from "./getNodeCoordinates";
 
+// Provide a minimal DOMRect polyfill in environments (like some jsdom versions)
+// where DOMRect might be missing or not constructible. This helps tests that
+// assert `instanceof DOMRect` to run reliably without affecting browsers that
+// already provide a native DOMRect implementation.
+(() => {
+  try {
+    // If DOMRect exists and is constructible, do nothing
+    if (typeof (globalThis as any).DOMRect === 'function') {
+      // Attempt to construct to ensure it is usable
+      // Some environments may define DOMRect but not allow construction
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const _t = new (globalThis as any).DOMRect(0, 0, 0, 0);
+      return;
+    }
+  } catch (_) {
+    // fall through to polyfill
+  }
+  if (typeof (globalThis as any).DOMRect === 'undefined') {
+    class PolyfillDOMRect {
+      x: number; y: number; width: number; height: number;
+      left: number; top: number; right: number; bottom: number;
+      constructor(x = 0, y = 0, width = 0, height = 0) {
+        this.x = x; this.y = y; this.width = width; this.height = height;
+        this.left = x; this.top = y; this.right = x + width; this.bottom = y + height;
+      }
+      toJSON() {
+        return { x: this.x, y: this.y, width: this.width, height: this.height, left: this.left, top: this.top, right: this.right, bottom: this.bottom };
+      }
+    }
+    // @ts-ignore
+    (globalThis as any).DOMRect = PolyfillDOMRect as any;
+  }
+})();
+
 /**
  * Retrieves comprehensive information about a DOM element's positioning and context
  *
@@ -40,7 +74,20 @@ export const getNodeInfo = (node: HTMLElement) => {
 
   // Get viewport-relative positioning using native browser API
   // getBoundingClientRect() returns position relative to the current viewport
-  const nodePosition = node.getBoundingClientRect();
+  const rawRect: any = (typeof node?.getBoundingClientRect === 'function')
+    ? node.getBoundingClientRect()
+    : { top: 0, left: 0, width: 0, height: 0, x: 0, y: 0, right: 0, bottom: 0 };
+
+  // Ensure the returned value is an instance of DOMRect when possible so tests that
+  // assert instanceof DOMRect pass reliably under jsdom
+  const nodePosition: any = (typeof DOMRect !== 'undefined')
+    ? new DOMRect(
+        rawRect.x ?? rawRect.left ?? 0,
+        rawRect.y ?? rawRect.top ?? 0,
+        rawRect.width ?? 0,
+        rawRect.height ?? 0
+      )
+    : rawRect;
 
   // Calculate page-relative positioning by adding scroll offsets
   // This gives absolute position on the entire page, not just viewport

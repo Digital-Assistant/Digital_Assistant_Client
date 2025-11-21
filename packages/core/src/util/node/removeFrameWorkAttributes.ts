@@ -7,48 +7,76 @@ import {FrameWorkAttributesConfig} from "./FrameWorkAttributesConfig";
  * Remove properties from the original node
  * @param node
  */
-export const removeFrameWorkAttributes = async (node: any) => {
+export const removeFrameWorkAttributes = (node: any) => {
+    // cloning the node deeply to process it without affecting the original DOM
+    const copiedNode: any = typeof node?.cloneNode === 'function' ? node.cloneNode(true) : node;
 
-    console.log({node});
-
-    // cloning the node deeply to process it without effecting the original dom
-    let copiedNode = node.cloneNode(true);
-
-    // let copiedNode = node;
-
-    for await (let frameWorkConfig of FrameWorkAttributesConfig) {
-        // deleting dom node properties
-        for await (let ignoreProperty of frameWorkConfig.list.domProperties) {
-            if (copiedNode.hasOwnProperty(ignoreProperty)) {
+    for (const frameWorkConfig of FrameWorkAttributesConfig) {
+        // deleting DOM node properties (exact match)
+        for (const ignoreProperty of frameWorkConfig.list.domProperties) {
+            if (Object.prototype.hasOwnProperty.call(copiedNode, ignoreProperty)) {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
                 delete copiedNode[ignoreProperty];
             }
         }
 
-        // deleting dom node properties that start with specified property name
-        for await (let ignoreAttributeText of frameWorkConfig.list.domPropertiesStartsWith) {
-            for (let key in copiedNode) {
-                if (key.indexOf(ignoreAttributeText) !== -1) {
+        // deleting DOM node properties that start with specified prefixes
+        for (const prefix of frameWorkConfig.list.domPropertiesStartsWith) {
+            for (const key in copiedNode) {
+                if (!Object.prototype.hasOwnProperty.call(copiedNode, key)) continue;
+                if (key.indexOf(prefix) === 0) {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
                     delete copiedNode[key];
                 }
             }
         }
 
-        // deleting attributes that are defined from element and from child elements
-
-        // Get all the attributes on the element.
-        const attributes = copiedNode.attributes;
-        for await (let attribute of attributes){
-            if(frameWorkConfig.list.attributes.indexOf(attribute) !== -1){
-                copiedNode.removeAttribute(attribute);
+        // deleting attributes defined on the element itself
+        const attrList: Attr[] = Array.from((copiedNode?.attributes ?? []) as any);
+        for (const attribute of attrList) {
+            const name = (attribute as any)?.name ?? attribute;
+            // Remove if matches configured attributes
+            if (frameWorkConfig.list.attributes.indexOf(name) !== -1) {
+                if (typeof copiedNode?.removeAttribute === 'function') {
+                    copiedNode.removeAttribute(name);
+                }
+            }
+            // Additionally remove any data-* attributes which are commonly used by frameworks
+            if (typeof name === 'string' && name.toLowerCase().startsWith('data-')) {
+                if (typeof copiedNode?.removeAttribute === 'function') {
+                    copiedNode.removeAttribute(name);
+                }
             }
         }
-        for await (let removeAttrib of frameWorkConfig.list.attributes) {
-            copiedNode.querySelectorAll('[' + removeAttrib + ']').forEach((element: any) => {
-                element.removeAttribute(removeAttrib);
-            })
+
+        // deleting attributes from all descendant elements
+        for (const removeAttrib of frameWorkConfig.list.attributes) {
+            if (typeof copiedNode?.querySelectorAll === 'function') {
+                copiedNode.querySelectorAll('[' + removeAttrib + ']').forEach((element: any) => {
+                    if (typeof element?.removeAttribute === 'function') {
+                        element.removeAttribute(removeAttrib);
+                    }
+                });
+            }
+        }
+
+        // Remove any descendant data-* attributes as well
+        if (typeof copiedNode?.querySelectorAll === 'function') {
+            copiedNode.querySelectorAll('*').forEach((el: any) => {
+                const attrs: Attr[] = Array.from((el?.attributes ?? []) as any);
+                for (const a of attrs) {
+                    const n = (a as any)?.name ?? a;
+                    if (typeof n === 'string' && n.toLowerCase().startsWith('data-')) {
+                        if (typeof el?.removeAttribute === 'function') {
+                            el.removeAttribute(n);
+                        }
+                    }
+                }
+            });
         }
     }
 
-    console.log({copiedNode});
     return copiedNode;
 }

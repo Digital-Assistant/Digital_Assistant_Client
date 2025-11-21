@@ -31,10 +31,12 @@
  * hasValidScreenSize(invalidNode); // returns false
  */
 export const hasValidScreenInfo = (node: any) => {
-    return node && // First validation: Ensure node exists and is not null/undefined
-        node.hasOwnProperty('screenSize') && // Second validation: Verify screenSize property exists on the node object
+    return !!(
+        node && // First validation: Ensure node exists and is not null/undefined
+        Object.prototype.hasOwnProperty.call(node, 'screenSize') && // Safer hasOwnProperty check
         node.screenSize && // Third validation: Ensure screenSize property is truthy (not null, undefined, or empty)
         node.screenSize.page && // Fourth validation: Verify the nested page object exists within screenSize
         node.screenSize.page.width > 0 && // Fifth validation: Ensure width is a positive number (greater than 0)
-        node.screenSize.page.height > 0; // Sixth validation: Ensure height is a positive number (greater than 0)
+        node.screenSize.page.height > 0 // Sixth validation: Ensure height is a positive number (greater than 0)
+    );
 }

@@ -16,7 +16,7 @@ const config: Config = {
         '/node_modules/',
         '/dist/',
     ],
-    setupFilesAfterEnv: [],
+    setupFilesAfterEnv: ['<rootDir>/src/__test__/setupTests.ts'],
     moduleNameMapper: {
         // Handle module aliases if any
     },

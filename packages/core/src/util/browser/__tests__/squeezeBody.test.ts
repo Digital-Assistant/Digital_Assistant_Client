@@ -1,6 +1,13 @@
 
 import { squeezeBody } from '../squeezeBody';
-import * as Node from '../../node';
+
+// Mock the node utilities module in a Jest-supported way instead of spying on
+// an ESM namespace export (which is non-configurable and causes redefine errors)
+jest.mock('../../node', () => ({
+  ...jest.requireActual('../../node'),
+  initSpecialNodes: jest.fn().mockResolvedValue(undefined),
+}));
+import { initSpecialNodes } from '../../node';
 
 // Mock the entire store module to prevent Redux initialization errors
 jest.mock('../../../store', () => ({
@@ -21,11 +28,10 @@ jest.mock('../../../store', () => ({
 
 
 describe('squeezeBody', () => {
-  const initSpecialNodesSpy = jest.spyOn(Node, 'initSpecialNodes').mockImplementation(() => Promise.resolve());
 
   beforeEach(() => {
     // Reset the spy before each test
-    initSpecialNodesSpy.mockClear();
+    (initSpecialNodes as jest.Mock).mockClear();
     // Set default for window.UDAGlobalConfig
     (window as any).UDAGlobalConfig = { enableOverlay: false };
     // Reset body style
@@ -36,7 +42,7 @@ describe('squeezeBody', () => {
 
   it('should call initSpecialNodes', async () => {
     await squeezeBody(true);
-    expect(initSpecialNodesSpy).toHaveBeenCalledTimes(1);
+    expect(initSpecialNodes).toHaveBeenCalledTimes(1);
   });
 
   it('should set body styles for squeezing when hide is false', async () => {

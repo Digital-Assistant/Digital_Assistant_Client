@@ -1,5 +1,11 @@
 export const isHighlightNode = (nodeData: any) => {
-  if (nodeData.meta && nodeData.meta.hasOwnProperty('selectedElement') && nodeData.meta.selectedElement && nodeData.meta.selectedElement.systemTag.trim() === 'highlight') {
-    return true;
+  try {
+    const sel = nodeData?.meta?.selectedElement;
+    if (sel && typeof sel.systemTag === 'string' && sel.systemTag.trim() === 'highlight') {
+      return true;
+    }
+  } catch (_) {
+    // ignore
   }
+  return undefined;
 }

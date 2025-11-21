@@ -48,8 +48,36 @@ export const checkNodeObjectKeyValue = (
             }
             break;
         }
+        case 'classname': {
+            // Support explicit key 'className'
+            const classList: string[] = (node?.className || '')
+                .toString()
+                .split(/\s+/)
+                .filter(Boolean);
+            if (classList.length) {
+                exists = objectValues.some(v => classList.includes(v));
+            }
+            break;
+        }
+        case 'textcontent': {
+            const text = (node?.textContent ?? '').toString();
+            if (text && objectValues.includes(text)) {
+                exists = true;
+            }
+            break;
+        }
         default:
-            exists = false;
+            // Treat unknown key as attribute name and compare value equality
+            try {
+                if (node && typeof node.getAttribute === 'function') {
+                    const attrVal = node.getAttribute(key);
+                    if (attrVal != null && objectValues.includes(attrVal)) {
+                        exists = true;
+                    }
+                }
+            } catch {
+                // ignore
+            }
     }
     return exists;
 }

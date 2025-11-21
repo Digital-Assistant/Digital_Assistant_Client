@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import {StorageUtil} from "../../util/storage";
-import {CONFIG} from "../../config";
+import { StorageUtil } from "../../util/storage";
+import { CONFIG } from "../../config";
 
 // Define the state interface for recording data
 export interface RecordingState {
@@ -14,43 +14,51 @@ export interface RecordingState {
     showLoader: boolean;
 }
 
-// Function to load state from localStorage
+// Single source of truth for defaults
+export const defaultRecordingState: RecordingState = {
+    isRecording: false,
+    isPlaying: 'off',
+    manualPlay: 'off',
+    playDelay: 'off',
+    recSequenceData: [],
+    selectedRecordingDetails: null,
+    showRecord: false,
+    showLoader: false,
+};
+
+// Function to safely coerce an arbitrary object into RecordingState
+const coerceRecordingState = (raw: any): RecordingState => {
+    if (!raw || typeof raw !== 'object') return { ...defaultRecordingState };
+    return {
+        isRecording: typeof raw.isRecording === 'boolean' ? raw.isRecording : defaultRecordingState.isRecording,
+        isPlaying: typeof raw.isPlaying === 'string' ? raw.isPlaying : defaultRecordingState.isPlaying,
+        manualPlay: typeof raw.manualPlay === 'string' ? raw.manualPlay : defaultRecordingState.manualPlay,
+        playDelay: typeof raw.playDelay === 'string' ? raw.playDelay : defaultRecordingState.playDelay,
+        recSequenceData: Array.isArray(raw.recSequenceData) ? raw.recSequenceData : [...defaultRecordingState.recSequenceData],
+        selectedRecordingDetails: raw.selectedRecordingDetails ?? defaultRecordingState.selectedRecordingDetails,
+        showRecord: typeof raw.showRecord === 'boolean' ? raw.showRecord : defaultRecordingState.showRecord,
+        showLoader: typeof raw.showLoader === 'boolean' ? raw.showLoader : defaultRecordingState.showLoader,
+    };
+};
+
+// Function to load state from storage; always returns a valid RecordingState
 const loadStateFromStorage = (): RecordingState => {
     try {
-        const serializedState: RecordingState = StorageUtil.getFromStore(CONFIG.RECORDING_SEQUENCE_REDUX, false);
-        if (serializedState === null) {
-            return {
-                isRecording: false,
-                isPlaying: 'off',
-                manualPlay: 'off',
-                playDelay: 'off',
-                recSequenceData: [],
-                selectedRecordingDetails: null,
-                showRecord: false,
-                showLoader: false,
-            };
+        const serializedState: any = StorageUtil.getFromStore(CONFIG.RECORDING_SEQUENCE_REDUX, false);
+        if (serializedState === null || typeof serializedState === 'undefined') {
+            return { ...defaultRecordingState };
         }
-        return serializedState;
+        return coerceRecordingState(serializedState);
     } catch (err) {
-        console.error('Error loading recording state from localStorage:', err);
-        return {
-            isRecording: false,
-            isPlaying: 'off',
-            manualPlay: 'off',
-            playDelay: 'off',
-            recSequenceData: [],
-            selectedRecordingDetails: null,
-            showRecord: false,
-            showLoader: false,
-        };
+        // Keep non-fatal; fall back to defaults in test/SSR environments
+        return { ...defaultRecordingState };
     }
 };
 
 // Function to save state to localStorage
-const saveStateToStorage = (state: any) => {
+const saveStateToStorage = (state: RecordingState) => {
     try {
-        console.log({...state});
-        StorageUtil.setToStore({...state}, CONFIG.RECORDING_SEQUENCE_REDUX,false)
+        StorageUtil.setToStore({ ...state }, CONFIG.RECORDING_SEQUENCE_REDUX, false)
     } catch (err) {
         console.error('Error saving recording state to localStorage:', err);
     }
@@ -99,17 +107,8 @@ export const recordingSlice = createSlice({
             state.showLoader = action.payload;
             saveStateToStorage(state);
         },
-        resetRecordingState: (state) => {
-            const resetState = {
-                isRecording: false,
-                isPlaying: 'off',
-                manualPlay: 'off',
-                playDelay: 'off',
-                recSequenceData: [],
-                selectedRecordingDetails: null,
-                showRecord: false,
-                showLoader: false,
-            };
+        resetRecordingState: () => {
+            const resetState = { ...defaultRecordingState };
             saveStateToStorage(resetState);
             return resetState;
         },

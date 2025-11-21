@@ -4,7 +4,7 @@
  * after accounting for a 25% width plugin (for tooltip placement, etc.).
  * @returns object
  */
-export const getScreenSize = () => {
+export const getScreenSize = (): any => {
   let page = {height: 0, width: 0};
   let viewport = {height: 0, width: 0}; // Original, unscaled viewport dimensions
   let availableContentArea = {height: 0, width: 0}; // Viewport adjusted for plugin
@@ -52,7 +52,7 @@ export const getScreenSize = () => {
   physicalScreen.height = window.screen.height;
   physicalScreen.width = window.screen.width;
 
-  const windowProperties = {
+  const windowProperties: any = {
     page: page, // Full document size (including scrollable content)
     viewport: viewport, // Original, unscaled visible window area
     availableContentArea: availableContentArea, // Viewport adjusted for plugin (width scaled by 0.75)

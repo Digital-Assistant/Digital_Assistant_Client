@@ -4,16 +4,29 @@
  * @returns HTMLElements Collection
  */
 export const getAllChildren = (htmlElement: any) => {
-    let allChildElements = [];
+    const results: any[] = [];
     try {
-        if (htmlElement?.children?.length === 0) return [htmlElement];
+        if (!htmlElement || !htmlElement.children) return results;
 
-        for (let i = 0; i < htmlElement?.children?.length; i++) {
-            let children: any = getAllChildren(htmlElement.children[i]);
-            if (children) allChildElements.push(...children);
+        // Collect only element children (excludes text/comment nodes automatically)
+        const len = htmlElement.children.length || 0;
+        for (let i = 0; i < len; i++) {
+            const child: any = htmlElement.children[i];
+            if (!child) continue;
+
+            // Always include the element child itself
+            results.push(child);
+
+            // Do not traverse into SCRIPT or STYLE children contents
+            const tag = String(child.tagName || '').toLowerCase();
+            if (tag === 'script' || tag === 'style') continue;
+
+            // Recurse for nested element children
+            const nested = getAllChildren(child);
+            if (Array.isArray(nested) && nested.length) results.push(...nested);
         }
-        allChildElements.push(htmlElement);
-    } catch (e) {
+    } catch (_) {
+        // ignore and return what we have
     }
-    return allChildElements;
+    return results;
 };

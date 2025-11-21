@@ -1,7 +1,7 @@
 
 import { getNodeInfo, getBrowserZoomFactor, getEffectiveZoomInfo } from '../nodeInfo';
 import * as Screen from '../../screen/getScreenSize';
-import * as Coordinates from './getNodeCoordinates';
+import * as Coordinates from '../getNodeCoordinates';
 
 describe('nodeInfo', () => {
   describe('getNodeInfo', () => {

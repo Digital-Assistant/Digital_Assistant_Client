@@ -26,12 +26,15 @@ export const compareNodes = (compareNode: any, recordedNode: any, isPersonalNode
     * We may have to have similar solutions in the future for other frameworks like vue etc.
     */
     let ignoreAttribute: boolean = false;
-    for(let ignoreText in nodeConfig.ignoreDynamicAttributeText){
-      // comparing the value whether it has the defined dynamicvalue position
-      if(key.indexOf(ignoreText) !== -1){
-        ignoreAttribute = true;
+    try {
+      for (const ignoreText of (nodeConfig.ignoreDynamicAttributeText || [])) {
+        if (typeof ignoreText !== 'string' || ignoreText.length === 0) continue; // skip empty/invalid
+        if (key.indexOf(ignoreText) !== -1) {
+          ignoreAttribute = true;
+          break;
+        }
       }
-    }
+    } catch (_) { /* ignore */ }
 
     if(ignoreAttribute === true){
       continue;
@@ -41,7 +44,7 @@ export const compareNodes = (compareNode: any, recordedNode: any, isPersonalNode
       continue;
     }*/
     // CONFIG.ignoreAttributes.indexOf(key) !== -1 ||
-    if (window.udaSpecialNodes.ignoreDuringCompare.attributes.indexOf(key) !== -1) {
+    if ((window as any)?.udaSpecialNodes?.ignoreDuringCompare?.attributes?.indexOf?.(key) !== -1) {
       continue;
     } else if (key.indexOf('_ngcontent') !== -1 || key.indexOf('jQuery') !== -1 || key.indexOf('__zone_symbol__') !== -1) {
       continue;
@@ -80,13 +83,14 @@ export const compareNodes = (compareNode: any, recordedNode: any, isPersonalNode
           });
         }
       }
-    } else if (key === 'innerText' && recordedNode.hasOwnProperty(key) && compareNode.hasOwnProperty(key) && (compareNode[key].trim().toLowerCase() === recordedNode[key].trim().toLowerCase())) {
+    } else if (key === 'innerText' && recordedNode.hasOwnProperty(key) && compareNode.hasOwnProperty(key) && (String(compareNode[key]).trim().toLowerCase() === String(recordedNode[key]).trim().toLowerCase())) {
       // matching inner text should be weighted more. We will add an arbitrarily large number - innerTextWeight.
       // since this will match for every child node, we need to accommodate this logic whenever 'comparenodes' is called
       UDAConsoleLogger.info(compareNode[key].trim());
       UDAConsoleLogger.info(recordedNode[key].trim());
       match.innerTextFlag = true;
-      match.matched = match.matched + nodeConfig.innerTextWeight;
+      // Count the base match (1) PLUS the configured weight
+      match.matched = match.matched + 1 + nodeConfig.innerTextWeight;
       // match.matched++;
     } else if (compareNode.hasOwnProperty(key) && compareNode[key] === recordedNode[key]) {
       match.matched++;
@@ -113,7 +117,8 @@ export const compareNodes = (compareNode: any, recordedNode: any, isPersonalNode
       // make inner text flag to true if personal tag is true
       if (key === 'innerText') {
         match.innerTextFlag = true;
-        match.matched = match.matched + nodeConfig.innerTextWeight;
+        // Count base match + weight for innerText in personal nodes as well
+        match.matched = match.matched + 1 + nodeConfig.innerTextWeight;
       } else {
         match.matched++;
       }
