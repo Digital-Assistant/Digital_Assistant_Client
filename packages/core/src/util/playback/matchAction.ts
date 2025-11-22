@@ -1,13 +1,24 @@
-//matching the action of the node and invoking whether to click or focus
+// This module is responsible for matching the action of a recorded node with a live DOM element
+// and then invoking the appropriate action, such as clicking, focusing, or displaying a tooltip.
+
 import {mapSelectedElementAction} from "./mapSelectedElementAction";
 import {invokeNextNode} from "./invokeNextNode";
 import {getSelectedRecordFromStore} from "./invokeNode";
 import {checkNodeValues, nodeConfig, simulateHover, simulateMouseLeave} from "../node";
-import {translate} from "../translate/translation";
-import {addToolTip, removeToolTip } from "../notification/addToolTip";
+import {translate} from "../translate";
+import {addToolTip, removeToolTip } from "../notification";
 import {inArray} from "../inArray";
 import {CONFIG} from "../../config";
 
+/**
+ * Matches the action of a recorded node to a live DOM element and performs the corresponding action.
+ * This function handles various element types and their specific interactions during playback,
+ * such as displaying tooltips, clicking, or focusing elements.
+ *
+ * @param node The live DOM element that matches the recorded node.
+ * @param selectedNode The recorded node object, containing its original data and metadata.
+ * @param toolTipVisibleTIme The time (in seconds) for which the tooltip should be visible.
+ */
 export const matchAction = (node: any, selectedNode: any, toolTipVisibleTIme: number = 1) => {
 
   if (!node) {
@@ -16,58 +27,56 @@ export const matchAction = (node: any, selectedNode: any, toolTipVisibleTIme: nu
 
   const recordedNodeData = JSON.parse(selectedNode.objectdata);
 
-  let timeToInvoke = toolTipVisibleTIme*1000;
+  let timeToInvoke = toolTipVisibleTIme * 1000; // Convert seconds to milliseconds.
 
-  // overriding the default time to invoke
-  /*if(UDAGlobalConfig.enableSlowReplay && recordedNodeData.hasOwnProperty('meta') && recordedNodeData.meta.hasOwnProperty('slowPlaybackTime') && parseInt(recordedNodeData.meta.slowPlaybackTime) > 0) {
-    timeToInvoke = parseInt(recordedNodeData.meta.slowPlaybackTime)*1000;
-  }*/
-
-  // remove added tooltips before invoking
+  // Remove any existing tooltips before proceeding with the current action.
   removeToolTip();
 
+  // Simulate hover and mouse leave events on the node.
   simulateHover(node);
   simulateMouseLeave(node);
 
+  // Retrieve the selected recording details from storage.
   const navigationData = getSelectedRecordFromStore();
 
-  // perform click action based on the input given
+  // If node type selection is enabled, attempt to map and perform a specific action.
   if(window.UDAGlobalConfig.enableNodeTypeSelection) {
     if (recordedNodeData.meta && recordedNodeData.meta.hasOwnProperty('selectedElement') && recordedNodeData.meta.selectedElement && recordedNodeData.meta.selectedElement.systemTag.trim() != 'others') {
       let performedAction = mapSelectedElementAction(node, selectedNode, navigationData, recordedNodeData, timeToInvoke);
       if (performedAction) {
-        return;
+        return; // If an action was performed, exit the function.
       }
     }
   }
 
-  // adding tooltip to text editor elements
+  // Special handling for text editor elements: display a tooltip.
   if(checkNodeValues(node, 'textEditors')){
     addToolTip(node, node, selectedNode, navigationData, false, false, false);
     return;
   }
 
-  // adding tooltip to drop down elements
+  // Special handling for dropdown elements: display a tooltip.
   if(checkNodeValues(node, 'dropDowns')){
     addToolTip(node, node, selectedNode, navigationData, false, false, false);
     return;
   }
 
-  // adding tooltip to Date selector elements
+  // Special handling for date picker elements: display a tooltip.
   if(checkNodeValues(node, 'datePicker')){
     addToolTip(node, node, selectedNode, navigationData, false, false, false);
     return;
   }
 
-
+  // If the node is in the list of nodes to ignore from indexing, display a tooltip.
   if (inArray(node.nodeName.toLowerCase(), nodeConfig.ignoreNodesFromIndexing) !== -1) {
     addToolTip(node, node.parentNode, selectedNode, navigationData, false, false, false);
     return;
   }
 
+  // Handle actions based on the node's tag name.
   switch (node.nodeName.toLowerCase()) {
     case "input":
-      // functionality for detecting multi select box and highlighting the recorded node
+      // Specific handling for input elements based on their class names, roles, or types.
       if (node.classList && (node.classList.contains('select2-search__field') || node.classList.contains('mat-autocomplete-trigger'))) {
         addToolTip(node, node.parentNode.parentNode.parentNode.parentNode.parentNode, selectedNode, navigationData, false, true);
       } else if (node.hasAttribute('role') && (node.getAttribute('role') === 'combobox')) {
@@ -77,23 +86,14 @@ export const matchAction = (node: any, selectedNode: any, toolTipVisibleTIme: nu
       } else if (node.hasAttribute('type')) {
         switch (node.getAttribute('type').toLowerCase()) {
           case 'checkbox':
-            if (node.parentNode && node.parentNode.classList && node.parentNode.classList.contains('vc_checkbox')) {
-              addToolTip(node, node.parentNode, selectedNode, navigationData, false, false, true);
-            } else {
-              addToolTip(node, node.parentNode, selectedNode, navigationData, false, false, true);
-            }
+            addToolTip(node, node.parentNode.classList.contains('vc_checkbox') ? node.parentNode : node.parentNode, selectedNode, navigationData, false, false, true);
             break;
           case 'radio':
-            if (node.parentNode && node.parentNode.classList && node.parentNode.classList.contains('vc_label')) {
-              addToolTip(node, node.parentNode, selectedNode, navigationData, false, false, true);
-            } else {
-              addToolTip(node, node.parentNode, selectedNode, navigationData, false, false, true);
-            }
+            addToolTip(node, node.parentNode.classList.contains('vc_label') ? node.parentNode : node.parentNode, selectedNode, navigationData, false, false, true);
             break;
           case 'submit':
             addToolTip(node, node, selectedNode, navigationData, false, false, false, translate('highLightText'), false, true);
-            // node.click();
-            invokeNextNode(node, timeToInvoke);
+            invokeNextNode(node, timeToInvoke); // Invoke the next node after a delay.
             break;
           case 'text':
             if (node.attributes && node.attributes.length > 0 && (node.hasAttribute('ngxdaterangepickermd'))) {
@@ -116,7 +116,7 @@ export const matchAction = (node: any, selectedNode: any, toolTipVisibleTIme: nu
       }
       break;
     case "textarea":
-      CONFIG.playNextAction = false;
+      CONFIG.playNextAction = false; // Prevent immediate next action.
       addToolTip(node, node.parentNode, selectedNode, navigationData, false, false, true);
       break;
     case "select":
@@ -125,44 +125,40 @@ export const matchAction = (node: any, selectedNode: any, toolTipVisibleTIme: nu
     case "option":
       addToolTip(node, node.parentNode, selectedNode, navigationData, false, false, true);
       break;
-    case "checkbox":
+    case "checkbox": // This case seems redundant as checkboxes are handled under input type.
       addToolTip(node, node, selectedNode, navigationData, false, false, true);
       break;
-      // Additional processing for calendar selection
     case "button":
+      // Additional processing for calendar selection or other button types.
       if (node.hasAttribute('aria-label') && node.getAttribute('aria-label').toLowerCase() === 'open calendar') {
         addToolTip(node, node.parentNode, selectedNode, navigationData, true, false);
       } else if (node.classList && node.classList.contains('btn-pill')) {
         addToolTip(node, node, selectedNode, navigationData, false, false, false, translate('highLightText'), false, true);
-        // node.click();
         invokeNextNode(node, timeToInvoke);
       } else {
         addToolTip(node, node, selectedNode, navigationData, false, false, false, translate('highLightText'), false, true);
-        // node.click();
         invokeNextNode(node, timeToInvoke);
       }
       break;
     case 'span':
+      // Specific handling for span elements, especially those acting as interactive components.
       if (node.classList && node.classList.contains('select2-selection')) {
         addToolTip(node, node.parentNode.parentNode, selectedNode, navigationData, true, false);
       } else if (node.classList.contains("radio") && node.classList.contains("replacement")) {
         addToolTip(node, node.parentNode.parentNode, selectedNode, navigationData, false, false, true);
       } else {
         addToolTip(node, node, selectedNode, navigationData, false, false, false, translate('highLightText'), false, true);
-        // node.click();
         invokeNextNode(node, timeToInvoke);
       }
       break;
-    //	fix for text editor during playback
-    case 'ckeditor':
+    case 'ckeditor': // Fix for text editor during playback.
       addToolTip(node, node, selectedNode, navigationData, true, false);
       break;
     case 'ng-select':
       addToolTip(node, node, selectedNode, navigationData, false, false);
       break;
     default:
-
-      // check for special input nodes and add tooltip
+      // Default handling for other node types.
       let specialInputNode = false;
       if (node.classList) {
         classListLoop:
@@ -178,9 +174,8 @@ export const matchAction = (node: any, selectedNode: any, toolTipVisibleTIme: nu
         addToolTip(node, node, selectedNode, navigationData, true, false);
       } else {
         addToolTip(node, node, selectedNode, navigationData, false, false, false, translate('highLightText'), false, true);
-        // node.click();
       }
-      invokeNextNode(node, timeToInvoke);
+      invokeNextNode(node, timeToInvoke); // Invoke the next node after a delay.
       break;
   }
 }

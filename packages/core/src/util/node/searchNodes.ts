@@ -4,51 +4,59 @@ import {processDistanceOfNodes} from "./processDistanceOfNodes";
 // @ts-ignore
 import * as domJSON from "domjson";
 import {getObjData} from "./getObjData";
-import {UDAConsoleLogger} from "../error/error-log";
+import {UDAConsoleLogger} from "../error";
 import {nodeConfig} from "./nodeConfig";
 
 /**
- * Old logic for searching elements
- * @param recordedNode
- * @param compareElements
+ * Legacy logic for searching for a recorded DOM element among a list of candidate elements.
+ * This function attempts to find the best match for a `recordedNode` within `compareElements`.
+ *
+ * @param recordedNode The node object from a recording, containing metadata and object data.
+ * @param compareElements An array of candidate elements to compare against the recorded node.
+ * @returns The DOM element that is considered the best match, or `null` if no suitable match is found.
  */
 export const searchNodes = (recordedNode: any, compareElements: any) => {
 
-  //  fall back old logic
+  // Fallback to the old logic for node searching.
   const recordedNodeData: any = getObjData(recordedNode?.node?.objectdata);
 
   let finalMatchElement = null;
-  // personal tag check
+  // Check if the recorded node is marked as a "personal" node.
   let isPersonalNode = false;
   const matchNodes = [];
   if (recordedNodeData.meta.hasOwnProperty('isPersonal') && recordedNodeData.meta.isPersonal) {
     isPersonalNode = true;
   }
+
+  // Iterate through the candidate elements to find potential matches.
   for (let searchNode of compareElements) {
     let searchLabelExists = false;
+    // Convert the candidate DOM node to a JSON object for comparison.
     let compareNode = domJSON.toJSON(searchNode.node, {serialProperties: true});
-    // compare recorded node with personal node tag or not
+    // Compare the recorded node with the candidate node.
     let match = compareNodes(compareNode.node, recordedNodeData.node, isPersonalNode);
 
-    // uncomment for debugging
+    // Uncomment for debugging purposes.
     if(match.matched+3 >= match.count){
       UDAConsoleLogger.info(searchNode.node, 3);
       UDAConsoleLogger.info(compareNode, 3);
       UDAConsoleLogger.info(match, 3);
     }
 
-    // we are incrementing 'matched' by 'innerTextWeight' for 'this' node and every child node and we are matching innerchildcounts that were returned from comparenodes
+    // Determine if the nodes match based on a scoring system.
+    // The 'matched' score is incremented by 'innerTextWeight' for the node and its children.
     if (compareNode.node.nodeName === recordedNodeData.node.nodeName) {
       if (match.innerTextFlag && Math.abs((match.matched) - match.count) <= (match.innerChildNodes * nodeConfig.innerTextWeight)) {
         searchLabelExists = true;
       } else if (match.matched === match.count) {
         searchLabelExists = true;
       } else if (recordedNodeData.node.nodeName === 'CKEDITOR' && (match.matched + 1) >= match.count) {
-        // fix for editor playback
+        // Special fix for CKEditor playback.
         searchLabelExists = true;
       }
     }
 
+    // If a match is found, add it to the list of matching nodes, avoiding duplicates.
     if (searchLabelExists) {
       let matchNodeExists = false;
       if (matchNodes.length > 0) {
@@ -65,37 +73,39 @@ export const searchNodes = (recordedNode: any, compareElements: any) => {
     }
   }
 
+  // Process the matching nodes to find the best fit.
   if (matchNodes.length === 1) {
-
+    // If there is only one match, it's the final one.
     finalMatchElement = matchNodes[0];
-
   } else if (matchNodes.length > 1) {
-    //todo need to perform some user intervention
-    // for multiple matching nodes compare labels of the clickable nodes to get exact node match
+    // If there are multiple matches, further refinement is needed.
+    // This may require user intervention in some cases.
     let finalMatchNode = null;
     let finalMatchNodes = [];
 
+    // Compare labels of the clickable nodes to find an exact match.
     matchNodes.forEach(function (matchNode) {
       if (matchNode) {
         const inputLabels = getClickedInputLabels(matchNode);
         if (inputLabels === recordedNode.clickednodename) {
           finalMatchNodes.push(matchNode);
         } else if (matchNode.classList && matchNode.classList.contains('expand-button')) {
-          // collapsable buttons are treated as matched nodes to check distance for further processing
+          // Collapsible buttons are treated as matched nodes to check distance for further processing.
           finalMatchNodes.push(matchNode);
         }
       }
     });
 
+    // If no nodes match by label, consider all initial matches.
     if (finalMatchNodes.length === 0 && matchNodes.length >= 1) {
       finalMatchNodes = matchNodes;
     }
 
-    // process matching nodes after comparing labels
+    // Process the refined list of matching nodes.
     if (finalMatchNodes.length === 1) {
       finalMatchNode = finalMatchNodes[0];
     } else if (finalMatchNodes.length > 1) {
-      // compare element positions as there are multiple matching nodes with same labels
+      // If multiple nodes still match, compare their positions to find the closest one.
       finalMatchNode = processDistanceOfNodes(finalMatchNodes, recordedNodeData.node);
       UDAConsoleLogger.info(finalMatchNode, 3);
     }

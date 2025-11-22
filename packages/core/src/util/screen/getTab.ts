@@ -1,20 +1,25 @@
 import {getActiveTabId, getBrowserVar, getUDABrowserPlugin} from "../browser";
 
 /**
- * Retrieves the active tab from the browser.
+ * Retrieves the currently active tab from the browser.
+ * This function first attempts to query for the active tab in the current window.
+ * If that fails, it tries to retrieve the tab using a stored active tab ID.
  *
- * @return {Promise<Object>} The active tab object.
+ * @returns {Promise<Object|boolean>} A promise that resolves to the active tab object if found, otherwise `false`.
  */
 export const getTab = async () => {
     let queryOptions = {active: true, currentWindow: true};
     const browserVar = getBrowserVar();
     const activeTabId = getActiveTabId();
-    const UDABrowserPlugin = getUDABrowserPlugin(); // Although not used in this function, good to update for consistency
+    const UDABrowserPlugin = getUDABrowserPlugin(); // Although not directly used here, it's part of the browser context.
 
+    // Attempt to query for the active tab in the current window.
     let tab = (await browserVar.tabs.query(queryOptions))[0];
     if (tab) {
         return tab;
-    } else if(activeTabId !== -1){
+    }
+    // If no tab is found by query, try to retrieve it using the active tab ID.
+    else if(activeTabId !== -1){
         tab = await browserVar.tabs.get(activeTabId);
         if (tab) {
             return tab;
@@ -22,7 +27,9 @@ export const getTab = async () => {
             console.log('No active tab identified.');
             return false;
         }
-    } else {
+    }
+    // If all attempts fail, return false.
+    else {
         return false;
     }
 }

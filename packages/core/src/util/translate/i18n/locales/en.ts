@@ -1,3 +1,9 @@
+/**
+ * This file contains the English translation strings used throughout the application.
+ * Each key represents a unique identifier for a piece of text, and its value is the
+ * corresponding English translation. These translations are used by the i18next
+ * internationalization framework.
+ */
 export const TRANSLATIONS_EN = {
   logoText: "UDAN (Beta)",
   needHelp: "Need Help",

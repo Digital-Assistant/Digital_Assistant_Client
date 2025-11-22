@@ -1,3 +1,18 @@
+/**
+ * Recursively traverses the DOM to find descriptive labels for a given node.
+ * This function is used to identify a node by its associated text, which can be in various places
+ * like placeholders, attributes, or nearby text nodes.
+ *
+ * @param node The starting DOM node for which to find labels.
+ * @param inputlabels An array to accumulate the found labels.
+ * @param iterationno The current iteration number to prevent infinite recursion.
+ * @param iterate A boolean to control whether to traverse up to the parent node.
+ * @param getchildlabels A boolean to control whether to get labels from child nodes.
+ * @param fromclick A boolean indicating if the function was called from a click event.
+ * @param iteratelimit The maximum number of iterations to prevent infinite loops.
+ * @param ignorenode A node to be ignored during traversal.
+ * @returns An array of objects, where each object contains the `text` of a found label and a `match` flag.
+ */
 export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, iterate = true, getchildlabels = true, fromclick = false, iteratelimit = 3, ignorenode: any = []) => {
 
     if (!node) return inputlabels;
@@ -7,6 +22,7 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
             ignorenode = node;
         }
 
+        // For <select> and <checkbox> elements, start by looking at the parent node for labels.
         if (
             (node.nodeName.toLowerCase() === "select" ||
                 node.nodeName.toLowerCase() === "checkbox") &&
@@ -25,15 +41,17 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
                 ignorenode
             );
             if (fromclick) {
-                //todo need to rework
+                // TODO: Rework this part for click events.
             }
         }
 
+        // For <input>, <textarea>, and <img> elements, check for specific attributes.
         if (
             node.nodeName.toLowerCase() === "input" ||
             node.nodeName.toLowerCase() === "textarea" ||
             node.nodeName.toLowerCase() === "img"
         ) {
+            // Use the placeholder attribute as a label.
             if (
                 node.getAttribute("placeholder") &&
                 node.getAttribute("placeholder") !== ""
@@ -43,6 +61,7 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
                     match: false,
                 });
             }
+            // For submit and file inputs, use the value attribute.
             if (
                 node.getAttribute("type") &&
                 (node.getAttribute("type").toLowerCase() === "submit" ||
@@ -56,6 +75,7 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
                     iterate = false;
                 }
             }
+            // For images, use the alt attribute.
             if (node.getAttribute("alt")) {
                 inputlabels.push({
                     text: node.getAttribute("alt").toString(),
@@ -64,6 +84,7 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
             }
         }
 
+        // Get labels from child nodes.
         if (getchildlabels && node.childNodes.length > 0) {
             let childNodes = node.childNodes;
             childNodes?.forEach(function (childNode: any) {
@@ -87,6 +108,7 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
             });
         }
 
+        // If no labels are found, check for tooltip attributes.
         if (inputlabels.length === 0 && node.getAttribute("data-tooltip")) {
             inputlabels.push({
                 text: node.getAttribute("data-tooltip").toString(),
@@ -94,6 +116,7 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
             });
         }
 
+        // If still no labels, check for aria-label.
         if (inputlabels.length === 0 && node.getAttribute("aria-label")) {
             inputlabels.push({
                 text: node.getAttribute("aria-label").toString(),
@@ -101,7 +124,7 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
             });
         }
 
-        //todo fix for image tags
+        // If no labels are found and iteration is allowed, move to the parent node.
         if (
             iterate &&
             node.nodeName.toLowerCase() !== "img" &&
@@ -121,6 +144,7 @@ export const getNodeLabels = (node: any, inputlabels: any, iterationno: any, ite
             );
         }
 
+        // As a last resort, use the node's ID, class, or tag name as a label.
         if (inputlabels.length === 0 && node.id !== "") {
             inputlabels.push({
                 text: node.nodeName.toLowerCase() + "-" + node.id,
