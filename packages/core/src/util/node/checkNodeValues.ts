@@ -1,11 +1,12 @@
-import {checkNodeObjectKeyValue} from "./checkNodeObjectKeyValue";
+import { checkNodeObjectKeyValue } from "./checkNodeObjectKeyValue";
+import { specialNodes } from "../specialNodes";
 
 /**
  * Checks if a DOM node matches a given value using several strategies.
  * This function is used to determine if a node is relevant based on a specific check type or value.
  *
  * The matching strategies are as follows:
- * - If a legacy configuration exists at `window.udaSpecialNodes[checkType]`, it uses that configuration for matching.
+ * - It checks against the `specialNodes` configuration for the given `checkType`.
  * - Otherwise, it attempts to match the `checkType` value directly against:
  *   1. The `value` property of `<input>`, `<select>`, or `<textarea>` elements.
  *   2. The `data-qa` attribute of the element.
@@ -19,19 +20,16 @@ export const checkNodeValues = (node: any, checkType: string) => {
   try {
     if (!node) return false;
 
-    // Legacy behavior: Use a configured set of keys for matching if available.
-    try {
-      // @ts-ignore
-      const cfg = window?.udaSpecialNodes?.[checkType];
-      if (cfg && typeof cfg === 'object') {
-        for (const key in cfg) {
-          if (checkNodeObjectKeyValue(node, key, cfg[key], checkType)) {
-            return true;
-          }
+    // Check against the imported specialNodes configuration
+    const config: any = specialNodes[checkType as keyof typeof specialNodes];
+    if (config && typeof config === 'object') {
+      for (const key in config) {
+        if (checkNodeObjectKeyValue(node, key, config[key], checkType)) {
+          return true;
         }
-        return false;
       }
-    } catch (_) { /* Ignore errors and fall back to direct matching. */ }
+      return false;
+    }
 
     // Prepare the value to search for.
     const needle = String(checkType ?? '').trim();

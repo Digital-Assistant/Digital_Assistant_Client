@@ -21,9 +21,6 @@ export * from './config';
 export * from './util';
 // Export selectors
 export * from './store/selectors';
-
-// Explicitly re-export frequently used low-level utils to aid IDE/module resolution
-export { hasClass } from './util/hasClass';
  
 export class DigitalAssistantCore {
     private unsubscribeCallback: (() => void) | null = null;

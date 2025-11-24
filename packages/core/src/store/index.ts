@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+import storageMiddleware from './middleware/storageMiddleware'; // Import the new middleware
 
 // Import reducers
 import {
@@ -18,6 +19,7 @@ export const store = configureStore({
         recording: recordingReducer,
         flow: flowReducer,
     },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(storageMiddleware),
 });
 
 // Infer the state type from the store itself  

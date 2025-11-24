@@ -5,6 +5,14 @@ const TerserPlugin = require('terser-webpack-plugin');
 module.exports = (env, argv) => {
     const isProduction = argv.mode === 'production';
 
+    // Define a common rule for source-map-loader to avoid repetition
+    const sourceMapLoaderRule = {
+        test: /\.js$/,
+        enforce: 'pre',
+        use: ['source-map-loader'],
+        exclude: /node_modules\/parse-domain/, // Exclude the problematic package
+    };
+
     return [
         // ESM build
         {
@@ -13,13 +21,13 @@ module.exports = (env, argv) => {
                 path: path.resolve(__dirname, 'dist'),
                 filename: 'index.esm.js',
                 module: true,
-                library: { type: 'module' },
+                library: {type: 'module'},
             },
-            experiments: { outputModule: true },
+            experiments: {outputModule: true},
             module: {
                 rules: [
-                    { test: /\.ts$/, use: ['ts-loader'], exclude: /node_modules/ },
-                    { test: /\.js$/, enforce: 'pre', use: ['source-map-loader'] },
+                    {test: /\.ts$/, use: ['ts-loader'], exclude: /node_modules/},
+                    sourceMapLoaderRule, // Use the common rule
                 ],
             },
             resolve: {
@@ -43,11 +51,11 @@ module.exports = (env, argv) => {
                 minimize: isProduction,
                 minimizer: [
                     new TerserPlugin({
-                        terserOptions: { compress: { drop_console: isProduction } },
+                        terserOptions: {compress: {drop_console: isProduction}},
                     }),
                 ],
             },
-            cache: { type: 'filesystem' },
+            cache: {type: 'filesystem'},
         },
         // CJS build
         {
@@ -55,26 +63,26 @@ module.exports = (env, argv) => {
             output: {
                 path: path.resolve(__dirname, 'dist'),
                 filename: 'index.cjs.js',
-                library: { type: 'commonjs2' },
+                library: {type: 'commonjs2'},
             },
             target: 'node',
             module: {
                 rules: [
-                    { test: /\.ts$/, use: ['ts-loader'], exclude: /node_modules/ },
-                    { test: /\.js$/, enforce: 'pre', use: ['source-map-loader'] },
+                    {test: /\.ts$/, use: ['ts-loader'], exclude: /node_modules/},
+                    sourceMapLoaderRule, // Use the common rule here as well
                 ],
             },
-            resolve: { extensions: ['.tsx', '.ts', '.js'] },
+            resolve: {extensions: ['.tsx', '.ts', '.js']},
             devtool: isProduction ? false : 'source-map',
             optimization: {
                 minimize: isProduction,
                 minimizer: [
                     new TerserPlugin({
-                        terserOptions: { compress: { drop_console: isProduction } },
+                        terserOptions: {compress: {drop_console: isProduction}},
                     }),
                 ],
             },
-            cache: { type: 'filesystem' },
+            cache: {type: 'filesystem'},
         },
     ];
 };

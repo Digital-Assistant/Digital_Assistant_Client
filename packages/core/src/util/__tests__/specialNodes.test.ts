@@ -1,31 +1,44 @@
 
-import { specialNodes } from '../specialNodes';
+// Import the function to be tested and the configuration it uses
+import { checkNodeValues } from '../node/checkNodeValues';
 
-describe('specialNodes', () => {
-  it('should be defined', () => {
-    expect(specialNodes).toBeDefined();
+// Mock the specialNodes to isolate the test
+jest.mock('../specialNodes', () => ({
+  specialNodes: {
+    specialNodes: { // This nested specialNodes is correct, as per the structure of specialNodes.ts
+      tags: ['fusioncharts'],
+      classes: ['special-class'],
+      attributes: ['data-special'],
+    },
+  },
+}));
+
+describe('isSpecialNode (via checkNodeValues)', () => {
+  it('should return true for a node with a special tag', () => {
+    const element = document.createElement('fusioncharts');
+    // We are testing the 'specialNodes' case within checkNodeValues
+    expect(checkNodeValues(element, 'specialNodes')).toBe(true);
   });
 
-  it('should identify a special node by data-qa attribute', () => {
+  it('should return true for a node with a special class', () => {
     const element = document.createElement('div');
-    element.setAttribute('data-qa', 'some-value');
-    expect(specialNodes.isSpecialNode(element)).toBe(true);
+    element.classList.add('special-class');
+    expect(checkNodeValues(element, 'specialNodes')).toBe(true);
   });
 
-  it('should identify a special node by id containing "live-player"', () => {
+  it('should return true for a node with a special attribute', () => {
     const element = document.createElement('div');
-    element.id = 'live-player-container';
-    expect(specialNodes.isSpecialNode(element)).toBe(true);
+    element.setAttribute('data-special', 'true');
+    expect(checkNodeValues(element, 'specialNodes')).toBe(true);
   });
 
-  it('should not identify a regular node as special', () => {
+  it('should return false for a node that is not special', () => {
     const element = document.createElement('div');
-    expect(specialNodes.isSpecialNode(element)).toBe(false);
+    expect(checkNodeValues(element, 'specialNodes')).toBe(false);
   });
 
-  it('should not identify a node with an empty data-qa attribute as special', () => {
-    const element = document.createElement('div');
-    element.setAttribute('data-qa', '');
-    expect(specialNodes.isSpecialNode(element)).toBe(false);
+  it('should return false for a null or undefined node', () => {
+    expect(checkNodeValues(null, 'specialNodes')).toBe(false);
+    expect(checkNodeValues(undefined, 'specialNodes')).toBe(false);
   });
 });

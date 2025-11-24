@@ -45,6 +45,7 @@ export const addClickToNode = (node: any) => {
         // If an input element has no 'type' attribute, treat it as a generic input.
         if (!clickableNode.hasAttribute("type")) {
           addEvent(clickableNode, 'click');
+          clickableNode.addedClickRecord = true;
           return node;
         }
         const inputType = clickableNode.getAttribute("type").toLowerCase();

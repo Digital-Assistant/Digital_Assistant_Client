@@ -37,7 +37,7 @@ export const saveClickData = async (node: any, text: string, meta: any) => {
 
         // Handle special nodes by assigning a custom display text if configured.
         if (
-            inArray(node.nodeName.toLowerCase(), nodeConfig.ignoreNodesFromIndexing) !== -1 &&
+            inArray(node.nodeName.toLowerCase(), nodeConfig.ignoreNodesFromIndexing) &&
             nodeConfig.customNameForSpecialNodes.hasOwnProperty(node.nodeName.toLowerCase())
         ) {
             // @ts-ignore

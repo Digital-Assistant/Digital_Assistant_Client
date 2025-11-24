@@ -17,13 +17,18 @@ export const observer = new MutationObserver((mutationList, observer) => {
     }
     // Set a new timer to call `addBodyEvents` after a delay.
     timer = setTimeout(async () => {
-        // Check if recording is currently active.
-        const isRecording = StorageUtil.getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true";
+        try {
+            // Check if recording is currently active.
+            const isRecording = StorageUtil.getFromStore(CONFIG.RECORDING_SWITCH_KEY, true) == "true";
 
-        if (isRecording) {
-            console.log('Adding body events.');
-            // Re-attach event listeners to the body and its children.
-            await addBodyEvents();
+            if (isRecording) {
+                console.log('Adding body events.');
+                // Re-attach event listeners to the body and its children.
+                await addBodyEvents();
+            }
+        } catch (e) {
+            // Log errors but do not crash the observer.
+            console.error("Error during DOM change observation:", e);
         }
     }, CONFIG.indexInterval); // Use a configured interval for debouncing.
 });
@@ -36,4 +41,15 @@ export const observer = new MutationObserver((mutationList, observer) => {
 export function initializeDomChanges() {
     console.log('Initialized dom changes.');
     observer.observe(document.body, {attributes: true, childList: true, subtree: true});
+}
+
+/**
+ * @internal
+ * This function is exported for testing purposes only to reset the module-level timer.
+ */
+export function _resetTimerForTest() {
+    if (timer) {
+        clearTimeout(timer);
+    }
+    timer = null;
 }

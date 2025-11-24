@@ -18,7 +18,7 @@ const config: Config = {
     ],
     setupFilesAfterEnv: ['<rootDir>/src/__test__/setupTests.ts'],
     moduleNameMapper: {
-        // Handle module aliases if any
+        'sweetalert2': '<rootDir>/src/__mocks__/sweetalert2.ts',
     },
     globals: {
         'ts-jest': {

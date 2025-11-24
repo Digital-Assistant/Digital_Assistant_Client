@@ -1,5 +1,5 @@
 
-import { hasClass } from '../hasClass';
+import { hasClass } from '../node/hasClass';
 
 describe('hasClass', () => {
   it('should return true if element has class', () => {

@@ -19,7 +19,7 @@ import {translate} from "../translate";
 export const mapSelectedElementAction = (node: any, recordedNode: any, navigationCookieData: any, recordedNodeData: any, timeToInvoke: any) => {
   let performedAction = false;
   // Use a switch statement to handle different system tags of the selected element.
-  switch (recordedNodeData.meta.selectedElement.systemTag) {
+  switch (recordedNodeData?.meta?.selectedElement?.systemTag) {
     case 'text':
     case 'date':
     case 'range':

@@ -50,17 +50,10 @@ const loadStateFromStorage = (): RecordingState => {
         }
         return coerceRecordingState(serializedState);
     } catch (err) {
+        // Log the error correctly as a loading error
+        console.error('Error loading recording state from localStorage:', err);
         // Keep non-fatal; fall back to defaults in test/SSR environments
         return { ...defaultRecordingState };
-    }
-};
-
-// Function to save state to localStorage
-const saveStateToStorage = (state: RecordingState) => {
-    try {
-        StorageUtil.setToStore({ ...state }, CONFIG.RECORDING_SEQUENCE_REDUX, false)
-    } catch (err) {
-        console.error('Error saving recording state to localStorage:', err);
     }
 };
 
@@ -73,44 +66,33 @@ export const recordingSlice = createSlice({
     reducers: {
         setIsRecording: (state, action: PayloadAction<boolean>) => {
             state.isRecording = action.payload;
-            saveStateToStorage(state);
         },
         setIsPlaying: (state, action: PayloadAction<string>) => {
             state.isPlaying = action.payload;
-            saveStateToStorage(state);
         },
         setManualPlay: (state, action: PayloadAction<string>) => {
             state.manualPlay = action.payload;
-            saveStateToStorage(state);
         },
         setPlayDelay: (state, action: PayloadAction<string>) => {
             state.playDelay = action.payload;
-            saveStateToStorage(state);
         },
         setRecSequenceData: (state, action: PayloadAction<any[]>) => {
             state.recSequenceData = action.payload;
-            saveStateToStorage(state);
         },
         addRecSequenceData: (state, action: PayloadAction<any>) => {
             state.recSequenceData.push(action.payload);
-            saveStateToStorage(state);
         },
         setSelectedRecordingDetails: (state, action: PayloadAction<any | null>) => {
             state.selectedRecordingDetails = action.payload;
-            saveStateToStorage(state);
         },
         setShowRecord: (state, action: PayloadAction<boolean>) => {
             state.showRecord = action.payload;
-            saveStateToStorage(state);
         },
         setShowLoader: (state, action: PayloadAction<boolean>) => {
             state.showLoader = action.payload;
-            saveStateToStorage(state);
         },
         resetRecordingState: () => {
-            const resetState = { ...defaultRecordingState };
-            saveStateToStorage(resetState);
-            return resetState;
+            return { ...defaultRecordingState };
         },
     },
 });

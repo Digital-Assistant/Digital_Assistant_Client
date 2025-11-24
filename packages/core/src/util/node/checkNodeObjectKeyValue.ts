@@ -12,36 +12,66 @@ import {hasClass} from "./hasClass";
  * @returns `true` if the node matches the criteria, `false` otherwise.
  */
 export const checkNodeObjectKeyValue = (node: any, key: string, objectValues: Array<string>, checkType: string) => {
-  let exists = false;
-  switch (key.toLowerCase()) {
-    case 'tags':
-      // Check if the node's tag name is included in the provided list of tags.
-      if (objectValues.includes(node?.tagName?.trim().toLowerCase())) {
-        exists = true;
-      }
-      break;
-    case 'classes':
-      // Check if the node has any of the specified CSS classes.
-      if(hasClass(node, objectValues)){
-        exists = true;
-      }
-      break;
-    case 'attributes':
-      // Check if the node has any of the specified attributes.
-      attributeLoop:
-      for(const attribute of objectValues){
-        if(node.hasAttribute(attribute)){
-          exists = true;
-          break attributeLoop;
+    let exists = false;
+    switch (key.toLowerCase()) {
+        case 'tags':
+            // Check if the node's tag name is included in the provided list of tags.
+            if (objectValues.includes(node?.tagName?.trim().toLowerCase())) {
+                exists = true;
+            }
+            break;
+        case 'classes':
+            // Check if the node has any of the specified CSS classes.
+            if (hasClass(node, objectValues)) {
+                exists = true;
+            }
+            break;
+        case 'attributes':
+            // Check if the node has any of the specified attributes.
+            attributeLoop:
+                for (const attribute of objectValues) {
+                    if (node.hasAttribute(attribute)) {
+                        exists = true;
+                        break attributeLoop;
+                    }
+                }
+            break;
+        case 'ids':
+            // Check if the node's ID is included in the provided list of IDs.
+            if (node.id && objectValues.includes(node.id.trim().toLowerCase())) {
+                exists = true;
+            }
+            break;
+        case 'classname': {
+            // Support explicit key 'className'
+            const classList: string[] = (node?.className || '')
+                .toString()
+                .split(/\s+/)
+                .filter(Boolean);
+            if (classList.length) {
+                exists = objectValues.some(v => classList.includes(v));
+            }
+            break;
         }
-      }
-      break;
-    case 'ids':
-      // Check if the node's ID is included in the provided list of IDs.
-      if(node.id && objectValues.includes(node.id.trim().toLowerCase())){
-        exists=true;
-      }
-      break;
-  }
-  return exists;
+        case 'textcontent': {
+            const text = (node?.textContent ?? '').toString();
+            if (text && objectValues.includes(text)) {
+                exists = true;
+            }
+            break;
+        }
+        default:
+            // Treat unknown key as attribute name and compare value equality
+            try {
+                if (node && typeof node.getAttribute === 'function') {
+                    const attrVal = node.getAttribute(key);
+                    if (attrVal != null && objectValues.includes(attrVal)) {
+                        exists = true;
+                    }
+                }
+            } catch {
+                // ignore
+            }
+    }
+    return exists;
 }

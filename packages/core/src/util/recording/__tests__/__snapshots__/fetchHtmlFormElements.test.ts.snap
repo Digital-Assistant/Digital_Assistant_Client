@@ -1,0 +1,119 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fetchHtmlFormElements should match the expected data structure snapshot 1`] = `
+[
+  {
+    "displayName": "Simple Text",
+    "inputElement": "input",
+    "inputType": [
+      "text",
+      "search",
+      "url",
+    ],
+    "systemTag": "text",
+  },
+  {
+    "displayName": "Multiple Select",
+    "inputElement": "input",
+    "inputType": "checkbox",
+    "systemTag": "multipleChoice",
+  },
+  {
+    "displayName": "Single Select",
+    "inputElement": "input",
+    "inputType": "radio",
+    "systemTag": "singleChoice",
+  },
+  {
+    "displayName": "Number Field",
+    "inputElement": "input",
+    "inputType": "number",
+    "systemTag": "number",
+  },
+  {
+    "displayName": "Date and/or Time Field",
+    "inputElement": "input",
+    "inputType": [
+      "date",
+      "time",
+    ],
+    "systemTag": "date",
+  },
+  {
+    "displayName": "Email Field",
+    "inputElement": "input",
+    "inputType": "email",
+    "systemTag": "email",
+  },
+  {
+    "displayName": "Password Field",
+    "inputElement": "input",
+    "inputType": "password",
+    "systemTag": "password",
+  },
+  {
+    "displayName": "Range Field",
+    "inputElement": "input",
+    "inputType": "range",
+    "systemTag": "range",
+  },
+  {
+    "displayName": "Telephone Field",
+    "inputElement": "input",
+    "inputType": "tel",
+    "systemTag": "telephone",
+  },
+  {
+    "displayName": "File Selection",
+    "inputElement": "input",
+    "inputType": "file",
+    "systemTag": "file",
+  },
+  {
+    "displayName": "Dropdown Field",
+    "inputElement": [
+      "select",
+      "option",
+      "optgroup",
+    ],
+    "inputType": "select",
+    "systemTag": "dropDown",
+  },
+  {
+    "displayName": "Large Text Area",
+    "inputElement": "textarea",
+    "inputType": "textarea",
+    "systemTag": "textArea",
+  },
+  {
+    "displayName": "Button",
+    "inputElement": [
+      "input",
+      "button",
+    ],
+    "inputType": [
+      "button",
+      "submit",
+    ],
+    "systemTag": "button",
+  },
+  {
+    "displayName": "Link",
+    "inputElement": "a",
+    "inputType": "href",
+    "systemTag": "link",
+  },
+  {
+    "displayName": "Unrecognized",
+    "inputElement": "others",
+    "inputType": "others",
+    "systemTag": "others",
+  },
+  {
+    "displayName": "Highlight",
+    "inputElement": "highlight",
+    "inputType": "highlight",
+    "systemTag": "highlight",
+  },
+]
+`;

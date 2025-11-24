@@ -92,12 +92,15 @@ export class ApiClient {
                 // Initialize headers
                 config.headers = config.headers || {};
 
-                // Extract JWT token from user state - match original logic
+                // Extract JWT token from user state - prioritize Keycloak
                 let token: string | null = null;
 
-                // Check userSessionData.authData first (matches original)
-                // It might be a JSON string, so we need to parse it.
-                if (userState.userSessionData?.authData) {
+                // 1. Prioritize Keycloak session data
+                if (userState.keycloakSessionData?.token) {
+                    token = userState.keycloakSessionData.token;
+                }
+                // 2. Fall back to userSessionData.authData
+                else if (userState.userSessionData?.authData) {
                     try {
                         // Handle case where authData is a stringified JSON
                         const authData = typeof userState.userSessionData.authData === 'string'
@@ -107,11 +110,7 @@ export class ApiClient {
                         token = authData?.authData?.token || authData?.token || null;
                     } catch (e) { /* Ignore parsing errors */ }
                 }
-                // Fall back to Keycloak session data
-                else if (userState.keycloakSessionData?.token) {
-                    token = userState.keycloakSessionData.token;
-                }
-                // Also check for direct token in userData
+                // 3. Fall back to direct token in userData
                 else if (userState.userData?.token) {
                     token = userState.userData.token;
                 }

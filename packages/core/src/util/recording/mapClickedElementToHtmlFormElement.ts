@@ -11,7 +11,7 @@ export const mapClickedElementToHtmlFormElement = (node: any) => {
     // Fetch the predefined list of HTML form elements.
     let htmlFormElements = fetchHtmlFormElements();
     // Initialize with a default 'others' type.
-    let selectedFormElement: any = {inputElement: 'others', inputType: 'others', displayName: 'Other HTML Element', systemTag: ''};
+    let selectedFormElement: any = {inputElement: 'others', inputType: 'others', displayName: 'Other HTML Element', systemTag: 'others'};
 
     // Iterate through each configured HTML form element.
     for(let htmlFormElement of htmlFormElements) {
@@ -46,4 +46,4 @@ export const mapClickedElementToHtmlFormElement = (node: any) => {
 }
 
 // Export as default for compatibility with older import syntaxes.
-export default mapClickedElementToHtmlFormElement
+export default mapClickedElementToHtmlFormElement;

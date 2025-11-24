@@ -25,8 +25,8 @@ export const invokeNextNode = (node: any, timeToInvoke: any) => {
       // Construct the current hostname to compare with the link's href.
       let hostname = window.location.protocol + "//" + window.location.host + window.location.pathname;
       let href = node.href.substr(hostname.length);
-      // If the href is not empty and not just a hash, it's considered a navigation link.
-      if (href !== '' && href !== "#") {
+      // If the href is not empty and not a hash link, it's considered a navigation link.
+      if (href !== '' && !href.startsWith("#")) {
         link = true;
         CONFIG.navigatedToNextPage.check = true;
         CONFIG.navigatedToNextPage.url = node.href;
@@ -43,15 +43,13 @@ export const invokeNextNode = (node: any, timeToInvoke: any) => {
   // Double the `timeToInvoke` for the next `UDAPlayNext` trigger.
   timeToInvoke += timeToInvoke;
 
-  // Trigger the 'UDAPlayNext' event after an additional delay.
+  // If it's not a navigation link, log it for debugging.
   if (!link) {
     UDAConsoleLogger.info(node, 2);
-    setTimeout(function () {
-      trigger("UDAPlayNext", {"playNext": true});
-    }, timeToInvoke);
-  } else {
-    setTimeout(function () {
-      trigger("UDAPlayNext", {"playNext": true});
-    }, timeToInvoke);
   }
+  
+  // Trigger the 'UDAPlayNext' event after an additional delay.
+  setTimeout(function () {
+    trigger("UDAPlayNext", {"playNext": true});
+  }, timeToInvoke);
 }

@@ -7,6 +7,7 @@ import MockAdapter from 'axios-mock-adapter';
 describe('ApiClient', () => {
     let client: ApiClient;
     let mockAxios: MockAdapter;
+    let consoleWarnSpy: jest.SpyInstance;
 
     beforeEach(() => {
         // Clear store state
@@ -19,11 +20,16 @@ describe('ApiClient', () => {
         
         // Create axios mock adapter on the client's axios instance
         mockAxios = new MockAdapter(client.getAxiosInstance());
+
+        // Spy on console.warn to suppress output and allow for assertions
+        consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
     });
 
     afterEach(() => {
         // Reset all mocks after each test
         mockAxios.reset();
+        // Restore the original console.warn
+        consoleWarnSpy.mockRestore();
     });
 
     afterAll(() => {
@@ -242,13 +248,16 @@ describe('ApiClient', () => {
             });
         });
 
-        it('should handle 401 Unauthorized error', async () => {
+        it('should handle 401 Unauthorized error and log a warning', async () => {
             mockAxios.onGet('/unauthorized').reply(401);
 
             await expect(client.get('/unauthorized')).rejects.toMatchObject({
                 message: 'Unauthorized - Authentication required or token expired',
                 status: 401
             });
+
+            // Verify that the warning was logged
+            expect(consoleWarnSpy).toHaveBeenCalledWith('API Client: Unauthorized request detected. Token may be expired.');
         });
 
         it('should handle 403 Forbidden error', async () => {

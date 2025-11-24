@@ -92,6 +92,19 @@ export class StorageUtil {
     }
   }
 
+  /**
+   * Clears all data from the appropriate storage mechanism.
+   *
+   * @returns A Promise that resolves when the storage is successfully cleared.
+   */
+  public static async clear(): Promise<void> {
+    if (this.UDABrowserPlugin && enablePlugin) {
+      return browserVar.storage.local.clear();
+    } else {
+      return window.localStorage.clear();
+    }
+  }
+
     /**
      * Sets data to `localStorage`. This method is a synchronous wrapper around `localStorage.setItem`.
      *

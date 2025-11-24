@@ -121,6 +121,11 @@ export const UDAErrorLogger = {
      * subject to the minimum log level. By design, only errors are sent to the server.
      */
     error: async function (message: any, exception: any = {message: "Error"}) {
+        // If the message is not a string, stringify it for better logging.
+        const errorMessage = typeof message === 'string' ? message : JSON.stringify(message);
+
+        let finalMessage: string;
+
         try {
             // Retrieve user authentication data from storage.
             const UDAUserAuthData: any = await StorageUtil.get(
@@ -131,17 +136,17 @@ export const UDAErrorLogger = {
             const userId = UDAUserAuthData?.authdata?.id;
             // Prepend the user ID to the message if it exists.
             if (userId) {
-                message = "UserID: " + userId + " Error: " + String(message);
+                finalMessage = "UserID: " + userId + " Error: " + errorMessage;
             } else {
-                message = "Error: " + String(message);
+                finalMessage = "Error: " + errorMessage;
             }
         } catch (e) {
             // If an error occurs while getting user data, format the message without user ID.
-            message = "Error: " + String(message);
+            finalMessage = "Error: " + errorMessage;
         }
 
         // Get the logger instance and log the error message.
         const logger = getLogger();
-        logger.error(message);
+        logger.error(finalMessage);
     },
 };
