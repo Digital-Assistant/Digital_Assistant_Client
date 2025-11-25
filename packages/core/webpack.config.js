@@ -1,6 +1,7 @@
 // webpack.config.js
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = (env, argv) => {
     const isProduction = argv.mode === 'production';
@@ -31,6 +32,11 @@ module.exports = (env, argv) => {
                     sourceMapLoaderRule, // Use the common rule
                 ],
             },
+            plugins: [
+                new webpack.ProvidePlugin({
+                    process: 'process/browser',
+                }),
+            ],
             resolve: {
                 extensions: ['.tsx', '.ts', '.js'],
                 fallback: {

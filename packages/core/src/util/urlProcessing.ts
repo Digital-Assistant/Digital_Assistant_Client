@@ -4,46 +4,70 @@
  */
 
 /**
- * Processes a URL by replacing placeholders (e.g., `#keyword#`) with actual values
- * from a provided request object. It also supports redacting sensitive query parameters.
+ * Processes a URL template by substituting placeholders with values from a given object.
  *
- * @param url The URL template with placeholders (e.g., `/search?query=#keyword#`).
- * @param request An object containing values to substitute for placeholders and optional redaction metadata.
- * @returns The processed URL with placeholders replaced and parameters potentially redacted.
+ * This function replaces placeholders in the format `#key#` with corresponding values from the `request` object.
+ * If a value is `null` or `undefined`, the placeholder is replaced with an empty string. All substituted values
+ * are URI-encoded to ensure a valid URL.
+ *
+ * The function also supports redacting sensitive query parameters. If a key in the `request` object
+ * has a value that is an object with `redact: true`, its corresponding query parameter in the final
+ * URL will be replaced with "REDACTED".
+ *
+ * URL fragments (e.g., `#section`) are preserved and appended to the final URL.
+ *
+ * @param url The URL template containing placeholders (e.g., `/search?query=#keyword#&page=#page#`).
+ * @param request An object where keys match the placeholder names in the URL.
+ *   - For simple substitution, the value is a string or number (e.g., `{ keyword: 'test' }`).
+ *   - For redaction, the value is an object (e.g., `{ sensitiveParam: { value: 'secret', redact: true } }`).
+ * @returns The processed URL with placeholders substituted, values encoded, and specified parameters redacted.
  */
 export const processUrlArgs = (url: string, request: any = {}): string => {
   if (!url || !request) return url;
 
-  // Preserve the hash fragment while operating on the base and query parts.
-  const [baseAndQuery, hash = ''] = url.split('#');
-
-  // First, replace placeholders like #key# in the base/query part.
-  let processed = baseAndQuery;
-  for (const key of Object.keys(request)) {
+  // Replace placeholders like #key# with values from the request object.
+  // This is done before other processing to ensure all placeholders are resolved.
+  const processed = url.replace(/#([^#]+)#/g, (_, key) => {
     const value = request[key];
-    if (value !== null && value !== undefined) {
-      const placeholder = new RegExp(`#${key}#`, 'g');
-      processed = processed.replace(placeholder, encodeURIComponent(String(value)));
+    if (value === null || value === undefined) {
+      return '';
     }
+
+    // Handle cases where the value is an object containing the actual value
+    // and potentially redaction metadata.
+    if (typeof value === 'object' && value.value !== undefined) {
+      return encodeURIComponent(String(value.value));
+    }
+
+    return encodeURIComponent(String(value));
+  });
+
+  // Separate the hash fragment to preserve it during query parameter processing.
+  const hashIndex = processed.indexOf('#');
+  let hash = '';
+  let urlToProcess = processed;
+  if (hashIndex !== -1) {
+    hash = processed.substring(hashIndex);
+    urlToProcess = processed.substring(0, hashIndex);
   }
 
-  // Apply redaction if requested (e.g., `request = { param: { redact: true } }`).
-  const [path, queryString = ''] = processed.split('?');
+  const [path, queryString = ''] = urlToProcess.split('?');
   if (!queryString) {
-    // If there's no query string to redact, restore the hash if any.
-    return hash ? `${path}#${hash}` : path;
+    return processed; // No query string, so nothing to redact or normalize.
   }
 
+  // Process query parameters for redaction.
   const params = new URLSearchParams(queryString);
   for (const [key, meta] of Object.entries(request)) {
-    // Check if the parameter needs to be redacted and exists in the query string.
     if (meta && typeof meta === 'object' && (meta as any).redact === true && params.has(key)) {
-      params.set(key, 'REDACTED'); // Redact the parameter's value.
+      params.set(key, 'REDACTED');
     }
   }
 
-  const finalUrl = `${path}?${params.toString()}`;
-  return hash ? `${finalUrl}#${hash}` : finalUrl;
+  // URLSearchParams encodes spaces as '+', but we want '%20' for consistency.
+  const paramsString = params.toString().replace(/\+/g, '%20');
+  const finalUrl = `${path}?${paramsString}`;
+  return finalUrl + hash;
 };
 
 /**

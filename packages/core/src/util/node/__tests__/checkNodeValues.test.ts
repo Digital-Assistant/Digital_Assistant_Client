@@ -1,5 +1,15 @@
 
 import { checkNodeValues } from '../checkNodeValues';
+import { specialNodes } from '../../specialNodes';
+
+// Mock the specialNodes configuration
+jest.mock('../../specialNodes', () => ({
+  specialNodes: {
+    'special-check': {
+      tagName: 'BUTTON',
+    },
+  },
+}));
 
 describe('checkNodeValues', () => {
   it('should return true for a div with matching text content', () => {
@@ -41,5 +51,11 @@ describe('checkNodeValues', () => {
   it('should return false for a node with no matching values', () => {
     const element = document.createElement('div');
     expect(checkNodeValues(element, 'test')).toBe(false);
+  });
+
+  it('should fall back to other checks if specialNodes check fails', () => {
+    const element = document.createElement('div');
+    element.textContent = 'special-check';
+    expect(checkNodeValues(element, 'special-check')).toBe(true);
   });
 });

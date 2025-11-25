@@ -171,6 +171,7 @@ export const RecordSequenceDetails = (props: MProps) => {
             return;
         }
         const playItem: any = getCurrentPlayItem();
+        console.log(playItem);
         if (playItem.node) {
             if (await matchNode(playItem)) {
                 updateStatus(playItem.index);
@@ -206,7 +207,7 @@ export const RecordSequenceDetails = (props: MProps) => {
      */
     const updateStatus = async (index: number) => {
         selectedRecordingDetails.userclicknodesSet[index].status = "completed";
-        await StorageUtil.add(selectedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
+        StorageUtil.setToStore(selectedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
         setSelectedRecordingDetails({...selectedRecordingDetails});
     };
 
@@ -221,7 +222,7 @@ export const RecordSequenceDetails = (props: MProps) => {
                 delete updatedRecordingDetails.userclicknodesSet[i].status;
             }
         }
-        StorageUtil.add(updatedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
+        StorageUtil.setToStore(updatedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
         setSelectedRecordingDetails(updatedRecordingDetails);
         setUserVote({upvote: 0, downvote: 0});
         return true;
@@ -420,7 +421,7 @@ export const RecordSequenceDetails = (props: MProps) => {
             props.showLoader(true);
             await updateRecording({id: selectedRecordingDetails.id, additionalParams: tmpPermissionsObj});
             selectedRecordingDetails.additionalParams = tmpPermissionsObj;
-            await StorageUtil.add(selectedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
+            StorageUtil.setToStore(selectedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
             await setAdvBtnShow(!advBtnShow);
             props.showLoader(false);
         } else {
@@ -476,7 +477,7 @@ export const RecordSequenceDetails = (props: MProps) => {
         selectedRecordingDetails.additionalParams = permissions;
 
         // Save updated recording details to store
-        await StorageUtil.add(selectedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
+        StorageUtil.setToStore(selectedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
 
         // Hide loader after operation is complete
         props.showLoader(false);
@@ -566,7 +567,7 @@ export const RecordSequenceDetails = (props: MProps) => {
             setSelectedRecordingDetails(updatedData);
 
             // Update the data in local storage
-            await StorageUtil.add(updatedData, CONFIG.SELECTED_RECORDING, false);
+            StorageUtil.setToStore(updatedData, CONFIG.SELECTED_RECORDING, false);
 
             // Exit editing mode
             setIsEditingLabels(false);
@@ -589,7 +590,7 @@ export const RecordSequenceDetails = (props: MProps) => {
         const updatedRecordingDetails = {...selectedRecordingDetails};
         updatedRecordingDetails.userclicknodesSet = data;
         setSelectedRecordingDetails(updatedRecordingDetails);
-        await StorageUtil.add(updatedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
+        StorageUtil.setToStore(updatedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
         if (enableValidation) {
             dispatch(startValidation(selectedRecordingDetails.id));
         }

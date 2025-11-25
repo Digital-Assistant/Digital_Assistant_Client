@@ -28,7 +28,6 @@ export const checkNodeValues = (node: any, checkType: string) => {
           return true;
         }
       }
-      return false;
     }
 
     // Prepare the value to search for.

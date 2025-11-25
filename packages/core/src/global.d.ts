@@ -23,6 +23,7 @@ declare global {
         UDAGlobalConfig: any;
         udaSpecialNodes: any;
         onDomChange: any;
+        clickedNode: any;
         // udanSelectedNodes: any;
         // clickedNode: any;
     }

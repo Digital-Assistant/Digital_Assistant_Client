@@ -1,3 +1,4 @@
+import 'setimmediate';
 import './util/translate/i18n/';
 import type {AppDispatch, RootState} from './store';
 import {store} from './store';

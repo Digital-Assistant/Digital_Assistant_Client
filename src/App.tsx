@@ -103,7 +103,7 @@ function App(props) {
         setRecordSequenceDetailsVisibility,
     ] = useState<boolean>(false);
     const [selectedRecordingDetails, setSelectedRecordingDetails] =
-        useState<any>(StorageUtil.get(CONFIG.SELECTED_RECORDING, false) || false);
+        useState<any>(StorageUtil.getFromStore(CONFIG.SELECTED_RECORDING, false) || false);
 
     /**
      * keycloak integration
@@ -145,7 +145,7 @@ function App(props) {
     useEffect(() => {
         if (invokeKeycloak) {
             // let keycloakData = getFromStore(CONFIG.UDAKeyCloakKey, false);
-            let keycloakData = StorageUtil.get(CONFIG.UDAKeyCloakKey, false);
+            let keycloakData = StorageUtil.getFromStore(CONFIG.UDAKeyCloakKey, false);
             if (keycloakData) {
                 setKeycloakSessionData(keycloakData);
                 // setAuthenticated(true);
@@ -186,7 +186,7 @@ function App(props) {
 
                         // Store user data
                         // setToStore(userData, CONFIG.UDAKeyCloakKey, false);
-                        await StorageUtil.add(userData, CONFIG.UDAKeyCloakKey, false);
+                        StorageUtil.setToStore(userData, CONFIG.UDAKeyCloakKey, false);
                         // Set keycloak session data
                         setKeycloakSessionData(userData);
 
@@ -280,7 +280,7 @@ function App(props) {
 
     const createSession = useCallback(async (data) => {
         // setToStore(data.detail.data, CONFIG.USER_AUTH_DATA_KEY, true);
-        await StorageUtil.add(data.detail.data, CONFIG.USER_AUTH_DATA_KEY);
+        StorageUtil.setToStore(data.detail.data, CONFIG.USER_AUTH_DATA_KEY, true);
         setAuthenticated(true);
         setUserSessionData(data.detail.data);
         DigitalAssistantCoreSDK.dispatch(setUserData(data.detail.data));
@@ -346,8 +346,8 @@ function App(props) {
             });
             if(recordDetails && recordDetails !== null){
                 // setToStore(recordDetails, CONFIG.SELECTED_RECORDING, false);
-                await StorageUtil.add(recordDetails, CONFIG.SELECTED_RECORDING, false);
-                DigitalAssistantCoreSDK.dispatch(setSelectedRecordingDetails(recordDetails));
+                StorageUtil.setToStore(recordDetails, CONFIG.SELECTED_RECORDING, false);
+                // DigitalAssistantCoreSDK.dispatch(setSelectedRecordingDetails(recordDetails));
                 await showRecordingDetails(recordDetails);
                 await togglePanel();
                 offSearch();
@@ -392,7 +392,7 @@ function App(props) {
         const initialInvoke = async ()=> {
 
             // let userSessionData = getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
-            let userSessionData = await StorageUtil.get(CONFIG.USER_AUTH_DATA_KEY, false);
+            let userSessionData = StorageUtil.getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
             if (!userSessionData) {
                 trigger("RequestUDASessionData", {
                     detail: { data: "getusersessiondata" },
@@ -443,7 +443,7 @@ function App(props) {
         window.isRecording = isRecording;
         CONFIG.isRecording = isRecording;
         // setToStore(isRecording, CONFIG.RECORDING_SWITCH_KEY, true);
-        StorageUtil.setToStore(isRecording, CONFIG.RECORDING_SWITCH_KEY, true);
+        // StorageUtil.setToStore(isRecording, CONFIG.RECORDING_SWITCH_KEY, true);
         if (isRecording) {
             setHide(false);
             initializeDomChanges();
@@ -572,6 +572,7 @@ function App(props) {
         setShowRecord(false);
         // DigitalAssistantCoreSDK.dispatch(setIsRecording(true));
         // DigitalAssistantCoreSDK.dispatch(setShowRecord(false));
+        StorageUtil.setToStore(true, CONFIG.RECORDING_SWITCH_KEY, true);
         setReFetchSearch("");
         setShowSearch(false);
         recordUserClickData('recordingStart');
@@ -591,11 +592,11 @@ function App(props) {
         /*setToStore("off", CONFIG.RECORDING_MANUAL_PLAY, true);
         setToStore([], CONFIG.RECORDING_SEQUENCE, false);
         setToStore({}, CONFIG.SELECTED_RECORDING, false);*/
-        await StorageUtil.add("off", CONFIG.RECORDING_MANUAL_PLAY);
-        await StorageUtil.add([], CONFIG.RECORDING_SEQUENCE, false);
-        await StorageUtil.add({}, CONFIG.SELECTED_RECORDING, false);
+        StorageUtil.setToStore("off", CONFIG.RECORDING_MANUAL_PLAY, true);
+        StorageUtil.setToStore([], CONFIG.RECORDING_SEQUENCE, false);
+        StorageUtil.setToStore({}, CONFIG.SELECTED_RECORDING, false);
         setSelectedRecordingDetails({});
-        DigitalAssistantCoreSDK.dispatch(setSelectedRecordingDetails({}));
+        // DigitalAssistantCoreSDK.dispatch(setSelectedRecordingDetails({}));
         if(forceRefresh || searchResults.length === 0) {
             setReFetchSearch("on");
         }
@@ -637,9 +638,9 @@ function App(props) {
             setReFetchSearch("off");
             setShowSearch(false);
             // setToStore([], CONFIG.RECORDING_SEQUENCE, false);
-            await StorageUtil.add([], CONFIG.RECORDING_SEQUENCE, false);
+            StorageUtil.setToStore([], CONFIG.RECORDING_SEQUENCE, false);
             setShowRecord(hideFlag);
-            DigitalAssistantCoreSDK.dispatch(setShowRecord(hideFlag));
+            // DigitalAssistantCoreSDK.dispatch(setShowRecord(hideFlag));
         } else {
             await togglePanel();
         }
@@ -663,12 +664,12 @@ function App(props) {
         setReFetchSearch("");
         setShowSearch(false);
         setManualPlay("off");
-        DigitalAssistantCoreSDK.dispatch(setManualPlay("off"));
+        // DigitalAssistantCoreSDK.dispatch(setManualPlay("off"));
         // setToStore("off", CONFIG.RECORDING_MANUAL_PLAY, true);
-        await StorageUtil.add("off", CONFIG.RECORDING_MANUAL_PLAY);
+        StorageUtil.setToStore("off", CONFIG.RECORDING_MANUAL_PLAY, true);
         playHandler("off");
         setShowRecord(flag);
-        DigitalAssistantCoreSDK.dispatch(setShowRecord(flag));
+        // DigitalAssistantCoreSDK.dispatch(setShowRecord(flag));
     };
 
     /**
@@ -720,10 +721,10 @@ function App(props) {
     const playHandler = async (status: string) => {
         setPlayDelay(status);
         setIsPlaying(status);
-        DigitalAssistantCoreSDK.dispatch(setPlayDelay(status));
-        DigitalAssistantCoreSDK.dispatch(setIsPlaying(status));
+        // DigitalAssistantCoreSDK.dispatch(setPlayDelay(status));
+        // DigitalAssistantCoreSDK.dispatch(setIsPlaying(status));
         // setToStore(status, CONFIG.RECORDING_IS_PLAYING, true);
-        await StorageUtil.add(status, CONFIG.RECORDING_IS_PLAYING);
+        StorageUtil.setToStore(status, CONFIG.RECORDING_IS_PLAYING, true);
     };
 
     const userContent = () => {
