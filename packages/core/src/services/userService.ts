@@ -109,22 +109,25 @@ export const getUserId = async (): Promise<string | null> => {
         const userState = state.user ?? null;
         if (!userState || typeof userState !== 'object') return null;
 
-        // Try to extract id from parsed auth data
-        const auth = extractAuthData(userState);
-        const authId = normalizeToString(auth?.id);
-        if (authId) return authId;
+        // Use extractAuthData to safely get the authData object
+        const authData = extractAuthData(userState);
 
-        // Fall back to raw session auth id (may be string or number)
-        const sessionAuthId = normalizeToString(userState?.userSessionData?.authData?.id);
-        if (sessionAuthId) return sessionAuthId;
+        if (authData?.id) {
+            const userId = normalizeToString(authData.id);
+            if (userId) return userId;
+        }
 
-        // Fall back to userData.id
-        const userDataId = normalizeToString(userState?.userData?.id);
-        if (userDataId) return userDataId;
+        // Check userData
+        if (userState.userData?.id) {
+            const userId = normalizeToString(userState.userData.id);
+            if (userId) return userId;
+        }
 
-        // Fall back to keycloak session id
-        const keycloakId = normalizeToString(userState?.keycloakSessionData?.id);
-        if (keycloakId) return keycloakId;
+        // Check keycloakSessionData
+        if (userState.keycloakSessionData?.id) {
+            const userId = normalizeToString(userState.keycloakSessionData.id);
+            if (userId) return userId;
+        }
 
         return null;
     } catch (error) {
@@ -156,10 +159,9 @@ export const getSessionKey = async (): Promise<string | null> => {
         const userState = state.user ?? null;
         if (!userState || typeof userState !== 'object') return null;
 
-        // Fallbacks for legacy/session storage keys
-        const sessionKey = normalizeToString(userState?.userSessionData?.sessionKey);
-        if (sessionKey)
-            return sessionKey;
+        if(userState?.userSessionData?.sessionKey) {
+            return userState.userSessionData.sessionKey;
+        }
 
         return null;
     } catch (error) {

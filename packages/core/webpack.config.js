@@ -22,6 +22,7 @@ module.exports = (env, argv) => {
                 filename: 'index.esm.js',
                 module: true,
                 library: {type: 'module'},
+                clean: true, // Clean the output directory before emit.
             },
             experiments: {outputModule: true},
             module: {
@@ -46,7 +47,7 @@ module.exports = (env, argv) => {
                     "process/browser": require.resolve("process/browser")
                 },
             },
-            devtool: isProduction ? false : 'source-map',
+            devtool: isProduction ? false : 'source-map', // Changed to 'source-map'
             optimization: {
                 minimize: isProduction,
                 minimizer: [
@@ -64,6 +65,7 @@ module.exports = (env, argv) => {
                 path: path.resolve(__dirname, 'dist'),
                 filename: 'index.cjs.js',
                 library: {type: 'commonjs2'},
+                clean: true, // Clean the output directory before emit.
             },
             target: 'node',
             module: {
@@ -73,7 +75,7 @@ module.exports = (env, argv) => {
                 ],
             },
             resolve: {extensions: ['.tsx', '.ts', '.js']},
-            devtool: isProduction ? false : 'source-map',
+            devtool: isProduction ? false : 'source-map', // Changed to 'source-map'
             optimization: {
                 minimize: isProduction,
                 minimizer: [

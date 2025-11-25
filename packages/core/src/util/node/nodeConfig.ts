@@ -73,13 +73,3 @@ function deepClone<T>(obj: T): T {
 // ensuring callers always receive a fresh deep-cloned snapshot while keeping
 // the named export available for type-checking and TypeScript import syntax.
 export const nodeConfig: any = deepClone(_nodeConfig);
-
-// Provide a dynamic export so that requiring the module again returns a fresh copy,
-// suitable for snapshot comparison after attempted mutations.
-// This is achieved by defining a getter on the `exports` object.
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-Object.defineProperty(exports, 'nodeConfig', {
-    enumerable: true,
-    get: () => deepClone(_nodeConfig)
-});
