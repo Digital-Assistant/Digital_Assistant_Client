@@ -1,27 +1,26 @@
 {
   "compilerOptions": {
     // --- Environment & Module Settings ---
-    "target": "ES2020",         // Output modern JS for better performance and smaller size.
-    "module": "ESNext",         // Let Webpack handle the final module format (UMD).
-    "moduleResolution": "node",
+    "target": "ES2020", // Output modern JS for better performance and smaller size.
+    "module": "ESNext", // Let Webpack handle the final module format (UMD).
+    "moduleResolution": "node", // Use Node.js module resolution algorithm.
     "lib": [
-      "DOM",                    // CRITICAL: Adds types for 'window', 'document', etc.
-      "DOM.Iterable",
-      "ES2020"                  // Matches the "target" setting.
+      "DOM", // CRITICAL: Adds types for 'window', 'document', etc.
+      "DOM.Iterable", // Adds types for iterables in DOM (e.g. NodeList).
+      "ES2020" // Matches the "target" setting.
     ],
-
     // --- Build & Interop Settings ---
-    "declaration": true,        // IMPORTANT: Creates .d.ts files for your users.
-    "outDir": "./dist",         // Specify output directory for the .d.ts files.
-    "esModuleInterop": true,
-    "sourceMap": true,          // Generate source maps for easier debugging.
-
+    "declaration": true, // IMPORTANT: Creates .d.ts files for your users.
+    "declarationMap": true, // Enables "Go to Definition" to jump to source code.
+    "outDir": "./dist", // Specify output directory for the .d.ts files.
+    "esModuleInterop": true, // Enables compatibility with CommonJS modules.
+    "sourceMap": true, // Generate source maps for easier debugging.
+    "resolveJsonModule": true, // Allow importing .json files.
     // --- Strictness & Best Practices ---
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
-    "allowJs": true
-    // REMOVED "jsx": "react-jsx" as you are not using React.
+    "strict": true, // Enable all strict type-checking options.
+    "forceConsistentCasingInFileNames": true, // Disallow inconsistently-cased references to the same file.
+    "skipLibCheck": true, // Skip type checking of declaration files.
+    "allowJs": true // Allow JavaScript files to be compiled.
   },
   "include": [
     "src"

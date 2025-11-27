@@ -172,7 +172,7 @@ module.exports = (env, argv) => {
                 utils: path.resolve(__dirname, "./src/config/index"),
                 // alias for antd
                 antd: path.resolve(__dirname, 'node_modules/antd'),
-                "@digital-assistant/core": path.resolve(__dirname, 'packages/core/dist/index.esm.js'),
+                // "@digital-assistant/core": path.resolve(__dirname, 'packages/core/dist/index.esm.js'),
             },
             fallback: {
                 //fallback module dependencies
