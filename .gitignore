@@ -47,4 +47,5 @@ output/
 execution-logs/
 
 packages/core/.jest-cache/
-packages/core/dist/
+packages/core/dist/*
+.vscode/
