@@ -38,7 +38,7 @@ export const CustomConfig: CustomConfigPropTypes = {
   enableEditClickedName: false, // Flag for editing the clicked element
   enableSkipDuringPlay: false, // Flag for enabling skip functionality
   enableTooltipAddition: true, // Flag for adding custom tooltip information
-  enableMultilingual: false, // Flag for enabling multilingual search with speech
+  enableMultilingual: true, // Flag for enabling multilingual search with speech
   enableNodeTypeSelection: true, // Flag for enabling node type selection
   enablePermissions: false, // Flag for enabling permissions addition
   permissions: {}, // Object where the permissions can be passed
@@ -56,9 +56,9 @@ export const CustomConfig: CustomConfigPropTypes = {
   realm: process.env.keycloakRealm, // Realm name to be used for authentication
   clientId: process.env.keycloakClientId, // Client ID to be used for authentication
   clientSecret: process.env.keycloakClientSecret, // Client secret to be used for authentication
-  enableHidePanelAfterCompletion: false, // Flag to enable hiding the panel after completion
-  enableStatusSelection: false, // Flag to enable status selection
-  enableUDAIconDuringRecording: false, // Flag to enable UDA icon during recording
+  enableHidePanelAfterCompletion: true, // Flag to enable hiding the panel after completion
+  enableStatusSelection: true, // Flag to enable status selection
+  enableUDAIconDuringRecording: true, // Flag to enable UDA icon during recording
   enableEditingOfRecordings: true, // Flag to enable editing of recordings
   enableAISearch: true
 };
