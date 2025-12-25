@@ -165,6 +165,7 @@ export const getCurrentPlayItem = () => {
       retObj.index = i;
       retObj.node = elementsFromStore?.userclicknodesSet[i];
       retObj.additionalParams = elementsFromStore?.additionalParams;
+      retObj.selectedRecordingDetails = elementsFromStore;
       break;
     }
   }

@@ -53,7 +53,7 @@ import {
 const DigitalAssistantCoreSDK = new DigitalAssistantCore(window.UDAPluginSDK);
 
 function App(props) {
-    
+
     // Subscribe to SDK state changes
     const [sdkState, setSdkState] = useState(DigitalAssistantCoreSDK.getState());
 
@@ -97,7 +97,7 @@ function App(props) {
     const [page, setPage] = useState<number>(0);
     const [hasMorePages, setHasMorePages] = useState<boolean>(true);
     const [reFetchSearch, setReFetchSearch] = useState<string>("off");
-    const [recSequenceData, setRecSequenceData] = useState<any>([]);
+    const [recSequenceData, setRecSequenceData] = useState<any>(getFromStore(CONFIG.RECORDING_SEQUENCE, false) || []);
     const [
         recordSequenceDetailsVisibility,
         setRecordSequenceDetailsVisibility,
@@ -372,6 +372,16 @@ function App(props) {
         setAuthenticated(false);
     }
 
+    const updateRecordedData = async () => {
+        let recordingData = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
+        // console.log(recordingData);
+        if(recordingData.length > 0) {
+            setRecSequenceData(recordingData);
+        } else {
+            setRecSequenceData([]);
+        }
+    }
+
     /**
      * Initializing functionality on start of the application
      */
@@ -385,6 +395,7 @@ function App(props) {
         on("openPanel", openPanel);
         on("closePanel", closePanel);
         on("UDAGetNewToken", logout);
+        on("updateRecordedData", updateRecordedData);
 
         /**
          * Asynchronous function to be get called in the beginning
@@ -436,6 +447,7 @@ function App(props) {
             off("UDAAlertMessageData", authenticationError);
             off("openPanel", openPanel);
             off("closePanel", closePanel);
+            off("updateRecordedData", updateRecordedData);
         };
     }, []);
 
@@ -465,6 +477,13 @@ function App(props) {
     /**
      * Sync data with storage
      */
+    /*useInterval(() => {
+        let recordingData = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
+        // console.log(recordingData);
+        if(recordingData.length > 0) {
+            setRecSequenceData(recordingData);
+        }
+    }, CONFIG.SYNC_INTERVAL);*/
     useInterval(() => {
         // DigitalAssistantCoreSDK.dispatch(setRecSequenceData(getFromStore(CONFIG.RECORDING_SEQUENCE, false)));
         // DigitalAssistantCoreSDK.dispatch(setRecSequenceData(await StorageUtil.get(CONFIG.RECORDING_SEQUENCE, false)));
@@ -802,7 +821,7 @@ function App(props) {
                                             }
                                         />
                                     )}
-
+                                {(recSequenceData?.length > 0) && <>
                                 <UdanMain.RecordedData
                                     isShown={toggleContainer(
                                         "recorded-data"
@@ -822,7 +841,8 @@ function App(props) {
                                         global.UDAGlobalConfig
                                     }
                                 />
-
+                                </>
+                                }
                                 {recordSequenceDetailsVisibility && (
                                     <UdanMain.RecordSequenceDetails
                                         data={

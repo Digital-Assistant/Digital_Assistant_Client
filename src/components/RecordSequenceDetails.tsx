@@ -58,14 +58,15 @@ import {
 
 
 interface MProps {
-    data?: any;
-    config?: any;
-    refetchSearch?: Function;
-    recordSequenceDetailsVisibility?: boolean;
-    cancelHandler?: Function;
-    playHandler?: Function;
-    isPlaying?: string;
-    showLoader?: Function;
+  data?: any;
+  config?: any;
+  refetchSearch?: Function;
+  recordSequenceDetailsVisibility?: boolean;
+  cancelHandler?: Function;
+  playHandler?: Function;
+  isPlaying?: string;
+  showLoader?: Function;
+  searchKeyword?: string;
 }
 
 /**

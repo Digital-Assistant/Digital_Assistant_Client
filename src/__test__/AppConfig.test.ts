@@ -184,7 +184,8 @@ it('should not update CustomConfig with invalid data types', () => {
         enableHidePanelAfterCompletion: false, // Add this property
         enableStatusSelection: false, // Flag to enable status selection
         enableUDAIconDuringRecording: false, // Flag to enable UDA icon during recording
-        enableEditingOfRecordings: false // Flag to enable editing of recordings
+        enableEditingOfRecordings: false, // Flag to enable editing of recordings
+        enableAISearch: true
       };
   });
 
@@ -530,7 +531,8 @@ describe('AppConfig', () => {
         enableHidePanelAfterCompletion: false, // Add this property
         enableStatusSelection: false, // Flag to enable status selection
         enableUDAIconDuringRecording: false, // Flag to enable UDA icon during recording
-        enableEditingOfRecordings: false // Flag to enable editing of recordings
+        enableEditingOfRecordings: false, // Flag to enable editing of recordings
+        enableAISearch: true
       };
     AppConfig(testData);
     expect(CustomConfig).toEqual(testData);
