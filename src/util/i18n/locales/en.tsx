@@ -47,6 +47,10 @@ export const TRANSLATIONS_EN = {
   statusLabel: "Recording Status",
   playBackItemNotFound: "Clickable element not found",
   playBackTimePlaceHolder: "Number of seconds to delay (Optional)",
+  customMetadataPlaceHolder: "Custom Metadata",
+  customMetadataDescriptionPlaceHolder: "Custom Metadata Description",
+  submit: "Submit",
+  update: "Update",
 
   // New translations for RecordSequenceDetails.tsx
   skipDuringPlay: "Skip during play",

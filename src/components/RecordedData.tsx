@@ -21,6 +21,7 @@ import {UDAConsoleLogger, UDAErrorLogger} from "../config/error-log";
 import {addNotification} from "../util/addNotification";
 import EditableStepForm from "./EditableStepForm";
 import {hasValidScreenInfo} from "../util/hasValidScreenInfo";
+import {trigger} from "../util/events";
 
 export interface MProps {
     sequenceName?: string;
@@ -57,6 +58,7 @@ export const RecordedData = (props: MProps) => {
     const [savingError, setSavingError] = useState<boolean>(false);
     const [slowPlayback, setSlowPlayback] = useState<boolean>(false);
     const [delayPlaybackTime, setDelayPlaybackTime] = useState<number>(1);
+    const [customMetdata, setCustomMetdata] = useState<any>({});
 
     // variable for setting screen information availability
     const [screenInfoNotAvailable, setScreenInfoNotAvailable] = useState<boolean>(false);
@@ -64,6 +66,14 @@ export const RecordedData = (props: MProps) => {
     useEffect(() => {
         setRecordData([...(props.data || [])]);
     }, [props.data]);
+
+    useEffect(() => {
+        setCustomMetdata({});
+    }, [recordData]);
+
+    /**
+     * @param data
+     */
 
     useEffect(() => {
         let permissions = {...props?.config?.permissions};
@@ -267,6 +277,7 @@ export const RecordedData = (props: MProps) => {
             props.recordHandler("cancel");
         }
         StorageUtil.add([], CONFIG.RECORDING_SEQUENCE, false);
+        trigger("updateRecordedData",{});
     };
 
     /**
@@ -442,6 +453,7 @@ export const RecordedData = (props: MProps) => {
             if (props.recordHandler) props.recordHandler("cancel");
             StorageUtil.add(false, CONFIG.RECORDING_SWITCH_KEY, true);
             StorageUtil.add([], CONFIG.RECORDING_SEQUENCE, false);
+            trigger("updateRecordedData",{});
 
         } catch (error) {
             setFormSubmit(false);
@@ -612,12 +624,26 @@ export const RecordedData = (props: MProps) => {
         const _objData = getObjData(recordData[index]?.objectdata);
         if (_objData) {
             if (_objData.meta[key] === undefined) _objData.meta[key] = tooltip;
-            _objData.meta[key] = tooltip
+            _objData.meta[key] = tooltip;
             recordData[index].objectdata = TSON.stringify(_objData);
             storeRecording(recordData);
             setToolTip("");
         }
         await setDisableTooltipSubmitBtn(false);
+        props.showLoader(false);
+    };
+
+    const updateMetadata = async (key: string, index: number) => {
+        props.showLoader(true);
+        const _objData = getObjData(recordData[index]?.objectdata);
+        if (_objData) {
+            if (customMetdata[key]) {
+                _objData.meta[key] = customMetdata[key];
+            }
+            // _objData.meta[key] = customMetdata[key]
+            recordData[index].objectdata = TSON.stringify(_objData);
+            storeRecording(recordData);
+        }
         props.showLoader(false);
     };
 

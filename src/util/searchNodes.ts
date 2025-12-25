@@ -26,6 +26,13 @@ export const searchNodes = (recordedNode, compareElements) => {
   for (let searchNode of compareElements) {
     let searchLabelExists = false;
     let compareNode = domJSON.toJSON(searchNode.node, {serialProperties: true});
+    //Fix for new line string
+    if (compareNode.node.innerText && compareNode.node.innerText.includes('\n')) {
+      compareNode.node.innerText = compareNode.node.innerText.replace(/\n/g, "");
+    }
+    if (compareNode.node.outerText && compareNode.node.outerText.includes('\n')) {
+      compareNode.node.outerText = compareNode.node.outerText.replace(/\n/g, "");
+    }
     // compare recorded node with personal node tag or not
     let match = compareNodes(compareNode.node, recordedNodeData.node, isPersonalNode);
 
