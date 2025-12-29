@@ -97,7 +97,7 @@ function App(props) {
     const [page, setPage] = useState<number>(0);
     const [hasMorePages, setHasMorePages] = useState<boolean>(true);
     const [reFetchSearch, setReFetchSearch] = useState<string>("off");
-    const [recSequenceData, setRecSequenceData] = useState<any>(getFromStore(CONFIG.RECORDING_SEQUENCE, false) || []);
+    const [recSequenceData, setRecSequenceData] = useState<any>(StorageUtil.getFromStore(CONFIG.RECORDING_SEQUENCE, false) || []);
     const [
         recordSequenceDetailsVisibility,
         setRecordSequenceDetailsVisibility,
@@ -373,7 +373,8 @@ function App(props) {
     }
 
     const updateRecordedData = async () => {
-        let recordingData = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
+        // let recordingData = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
+        let recordingData = StorageUtil.getFromStore(CONFIG.RECORDING_SEQUENCE, false);
         // console.log(recordingData);
         if(recordingData.length > 0) {
             setRecSequenceData(recordingData);

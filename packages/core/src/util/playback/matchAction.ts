@@ -14,6 +14,7 @@ import {translate} from "../translate";
 import {addToolTip, removeToolTip } from "../notification";
 import {inArray} from "../inArray";
 import {CONFIG} from "../../config";
+import {matchLLMInputToNode} from "./matchLLMInputToNode";
 
 /**
  * Matches the action of a recorded node to a live DOM element and performs the corresponding action.
@@ -25,24 +26,29 @@ import {CONFIG} from "../../config";
  * @param selectedNode The recorded node object from the stored navigation sequence, containing its original data and metadata.
  * @param toolTipVisibleTIme The time (in seconds) for which the instructional tooltip should be visible before proceeding. Defaults to 1 second.
  */
-export const matchAction = (node: any, selectedNode: any, toolTipVisibleTIme: number = 1) => {
+export const matchAction = (node: any, selectedNode: any, selectedRecordingDetails: any) => {
 
-  // If there is no matching live DOM element, abort the action.
-  if (!node) {
-    return;
+  let playBackDelayTime = 2;
+  if(selectedRecordingDetails?.additionalParams?.slowPlaybackTime){
+    playBackDelayTime = selectedRecordingDetails?.additionalParams?.slowPlaybackTime;
   }
 
-  // The objectdata property is expected to be a JSON string. If it's already an object,
-  // something is wrong, so we abort to prevent errors.
-  if(typeof selectedNode.objectdata !== 'string'){
-      return;
+  if (!node) {
+    return;
   }
 
   // Parse the recorded data of the node from its JSON string format.
   const recordedNodeData = JSON.parse(selectedNode?.objectdata);
 
   // Convert the tooltip visibility time from seconds to milliseconds for use with setTimeout.
-  let timeToInvoke = toolTipVisibleTIme * 1000;
+  let timeToInvoke: number = playBackDelayTime*1000;
+
+
+  // The objectdata property is expected to be a JSON string. If it's already an object,
+  // something is wrong, so we abort to prevent errors.
+  if(typeof selectedNode.objectdata !== 'string'){
+      return;
+  }
 
   // Clear any tooltips that might be lingering from a previous action.
   removeToolTip();
@@ -54,6 +60,16 @@ export const matchAction = (node: any, selectedNode: any, toolTipVisibleTIme: nu
 
   // Retrieve the complete recording data from the store for context.
   const navigationData = getSelectedRecordFromStore();
+
+  // invoking the node based on the LLM api
+  if(window.UDAGlobalConfig.enableAISearch && recordedNodeData.meta?.inputType){
+    const invokedNodeFromLLM = matchLLMInputToNode(node, selectedNode, selectedRecordingDetails, timeToInvoke);
+    if(invokedNodeFromLLM) {
+      return;
+    } else {
+      // UDAErrorLogger.error('llm input processing failed');
+    }
+  }
 
   // If the "Node Type Selection" feature is enabled, try a more specific action mapping first.
   // This allows for custom handling of elements tagged with a specific systemTag.
