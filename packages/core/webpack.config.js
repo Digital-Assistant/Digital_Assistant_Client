@@ -11,10 +11,14 @@ const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 const webpack = require('webpack');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 const pkg = require('./package.json');
 
 module.exports = (env, argv) => {
     const isProduction = argv.mode === 'production';
+
+    // Determine environment file path based on build environment
+    const envFile = './environments/' + (env && env.build ? `${env.build}.env` : 'local.env');
 
     /**
      * Externals Configuration
@@ -94,6 +98,16 @@ module.exports = (env, argv) => {
             }),
             // Run type checking in a separate process for faster builds
             new ForkTsCheckerWebpackPlugin(),
+            // Load environment variables from .env files
+            new Dotenv({
+                path: `${envFile}`,
+                safe: true,
+                allowEmptyValues: true,
+                systemvars: false,
+                silent: true,
+                defaults: false,
+                ignoreStub: true,
+            }),
         ],
         optimization: {
             minimize: isProduction,

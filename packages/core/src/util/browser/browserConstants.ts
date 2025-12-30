@@ -11,7 +11,7 @@ let UDABrowserPlugin: boolean=false;
 /**
  * The session name for UDA.
  */
-let UDASessionName=CONFIG.USER_AUTH_DATA_KEY;
+let UDASessionName= CONFIG.USER_AUTH_DATA_KEY;
 
 /**
  * The ID of the active tab.

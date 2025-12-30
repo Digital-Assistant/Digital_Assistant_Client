@@ -2,3 +2,9 @@ dist/*
 node_modules/
 environments/*
 UI-Refactoring/*
+package-lock.json
+.venv/*
+.DS_Store
+.vscode/
+.idea/
+.jest-cache/

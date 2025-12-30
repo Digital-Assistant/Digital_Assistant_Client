@@ -7,6 +7,27 @@ import {TranslateService} from './services/TranslateService';
 import {ErrorLoggerService} from './services/ErrorLoggerService';
 import {DigitalAssistantConfiguration} from './DigitalAssistantConfiguration';
 
+import { AuthDataConfig } from './util/user/AuthDataConfig';
+import { AuthConfig } from './util/user/UserAuthConfig';
+import { AppConfig } from './config/AppConfig';
+import { CustomConfig } from './config/CustomConfig';
+
+// Export for module usage
+export { AuthDataConfig, AuthConfig, AppConfig, CustomConfig };
+
+// Expose globally for both Browser Extension and Independent SDK
+if (typeof window !== 'undefined') {
+    (window as any).UDAAuthDataConfig = AuthDataConfig;
+    (window as any).UDAAuthConfig = AuthConfig;
+    (window as any).UDAPluginSDK = AppConfig;
+    (window as any).UDAGlobalConfig = CustomConfig;
+} else if (typeof global !== 'undefined') {
+    (global as any).UDAAuthDataConfig = AuthDataConfig;
+    (global as any).UDAAuthConfig = AuthConfig;
+    (global as any).UDAPluginSDK = AppConfig;
+    (global as any).UDAGlobalConfig = CustomConfig;
+}
+
 // Export the store and types for external consumption
 export { store } from './store';
 export type { RootState, AppDispatch } from './store';

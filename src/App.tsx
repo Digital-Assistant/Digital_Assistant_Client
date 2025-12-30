@@ -17,16 +17,16 @@ import useInterval from "react-useinterval";
 import keycloak from "./config/keycloak";
 import { off, on, trigger } from "./util/events";
 import { UserDataContext } from "./providers/UserDataContext";
-import { AppConfig } from "./config/AppConfig";
-import { CustomConfig } from "./config/CustomConfig";
+// import { AppConfig } from "./config/AppConfig";
+// import { CustomConfig } from "./config/CustomConfig";
 import {postRecordSequenceData, recordUserClickData} from "./services";
 // import { addBodyEvents } from "./util/addBodyEvents";
 // import { initSpecialNodes } from "./util/initSpecialNodes";
 // import {fetchDomain} from "./util/fetchDomain";
 
 // adding global variable declaration for exposing react custom configuration
-window.UDAPluginSDK = AppConfig;
-window.UDAGlobalConfig = CustomConfig;
+// window.UDAPluginSDK = AppConfig;
+// window.UDAGlobalConfig = CustomConfig;
 
 import {
     // setIsRecording,
@@ -47,7 +47,7 @@ import {
     initSpecialNodes,
     fetchDomain,
     squeezeBody,
-    initializeDomChanges,
+    initializeDomChanges
 } from "@digital-assistant/core";
 
 const DigitalAssistantCoreSDK = new DigitalAssistantCore(window.UDAPluginSDK);

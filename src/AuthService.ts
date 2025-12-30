@@ -20,8 +20,8 @@ import {UDASessionData} from "./models/UDASessionData";
 import {CustomConfig} from "./config/CustomConfig";
 import {AppConfig} from "./config/AppConfig";
 
-global.UDAAuthDataConfig = AuthDataConfig;
-global.UDAAuthConfig = AuthConfig;
+// global.UDAAuthDataConfig = AuthDataConfig;
+// global.UDAAuthConfig = AuthConfig;
 global.UDAPluginSDK = AppConfig;
 global.UDAGlobalConfig = CustomConfig;
 

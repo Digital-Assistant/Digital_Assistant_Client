@@ -16,10 +16,10 @@
     "dist"
   ],
   "scripts": {
-    "start": "webpack --watch --mode=development",
-    "build": "webpack --mode=development",
-    "build:prod": "webpack --mode=production",
-    "build:dev": "webpack --mode=development",
+    "start": "webpack --env build=local --watch --mode=development",
+    "build": "webpack --env build=local --mode=development",
+    "build:prod": "webpack --env build=production --mode=production",
+    "build:dev": "webpack --env build=development --mode=development",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -68,6 +68,7 @@
     "@typescript-eslint/parser": "^7.1.0",
     "axios-mock-adapter": "^2.1.0",
     "babel-loader": "^9.1.3",
+    "dotenv-webpack": "^8.0.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",

@@ -153,7 +153,8 @@ export const matchNode = async (recordedNode: any) => {
 
   // If a matching element is found, invoke the action on it.
   if (finalMatchElement !== null) {
-    matchAction(finalMatchElement, recordedNode.node, recordedNode?.additionalParams?.slowPlaybackTime)
+    // matchAction(finalMatchElement, recordedNode.node, recordedNode?.additionalParams?.slowPlaybackTime)
+    matchAction(finalMatchElement, recordedNode.node, recordedNode?.selectedRecordingDetails);
     return true;
   } else {
     // If no matching element is found, display an error notification to the user.
