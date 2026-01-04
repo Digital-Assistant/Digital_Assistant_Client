@@ -19,7 +19,7 @@ import {isHighlightNode} from "../util/checkNode";
 import {Alert, Progress, Space, Switch} from "antd";
 import {UDAConsoleLogger, UDAErrorLogger} from "../config/error-log";
 import {addNotification} from "../util/addNotification";
-import EditableStepForm from "./EditableStepForm";
+import EditableStepForm from "./EditableStepForm.new";
 import {hasValidScreenInfo} from "../util/hasValidScreenInfo";
 import {trigger} from "../util/events";
 

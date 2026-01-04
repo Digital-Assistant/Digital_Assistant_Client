@@ -17,3 +17,4 @@ export * from './fetchDomain';
 export * from './specialNodes';
 export * from './urlProcessing';
 export * from './removeFromArray';
+export * from './validation';

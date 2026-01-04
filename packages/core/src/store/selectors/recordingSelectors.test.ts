@@ -9,6 +9,7 @@ import type { EditingStepState } from '../slices/editingSlice';
 import type { ValidationState } from '../slices/validationSlice';
 import type { UserState } from '../slices/userSlice';
 import type { FlowState } from '../slices/flowSlice';
+import type { EditableStepFormState } from '../slices/editableStepFormSlice';
 
 describe('recordingSelectors', () => {
   // Create a mock recording state that fully conforms to the RecordingState interface
@@ -53,11 +54,34 @@ describe('recordingSelectors', () => {
     recordSequenceDetailsVisibility: false,
   };
 
+  const mockEditableStepFormState: EditableStepFormState = {
+    formFields: {
+      stepEditValue: '',
+      tooltip: '',
+      slowPlaybackTime: '',
+      customMetadata: {},
+    },
+    errors: {
+      stepProfanityError: false,
+      stepInputError: false,
+      tooltipError: false,
+      slowPlaybackTimeError: false,
+    },
+    uiState: {
+      disableTooltipSubmitBtn: true,
+      isMounted: true,
+    },
+    currentEditingIndex: null,
+    isUpdateMode: false,
+    recordingId: null,
+  };
+
   // Create a mock root state for testing
   const mockState: RootState = {
     editing: mockEditingState,
     validation: mockValidationState,
     user: mockUserState,
+    editableStepForm: mockEditableStepFormState,
     recording: createMockRecordingState({
       recSequenceData: [
         { id: 1, action: 'click' },
@@ -82,6 +106,7 @@ describe('recordingSelectors', () => {
         editing: mockEditingState,
         validation: mockValidationState,
         user: mockUserState,
+        editableStepForm: mockEditableStepFormState,
         recording: createMockRecordingState({ recSequenceData: [] }),
         flow: mockFlowState,
       };
@@ -110,6 +135,7 @@ describe('recordingSelectors', () => {
         editing: mockEditingState,
         validation: mockValidationState,
         user: mockUserState,
+        editableStepForm: mockEditableStepFormState,
         recording: createMockRecordingState({ recSequenceData: [] }),
         flow: mockFlowState,
       };
@@ -128,6 +154,7 @@ describe('recordingSelectors', () => {
         editing: { ...mockEditingState, validationRequired: true }, // Example override
         validation: { ...mockValidationState, validationCompleted: true }, // Example override
         user: { ...mockUserState, userSessionData: { authData: { id: '123' } } }, // Example override
+        editableStepForm: mockEditableStepFormState,
         recording: mockState.recording, // Keep recording slice the same for this test
         flow: { ...mockFlowState, searchKeyword: 'test' }, // Example override
       };

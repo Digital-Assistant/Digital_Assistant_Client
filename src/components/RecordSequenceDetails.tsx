@@ -45,7 +45,7 @@ import {translate} from "../util/translation";
 import {removeToolTip} from "../util/addToolTip";
 import {getClickedNodeLabel} from "../util/getClickedNodeLabel";
 import {addNotification} from "../util/addNotification";
-import EditableStepForm from "./EditableStepForm";
+import EditableStepForm from "./EditableStepForm.new";
 
 import {useAppSelector, useAppDispatch} from '../redux';
 import {

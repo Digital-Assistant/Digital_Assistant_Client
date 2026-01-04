@@ -37,3 +37,21 @@ export { recordUserClickData, userClick } from './trackingService';
 
 // Export user vote services
 export * from './UserVote';
+
+// Export StepEditingService functions (with aliases to avoid conflicts with Redux actions)
+export {
+  validateStepNameWithProfanity,
+  updateStepMetadata,
+  toggleSkipDuringPlay,
+  togglePersonalInfo,
+  updateTooltipMetadata,
+  updateDelayTimeMetadata,
+  updateCustomMetadata as updateCustomMetadataService,  // Aliased to avoid conflict
+  saveStepChanges,
+  updateStepName as updateStepNameService,  // Aliased to avoid conflict
+} from './StepEditingService';
+export type {
+  UpdateMetadataParams,
+  SaveStepParams,
+  ServiceResult,
+} from './StepEditingService';
