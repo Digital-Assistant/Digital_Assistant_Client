@@ -6,13 +6,13 @@ export { default as flowReducer, flowSlice } from './flowSlice';
 export { default as editableStepFormReducer, editableStepFormSlice } from './editableStepFormSlice';
 
 // Export action creators from editing slice
-export {
-    startValidation,
-    markValidationCompleted,
-    resetValidationState,
-    startEditingStep,
-    cancelEditingStep
-} from './editingSlice';
+// export {
+//     startValidation,
+//     markValidationCompleted,
+//     resetValidationState,
+//     startEditingStep,
+//     cancelEditingStep
+// } from './editingSlice';
 
 // Export action creators from recording slice
 export {
@@ -32,6 +32,11 @@ export {
 export {
     initializeFormForStep,
     resetForm,
+    startStepEditing,
+    updateDraftChanges,
+    startValidation,
+    markValidationCompleted,
+    cancelStepEditing,
     updateStepName,
     updateTooltip,
     updateSlowPlaybackTime,

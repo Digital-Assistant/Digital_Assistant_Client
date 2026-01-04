@@ -23,10 +23,20 @@ export interface UIState {
   isMounted: boolean;
 }
 
+export interface EditingWorkflowState {
+  isEditing: boolean;
+  originalStepData: any | null;
+  draftChanges: any | null;
+  validationRequired: boolean;
+  validationCompleted: boolean;
+  validationInProgress: boolean;
+}
+
 export interface EditableStepFormState {
   formFields: FormFields;
   errors: FormErrors;
   uiState: UIState;
+  editingWorkflow: EditingWorkflowState;
   currentEditingIndex: number | null;
   isUpdateMode: boolean;
   recordingId: number | null;
@@ -51,6 +61,14 @@ const getInitialState = (): EditableStepFormState => ({
   uiState: {
     disableTooltipSubmitBtn: true,
     isMounted: true,
+  },
+  editingWorkflow: {
+    isEditing: false,
+    originalStepData: null,
+    draftChanges: null,
+    validationRequired: false,
+    validationCompleted: false,
+    validationInProgress: false,
   },
   currentEditingIndex: null,
   isUpdateMode: false,
@@ -113,6 +131,12 @@ interface SetErrorPayload {
   hasError: boolean;
 }
 
+interface StartStepEditingPayload {
+  index: number;
+  stepData: any;
+  recordingId: number;
+}
+
 /**
  * EditableStepForm Slice
  */
@@ -145,6 +169,7 @@ export const editableStepFormSlice = createSlice({
       // Get slow playback time from meta
       const playbackTime = objectData?.meta?.slowPlaybackTime || '';
 
+      // Initialize state with draft changes separate from persistent data
       const newState: EditableStepFormState = {
         formFields: {
           stepEditValue: displayText,
@@ -162,6 +187,14 @@ export const editableStepFormSlice = createSlice({
           disableTooltipSubmitBtn: tooltipInfo === '',
           isMounted: true,
         },
+        editingWorkflow: {
+          isEditing: isUpdateMode, // Only true if in update mode
+          originalStepData: item,
+          draftChanges: item, // Initially same as original
+          validationRequired: false,
+          validationCompleted: false,
+          validationInProgress: false,
+        },
         currentEditingIndex: index,
         isUpdateMode,
         recordingId: recordingId || null,
@@ -169,6 +202,93 @@ export const editableStepFormSlice = createSlice({
 
       saveStateToStorage(newState);
       return newState;
+    },
+
+    /**
+     * Start editing a step (explicit action for update mode)
+     */
+    startStepEditing: (state, action: PayloadAction<StartStepEditingPayload>) => {
+      const { index, stepData, recordingId } = action.payload;
+
+      state.currentEditingIndex = index;
+      state.isUpdateMode = true;
+      state.recordingId = recordingId;
+
+      state.editingWorkflow = {
+        isEditing: true,
+        originalStepData: stepData,
+        draftChanges: stepData,
+        validationRequired: false,
+        validationCompleted: false,
+        validationInProgress: false,
+      };
+
+      // Also initialize form fields from the data
+      // This logic is duplicated from initializeFormForStep but necessary to keep fields in sync
+      let objectData: any = {};
+      try {
+        objectData = typeof stepData?.objectdata === 'string'
+          ? JSON.parse(stepData.objectdata)
+          : stepData?.objectdata || {};
+      } catch (e) {
+        // ignore
+      }
+
+      state.formFields.stepEditValue = objectData?.meta?.displayText || stepData?.clickednodename || '';
+      state.formFields.tooltip = objectData?.meta?.tooltipInfo || '';
+      state.formFields.slowPlaybackTime = (objectData?.meta?.slowPlaybackTime || '').toString();
+
+      saveStateToStorage(state);
+    },
+
+    /**
+     * Update draft changes (temporary storage)
+     */
+    updateDraftChanges: (state, action: PayloadAction<any>) => {
+      state.editingWorkflow.draftChanges = action.payload;
+      // Changes to draft imply validation is now required
+      state.editingWorkflow.validationRequired = true;
+      state.editingWorkflow.validationCompleted = false;
+      saveStateToStorage(state);
+    },
+
+    /**
+     * Start validation control
+     */
+    startValidation: (state, action: PayloadAction<number | void>) => {
+      state.editingWorkflow.validationRequired = true;
+      state.editingWorkflow.validationInProgress = true;
+      state.editingWorkflow.validationCompleted = false;
+      saveStateToStorage(state);
+    },
+
+    /**
+     * Mark validation as completed
+     */
+    markValidationCompleted: (state) => {
+      state.editingWorkflow.validationCompleted = true;
+      state.editingWorkflow.validationInProgress = false;
+      // Once validated, we don't strictly require re-validation unless changes happen
+      // But we keep validationRequired=true to indicate "requires validation logic to run"
+      // vs validationCompleted=true meaning "it ran successfully"
+      saveStateToStorage(state);
+    },
+
+    /**
+     * Cancel editing - revert to original state
+     */
+    cancelStepEditing: (state) => {
+      state.isUpdateMode = false;
+      state.editingWorkflow = {
+        isEditing: false,
+        originalStepData: null,
+        draftChanges: null,
+        validationRequired: false,
+        validationCompleted: false,
+        validationInProgress: false,
+      };
+      state.currentEditingIndex = null;
+      saveStateToStorage(state);
     },
 
     /**
@@ -185,6 +305,32 @@ export const editableStepFormSlice = createSlice({
      */
     updateStepName: (state, action: PayloadAction<string>) => {
       state.formFields.stepEditValue = action.payload;
+      // Updating field marks validation as required
+      if (state.isUpdateMode) {
+        state.editingWorkflow.validationRequired = true;
+        state.editingWorkflow.validationCompleted = false;
+
+        // Also update draft changes if they exist
+        if (state.editingWorkflow.draftChanges) {
+          let objectData: any = {};
+          try {
+            // If existing objectdata is string, parse it
+            const currentObj = state.editingWorkflow.draftChanges.objectdata;
+            objectData = typeof currentObj === 'string' ? JSON.parse(currentObj) : currentObj || {};
+
+            // Update meta display text
+            if (!objectData.meta) objectData.meta = {};
+            objectData.meta.displayText = action.payload;
+
+            // Update drafted objectdata
+            state.editingWorkflow.draftChanges.objectdata = JSON.stringify(objectData);
+            // Also update clickednodename as fallback
+            state.editingWorkflow.draftChanges.clickednodename = action.payload;
+          } catch (e) {
+            console.error("Error updating draft step name", e);
+          }
+        }
+      }
       saveStateToStorage(state);
     },
 
@@ -283,6 +429,11 @@ export const editableStepFormSlice = createSlice({
 export const {
   initializeFormForStep,
   resetForm,
+  startStepEditing,
+  updateDraftChanges,
+  startValidation,
+  markValidationCompleted,
+  cancelStepEditing,
   updateStepName,
   updateTooltip,
   updateSlowPlaybackTime,

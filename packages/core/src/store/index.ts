@@ -15,7 +15,7 @@ import {
 // Create the store
 export const store = configureStore({
     reducer: {
-        editing: editingReducer,
+        // editing: editingReducer,
         validation: validationReducer,
         user: userReducer,
         recording: recordingReducer,
@@ -27,7 +27,7 @@ export const store = configureStore({
 
 // Infer the state type from the store itself
 export type RootState = {
-    editing: ReturnType<typeof editingReducer>;
+    // editing: ReturnType<typeof editingReducer>;
     validation: ReturnType<typeof validationReducer>;
     user: ReturnType<typeof userReducer>;
     recording: ReturnType<typeof recordingReducer>;

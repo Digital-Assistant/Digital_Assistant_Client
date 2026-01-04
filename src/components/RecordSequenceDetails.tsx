@@ -5,8 +5,8 @@
  * Associated Route/Usage: *
  */
 
-import React, {useEffect, useRef, useState} from "react";
-import {Button, Checkbox, Col, Form, List, Popconfirm, Row, Select} from "antd";
+import React, { useEffect, useRef, useState } from "react";
+import { Button, Checkbox, Col, Form, List, Popconfirm, Row, Select } from "antd";
 import {
     CopyFilled,
     DeleteOutlined,
@@ -35,38 +35,45 @@ import {
     recordUserClickData,
     getVoteRecord,
     vote,
-    getCurrentPlayItem
-} from "@digital-assistant/core";
-import {getUserId} from "../services/userService";
-import {matchNode} from "../util/invokeNode";
-import {CONFIG} from "../config";
-import {off, on, trigger} from "../util/events";
-import {translate} from "../util/translation";
-import {removeToolTip} from "../util/addToolTip";
-import {getClickedNodeLabel} from "../util/getClickedNodeLabel";
-import {addNotification} from "../util/addNotification";
-import EditableStepForm from "./EditableStepForm.new";
-
-import {useAppSelector, useAppDispatch} from '../redux';
-import {
-    cancelEditingStep,
+    getCurrentPlayItem,
+    // Core actions
+    startStepEditing,
+    cancelStepEditing,
+    startValidation,
     markValidationCompleted,
-    resetValidationState,
-    startEditingStep,
-    startValidation
-} from "../redux/editingStep";
+    resetForm,
+    // DigitalAssistantCore,
+} from "@digital-assistant/core";
+import { getUserId } from "../services/userService";
+import { matchNode } from "../util/invokeNode";
+import { CONFIG } from "../config";
+import { off, on, trigger } from "../util/events";
+import { translate } from "../util/translation";
+import { removeToolTip } from "../util/addToolTip";
+import { getClickedNodeLabel } from "../util/getClickedNodeLabel";
+import { addNotification } from "../util/addNotification";
+import EditableStepForm from "./EditableStepForm.new";
+import { DigitalAssistantCoreSDK } from "../services/coreSDK";
+
+// import {
+//     cancelEditingStep,
+//     markValidationCompleted,
+//     resetValidationState,
+//     startEditingStep,
+//     startValidation
+// } from "../redux/editingStep";
 
 
 interface MProps {
-  data?: any;
-  config?: any;
-  refetchSearch?: Function;
-  recordSequenceDetailsVisibility?: boolean;
-  cancelHandler?: Function;
-  playHandler?: Function;
-  isPlaying?: string;
-  showLoader?: Function;
-  searchKeyword?: string;
+    data?: any;
+    config?: any;
+    refetchSearch?: Function;
+    recordSequenceDetailsVisibility?: boolean;
+    cancelHandler?: Function;
+    playHandler?: Function;
+    isPlaying?: string;
+    showLoader?: Function;
+    searchKeyword?: string;
 }
 
 /**
@@ -74,7 +81,11 @@ interface MProps {
  * @returns HTML Element
  */
 
+// Initialize Core SDK outside component to avoid re-initialization on every render
+// const DigitalAssistantCoreSDK = new DigitalAssistantCore(window.UDAPluginSDK);
+
 export const RecordSequenceDetails = (props: MProps) => {
+
     const [advBtnShow, setAdvBtnShow] = useState<boolean>(false);
     const [permissions, setPermissions] = useState<any>({});
     const [selectedRecordingDetails, setSelectedRecordingDetails] = React.useState<any>(props.data);
@@ -87,15 +98,28 @@ export const RecordSequenceDetails = (props: MProps) => {
     const [inputError, setInputError] = useState<any>({});
     const [editRecording, setEditRecording] = useState(false);
 
-    const dispatch = useAppDispatch();
-    const editingState = useAppSelector(state => state.editingStep);
+    // Subscribe to SDK state
+    const [sdkState, setSdkState] = useState(DigitalAssistantCoreSDK.getState());
 
     useEffect(() => {
-        if (editingState && editingState.editingStepId != null) {
+        const unsubscribe = DigitalAssistantCoreSDK.subscribe((newState) => {
+            setSdkState(newState);
+        });
+        return unsubscribe;
+    }, []);
+
+    // Use core state from SDK
+    const editableStepFormState = sdkState.editableStepForm;
+    const editingWorkflow = editableStepFormState?.editingWorkflow;
+
+    useEffect(() => {
+        if (editingWorkflow?.isEditing && editableStepFormState?.currentEditingIndex != null) {
             setEditRecording(true);
-            setEditingStepIndex(editingState.editingStepId);
+            setEditingStepIndex(editableStepFormState.currentEditingIndex);
+        } else if (!editingWorkflow?.isEditing) {
+            setEditingStepIndex(null);
         }
-    }, [editingState]);
+    }, [editingWorkflow?.isEditing, editableStepFormState?.currentEditingIndex]);
 
     /**
      * Every time isPlaying state changes, and status is "on", play continues
@@ -171,7 +195,27 @@ export const RecordSequenceDetails = (props: MProps) => {
         if (StorageUtil.getFromStore(CONFIG.RECORDING_IS_PLAYING, true) !== "on") {
             return;
         }
-        const playItem: any = getCurrentPlayItem();
+
+        // Get fresh state to handle draft changes
+        const currentSdkState = DigitalAssistantCoreSDK.getState();
+        const editingWorkflow = currentSdkState.editableStepForm?.editingWorkflow;
+
+        let playItem: any = getCurrentPlayItem();
+
+        // If we are validating/editing, substitute the current step with draft data
+        if (editingWorkflow?.isEditing && editingWorkflow?.draftChanges) {
+            const currentIndex = currentSdkState.editableStepForm.currentEditingIndex;
+            if (playItem.index === currentIndex) {
+                playItem = {
+                    ...playItem,
+                    node: {
+                        ...playItem.node,
+                        ...editingWorkflow.draftChanges
+                    }
+                };
+            }
+        }
+
         console.log(playItem);
         if (playItem.node) {
             if (await matchNode(playItem)) {
@@ -180,7 +224,7 @@ export const RecordSequenceDetails = (props: MProps) => {
                 recordUserClickData('playBackError', '', selectedRecordingDetails.id);
                 pause();
                 removeToolTip();
-                trigger("openPanel", {action: 'openPanel'});
+                trigger("openPanel", { action: 'openPanel' });
             }
         } else {
             recordUserClickData('playCompleted', '', selectedRecordingDetails.id);
@@ -189,12 +233,27 @@ export const RecordSequenceDetails = (props: MProps) => {
             addNotification(translate('autoplayCompletedTitle'), translate('autoplayCompleted'), 'success');
             setPlayStatus('completed');
             props.playHandler("off");
-            if (editingState && editingState.validationRequired) {
-                dispatch(markValidationCompleted());
-                trigger("openPanel", {action: 'openPanel'});
-            } else {
+
+            // Get fresh state to avoid closure staleness in event listeners
+            const currentSdkState = DigitalAssistantCoreSDK.getState();
+            const currentWorkflow = currentSdkState.editableStepForm?.editingWorkflow;
+
+            // PRIORITY 1: Step editing validation flow - keep user on recording details page
+            if (currentWorkflow?.isEditing && currentWorkflow?.validationRequired) {
+                // Mark validation as completed so Save button becomes enabled
+                DigitalAssistantCoreSDK.dispatch(markValidationCompleted());
+                // Open panel to show the recording details with Save button enabled
+                trigger("openPanel", { action: 'openPanel' });
+                // DO NOT call backNav() - user must stay on recording details to save the edited step
+            }
+            // PRIORITY 2: Still editing but validation not required (shouldn't happen normally)
+            else if (currentWorkflow?.isEditing) {
+                trigger("openPanel", { action: 'openPanel' });
+            }
+            // PRIORITY 3: Normal playback completion (not editing)
+            else {
                 if (!props?.config?.enableHidePanelAfterCompletion) {
-                    trigger("openPanel", {action: 'openPanel'});
+                    trigger("openPanel", { action: 'openPanel' });
                 } else {
                     backNav(true, false);
                 }
@@ -209,14 +268,14 @@ export const RecordSequenceDetails = (props: MProps) => {
     const updateStatus = async (index: number) => {
         selectedRecordingDetails.userclicknodesSet[index].status = "completed";
         StorageUtil.setToStore(selectedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
-        setSelectedRecordingDetails({...selectedRecordingDetails});
+        setSelectedRecordingDetails({ ...selectedRecordingDetails });
     };
 
     /**
      * Updates all recorded nodes status to 'none'
      */
     const resetStatus = () => {
-        const updatedRecordingDetails = {...selectedRecordingDetails};
+        const updatedRecordingDetails = { ...selectedRecordingDetails };
         for (let i = 0; i < updatedRecordingDetails?.userclicknodesSet?.length; i++) {
             if (updatedRecordingDetails.userclicknodesSet[i]?.status) {
                 console.log("removed");
@@ -225,7 +284,7 @@ export const RecordSequenceDetails = (props: MProps) => {
         }
         StorageUtil.setToStore(updatedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
         setSelectedRecordingDetails(updatedRecordingDetails);
-        setUserVote({upvote: 0, downvote: 0});
+        setUserVote({ upvote: 0, downvote: 0 });
         return true;
     };
 
@@ -273,12 +332,12 @@ export const RecordSequenceDetails = (props: MProps) => {
     const backNav = async (forceRefresh = false, openPanel = true) => {
         recordUserClickData('backToSearchResults', '', selectedRecordingDetails.id);
         if (openPanel) {
-            trigger("openPanel", {action: 'openPanel'});
+            trigger("openPanel", { action: 'openPanel' });
         }
         resetStatus();
         removeToolTip();
         setEditRecording(false); // Reset edit mode when navigating away
-        dispatch(cancelEditingStep());
+        DigitalAssistantCoreSDK.dispatch(cancelStepEditing());
         if (props.cancelHandler) props.cancelHandler(forceRefresh);
     };
 
@@ -287,7 +346,7 @@ export const RecordSequenceDetails = (props: MProps) => {
      */
     const play = async () => {
         recordUserClickData('play', '', selectedRecordingDetails.id);
-        trigger("closePanel", {action: 'closePanel'});
+        trigger("closePanel", { action: 'closePanel' });
         if (props.playHandler) props.playHandler("on");
         // autoPlay();
     };
@@ -300,7 +359,7 @@ export const RecordSequenceDetails = (props: MProps) => {
         console.log('validateStepEdit');
         if (resetStatus()) {
             if (props.playHandler) {
-                trigger("closePanel", {action: 'closePanel'});
+                trigger("closePanel", { action: 'closePanel' });
                 props.playHandler("on");
                 autoPlay();
             }
@@ -317,7 +376,7 @@ export const RecordSequenceDetails = (props: MProps) => {
     };
 
     const playNode = async (item, index) => {
-        if (await matchNode({node: item, index, additionalParams: selectedRecordingDetails?.additionalParams})) {
+        if (await matchNode({ node: item, index, additionalParams: selectedRecordingDetails?.additionalParams })) {
             updateStatus(index);
         }
     }
@@ -329,7 +388,7 @@ export const RecordSequenceDetails = (props: MProps) => {
         recordUserClickData('replay', '', selectedRecordingDetails.id);
         setPlayStatus('playing');
         if (resetStatus()) {
-            trigger("closePanel", {action: 'closePanel'});
+            trigger("closePanel", { action: 'closePanel' });
             if (props.playHandler) props.playHandler("on");
             autoPlay();
         }
@@ -338,23 +397,23 @@ export const RecordSequenceDetails = (props: MProps) => {
     const removeRecording = async () => {
         recordUserClickData('delete', '', selectedRecordingDetails.id);
         props.showLoader(true);
-        await deleteRecording({id: selectedRecordingDetails.id});
+        await deleteRecording({ id: selectedRecordingDetails.id });
         setTimeout(() => {
             backNav(true);
         }, CONFIG.indexInterval);
     };
 
     const manageVote = async (type: string = 'up') => {
-        let record: any = await vote({id: selectedRecordingDetails.id}, type);
+        let record: any = await vote({ id: selectedRecordingDetails.id }, type);
         console.log(record);
         selectedRecordingDetails.upVoteCount = record.upVoteCount;
         selectedRecordingDetails.downVoteCount = record.downVoteCount;
-        setSelectedRecordingDetails({...selectedRecordingDetails});
+        setSelectedRecordingDetails({ ...selectedRecordingDetails });
         if (type === 'up') {
-            setUserVote({upvote: 1, downvote: 0});
+            setUserVote({ upvote: 1, downvote: 0 });
             recordUserClickData('upVote', '', selectedRecordingDetails.id);
         } else {
-            setUserVote({upvote: 0, downvote: 1});
+            setUserVote({ upvote: 0, downvote: 1 });
             recordUserClickData('downVote', '', selectedRecordingDetails.id);
         }
     };
@@ -362,10 +421,10 @@ export const RecordSequenceDetails = (props: MProps) => {
     /**
      * setting the user vote record
      */
-    const [userVote, setUserVote] = useState<any>({upvote: 0, downvote: 0});
+    const [userVote, setUserVote] = useState<any>({ upvote: 0, downvote: 0 });
 
     const fetchUserVote = async () => {
-        let userRecord = await getVoteRecord({id: selectedRecordingDetails.id});
+        let userRecord = await getVoteRecord({ id: selectedRecordingDetails.id });
         console.log(userRecord);
         if (userRecord) {
             setUserVote(userRecord);
@@ -420,7 +479,7 @@ export const RecordSequenceDetails = (props: MProps) => {
     const toggleAdvanced = async () => {
         if (advBtnShow) {
             props.showLoader(true);
-            await updateRecording({id: selectedRecordingDetails.id, additionalParams: tmpPermissionsObj});
+            await updateRecording({ id: selectedRecordingDetails.id, additionalParams: tmpPermissionsObj });
             selectedRecordingDetails.additionalParams = tmpPermissionsObj;
             StorageUtil.setToStore(selectedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
             await setAdvBtnShow(!advBtnShow);
@@ -439,13 +498,13 @@ export const RecordSequenceDetails = (props: MProps) => {
      * @return {Promise<void>} A promise that resolves to nothing.
      */
     const handlePermissions = (obj: any) => async () => {
-        let permissions = {...tmpPermissionsObj};
+        let permissions = { ...tmpPermissionsObj };
         if (permissions[obj.key]) {
             delete permissions[obj.key];
         } else {
             permissions[obj.key] = obj[obj.key];
         }
-        await setTmpPermissionsObj({...permissions});
+        await setTmpPermissionsObj({ ...permissions });
     };
 
 
@@ -459,7 +518,7 @@ export const RecordSequenceDetails = (props: MProps) => {
         props.showLoader(true);
 
         // Create a copy of permissions object to avoid direct mutation
-        let permissions = {...tmpPermissionsObj};
+        let permissions = { ...tmpPermissionsObj };
 
         // Toggle published state if it exists, otherwise set it to false
         if (permissions.hasOwnProperty('status')) {
@@ -469,10 +528,10 @@ export const RecordSequenceDetails = (props: MProps) => {
         }
 
         // Update the temporary permissions state
-        setTmpPermissionsObj({...permissions});
+        setTmpPermissionsObj({ ...permissions });
 
         // Persist the changes to the recording
-        await updateRecording({id: selectedRecordingDetails.id, additionalParams: permissions});
+        await updateRecording({ id: selectedRecordingDetails.id, additionalParams: permissions });
 
         // Update the recording details with new permissions
         selectedRecordingDetails.additionalParams = permissions;
@@ -501,7 +560,7 @@ export const RecordSequenceDetails = (props: MProps) => {
                         return item;
                     }
                     // If item is just a string, convert to the expected format
-                    return {label: String(item), profanity: false};
+                    return { label: String(item), profanity: false };
                 })
                 : [];
         } catch (e) {
@@ -519,12 +578,12 @@ export const RecordSequenceDetails = (props: MProps) => {
 
     const onExtraLabelChange = async (index: number, value: string) => {
         const updatedLabels = [...labels];
-        updatedLabels[index] = {...updatedLabels[index], label: value};
+        updatedLabels[index] = { ...updatedLabels[index], label: value };
         setLabels(updatedLabels);
     };
 
     const setInputAt = async (key: string) => {
-        setInputError({...inputError, [key]: {error: false}});
+        setInputError({ ...inputError, [key]: { error: false } });
     };
 
     const checkLabelProfanity = async (index: number, value: string) => {
@@ -533,12 +592,12 @@ export const RecordSequenceDetails = (props: MProps) => {
         const hasProfanity = false; // Replace with actual check
 
         const updatedLabels = [...labels];
-        updatedLabels[index] = {...updatedLabels[index], profanity: hasProfanity};
+        updatedLabels[index] = { ...updatedLabels[index], profanity: hasProfanity };
         setLabels(updatedLabels);
     };
 
     const addLabel = () => {
-        setLabels([...labels, {label: '', profanity: false}]);
+        setLabels([...labels, { label: '', profanity: false }]);
     };
 
     const removeLabel = (index: number) => {
@@ -555,7 +614,7 @@ export const RecordSequenceDetails = (props: MProps) => {
         });
 
         // Create updated data object with new labels
-        const updatedData = {...props.data, name: JSON.stringify(convertedLabels)};
+        const updatedData = { ...props.data, name: JSON.stringify(convertedLabels) };
 
         // Show loader while updating
         props.showLoader(true);
@@ -588,40 +647,43 @@ export const RecordSequenceDetails = (props: MProps) => {
     };
 
     const storeRecording = async (data: any, enableValidation: boolean = true) => {
-        const updatedRecordingDetails = {...selectedRecordingDetails};
+        const updatedRecordingDetails = { ...selectedRecordingDetails };
         updatedRecordingDetails.userclicknodesSet = data;
         setSelectedRecordingDetails(updatedRecordingDetails);
         StorageUtil.setToStore(updatedRecordingDetails, CONFIG.SELECTED_RECORDING, false);
         if (enableValidation) {
-            dispatch(startValidation(selectedRecordingDetails.id));
+            DigitalAssistantCoreSDK.dispatch(startValidation(selectedRecordingDetails.id));
         }
     };
 
     const onCancel = () => {
-        const originalData = [...selectedRecordingDetails.userclicknodesSet];
-        originalData[editingState.editingStepId] = {...editingState.editingStepOriginalData};
-        storeRecording(originalData);
+        // Revert local data if we have original data
+        if (editingWorkflow?.originalStepData && editableStepFormState?.currentEditingIndex !== null) {
+            const originalData = [...selectedRecordingDetails.userclicknodesSet];
+            originalData[editableStepFormState.currentEditingIndex] = { ...editingWorkflow.originalStepData };
+            storeRecording(originalData, false);
+        }
         setEditingStepIndex(null);
-        dispatch(cancelEditingStep());
+        DigitalAssistantCoreSDK.dispatch(cancelStepEditing());
     };
 
     const editStep = (index: number, item: any) => {
-        if (editingState.editingStepId !== null && editingState.editingStepId !== item.id) {
-            const originalData = [...selectedRecordingDetails.userclicknodesSet];
-            originalData[editingState.editingStepId] = {...editingState.editingStepOriginalData};
-            storeRecording(originalData);
+        // If already editing another step, cancel first (or save?)
+        if (editableStepFormState?.currentEditingIndex !== null && editableStepFormState.currentEditingIndex !== index) {
+            onCancel(); // For now, simple cancel/revert of previous if switching
         }
+
         resetStatus();
         setEditingStepIndex(index);
-        dispatch(startEditingStep({
+        DigitalAssistantCoreSDK.dispatch(startStepEditing({
             recordingId: selectedRecordingDetails.id,
-            editingStepId: index,
-            editingStepData: item
+            index: index,
+            stepData: item
         }));
     }
 
     const toggleEditIcon = () => {
-        if (editingState.editingStepId !== null) {
+        if (editableStepFormState?.currentEditingIndex !== null) {
             onCancel();
         }
         setEditRecording(!editRecording);
@@ -641,11 +703,11 @@ export const RecordSequenceDetails = (props: MProps) => {
                         type="primary"
                         shape="circle"
                         size="small"
-                        style={{position: "absolute", top: 12, left: 0}}
+                        style={{ position: "absolute", top: 12, left: 0 }}
                         className="uda_exclude"
                         onClick={() => backNav(false)}
                     >
-                        <LeftOutlined/>
+                        <LeftOutlined />
                     </Button>
                     {(props?.isPlaying == "off" && playStatus !== "completed") && (
                         <PlayCircleOutlined
@@ -679,10 +741,10 @@ export const RecordSequenceDetails = (props: MProps) => {
                         <Button
                             className="uda_exclude"
                             type={editRecording ? "primary" : "default"}
-                            style={{position: "absolute", top: 12, right: 0}}
+                            style={{ position: "absolute", top: 12, right: 0 }}
                             onClick={toggleEditIcon}
                         >
-                            <EditOutlined className="uda_exclude"/>
+                            <EditOutlined className="uda_exclude" />
                             {editRecording ? "Done" : "Edit"}
                         </Button>
                     )}
@@ -699,9 +761,8 @@ export const RecordSequenceDetails = (props: MProps) => {
                                                 type="text"
                                                 id="uda-recorded-name"
                                                 name="uda-save-recorded[]"
-                                                className={`uda-form-input uda-form-input-reduced uda_exclude ${
-                                                    item.profanity ? "profanity" : ""
-                                                }`}
+                                                className={`uda-form-input uda-form-input-reduced uda_exclude ${item.profanity ? "profanity" : ""
+                                                    }`}
                                                 placeholder="Enter Label"
                                                 onChange={async (e) => {
                                                     await onExtraLabelChange(index, e.target.value);
@@ -715,7 +776,7 @@ export const RecordSequenceDetails = (props: MProps) => {
                                             {(index > 0) &&
                                                 <Button
                                                     type="text"
-                                                    icon={<DeleteOutlined/>}
+                                                    icon={<DeleteOutlined />}
                                                     className="delete-btn uda-remove-row uda_exclude"
                                                     onClick={() => removeLabel(index)}
                                                 />
@@ -723,7 +784,7 @@ export const RecordSequenceDetails = (props: MProps) => {
                                         </div>
                                         <div className="flex-card flex-center">
                                             {item.profanity && (
-                                                <span className="uda-alert">{translate('profanityDetected')}<br/></span>
+                                                <span className="uda-alert">{translate('profanityDetected')}<br /></span>
                                             )}
                                             {(inputError['label' + index] && inputError['label' + index].error) && (
                                                 <span className="uda-alert">{translate('inputError')}</span>
@@ -763,7 +824,7 @@ export const RecordSequenceDetails = (props: MProps) => {
                             {(props?.config?.enableEditingOfRecordings && (selectedRecordingDetails.usersessionid === userId) && editRecording) &&
                                 <Button
                                     type="text"
-                                    icon={<EditOutlined/>}
+                                    icon={<EditOutlined />}
                                     className="edit-btn uda_exclude"
                                     onClick={startEditing}
                                 />
@@ -772,7 +833,7 @@ export const RecordSequenceDetails = (props: MProps) => {
                     )}
                 </div>
 
-                <hr/>
+                <hr />
                 <ul className="uda-suggestion-list" id="uda-sequence-steps">
                     {selectedRecordingDetails && (
                         <List
@@ -821,7 +882,8 @@ export const RecordSequenceDetails = (props: MProps) => {
 
                                                             // Exit edit mode
                                                             setEditingStepIndex(null);
-                                                            dispatch(resetValidationState());
+                                                            DigitalAssistantCoreSDK.dispatch(markValidationCompleted()); // Fix redux state
+                                                            // dispatch(resetValidationState());
                                                             if (props.refetchSearch) props.refetchSearch("on");
                                                         } catch (error) {
                                                             console.error("Error updating step:", error);
@@ -842,7 +904,7 @@ export const RecordSequenceDetails = (props: MProps) => {
                                                 {(props?.config?.enableEditingOfRecordings && (selectedRecordingDetails.usersessionid === userId) && editRecording) && (
                                                     <Button
                                                         type="text"
-                                                        icon={<EditOutlined/>}
+                                                        icon={<EditOutlined />}
                                                         className="edit-btn uda_exclude"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
@@ -860,37 +922,37 @@ export const RecordSequenceDetails = (props: MProps) => {
                 </ul>
             </div>
             <div className="uda-details-footer">
-                <Row style={{textAlign: "center"}}>
+                <Row style={{ textAlign: "center" }}>
                     <Col span={8}>
                         <Button onClick={() => manageVote("up")} className="uda_exclude">
                             {(userVote && userVote?.upvote === 1) &&
-                                <LikeFilled width={33} className="secondary"/>
+                                <LikeFilled width={33} className="secondary" />
                             }
                             {((userVote && userVote?.upvote === 0) || !userVote) &&
-                                <LikeOutlined width={33} className="secondary"/>
+                                <LikeOutlined width={33} className="secondary" />
                             }
                         </Button>
                         <Button onClick={() => manageVote("down")} className="uda_exclude">
                             {(userVote && userVote?.downvote === 1) &&
-                                <DislikeFilled width={33} className="secondary"/>
+                                <DislikeFilled width={33} className="secondary" />
                             }
                             {((userVote && userVote?.downvote === 0) || (!userVote)) &&
-                                <DislikeOutlined width={33} className="secondary"/>
+                                <DislikeOutlined width={33} className="secondary" />
                             }
                         </Button>
                     </Col>
                     <Col span={8}>
                         <Button onClick={copy}>
-                            {!copied && <><ShareAltOutlined/> Share link</>} : {copied && <> <CopyFilled/> Copied!</>}
+                            {!copied && <><ShareAltOutlined /> Share link</>} : {copied && <> <CopyFilled /> Copied!</>}
                         </Button>
                     </Col>
                     <Col span={8}>
                         {(selectedRecordingDetails.usersessionid === userId) &&
                             <>
                                 <Popconfirm title={translate('deleteRecording')} onConfirm={removeRecording}
-                                            className="uda_exclude">
+                                    className="uda_exclude">
                                     <Button className="uda_exclude">
-                                        <DeleteOutlined width={33} className="secondary uda_exclude"/>
+                                        <DeleteOutlined width={33} className="secondary uda_exclude" />
                                     </Button>
                                 </Popconfirm>
                             </>
@@ -905,10 +967,10 @@ export const RecordSequenceDetails = (props: MProps) => {
                             {/* Only show publish controls if the current user owns this recording */}
                             {(selectedRecordingDetails.usersessionid === userId) &&
                                 <>
-                                    <Form.Item labelCol={{span: 8}}
-                                               label={translate('statusLabel')}
-                                               className="uda_exclude"
-                                               style={{marginBottom: 0}}
+                                    <Form.Item labelCol={{ span: 8 }}
+                                        label={translate('statusLabel')}
+                                        className="uda_exclude"
+                                        style={{ marginBottom: 0 }}
                                     >
                                         <Select
                                             defaultValue={(tmpPermissionsObj && tmpPermissionsObj.hasOwnProperty('status')) ? parseInt(tmpPermissionsObj.status) : 6}
@@ -929,11 +991,11 @@ export const RecordSequenceDetails = (props: MProps) => {
                 }
                 {/* enabling update permissions*/}
                 {(props?.config?.enablePermissions && (selectedRecordingDetails.usersessionid === userId) && editRecording) && (
-                    <div id="uda-permissions-section" style={{padding: "25px", display: 'flex'}}>
+                    <div id="uda-permissions-section" style={{ padding: "25px", display: 'flex' }}>
                         <div>
                             <button
                                 className="add-btn uda_exclude"
-                                style={{color: 'white'}}
+                                style={{ color: 'white' }}
                                 onClick={() => toggleAdvanced()}
                             >
                                 {advBtnShow ? 'Update Permissions' : 'Edit Permissions'}
@@ -943,22 +1005,42 @@ export const RecordSequenceDetails = (props: MProps) => {
 
                             {advBtnShow && Object.entries(props?.config?.permissions).map(([key, value]) => {
                                 if (tmpPermissionsObj && typeof tmpPermissionsObj[key] !== "undefined") {
-                                    return <div key={key} style={{marginLeft: 30}}>
+                                    return <div key={key} style={{ marginLeft: 30 }}>
                                         <Checkbox id="uda-recorded-name" className="uda_exclude" checked={true}
-                                                  onChange={handlePermissions({[key]: value, key})}
+                                            onChange={handlePermissions({ [key]: value, key })}
                                         />
                                         {displayKeyValue(key, value)}
                                     </div>
                                 } else {
-                                    return <div key={key} style={{marginLeft: 30}}>
+                                    return <div key={key} style={{ marginLeft: 30 }}>
                                         <Checkbox id="uda-recorded-name" className="uda_exclude"
-                                                  onChange={handlePermissions({[key]: value, key})}
+                                            onChange={handlePermissions({ [key]: value, key })}
                                         />
                                         {displayKeyValue(key, value)}
                                     </div>
                                 }
                             })
                             }
+
+                            {/* Global Slow Playback Time Input */}
+                            {advBtnShow && (
+                                <div style={{ marginLeft: 30, marginTop: 10 }}>
+                                    <label style={{ marginRight: 10 }}>{translate ? translate('slowPlaybackTime') : 'Slow Playback Time'}:</label>
+                                    <input
+                                        type="number"
+                                        className="uda-form-input uda_exclude"
+                                        style={{ width: '80px', display: 'inline-block' }}
+                                        value={tmpPermissionsObj.slowPlaybackTime || ''}
+                                        onChange={(e) => {
+                                            setTmpPermissionsObj({
+                                                ...tmpPermissionsObj,
+                                                slowPlaybackTime: e.target.value
+                                            });
+                                        }}
+                                        placeholder="ms"
+                                    />
+                                </div>
+                            )}
                         </div>
                     </div>
                 )}

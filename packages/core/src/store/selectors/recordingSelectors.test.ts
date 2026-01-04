@@ -1,11 +1,10 @@
-
 // Import the selectors to be tested
 import { getRecordingState, getRecSequenceData } from './recordingSelectors';
 import type { RootState } from '../../store';
 import type { RecordingState } from '../slices/recordingSlice'; // Import the actual type
 
 // Import the actual types for other slices to create accurate mock states
-import type { EditingStepState } from '../slices/editingSlice';
+// import type { EditingStepState } from '../slices/editingSlice';
 import type { ValidationState } from '../slices/validationSlice';
 import type { UserState } from '../slices/userSlice';
 import type { FlowState } from '../slices/flowSlice';
@@ -26,6 +25,7 @@ describe('recordingSelectors', () => {
   });
 
   // Create dummy mock states for other slices to satisfy RootState
+  /*
   const mockEditingState: EditingStepState = {
     recordingId: null,
     editingStepId: null,
@@ -33,6 +33,7 @@ describe('recordingSelectors', () => {
     validationCompleted: false,
     editingStepOriginalData: null,
   };
+  */
 
   const mockValidationState: ValidationState = {
     recordingId: null,
@@ -74,11 +75,19 @@ describe('recordingSelectors', () => {
     currentEditingIndex: null,
     isUpdateMode: false,
     recordingId: null,
+    editingWorkflow: {
+      isEditing: false,
+      originalStepData: null,
+      draftChanges: null,
+      validationRequired: false,
+      validationCompleted: false,
+      validationInProgress: false
+    }
   };
 
   // Create a mock root state for testing
   const mockState: RootState = {
-    editing: mockEditingState,
+    // editing: mockEditingState,
     validation: mockValidationState,
     user: mockUserState,
     editableStepForm: mockEditableStepFormState,
@@ -103,7 +112,7 @@ describe('recordingSelectors', () => {
     it('should return a default or initial state if the slice is empty', () => {
       // Arrange
       const emptyState: RootState = {
-        editing: mockEditingState,
+        // editing: mockEditingState,
         validation: mockValidationState,
         user: mockUserState,
         editableStepForm: mockEditableStepFormState,
@@ -132,7 +141,7 @@ describe('recordingSelectors', () => {
     it('should return an empty array if recSequenceData is empty', () => {
       // Arrange
       const emptyState: RootState = {
-        editing: mockEditingState,
+        // editing: mockEditingState,
         validation: mockValidationState,
         user: mockUserState,
         editableStepForm: mockEditableStepFormState,
@@ -151,7 +160,7 @@ describe('recordingSelectors', () => {
     it('should not be affected by other state slices', () => {
       // Arrange - create a state where other slices might have different data
       const stateWithOtherData: RootState = {
-        editing: { ...mockEditingState, validationRequired: true }, // Example override
+        // editing: { ...mockEditingState, validationRequired: true }, // Example override
         validation: { ...mockValidationState, validationCompleted: true }, // Example override
         user: { ...mockUserState, userSessionData: { authData: { id: '123' } } }, // Example override
         editableStepForm: mockEditableStepFormState,

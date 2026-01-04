@@ -19,7 +19,7 @@ import { off, on, trigger } from "./util/events";
 import { UserDataContext } from "./providers/UserDataContext";
 // import { AppConfig } from "./config/AppConfig";
 // import { CustomConfig } from "./config/CustomConfig";
-import {postRecordSequenceData, recordUserClickData} from "./services";
+import { postRecordSequenceData, recordUserClickData } from "./services";
 // import { addBodyEvents } from "./util/addBodyEvents";
 // import { initSpecialNodes } from "./util/initSpecialNodes";
 // import {fetchDomain} from "./util/fetchDomain";
@@ -37,7 +37,7 @@ import {
     // setSelectedRecordingDetails,
     // setShowRecord,
     // setShowLoader,
-    DigitalAssistantCore,
+    // DigitalAssistantCore,
     fetchSearchResults as fetchSearchResultsSDK,
     fetchRecord as fetchRecordSDK,
     apiClient,
@@ -50,7 +50,9 @@ import {
     initializeDomChanges
 } from "@digital-assistant/core";
 
-const DigitalAssistantCoreSDK = new DigitalAssistantCore(window.UDAPluginSDK);
+import { DigitalAssistantCoreSDK } from "./services/coreSDK";
+
+// const DigitalAssistantCoreSDK = new DigitalAssistantCore(window.UDAPluginSDK);
 
 function App(props) {
 
@@ -122,23 +124,23 @@ function App(props) {
 
     // fetch search results based on the permissions
     useEffect(() => {
-        if(!showLoader && (global.UDAGlobalConfig.enablePermissions || global.UDAGlobalConfig.enableForAllDomains)) {
+        if (!showLoader && (global.UDAGlobalConfig.enablePermissions || global.UDAGlobalConfig.enableForAllDomains)) {
             // init();
-            getSearchResults(0,true);
+            getSearchResults(0, true);
         }
     }, [global.UDAGlobalConfig.enablePermissions, global.UDAGlobalConfig.enableForAllDomains]);
 
-    useEffect(()=>{
+    useEffect(() => {
         trigger("RequestUDASessionData", {
             detail: { data: "getusersessiondata" },
             bubbles: false,
             cancelable: false,
         });
-    },[global.UDAGlobalConfig.realm,global.UDAGlobalConfig.clientId,global.UDAGlobalConfig.clientSecret])
+    }, [global.UDAGlobalConfig.realm, global.UDAGlobalConfig.clientId, global.UDAGlobalConfig.clientSecret])
 
     useEffect(() => {
-        if(global.UDAGlobalConfig.environment !== previousEnvironment.current) {
-            getSearchResults(0,true);
+        if (global.UDAGlobalConfig.environment !== previousEnvironment.current) {
+            getSearchResults(0, true);
         }
     }, [global.UDAGlobalConfig.environment]);
 
@@ -311,15 +313,15 @@ function App(props) {
         });
     }, []);
 
-    useEffect(()=>{
-        if(authenticated){
+    useEffect(() => {
+        if (authenticated) {
             init();
         }
-    },[authenticated]);
+    }, [authenticated]);
 
     const init = async () => {
         const searchParams = new URLSearchParams(window.location.search);
-        if(!authenticated){
+        if (!authenticated) {
             return;
         }
 
@@ -334,7 +336,7 @@ function App(props) {
         setShowLoader(true);
         // DigitalAssistantCoreSDK.dispatch(setShowLoader(true));
         await initSpecialNodes();
-        if(searchParams.get(CONFIG.UDA_URL_Param)){
+        if (searchParams.get(CONFIG.UDA_URL_Param)) {
             let searchId = searchParams.get(CONFIG.UDA_URL_Param);
             recordUserClickData('searchRecordingId', '', parseInt(searchId));
             let recordDetails = await fetchRecordSDK({
@@ -344,7 +346,7 @@ function App(props) {
                     ? encodeURI(JSON.stringify(global.UDAGlobalConfig.permissions))
                     : null,
             });
-            if(recordDetails && recordDetails !== null){
+            if (recordDetails && recordDetails !== null) {
                 // setToStore(recordDetails, CONFIG.SELECTED_RECORDING, false);
                 StorageUtil.setToStore(recordDetails, CONFIG.SELECTED_RECORDING, false);
                 // DigitalAssistantCoreSDK.dispatch(setSelectedRecordingDetails(recordDetails));
@@ -376,7 +378,7 @@ function App(props) {
         // let recordingData = getFromStore(CONFIG.RECORDING_SEQUENCE, false);
         let recordingData = StorageUtil.getFromStore(CONFIG.RECORDING_SEQUENCE, false);
         // console.log(recordingData);
-        if(recordingData.length > 0) {
+        if (recordingData.length > 0) {
             setRecSequenceData(recordingData);
         } else {
             setRecSequenceData([]);
@@ -401,7 +403,7 @@ function App(props) {
         /**
          * Asynchronous function to be get called in the beginning
          */
-        const initialInvoke = async ()=> {
+        const initialInvoke = async () => {
 
             // let userSessionData = getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
             let userSessionData = StorageUtil.getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
@@ -471,7 +473,7 @@ function App(props) {
         }
 
         if (reFetchSearch === "on") {
-            getSearchResults(0,true);
+            getSearchResults(0, true);
         }
     }, [searchKeyword, reFetchSearch]);
 
@@ -521,7 +523,7 @@ function App(props) {
      * @param _page
      */
     const [timer, setTimer] = useState(null);
-    const getSearchResults = async (_page: number = 0, refetch=false) => {
+    const getSearchResults = async (_page: number = 0, refetch = false) => {
         if (!authenticated) {
             return;
         }
@@ -531,13 +533,13 @@ function App(props) {
         }
         setTimer(
             setTimeout(async () => {
-                if(isRecording){
+                if (isRecording) {
                     setShowLoader(false);
                     // DigitalAssistantCoreSDK.dispatch(setShowLoader(false));
                     await addBodyEvents();
                     return;
                 }
-                if(_page===0 && searchResults.length > 0 && !refetch) {
+                if (_page === 0 && searchResults.length > 0 && !refetch) {
                     setShowLoader(false);
                     // DigitalAssistantCoreSDK.dispatch(setShowLoader(false));
                     return;
@@ -546,7 +548,7 @@ function App(props) {
                     // DigitalAssistantCoreSDK.dispatch(setShowLoader(false));
                     return;
                 }
-                if(_page===0 && refetch) {
+                if (_page === 0 && refetch) {
                     setShowLoader(true);
                     // DigitalAssistantCoreSDK.dispatch(setShowLoader(true));
                 }
@@ -562,18 +564,18 @@ function App(props) {
                 setTimeout(() => {
                     setShowLoader(false);
                     // DigitalAssistantCoreSDK.dispatch(setShowLoader(false));
-                    if(refetch) {
+                    if (refetch) {
                         setReFetchSearch("off");
                     }
                 }, 500);
                 if (_searchResults.length > 0) {
                     setPage(_page);
-                    if(_searchResults.length===10){
+                    if (_searchResults.length === 10) {
                         setHasMorePages(true);
                     } else {
                         setHasMorePages(false);
                     }
-                    if(_page===0){
+                    if (_page === 0) {
                         setSearchResults(_searchResults);
                     } else {
                         setSearchResults(searchResults.concat(_searchResults));
@@ -600,7 +602,7 @@ function App(props) {
     };
 
     /**common cancel button handler */
-    const cancel = async (forceRefresh=false) => {
+    const cancel = async (forceRefresh = false) => {
         setIsRecording(false);
         setShowRecord(false);
         // DigitalAssistantCoreSDK.dispatch(setIsRecording(false));
@@ -617,7 +619,7 @@ function App(props) {
         StorageUtil.setToStore({}, CONFIG.SELECTED_RECORDING, false);
         setSelectedRecordingDetails({});
         // DigitalAssistantCoreSDK.dispatch(setSelectedRecordingDetails({}));
-        if(forceRefresh || searchResults.length === 0) {
+        if (forceRefresh || searchResults.length === 0) {
             setReFetchSearch("on");
         }
         setShowSearch(true);
@@ -784,15 +786,15 @@ function App(props) {
                                 {toggleContainer(
                                     "record-seq"
                                 ) && (
-                                    <UdanMain.RecordSequence
-                                        cancelHandler={
-                                            cancel
-                                        }
-                                        recordSequenceVisibility={toggleContainer(
-                                            "record-seq"
-                                        )}
-                                    />
-                                )}
+                                        <UdanMain.RecordSequence
+                                            cancelHandler={
+                                                cancel
+                                            }
+                                            recordSequenceVisibility={toggleContainer(
+                                                "record-seq"
+                                            )}
+                                        />
+                                    )}
                                 {!showLoader &&
                                     showSearch && (
                                         <UdanMain.SearchResults
@@ -823,25 +825,25 @@ function App(props) {
                                         />
                                     )}
                                 {(recSequenceData?.length > 0) && <>
-                                <UdanMain.RecordedData
-                                    isShown={toggleContainer(
-                                        "recorded-data"
-                                    )}
-                                    data={recSequenceData}
-                                    recordHandler={
-                                        recordHandler
-                                    }
-                                    refetchSearch={
-                                        setReFetchSearch
-                                    }
-                                    showLoader={
-                                        setShowLoader
-                                        // (loading: boolean) => DigitalAssistantCoreSDK.dispatch(setShowLoader(loading))
-                                    }
-                                    config={
-                                        global.UDAGlobalConfig
-                                    }
-                                />
+                                    <UdanMain.RecordedData
+                                        isShown={toggleContainer(
+                                            "recorded-data"
+                                        )}
+                                        data={recSequenceData}
+                                        recordHandler={
+                                            recordHandler
+                                        }
+                                        refetchSearch={
+                                            setReFetchSearch
+                                        }
+                                        showLoader={
+                                            setShowLoader
+                                            // (loading: boolean) => DigitalAssistantCoreSDK.dispatch(setShowLoader(loading))
+                                        }
+                                        config={
+                                            global.UDAGlobalConfig
+                                        }
+                                    />
                                 </>
                                 }
                                 {recordSequenceDetailsVisibility && (
@@ -890,9 +892,9 @@ function App(props) {
                     }}
                     >
                         <Button type="primary" className="uda_exclude"
-                                onClick={() => {
-                                    keycloak.login();
-                                }}
+                            onClick={() => {
+                                keycloak.login();
+                            }}
                         >
                             Login
                         </Button>
@@ -922,8 +924,8 @@ function App(props) {
                 </div>
             </div>
             <Toggler toggleFlag={hide} userContent={userContent} toggleHandler={togglePanel}
-                     udaDivId={global.UDAGlobalConfig.udaDivId} enableUdaIcon={global.UDAGlobalConfig.enableUdaIcon}
-                     config={global.UDAGlobalConfig} isRecording={isRecording} />
+                udaDivId={global.UDAGlobalConfig.udaDivId} enableUdaIcon={global.UDAGlobalConfig.enableUdaIcon}
+                config={global.UDAGlobalConfig} isRecording={isRecording} />
         </UserDataContext.Provider>
     );
 }

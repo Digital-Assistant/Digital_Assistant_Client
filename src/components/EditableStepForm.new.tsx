@@ -40,9 +40,10 @@ import SelectedElement from "./SelectedElement";
 import { Button } from "antd";
 import { addNotification } from "../util/addNotification";
 import { CONFIG } from "../config";
+import { DigitalAssistantCoreSDK } from "../services/coreSDK";
 
 // Get the SDK instance
-const DigitalAssistantCoreSDK = new DigitalAssistantCore(window.UDAPluginSDK);
+// const DigitalAssistantCoreSDK = new DigitalAssistantCore(window.UDAPluginSDK);
 
 interface EditableStepFormProps {
     item: any;
@@ -85,7 +86,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
     const formState = sdkState.editableStepForm.formFields;
     const errors = sdkState.editableStepForm.errors;
     const uiState = sdkState.editableStepForm.uiState;
-    const validationState = sdkState.editing;
+    const validationState = sdkState.editableStepForm.editingWorkflow;
 
     // Get object data from the item
     const objectData = getObjData(item?.objectdata || '{}');
@@ -100,8 +101,10 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
         }));
 
         // Cleanup: reset form on unmount
+        // REMOVED: resetForm() to prevent state loss on re-renders. 
+        // State should be managed by explicit cancel/save actions.
         return () => {
-            DigitalAssistantCoreSDK.dispatch(resetForm());
+            // DigitalAssistantCoreSDK.dispatch(resetForm());
         };
     }, [item.id]); // Re-initialize if item changes
 
@@ -493,7 +496,7 @@ const EditableStepForm: React.FC<EditableStepFormProps> = ({
                         type="primary"
                         onClick={(e) => {
                             e.stopPropagation();
-                            StorageUtil.add(true, CONFIG.RECORDING_IS_PLAYING, true);
+                            StorageUtil.add("on", CONFIG.RECORDING_IS_PLAYING, false);
                             autoPlay();
                         }}
                         disabled={!validationState.validationRequired}

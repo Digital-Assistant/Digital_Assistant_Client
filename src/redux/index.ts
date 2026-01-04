@@ -3,13 +3,17 @@ import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
 
 // Import reducers
 // import validationReducer from './validation';
+// Import reducers
+// import validationReducer from './validation';
 import editingReducer from "./editingStep";
+// import { editableStepFormReducer } from "@digital-assistant/core";
 
 // Create the store
 export const store = configureStore({
     reducer: {
         // validation: validationReducer,
-        editingStep: editingReducer
+        editingStep: editingReducer,
+        // editableStepForm: editableStepFormReducer
     },
 });
 
@@ -17,6 +21,7 @@ export const store = configureStore({
 export interface RootState {
     // validation: ReturnType<typeof validationReducer>;
     editingStep: ReturnType<typeof editingReducer>;
+    // editableStepForm: ReturnType<typeof editableStepFormReducer>;
     // Add other slices here as needed
 }
 
