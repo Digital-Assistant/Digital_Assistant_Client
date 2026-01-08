@@ -23,9 +23,10 @@ export interface CustomConfigPropTypes {
   enableSlowReplay: boolean,
   enableCustomIcon: boolean,
   customIcon: string,
-  realm: string|undefined,
-  clientId: string|undefined,
-  clientSecret: string|undefined,
+  realm: string | undefined,
+  clientId: string | undefined,
+  clientSecret: string | undefined,
+  keycloakUrl?: string, // Keycloak Base URL
   enableHidePanelAfterCompletion: boolean,
   enableStatusSelection: boolean,
   enableUDAIconDuringRecording: boolean,
@@ -56,6 +57,7 @@ export const CustomConfig: CustomConfigPropTypes = {
   realm: process.env.keycloakRealm, // Realm name to be used for authentication
   clientId: process.env.keycloakClientId, // Client ID to be used for authentication
   clientSecret: process.env.keycloakClientSecret, // Client secret to be used for authentication
+  keycloakUrl: process.env.keycloakUrl, // Keycloak URL
   enableHidePanelAfterCompletion: true, // Flag to enable hiding the panel after completion
   enableStatusSelection: true, // Flag to enable status selection
   enableUDAIconDuringRecording: true, // Flag to enable UDA icon during recording

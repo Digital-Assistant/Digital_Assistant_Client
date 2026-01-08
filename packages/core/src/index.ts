@@ -1,11 +1,11 @@
 import 'setimmediate';
 import './util/translate/i18n/';
-import type {AppDispatch, RootState} from './store';
-import {store} from './store';
-import {apiClient} from './services';
-import {TranslateService} from './services/TranslateService';
-import {ErrorLoggerService} from './services/ErrorLoggerService';
-import {DigitalAssistantConfiguration} from './DigitalAssistantConfiguration';
+import type { AppDispatch, RootState } from './store';
+import { store } from './store';
+import { apiClient } from './services';
+import { TranslateService } from './services/TranslateService';
+import { ErrorLoggerService } from './services/ErrorLoggerService';
+import { DigitalAssistantConfiguration } from './DigitalAssistantConfiguration';
 
 import { AuthDataConfig } from './util/user/AuthDataConfig';
 import { AuthConfig } from './util/user/UserAuthConfig';
@@ -43,7 +43,8 @@ export * from './config';
 export * from './util';
 // Export selectors
 export * from './store/selectors';
- 
+export { authManager } from './services/AuthManager';
+
 export class DigitalAssistantCore {
     private unsubscribeCallback: (() => void) | null = null;
     private translateService: TranslateService;
@@ -54,6 +55,10 @@ export class DigitalAssistantCore {
         console.log("Digital Assistant SDK Core initialized");
         this.errorLogger = new ErrorLoggerService(config);
         this.translateService = new TranslateService(apiClient, config, this.errorLogger);
+        // Initialize AuthManager
+        import('./services/AuthManager').then(({ authManager }) => {
+            authManager.init();
+        });
     }
 
     getState(): RootState {

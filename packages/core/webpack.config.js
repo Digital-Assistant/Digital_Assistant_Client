@@ -89,6 +89,14 @@ module.exports = (env, argv) => {
                     use: ['source-map-loader'],
                     exclude: /node_modules\/parse-domain/, // Exclude problematic packages
                 },
+                // Handle domjson legacy dependency (implicit `this`)
+                {
+                    test: require.resolve('domjson'),
+                    loader: 'imports-loader',
+                    options: {
+                        wrapper: 'window',
+                    },
+                },
             ],
         },
         plugins: [

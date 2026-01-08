@@ -3,13 +3,13 @@ export { ApiClient, apiClient } from './apiClient';
 export type { ApiClientConfig, ApiResponse, ApiError } from './apiClient';
 
 // Export SearchService functions (direct usage)
-export { 
+export {
   fetchSearchResults,
   fetchRecord,
   fetchSpecialNodes
 } from './SearchService';
-export type { 
-  SearchRequest, 
+export type {
+  SearchRequest,
   RecordRequest
 } from './SearchService';
 
@@ -55,3 +55,6 @@ export type {
   SaveStepParams,
   ServiceResult,
 } from './StepEditingService';
+
+// Export AuthManager
+export * from './AuthManager';

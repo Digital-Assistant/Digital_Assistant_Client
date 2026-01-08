@@ -14,7 +14,7 @@ import Header from "./components/layout/Header";
 import Body from "./components/layout/Body";
 import Footer from "./components/layout/Footer";
 import useInterval from "react-useinterval";
-import keycloak from "./config/keycloak";
+// import keycloak from "./config/keycloak";
 import { off, on, trigger } from "./util/events";
 import { UserDataContext } from "./providers/UserDataContext";
 // import { AppConfig } from "./config/AppConfig";
@@ -47,7 +47,8 @@ import {
     initSpecialNodes,
     fetchDomain,
     squeezeBody,
-    initializeDomChanges
+    initializeDomChanges,
+    authManager
 } from "@digital-assistant/core";
 
 import { DigitalAssistantCoreSDK } from "./services/coreSDK";
@@ -158,10 +159,50 @@ function App(props) {
     }, [invokeKeycloak, userSessionData]);
 
     useEffect(() => {
-        if (invokeKeycloak) {
+        /*if (invokeKeycloak) {
             initKeycloak();
+        }*/
+        // Observe AuthManager state or Redux state
+        const checkAuth = async () => {
+            if (authManager.isAuthenticated()) {
+                const sessionData = authManager.getSessionData();
+                if (sessionData && !authenticated) {
+                    setAuthenticated(true);
+                    setUserSessionData(sessionData);
+                    setKeycloakSessionData(sessionData);
+                    // Trigger event to create user data session
+                    trigger("CreateUDASessionData", {
+                        detail: { action: "createSession", data: sessionData },
+                        bubbles: false,
+                        cancelable: false,
+                    });
+                    await togglePanel();
+                }
+            }
         }
-    }, [keycloak, keycloakSessionData]);
+        checkAuth();
+        // Subscribe to store changes for auth updates
+        const unsubscribe = DigitalAssistantCoreSDK.subscribe(async (state) => {
+            const keycloakData = state.user?.keycloakSessionData;
+            if (keycloakData && !authenticated) {
+                // Re-construct session data format expected by UI
+                const sessionData = authManager.getSessionData();
+                if (sessionData) {
+                    setAuthenticated(true);
+                    setUserSessionData(sessionData);
+                    setKeycloakSessionData(sessionData);
+                    trigger("CreateUDASessionData", {
+                        detail: { action: "createSession", data: sessionData },
+                        bubbles: false,
+                        cancelable: false,
+                    });
+                    await togglePanel();
+                }
+            }
+        });
+        return unsubscribe;
+
+    }, [keycloakSessionData, authenticated]);
 
     /**
      * Initializes the Keycloak authentication.
@@ -169,6 +210,8 @@ function App(props) {
      * @returns {void} This function does not return anything.
      */
     const initKeycloak = () => {
+        // Commenting out local keycloak init
+        /*
         // If keycloak is not already authenticated and there is no session or user data
         if (!keycloak.authenticated && !keycloakSessionData && !userSessionData && !authenticated) {
             // Initialize keycloak
@@ -252,6 +295,9 @@ function App(props) {
                     }
                 });
         }
+        */
+        // Use AuthManager from core
+        authManager.init();
     };
 
     /**
@@ -893,7 +939,8 @@ function App(props) {
                     >
                         <Button type="primary" className="uda_exclude"
                             onClick={() => {
-                                keycloak.login();
+                                // keycloak.login();
+                                authManager.login();
                             }}
                         >
                             Login

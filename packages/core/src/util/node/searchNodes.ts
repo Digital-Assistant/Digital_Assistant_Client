@@ -1,11 +1,10 @@
-import {compareNodes} from "./compareNodes";
-import {getClickedInputLabels} from "./getClickedInputLabels";
-import {processDistanceOfNodes} from "./processDistanceOfNodes";
-// @ts-ignore
-import * as domJSON from "domjson";
-import {getObjData} from "./getObjData";
-import {UDAConsoleLogger} from "../error";
-import {nodeConfig} from "./nodeConfig";
+import { compareNodes } from "./compareNodes";
+import { getClickedInputLabels } from "./getClickedInputLabels";
+import { processDistanceOfNodes } from "./processDistanceOfNodes";
+import domJSON from "domjson";
+import { getObjData } from "./getObjData";
+import { UDAConsoleLogger } from "../error";
+import { nodeConfig } from "./nodeConfig";
 
 /**
  * Legacy logic for searching for a recorded DOM element among a list of candidate elements.
@@ -32,12 +31,12 @@ export const searchNodes = (recordedNode: any, compareElements: any) => {
   for (let searchNode of compareElements) {
     let searchLabelExists = false;
     // Convert the candidate DOM node to a JSON object for comparison.
-    let compareNode = domJSON.toJSON(searchNode.node, {serialProperties: true});
+    let compareNode = domJSON.toJSON(searchNode.node, { serialProperties: true });
     // Compare the recorded node with the candidate node.
     let match = compareNodes(compareNode.node, recordedNodeData.node, isPersonalNode);
 
     // Uncomment for debugging purposes.
-    if(match.matched+3 >= match.count){
+    if (match.matched + 3 >= match.count) {
       UDAConsoleLogger.info(searchNode.node, 3);
       UDAConsoleLogger.info(compareNode, 3);
       UDAConsoleLogger.info(match, 3);
