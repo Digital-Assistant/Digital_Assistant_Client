@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Vite Shadow DOM CSS Injection</title>
+  
+  <style>
+    /* Host page styles - Should NOT affect widget */
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+    }
+    
+    h1 {
+      color: yellow;
+      font-size: 48px;
+    }
+    
+    .host-box {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+    
+    button {
+      background: red !important;
+      color: white !important;
+      padding: 20px 40px !important;
+      font-size: 24px !important;
+      border: none !important;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 Vite Shadow DOM CSS Test</h1>
+  
+  <div class="host-box">
+    <h2>Host Page Content</h2>
+    <p>This page has aggressive styles to test isolation.</p>
+    <button>Host Page Button (Should be Red)</button>
+  </div>
+  
+  <div class="host-box">
+    <h2>✅ Test Checklist</h2>
+    <div id="test-results"></div>
+    <button onclick="runTests()">🔍 Run Tests</button>
+  </div>
+  
+  <div class="host-box">
+    <h2>📋 Instructions</h2>
+    <ol>
+      <li>Build your widget: <code>npm run build</code></li>
+      <li>The widget will load below</li>
+      <li>Click "Run Tests" to verify Shadow DOM CSS injection</li>
+      <li>Widget should look normal despite aggressive host styles</li>
+    </ol>
+  </div>
+  
+  <!-- Widget will be injected here by main.tsx -->
+  
+  <!-- Load the widget bundle -->
+  <!-- Update this path to your actual build output -->
+  <script type="module" src="/dist/udan-widget.js"></script>
+  
+  <script>
+    function runTests() {
+      const results = document.getElementById('test-results');
+      const tests = [];
+      
+      // Test 1: Check if Shadow DOM exists
+      const shadowHost = document.getElementById('udan-react-root');
+      tests.push({
+        name: 'Shadow DOM Container Exists',
+        pass: !!shadowHost,
+        detail: shadowHost ? '✅ Found #udan-react-root' : '❌ Not found'
+      });
+      
+      // Test 2: Check if Shadow Root is attached
+      const shadowRoot = shadowHost?.shadowRoot;
+      tests.push({
+        name: 'Shadow Root Attached',
+        pass: !!shadowRoot,
+        detail: shadowRoot ? '✅ Shadow Root exists' : '❌ Shadow Root not attached'
+      });
+      
+      // Test 3: Check if styles are in Shadow DOM
+      const shadowStyles = shadowRoot?.querySelectorAll('style');
+      tests.push({
+        name: 'Styles Injected into Shadow DOM',
+        pass: shadowStyles && shadowStyles.length > 0,
+        detail: shadowStyles 
+          ? `✅ Found ${shadowStyles.length} style element(s)` 
+          : '❌ No styles in Shadow DOM'
+      });
+      
+      // Test 4: Check if React app is rendered
+      const reactRoot = shadowRoot?.getElementById('udan-react-app-root');
+      tests.push({
+        name: 'React App Rendered',
+        pass: !!reactRoot,
+        detail: reactRoot ? '✅ React container exists' : '❌ React container not found'
+      });
+      
+      // Test 5: Check that styles are NOT in document head
+      const allDocStyles = Array.from(document.querySelectorAll('style'));
+      const widgetStylesInDoc = allDocStyles.filter(s => 
+        s.textContent && s.textContent.includes('uda_exclude')
+      );
+      tests.push({
+        name: 'Styles NOT in Document Head',
+        pass: widgetStylesInDoc.length === 0,
+        detail: widgetStylesInDoc.length === 0 
+          ? '✅ Widget styles isolated' 
+          : `⚠️ Found ${widgetStylesInDoc.length} widget style(s) in document`
+      });
+      
+      // Test 6: Check global window objects
+      tests.push({
+        name: 'Debug Objects Available',
+        pass: !!(window.udanShadowRoot && window.udanReactRoot),
+        detail: (window.udanShadowRoot && window.udanReactRoot)
+          ? '✅ window.udanShadowRoot and window.udanReactRoot exist'
+          : '⚠️ Debug objects not found'
+      });
+      
+      // Display results
+      results.innerHTML = `
+        <div style="font-family: monospace; margin-top: 20px;">
+          ${tests.map(test => `
+            <div style="margin: 10px 0; padding: 10px; background: ${test.pass ? '#10b981' : '#ef4444'}; border-radius: 5px;">
+              <strong>${test.pass ? '✅' : '❌'} ${test.name}</strong><br>
+              <span style="font-size: 12px;">${test.detail}</span>
+            </div>
+          `).join('')}
+          
+          <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 5px;">
+            <strong>📊 Summary:</strong> ${tests.filter(t => t.pass).length}/${tests.length} tests passed
+          </div>
+          
+          <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 5px;">
+            <strong>🔍 Debug Commands:</strong><br>
+            <code>window.udanShadowRoot</code> - Access Shadow DOM<br>
+            <code>window.udanShadowRoot.querySelectorAll('style')</code> - View injected styles<br>
+            <code>window.udanReactRoot</code> - Access React root<br>
+          </div>
+        </div>
+      `;
+      
+      // Also log to console
+      console.group('🧪 Shadow DOM Tests');
+      tests.forEach(test => {
+        console.log(`${test.pass ? '✅' : '❌'} ${test.name}: ${test.detail}`);
+      });
+      console.groupEnd();
+      
+      // Show style content
+      if (shadowRoot) {
+        console.group('📋 Shadow DOM Styles Content');
+        const styles = shadowRoot.querySelectorAll('style');
+        styles.forEach((style, i) => {
+          console.log(`Style ${i + 1}:`, style.textContent?.substring(0, 200) + '...');
+        });
+        console.groupEnd();
+      }
+    }
+    
+    // Auto-run tests after 2 seconds
+    setTimeout(() => {
+      console.log('🚀 Auto-running tests...');
+      runTests();
+    }, 2000);
+  </script>
+  
+  <style>
+    /* More aggressive host styles */
+    * {
+      box-sizing: border-box;
+    }
+    
+    code {
+      background: rgba(0,0,0,0.3);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+    }
+  </style>
+</body>
+</html>
