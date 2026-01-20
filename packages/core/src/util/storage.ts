@@ -1,25 +1,74 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * @file Manages browser storage functionalities, adapting to different browser environments.
+c *
+ * Supports:
+ * - Chrome/Edge/Chromium (chrome.storage API)
+ * - Firefox (browser.storage API)
+ * - Safari (browser.storage API)
+ * - Opera (chrome.storage API)
+ * - Brave (chrome.storage API)
+ * - Service Workers (all browsers)
+ * - Standalone Web Apps (localStorage)
  */
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { detect } from 'detect-browser';
 
-declare const chrome: any; // Declare `chrome` global for TypeScript.
+// Declare globals for different browser extension APIs
+declare const chrome: any;
+declare const browser: any; // Firefox, Safari use 'browser' namespace
+
+/**
+ * Get the appropriate browser extension API
+ * Priority: browser API (Firefox/Safari) > chrome API (Chrome/Edge/Opera/Brave)
+ */
+function getBrowserAPI(): any {
+  // Firefox, Safari use 'browser' namespace
+  if (typeof browser !== 'undefined' && browser.storage) {
+    return browser;
+  }
+  // Chrome, Edge, Opera, Brave use 'chrome' namespace
+  if (typeof chrome !== 'undefined' && chrome.storage) {
+    return chrome;
+  }
+  return null;
+}
 
 // Detect the current browser environment.
-const browser = detect();
-let browserVar: any; // Variable to hold the browser-specific API (e.g., `chrome` or `window`).
+const detectedBrowser = detect();
+const browserAPI = getBrowserAPI();
+let browserVar: any = browserAPI; // Variable to hold the browser-specific API
 let enablePlugin = false; // Flag to indicate if a browser extension environment is detected.
+let isServiceWorker = false; // Flag to indicate if running in a service worker context
 
-// If the browser is Chrome or Edge, assume a browser extension environment.
-if (browser && (browser.name === 'chrome' || browser.name.startsWith('edge'))) {
-  enablePlugin = true;
-  browserVar = chrome; // Use the `chrome` API for storage.
-} else {
-  browserVar = browser; // Fallback to `window.localStorage` if not a recognized extension environment.
+// Check if we're in a service worker context (no window object)
+if (typeof window === 'undefined' && typeof self !== 'undefined') {
+  isServiceWorker = true;
+}
+
+// Detect browser extension environment for all Chromium-based and Firefox browsers
+if (detectedBrowser) {
+  const browserName = detectedBrowser.name.toLowerCase();
+  const extensionBrowsers = [
+    'chrome',
+    'edge',
+    'edge-chromium',
+    'edge-ios',
+    'firefox',
+    'safari',
+    'opera',
+    'brave',
+    'chromium-webview'
+  ];
+
+  if (extensionBrowsers.some(name => browserName.includes(name))) {
+    enablePlugin = true;
+    browserVar = browserAPI || detectedBrowser;
+  } else {
+    browserVar = detectedBrowser;
+  }
 }
 
 /**
@@ -43,11 +92,20 @@ export class StorageUtil {
    * @returns A Promise that resolves when the data is successfully added to the storage.
    */
   public static async add(data: any, key: string, convertToString: boolean = true): Promise<void> {
-    if (this.UDABrowserPlugin && enablePlugin) {
+    const extensionAPI = getBrowserAPI();
+
+    // Try browser extension storage first (works in all browsers)
+    if (this.UDABrowserPlugin && enablePlugin && browserVar?.storage) {
       const storageData: { [key: string]: any } = {};
       storageData[key] = (convertToString)?JSON.stringify(data):data;
       return browserVar.storage.local.set(storageData);
-    } else {
+    } else if (isServiceWorker && extensionAPI?.storage) {
+      // Service worker context - use extension API (cross-browser)
+      const storageData: { [key: string]: any } = {};
+      storageData[key] = (convertToString)?JSON.stringify(data):data;
+      return extensionAPI.storage.local.set(storageData);
+    } else if (typeof window !== 'undefined' && window.localStorage) {
+      // Web context - use localStorage
       const storageData = (convertToString)?JSON.stringify(data):data;
       return window.localStorage.setItem(key, storageData);
     }
@@ -61,14 +119,26 @@ export class StorageUtil {
    * @returns A Promise that resolves with the retrieved data, or `null` if the key is not found.
    */
   public static async get(key: string, parseAsJson: boolean = true): Promise<any> {
-    if (this.UDABrowserPlugin && enablePlugin) {
+    const extensionAPI = getBrowserAPI();
+
+    // Try browser extension storage first (works in all browsers)
+    if (this.UDABrowserPlugin && enablePlugin && browserVar?.storage) {
       const result = await browserVar.storage.local.get([key]);
       if(result[key]){
           return (parseAsJson)?JSON.parse(result[key]):result[key];
       } else {
           return null;
       }
-    } else {
+    } else if (isServiceWorker && extensionAPI?.storage) {
+      // Service worker context - use extension API (cross-browser)
+      const result = await extensionAPI.storage.local.get([key]);
+      if(result[key]){
+          return (parseAsJson)?JSON.parse(result[key]):result[key];
+      } else {
+          return null;
+      }
+    } else if (typeof window !== 'undefined' && window.localStorage) {
+      // Web context - use localStorage
       const item = window.localStorage.getItem(key);
       if(item){
           return (parseAsJson)?JSON.parse(item):item;
@@ -76,6 +146,7 @@ export class StorageUtil {
           return null;
       }
     }
+    return null;
   }
 
   /**
@@ -85,9 +156,15 @@ export class StorageUtil {
    * @returns A Promise that resolves when the data is successfully removed from the storage.
    */
   public static async remove(key: string): Promise<void> {
-    if (this.UDABrowserPlugin && enablePlugin) {
+    const extensionAPI = getBrowserAPI();
+
+    // Try browser extension storage first (works in all browsers)
+    if (this.UDABrowserPlugin && enablePlugin && browserVar?.storage) {
       return browserVar.storage.local.remove([key]);
-    } else {
+    } else if (isServiceWorker && extensionAPI?.storage) {
+      // Service worker context - use extension API (cross-browser)
+      return extensionAPI.storage.local.remove([key]);
+    } else if (typeof window !== 'undefined' && window.localStorage) {
       return window.localStorage.removeItem(key);
     }
   }
@@ -98,33 +175,104 @@ export class StorageUtil {
    * @returns A Promise that resolves when the storage is successfully cleared.
    */
   public static async clear(): Promise<void> {
-    if (this.UDABrowserPlugin && enablePlugin) {
+    const extensionAPI = getBrowserAPI();
+
+    // Try browser extension storage first (works in all browsers)
+    if (this.UDABrowserPlugin && enablePlugin && browserVar?.storage) {
       return browserVar.storage.local.clear();
-    } else {
+    } else if (isServiceWorker && extensionAPI?.storage) {
+      // Service worker context - use extension API (cross-browser)
+      return extensionAPI.storage.local.clear();
+    } else if (typeof window !== 'undefined' && window.localStorage) {
+      // Web context - use localStorage
       return window.localStorage.clear();
     }
   }
 
     /**
      * Sets data to `localStorage`. This method is a synchronous wrapper around `localStorage.setItem`.
+     * Note: This only works in window context, not in service workers.
      *
      * @param data The data to be stored.
      * @param key The key under which to store the data.
      * @param isRaw If `true`, the data is stored as-is; otherwise, it's JSON.stringified.
      */
     public static setToStore = (data: any, key: string, isRaw: boolean) => {
-        localStorage.setItem(key, !isRaw ? JSON.stringify(data) : data);
+        if (typeof localStorage !== 'undefined') {
+            localStorage.setItem(key, !isRaw ? JSON.stringify(data) : data);
+        } else {
+            console.warn('localStorage not available in service worker context. Use async methods instead.');
+        }
     };
 
     /**
      * Retrieves data from `localStorage`. This method is a synchronous wrapper around `localStorage.getItem`.
+     * Note: This only works in window context, not in service workers.
      *
      * @param key The key associated with the data to be retrieved.
      * @param isRaw If `true`, the data is returned as a raw string; otherwise, it's JSON.parsed.
      * @returns The retrieved data, or `undefined` if the key is not found.
      */
     public static getFromStore = (key: string, isRaw: boolean) => {
-        const data = localStorage.getItem(key);
-        if (data) return !isRaw ? JSON.parse(data) : data;
+        if (typeof localStorage !== 'undefined') {
+            const data = localStorage.getItem(key);
+            if (data) return !isRaw ? JSON.parse(data) : data;
+        } else {
+            console.warn('localStorage not available in service worker context. Use async methods instead.');
+            return undefined;
+        }
     };
 }
+
+/**
+ * Compatibility export for UDAStorageService
+ * This provides backward compatibility with the extension layer
+ * Maps to StorageUtil methods
+ */
+export const UDAStorageService = {
+    /**
+     * Adds data to the storage.
+     * @param data - The data to be added.
+     * @param key - The key to store the data under.
+     * @returns A Promise that resolves when the data is added to the storage.
+     */
+    add: async (data: any, key: string): Promise<void> => {
+        return StorageUtil.add(data, key, false);
+    },
+
+    /**
+     * Sets data to the storage (alias for add).
+     * @param key - The key to store the data under.
+     * @param data - The data to be added.
+     * @returns A Promise that resolves when the data is added to the storage.
+     */
+    set: async (key: string, data: any): Promise<void> => {
+        return StorageUtil.add(data, key, false);
+    },
+
+    /**
+     * Retrieves data from the storage.
+     * @param key - The key associated with the data to be retrieved.
+     * @returns A Promise that resolves with the retrieved data.
+     */
+    get: async (key: string): Promise<any> => {
+        return StorageUtil.get(key, false);
+    },
+
+    /**
+     * Removes data from the storage.
+     * @param key - The key associated with the data to be removed.
+     * @returns A Promise that resolves when the data is successfully removed from the storage.
+     */
+    remove: async (key: string): Promise<void> => {
+        return StorageUtil.remove(key);
+    },
+
+    /**
+     * Clears all data from the storage.
+     * @returns A Promise that resolves when the storage is successfully cleared.
+     */
+    clear: async (): Promise<void> => {
+        return StorageUtil.clear();
+    }
+};

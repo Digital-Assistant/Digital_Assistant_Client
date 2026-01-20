@@ -139,7 +139,7 @@ export const matchNode = async (recordedNode: any) => {
       finalMatchElement = processDistanceOfNodes(matchedElements, recordedNode);
     } else if (matchedElements.length === 0) {
       // If no elements matched by node name, fall back to the older, more general search logic.
-      finalMatchElement = searchNodes(recordedNode, compareElements);
+      finalMatchElement = await searchNodes(recordedNode, compareElements);
     }
   }
 

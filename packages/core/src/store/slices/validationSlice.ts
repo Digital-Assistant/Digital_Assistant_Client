@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { loadFromStorage, saveToStorage } from '../utils/storageHelper';
 
 // Define the state interface
 export interface ValidationState {
@@ -7,36 +8,21 @@ export interface ValidationState {
     validationCompleted: boolean;
 }
 
-// Function to load state from localStorage
-const loadStateFromStorage = (): ValidationState => {
-    try {
-        const serializedState = localStorage.getItem('validationState');
-        if (serializedState === null) {
-            return {
-                recordingId: null,
-                validationRequired: false,
-                validationCompleted: false,
-            };
-        }
-        return JSON.parse(serializedState);
-    } catch (err) {
-        console.error('Error loading validation state from localStorage:', err);
-        return {
-            recordingId: null,
-            validationRequired: false,
-            validationCompleted: false,
-        };
-    }
+// Default state
+const defaultState: ValidationState = {
+    recordingId: null,
+    validationRequired: false,
+    validationCompleted: false,
 };
 
-// Function to save state to localStorage
+// Function to load state from storage (works in service workers and web)
+const loadStateFromStorage = (): ValidationState => {
+    return loadFromStorage('validationState', defaultState);
+};
+
+// Function to save state to storage (works in service workers and web)
 const saveStateToStorage = (state: ValidationState) => {
-    try {
-        const serializedState = JSON.stringify(state);
-        localStorage.setItem('validationState', serializedState);
-    } catch (err) {
-        console.error('Error saving validation state to localStorage:', err);
-    }
+    saveToStorage('validationState', state);
 };
 
 // Initialize state from localStorage

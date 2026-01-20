@@ -41,6 +41,7 @@ export * from './services';
 // Export configurations and utilities
 export * from './config';
 export * from './util';
+export * from './models';
 // Export selectors
 export * from './store/selectors';
 export { authManager } from './services/AuthManager';

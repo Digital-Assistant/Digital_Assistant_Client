@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { loadFromStorage, saveToStorage } from '../utils/storageHelper';
 
 /**
  * TypeScript Interfaces for EditableStepForm State
@@ -76,31 +77,17 @@ const getInitialState = (): EditableStepFormState => ({
 });
 
 /**
- * Load state from localStorage
+ * Load state from storage (works in service workers and web)
  */
 const loadStateFromStorage = (): EditableStepFormState => {
-  try {
-    const serializedState = localStorage.getItem('editableStepFormState');
-    if (serializedState === null) {
-      return getInitialState();
-    }
-    return JSON.parse(serializedState);
-  } catch (err) {
-    console.error('Error loading editable step form state from localStorage:', err);
-    return getInitialState();
-  }
+  return loadFromStorage('editableStepFormState', getInitialState());
 };
 
 /**
- * Save state to localStorage
+ * Save state to storage (works in service workers and web)
  */
 const saveStateToStorage = (state: EditableStepFormState) => {
-  try {
-    const serializedState = JSON.stringify(state);
-    localStorage.setItem('editableStepFormState', serializedState);
-  } catch (err) {
-    console.error('Error saving editable step form state to localStorage:', err);
-  }
+  saveToStorage('editableStepFormState', state);
 };
 
 /**
