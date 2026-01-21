@@ -56,9 +56,14 @@ export class AuthManager {
         this.keycloak = new Keycloak(keycloakConfig);
 
         try {
+            // Build redirect URI - only use window.location in browser context
+            const redirectUri = (typeof window !== 'undefined' && window.location)
+                ? window.location.origin + '/silent-check-sso.html'
+                : undefined;
+
             this.authenticated = await this.keycloak.init({
                 onLoad: 'check-sso',
-                silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html',
+                silentCheckSsoRedirectUri: redirectUri,
                 pkceMethod: 'S256',
             });
 

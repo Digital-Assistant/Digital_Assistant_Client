@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { loadFromStorage, saveToStorage } from '../utils/storageHelper';
 
 // Define the state interface
 export interface EditingStepState {
@@ -9,40 +10,23 @@ export interface EditingStepState {
     editingStepOriginalData: any;
 }
 
-// Function to load state from localStorage
-const loadStateFromStorage = (): EditingStepState => {
-    try {
-        const serializedState = localStorage.getItem('editingState');
-        if (serializedState === null) {
-            return {
-                recordingId: null,
-                editingStepId: null,
-                validationRequired: false,
-                validationCompleted: false,
-                editingStepOriginalData: null,
-            };
-        }
-        return JSON.parse(serializedState);
-    } catch (err) {
-        console.error('Error loading validation state from localStorage:', err);
-        return {
-            recordingId: null,
-            editingStepId: null,
-            validationRequired: false,
-            validationCompleted: false,
-            editingStepOriginalData: null,
-        };
-    }
+// Default state
+const defaultState: EditingStepState = {
+    recordingId: null,
+    editingStepId: null,
+    validationRequired: false,
+    validationCompleted: false,
+    editingStepOriginalData: null,
 };
 
-// Function to save state to localStorage
+// Function to load state from storage (works in service workers and web)
+const loadStateFromStorage = (): EditingStepState => {
+    return loadFromStorage('editingState', defaultState);
+};
+
+// Function to save state to storage (works in service workers and web)
 const saveStateToStorage = (state: EditingStepState) => {
-    try {
-        const serializedState = JSON.stringify(state);
-        localStorage.setItem('editingState', serializedState);
-    } catch (err) {
-        console.error('Error saving validation state to localStorage:', err);
-    }
+    saveToStorage('editingState', state);
 };
 
 // Initialize state from localStorage

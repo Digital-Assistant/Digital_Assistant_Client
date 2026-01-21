@@ -99,6 +99,7 @@
     "babel-plugin-transform-react-inline-elements": "^6.22.0",
     "babel-plugin-transform-react-pure-class-to-function": "^1.0.1",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "baseline-browser-mapping": "^2.9.16",
     "compression-webpack-plugin": "^10.0.0",
     "copy-webpack-plugin": "^11.0.0",
     "core-js": "^3.39.0",

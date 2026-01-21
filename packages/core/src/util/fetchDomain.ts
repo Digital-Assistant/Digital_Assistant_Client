@@ -5,13 +5,22 @@ import { parseDomain, ParseResultType } from "parse-domain";
  * If `window.UDAGlobalConfig.enableForAllDomains` is true, it uses `parse-domain`
  * to extract the top-level domain; otherwise, it returns the full host.
  *
- * @returns The top-level domain or the full host of the current window.
+ * Note: This function only works in browser contexts with window.location.
+ * Returns null in service worker or Node.js contexts.
+ *
+ * @returns The top-level domain, the full host, or null if not in browser context.
  */
-export const fetchDomain = () => {
+export const fetchDomain = (): string | null => {
+    // Check if we're in a browser context with window.location
+    if (typeof window === 'undefined' || !window.location) {
+        return null;
+    }
+
     let finalDomain = window.location.host; // Default to the full host.
 
     // If the global configuration enables processing for all domains, parse the top-level domain.
-    if(window.UDAGlobalConfig.enableForAllDomains){
+    // @ts-ignore - UDAGlobalConfig is added at runtime
+    if(window.UDAGlobalConfig && window.UDAGlobalConfig.enableForAllDomains){
         const parseResult = parseDomain(finalDomain); // Parse the domain using `parse-domain` library.
 
         switch (parseResult.type) {

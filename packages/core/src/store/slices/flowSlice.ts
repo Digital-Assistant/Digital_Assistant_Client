@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { loadFromStorage, saveToStorage } from '../utils/storageHelper';
 
 // Define the state interface for flow data
 export interface FlowState {
@@ -11,44 +12,25 @@ export interface FlowState {
     recordSequenceDetailsVisibility: boolean;
 }
 
-// Function to load state from localStorage
-const loadStateFromStorage = (): FlowState => {
-    try {
-        const serializedState = localStorage.getItem('flowState');
-        if (serializedState === null) {
-            return {
-                searchKeyword: '',
-                searchResults: [],
-                page: 0,
-                hasMorePages: true,
-                reFetchSearch: 'off',
-                showSearch: true,
-                recordSequenceDetailsVisibility: false,
-            };
-        }
-        return JSON.parse(serializedState);
-    } catch (err) {
-        console.error('Error loading flow state from localStorage:', err);
-        return {
-            searchKeyword: '',
-            searchResults: [],
-            page: 0,
-            hasMorePages: true,
-            reFetchSearch: 'off',
-            showSearch: true,
-            recordSequenceDetailsVisibility: false,
-        };
-    }
+// Default state
+const defaultState: FlowState = {
+    searchKeyword: '',
+    searchResults: [],
+    page: 0,
+    hasMorePages: true,
+    reFetchSearch: 'off',
+    showSearch: true,
+    recordSequenceDetailsVisibility: false,
 };
 
-// Function to save state to localStorage
+// Function to load state from storage (works in service workers and web)
+const loadStateFromStorage = (): FlowState => {
+    return loadFromStorage('flowState', defaultState);
+};
+
+// Function to save state to storage (works in service workers and web)
 const saveStateToStorage = (state: FlowState) => {
-    try {
-        const serializedState = JSON.stringify(state);
-        localStorage.setItem('flowState', serializedState);
-    } catch (err) {
-        console.error('Error saving flow state to localStorage:', err);
-    }
+    saveToStorage('flowState', state);
 };
 
 // Initialize state from localStorage

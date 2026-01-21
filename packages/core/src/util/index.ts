@@ -2,6 +2,7 @@
 // This pattern helps in organizing and simplifying imports in larger projects,
 // allowing other modules to import from a single entry point.
 
+export * from './user';
 export * from './node';
 export * from './error';
 export * from './screen';

@@ -1,5 +1,11 @@
 /**
  * @file This file contains constants and functions related to browser detection and plugin state.
+ *
+ * Supports all major browsers:
+ * - Chrome, Edge, Chromium (chrome API)
+ * - Firefox (browser API)
+ * - Safari (browser API)
+ * - Opera, Brave (chrome API)
  */
 import {CONFIG} from "../../config";
 
@@ -24,7 +30,7 @@ let activeTabId: number = -1;
 let enablePlugin = false;
 
 /**
- * The browser variable (e.g., `chrome` or the detected browser object).
+ * The browser variable - holds the appropriate API (chrome or browser)
  */
 let browserVar: any;
 
@@ -34,20 +40,60 @@ const { detect } = require('detect-browser');
  * The detected browser object.
  */
 const browser: any = detect();
-declare const chrome: any;
 
-switch (browser && browser.name) {
-    case 'edge-chromium':
-    case 'edge':
-    case 'edge-ios':
-    case 'chrome':
-    case 'opera':
+// Declare both chrome and browser globals for cross-browser support
+declare const chrome: any;
+declare const browserAPI: any;
+
+/**
+ * Get the appropriate browser extension API
+ * Firefox/Safari use 'browser', Chrome/Edge/Opera/Brave use 'chrome'
+ */
+function getBrowserExtensionAPI(): any {
+    // Try 'browser' namespace first (Firefox, Safari)
+    if (typeof browserAPI !== 'undefined' && browserAPI.storage) {
+        return browserAPI;
+    }
+    // Try 'chrome' namespace (Chrome, Edge, Opera, Brave)
+    if (typeof chrome !== 'undefined' && chrome.storage) {
+        return chrome;
+    }
+    // Fallback - try window.browser for Firefox
+    if (typeof window !== 'undefined' && (window as any).browser && (window as any).browser.storage) {
+        return (window as any).browser;
+    }
+    return null;
+}
+
+// Supported browser extensions
+const supportedBrowsers = [
+    'chrome',
+    'edge',
+    'edge-chromium',
+    'edge-ios',
+    'firefox',
+    'safari',
+    'opera',
+    'brave',
+    'chromium-webview'
+];
+
+// Detect browser and set appropriate API
+if (browser && browser.name) {
+    const browserName = browser.name.toLowerCase();
+
+    if (supportedBrowsers.some(name => browserName.includes(name))) {
         enablePlugin = true;
-        browserVar = chrome;
-        break;
-    default:
+        browserVar = getBrowserExtensionAPI() || browser;
+    } else {
         browserVar = browser;
-        break;
+    }
+} else {
+    // If detection fails, try to get extension API anyway
+    browserVar = getBrowserExtensionAPI();
+    if (browserVar) {
+        enablePlugin = true;
+    }
 }
 
 /**

@@ -1,20 +1,32 @@
 import { compareNodes } from "./compareNodes";
 import { getClickedInputLabels } from "./getClickedInputLabels";
 import { processDistanceOfNodes } from "./processDistanceOfNodes";
-import domJSON from "domjson";
 import { getObjData } from "./getObjData";
 import { UDAConsoleLogger } from "../error";
 import { nodeConfig } from "./nodeConfig";
+
+// Cache for domJSON module to avoid repeated dynamic imports
+let domJSONModule: any = null;
 
 /**
  * Legacy logic for searching for a recorded DOM element among a list of candidate elements.
  * This function attempts to find the best match for a `recordedNode` within `compareElements`.
  *
+ * Note: Uses dynamic import to avoid loading domjson in service worker contexts.
+ * Changed to async to support dynamic imports.
+ *
  * @param recordedNode The node object from a recording, containing metadata and object data.
  * @param compareElements An array of candidate elements to compare against the recorded node.
- * @returns The DOM element that is considered the best match, or `null` if no suitable match is found.
+ * @returns A promise that resolves to the DOM element that is considered the best match, or `null` if no suitable match is found.
  */
-export const searchNodes = (recordedNode: any, compareElements: any) => {
+export const searchNodes = async (recordedNode: any, compareElements: any) => {
+
+  // Load domJSON module dynamically (only once, then cached)
+  if (!domJSONModule) {
+    // @ts-ignore
+    const domJSON = await import("domjson");
+    domJSONModule = domJSON.default || domJSON;
+  }
 
   // Fallback to the old logic for node searching.
   const recordedNodeData: any = getObjData(recordedNode?.node?.objectdata);
@@ -31,7 +43,7 @@ export const searchNodes = (recordedNode: any, compareElements: any) => {
   for (let searchNode of compareElements) {
     let searchLabelExists = false;
     // Convert the candidate DOM node to a JSON object for comparison.
-    let compareNode = domJSON.toJSON(searchNode.node, { serialProperties: true });
+    let compareNode = domJSONModule.toJSON(searchNode.node, { serialProperties: true });
     // Compare the recorded node with the candidate node.
     let match = compareNodes(compareNode.node, recordedNodeData.node, isPersonalNode);
 

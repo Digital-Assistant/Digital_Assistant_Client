@@ -1,6 +1,38 @@
 'use strict';
 
-import {browserVar, UDASessionName, updateActiveTabId, updateBrowserPlugin} from "./BrowserConstants";
+/**
+ * Background Script for Universal Digital Assistant Browser Extension
+ *
+ * This service worker handles:
+ * - User authentication via Chrome Identity API
+ * - Session management
+ * - Communication between content scripts and web pages
+ *
+ * Architecture:
+ * - Browser-specific logic: In this file and ./browser-auth/
+ * - Platform-agnostic logic: Imported from @digital-assistant/core package
+ */
+
+// Import browser constants and utilities from core package
+import {
+    getBrowserVar,
+    getUDASessionName,
+    updateActiveTabId,
+    updateBrowserPlugin,
+    UDASessionData,
+    UDAGetSessionKey,
+    UDABindAuthenticatedAccount,
+    UDASendSessionData,
+    UDAStorageService,
+    keyCloakStore
+} from "@digital-assistant/core";
+
+// Import browser extension specific authentication
+import { LoginWithBrowser } from "./browser-auth/LoginWithBrowser";
+
+// Initialize browser variables
+const browserVar = getBrowserVar();
+const UDASessionName = getUDASessionName();
 
 updateBrowserPlugin(true);
 
@@ -11,13 +43,6 @@ browserVar.tabs.onActivated.addListener(function (activeInfo) {
 	updateActiveTabId(activeInfo.tabId);
 });
 
-import {LoginWithBrowser} from "./util/LoginWithBrowser";
-import {UDASendSessionData} from "./util/UDASendSessionData";
-import {UDASessionData} from "./models/UDASessionData";
-import {UDAGetSessionKey} from "./util/UDAGetSessionKey";
-import {UDABindAuthenticatedAccount} from "./util/UDABindAuthenticatedAccount";
-import {UDAStorageService} from "./services/UDAStorageService";
-import {keyCloakStore} from "./util/KeycloakStore";
 let sessionData: UDASessionData = new UDASessionData();
 
 // listen for the requests made from webpage for accessing userdata
