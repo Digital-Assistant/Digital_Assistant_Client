@@ -16,9 +16,12 @@ export const UDABindAuthenticatedAccount = async (sessionData: UDASessionData, r
     emailid: sessionData.authData.email,
     authsource: sessionData.authenticationSource
   };
+  console.log(sessionData);
   let response = await apiClient.post(ENDPOINT.CheckUserId, authData);
   if(response){
     if (sessionData.sessionKey !== null) {
+      console.log("Binding authenticated account with session key");
+      console.log("Session key:", sessionData.sessionKey);
       await UDABindAccount(response, sessionData, renewToken);
     }
   }

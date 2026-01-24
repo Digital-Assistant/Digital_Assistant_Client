@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { store } from '../store';
 import type { RootState } from '../store';
-import {specialNodes} from "../util";
+import { specialNodes } from "../util";
+import { CONFIG } from '../config';
 
 /**
  * Configuration options for the API client
@@ -64,9 +65,21 @@ export class ApiClient {
             ...config
         };
 
+        // Determine base URL from environment variables (logic mirrored from invokeApi.ts)
+        const baseProdURL = process.env.baseProdURL;
+        const baseTestURL = process.env.baseTestURL;
+
+        let envBaseURL = baseProdURL;
+        if (CONFIG.current === 'TEST') {
+            envBaseURL = baseTestURL;
+        }
+
+        // Use provided baseURL from config or fall back to determined environment URL
+        const resolvedBaseURL = this.config.baseURL || envBaseURL;
+
         // Create Axios instance
         this.axiosInstance = axios.create({
-            baseURL: this.config.baseURL,
+            baseURL: resolvedBaseURL,
             timeout: this.config.timeout,
             headers: {
                 'Content-Type': 'application/json',
@@ -106,7 +119,7 @@ export class ApiClient {
                         const authData = typeof userState.userSessionData.authData === 'string'
                             ? JSON.parse(userState.userSessionData.authData)
                             : userState.userSessionData.authData;
-                        
+
                         token = authData?.authData?.token || authData?.token || null;
                     } catch (e) { /* Ignore parsing errors */ }
                 }
@@ -206,7 +219,7 @@ export class ApiClient {
         // For now, just log the error
         // In the future, this could dispatch Redux actions for token refresh
         console.warn('API Client: Unauthorized request detected. Token may be expired.');
-        
+
         // Could emit custom events for handling in the main application
         if (typeof window !== 'undefined') {
             window.dispatchEvent(new CustomEvent('digital-assistant:unauthorized', {

@@ -1,9 +1,9 @@
 // Mock console.error BEFORE any imports
-const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
 
 // Declare a mock object for StorageUtil that we can control
 const mockStorageUtil = {
-  getFromStore: jest.fn(),
+  get: jest.fn(),
   setToStore: jest.fn(),
 };
 
@@ -22,17 +22,18 @@ jest.mock('../../../config', () => ({
 // Import RecordingState type for type safety in tests
 import type { RecordingState } from '../recordingSlice';
 import recordingReducer, {
-    setIsRecording,
-    setIsPlaying,
-    setManualPlay,
-    setPlayDelay,
-    setRecSequenceData,
-    addRecSequenceData,
-    setSelectedRecordingDetails,
-    setShowRecord,
-    setShowLoader,
-    resetRecordingState,
-    defaultRecordingState,
+  setIsRecording,
+  setIsPlaying,
+  setManualPlay,
+  setPlayDelay,
+  setRecSequenceData,
+  addRecSequenceData,
+  setSelectedRecordingDetails,
+  setShowRecord,
+  setShowLoader,
+  resetRecordingState,
+  initializeRecordingState,
+  defaultRecordingState,
 } from '../recordingSlice';
 
 describe('recordingSlice', () => {
@@ -44,21 +45,21 @@ describe('recordingSlice', () => {
     jest.resetModules(); // Clear module cache
 
     // Clear mocks on our controlled mock object and spies
-    mockStorageUtil.getFromStore.mockClear();
+    mockStorageUtil.get.mockClear();
     mockStorageUtil.setToStore.mockClear();
     consoleErrorSpy.mockClear();
 
     if (throwErrorOnLoad) {
-      mockStorageUtil.getFromStore.mockImplementation(() => {
+      mockStorageUtil.get.mockImplementation(() => {
         throw new Error('Storage read error');
       });
     } else {
-      mockStorageUtil.getFromStore.mockReturnValue(storageData);
+      mockStorageUtil.get.mockReturnValue(Promise.resolve(storageData));
     }
 
     // Re-import the slice and its actions
     const freshModule = require('../recordingSlice');
-    
+
     reducer = freshModule.default;
     CONFIG_MOCK = require('../../../config').CONFIG;
 
@@ -78,49 +79,63 @@ describe('recordingSlice', () => {
   });
 
   describe('recordingSlice initialization', () => {
-    it('initializes with default state when storage returns null', () => {
+    it('initializes with default state initially', () => {
+      // Now initialization is async, so initial state should always be default
       const { actualInitialState } = getFreshSliceModule(null);
       expect(actualInitialState).toEqual(defaultRecordingState);
-      expect(mockStorageUtil.getFromStore).toHaveBeenCalledWith(CONFIG_MOCK.RECORDING_SEQUENCE_REDUX, false);
     });
 
-    it('initializes with default state when storage returns undefined', () => {
-      const { actualInitialState } = getFreshSliceModule(undefined);
-      expect(actualInitialState).toEqual(defaultRecordingState);
-      expect(mockStorageUtil.getFromStore).toHaveBeenCalledWith(CONFIG_MOCK.RECORDING_SEQUENCE_REDUX, false);
-    });
-
-    it('initializes with persisted state when storage returns a valid object', () => {
+    it('async initialization updates state with storage data', async () => {
       const persistedState: RecordingState = {
         ...defaultRecordingState,
         isRecording: true,
         isPlaying: 'on',
         recSequenceData: [{ id: 1, action: 'click' }],
       };
-      const { actualInitialState } = getFreshSliceModule(persistedState);
-      expect(actualInitialState).toEqual(persistedState);
-      expect(mockStorageUtil.getFromStore).toHaveBeenCalledWith(CONFIG_MOCK.RECORDING_SEQUENCE_REDUX, false);
+      const { reducer } = getFreshSliceModule(persistedState);
+      const store = { getState: () => ({ recording: defaultRecordingState }), dispatch: jest.fn() };
+
+      // Dispatch the async thunk
+      const action = await initializeRecordingState()(store.dispatch, store.getState, undefined);
+
+      // Check if the fulfilled action has the correct payload
+      expect(action.payload).toEqual(persistedState);
+
+      // Check if reducer handles the fulfilled action
+      const newState = reducer(defaultRecordingState, action);
+      expect(newState).toEqual(persistedState);
+      expect(mockStorageUtil.get).toHaveBeenCalledWith(CONFIG_MOCK.RECORDING_SEQUENCE_REDUX, false);
     });
 
-    it('falls back to defaults for malformed/partial persisted values', () => {
+    it('async initialization falls back to defaults for malformed/partial persisted values', async () => {
       const malformedState = {
         isRecording: 'yes', // Incorrect type
         recSequenceData: [{ id: 1 }], // Correct type
         unknownProperty: 'value', // Extra property
       };
-      const { actualInitialState } = getFreshSliceModule(malformedState);
+
+      const { reducer } = getFreshSliceModule(malformedState);
+      const store = { getState: () => ({ recording: defaultRecordingState }), dispatch: jest.fn() };
+
+      const action = await initializeRecordingState()(store.dispatch, store.getState, undefined);
+
       const expectedState = {
         ...defaultRecordingState,
         recSequenceData: [{ id: 1 }], // Only recSequenceData should be taken from malformed
       };
-      expect(actualInitialState).toEqual(expectedState);
-      expect(mockStorageUtil.getFromStore).toHaveBeenCalledWith(CONFIG_MOCK.RECORDING_SEQUENCE_REDUX, false);
+
+      expect(action.payload).toEqual(expectedState);
+      expect(mockStorageUtil.get).toHaveBeenCalledWith(CONFIG_MOCK.RECORDING_SEQUENCE_REDUX, false);
     });
 
-    it('handles errors during state loading from storage gracefully', () => {
-      const { actualInitialState } = getFreshSliceModule(null, true); // Pass true to throwErrorOnLoad
-      expect(actualInitialState).toEqual(defaultRecordingState);
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Error loading recording state from localStorage:', expect.any(Error));
+    it('handles errors during state loading from storage gracefully', async () => {
+      const { reducer } = getFreshSliceModule(null, true); // Pass true to throwErrorOnLoad
+      const store = { getState: () => ({ recording: defaultRecordingState }), dispatch: jest.fn() };
+
+      const action = await initializeRecordingState()(store.dispatch, store.getState, undefined);
+
+      expect(action.payload).toEqual(defaultRecordingState);
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Error loading recording state from storage:', expect.any(Error));
     });
   });
 

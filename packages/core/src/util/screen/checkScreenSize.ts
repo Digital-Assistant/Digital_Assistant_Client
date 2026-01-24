@@ -1,6 +1,6 @@
 
-import {getScreenSize} from "./getScreenSize";
-import {UDAConsoleLogger, UDAErrorLogger} from "../error/error-log";
+import { getScreenSize } from "./getScreenSize";
+import { UDAConsoleLogger, UDAErrorLogger } from "../error/error-log";
 
 /**
  * Checks the screen size and determines plugin compatibility and alert status.
@@ -32,15 +32,15 @@ export const checkScreenSize = (): { enablePluginForScreen: boolean; showScreenA
         const screenSize = getScreenSize();
 
         // Validate screen size data structure
-        if (!screenSize || !screenSize.resolution) {
+        if (!screenSize || !screenSize.screen) {
             throw new Error('Invalid screen size object');
         }
 
         // Ensure resolution values are valid numbers
-        if (typeof screenSize.resolution.width !== 'number' ||
-            typeof screenSize.resolution.height !== 'number' ||
-            screenSize.resolution.width <= 0 ||
-            screenSize.resolution.height <= 0) {
+        if (typeof screenSize.screen.width !== 'number' ||
+            typeof screenSize.screen.height !== 'number' ||
+            screenSize.screen.width <= 0 ||
+            screenSize.screen.height <= 0) {
             throw new Error('Invalid resolution values');
         }
 
@@ -53,8 +53,8 @@ export const checkScreenSize = (): { enablePluginForScreen: boolean; showScreenA
         }
 
         // Calculate effective dimensions accounting for pixel ratio
-        const effectiveHeight = screenSize.resolution.height * devicePixelRatio;
-        const effectiveWidth = screenSize.resolution.width * devicePixelRatio;
+        const effectiveHeight = screenSize.screen.height * devicePixelRatio;
+        const effectiveWidth = screenSize.screen.width * devicePixelRatio;
 
         // Initialize status flags
         let enablePluginForScreen = true;
@@ -75,7 +75,7 @@ export const checkScreenSize = (): { enablePluginForScreen: boolean; showScreenA
         }
 
         // Log resolution information
-        UDAConsoleLogger.info(`System given resolution is: ${screenSize.resolution.width}x${screenSize.resolution.height}`);
+        UDAConsoleLogger.info(`System given resolution is: ${screenSize.screen.width}x${screenSize.screen.height}`);
         UDAConsoleLogger.info(`Current resolution is: ${effectiveWidth}x${effectiveHeight}`);
 
         return { enablePluginForScreen, showScreenAlert };
