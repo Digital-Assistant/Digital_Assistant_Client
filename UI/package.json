@@ -111,6 +111,7 @@
     "start": "webpack --watch",
     "build:dev": "webpack --env build=development",
     "build": "webpack",
-    "build:prod": "webpack --env build=production"
+    "build:prod": "webpack --env build=production",
+    "build:qa": "webpack --env build=qa"
   }
 }

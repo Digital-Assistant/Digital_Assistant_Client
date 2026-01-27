@@ -38,7 +38,7 @@ module.exports = (env, argv) => {
         "./environments/" + (env.build ? `${env.build}.env` : "local.env");
 
     const buildPath =
-        (env.build && (env.build === "production" || env.build === "development")) ? "dist" : "build";
+        (env.build && (env.build === "production" || env.build === "qa")) ? "dist" : "build";
 
     const webpackConfig = {
         cache: { type: 'filesystem' },
@@ -71,7 +71,7 @@ module.exports = (env, argv) => {
                     test: /\.(js|jsx)$/,
                     exclude: [
                         /(node_modules|bower_components)/,
-                        path.resolve(__dirname, "packages/core")
+                        path.resolve(__dirname, "../packages/core")
                     ],
                     loader: "babel-loader", // the loader which should be applied, it'll be resolved relative to the context
                     options: { presets: ["@babel/env", "@babel/preset-react"] }, // options for the loader
@@ -80,7 +80,7 @@ module.exports = (env, argv) => {
                     test: /\.(ts|tsx)$/,
                     exclude: [
                         /node_modules/,
-                        path.resolve(__dirname, "packages/core")
+                        path.resolve(__dirname, "../packages/core")
                     ],
                     loader: "ts-loader",
                 },
@@ -163,15 +163,6 @@ module.exports = (env, argv) => {
             alias: {
                 // a list of module name aliases
                 // aliases are imported relative to the current context
-                process: "process/browser",
-                utils: path.resolve(__dirname, "./src/config/index"),
-                // alias for antd
-                antd: path.resolve(__dirname, 'node_modules/antd'),
-                // "@digital-assistant/core": path.resolve(__dirname, 'packages/core/dist/index.esm.js'),
-            },
-            fallback: {
-                //fallback module dependencies
-                fs: false,
                 /*http: require.resolve("stream-http"),
                 https: require.resolve("https-browserify"),
                 stream: require.resolve("stream-browserify"),
@@ -179,8 +170,17 @@ module.exports = (env, argv) => {
                 buffer: require.resolve("buffer/"),
                 path: require.resolve("path-browserify"),
                 os: require.resolve("os-browserify/browser"),
-                assert: require.resolve("assert/"),
-                "process/browser": require.resolve("process/browser")*/
+                assert: require.resolve("assert/"),*/
+                "process/browser": require.resolve("process/browser"),
+                utils: path.resolve(__dirname, "./src/config/index"),
+                // alias for antd
+                antd: path.resolve(__dirname, 'node_modules/antd'),
+                "@digital-assistant/core": path.resolve(__dirname, '../packages/core/dist/index.esm.js'),
+            },
+            fallback: {
+                //fallback module dependencies
+                fs: false,
+                "process/browser": require.resolve("process/browser")
             },
         },
         output: {

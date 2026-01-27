@@ -20,13 +20,13 @@
       "js": [
         "./assets/UDAPluginSDK.js"
       ],
-      "css": [
-
-      ],
+      "css": [],
       "media": []
     }
   ],
-
+  "background": {
+    "service_worker": "./assets/UDABackground.js"
+  },
   "permissions": [
     "identity",
     "identity.email",
