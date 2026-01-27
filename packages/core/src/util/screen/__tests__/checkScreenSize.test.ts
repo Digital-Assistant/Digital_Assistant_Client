@@ -28,7 +28,7 @@ describe('checkScreenSize', () => {
       writable: true,
     });
     (getScreenSize as jest.Mock).mockReturnValue({
-      resolution: { width, height },
+      screen: { width, height },
     });
   };
 

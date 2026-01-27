@@ -1,24 +1,30 @@
-import {UDASessionName, updateSessionName, updateBrowserPlugin} from "./BrowserConstants";
+// Migrated to use @digital-assistant/core package
+import {
+    getUDASessionName,
+    updateSessionName,
+    updateBrowserPlugin,
+    UDAGetSessionKey,
+    UDASendSessionData,
+    UDABindAuthenticatedAccount,
+    CONFIG,
+    AuthDataConfig,
+    AuthConfig,
+    keyCloakStore,
+    on,
+    UDAStorageService,
+    UDASessionData,
+    CustomConfig,
+    AppConfig
+} from "@digital-assistant/core";
 
 updateBrowserPlugin(false);
 updateSessionName('web');
 
+// Get UDASessionName from core package
+const UDASessionName = getUDASessionName();
+
 // export let sessionData: any = {sessionKey:"", authenticated:false, authenticationSource:"", authData:{}};
 let sessionData: UDASessionData = new UDASessionData();
-
-import {UDAGetSessionKey} from "./util/UDAGetSessionKey";
-import {UDASendSessionData} from "./util/UDASendSessionData";
-import {UDABindAuthenticatedAccount} from "./util/UDABindAuthenticatedAccount";
-import {CONFIG} from "./config";
-import {AuthDataConfig} from "./config/AuthDataConfig";
-import {AuthConfig} from "./config/UserAuthConfig";
-
-import {keyCloakStore} from "./util/KeycloakStore";
-import {on} from "./util/events";
-import {UDAStorageService} from "./services/UDAStorageService";
-import {UDASessionData} from "./models/UDASessionData";
-import {CustomConfig} from "./config/CustomConfig";
-import {AppConfig} from "./config/AppConfig";
 
 // global.UDAAuthDataConfig = AuthDataConfig;
 // global.UDAAuthConfig = AuthConfig;
@@ -64,12 +70,14 @@ export const UDACheckUserSessionData = async (storedSessionData, getSession: boo
         await UDABindAuthenticatedAccount(sessionData, renewToken);
       }
     } else if(getSession && typeof global.UDAAuthConfig!=='undefined' && global.UDAAuthConfig.id){
-      window.localStorage.removeItem(UDASessionName);
+      // Use async storage instead of localStorage (service worker safe)
+      await UDAStorageService.remove(UDASessionName);
       sessionData = await UDAGetSessionKey(sessionData);
       sessionData.authData.id = global.UDAAuthConfig.id;
       sessionData.authData.email = (global.UDAAuthConfig.email)?global.UDAAuthConfig.email:global.UDAAuthConfig.id;
       sessionData.authenticated=true;
-      sessionData.authenticationSource=window.location.hostname;
+      // Use window.location safely (only in web context)
+      sessionData.authenticationSource=(typeof window !== 'undefined' && window.location)?window.location.hostname:'unknown';
       await UDABindAuthenticatedAccount(sessionData, renewToken);
     } else {
       await UDASendSessionData(sessionData, "UDAAlertMessageData", "login")
@@ -79,7 +87,8 @@ export const UDACheckUserSessionData = async (storedSessionData, getSession: boo
     sessionData.authData.id = global.UDAAuthConfig.id;
     sessionData.authData.email = (global.UDAAuthConfig.email)?global.UDAAuthConfig.email:global.UDAAuthConfig.id;
     sessionData.authenticated=true;
-    sessionData.authenticationSource=window.location.hostname;
+    // Use window.location safely (only in web context)
+    sessionData.authenticationSource=(typeof window !== 'undefined' && window.location)?window.location.hostname:'unknown';
     await UDABindAuthenticatedAccount(sessionData, renewToken);
   } else if (global.UDAAuthConfig.id === '') {
     await UDASendSessionData(sessionData, "UDAAlertMessageData", "login")
@@ -88,8 +97,10 @@ export const UDACheckUserSessionData = async (storedSessionData, getSession: boo
 
 /**
  * Clearing Session storage
+ * Updated to use async storage (service worker safe)
  */
-export const UDAClearSession= () => {
-  window.localStorage.removeItem(UDASessionName);
-  sessionData=new UDASessionData();
+export const UDAClearSession = async () => {
+  // Use async storage instead of localStorage (service worker safe)
+  await UDAStorageService.remove(UDASessionName);
+  sessionData = new UDASessionData();
 }

@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { StorageUtil } from "../../util/storage";
 import { CONFIG } from "../../config";
 
@@ -41,24 +41,24 @@ const coerceRecordingState = (raw: any): RecordingState => {
     };
 };
 
-// Function to load state from storage; always returns a valid RecordingState
-const loadStateFromStorage = (): RecordingState => {
-    try {
-        const serializedState: any = StorageUtil.getFromStore(CONFIG.RECORDING_SEQUENCE_REDUX, false);
-        if (serializedState === null || typeof serializedState === 'undefined') {
+// Async thunk to initialize state from storage
+export const initializeRecordingState = createAsyncThunk(
+    'recording/initialize',
+    async () => {
+        try {
+            const serializedState: any = await StorageUtil.get(CONFIG.RECORDING_SEQUENCE_REDUX, false);
+            if (serializedState === null || typeof serializedState === 'undefined') {
+                return { ...defaultRecordingState };
+            }
+            return coerceRecordingState(serializedState);
+        } catch (err) {
+            console.error('Error loading recording state from storage:', err);
             return { ...defaultRecordingState };
         }
-        return coerceRecordingState(serializedState);
-    } catch (err) {
-        // Log the error correctly as a loading error
-        console.error('Error loading recording state from localStorage:', err);
-        // Keep non-fatal; fall back to defaults in test/SSR environments
-        return { ...defaultRecordingState };
     }
-};
+);
 
-// Initialize state from localStorage
-const initialState: RecordingState = loadStateFromStorage();
+const initialState: RecordingState = { ...defaultRecordingState };
 
 export const recordingSlice = createSlice({
     name: 'recording',
@@ -95,19 +95,24 @@ export const recordingSlice = createSlice({
             return { ...defaultRecordingState };
         },
     },
+    extraReducers: (builder) => {
+        builder.addCase(initializeRecordingState.fulfilled, (state, action) => {
+            return { ...state, ...action.payload };
+        });
+    },
 });
 
-export const { 
-    setIsRecording, 
-    setIsPlaying, 
-    setManualPlay, 
-    setPlayDelay, 
-    setRecSequenceData, 
-    addRecSequenceData, 
-    setSelectedRecordingDetails, 
-    setShowRecord, 
-    setShowLoader, 
-    resetRecordingState 
+export const {
+    setIsRecording,
+    setIsPlaying,
+    setManualPlay,
+    setPlayDelay,
+    setRecSequenceData,
+    addRecSequenceData,
+    setSelectedRecordingDetails,
+    setShowRecord,
+    setShowLoader,
+    resetRecordingState
 } = recordingSlice.actions;
 
 export default recordingSlice.reducer;

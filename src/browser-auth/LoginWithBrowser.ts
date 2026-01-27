@@ -45,7 +45,7 @@ export const LoginWithBrowser = async (
 
     // Chrome Identity API - only available in browser extensions with proper permissions
     // Requires: "identity" and "identity.email" permissions in manifest.json
-    const data = await browserVar.identity.getProfileUserInfo({accountStatus: 'ANY'});
+    const data = await browserVar.identity.getProfileUserInfo({ accountStatus: 'ANY' });
 
     if (data && data?.id !== '' && data?.email !== "") {
         sessionData.authenticated = true;

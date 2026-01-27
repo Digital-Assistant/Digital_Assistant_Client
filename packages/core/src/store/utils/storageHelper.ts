@@ -47,8 +47,9 @@ export function loadFromStorage<T>(key: string, defaultValue: T): T {
         }
 
         // Regular web context - use localStorage
-        if (typeof localStorage !== 'undefined') {
-            const serializedState = localStorage.getItem(key);
+        // Access via window.localStorage to avoid warnings in service workers
+        if (typeof window !== 'undefined' && window.localStorage) {
+            const serializedState = window.localStorage.getItem(key);
             if (serializedState === null) {
                 return defaultValue;
             }
@@ -57,7 +58,7 @@ export function loadFromStorage<T>(key: string, defaultValue: T): T {
 
         return defaultValue;
     } catch (err) {
-        console.error(`Error loading ${key} from localStorage:`, err);
+        console.error(`Error loading ${key} from storage:`, err);
         return defaultValue;
     }
 }
@@ -99,8 +100,9 @@ export function saveToStorage<T>(key: string, state: T): void {
         }
 
         // Regular web context - use localStorage
-        if (typeof localStorage !== 'undefined') {
-            localStorage.setItem(key, serializedState);
+        // Access via window.localStorage to avoid warnings in service workers
+        if (typeof window !== 'undefined' && window.localStorage) {
+            window.localStorage.setItem(key, serializedState);
             return;
         }
 
@@ -109,7 +111,7 @@ export function saveToStorage<T>(key: string, state: T): void {
             console.error(`Error saving ${key} to storage:`, err);
         });
     } catch (err) {
-        console.error(`Error saving ${key} to localStorage:`, err);
+        console.error(`Error saving ${key} to storage:`, err);
     }
 }
 
@@ -131,8 +133,9 @@ export function removeFromStorage(key: string): void {
         }
 
         // Regular web context
-        if (typeof localStorage !== 'undefined') {
-            localStorage.removeItem(key);
+        // Access via window.localStorage to avoid warnings in service workers
+        if (typeof window !== 'undefined' && window.localStorage) {
+            window.localStorage.removeItem(key);
             return;
         }
 

@@ -1,10 +1,10 @@
 //adding the sessionKey to the authid
-import {UDASendSessionData} from "./UDASendSessionData";
+import { UDASendSessionData } from "./UDASendSessionData";
 import { ENDPOINT } from "../../config";
-import {StorageUtil} from "../storage";
-import {getUDASessionName} from "../browser";
-import {UDASessionData} from "../../models/UDASessionData";
-import {apiClient} from "../../services";
+import { StorageUtil } from "../storage";
+import { getUDASessionName } from "../browser";
+import { UDASessionData } from "../../models/UDASessionData";
+import { apiClient } from "../../services";
 
 
 /**
@@ -15,13 +15,20 @@ import {apiClient} from "../../services";
  * @returns {Promise<void>} Promise that resolves when the binding is complete.
  */
 export const UDABindAccount = async (userAuthData: any, UDASessionData: UDASessionData, renewToken: any) => {
-  const payLoad = {uid: UDASessionData.authData.id, email: UDASessionData.authData.email, realm: window.UDAGlobalConfig.realm, clientId: window.UDAGlobalConfig.clientId, clientSecret: window.UDAGlobalConfig.clientSecret};
-  const authToken: any = await apiClient.post(process.env.tokenUrl+ENDPOINT.tokenUrl, payLoad);
-  if(authToken && authToken?.token) {
-    UDASessionData.authData.token = authToken.token;
-    let userSessionData: any = {userauthid: userAuthData.id, usersessionid: UDASessionData.sessionKey};
+  const globalConfig = (globalThis as any).UDAGlobalConfig || {};
+  const payLoad = { uid: UDASessionData.authData.id, email: UDASessionData.authData.email, realm: globalConfig.realm, clientId: globalConfig.clientId, clientSecret: globalConfig.clientSecret };
+  console.log(payLoad);
+  console.log(process.env.tokenUrl + ENDPOINT.tokenUrl);
+  const authTokenResponse: any = await apiClient.post(process.env.tokenUrl + ENDPOINT.tokenUrl, payLoad);
+  console.log(authTokenResponse);
+  if (authTokenResponse && authTokenResponse?.data?.token) {
+    UDASessionData.authData.token = authTokenResponse.data.token;
+    console.log(UDASessionData);
+    let userSessionData: any = { userauthid: userAuthData.id, usersessionid: UDASessionData.sessionKey };
+    console.log(userSessionData);
     let response = await apiClient.post(ENDPOINT.CheckUserSession, userSessionData);
-    if(response){
+    console.log(response);
+    if (response) {
       await StorageUtil.add(UDASessionData, getUDASessionName());
       await UDASendSessionData(UDASessionData, "UDAAuthenticatedUserSessionData");
     }

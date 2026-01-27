@@ -190,35 +190,64 @@ export class StorageUtil {
   }
 
     /**
-     * Sets data to `localStorage`. This method is a synchronous wrapper around `localStorage.setItem`.
-     * Note: This only works in window context, not in service workers.
+     * Sets data to storage. Checks for browser extension context first, then falls back to localStorage.
+     * For browser extensions, this uses async storage (fire-and-forget).
+     * For web context, this uses synchronous localStorage.
      *
      * @param data The data to be stored.
      * @param key The key under which to store the data.
      * @param isRaw If `true`, the data is stored as-is; otherwise, it's JSON.stringified.
      */
     public static setToStore = (data: any, key: string, isRaw: boolean) => {
-        if (typeof localStorage !== 'undefined') {
-            localStorage.setItem(key, !isRaw ? JSON.stringify(data) : data);
+        const extensionAPI = getBrowserAPI();
+        const serializedData = !isRaw ? JSON.stringify(data) : data;
+
+        // Browser extension context - use extension storage (async, fire-and-forget)
+        if (this.UDABrowserPlugin && enablePlugin && browserVar?.storage) {
+            const storageData: { [key: string]: any } = {};
+            storageData[key] = serializedData;
+            browserVar.storage.local.set(storageData).catch((err: Error) => {
+                console.error(`Error saving ${key} to extension storage:`, err);
+            });
+        } else if (isServiceWorker && extensionAPI?.storage) {
+            // Service worker context - use extension API (cross-browser, async, fire-and-forget)
+            const storageData: { [key: string]: any } = {};
+            storageData[key] = serializedData;
+            extensionAPI.storage.local.set(storageData).catch((err: Error) => {
+                console.error(`Error saving ${key} to extension storage:`, err);
+            });
+        } else if (typeof window !== 'undefined' && window.localStorage) {
+            // Web context - use localStorage (synchronous)
+            window.localStorage.setItem(key, serializedData);
         } else {
-            console.warn('localStorage not available in service worker context. Use async methods instead.');
+            console.warn('Storage not available. Use async methods instead.');
         }
     };
 
     /**
-     * Retrieves data from `localStorage`. This method is a synchronous wrapper around `localStorage.getItem`.
-     * Note: This only works in window context, not in service workers.
+     * Retrieves data from storage. This is a synchronous method that only works with localStorage.
+     * For browser extension/service worker contexts, use the async `get()` method instead.
      *
      * @param key The key associated with the data to be retrieved.
      * @param isRaw If `true`, the data is returned as a raw string; otherwise, it's JSON.parsed.
-     * @returns The retrieved data, or `undefined` if the key is not found.
+     * @returns The retrieved data, or `undefined` if the key is not found or in service worker context.
      */
     public static getFromStore = (key: string, isRaw: boolean) => {
-        if (typeof localStorage !== 'undefined') {
-            const data = localStorage.getItem(key);
+        const extensionAPI = getBrowserAPI();
+
+        // Check if we're in a browser extension or service worker context
+        if ((this.UDABrowserPlugin && enablePlugin && browserVar?.storage) ||
+            (isServiceWorker && extensionAPI?.storage)) {
+            console.warn(`getFromStore() is synchronous and cannot access extension storage. Use async get() method instead for key: ${key}`);
+            return undefined;
+        }
+
+        // Web context - use localStorage (synchronous)
+        if (typeof window !== 'undefined' && window.localStorage) {
+            const data = window.localStorage.getItem(key);
             if (data) return !isRaw ? JSON.parse(data) : data;
         } else {
-            console.warn('localStorage not available in service worker context. Use async methods instead.');
+            console.warn('Storage not available. Use async get() method instead.');
             return undefined;
         }
     };
