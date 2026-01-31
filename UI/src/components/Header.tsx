@@ -4,26 +4,129 @@ import { LanguageSelector } from "./LanguageSelector";
 import { SettingsMenu } from "./SettingsMenu";
 import { usePanelPosition } from "../contexts/PanelPositionContext";
 import { useAuth } from "../contexts/AuthContext";
+import { coreSDK } from "../services/coreSDK";
 
 interface HeaderProps {
   onRecClick?: () => void;
   showSearchBar?: boolean;
+  searchKeyword?: string;
+  onSearchChange?: (display: string, query: string) => void;
 }
 
-export function Header({ onRecClick, showSearchBar = true }: HeaderProps) {
+const speech = (window as any).webkitSpeechRecognition;
+let UDAVoiceRecognition: any;
+if (speech) {
+  UDAVoiceRecognition = speech;
+}
+
+export function Header({
+  onRecClick,
+  showSearchBar = true,
+  searchKeyword = "",
+  onSearchChange
+}: HeaderProps) {
   const { isAuthenticated } = useAuth();
   const [showLanguageSelector, setShowLanguageSelector] = useState(false);
   const [showSettingsMenu, setShowSettingsMenu] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [searchValue, setSearchValue] = useState("");
+  // Local state for input field to support manual typing without triggering search immediately
+  const [localSearchValue, setLocalSearchValue] = useState(searchKeyword);
   const [isMicActive, setIsMicActive] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState("en-US"); // Default to English US
   const { position, togglePosition, setIsPanelVisible, panelHeight, togglePanelHeight } = usePanelPosition();
   const headerRef = useRef<HTMLDivElement>(null);
+
+  // Sync local state if prop changes (e.g. cleared externally)
+  useEffect(() => {
+    setLocalSearchValue(searchKeyword);
+  }, [searchKeyword]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      if (onSearchChange) onSearchChange(localSearchValue, localSearchValue);
+    }
+  };
+
+  // Speech Recognition Logic
+  const recognition = useRef<any>(null);
+
+  useEffect(() => {
+    if (UDAVoiceRecognition) {
+      recognition.current = new UDAVoiceRecognition();
+      recognition.current.lang = selectedLanguage; // Use selected language
+      recognition.current.continuous = false; // Ensure single results
+      recognition.current.interimResults = false;
+
+      let hasProcessedResult = false;
+
+      recognition.current.onstart = function () {
+        setIsMicActive(true);
+        hasProcessedResult = false;
+      };
+
+      recognition.current.onerror = function (event: any) {
+        if (event.error === "no-speech") {
+          // alert("No speech was detected. Try again.");
+        }
+        setIsMicActive(false);
+        recognition.current.stop();
+      };
+
+      recognition.current.onresult = async function (event: any) {
+        if (event.results.length > 0 && !hasProcessedResult) {
+          hasProcessedResult = true; // Prevent double firing
+          const current = event.resultIndex;
+          const transcript = event.results[current][0].transcript;
+          setIsMicActive(false);
+          recognition.current.stop();
+
+          // Update local state immediately (Show spoken text)
+          setLocalSearchValue(transcript);
+
+          // Translation Logic
+          let queryText = transcript;
+
+          if (selectedLanguage !== 'en-US') {
+            try {
+              // Translate to English for search
+              queryText = await coreSDK.getTranslateService().translateText(transcript, selectedLanguage, 'en');
+              console.log(`Translated '${transcript}' (${selectedLanguage}) to '${queryText}' (en)`);
+            } catch (error) {
+              console.error("Translation failed, searching with original text", error);
+            }
+          }
+
+          if (onSearchChange) {
+            onSearchChange(transcript, queryText);
+          }
+        }
+      };
+    }
+
+    // Cleanup function to stop recognition if component unmounts or updates
+    return () => {
+      if (recognition.current) {
+        recognition.current.onstart = null;
+        recognition.current.onerror = null;
+        recognition.current.onresult = null;
+        recognition.current.abort();
+      }
+    };
+  }, [onSearchChange, selectedLanguage]);
+
+  const toggleMic = () => {
+    if (isMicActive) {
+      recognition.current?.stop();
+      setIsMicActive(false);
+    } else {
+      recognition.current?.start();
+    }
+  };
 
   useEffect(() => {
     // Find the scrollable main content container
     const mainContent = headerRef.current?.closest('.bg-\\[\\#f6f6f6\\]')?.querySelector('main');
-    
+
     if (!mainContent) return;
 
     const handleScroll = () => {
@@ -43,7 +146,8 @@ export function Header({ onRecClick, showSearchBar = true }: HeaderProps) {
   };
 
   const handleClearSearch = () => {
-    setSearchValue("");
+    setLocalSearchValue("");
+    if (onSearchChange) onSearchChange("", "");
   };
 
   return (
@@ -141,7 +245,7 @@ export function Header({ onRecClick, showSearchBar = true }: HeaderProps) {
               </span>
             </button>
           )}
-          
+
           <div className="relative">
             <button
               onClick={() => setShowSettingsMenu(!showSettingsMenu)}
@@ -173,13 +277,13 @@ export function Header({ onRecClick, showSearchBar = true }: HeaderProps) {
                 </svg>
               </div>
             </button>
-            
+
             {/* Settings Menu - Only show when authenticated */}
             {isAuthenticated && showSettingsMenu && (
               <SettingsMenu onClose={() => setShowSettingsMenu(false)} />
             )}
           </div>
-          
+
           <button
             onClick={handleClose}
             className="w-6 h-6 border-2 border-[#8e8e93] rounded flex items-center justify-center hover:bg-gray-100 transition-colors"
@@ -219,20 +323,40 @@ export function Header({ onRecClick, showSearchBar = true }: HeaderProps) {
             <input
               type="text"
               placeholder="Search"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
+              value={localSearchValue}
+              onChange={(e) => setLocalSearchValue(e.target.value)}
+              onKeyDown={handleKeyDown}
               className="flex-1 bg-transparent border-none outline-none px-2 text-base font-['Roboto',sans-serif] text-black placeholder:text-black"
             />
+            {searchKeyword && (
+              <button
+                onClick={handleClearSearch}
+                className="shrink-0 hover:opacity-80 transition-opacity mr-2"
+                aria-label="Clear search"
+              >
+                <div className="w-8 h-8 rounded-full bg-white hover:bg-black shadow-sm flex items-center justify-center transition-colors group">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24">
+                    <path
+                      d="M18 6L6 18M6 6L18 18"
+                      stroke="#1C1C1E"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="group-hover:stroke-white transition-colors"
+                    />
+                  </svg>
+                </div>
+              </button>
+            )}
             <button
-              onClick={() => setIsMicActive(!isMicActive)}
+              onClick={toggleMic}
               className="shrink-0 hover:opacity-80 transition-opacity relative"
               aria-label="Voice search"
             >
-              <div className={`w-8 h-8 rounded-full shadow-sm flex items-center justify-center transition-colors group ${
-                isMicActive 
-                  ? 'bg-[#E57373] hover:bg-[#EF5350]' 
-                  : 'bg-white hover:bg-black'
-              }`}>
+              <div className={`w-8 h-8 rounded-full shadow-sm flex items-center justify-center transition-colors group ${isMicActive
+                ? 'bg-[#E57373] hover:bg-[#EF5350]'
+                : 'bg-white hover:bg-black'
+                }`}>
                 <svg
                   className="w-5 h-5"
                   fill="none"
@@ -266,11 +390,10 @@ export function Header({ onRecClick, showSearchBar = true }: HeaderProps) {
                 className="shrink-0 ml-2 hover:opacity-80 transition-opacity"
                 aria-label="Translate"
               >
-                <div className={`w-8 h-8 rounded-full shadow-sm flex items-center justify-center transition-colors group ${
-                  showLanguageSelector 
-                    ? 'bg-black' 
-                    : 'bg-white hover:bg-black'
-                }`}>
+                <div className={`w-8 h-8 rounded-full shadow-sm flex items-center justify-center transition-colors group ${showLanguageSelector
+                  ? 'bg-black'
+                  : 'bg-white hover:bg-black'
+                  }`}>
                   <svg
                     className="w-5 h-5"
                     fill="none"
@@ -287,10 +410,14 @@ export function Header({ onRecClick, showSearchBar = true }: HeaderProps) {
                   </svg>
                 </div>
               </button>
-              
+
               {/* Language Selector Dropdown */}
               {showLanguageSelector && (
-                <LanguageSelector onClose={() => setShowLanguageSelector(false)} />
+                <LanguageSelector
+                  selectedLanguage={selectedLanguage}
+                  onSelect={(code) => setSelectedLanguage(code)}
+                  onClose={() => setShowLanguageSelector(false)}
+                />
               )}
             </div>
           </div>
@@ -314,13 +441,14 @@ export function Header({ onRecClick, showSearchBar = true }: HeaderProps) {
             <input
               type="text"
               placeholder="Search"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
+              value={localSearchValue}
+              onChange={(e) => setLocalSearchValue(e.target.value)}
+              onKeyDown={handleKeyDown}
               className="flex-1 bg-transparent border-none outline-none px-2 text-base font-['Roboto',sans-serif] text-black placeholder:text-black"
             />
-            
+
             {/* Clear Button - Only shown when there's text */}
-            {searchValue && (
+            {searchKeyword && (
               <button
                 onClick={handleClearSearch}
                 className="shrink-0 hover:opacity-80 transition-opacity mr-2"
@@ -340,17 +468,16 @@ export function Header({ onRecClick, showSearchBar = true }: HeaderProps) {
                 </div>
               </button>
             )}
-            
+
             <button
-              onClick={() => setIsMicActive(!isMicActive)}
+              onClick={toggleMic}
               className="shrink-0 hover:opacity-80 transition-opacity relative"
               aria-label="Voice search"
             >
-              <div className={`w-8 h-8 rounded-full shadow-sm flex items-center justify-center transition-colors group ${
-                isMicActive 
-                  ? 'bg-[#E57373] hover:bg-[#EF5350]' 
-                  : 'bg-white hover:bg-black'
-              }`}>
+              <div className={`w-8 h-8 rounded-full shadow-sm flex items-center justify-center transition-colors group ${isMicActive
+                ? 'bg-[#E57373] hover:bg-[#EF5350]'
+                : 'bg-white hover:bg-black'
+                }`}>
                 <svg
                   className="w-5 h-5"
                   fill="none"
@@ -384,11 +511,10 @@ export function Header({ onRecClick, showSearchBar = true }: HeaderProps) {
                 className="shrink-0 ml-2 hover:opacity-80 transition-opacity"
                 aria-label="Translate"
               >
-                <div className={`w-8 h-8 rounded-full shadow-sm flex items-center justify-center transition-colors group ${
-                  showLanguageSelector 
-                    ? 'bg-black' 
-                    : 'bg-white hover:bg-black'
-                }`}>
+                <div className={`w-8 h-8 rounded-full shadow-sm flex items-center justify-center transition-colors group ${showLanguageSelector
+                  ? 'bg-black'
+                  : 'bg-white hover:bg-black'
+                  }`}>
                   <svg
                     className="w-5 h-5"
                     fill="none"
@@ -405,10 +531,14 @@ export function Header({ onRecClick, showSearchBar = true }: HeaderProps) {
                   </svg>
                 </div>
               </button>
-              
+
               {/* Language Selector Dropdown */}
               {showLanguageSelector && (
-                <LanguageSelector onClose={() => setShowLanguageSelector(false)} />
+                <LanguageSelector
+                  selectedLanguage={selectedLanguage}
+                  onSelect={(code) => setSelectedLanguage(code)}
+                  onClose={() => setShowLanguageSelector(false)}
+                />
               )}
             </div>
           </div>

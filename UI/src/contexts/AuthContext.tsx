@@ -8,10 +8,11 @@ import {
   trigger,
   setUserData
 } from "@digital-assistant/core";
-import { DigitalAssistantCoreSDK } from "../services/coreSDK";
+import { coreSDK as DigitalAssistantCoreSDK } from "../services/coreSDK";
 
 interface AuthContextType {
   isAuthenticated: boolean;
+  isInitialized: boolean;
   login: () => void;
   logout: () => void;
   user: any;
@@ -21,6 +22,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
   const [user, setUser] = useState<any>(null);
 
   const createSession = useCallback(async (data: any) => {
@@ -51,30 +53,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Check existing session
     const checkAuth = async () => {
-      if (authManager.isAuthenticated()) {
-        const sessionData = authManager.getSessionData();
-        if (sessionData && !isAuthenticated) {
+      try {
+        if (authManager.isAuthenticated()) {
+          const sessionData = authManager.getSessionData();
+          if (sessionData && !isAuthenticated) {
+            setIsAuthenticated(true);
+            setUser(sessionData);
+            trigger("CreateUDASessionData", {
+              detail: { action: "createSession", data: sessionData },
+              bubbles: false,
+              cancelable: false,
+            });
+          }
+        }
+
+        let userSessionData = StorageUtil.getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
+        if (userSessionData) {
+          setUser(userSessionData);
           setIsAuthenticated(true);
-          setUser(sessionData);
-          trigger("CreateUDASessionData", {
-            detail: { action: "createSession", data: sessionData },
+          DigitalAssistantCoreSDK.dispatch(setUserData(userSessionData));
+        } else {
+          // Request session data if not found
+          trigger("RequestUDASessionData", {
+            detail: { data: "getusersessiondata" },
             bubbles: false,
             cancelable: false,
           });
         }
-      }
-
-      let userSessionData = StorageUtil.getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
-      if (userSessionData) {
-        setUser(userSessionData);
-        setIsAuthenticated(true);
-      } else {
-        // Request session data if not found
-        trigger("RequestUDASessionData", {
-          detail: { data: "getusersessiondata" },
-          bubbles: false,
-          cancelable: false,
-        });
+      } catch (error) {
+        console.error("Auth initialization error:", error);
+      } finally {
+        setIsInitialized(true);
       }
     }
 
@@ -121,7 +130,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, user }}>
+    <AuthContext.Provider value={{ isAuthenticated, isInitialized, login, logout, user }}>
       {children}
     </AuthContext.Provider>
   );

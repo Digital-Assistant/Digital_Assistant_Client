@@ -1,8 +1,8 @@
-import { DigitalAssistantCore } from "@digital-assistant/core";
+import { DigitalAssistantCore, DigitalAssistantConfiguration, AppConfig, CustomConfig, CONFIG } from "@digital-assistant/core";
 
-// Ensure global type definition if needed, or cast window
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const globalConfig = (window as any).UDAPluginSDK;
+// Initialize Core SDK
+const config = new DigitalAssistantConfiguration(CONFIG);
+// Apply default CustomConfig configuration
+AppConfig(CustomConfig);
 
-// Export a single shared instance
-export const DigitalAssistantCoreSDK = new DigitalAssistantCore(globalConfig);
+export const coreSDK = new DigitalAssistantCore(config);

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Layout } from "./Layout";
 import { SearchResults } from "./SearchResults";
 import { StartRecording } from "./StartRecording";
@@ -22,6 +22,13 @@ export default function HomePageUser() {
   const [countdown, setCountdown] = useState(3);
   const [currentStep, setCurrentStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState<CompletedStep[]>([]);
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [displayKeyword, setDisplayKeyword] = useState("");
+
+  const handleSearchChange = useCallback((display: string, query: string) => {
+    setDisplayKeyword(display);
+    setSearchKeyword(query);
+  }, []);
 
   const handleRecClick = () => {
     setRecordingState('start');
@@ -46,10 +53,10 @@ export default function HomePageUser() {
       number: stepData.number,
       title: stepData.title
     }]);
-    
+
     // Move to next step
     setCurrentStep(currentStep + 1);
-    
+
     // Stay in step editor for next step
     // Or you can go back to recording: setRecordingState('recording');
   };
@@ -101,14 +108,18 @@ export default function HomePageUser() {
   }
 
   return (
-    <Layout onRecClick={handleRecClick}>
-      {recordingState === 'idle' && <SearchResults />}
+    <Layout
+      onRecClick={handleRecClick}
+      searchKeyword={displayKeyword}
+      onSearchChange={handleSearchChange}
+    >
+      {recordingState === 'idle' && <SearchResults searchKeyword={searchKeyword} />}
       {recordingState === 'start' && <StartRecording onStart={handleStart} onCancel={handleCancel} />}
       {recordingState === 'countdown' && <Countdown count={countdown} />}
       {recordingState === 'recording' && <RecordingScreen onContainerClick={handleContainerClick} onCancel={handleCancel} />}
       {recordingState === 'stepEditor' && (
-        <StepEditor 
-          onClose={handleCloseStepEditor} 
+        <StepEditor
+          onClose={handleCloseStepEditor}
           stepNumber={currentStep}
           completedSteps={completedSteps}
           onSaveStep={handleSaveStep}
@@ -117,7 +128,7 @@ export default function HomePageUser() {
         />
       )}
       {recordingState === 'saving' && (
-        <SavingProgress 
+        <SavingProgress
           totalSteps={completedSteps.length}
           onComplete={handleSavingComplete}
         />

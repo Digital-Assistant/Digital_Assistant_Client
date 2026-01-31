@@ -8,9 +8,17 @@ interface LayoutProps {
   children: React.ReactNode;
   onRecClick?: () => void;
   showSearchBar?: boolean;
+  searchKeyword?: string;
+  onSearchChange?: (display: string, query: string) => void;
 }
 
-export function Layout({ children, onRecClick, showSearchBar = true }: LayoutProps) {
+export function Layout({
+  children,
+  onRecClick,
+  showSearchBar = true,
+  searchKeyword,
+  onSearchChange
+}: LayoutProps) {
   const { position, coordinates, setCoordinates, isDragging, setIsDragging, isPanelVisible, panelHeight } = usePanelPosition();
   const panelRef = useRef<HTMLDivElement>(null);
   const dragOffset = useRef({ x: 0, y: 0 });
@@ -19,14 +27,14 @@ export function Layout({ children, onRecClick, showSearchBar = true }: LayoutPro
     // Only allow dragging from the header area
     const target = e.target as HTMLElement;
     const isHeaderArea = target.closest('.drag-handle');
-    
+
     if (!isHeaderArea) return;
-    
+
     setIsDragging(true);
-    
+
     const panel = panelRef.current;
     if (!panel) return;
-    
+
     const rect = panel.getBoundingClientRect();
     dragOffset.current = {
       x: e.clientX - rect.left,
@@ -73,7 +81,7 @@ export function Layout({ children, onRecClick, showSearchBar = true }: LayoutPro
   const getPositionStyle = () => {
     // Determine max height based on panelHeight setting
     const maxHeightValue = panelHeight === 'full' ? '95vh' : '50vh';
-    
+
     // If coordinates are set (dragged), use them
     if (coordinates.x !== 0 || coordinates.y !== 0) {
       return {
@@ -87,7 +95,7 @@ export function Layout({ children, onRecClick, showSearchBar = true }: LayoutPro
         maxHeight: maxHeightValue,
       };
     }
-    
+
     // Otherwise use the position prop (left/right)
     return {
       position: 'fixed' as const,
@@ -106,7 +114,7 @@ export function Layout({ children, onRecClick, showSearchBar = true }: LayoutPro
 
       {/* Widget Container with Border - Shows when visible */}
       {isPanelVisible && (
-        <div 
+        <div
           ref={panelRef}
           onMouseDown={handleMouseDown}
           className="bg-[#f6f6f6] border-2 border-[#d9d9d9] rounded-2xl shadow-2xl flex flex-col transition-all duration-300"
@@ -118,7 +126,12 @@ export function Layout({ children, onRecClick, showSearchBar = true }: LayoutPro
         >
           {/* Header - Fixed at top */}
           <div className="flex-shrink-0 px-3 pt-4">
-            <Header onRecClick={onRecClick} showSearchBar={showSearchBar} />
+            <Header
+              onRecClick={onRecClick}
+              showSearchBar={showSearchBar}
+              searchKeyword={searchKeyword}
+              onSearchChange={onSearchChange}
+            />
           </div>
 
           {/* Main Content - Scrollable */}
