@@ -6,6 +6,7 @@ import { apiClient } from './services';
 import { TranslateService } from './services/TranslateService';
 import { ErrorLoggerService } from './services/ErrorLoggerService';
 import { DigitalAssistantConfiguration } from './DigitalAssistantConfiguration';
+export { DigitalAssistantConfiguration };
 
 import { AuthDataConfig } from './util/user/AuthDataConfig';
 import { AuthConfig } from './util/user/UserAuthConfig';
@@ -89,5 +90,9 @@ export class DigitalAssistantCore {
 
     getApiClient() {
         return apiClient;
+    }
+
+    getTranslateService(): TranslateService {
+        return this.translateService;
     }
 }

@@ -3,6 +3,7 @@ export { ApiClient, apiClient } from './apiClient';
 export type { ApiClientConfig, ApiResponse, ApiError } from './apiClient';
 
 // Export SearchService functions (direct usage)
+export { TranslateService } from './TranslateService';
 export {
   fetchSearchResults,
   fetchRecord,
