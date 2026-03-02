@@ -4,7 +4,7 @@
   "version": "1.0.8.7",
   "private": true,
   "dependencies": {
-    "@digital-assistant/core": "file:./packages/core",
+    "@digital-assistant/core": "file:./UDAN-Core",
     "@popperjs/core": "^2.11.6",
     "@reduxjs/toolkit": "^1.9.7",
     "@types/react-redux": "^7.1.34",

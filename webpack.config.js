@@ -19,17 +19,17 @@ const TerserPlugin = require("terser-webpack-plugin");
 
 // adding custom styleloader functionality to inject css styles into shadow dom
 const customStyleLoader = {
-        loader: require.resolve('style-loader'),
-        options: {
-            insert: function (linkTag) {
-                setTimeout(()=>{
-                    const parent = document.querySelector('#udan-react-root').shadowRoot;
-                    parent.appendChild(linkTag);
-                },10);
-            },
-            // injectType: "linkTag"
-        }
+    loader: require.resolve('style-loader'),
+    options: {
+        insert: function (linkTag) {
+            setTimeout(() => {
+                const parent = document.querySelector('#udan-react-root').shadowRoot;
+                parent.appendChild(linkTag);
+            }, 10);
+        },
+        // injectType: "linkTag"
     }
+}
 
 module.exports = (env, argv) => {
     // reduce it to a nice object, the same as before
@@ -71,7 +71,8 @@ module.exports = (env, argv) => {
                     test: /\.(js|jsx)$/,
                     exclude: [
                         /(node_modules|bower_components)/,
-                        path.resolve(__dirname, "packages/core")
+                        path.resolve(__dirname, "packages/core"),
+                        path.resolve(__dirname, "UDAN-Core")
                     ],
                     loader: "babel-loader", // the loader which should be applied, it'll be resolved relative to the context
                     options: { presets: ["@babel/env", "@babel/preset-react"] }, // options for the loader
@@ -80,10 +81,12 @@ module.exports = (env, argv) => {
                     test: /\.(ts|tsx)$/,
                     exclude: [
                         /node_modules/,
-                        path.resolve(__dirname, "packages/core")
+                        path.resolve(__dirname, "packages/core"),
+                        path.resolve(__dirname, "UDAN-Core")
                     ],
                     loader: "ts-loader",
                     options: {
+                        transpileOnly: true,
                         getCustomTransformers: (program) => ({
                             before: [transform(program)],
                         }),
@@ -136,6 +139,12 @@ module.exports = (env, argv) => {
                         options: { name: "[name].svg" },
                     },
                 },
+                {
+                    test: /\.m?js/,
+                    resolve: {
+                        fullySpecified: false
+                    }
+                }
             ],
         },
         plugins: [
@@ -163,6 +172,7 @@ module.exports = (env, argv) => {
         resolve: {
             // options for resolving module requests
             // (does not apply to resolving of loaders)
+            symlinks: false,
             extensions: [".tsx", ".ts", ".js", ".css", ".scss"], // extensions that are used
             modules: ["./node_modules"], // directories where to look for modules (in order)
             alias: {

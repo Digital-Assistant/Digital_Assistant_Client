@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
+// import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
 import storageMiddleware from './middleware/storageMiddleware'; // Import the new middleware
 
 // Import reducers
@@ -39,8 +39,8 @@ export type AppStore = typeof store;
 export type AppDispatch = typeof store.dispatch;
 
 // Create typed hooks for React components
-export const useAppDispatch = () => useDispatch<AppDispatch>();
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+// export const useAppDispatch = () => useDispatch<AppDispatch>();
+// export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 // Export actions from all slices
 export * from './slices';

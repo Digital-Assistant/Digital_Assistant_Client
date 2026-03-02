@@ -58,6 +58,7 @@ export class DigitalAssistantCore {
         this.errorLogger = new ErrorLoggerService(config);
         this.translateService = new TranslateService(apiClient, config, this.errorLogger);
         // Initialize AuthManager
+        // Initialize AuthManager
         import('./services/AuthManager').then(({ authManager }) => {
             authManager.init();
         });
