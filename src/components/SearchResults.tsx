@@ -53,7 +53,7 @@ export function SearchResults({ searchKeyword = "" }: SearchResultsProps) {
   const loadingRef = useRef(false);
   const hasMorePagesRef = useRef(true);
   const initialLoadDone = useRef(false);
-  const getSearchResultsRef = useRef<(page?: number, refetch?: boolean) => Promise<void>>();
+  const getSearchResultsRef = useRef<(page?: number, refetch?: boolean) => Promise<void>>(undefined);
 
   // SDK Subscription to keep selectedRecording in sync during playback
   useEffect(() => {

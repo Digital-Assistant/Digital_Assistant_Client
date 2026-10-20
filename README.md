@@ -1,5 +1,17 @@
-# Developer Instructions
+# Digital Assistant Client (UDAN)
 
-1. checkout https://github.com/Digital-Assistant/Digital-Assistant-UI for UI as UDAN-UI
-2. The SDK is consumed via npm as `@udan/digital-assistant-sdk` (published from https://github.com/Digital-Assistant/Digital-Assistant-SDK) — no local checkout is required.
-3. Run `npm install` then `npm run build` from the UDAN-UI folder.
+Browser extension UI for the Universal Digital Assistant Network. The core logic comes from the published SDK, `@udan/digital-assistant-sdk` (source: https://github.com/Digital-Assistant/Digital-Assistant-SDK), so no local SDK checkout is needed.
+
+## Build
+
+```
+npm install
+npm run build        # default build -> build/
+npm run build:dev    # development
+npm run build:prod   # production -> dist/
+npm run build:qa     # QA -> dist/
+```
+
+`npm start` runs webpack in watch mode.
+
+`webpack` is pinned to 5.105.4: 5.112.0 fails on the SDK bundle.
