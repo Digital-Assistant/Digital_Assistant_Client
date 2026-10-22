@@ -15,7 +15,6 @@ environments/
 .idea/
 
 # Misc
-package-lock.json
 
 # Local planning artefacts (not committed)
 artefacts/
