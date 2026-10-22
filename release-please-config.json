@@ -1,0 +1,15 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "bootstrap-sha": "04b1652dd7e54adfba16872a8df0a26e806a875f",
+  "packages": {
+    ".": {
+      "release-type": "node",
+      "package-name": "digital-assistant-client",
+      "include-component-in-tag": false,
+      "extra-files": [
+        { "type": "json", "path": "public/manifest.json", "jsonpath": "$.version" },
+        { "type": "json", "path": "public/manifest-firefox.json", "jsonpath": "$.version" }
+      ]
+    }
+  }
+}
