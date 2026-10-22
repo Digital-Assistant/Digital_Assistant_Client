@@ -7,7 +7,11 @@
     "strict": false,
     "module": "es6",
     "target": "es6",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "jsx": "react-jsx",
     "allowJs": true,
     "skipLibCheck": true,
@@ -18,14 +22,17 @@
     "noEmit": false,
     "baseUrl": "src",
     "paths": {
-      "@/*": ["*"]
+      "@/*": [
+        "*"
+      ]
     },
-    "plugins": [
-      {
-        "transform": "typescript-json/lib/transform"
-      }
-    ]
+    "plugins": []
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

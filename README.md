@@ -1,4 +1,4 @@
-# Digital_Assistant_Client
+# Digital Assistant Client (UDAN)
 
 Client for Universal Digital Assistant
 
@@ -117,18 +117,18 @@ We solicit and welcome comments, help, documentation in improving the client.
 ```bash
   npm install
 ```
+Browser extension UI for the Universal Digital Assistant Network. The core logic comes from the published SDK, `@udan/digital-assistant-sdk` (source: https://github.com/Digital-Assistant/Digital-Assistant-SDK), so no local SDK checkout is needed.
 
 ## Build
 
-To build chrome extension (to build folder)
-
-```bash
-  npm run build
+```
+npm install
+npm run build        # default build -> build/
+npm run build:dev    # development
+npm run build:prod   # production -> dist/
+npm run build:qa     # QA -> dist/
 ```
 
-## Installing to Chrome as Plugin
+`npm start` runs webpack in watch mode.
 
-```
-1. Under chrome -> Extensions (enable developer mode) 
-2. Click on Load unpacked and select the build folder
-3. Now open new tab and enter the url that you want to use for
+`webpack` is pinned to 5.105.4: 5.112.0 fails on the SDK bundle.

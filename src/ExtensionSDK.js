@@ -1,6 +1,5 @@
-import {checkBrowser} from "./util/checkBrowser";
-import {checkScreenSize} from "./util/checkScreenSize";
-
+// Migrated to use @udan/digital-assistant-sdk package
+import { checkBrowser, checkScreenSize, getBrowserVar } from "@udan/digital-assistant-sdk";
 
 let {enableUDAPlugin, udaBrowserVar, udaIdentifiedBrowser} = checkBrowser();
 
