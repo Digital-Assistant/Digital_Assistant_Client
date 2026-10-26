@@ -3,11 +3,16 @@ node_modules/
 
 # Build outputs
 build/
+# Packaged extension zip, SHA256SUMS, build-info.json (scripts/ci/package-extension.sh)
+out/
+coverage/
 
 # dist/ is committed for publishing — do not ignore
 
-# Environment files
-environments/
+# Environment files: the filled-in copies hold local values and are never committed.
+# Only the schema (public key names, empty values) is tracked.
+environments/*
+!environments/env.example
 
 # OS & IDE
 .DS_Store
@@ -15,6 +20,7 @@ environments/
 .idea/
 
 # Misc
+npm-debug.log*
 
 # Local planning artefacts (not committed)
 artefacts/

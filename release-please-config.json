@@ -5,11 +5,7 @@
     ".": {
       "release-type": "node",
       "package-name": "digital-assistant-client",
-      "include-component-in-tag": false,
-      "extra-files": [
-        { "type": "json", "path": "public/manifest.json", "jsonpath": "$.version" },
-        { "type": "json", "path": "public/manifest-firefox.json", "jsonpath": "$.version" }
-      ]
+      "include-component-in-tag": false
     }
   }
 }

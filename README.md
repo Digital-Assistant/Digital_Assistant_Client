@@ -14,22 +14,59 @@ npm run build:qa     # QA -> dist/
 
 `npm start` runs webpack in watch mode.
 
+## Environment settings
+
+The build reads public settings from `environments/<build>.env`: `local.env` for `npm run build`, `development.env`, `production.env` for `npm run build:prod`, `qa.env`. Copy `environments/env.example` (the schema, tracked) to that name and fill in the values; the copies are gitignored. Only the keys in `env.example` are inlined (webpack `DefinePlugin`, rules in `scripts/build-env.js`); an environment variable with the key's name overrides the file.
+
+| Keys | What |
+|---|---|
+| `baseProdURL`, `baseTestURL` | Backend REST base, including `/api` |
+| `tokenProdUrl`, `tokenTestUrl` | Token service |
+| `llmProdUrl`, `llmTestUrl` | LLM search |
+| `keycloakProdUrl`, `keycloakTestUrl` | Keycloak base URL |
+| `keycloakRealm`, `keycloakClientId` | Keycloak realm and public client id |
+| `googleAnalyticsMeasurementId`, `enableGoogleAnalytics` | Google Analytics |
+
+Each URL has a PROD and a TEST value, so one build can serve both; the environment is chosen at runtime. The values are exposed as `src/config/buildConfig.ts` (not used by the app yet).
+
+**No secrets.** Everything in these files ends up in the extension, which anyone can unzip. `scripts/ci/check-env-keys.sh` fails the release build if a secret key (`keycloakClientSecret`, `profanityKey`, `googleTranslateApiKey`, `googleAnalyticsSecretKey`, `clientSecret`) has a value or is referenced in `src/`.
+
+Older env files: rename `keyCloakUrl` to `keycloakProdUrl` / `keycloakTestUrl`, split `tokenUrl` and `llmUrl` into the `Prod`/`Test` pairs, and delete the secret keys. `baseURL`, `profanity*` and `googleTranslate*` are no longer read.
+
+## Installing in Chrome (unpacked)
+
+1. Get a zip: the `client-zip` artifact of a CI run, or `scripts/ci/package-extension.sh` locally (`out/udan-extension-<version>.zip`). Unzip it into a folder. A plain `npm run build:prod` also works: use `dist/`.
+2. Open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked** and pick the folder.
+3. The card shows the version, for example `1.1.0 (abc1234)` (the `version_name`); **Details** shows the full `1.1.0.<run>`.
+
+Unpacked extensions do not update themselves: remove the old one and load the new folder.
+
 ## CI and releases
 
-Branch from `dev` and open a PR into `dev`; the PR title must be a [Conventional Commit](https://www.conventionalcommits.org/) (`feat: ...`, `fix: ...`) because it becomes the squash commit and drives the changelog. The extension has no server deploy: a release is a tagged version plus a manual store upload.
+Branch from `dev` and open a PR into `dev`; the PR title must be a [Conventional Commit](https://www.conventionalcommits.org/) (`feat: ...`, `fix: ...`) because it becomes the squash commit and drives the changelog.
+
+**Build once.** Every CI run builds the extension once and packs it into one zip, the extension's equivalent of an image digest. Testers and later the store get exactly that zip, never a rebuild. Scripts and details: `scripts/ci/README.md`.
+
+- Zip: `udan-extension-<X.Y.Z.N>.zip`, plus `SHA256SUMS` and `build-info.json` (commit, branch, run, SDK version and integrity, names of the env keys that were set). Same commit and run number give the same bytes.
+- Version: CI stamps the built manifest with `version = X.Y.Z.<run number>` and `version_name = "X.Y.Z (<short commit>)"`. X.Y.Z comes from `package.json` (Release Please owns it); the run number makes each build unique and higher than the last. The source manifests only hold the base version, for local builds.
+- Retention: artifact `client-zip`, 90 days for pushes to `dev`, 14 days for PRs. The run summary shows the version, SHA256 and SDK version.
+- Build settings in CI come from GitHub Actions **variables** (`BASE_PROD_URL`, `TOKEN_TEST_URL`, ...: `scripts/ci/generate-env.sh --print-names`), never from secrets. They are set once at the organization level and shared with the SDK repo, which uses the same names.
+
 ```mermaid
 flowchart LR
-    PR["PR into dev or master<br/>Conventional Commit title"] --> CI{"CI Gate<br/>build, typecheck, gitleaks, workflow lint<br/>npm audit report-only"}
+    PR["PR into dev or master<br/>Conventional Commit title"] --> CI{"CI Gate<br/>build and pack, typecheck, gitleaks,<br/>workflow lint, npm audit report-only"}
     CI -- no --> PR
     CI -- "yes: squash merge" --> DEV["dev"]
-    CI -. "each build uploads dist and SHA256SUMS<br/>as a run artifact, kept 14 days" .-> ART[("client-dist-commit")]
-    DEV --> DIST["dist/ is built with npm run build:prod<br/>and committed by the maintainer"]
-    DIST --> REL["PR dev into master, merge commit"]
-    REL --> RP["Release Please PR<br/>package.json, manifests, CHANGELOG"]
+    CI -. "PR runs: artifact client-zip, kept 14 days" .-> PZIP[("client-zip (PR)")]
+    DEV --> BUILD["CI on dev: one build<br/>udan-extension-X.Y.Z.run.zip<br/>SHA256SUMS, build-info.json"]
+    BUILD --> ZIP[("artifact client-zip<br/>kept 90 days")]
+    ZIP -. "later phases: same zip, no rebuild" .-> TESTERS["Testers: load unpacked"]
+    ZIP -. "later phases" .-> PROD["GitHub release / store"]
+    DEV --> REL["PR dev into master, merge commit"]
+    REL --> RP["Release Please PR<br/>package.json, CHANGELOG"]
     RP --> TAG["Tag vX.Y.Z and GitHub release"]
-    TAG --> BM["Back-merge PR to dev"]
-    TAG --> CWS["Upload to the Chrome Web Store: manual<br/>automation is a TODO"]
+    TAG --> BM["Back-merge PR to dev<br/>new X.Y.Z for the next dev builds"]
 ```
-Release Please does not rebuild `dist/`: build and commit it before the release PR.
+Release Please no longer touches the manifests: CI owns the extension version. Handing the zip to testers (Deploy to TEST) and attaching it to releases come in later steps; until then the store upload stays manual. `dist/` is still committed for now and will stop being committed once zips are published.
 
 `webpack` is pinned to 5.105.4: 5.112.0 fails on the SDK bundle.

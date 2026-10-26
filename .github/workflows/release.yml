@@ -68,5 +68,5 @@ jobs:
             --base dev \
             --head master \
             --title "chore: sync master back to dev after release" \
-            --body "Automated PR: syncs the version, manifests and CHANGELOG.md from master back to dev after a release." \
+            --body "Automated PR: syncs the version (package.json, package-lock.json) and CHANGELOG.md from master back to dev after a release." \
             || echo "Back-merge PR not created (already exists or nothing to sync)."
