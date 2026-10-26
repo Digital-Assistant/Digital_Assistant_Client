@@ -8,7 +8,7 @@ Browser extension UI for the Universal Digital Assistant Network. The core logic
 npm install
 npm run build        # default build -> build/
 npm run build:dev    # development
-npm run build:prod   # production -> dist/
+npm run build:prod   # production -> dist/ (local build folder, not committed)
 npm run build:qa     # QA -> dist/
 ```
 
@@ -35,7 +35,7 @@ Older env files: rename `keyCloakUrl` to `keycloakProdUrl` / `keycloakTestUrl`, 
 
 ## Installing in Chrome (unpacked)
 
-1. Get a zip: the `client-zip` artifact of a CI run, or `scripts/ci/package-extension.sh` locally (`out/udan-extension-<version>.zip`). Unzip it into a folder. A plain `npm run build:prod` also works: use `dist/`.
+1. Get a zip. Testers: the newest TEST build is on the [`test-current`](../../releases/tag/test-current) prerelease (every build also has its own `test-v<version>` prerelease). Developers: the `client-zip` artifact of a CI run, or `scripts/ci/package-extension.sh` locally (`out/udan-extension-<version>.zip`). Unzip it into a new folder. A plain `npm run build:prod` also works: use `dist/`.
 2. Open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked** and pick the folder.
 3. The card shows the version, for example `1.1.0 (abc1234)` (the `version_name`); **Details** shows the full `1.1.0.<run>`.
 
@@ -60,13 +60,16 @@ flowchart LR
     CI -. "PR runs: artifact client-zip, kept 14 days" .-> PZIP[("client-zip (PR)")]
     DEV --> BUILD["CI on dev: one build<br/>udan-extension-X.Y.Z.run.zip<br/>SHA256SUMS, build-info.json"]
     BUILD --> ZIP[("artifact client-zip<br/>kept 90 days")]
-    ZIP -. "later phases: same zip, no rebuild" .-> TESTERS["Testers: load unpacked"]
+    ZIP -- "Deploy to TEST: manual, dev only<br/>same zip, no rebuild" --> PRE["Prereleases<br/>test-vX.Y.Z.run and test-current"]
+    PRE --> TESTERS["Testers: load unpacked"]
     ZIP -. "later phases" .-> PROD["GitHub release / store"]
     DEV --> REL["PR dev into master, merge commit"]
     REL --> RP["Release Please PR<br/>package.json, CHANGELOG"]
     RP --> TAG["Tag vX.Y.Z and GitHub release"]
     TAG --> BM["Back-merge PR to dev<br/>new X.Y.Z for the next dev builds"]
 ```
-Release Please no longer touches the manifests: CI owns the extension version. Handing the zip to testers (Deploy to TEST) and attaching it to releases come in later steps; until then the store upload stays manual. `dist/` is still committed for now and will stop being committed once zips are published.
+Release Please no longer touches the manifests: CI owns the extension version. Attaching the zip to production releases and the store upload come in later steps; until then the store upload stays manual. `dist/` is no longer committed: it is only the local `build:prod` folder.
+
+**Deploy to TEST.** Testers get builds from GitHub prereleases, never from a rebuild. Run the workflow `Deploy to TEST` on `dev` (Actions tab, or `gh workflow run deploy-test.yml --ref dev`). With no input it takes the newest `dev` build; `-f version=X.Y.Z.N` (from a CI run summary) takes that one, which is also the rollback. It verifies `SHA256SUMS`, the version and that the commit is on `dev`, then publishes prerelease `test-v<version>` and moves `test-current` to it. Neither is ever marked latest. The notes say whether the build talks to the TEST backend and list known issues (`scripts/ci/test-known-issues.md`). The workflow refuses any other branch. A build is deployable while its artifact lives (90 days).
 
 `webpack` is pinned to 5.105.4: 5.112.0 fails on the SDK bundle.

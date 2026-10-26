@@ -1,13 +1,13 @@
 # Dependencies
 node_modules/
 
-# Build outputs
+# Build outputs. dist/ is the local build:prod folder; testers and releases get the CI zip
+# (GitHub prereleases test-v<version>/test-current, see the README).
 build/
+dist/
 # Packaged extension zip, SHA256SUMS, build-info.json (scripts/ci/package-extension.sh)
 out/
 coverage/
-
-# dist/ is committed for publishing — do not ignore
 
 # Environment files: the filled-in copies hold local values and are never committed.
 # Only the schema (public key names, empty values) is tracked.
