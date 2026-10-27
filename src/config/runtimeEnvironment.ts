@@ -26,7 +26,7 @@ export interface EnvironmentChoice {
 export const ENVIRONMENT_STORAGE_KEY = "udanEnvironment";
 
 /** SDK config keys (SDK 0.11.0) that the build config can fill. */
-export const BUILD_CONFIG_KEYS = ["apiBaseUrl", "tokenUrl", "llmUrl", "keycloakUrl", "realm", "clientId"] as const;
+export const BUILD_CONFIG_KEYS = ["apiBaseUrl", "tokenUrl", "llmUrl", "keycloakUrl", "realm", "clientId", "clientSecret"] as const;
 export type BuildConfigKey = (typeof BUILD_CONFIG_KEYS)[number];
 
 export function normalizeEnvironment(value: unknown): Environment | undefined {
@@ -54,6 +54,7 @@ export function buildSdkValues(environment: Environment, config: Readonly<BuildC
         keycloakUrl: urls.keycloakUrl,
         realm: config.keycloakRealm,
         clientId: config.keycloakClientId,
+        clientSecret: config.keycloakClientSecret,
     };
 }
 

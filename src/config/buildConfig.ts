@@ -13,6 +13,9 @@
  * imports this module, so the values are not in the bundle.
  */
 
+// Defined by webpack only for local builds (UDAN_ALLOW_CLIENT_SECRET=1), see webpack.config.js.
+declare const __UDAN_LOCAL_CLIENT_SECRET__: string | undefined;
+
 export interface EnvironmentUrls {
     /** Backend REST base, including /api (endpoint paths are appended). */
     apiBaseUrl: string;
@@ -29,6 +32,8 @@ export interface BuildConfig {
     TEST: EnvironmentUrls;
     keycloakRealm: string;
     keycloakClientId: string;
+    /** Local test builds only; empty otherwise (no secret in release builds). */
+    keycloakClientSecret: string;
     googleAnalyticsMeasurementId: string;
     enableGoogleAnalytics: boolean;
 }
@@ -48,6 +53,7 @@ export const buildConfig: Readonly<BuildConfig> = Object.freeze({
     }),
     keycloakRealm: process.env.keycloakRealm || "",
     keycloakClientId: process.env.keycloakClientId || "",
+    keycloakClientSecret: (typeof __UDAN_LOCAL_CLIENT_SECRET__ !== "undefined" && __UDAN_LOCAL_CLIENT_SECRET__) || "",
     googleAnalyticsMeasurementId: process.env.googleAnalyticsMeasurementId || "",
     enableGoogleAnalytics: process.env.enableGoogleAnalytics === "true",
 });
