@@ -40,8 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    // Initialize AuthManager
-    authManager.init();
+    // No Keycloak check-sso on load: the real login is the Chrome identity flow in the worker
 
     // Check existing session
     const checkAuth = async () => {
@@ -113,8 +112,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []); // run once on mount only — isAuthenticated changes must not re-register listeners
 
+  // Sign-in asks the worker for the session; with no signed-in identity it starts LoginWithBrowser (Chrome identity)
   const login = () => {
-    authManager.init();
+    trigger("RequestUDASessionData", {
+      detail: { data: "getusersessiondata" },
+      bubbles: false,
+      cancelable: false,
+    });
   };
 
   const logout = () => {
