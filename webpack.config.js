@@ -8,6 +8,7 @@ const webpack = require("webpack");
 const CopyPlugin = require("copy-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const { defineEntries } = require("./scripts/build-env");
 
 // adding custom styleloader functionality to inject css styles into shadow dom
 const customStyleLoader = {
@@ -26,10 +27,18 @@ module.exports = (env, argv) => {
     const isProd = env.build === "production" || env.build === "qa";
     const buildPath = isProd ? "dist" : "build";
 
+    // Build-time env (public keys only): exactly the keys in environments/env.example,
+    // read from environments/<env.build>.env (default local.env); an environment
+    // variable with the same name overrides the file. See scripts/build-env.js.
+    const { env: buildEnv, defs: envDefinitions } = defineEntries(env.build);
+    if (!buildEnv.exists) {
+        console.warn(`[env] ${path.relative(__dirname, buildEnv.file)} not found: all build-time keys are empty (copy environments/env.example).`);
+    }
+
     const webpackConfig = {
         cache: {
             type: 'filesystem',
-            buildDependencies: { config: [__filename] },
+            buildDependencies: { config: [__filename, require.resolve("./scripts/build-env")] },
         },
         entry: {
             UDAHeaders: "./src/Headers.js",
@@ -38,6 +47,7 @@ module.exports = (env, argv) => {
             UDABackground: "./src/Background.ts",
             UDALoad: "./src/InjectSDK.js",
             UDAPluginSDK: "./src/ExtensionSDK.js",
+            UDAOptions: "./src/Options.ts",
         },
         mode: isProd ? "production" : "development",
         devtool: isProd ? false : "cheap-module-source-map",
@@ -89,6 +99,7 @@ module.exports = (env, argv) => {
                 process: "process/browser",
                 Buffer: ["buffer", "Buffer"],
             }),
+            new webpack.DefinePlugin(envDefinitions),
             new CopyPlugin({
                 patterns: [
                     { from: "public/", to: "../" },

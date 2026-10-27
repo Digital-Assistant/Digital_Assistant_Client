@@ -16,7 +16,6 @@ permissions: {}
 env:
   NODE_VERSION: "22"
   GITLEAKS_VERSION: "8.30.1"
-  ACTIONLINT_VERSION: "1.7.12"
 
 jobs:
   # Decides if the code changed. Docs-only changes skip the slow jobs.
@@ -50,6 +49,10 @@ jobs:
             echo "code=false" >> "$GITHUB_OUTPUT"
           fi
 
+  # Build once: one immutable, identifiable extension zip per run (the Client's version of an
+  # image digest). Later phases hand exactly this zip to testers and PROD, never a rebuild.
+  # Artifact client-zip = out/udan-extension-<X.Y.Z.run>.zip + SHA256SUMS + build-info.json.
+  # No npm cache: this job produces the release artifact (same rule as the Server image build).
   build:
     needs: changes
     if: needs.changes.outputs.code == 'true'
@@ -64,23 +67,42 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
+          package-manager-cache: false
       - run: npm ci
-      - run: npm run build:prod
-      # dist/ is the file the owner copies by hand today. The SHA256 file lets
-      # anyone check that the download is the one CI built.
-      - name: Write SHA256 of dist
-        run: |
-          set -euo pipefail
-          cd dist
-          find . -type f -print0 | sort -z | xargs -0 sha256sum > ../SHA256SUMS
-          mv ../SHA256SUMS SHA256SUMS
-          wc -l SHA256SUMS
+      # Public build-time values only, from repository variables. Never map a secret here:
+      # every value is inlined into the public extension. Unset variables give empty keys
+      # (fork PRs get none; that is fine). Names: scripts/ci/generate-env.sh --print-names.
+      - name: Generate build env
+        env:
+          BASE_PROD_URL: ${{ vars.BASE_PROD_URL }}
+          BASE_TEST_URL: ${{ vars.BASE_TEST_URL }}
+          TOKEN_PROD_URL: ${{ vars.TOKEN_PROD_URL }}
+          TOKEN_TEST_URL: ${{ vars.TOKEN_TEST_URL }}
+          LLM_PROD_URL: ${{ vars.LLM_PROD_URL }}
+          LLM_TEST_URL: ${{ vars.LLM_TEST_URL }}
+          KEYCLOAK_PROD_URL: ${{ vars.KEYCLOAK_PROD_URL }}
+          KEYCLOAK_TEST_URL: ${{ vars.KEYCLOAK_TEST_URL }}
+          KEYCLOAK_REALM: ${{ vars.KEYCLOAK_REALM }}
+          KEYCLOAK_CLIENT_ID: ${{ vars.KEYCLOAK_CLIENT_ID }}
+          GOOGLE_ANALYTICS_MEASUREMENT_ID: ${{ vars.GOOGLE_ANALYTICS_MEASUREMENT_ID }}
+          ENABLE_GOOGLE_ANALYTICS: ${{ vars.ENABLE_GOOGLE_ANALYTICS }}
+        run: scripts/ci/generate-env.sh --build production
+      # Env check, clean build:prod, stamped manifest, build-info.json, deterministic zip,
+      # SHA256SUMS; writes version, SHA256 and SDK version to the run summary.
+      - name: Build and pack the extension
+        env:
+          RUN_NUMBER: ${{ github.run_number }}
+          COMMIT_SHA: ${{ github.sha }}
+        run: scripts/ci/package-extension.sh --run-number "$RUN_NUMBER" --sha "$COMMIT_SHA"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: client-dist-${{ github.sha }}
-          path: dist/
-          retention-days: 14
+          name: client-zip
+          path: |
+            out/udan-extension-*.zip
+            out/SHA256SUMS
+            out/build-info.json
+          # 90 days for dev builds (testers and PROD take these), 14 for PR builds.
+          retention-days: ${{ github.event_name == 'push' && 90 || 14 }}
           if-no-files-found: error
 
   typecheck:
@@ -163,16 +185,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: actionlint
-        run: |
-          set -euo pipefail
-          base="https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}"
-          f="actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
-          curl -fsSLO "$base/$f"
-          curl -fsSL -o checksums.txt "$base/actionlint_${ACTIONLINT_VERSION}_checksums.txt"
-          grep " $f\$" checksums.txt | sha256sum -c -
-          tar -xzf "$f" actionlint
-          ./actionlint -color
+      # actionlint + zizmor over the workflows, shellcheck over scripts/ci/*.sh.
+      - name: Lint workflows and CI scripts
+        run: scripts/ci/lint-workflows.sh
 
   # One name for branch protection (P09). Fails if any needed job failed or was
   # cancelled. "skipped" is fine: it means docs-only changes.

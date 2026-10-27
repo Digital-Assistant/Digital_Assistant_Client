@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>UDAN options</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font: 14px/1.4 system-ui, sans-serif; margin: 16px; min-width: 280px; }
+    label { display: block; font-weight: 600; margin-bottom: 6px; }
+    select { font: inherit; padding: 4px 6px; }
+    p { color: #444; margin: 12px 0 0; }
+    #status { color: #666; }
+  </style>
+</head>
+<body>
+  <label for="environment">Environment</label>
+  <select id="environment">
+    <option value="">Automatic (unpacked = TEST, store = PROD)</option>
+    <option value="TEST">TEST</option>
+    <option value="PROD">PROD</option>
+  </select>
+  <p id="effective">Checking...</p>
+  <p id="status"></p>
+  <script src="assets/UDAOptions.js"></script>
+</body>
+</html>

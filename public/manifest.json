@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Universal Digital Assistant (UDA) Beta",
-  "version": "1.0.8.7",
+  "version": "1.1.0",
   "content_scripts": [
     {
       "js": [
@@ -26,6 +26,13 @@
   ],
   "background": {
     "service_worker": "./assets/UDABackground.js"
+  },
+  "action": {
+    "default_title": "Universal Digital Assistant (UDA)"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
   },
   "permissions": [
     "identity",

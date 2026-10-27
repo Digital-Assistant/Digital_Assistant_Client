@@ -1,0 +1,12 @@
+# gitleaks config: the default rules, plus one path allowlist.
+# gitleaks reads this file from the repo root by default (ci.yml, job gitleaks).
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Env schema: keys only, values always empty"
+# generic-api-key matches "keycloakProdUrl=" and reads the next line's key name
+# as the secret. The schema can never hold a value: scripts/ci/check-env-keys.sh
+# fails the build if any key in it is set.
+paths = ['''^environments/env\.example$''']
