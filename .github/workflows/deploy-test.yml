@@ -6,7 +6,9 @@ name: Deploy to TEST
 #   test-current     fixed page testers bookmark; it moves to the build deployed last.
 # Empty version: the newest dev build (scripts/ci/latest-client-build.sh). An older version
 # redeploys it, which is the rollback. Testers load the zip unpacked (README, "Installing").
-# Neither prerelease is ever marked latest. Runs only on dev.
+# Neither prerelease is ever marked latest. Runs only on dev. After publishing, job "Sanity check
+# TEST" loads that same zip into Chromium (scripts/ci/smoke-extension.sh); a failure turns the run
+# red but does not unpublish: redeploy the previous version to roll back.
 #   gh workflow run deploy-test.yml --ref dev [-f version=X.Y.Z.N]
 
 on:
@@ -89,3 +91,52 @@ jobs:
           EXPECTED_VERSION: ${{ needs.choose.outputs.version }}
           BASE_TEST_URL: ${{ vars.BASE_TEST_URL }}
         run: scripts/ci/publish-test-build.sh build
+
+      # The same files that were just verified and published, handed to the sanity job (not rebuilt).
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: deployed-zip
+          path: |
+            build/udan-extension-*.zip
+            build/SHA256SUMS
+            build/build-info.json
+          retention-days: 1
+          if-no-files-found: error
+
+  sanity:
+    name: Sanity check TEST
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read # checkout the scripts and the pinned playwright-core
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+          package-manager-cache: false
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: deployed-zip
+          path: zip
+
+      # No lifecycle scripts: only playwright-core is needed, from the lockfile.
+      - run: npm ci --ignore-scripts
+
+      - name: Install Chromium
+        run: npx playwright-core install --with-deps chromium
+
+      # Unauthenticated and read-only. BASE_TEST_URL and BASE_PROD_URL are public variables, but
+      # run logs of a public repo are public: the script prints "<test backend>", never the host.
+      - name: Sanity check the extension
+        env:
+          BASE_TEST_URL: ${{ vars.BASE_TEST_URL }}
+          BASE_PROD_URL: ${{ vars.BASE_PROD_URL }}
+        run: |
+          set -euo pipefail
+          scripts/ci/smoke-extension.sh zip/udan-extension-*.zip "$BASE_TEST_URL"
