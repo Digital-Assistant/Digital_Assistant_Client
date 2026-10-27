@@ -1,5 +1,6 @@
 import {createRoot} from "react-dom/client";
 import App from "./App";
+import { initRuntimeEnvironment } from "./services/runtimeEnvironment";
 
 // createRoot(document.getElementById("root")!).render(<App />);
 
@@ -42,5 +43,8 @@ reactDiv.setAttribute('id', 'udan-react-app-root');
 shadowRoot.appendChild(reactDiv);
 
 const reactRoot = createRoot(shadowRoot);
-reactRoot.render(<App />);
+
+// Render once the environment (TEST or PROD) is known (or after a short timeout), so the
+// first requests of the panel already go to the right backend.
+initRuntimeEnvironment().then(() => reactRoot.render(<App />));
   

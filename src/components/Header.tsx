@@ -6,6 +6,7 @@ import { usePanelPosition } from "../contexts/PanelPositionContext";
 import { useAuth } from "../contexts/AuthContext";
 import { coreSDK } from "../services/coreSDK";
 import { recordUserClickData } from "@udan/digital-assistant-sdk";
+import { EnvironmentBadge } from "./EnvironmentBadge";
 
 interface HeaderProps {
   onRecClick?: () => void;
@@ -230,6 +231,7 @@ export function Header({
           <span className="bg-[#cccccc] text-[#1e1e1e] text-[10px] font-['Raleway',sans-serif] px-1 rounded h-[14px] flex items-center">
             Beta
           </span>
+          <EnvironmentBadge />
         </div>
 
         <div className="flex items-center gap-2">
