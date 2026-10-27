@@ -25,7 +25,7 @@ export interface EnvironmentChoice {
 /** chrome.storage.local key of the options override: "TEST" | "PROD" | unset (automatic). */
 export const ENVIRONMENT_STORAGE_KEY = "udanEnvironment";
 
-/** SDK config keys (SDK 0.11.0) that the build config can fill. */
+/** SDK config keys (SDK 0.12.0) that the build config can fill. */
 export const BUILD_CONFIG_KEYS = ["apiBaseUrl", "tokenUrl", "llmUrl", "keycloakUrl", "realm", "clientId"] as const;
 export type BuildConfigKey = (typeof BUILD_CONFIG_KEYS)[number];
 
