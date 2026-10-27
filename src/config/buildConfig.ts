@@ -29,8 +29,6 @@ export interface BuildConfig {
     TEST: EnvironmentUrls;
     keycloakRealm: string;
     keycloakClientId: string;
-    googleAnalyticsMeasurementId: string;
-    enableGoogleAnalytics: boolean;
 }
 
 export const buildConfig: Readonly<BuildConfig> = Object.freeze({
@@ -48,8 +46,6 @@ export const buildConfig: Readonly<BuildConfig> = Object.freeze({
     }),
     keycloakRealm: process.env.keycloakRealm || "",
     keycloakClientId: process.env.keycloakClientId || "",
-    googleAnalyticsMeasurementId: process.env.googleAnalyticsMeasurementId || "",
-    enableGoogleAnalytics: process.env.enableGoogleAnalytics === "true",
 });
 
 export default buildConfig;

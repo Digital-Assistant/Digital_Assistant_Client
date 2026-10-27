@@ -112,7 +112,6 @@ module.exports = (env, argv) => {
             alias: {
                 process: "process/browser",
                 utils: path.resolve(__dirname, "./src/config/index"),
-                antd: path.resolve(__dirname, 'node_modules/antd'),
             },
             fallback: { fs: false },
         },
@@ -133,7 +132,7 @@ module.exports = (env, argv) => {
             minimizer: [
                 new CssMinimizerPlugin(),
                 new TerserPlugin({
-                    terserOptions: { compress: { drop_console: false } },
+                    terserOptions: { compress: { drop_console: true } },
                 }),
             ],
         };
