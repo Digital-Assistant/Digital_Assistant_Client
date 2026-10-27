@@ -47,6 +47,7 @@ module.exports = (env, argv) => {
             UDABackground: "./src/Background.ts",
             UDALoad: "./src/InjectSDK.js",
             UDAPluginSDK: "./src/ExtensionSDK.js",
+            UDAOptions: "./src/Options.ts",
         },
         mode: isProd ? "production" : "development",
         devtool: isProd ? false : "cheap-module-source-map",

@@ -1,5 +1,6 @@
 import { useAuth } from '../contexts/AuthContext';
 import svgPaths from "../imports/svg-s04gq19zek";
+import { EnvironmentBadge } from "./EnvironmentBadge";
 
 export function LoginScreen() {
   const { login } = useAuth();
@@ -15,6 +16,7 @@ export function LoginScreen() {
           <span className="bg-[#cccccc] text-[#1e1e1e] text-[12px] font-['Raleway',sans-serif] px-2 py-0.5 rounded h-[18px] flex items-center">
             Beta
           </span>
+          <EnvironmentBadge className="!px-2 !h-[18px] !text-[12px]" />
         </div>
         <p className="text-[#666666] text-[16px] font-['Roboto',sans-serif] max-w-[320px] mx-auto">
           Sign in to access your personalized digital assistant
