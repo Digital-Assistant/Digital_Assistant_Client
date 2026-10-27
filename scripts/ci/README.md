@@ -16,6 +16,7 @@ flowchart LR
         LW["lint-workflows.sh"]
         LB["latest-client-build.sh"]
         PT["publish-test-build.sh"]
+        SM["smoke-extension.sh<br/>+ smoke-extension.mjs"]
     end
     BE["scripts/build-env.js<br/>schema and env loader"]
     WP["webpack.config.js<br/>DefinePlugin"]
@@ -24,9 +25,10 @@ flowchart LR
     PE -- "npm run build:prod" --> WP
     GE & CK & PE & WP --> BE
     PE --> ART[("artifact client-zip<br/>zip, SHA256SUMS, build-info.json")]
-    DT --> LB & PT
+    DT --> LB & PT & SM
     LB -. "finds the run" .-> ART
     ART -- "download, verify" --> PT
+    PT -. "same zip, handed on" .-> SM
     PT --> REL[("prereleases<br/>test-v&lt;version&gt;, test-current")]
 ```
 
@@ -38,7 +40,9 @@ flowchart LR
 | `latest-client-build.sh [VERSION]` | `deploy-test.yml` job `choose` | Prints `<run id> <version>` of the `dev` CI run holding that build, or of the newest `dev` build when no version is given. The version's last part is the run number; X.Y.Z is checked against `package.json` at the run's commit. Clear errors for an unknown version, a run without the artifact, or an expired artifact (90 days). No download. |
 | `publish-test-build.sh DIR` | `deploy-test.yml` job `publish` | Takes a downloaded `client-zip` (never builds): checks `SHA256SUMS`, the zip name and the manifest inside it against `build-info.json`, and that the commit is on `dev`; then creates or updates prerelease `test-v<version>` and moves prerelease `test-current` to the same commit with the same files. Never marks either latest. Writes the notes (install steps, backend state, `test-known-issues.md`) and the run summary. `DRY_RUN=1` runs every check and writes `DIR/RELEASE_NOTES.md` without changing a release. |
 | `test-known-issues.md` | `publish-test-build.sh` | The "Known issues" list in the TEST release notes. Edit it on `dev`; the next deploy uses it. |
-| `lint-workflows.sh` | `ci.yml` job `workflow-lint` | actionlint (pinned, checksum-checked) and zizmor (pinned, offline) over `.github/workflows/*.yml`, shellcheck over `scripts/ci/*.sh`. |
+| `smoke-extension.sh ZIP BASE_TEST_URL` | `deploy-test.yml` job `Sanity check TEST` | Checks `SHA256SUMS` next to the zip, then runs `smoke-extension.mjs`: unpacks the zip, loads it in Chromium with the pinned `playwright-core` (new headless mode, persistent profile) and opens `fixtures/host-page.html` from a local server. Checks, 3 tries each: (1) the service worker starts and its manifest version equals `build-info.json`; (2) `#udan-react-root` mounts; (3) a request to `BASE_TEST_URL` gets a 2xx or 401 that is not the HTML fallback, and none goes to `BASE_PROD_URL` (a 403 prints "TEST backend CORS (DESIGN F9)"); (4) toolbar badge `TEST` and `UDASdkReady` fired. Checks 3 and 4 are **skipped** for builds without the runtime environment (no `UDASdkReady` in the bundle; those builds call no backend). Skips are not failures; any FAIL exits 1. Results go to stdout and `GITHUB_STEP_SUMMARY`. The test host is never printed (`<test backend>`). Unauthenticated, read-only. |
+| `fixtures/host-page.html` | `smoke-extension.mjs` | Plain page the extension runs on (replaces the old `sample/index.html`, which loaded the SDK and Bootstrap from public CDNs). |
+| `lint-workflows.sh` | `ci.yml` job `workflow-lint` | actionlint (pinned, checksum-checked) and zizmor (pinned, offline) over `.github/workflows/*.yml`, shellcheck over `scripts/ci/*.sh`, `node --check` over `scripts/ci/*.mjs`. |
 
 `scripts/build-env.js` (not a CI script) holds the env rules used by webpack and these scripts: the schema is `environments/env.example`, values come from `environments/<build>.env` (or the file named by `UDAN_ENV_FILE`), and an environment variable with the key's own name overrides the file.
 
@@ -61,5 +65,12 @@ GITHUB_REPOSITORY=<owner>/<repo> scripts/ci/latest-client-build.sh          # ne
 gh run download <run id> -n client-zip -D /tmp/client-zip
 GITHUB_REPOSITORY=<owner>/<repo> DRY_RUN=1 scripts/ci/publish-test-build.sh /tmp/client-zip
 ```
+
+Try the sanity check on a laptop (after `npm ci`; the first run needs `npx playwright-core install chromium`). Use a zip built with your TEST URL, or the one from a dev CI run:
+```
+gh run download <run id> -n client-zip -D /tmp/client-zip
+scripts/ci/smoke-extension.sh /tmp/client-zip/udan-extension-*.zip "$BASE_TEST_URL"   # BASE_PROD_URL optional
+```
+A wrong host fails check 3 with "no request reached <test backend>/api/".
 
 No script contains a secret. Never put one in these files or in a variable that a workflow maps.

@@ -1,0 +1,15 @@
+<!doctype html>
+<!-- Plain host page for scripts/ci/smoke-extension.mjs. The extension injects its panel through
+     its content scripts (manifest "matches"); the page itself loads nothing and calls no backend.
+     Replaces the old sample/index.html, which pulled the SDK and Bootstrap from public CDNs. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>UDA extension sanity page</title>
+  </head>
+  <body>
+    <h1>UDA extension sanity page</h1>
+    <button type="button" id="sanity-button">Sample button</button>
+  </body>
+</html>

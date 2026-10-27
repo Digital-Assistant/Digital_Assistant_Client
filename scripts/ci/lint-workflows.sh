@@ -3,7 +3,8 @@
 #   - actionlint (pinned, checksum-checked) over .github/workflows/*.yml; it also lints
 #     every `run:` block with ShellCheck when that tool is on PATH;
 #   - zizmor (pinned, offline) over the same workflows;
-#   - shellcheck over scripts/ci/*.sh.
+#   - shellcheck over scripts/ci/*.sh;
+#   - node --check over scripts/ci/*.mjs (syntax only).
 # Needs: curl, sha256sum, python3 with venv (for zizmor), shellcheck (preinstalled on
 # GitHub's ubuntu runners; locally: your package manager).
 set -euo pipefail
@@ -28,6 +29,9 @@ tar -xzf "$TMP/actionlint.tar.gz" -C "$TMP" actionlint
 
 echo "==> shellcheck $(shellcheck --version | sed -n 's/^version: //p') (${#SCRIPTS[@]} scripts)"
 shellcheck "${SCRIPTS[@]}"
+
+echo "==> node --check (scripts/ci/*.mjs)"
+for f in scripts/ci/*.mjs; do node --check "$f"; done
 
 echo "==> actionlint ${ACTIONLINT_VERSION} (${#WORKFLOWS[@]} workflows)"
 "$TMP/actionlint" "${WORKFLOWS[@]}"
