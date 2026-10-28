@@ -5,6 +5,11 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    groups:
+      npm-and-yarn:
+        patterns: ["*"]
+        # Majors stay separate so each gets its own review.
+        update-types: ["minor", "patch"]
     ignore:
       # Webpack 5.112.0 fails on the SDK bundle. Keep the pin until that is fixed.
       - dependency-name: webpack
