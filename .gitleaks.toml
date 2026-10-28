@@ -10,3 +10,10 @@ description = "Env schema: keys only, values always empty"
 # as the secret. The schema can never hold a value: scripts/ci/check-env-keys.sh
 # fails the build if any key in it is set.
 paths = ['''^environments/env\.example$''']
+
+[[allowlists]]
+description = "First agentic-readiness audit reports: the JSON holds two git commit hashes (framework_revision, git_sha) that the sourcegraph rule reads as tokens"
+targetRules = ["sourcegraph-access-token"]
+paths = [
+  '''^docs/agentic-readiness-report/[^/]+\.json$''',
+]
