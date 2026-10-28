@@ -5,14 +5,9 @@ module.exports = {
       // Defines browser targets - Available since Babel 7.0.0
       "targets": "> 0.25%, not dead",              // Target browsers with >0.25% market share
 
-      // Handles polyfills automatically - Added in Babel 7.4.0
-      "useBuiltIns": "usage",                      // Automatically detect and inject needed polyfills
-
-      // CoreJS version and proposals config - Added in Babel 7.4.0
-      "corejs": {
-        version: 3,                                // Use CoreJS version 3 for modern polyfills
-        proposals: true                            // Enable polyfills for proposal features
-      },
+      // Babel 8 removed useBuiltIns/corejs (automatic polyfill injection) and the
+      // loose/spec switches (replaced by the "assumptions" block below). core-js is
+      // no longer injected by the compiler; the MV3 targets do not need it.
 
       // Preserves ES modules for better tree shaking - Added in Babel 7.0.0
       "modules": false,                            // Keep ES modules for webpack optimization
@@ -20,17 +15,11 @@ module.exports = {
       // Enables latest bugfixes - Added in Babel 7.9.0
       "bugfixes": true,                            // Enable latest syntax transformations
 
-      // Enables loose mode for better performance - Available since Babel 7.0.0
-      "loose": true,                               // Use loose mode for smaller output
-
       // Excludes unnecessary transformations - Available since Babel 7.0.0
-      "exclude": ["transform-typeof-symbol"],      // Skip typeof Symbol() transform
+      "exclude": ["transform-typeof-symbol"]       // Skip typeof Symbol() transform
 
-      // Includes specific proposal plugins - Available since Babel 7.0.0
-      "include": [
-        "@babel/plugin-proposal-optional-chaining",        // Enable ?. operator
-        "@babel/plugin-proposal-nullish-coalescing-operator" // Enable ?? operator
-      ]
+      // ?. and ?? are stage-4 syntax: preset-env transforms them from the targets
+      // above. The proposal-* plugins that used to be listed here have no Babel 8 builds.
     }],
 
     ["@babel/preset-react", {
@@ -51,11 +40,8 @@ module.exports = {
     }],
 
     ["@babel/preset-typescript", {
-      // Enables TSX support - Available since Babel 7.0.0
-      "isTSX": true,                              // Enable TypeScript JSX processing
-
-      // Applies to all file extensions - Available since Babel 7.0.0
-      "allExtensions": true,                      // Apply TypeScript to all files
+      // Babel 8 removed allExtensions/isTSX: the preset now keys off the file
+      // extension, so .ts/.tsx go through ts-loader and .js is left alone.
 
       // Enables namespace support - Added in Babel 7.6.0
       "allowNamespaces": true,                    // Enable TypeScript namespaces
@@ -71,21 +57,16 @@ module.exports = {
   "plugins": [
     ["@babel/plugin-transform-runtime", {
       // Runtime helpers configuration - Available since Babel 7.0.0
+      // Babel 8 removed "regenerator", "useESModules" and "helpers": helper
+      // injection is always on and @babel/runtime resolves CJS/ESM through
+      // package.json#exports.
       "corejs": 3,                                // Use CoreJS 3 for runtime polyfills
-      "helpers": true,                            // Enable helper function reuse
-      "regenerator": true,                        // Include regenerator runtime
-      "useESModules": true,                       // Use ES modules for tree shaking
       "absoluteRuntime": false                    // Use relative runtime paths
     }],
 
-    // Class properties support - Available since Babel 7.0.0
-    ["@babel/plugin-proposal-class-properties", {
-      // "loose": true,                              // Use loose mode for performance
-      "spec": false                               // Don't follow strict spec compliance
-    }],
-
-    // Object spread operator support - Available since Babel 7.0.0
-    "@babel/plugin-proposal-object-rest-spread",  // Enable {...obj} syntax
+    // Class properties, object rest/spread and dynamic import are stage-4 syntax:
+    // preset-env compiles them from the targets above. Their proposal/syntax
+    // packages have no Babel 8 builds and are gone from devDependencies.
 
     // Macro support - Added in Babel 7.0.0
     "babel-plugin-macros",                        // Enable macro processing
@@ -101,10 +82,7 @@ module.exports = {
       }
     }],
 
-    // Dynamic import optimization - Added in Babel 7.2.0
-    ["@babel/plugin-syntax-dynamic-import", {
-      "loose": true                               // Use loose mode for smaller output
-    }],
+    // Dynamic import is stage-4 syntax: the parser handles it, no syntax plugin needed.
 
     // Decorator support - Added in Babel 7.0.0
     ["@babel/plugin-proposal-decorators", {
