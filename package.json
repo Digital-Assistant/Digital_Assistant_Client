@@ -84,7 +84,7 @@
     "react-test-renderer": "^19.2.3",
     "sass": "^1.97.0",
     "sass-loader": "^16.0.6",
-    "style-loader": "^3.3.4",
+    "style-loader": "^4.0.0",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.18",
     "terser-webpack-plugin": "^5.3.16",
