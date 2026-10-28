@@ -13,7 +13,7 @@ Browser extension UI (Chrome, Manifest V3) for the Universal Digital Assistant N
 - `scripts/ci/*`: the workflows only call these scripts, run them locally the same way. Index and details: `scripts/ci/README.md`.
   - `package-extension.sh` builds once and writes `out/udan-extension-<X.Y.Z.N>.zip`, `SHA256SUMS`, `build-info.json`.
   - `generate-env.sh`, `check-env-keys.sh`, `lint-workflows.sh`, `latest-client-build.sh`, `publish-test-build.sh`, `smoke-extension.sh`.
-- `webpack` is pinned at 5.105.4 (recorded as: 5.112.0 fails on the SDK bundle); Dependabot ignores webpack minor/major bumps. Do not bump it casually. `buffer` and `process` are direct dependencies on purpose (webpack `ProvidePlugin`).
+- `webpack` is pinned at 5.112.2. Retried 2026-10-28 in a scratch install: 5.112.2 builds the SDK bundle and passes the smoke check, so the old 5.105.4 pin (5.112.0 failed) and the Dependabot ignore for webpack are gone. Bump it only through a PR that passes the smoke check. `buffer` and `process` are direct dependencies on purpose (webpack `ProvidePlugin`).
 - Build health: `drop_console` applies to `build:prod` and `build:qa` only (`isProd` in `webpack.config.js`); `.gitattributes` has `* text=auto eol=lf` (CRLF checkouts made noisy diffs; compare old trees with `git diff --strip-trailing-cr -w`); the old `antd` alias is gone.
 
 ## Environment settings

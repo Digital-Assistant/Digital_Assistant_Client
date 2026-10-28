@@ -21,7 +21,7 @@ interface SearchResultsProps {
 }
 
 export function SearchResults({ searchKeyword = "" }: SearchResultsProps) {
-  const { isAuthenticated, isInitialized } = useAuth();
+  const { isAuthenticated, isInitialized, configVersion } = useAuth();
   const [activeTab, setActiveTab] = useState<
     "trending" | "popular" | "latest"
   >("trending");
@@ -160,7 +160,7 @@ export function SearchResults({ searchKeyword = "" }: SearchResultsProps) {
       getSearchResults(0, true);
       initialLoadDone.current = true;
     }
-  }, [isInitialized, isAuthenticated, debouncedKeyword]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isInitialized, isAuthenticated, debouncedKeyword, configVersion]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Infinite Scroll Observer — stable, never re-registers on loading state changes
   useEffect(() => {

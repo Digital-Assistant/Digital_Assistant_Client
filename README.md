@@ -48,7 +48,7 @@ One zip serves both backends. The extension decides when it starts, first match 
 | 3 | Install type: an **unpacked** install (`chrome.management.getSelf().installType === 'development'`) is TEST, any other install is PROD | Needs no extra permission; background service worker only |
 | 4 | Default: PROD | Same as the SDK |
 
-The URLs for the chosen environment come, per key, from the page (`apiBaseUrl`, `tokenUrl`, `llmUrl`, `keycloakUrl`), then from the build settings above, then from the SDK's own defaults. A key the page set is never overwritten. After you switch the environment, reload the page: the panel does not yet re-run login or search by itself.
+The URLs for the chosen environment come, per key, from the page (`apiBaseUrl`, `tokenUrl`, `llmUrl`, `keycloakUrl`), then from the build settings above, then from the SDK's own defaults. A key the page set is never overwritten. When the environment (or a backend, realm or client setting) changes while the panel is open, the panel drops the stored session of the old backend, asks the worker for the session again and runs the search again; no page reload is needed. This is `AuthContext` listening to `UDAConfigUpdated`. The Client never calls `authManager.init` (sign-in is the Chrome identity flow in the worker), so there is nothing else to re-run.
 
 - **TEST badge.** When the extension runs against TEST, the panel header and the login screen show a `TEST` badge and the toolbar icon shows `TEST`. No badge means PROD.
 - **`UDASdkReady`.** After the extension has applied the environment it fires a `window` event `UDASdkReady` with `detail: { environment: 'TEST' | 'PROD', source: 'page' | 'override' | 'install-type' | 'default' }` and sets `window.UDASdkIsReady = true` (for pages that attach late). A host page must call `UDAAuthDataConfig` and `UDAPluginSDK` only after it: earlier calls reach a copy of the SDK that is replaced later and are lost. Guide: SDK `USAGE.md`.
@@ -150,4 +150,4 @@ Release Please no longer touches the manifests: CI owns the extension version. A
 
 **Sanity check.** The `Sanity check TEST` job runs `scripts/ci/smoke-extension.sh` (details in `scripts/ci/README.md`); you can run it on a laptop with the same zip.
 
-`webpack` is pinned to 5.105.4: 5.112.0 fails on the SDK bundle.
+`webpack` is pinned to 5.112.2 (exact, like the other build tools). 5.112.0 once failed on the SDK bundle; 5.112.2 builds it and passes the extension smoke check (retried 2026-10-28).

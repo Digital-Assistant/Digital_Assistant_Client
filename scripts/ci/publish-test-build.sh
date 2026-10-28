@@ -86,6 +86,15 @@ previous=""
 if prev_sha="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/${CURRENT_TAG}" --jq '.object.sha' 2>/dev/null)"; then
   [[ "$prev_sha" != "$commit" ]] && previous="$prev_sha"
 fi
+# GitHub compare links read older...newer. A rollback publishes an older commit than test-current
+# points at: compare says this commit is "behind" the previous one, so the link order is swapped.
+compare_from="$previous"; compare_to="$commit"; compare_title="Changes since the previous TEST build"
+if [[ -n "$previous" ]]; then
+  rel="$(gh api "repos/${GITHUB_REPOSITORY}/compare/${previous}...${commit}" --jq '.status' 2>/dev/null || true)"
+  if [[ "$rel" == "behind" ]]; then
+    compare_from="$commit"; compare_to="$previous"; compare_title="Rollback: changes removed since the previous TEST build"
+  fi
+fi
 
 # 4. Release notes. No hostnames: the notes only say "TEST backend".
 notes="RELEASE_NOTES.md"
@@ -117,8 +126,8 @@ notes="RELEASE_NOTES.md"
   echo "Open an issue in this repository. Include the version from \`chrome://extensions\`, the page you were on and what you expected."
   if [[ -n "$previous" ]]; then
     echo
-    echo "## Changes since the previous TEST build"
-    echo "${repo_url}/compare/${previous:0:12}...${commit:0:12}"
+    echo "## ${compare_title}"
+    echo "${repo_url}/compare/${compare_from:0:12}...${compare_to:0:12}"
   fi
 } > "$notes"
 
