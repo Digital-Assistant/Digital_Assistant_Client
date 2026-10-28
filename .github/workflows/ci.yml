@@ -5,6 +5,9 @@ on:
     branches: [dev, master]
   push:
     branches: [dev]
+  # The merge queue verifies PRs on a temporary merge-group ref: without this trigger the
+  # required `CI Gate` check never reports there and every queued merge times out.
+  merge_group:
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -35,7 +38,7 @@ jobs:
       - id: filter
         env:
           EVENT: ${{ github.event_name }}
-          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before }}
           HEAD: ${{ github.sha }}
         run: |
           set -euo pipefail
@@ -166,7 +169,7 @@ jobs:
       - name: Scan new commits
         env:
           EVENT: ${{ github.event_name }}
-          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before }}
           HEAD: ${{ github.sha }}
         run: |
           set -euo pipefail
