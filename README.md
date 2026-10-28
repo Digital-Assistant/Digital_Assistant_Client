@@ -71,7 +71,43 @@ cp environments/env.example environments/production.env   # fill in public value
 npm run build:prod                                        # -> dist/
 ```
 
-Then load `dist/` unpacked as above, or run `scripts/ci/package-extension.sh` to get the same zip CI makes. A plain `npm run build` writes to `build/` and `npm start` rebuilds on change; reload the extension on `chrome://extensions` after each rebuild. There is no unit-test suite in this repo (the old Jest tests tested code that now lives in the SDK, which has its own); the check is the CI build, the type check and the sanity check below. Production builds drop `console.*` calls.
+Then load `dist/` unpacked as above, or run `scripts/ci/package-extension.sh` to get the same zip CI makes. A plain `npm run build` writes to `build/` and `npm start` rebuilds on change; reload the extension on `chrome://extensions` after each rebuild. There is no unit-test suite in this repo (the old Jest tests tested code that now lives in the SDK, which has its own); the check is the CI build, the type check and the sanity check below. `build:prod` and `build:qa` drop `console.*` calls (terser `drop_console`); `build` and `build:dev` keep them.
+
+
+## Sign-in and where the config lives
+
+- **Login path.** The real login is the Chrome identity flow in the background worker (`LoginWithBrowser`, uses `chrome.identity`). The panel's Sign-in button sends the page event `RequestUDASessionData`; the worker answers with the session, or starts `LoginWithBrowser` when no signed-in identity exists. There is deliberately **no Keycloak `check-sso` on page load** (removed on purpose; the original extension never had it): opening a page makes zero Keycloak requests. Do not add one back.
+- **Config reaches the worker only through the build.** The worker (`Background.ts`) reads `src/config/buildConfig.ts`, which comes from the env settings above. A host page calling `UDAPluginSDK({...})` only changes the page world, not the worker, so realm and URLs cannot be set from a site. The host-page copy of the SDK (`src/Headers.js`) carries its own SDK build.
+- **Backend CORS.** The extension calls the backend from a `chrome-extension://` origin, and customer sites from their own origins. The backend must allow those origins (with credentials) and the request headers `Content-Type`, `Authorization`, `X-Requested-With`, `x-sdk-client` and `udan-realm`; otherwise the browser reports a CORS failure and the sanity check prints "TEST backend CORS". See the Server README, "CORS".
+
+## Testing a change locally
+
+The CI sanity check is unauthenticated. To exercise the whole flow against a local backend (no secrets in the repo, no committed flags):
+
+1. Start the backend (Server `README`, "Run locally") and note its `/api` URL and the realm/client id the SDK must use.
+2. Build the SDK you want to test (`npm pack` in the SDK repo, see its `RELEASE_PROCESS.md`) and install the tarball without touching `package.json`: `npm install --no-save <sdk>.tgz`. A later `npm ci` reinstalls the pinned npm version, so install the tarball again after it. Check with `npm ls @udan/digital-assistant-sdk`.
+3. `npm run build:dev` with a local env file, then load `build/` unpacked (`chrome://extensions`).
+4. For automation use Playwright Chromium with the extension loaded in a persistent profile (`scripts/ci/smoke-extension.mjs` is the pattern) and stub `chrome.identity.getProfileUserInfo` in the service worker, so the Google sign-in needs no real account.
+5. The SDK needs `realm`, `clientId` and `clientSecret`; supply the secret only in your own untracked local build and never share or upload that build (everything in it is readable by whoever unzips it).
+
+Behaviour checklist (all 14 pass on `dev` with the current SDK against a local backend; run it by hand or script it):
+
+| # | Check | Pass when |
+|---|---|---|
+| 1 | Extension loads | The service worker starts |
+| 2 | Panel mounts | `#udan-react-root` exists on the page |
+| 3 | Early call | A host-page `UDAPluginSDK` call made before the extension is ready is kept (call after `UDASdkReady`, see above) |
+| 4 | No Keycloak on load | Zero Keycloak requests while the page loads |
+| 5 | Realm header | `UDAN-Realm` is on every backend and token-service call |
+| 6 | No config, no calls | Without realm/clientId/clientSecret the SDK sends nothing |
+| 7 | Login | `getsessionkey` 200, `checkauthid` 200, token service `POST /user/token` 201, `checkusersession` 200 |
+| 8 | Search | `GET /api/search/all` 200; a text filter finds a saved recording |
+| 9 | Record | REC, Start, countdown, two host-page clicks; both steps are listed |
+| 10 | Save | `clickednode` 200 for each step, then `recordsequencedata` 200 |
+| 11 | List | The saved recording appears in the list |
+| 12 | Playback | Steps navigate, `userclick` 204, ends on the recording view |
+| 13 | Vote | `GET /api/votes/...` 200 and `POST /api/votes/addVote` 200 |
+| 14 | No failures | No failed backend call during the whole run |
 
 
 ## CI and releases
