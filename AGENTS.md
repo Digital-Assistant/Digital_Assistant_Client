@@ -13,15 +13,26 @@ Browser extension UI (Chrome, Manifest V3) for the Universal Digital Assistant N
 - `scripts/ci/*`: the workflows only call these scripts, run them locally the same way. Index and details: `scripts/ci/README.md`.
   - `package-extension.sh` builds once and writes `out/udan-extension-<X.Y.Z.N>.zip`, `SHA256SUMS`, `build-info.json`.
   - `generate-env.sh`, `check-env-keys.sh`, `lint-workflows.sh`, `latest-client-build.sh`, `publish-test-build.sh`, `smoke-extension.sh`.
-- `webpack` is pinned at 5.105.4 (5.112.0 fails on the SDK bundle). Do not bump it casually; `buffer` and `process` are direct dependencies on purpose (webpack `ProvidePlugin`).
+- `webpack` is pinned at 5.105.4 (recorded as: 5.112.0 fails on the SDK bundle); Dependabot ignores webpack minor/major bumps. Do not bump it casually. `buffer` and `process` are direct dependencies on purpose (webpack `ProvidePlugin`).
+- Build health: `drop_console` applies to `build:prod` and `build:qa` only (`isProd` in `webpack.config.js`); `.gitattributes` has `* text=auto eol=lf` (CRLF checkouts made noisy diffs; compare old trees with `git diff --strip-trailing-cr -w`); the old `antd` alias is gone.
 
 ## Environment settings
 - Schema = `environments/env.example` (12 public keys, each URL as a `Prod`/`Test` pair). Add a new key to `env.example` only (`scripts/build-env.js` and `generate-env.sh` read the schema; the UPPER_SNAKE Actions variable must also exist) and say so in the PR. Values come from `environments/<build>.env`, or an environment variable with the key's own name.
 - Runtime choice of TEST or PROD (page key, options override, install type, default PROD) lives in `src/config/runtimeEnvironment.ts`; read the README section "TEST or PROD at runtime" before changing it. A host page must call `UDAPluginSDK` after the `UDASdkReady` event.
+- Auth and config (details in README "Sign-in and where the config lives"): login is the Chrome identity flow in the worker (`LoginWithBrowser`), started by the Sign-in button via `RequestUDASessionData`. Never add a Keycloak `check-sso` on load. Config reaches the worker only through `buildConfig.ts`; a host page cannot set it. The SDK needs `realm`, `clientId`, `clientSecret` and sends nothing without them. Test procedure and the 14-check behaviour list: README "Testing a change locally".
 - Manifest changes (permissions, `action`, `options_ui`) need the owner's OK.
 
 ## Branches, releases, rollback
 - Branch from `dev`, PR into `dev`, Conventional Commit PR title (`feat:`, `fix:`...). No commit, push or PR unless the owner asks. Never touch `master`.
 - CI builds one zip per `dev` push (artifact `client-zip`, 90 days). `Deploy to TEST` (manual, `dev` only) publishes that same zip as prereleases `test-v<version>` and `test-current` and never rebuilds; rollback = run it with an older `version`. Release Please owns `package.json` and `CHANGELOG`, CI owns the extension version in the built manifest (`X.Y.Z.<run>`).
+- Merge method: squash (PR title becomes the commit; the repo also allows merge and rebase, but use squash into `dev`; `dev` to `master` is a merge commit). Default branch is `dev`: GitHub registers `workflow_dispatch`-only workflows (like `Deploy to TEST`) only from the default branch, so keep it `dev`.
+- Unpacked installs never auto-update: testers remove the old extension and load the new folder.
 - The SDK pin changes only through a PR; the SDK is promoted to npm `latest` after a Client TEST pass (SDK `RELEASE_PROCESS.md`).
 - Chrome Web Store upload and the SDK CDN feed are not built yet (track phases C08, C09).
+
+## Dependabot and lockfile lessons
+- npm minor/patch updates are grouped into one weekly PR (`.github/dependabot.yml`); majors stay separate. Merge a Dependabot PR only when `gh pr view --json mergeStateStatus` says `CLEAN` (checks green and up to date), not just when checks are green.
+- `package-lock.json` is tracked; `npm ci` fails without it. On a lock conflict take the branch's lock and run `npm install --package-lock-only`; a lockfile older than a `package.json` change cannot be fixed by asking Dependabot to rebase (it compares commits, not lock content). Retitling a Dependabot PR stops it rebasing; rebase first, retitle after.
+- Dependabot's lock regeneration drops `node_modules/@udan/digital-assistant-sdk/node_modules/react` (18.3.1, an optional peer entry). Symptom: `build` and `typecheck` fail on the PR with `npm ci ... Missing: react@18.3.1 from lock file`, and a rebase does not fix it because the entry disappears each time Dependabot rewrites the lock. Fix on the PR branch: merge `origin/dev`, copy that one entry back from dev's lockfile, verify `npm ci --dry-run` resolves, then push and let CI Gate run. Never paper over it with `--legacy-peer-deps`, and never take the branch's lock wholesale — it is the file that is missing the entry. Every new npm Dependabot PR after a `dev` change repeats this.
+- A green PR that is `BEHIND` is still blocked: the `Protect dev` ruleset sets `strict_required_status_checks_policy: true`. Run `gh api -X PUT repos/Digital-Assistant/Digital_Assistant_Client/pulls/<n>/update-branch`, wait for `CI Gate` to report again, then squash-merge. Merging one PR re-behinds every other open PR, so update them in the same round.
+- Do not run two `gh` processes at once; the local `gh` cache can corrupt.
