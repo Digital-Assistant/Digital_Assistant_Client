@@ -16,6 +16,16 @@ interface AuthContextType {
   login: () => void;
   logout: () => void;
   user: any;
+  /** Changes when the environment or a backend/realm setting of the SDK changes; effects that fetch data depend on it. */
+  configVersion: number;
+}
+
+/** The SDK settings that decide which backend and realm a session belongs to. */
+const SESSION_CONFIG_KEYS = ["environment", "apiBaseUrl", "tokenUrl", "llmUrl", "keycloakUrl", "realm", "clientId"];
+
+function sessionConfigSignature(): string {
+  const config = (typeof window !== "undefined" ? (window as any).UDAGlobalConfig : undefined) || {};
+  return JSON.stringify(SESSION_CONFIG_KEYS.map((key) => config[key] ?? ""));
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,6 +34,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [configVersion, setConfigVersion] = useState(0);
 
   const createSession = useCallback(async (data: any) => {
     StorageUtil.setToStore(data.detail.data, CONFIG.USER_AUTH_DATA_KEY, true);
@@ -112,6 +123,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []); // run once on mount only — isAuthenticated changes must not re-register listeners
 
+  // The environment (TEST/PROD) or a backend/realm setting changed after the panel mounted (options
+  // override, host page UDAPluginSDK call): the stored session belongs to the old backend. Drop it,
+  // ask the worker for the session of the new one and let the search run again (configVersion).
+  useEffect(() => {
+    let signature = sessionConfigSignature();
+    const onConfigUpdated = () => {
+      const next = sessionConfigSignature();
+      if (next === signature) return;
+      signature = next;
+      try {
+        window.localStorage.removeItem(CONFIG.USER_AUTH_DATA_KEY);
+      } catch {
+        // storage not available: the worker answer below replaces the session anyway
+      }
+      setIsAuthenticated(false);
+      setUser(null);
+      setConfigVersion((version) => version + 1);
+      trigger("RequestUDASessionData", {
+        detail: { data: "getusersessiondata" },
+        bubbles: false,
+        cancelable: false,
+      });
+    };
+    window.addEventListener("UDAConfigUpdated", onConfigUpdated);
+    return () => window.removeEventListener("UDAConfigUpdated", onConfigUpdated);
+  }, []);
+
   // Sign-in asks the worker for the session; with no signed-in identity it starts LoginWithBrowser (Chrome identity)
   const login = () => {
     trigger("RequestUDASessionData", {
@@ -126,7 +164,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, isInitialized, login, logout, user }}>
+    <AuthContext.Provider value={{ isAuthenticated, isInitialized, login, logout, user, configVersion }}>
       {children}
     </AuthContext.Provider>
   );

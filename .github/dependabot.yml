@@ -11,9 +11,6 @@ updates:
     schedule:
       interval: monthly
     ignore:
-      # Webpack 5.112.0 fails on the SDK bundle. Keep the pin until that is fixed.
-      - dependency-name: webpack
-        update-types: ["version-update:semver-major", "version-update:semver-minor"]
       # Babel 8 stalls the webpack build: with babel-loader 10.1.1 (latest) the
       # compiler emits no assets and exits 0. Re-enable when babel-loader supports
       # Babel 8; the migration also rewrites babel.config.js.

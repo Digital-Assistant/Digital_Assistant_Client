@@ -118,6 +118,26 @@ async function waitFor(fn, what, ms = STEP_MS) {
 
 let worker;
 let loaded = false;
+
+// SDK 0.12.0 sends nothing without realm, clientId and clientSecret (UDAConfigurationError), and the
+// extension build carries no client secret (check-env-keys.sh). So the worker's SDK gets obvious
+// placeholders here, only for keys that are still empty: the check proves that a configured SDK
+// reaches the backend, not that sign-in works. The values are not real and never leave the test.
+const PLACEHOLDERS = { realm: "smoke-realm", clientId: "smoke-client", clientSecret: "smoke-placeholder" };
+async function configureWorkerSdk() {
+  await worker.evaluate((placeholders) => {
+    const config = globalThis.UDAGlobalConfig && typeof globalThis.UDAGlobalConfig === "object" ? globalThis.UDAGlobalConfig : {};
+    for (const [key, value] of Object.entries(placeholders)) {
+      if (typeof config[key] !== "string" || config[key].trim() === "") config[key] = value;
+    }
+    globalThis.UDAGlobalConfig = config;
+  }, PLACEHOLDERS);
+}
+// The panel asked for the session while the SDK was still unconfigured and got nothing: ask again.
+function requestSessionAgain() {
+  return page.evaluate(() =>
+    document.dispatchEvent(new CustomEvent("RequestUDASessionData", { detail: { data: "getusersessiondata" }, bubbles: false, cancelable: false })));
+}
 async function openHostPage(attempt) {
   if (!loaded || attempt > 1) {
     await page.goto(pageUrl, { waitUntil: "load" });
@@ -143,6 +163,8 @@ try {
   await check("3 TEST backend answers (not HTML), no PROD call", async (attempt) => {
     if (!hasRuntimeEnv) throw new Skip("skipped: needs C04 (this build calls no backend)");
     await openHostPage(attempt);
+    await configureWorkerSdk();
+    await requestSessionAgain();
     if (prodOrigin) {
       const prod = seen.find((s) => s.url.startsWith(`${prodOrigin}/`));
       if (prod) throw new Error(`a request went to the PROD backend: ${prod.url}`);
