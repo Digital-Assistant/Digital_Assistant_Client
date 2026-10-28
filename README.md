@@ -31,11 +31,29 @@ The build reads public settings from `environments/<build>.env`: `local.env` for
 | `keycloakRealm`, `keycloakClientId` | Keycloak realm and public client id |
 | `googleAnalyticsMeasurementId`, `enableGoogleAnalytics` | Google Analytics |
 
-Each URL has a PROD and a TEST value, so one build can serve both; the environment is chosen at runtime. The values are exposed as `src/config/buildConfig.ts` (not used by the app yet).
+Each URL has a PROD and a TEST value, so one build serves both; the environment is chosen at runtime (next section). The values are exposed as `src/config/buildConfig.ts` and handed to the SDK at start-up. The two Google Analytics keys are carried there but nothing reads them yet.
 
 **No secrets.** Everything in these files ends up in the extension, which anyone can unzip. `scripts/ci/check-env-keys.sh` fails the release build if a secret key (`keycloakClientSecret`, `profanityKey`, `googleTranslateApiKey`, `googleAnalyticsSecretKey`, `clientSecret`) has a value or is referenced in `src/`.
 
 Older env files: rename `keyCloakUrl` to `keycloakProdUrl` / `keycloakTestUrl`, split `tokenUrl` and `llmUrl` into the `Prod`/`Test` pairs, and delete the secret keys. `baseURL`, `profanity*` and `googleTranslate*` are no longer read.
+
+## TEST or PROD at runtime
+
+One zip serves both backends. The extension decides when it starts, first match wins:
+
+| Order | Source | Notes |
+|---|---|---|
+| 1 | The host page: `window.UDAPluginSDK({ environment: 'TEST' })` | Only for pages that talk to the extension; call it after `UDASdkReady` (below) |
+| 2 | The options page override (`chrome.storage.local`, key `udanEnvironment`) | Extension options: Automatic, TEST or PROD; a change applies within seconds, no reload of the extension |
+| 3 | Install type: an **unpacked** install (`chrome.management.getSelf().installType === 'development'`) is TEST, any other install is PROD | Needs no extra permission; background service worker only |
+| 4 | Default: PROD | Same as the SDK |
+
+The URLs for the chosen environment come, per key, from the page (`apiBaseUrl`, `tokenUrl`, `llmUrl`, `keycloakUrl`), then from the build settings above, then from the SDK's own defaults. A key the page set is never overwritten. After you switch the environment, reload the page: the panel does not yet re-run login or search by itself.
+
+- **TEST badge.** When the extension runs against TEST, the panel header and the login screen show a `TEST` badge and the toolbar icon shows `TEST`. No badge means PROD.
+- **`UDASdkReady`.** After the extension has applied the environment it fires a `window` event `UDASdkReady` with `detail: { environment: 'TEST' | 'PROD', source: 'page' | 'override' | 'install-type' | 'default' }` and sets `window.UDASdkIsReady = true` (for pages that attach late). A host page must call `UDAAuthDataConfig` and `UDAPluginSDK` only after it: earlier calls reach a copy of the SDK that is replaced later and are lost. Guide: SDK `USAGE.md`.
+- **Manifest.** The runtime choice added `action` (toolbar badge) and `options_ui`; no new permission.
+- **Rule of thumb for testers.** Unpacked build from `test-current` = TEST. A build installed from the Chrome Web Store (later) = PROD. Whether the store default should be PROD is the owner's decision (R1 in the CI/CD track); the rule above is what the code does today.
 
 ## Installing in Chrome (unpacked)
 
@@ -44,6 +62,17 @@ Older env files: rename `keyCloakUrl` to `keycloakProdUrl` / `keycloakTestUrl`, 
 3. The card shows the version, for example `1.1.0 (abc1234)` (the `version_name`); **Details** shows the full `1.1.0.<run>`.
 
 Unpacked extensions do not update themselves: remove the old one and load the new folder.
+
+### Developers: build and load your own copy
+
+```
+npm install
+cp environments/env.example environments/production.env   # fill in public values; see "Environment settings"
+npm run build:prod                                        # -> dist/
+```
+
+Then load `dist/` unpacked as above, or run `scripts/ci/package-extension.sh` to get the same zip CI makes. A plain `npm run build` writes to `build/` and `npm start` rebuilds on change; reload the extension on `chrome://extensions` after each rebuild. There is no unit-test suite in this repo (the old Jest tests tested code that now lives in the SDK, which has its own); the check is the CI build, the type check and the sanity check below. Production builds drop `console.*` calls.
+
 
 ## CI and releases
 
@@ -58,15 +87,18 @@ Branch from `dev` and open a PR into `dev`; the PR title must be a [Conventional
 
 ```mermaid
 flowchart LR
-    PR["PR into dev or master<br/>Conventional Commit title"] --> CI{"CI Gate<br/>build and pack, typecheck, gitleaks,<br/>workflow lint, npm audit report-only"}
+    PR["PR into dev<br/>Conventional Commit title"] --> CI{"CI Gate<br/>build and pack, typecheck, gitleaks,<br/>workflow lint, npm audit report-only"}
     CI -- no --> PR
     CI -- "yes: squash merge" --> DEV["dev"]
     CI -. "PR runs: artifact client-zip, kept 14 days" .-> PZIP[("client-zip (PR)")]
     DEV --> BUILD["CI on dev: one build<br/>udan-extension-X.Y.Z.run.zip<br/>SHA256SUMS, build-info.json"]
     BUILD --> ZIP[("artifact client-zip<br/>kept 90 days")]
     ZIP -- "Deploy to TEST: manual, dev only<br/>same zip, no rebuild" --> PRE["Prereleases<br/>test-vX.Y.Z.run and test-current"]
-    PRE --> TESTERS["Testers: load unpacked"]
-    ZIP -. "later phases" .-> PROD["GitHub release / store"]
+    PRE --> SAN{"Sanity check TEST<br/>Chromium loads the same zip"}
+    SAN --> TESTERS["Testers: load unpacked,<br/>badge says TEST"]
+    SAN -- "red" --> RB["Rollback: Deploy to TEST<br/>with the previous version"]
+    RB --> PRE
+    ZIP -. "later: C08 store, C09 SDK CDN" .-> PROD["GitHub release / store"]
     DEV --> REL["PR dev into master, merge commit"]
     REL --> RP["Release Please PR<br/>package.json, CHANGELOG"]
     RP --> TAG["Tag vX.Y.Z and GitHub release"]
@@ -75,5 +107,11 @@ flowchart LR
 Release Please no longer touches the manifests: CI owns the extension version. Attaching the zip to production releases and the store upload come in later steps; until then the store upload stays manual. `dist/` is no longer committed: it is only the local `build:prod` folder.
 
 **Deploy to TEST.** Testers get builds from GitHub prereleases, never from a rebuild. Run the workflow `Deploy to TEST` on `dev` (Actions tab, or `gh workflow run deploy-test.yml --ref dev`). With no input it takes the newest `dev` build; `-f version=X.Y.Z.N` (from a CI run summary) takes that one, which is also the rollback. It verifies `SHA256SUMS`, the version and that the commit is on `dev`, then publishes prerelease `test-v<version>` and moves `test-current` to it. Neither is ever marked latest. The notes say whether the build talks to the TEST backend and list known issues (`scripts/ci/test-known-issues.md`). The workflow refuses any other branch. A build is deployable while its artifact lives (90 days). After publishing, job `Sanity check TEST` loads that same zip into Chromium (Playwright) and checks that the extension starts, the panel mounts and the TEST backend answers; it is read-only and skips the backend checks for builds that call no backend. A failure turns the run red but does not unpublish; redeploy the previous version to roll back. Details and the laptop command: `scripts/ci/README.md`.
+
+**Roll back TEST.** Run `Deploy to TEST` on `dev` with `version` set to the previous build (for example `1.1.0.11`; the version is in the earlier prerelease's name and in each CI run summary). `test-current` moves back to that build, the sanity job runs again, and testers reinstall from `test-current`. It works while that build's CI artifact is still kept (90 days). In the release notes of a rollback the "changes since" link compares newer to older and reads as empty; ignore it.
+
+**Bumping the SDK.** The Client pins `@udan/digital-assistant-sdk` to an exact version (`package.json` and lockfile). To try a new SDK: PR with the new pin into `dev`, wait for the build, run `Deploy to TEST`, test. Only after that passes does the SDK maintainer move npm `latest` (SDK `RELEASE_PROCESS.md`, "Promotion and rollback"). The SDK version of every build is in `build-info.json` and in the release notes.
+
+**Sanity check.** The `Sanity check TEST` job runs `scripts/ci/smoke-extension.sh` (details in `scripts/ci/README.md`); you can run it on a laptop with the same zip.
 
 `webpack` is pinned to 5.105.4: 5.112.0 fails on the SDK bundle.
