@@ -10,6 +10,7 @@ Browser extension UI (Chrome, Manifest V3) for the Universal Digital Assistant N
 ## Commands (Node 22)
 - `npm ci` (or `npm install`), then `npm run build:prod` -> `dist/` (not committed); `npm run build` -> `build/`; `npm start` watches; `npx tsc --noEmit` is the type check.
 - There is no unit-test suite. CI checks: build and pack, type check, gitleaks, workflow lint, `npm audit` (report only).
+- `npm run e2e:behaviour -- --build <dir> --backend <url>/api` runs the 14 behaviour checks against a local stack (README "Behaviour check (local stack)"). Not in CI. It needs a build that can sign in; the secret for that never comes from this repo.
 - `scripts/ci/*`: the workflows only call these scripts, run them locally the same way. Index and details: `scripts/ci/README.md`.
   - `package-extension.sh` builds once and writes `out/udan-extension-<X.Y.Z.N>.zip`, `SHA256SUMS`, `build-info.json`.
   - `generate-env.sh`, `check-env-keys.sh`, `lint-workflows.sh`, `latest-client-build.sh`, `publish-test-build.sh`, `smoke-extension.sh`.

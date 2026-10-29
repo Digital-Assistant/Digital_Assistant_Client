@@ -1,15 +1,35 @@
 <!doctype html>
-<!-- Plain host page for scripts/ci/smoke-extension.mjs. The extension injects its panel through
-     its content scripts (manifest "matches"); the page itself loads nothing and calls no backend.
-     Replaces the old sample/index.html, which pulled the SDK and Bootstrap from public CDNs. -->
+<!-- Plain host page for scripts/ci/smoke-extension.mjs and scripts/e2e/behaviour-check.mjs. The
+     extension injects its panel through its content scripts (manifest "matches"); the page itself
+     loads nothing and calls no backend. Replaces the old sample/index.html, which pulled the SDK and
+     Bootstrap from public CDNs.
+     Two buttons give the behaviour check two steps to record. Only when the URL carries
+     ?udaEnvironment=...&udaRealm=... (the behaviour check) does the page call UDAPluginSDK, after
+     UDASdkReady as host pages must (SDK USAGE.md); the smoke check opens it without parameters. -->
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>UDA extension sanity page</title>
+    <script>
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var environment = params.get("udaEnvironment");
+        var realm = params.get("udaRealm");
+        if (!environment && !realm) return;
+        window.addEventListener("UDASdkReady", function () {
+          var config = {};
+          if (environment) config.environment = environment;
+          if (realm) config.realm = realm;
+          window.UDAPluginSDK(config);
+          window.__udaHostConfig = config;
+        });
+      })();
+    </script>
   </head>
   <body>
     <h1>UDA extension sanity page</h1>
     <button type="button" id="sanity-button">Sample button</button>
+    <button type="button" id="second-button">Second button</button>
   </body>
 </html>
