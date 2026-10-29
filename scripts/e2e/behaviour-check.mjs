@@ -246,8 +246,9 @@ context.on("request", (req) => {
   if (url.startsWith("data:") || url.startsWith("chrome-extension:") || url.startsWith(pageOrigin)) return;
   const service = serviceOf(url) || (isKeycloak(url) ? "keycloak" : null);
   if (!service) return;
-  const u = new URL(url);
-  requests.push({ req, phase, service, method: req.method(), path: u.pathname, realm: Boolean(req.headers()["udan-realm"]) });
+  // long hex ids in a path (e.g. the hashed user id in /votes/...) are shortened, not reported
+  const path = new URL(url).pathname.replace(/[0-9a-f]{32,}/gi, "<hash>");
+  requests.push({ req, phase, service, method: req.method(), path, realm: Boolean(req.headers()["udan-realm"]) });
 });
 context.on("response", (res) => {
   const e = requests.find((r) => r.req === res.request());
@@ -418,10 +419,9 @@ try {
     await recordButton.click({ timeout: STEP_MS });
     await panel.getByRole("button", { name: "Start" }).click({ timeout: STEP_MS });
     await sleep(4_500); // 3 s countdown, then the SDK listens for clicks
+    // the SDK keeps the clicks locally; clickednode goes out when the recording is saved (check 11)
     for (const selector of ["#sanity-button", "#second-button"]) {
-      const before = find(apiPath("/clickevents/clickednode")).length;
       await page.click(selector);
-      await waitFor(() => find(apiPath("/clickevents/clickednode")).length > before, `clickednode after ${selector}`, 15_000).catch(() => {});
       await sleep(800);
       await openPanel();
       await panel.getByRole("button", { name: "Save step" }).click({ timeout: STEP_MS });
@@ -504,11 +504,12 @@ try {
     await panel.getByRole("button", { name: "Play", exact: true }).click({ timeout: STEP_MS });
     const done = page.getByText(/Playback completed/).first();
     await done.waitFor({ state: "visible", timeout: 45_000 });
-    await waitFor(() => find(apiPath("/clickevents/userclick")).some(answered), "userclick", 10_000).catch(() => {});
-    const clicks = find(apiPath("/clickevents/userclick"));
+    const userclick = (r) => r.phase === "playback" && apiPath("/clickevents/userclick")(r);
+    await waitFor(() => find(userclick).some(answered), "userclick", 10_000).catch(() => {});
+    const clicks = find(userclick);
     const good = clicks.filter((r) => r.status === 204);
-    if (good.length >= 1 && good.length === clicks.length) pass(13, `"Playback completed" shown; userclick ${good.length}x 204`);
-    else fail(13, `"Playback completed" shown, but userclick: ${clicks.map(describe).join(", ") || "none"}`);
+    if (good.length >= 1 && good.length === clicks.length) pass(13, `"Playback completed" shown; userclick during playback ${good.length}x 204`);
+    else fail(13, `"Playback completed" shown, but userclick during playback: ${clicks.map(describe).join(", ") || "none"}`);
   } catch (err) {
     fail(13, `playback did not complete: ${err.message.split("\n")[0]}; userclick: ${find(apiPath("/clickevents/userclick")).map(describe).join(", ") || "none"}`);
   }
