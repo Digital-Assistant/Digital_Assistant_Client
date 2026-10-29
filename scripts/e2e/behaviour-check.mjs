@@ -213,7 +213,7 @@ try {
   const res = await fetch(`${apiPrefix}user/getsessionkey`, { signal: AbortSignal.timeout(5_000) });
   log(`backend answers: GET <backend>/api/user/getsessionkey -> ${res.status}`);
 } catch (err) {
-  setupError = `backend unreachable: no HTTP answer from ${apiPrefix} (${err.cause?.code || err.name}). Start the local stack (local-up.sh) and the Server (start-server.sh), or pass the right --backend.`;
+  setupError = `backend unreachable: no HTTP answer from ${apiPrefix} (${err.cause?.code || err.cause?.message || err.message}). Start the local stack (local-up.sh) and the Server (start-server.sh), or pass the right --backend.`;
   finish([], 3);
 }
 
