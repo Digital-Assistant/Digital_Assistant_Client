@@ -8,9 +8,9 @@
  * Both environments are kept so one build can serve TEST and PROD; the
  * environment is picked at runtime.
  *
- * Not wired into the SDK yet: phase C04 passes it to the SDK once the SDK
- * accepts these keys from the page config (phase C03). Until then nothing
- * imports this module, so the values are not in the bundle.
+ * Handed to the SDK at runtime by ./runtimeEnvironment.ts (applyBuildConfig),
+ * which the background worker and the panel (src/main.tsx) both call. The
+ * client secret is deliberately not part of this config.
  */
 
 export interface EnvironmentUrls {
