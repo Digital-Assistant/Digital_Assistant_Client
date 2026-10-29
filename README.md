@@ -90,25 +90,40 @@ The CI sanity check is unauthenticated. To exercise the whole flow against a loc
 4. For automation use Playwright Chromium with the extension loaded in a persistent profile (`scripts/ci/smoke-extension.mjs` is the pattern) and stub `chrome.identity.getProfileUserInfo` in the service worker, so the Google sign-in needs no real account.
 5. The SDK needs `realm`, `clientId` and `clientSecret`; supply the secret only in your own untracked local build and never share or upload that build (everything in it is readable by whoever unzips it).
 
-Behaviour checklist (all 14 pass on `dev` with the current SDK against a local backend; run it by hand or script it):
+Behaviour checklist (all 14 pass on `dev` with the current SDK against a local backend). `npm run e2e:behaviour` runs it, see the next section.
 
-| # | Check | Pass when |
-|---|---|---|
-| 1 | Extension loads | The service worker starts |
-| 2 | Panel mounts | `#udan-react-root` exists on the page |
-| 3 | Early call | A host-page `UDAPluginSDK` call made before the extension is ready is kept (call after `UDASdkReady`, see above) |
-| 4 | No Keycloak on load | Zero Keycloak requests while the page loads |
-| 5 | Realm header | `UDAN-Realm` is on every backend and token-service call |
-| 6 | No config, no calls | Without realm/clientId/clientSecret the SDK sends nothing |
-| 7 | Login | `getsessionkey` 200, `checkauthid` 200, token service `POST /user/token` 201, `checkusersession` 200 |
-| 8 | Search | `GET /api/search/all` 200; a text filter finds a saved recording |
-| 9 | Record | REC, Start, countdown, two host-page clicks; both steps are listed |
-| 10 | Save | `clickednode` 200 for each step, then `recordsequencedata` 200 |
-| 11 | List | The saved recording appears in the list |
-| 12 | Playback | Steps navigate, `userclick` 204, ends on the recording view |
-| 13 | Vote | `GET /api/votes/...` 200 and `POST /api/votes/addVote` 200 |
-| 14 | No failures | No failed backend call during the whole run |
+| # | Check |
+|---|---|
+| 1 | Extension loads, worker starts |
+| 2 | Content script injects, panel mounts (`#udan-react-root`, shadow root) |
+| 3 | Panel opens, login screen shown |
+| 4 | No console errors on load |
+| 5 | Backend reached with the build's own defaults |
+| 6 | Early host-page `UDAPluginSDK({environment, realm})` honoured (page world; the worker takes the build config) |
+| 7 | Zero Keycloak requests on page load |
+| 8 | Login: `getsessionkey` 200, `checkauthid` 200, token service `POST /user/token` 201, `checkusersession` 200, with the `UDAN-Realm` header |
+| 9 | Search list `GET /api/search/all` 200; a text filter shows a saved recording |
+| 10 | Record two clicks; steps listed |
+| 11 | Save: `clickednode` x2 200, `recordsequencedata` 200 |
+| 12 | Saved recording listed and searchable |
+| 13 | Playback navigates the steps, `userclick` 204, ends on "Playback completed" |
+| 14 | No failed backend calls in the whole run |
 
+## Behaviour check (local stack)
+
+`scripts/e2e/behaviour-check.mjs` runs the 14 checks above without a person: Chromium (pinned `playwright-core`, new headless mode) loads an unpacked build, opens `scripts/ci/fixtures/host-page.html` from a local server, signs in, records the two buttons, saves, searches and plays the recording.
+
+```
+npm run build                        # local.env -> build/ (the backend URLs of your local stack)
+npm run e2e:behaviour -- --build <dir> --backend http://localhost:<port>/api [--auth chrome-identity] [--identity <label>] [--out <dir>] [--headed]
+```
+
+- **The build must be able to sign in.** The SDK needs `realm`, `clientId` and `clientSecret`, and this repo never holds the secret, so a plain `build/` stops at check 5 ("worker SDK not configured"). Pass a copy that your own local tooling completed, keep it out of the repo and delete it after the run. The runner reads no secret and prints none.
+- **Auth drivers** (`--auth`): `chrome-identity` (default) replaces `chrome.identity.getProfileUserInfo` in the running worker with a stub. It answers "not signed in" while the page loads (check 3), then a labelled test identity (`<label>@example.test`, default label `pk-e2e-a`) when the runner clicks "Sign in with UDAN". The build is not patched. `keycloak-pkce` is a placeholder for the PKCE sign-in and exits 2 until it is implemented (the `authDrivers` object in the script).
+- **Data:** each run saves a new recording named `pk e2e <label> <run id>` on a fresh host-page port (the SDK scopes recordings by host and port), so reruns stay green. The data stays in the local backend.
+- **Output** in `--out` (default `out/behaviour/<run id>/`, gitignored): `behaviour-check.json` (checks plus every backend, token-service and Keycloak call: method, path, status, `UDAN-Realm` yes/no) and `behaviour-check.md` (check, result, evidence), plus `failure.png` when a check fails. Hosts are shown as `<backend>`, `<token service>`, `<keycloak>`; tokens and bodies are never recorded.
+- **Exit codes:** 0 all 14 pass, 1 a check failed, 2 usage or setup error, 3 backend unreachable (checked before the browser starts).
+- Not in CI: it needs the Server, the token service and Keycloak. The first run on a machine needs `npx playwright-core install chromium`.
 
 ## CI and releases
 
