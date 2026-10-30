@@ -32,9 +32,29 @@ if(enableUDAPlugin === false){
     const sendAccessTokenToPage = function(data) {
         document.dispatchEvent(new CustomEvent("UDAAccessTokenData", {detail: {data: data}, bubbles: false, cancelable: false}));
     };
+    const sendAlertToPage = function(code) {
+        document.dispatchEvent(new CustomEvent("UDAAlertMessageData", {detail: {data: code}, bubbles: false, cancelable: false}));
+    };
 
+    /**
+     * Sign-in: the worker answers with a session or a message code. When it cannot (it failed, or
+     * the extension was reloaded and this page still runs the old content script), the panel is
+     * told here; otherwise the Sign-in button would seem to do nothing.
+     */
     document.addEventListener("RequestUDASessionData", function(data) {
-        sendToBackground({action:data.detail.data,data:data.detail.data});
+        const action = data.detail.data;
+        const signIn = action === "UDASignIn" || action === "UDASignInKeycloak";
+        let answer;
+        try {
+            answer = Promise.resolve(sendToBackground({action:action,data:action}));
+        } catch (err) {
+            answer = Promise.reject(err);
+        }
+        answer.then(function(response) {
+            if (signIn && (!response || response.success === false)) sendAlertToPage("signin-failed");
+        }, function(err) {
+            if (signIn) sendAlertToPage(/context invalidated/i.test(String(err && err.message)) ? "signin-reload" : "signin-failed");
+        });
     });
 
     document.addEventListener("UDADebugSetEvent", function(data) {

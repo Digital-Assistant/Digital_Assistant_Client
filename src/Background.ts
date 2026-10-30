@@ -33,6 +33,7 @@ import {
     setAuthToken,
     clearAuthToken,
     setAuthTokenRenewer,
+    hasClientSecret,
 } from "@udan/digital-assistant-sdk";
 
 // Import browser extension specific authentication
@@ -154,6 +155,13 @@ browserVar.runtime.onMessage.addListener(function (request, sender, sendResponse
 		applyEnvironment(normalizeEnvironment(request.pageEnvironment) ?? ownChoice.environment);
 		if (request.action === "getusersessiondata" || request.action === "UDAGetNewToken") {
 			if (await resumeKeycloakSession(tabId, request.action === "UDAGetNewToken")) return;
+			if (keycloakSettings() && !chromeIdentityCanSignIn()) {
+				// the Chrome identity flow cannot finish without the secret: signed out (session key
+				// only, as for a signed-out profile) until the Sign-in button runs the Keycloak sign-in
+				if (!sessionData.sessionKey) sessionData = await UDAGetSessionKey(sessionData);
+				await sendToTab(tabId, "UDAAlertMessageData", "login");
+				return;
+			}
 			await legacySession(request.action);
 		} else if (request.action === "UDASignIn" || request.action === "UDASignInKeycloak") {
 			// the user pressed Sign in: the only place a sign-in window may open
@@ -221,9 +229,15 @@ async function legacySession(action: string) {
 function keycloakSettings(): KeycloakSettings | null {
 	const environment = appliedEnvironment ?? ownChoice.environment;
 	const baseUrl = buildConfig[environment].keycloakUrl;
-	const { keycloakRealm: realm, keycloakPublicClientId: clientId, keycloakIdpHint: idpHint } = buildConfig;
+	const { keycloakRealm: realm, keycloakPublicClientId: clientId } = buildConfig;
+	// users sign in with Google only (no Keycloak password): the window goes straight to Google.
+	// A realm without that alias ignores the hint and shows its own page.
+	const idpHint = buildConfig.keycloakIdpHint || DEFAULT_IDP_HINT;
 	return baseUrl && realm && clientId ? { baseUrl, realm, clientId, idpHint } : null;
 }
+
+/** Identity provider alias sent as kc_idp_hint when the build names none. */
+const DEFAULT_IDP_HINT = "google";
 
 /** The worker's SDK sends the Keycloak access token on its calls and asks for a fresh one before it expires. */
 function applyKeycloakToken(tokens: KeycloakTokens) {
@@ -299,21 +313,33 @@ async function bindKeycloakSession(tokens: KeycloakTokens, tabId: number | undef
 }
 
 /**
+ * The Chrome identity flow ends at the token service, which needs the client secret. Builds never
+ * carry one (check-env-keys.sh); only a local test build has it added to its own copy.
+ */
+function chromeIdentityCanSignIn(): boolean {
+	return hasClientSecret();
+}
+
+/**
  * Sign-in button. A Chrome identity keeps the Chrome identity flow (compatibility until PK15)
- * unless the user chose Keycloak; with no identity, or by choice, the Keycloak sign-in runs:
- * silently first, then in a window. A build without the public client keeps the old answer.
+ * when that flow can finish (a build with the client secret) and the user did not choose
+ * Keycloak; otherwise the Keycloak sign-in runs: silently first, then in a window. A build
+ * without the public client keeps the old answer. Every way out sends the tab a session or a
+ * message code, or throws (the content script then shows "signin-failed").
  */
 async function signIn(tabId: number | undefined, keycloakChosen: boolean) {
 	if (await resumeKeycloakSession(tabId)) return;
 	const settings = keycloakSettings();
 	const identity = await getBrowserIdentity();
-	if (!settings || (identity && !keycloakChosen)) {
+	if (!settings || (identity && !keycloakChosen && chromeIdentityCanSignIn())) {
 		if (!identity) {
 			// the button did nothing before: tell the user why
 			await sendToTab(tabId, "UDAAlertMessageData", "signin-no-identity");
 			return;
 		}
 		await legacySession("getusersessiondata");
+		// the token service gave no token: that flow stops without a word, so say it here
+		if (!sessionData.authData?.token) await sendToTab(tabId, "UDAAlertMessageData", "signin-failed");
 		return;
 	}
 	try {
