@@ -3,7 +3,7 @@ import svgPaths from "../imports/svg-s04gq19zek";
 import { EnvironmentBadge } from "./EnvironmentBadge";
 
 export function LoginScreen() {
-  const { login } = useAuth();
+  const { login, authMessage, signingIn } = useAuth();
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[400px] px-8 py-12">
@@ -23,10 +23,22 @@ export function LoginScreen() {
         </p>
       </div>
 
+      {/* Why the last sign-in did not work, in plain words */}
+      {authMessage && (
+        <p
+          role="alert"
+          data-testid="auth-message"
+          className="mb-4 max-w-[320px] text-center text-[14px] font-['Roboto',sans-serif] text-[#b42318] bg-[#fef3f2] border border-[#fecdca] rounded-lg px-4 py-2"
+        >
+          {authMessage}
+        </p>
+      )}
+
       {/* Login Button - Google Style */}
       <button
         onClick={login}
-        className="flex items-center gap-3 bg-white border-2 border-[#d9d9d9] rounded-lg px-6 py-3 hover:bg-[#f8f8f8] hover:border-[#8e8e93] transition-all duration-200 shadow-sm hover:shadow-md group"
+        disabled={signingIn}
+        className="flex items-center gap-3 bg-white border-2 border-[#d9d9d9] rounded-lg px-6 py-3 hover:bg-[#f8f8f8] hover:border-[#8e8e93] disabled:opacity-60 disabled:cursor-wait transition-all duration-200 shadow-sm hover:shadow-md group"
         aria-label="Sign in with UDAN"
       >
         {/* UDAN Icon */}
@@ -53,7 +65,7 @@ export function LoginScreen() {
         
         {/* Button Text */}
         <span className="text-[#1e1e1e] text-[16px] font-['Roboto',sans-serif] font-medium">
-          Sign in with UDAN
+          {signingIn ? 'Signing in…' : 'Sign in with UDAN'}
         </span>
       </button>
 

@@ -38,6 +38,7 @@ import {
 // Import browser extension specific authentication
 import { LoginWithBrowser, getBrowserIdentity } from "./browser-auth/LoginWithBrowser";
 import {
+    KeycloakAuthError,
     signInWithKeycloak,
     getKeycloakTokens,
     refreshKeycloakTokens,
@@ -161,7 +162,7 @@ browserVar.runtime.onMessage.addListener(function (request, sender, sendResponse
 			await signOut();
 		} else if (request.action === "UDARenewAccessToken") {
 			// the panel's token is about to expire: the access token only, never the refresh token
-			return { accessToken: await panelAccessToken() };
+			return { accessToken: await panelAccessToken(tabId) };
 		} else if (request.action === "authtenicate") {
 			await LoginWithBrowser(sessionData, false);
 		} else if (request.action === "createSession") {
@@ -307,6 +308,11 @@ async function signIn(tabId: number | undefined, keycloakChosen: boolean) {
 	const settings = keycloakSettings();
 	const identity = await getBrowserIdentity();
 	if (!settings || (identity && !keycloakChosen)) {
+		if (!identity) {
+			// the button did nothing before: tell the user why
+			await sendToTab(tabId, "UDAAlertMessageData", "signin-no-identity");
+			return;
+		}
 		await legacySession("getusersessiondata");
 		return;
 	}
@@ -315,8 +321,18 @@ async function signIn(tabId: number | undefined, keycloakChosen: boolean) {
 		await bindKeycloakSession(tokens, tabId);
 	} catch (err) {
 		console.warn("[UDA Background] Keycloak sign-in did not complete:", (err as Error)?.message || err);
-		await sendToTab(tabId, "UDAAlertMessageData", "login");
+		await sendToTab(tabId, "UDAAlertMessageData", signInFailureCode(err));
 	}
+}
+
+/** What the panel shows when the sign-in did not complete (texts live in the panel): cancelled, no connection, or failed. */
+function signInFailureCode(err: unknown): string {
+	if (err instanceof KeycloakAuthError) {
+		if (err.code === "cancelled") return "signin-cancelled";
+		return err.code.startsWith("http_5") ? "signin-network" : "signin-failed";
+	}
+	const message = (err as Error)?.message || "";
+	return err instanceof TypeError || /network|failed to fetch|timeout/i.test(message) ? "signin-network" : "signin-failed";
 }
 
 /** Sign-out: ends the Keycloak session (if any) and forgets the stored session and tokens. */
@@ -328,11 +344,19 @@ async function signOut() {
 }
 
 /** A fresh access token for the panel, or null when there is no Keycloak session. */
-async function panelAccessToken(): Promise<{ token: string; expiresAt: number } | null> {
+async function panelAccessToken(tabId: number | undefined): Promise<{ token: string; expiresAt: number } | null> {
 	const settings = keycloakSettings();
 	if (!settings || !(await storedKeycloakSession())) return null;
 	const tokens = await getKeycloakTokens(settings);
-	return tokens ? { token: tokens.accessToken, expiresAt: tokens.expiresAt } : null;
+	if (!tokens) {
+		// Keycloak ended the session (refresh token expired or revoked): sign out here, the panel shows the Sign-in button
+		clearAuthToken();
+		await UDAStorageService.remove(UDASessionName);
+		sessionData = new UDASessionData();
+		await sendToTab(tabId, "UDAAlertMessageData", "session-expired");
+		return null;
+	}
+	return { token: tokens.accessToken, expiresAt: tokens.expiresAt };
 }
 
 async function generateNewToken() {
