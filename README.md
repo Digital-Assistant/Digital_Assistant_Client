@@ -61,7 +61,7 @@ The URLs for the chosen environment come, per key, from the page (`apiBaseUrl`, 
 
 1. Get a zip. Testers: the newest TEST build is on the [`test-current`](../../releases/tag/test-current) prerelease (every build also has its own `test-v<version>` prerelease). Developers: the `client-zip` artifact of a CI run, or `scripts/ci/package-extension.sh` locally (`out/udan-extension-<version>.zip`). Unzip it into a new folder. A plain `npm run build:prod` also works: use `dist/`.
 2. Open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked** and pick the folder.
-3. The card shows the version, for example `1.1.0 (abc1234)` (the `version_name`); **Details** shows the full `1.1.0.<run>`.
+3. The card shows the build identity, for example `1.1.0 (abc1234) run 173.2 cfg 8b97165d` (the `version_name`; it is also the first line of the release page); **Details** shows the full `1.1.0.<run>`. Same version but a different card text means a different build: reinstall.
 
 Unpacked extensions do not update themselves: remove the old one and load the new folder.
 
@@ -166,8 +166,8 @@ Branch from `dev` and open a PR into `dev`; the PR title must be a [Conventional
 
 **Build once.** Every CI run builds the extension once and packs it into one zip, the extension's equivalent of an image digest. Testers and later the store get exactly that zip, never a rebuild. Scripts and details: `scripts/ci/README.md`.
 
-- Zip: `udan-extension-<X.Y.Z.N>.zip`, plus `SHA256SUMS` and `build-info.json` (commit, branch, run, SDK version and integrity, names of the env keys that were set). Same commit and run number give the same bytes.
-- Version: CI stamps the built manifest with `version = X.Y.Z.<run number>` and `version_name = "X.Y.Z (<short commit>)"`. X.Y.Z comes from `package.json` (Release Please owns it); the run number makes each build unique and higher than the last. The source manifests only hold the base version, for local builds.
+- Zip: `udan-extension-<X.Y.Z.N>.zip`, plus `SHA256SUMS` and `build-info.json` (commit, branch, run, attempt, config hash, SDK version and integrity, names of the env keys that were set). Same commit, run number, attempt and build configuration give the same bytes.
+- Version: CI stamps the built manifest with `version = X.Y.Z.<run number>` and `version_name = "X.Y.Z (<short commit>) run <run number>.<attempt> cfg <config hash>"`. X.Y.Z comes from `package.json` (Release Please owns it); the run number makes each build higher than the last. `version_name` is the build identity: a re-run of the same CI run (new attempt, e.g. after fixing an Actions variable) or any changed build setting changes it, while `version` stays. The config hash is 8 hex of a sha256 over the build settings the bundle inlines (`node scripts/build-env.js production --hash`); the values are not recoverable from it. The source manifests only hold the base version, for local builds.
 - Retention: artifact `client-zip`, 90 days for pushes to `dev`, 14 days for PRs. The run summary shows the version, SHA256 and SDK version.
 - Build settings in CI come from GitHub Actions **variables** (`BASE_PROD_URL`, `TOKEN_TEST_URL`, ..., `KEYCLOAK_PUBLIC_CLIENT_ID`, `KEYCLOAK_IDP_HINT`: `scripts/ci/generate-env.sh --print-names`), never from secrets. They are set once at the organization level and shared with the SDK repo, which uses the same names.
 
