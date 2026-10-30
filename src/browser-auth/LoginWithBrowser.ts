@@ -67,3 +67,13 @@ export const LoginWithBrowser = async (
 
     return true;
 }
+
+/** The browser's signed-in profile (id and email), or null when none is signed in or the API is missing. */
+export const getBrowserIdentity = async (): Promise<{ id: string; email: string } | null> => {
+    try {
+        const data = await (getBrowserVar() as any).identity?.getProfileUserInfo?.({ accountStatus: 'ANY' });
+        return data?.id && data?.email ? { id: data.id, email: data.email } : null;
+    } catch {
+        return null;
+    }
+}

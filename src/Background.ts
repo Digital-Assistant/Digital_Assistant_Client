@@ -4,7 +4,8 @@
  * Background Script for Universal Digital Assistant Browser Extension
  *
  * This service worker handles:
- * - User authentication via Chrome Identity API
+ * - User authentication: Chrome Identity API (LoginWithBrowser) or Keycloak authorization
+ *   code + PKCE (LoginWithKeycloak, no client secret)
  * - Session management
  * - Communication between content scripts and web pages
  *
@@ -24,12 +25,27 @@ import {
     UDABindAuthenticatedAccount,
     UDASendSessionData,
     UDAStorageService,
+    UDADigestMessage,
     keyCloakStore,
-    AppConfig
+    AppConfig,
+    apiClient,
+    ENDPOINT,
+    setAuthToken,
+    clearAuthToken,
+    setAuthTokenRenewer,
 } from "@udan/digital-assistant-sdk";
 
 // Import browser extension specific authentication
-import { LoginWithBrowser } from "./browser-auth/LoginWithBrowser";
+import { LoginWithBrowser, getBrowserIdentity } from "./browser-auth/LoginWithBrowser";
+import {
+    signInWithKeycloak,
+    getKeycloakTokens,
+    refreshKeycloakTokens,
+    signOutOfKeycloak,
+    type KeycloakSettings,
+    type KeycloakTokens,
+} from "./browser-auth/LoginWithKeycloak";
+import { buildConfig } from "./config/buildConfig";
 import {
     applyBuildConfig,
     chooseEnvironment,
@@ -130,38 +146,22 @@ browserVar.runtime.onMessage.addListener(function (request, sender, sendResponse
 		return true;
 	}
 
-	const handleMessage = async () => {
+	const tabId: number | undefined = sender?.tab?.id;
+	const handleMessage = async (): Promise<Record<string, unknown> | void> => {
 		await environmentReady;
 		// a page that set `environment` itself wins for its own messages
 		applyEnvironment(normalizeEnvironment(request.pageEnvironment) ?? ownChoice.environment);
 		if (request.action === "getusersessiondata" || request.action === "UDAGetNewToken") {
-			const storedSessionData = await UDAStorageService.get(UDASessionName);
-			if (!storedSessionData) {
-				sessionData = await UDAGetSessionKey(sessionData);
-				await LoginWithBrowser(sessionData, false);
-			} else {
-				// looks like browser storage might have changed so changing the reading the data has been changed. For to work with old version have added the new code to else if statement
-				if (storedSessionData.hasOwnProperty("sessionKey") && storedSessionData["sessionKey"] && typeof storedSessionData["sessionKey"] != 'object') {
-					sessionData = storedSessionData;
-					if (request.action === "UDAGetNewToken") {
-						await generateNewToken();
-					} else if (storedSessionData.hasOwnProperty('authenticated') && storedSessionData.authenticated) {
-						await UDASendSessionData(sessionData);
-					} else {
-						await LoginWithBrowser(sessionData, false);
-					}
-				} else if (storedSessionData.hasOwnProperty(UDASessionName) && storedSessionData[UDASessionName].hasOwnProperty("sessionKey") && storedSessionData[UDASessionName]["sessionKey"] && typeof storedSessionData[UDASessionName]["sessionKey"] != 'object') {
-					sessionData = storedSessionData[UDASessionName];
-					if (storedSessionData.hasOwnProperty('authenticated') && storedSessionData.authenticated) {
-						await UDASendSessionData(sessionData);
-					} else {
-						await LoginWithBrowser(sessionData, false);
-					}
-				} else {
-					sessionData = await UDAGetSessionKey(sessionData);
-					await LoginWithBrowser(sessionData, false);
-				}
-			}
+			if (await resumeKeycloakSession(tabId, request.action === "UDAGetNewToken")) return;
+			await legacySession(request.action);
+		} else if (request.action === "UDASignIn" || request.action === "UDASignInKeycloak") {
+			// the user pressed Sign in: the only place a sign-in window may open
+			await signIn(tabId, request.action === "UDASignInKeycloak");
+		} else if (request.action === "UDASignOut") {
+			await signOut();
+		} else if (request.action === "UDARenewAccessToken") {
+			// the panel's token is about to expire: the access token only, never the refresh token
+			return { accessToken: await panelAccessToken() };
 		} else if (request.action === "authtenicate") {
 			await LoginWithBrowser(sessionData, false);
 		} else if (request.action === "createSession") {
@@ -170,7 +170,7 @@ browserVar.runtime.onMessage.addListener(function (request, sender, sendResponse
 	};
 
 	handleMessage()
-		.then(() => sendResponse({ success: true }))
+		.then((extra) => sendResponse({ success: true, ...(extra || {}) }))
 		.catch((err) => {
 			const error = err instanceof Error ? err : new Error(String(err));
 			console.error("[UDA Background] onMessage error:", error);
@@ -180,6 +180,160 @@ browserVar.runtime.onMessage.addListener(function (request, sender, sendResponse
 	// Return true to keep the message channel open for async sendResponse
 	return true;
 });
+
+/** The session of the Chrome identity flow (compatibility until PK15), as before the Keycloak sign-in. */
+async function legacySession(action: string) {
+	const storedSessionData = await UDAStorageService.get(UDASessionName);
+	if (!storedSessionData) {
+		sessionData = await UDAGetSessionKey(sessionData);
+		await LoginWithBrowser(sessionData, false);
+	} else {
+		// looks like browser storage might have changed so changing the reading the data has been changed. For to work with old version have added the new code to else if statement
+		if (storedSessionData.hasOwnProperty("sessionKey") && storedSessionData["sessionKey"] && typeof storedSessionData["sessionKey"] != 'object') {
+			sessionData = storedSessionData;
+			if (action === "UDAGetNewToken") {
+				await generateNewToken();
+			} else if (storedSessionData.hasOwnProperty('authenticated') && storedSessionData.authenticated) {
+				await UDASendSessionData(sessionData);
+			} else {
+				await LoginWithBrowser(sessionData, false);
+			}
+		} else if (storedSessionData.hasOwnProperty(UDASessionName) && storedSessionData[UDASessionName].hasOwnProperty("sessionKey") && storedSessionData[UDASessionName]["sessionKey"] && typeof storedSessionData[UDASessionName]["sessionKey"] != 'object') {
+			sessionData = storedSessionData[UDASessionName];
+			if (storedSessionData.hasOwnProperty('authenticated') && storedSessionData.authenticated) {
+				await UDASendSessionData(sessionData);
+			} else {
+				await LoginWithBrowser(sessionData, false);
+			}
+		} else {
+			sessionData = await UDAGetSessionKey(sessionData);
+			await LoginWithBrowser(sessionData, false);
+		}
+	}
+}
+
+/**
+ * Keycloak sign-in (authorization code + PKCE, public client, no secret). Settings come from the
+ * build (keycloakPublicClientId, the environment's keycloakUrl, keycloakRealm); null = this build
+ * has no public client, so only the Chrome identity flow exists.
+ */
+function keycloakSettings(): KeycloakSettings | null {
+	const environment = appliedEnvironment ?? ownChoice.environment;
+	const baseUrl = buildConfig[environment].keycloakUrl;
+	const { keycloakRealm: realm, keycloakPublicClientId: clientId, keycloakIdpHint: idpHint } = buildConfig;
+	return baseUrl && realm && clientId ? { baseUrl, realm, clientId, idpHint } : null;
+}
+
+/** The worker's SDK sends the Keycloak access token on its calls and asks for a fresh one before it expires. */
+function applyKeycloakToken(tokens: KeycloakTokens) {
+	setAuthToken({ token: tokens.accessToken, expiresAt: tokens.expiresAt, authsource: "keycloak", sub: tokens.sub });
+	setAuthTokenRenewer(async () => {
+		const settings = keycloakSettings();
+		const next = settings ? await getKeycloakTokens(settings) : null;
+		return next ? { token: next.accessToken, expiresAt: next.expiresAt, authsource: "keycloak", sub: next.sub } : null;
+	});
+}
+
+/** The stored session if it came from the Keycloak sign-in. */
+async function storedKeycloakSession(): Promise<UDASessionData | null> {
+	let stored = await UDAStorageService.get(UDASessionName);
+	if (typeof stored === "string") {
+		try { stored = JSON.parse(stored); } catch { return null; }
+	}
+	return stored?.authenticated && stored.authenticationSource === "keycloak" && stored.sessionKey ? stored : null;
+}
+
+async function sendToTab(tabId: number | undefined, action: string, data: string) {
+	if (tabId === undefined) {
+		// not asked by a tab: the SDK finds the active tab itself
+		await UDASendSessionData(sessionData, action, data);
+		return;
+	}
+	await anyBrowser.tabs.sendMessage(tabId, { action, data });
+}
+
+/**
+ * A stored Keycloak session: refresh the access token if needed (`force`: the Server refused it) and
+ * send the session to the tab. False when there is none, or Keycloak ended it (the stored session
+ * is dropped, so the caller continues signed out).
+ */
+async function resumeKeycloakSession(tabId: number | undefined, force = false): Promise<boolean> {
+	const stored = await storedKeycloakSession();
+	if (!stored) return false;
+	const settings = keycloakSettings();
+	const tokens = settings ? await (force ? refreshKeycloakTokens(settings) : getKeycloakTokens(settings)) : null;
+	if (!tokens) {
+		clearAuthToken();
+		await UDAStorageService.remove(UDASessionName);
+		sessionData = new UDASessionData();
+		return false;
+	}
+	applyKeycloakToken(tokens);
+	sessionData = stored;
+	sessionData.authData = { ...sessionData.authData, token: tokens.accessToken, expiresAt: tokens.expiresAt } as UDASessionData["authData"];
+	await UDAStorageService.add(sessionData, UDASessionName);
+	await sendToTab(tabId, "UDAAuthenticatedUserSessionData", JSON.stringify(sessionData));
+	return true;
+}
+
+/**
+ * Binds a Keycloak sign-in to a UDAN session: checkauthid and checkusersession with the access
+ * token (the Server takes the user from the token: sub, authsource keycloak), then stores the
+ * session and sends it to the tab. The session holds the access token only.
+ */
+async function bindKeycloakSession(tokens: KeycloakTokens, tabId: number | undefined) {
+	applyKeycloakToken(tokens);
+	if (!sessionData.sessionKey) sessionData = await UDAGetSessionKey(sessionData);
+	const email = tokens.email ? await UDADigestMessage(tokens.email, "SHA-512") : null;
+	const account = await apiClient.post(ENDPOINT.CheckUserId, { authid: tokens.sub, emailid: email, authsource: "keycloak" });
+	const userId = account?.data?.id;
+	if (userId === undefined || userId === null) throw new Error("checkauthid returned no user id");
+	await apiClient.post(ENDPOINT.CheckUserSession, { userauthid: userId, usersessionid: sessionData.sessionKey });
+	sessionData.authenticated = true;
+	sessionData.authenticationSource = "keycloak";
+	// the Server's owner key of a Keycloak user is this row id; the panel compares it with authData.id
+	sessionData.authData = { id: String(userId), email, token: tokens.accessToken, expiresAt: tokens.expiresAt } as UDASessionData["authData"];
+	await UDAStorageService.add(sessionData, UDASessionName);
+	await sendToTab(tabId, "UDAAuthenticatedUserSessionData", JSON.stringify(sessionData));
+}
+
+/**
+ * Sign-in button. A Chrome identity keeps the Chrome identity flow (compatibility until PK15)
+ * unless the user chose Keycloak; with no identity, or by choice, the Keycloak sign-in runs:
+ * silently first, then in a window. A build without the public client keeps the old answer.
+ */
+async function signIn(tabId: number | undefined, keycloakChosen: boolean) {
+	if (await resumeKeycloakSession(tabId)) return;
+	const settings = keycloakSettings();
+	const identity = await getBrowserIdentity();
+	if (!settings || (identity && !keycloakChosen)) {
+		await legacySession("getusersessiondata");
+		return;
+	}
+	try {
+		const tokens = await signInWithKeycloak(settings, { interactive: true, loginHint: identity?.email });
+		await bindKeycloakSession(tokens, tabId);
+	} catch (err) {
+		console.warn("[UDA Background] Keycloak sign-in did not complete:", (err as Error)?.message || err);
+		await sendToTab(tabId, "UDAAlertMessageData", "login");
+	}
+}
+
+/** Sign-out: ends the Keycloak session (if any) and forgets the stored session and tokens. */
+async function signOut() {
+	clearAuthToken();
+	await UDAStorageService.remove(UDASessionName);
+	sessionData = new UDASessionData();
+	await signOutOfKeycloak(keycloakSettings());
+}
+
+/** A fresh access token for the panel, or null when there is no Keycloak session. */
+async function panelAccessToken(): Promise<{ token: string; expiresAt: number } | null> {
+	const settings = keycloakSettings();
+	if (!settings || !(await storedKeycloakSession())) return null;
+	const tokens = await getKeycloakTokens(settings);
+	return tokens ? { token: tokens.accessToken, expiresAt: tokens.expiresAt } : null;
+}
 
 async function generateNewToken() {
 	console.log(sessionData);

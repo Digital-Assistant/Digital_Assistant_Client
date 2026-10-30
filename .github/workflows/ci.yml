@@ -87,6 +87,8 @@ jobs:
           KEYCLOAK_TEST_URL: ${{ vars.KEYCLOAK_TEST_URL }}
           KEYCLOAK_REALM: ${{ vars.KEYCLOAK_REALM }}
           KEYCLOAK_CLIENT_ID: ${{ vars.KEYCLOAK_CLIENT_ID }}
+          KEYCLOAK_PUBLIC_CLIENT_ID: ${{ vars.KEYCLOAK_PUBLIC_CLIENT_ID }}
+          KEYCLOAK_IDP_HINT: ${{ vars.KEYCLOAK_IDP_HINT }}
           GOOGLE_ANALYTICS_MEASUREMENT_ID: ${{ vars.GOOGLE_ANALYTICS_MEASUREMENT_ID }}
           ENABLE_GOOGLE_ANALYTICS: ${{ vars.ENABLE_GOOGLE_ANALYTICS }}
         run: scripts/ci/generate-env.sh --build production

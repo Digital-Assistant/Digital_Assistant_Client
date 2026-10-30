@@ -2,6 +2,7 @@
   "manifest_version": 3,
   "name": "Universal Digital Assistant (UDA) Beta",
   "version": "1.1.0",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA/HrhD5R5x/MgAVFeM9SJelrhbDUuu52lX2TgP2mdsCgeYZCfNbj7ymCrQrydbxKZpC9Lh/AtyqlFtmXgHGfUvxpXbH/JO/vMqNQImDIIej7gdJq4dBunjbMxpGi9L7qB+3aVBAXI+rlxqToaFoTl6s2Xj6prrIlRBh160mWyARtz0yT20jzrEqITq9cydtyUGskFjquVblFwRHxWgfkiQDcq8G7jU212zyFm9z4knnNNXOIUUVZ99+hU3rlMzmgssImJhgG5xGIUEl7TPa86OVpN3RLE+iXC/pf/EEWwYQoHT7qftoKpq1LC0PJKkfzKxb2iadVxwTBDZyLJqt8WHwIDAQAB",
   "content_scripts": [
     {
       "js": [

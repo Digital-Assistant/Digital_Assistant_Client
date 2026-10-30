@@ -8,9 +8,8 @@
  * Both environments are kept so one build can serve TEST and PROD; the
  * environment is picked at runtime.
  *
- * Not wired into the SDK yet: phase C04 passes it to the SDK once the SDK
- * accepts these keys from the page config (phase C03). Until then nothing
- * imports this module, so the values are not in the bundle.
+ * Read by ./runtimeEnvironment.ts (handed to the SDK) and by the worker's
+ * Keycloak sign-in (../browser-auth/LoginWithKeycloak.ts).
  */
 
 export interface EnvironmentUrls {
@@ -29,6 +28,10 @@ export interface BuildConfig {
     TEST: EnvironmentUrls;
     keycloakRealm: string;
     keycloakClientId: string;
+    /** Public Keycloak client for the worker's PKCE sign-in (no secret); empty = PKCE sign-in off. */
+    keycloakPublicClientId: string;
+    /** Optional identity provider alias sent as kc_idp_hint (e.g. the Google IdP); empty = Keycloak's own page. */
+    keycloakIdpHint: string;
 }
 
 export const buildConfig: Readonly<BuildConfig> = Object.freeze({
@@ -46,6 +49,8 @@ export const buildConfig: Readonly<BuildConfig> = Object.freeze({
     }),
     keycloakRealm: process.env.keycloakRealm || "",
     keycloakClientId: process.env.keycloakClientId || "",
+    keycloakPublicClientId: process.env.keycloakPublicClientId || "",
+    keycloakIdpHint: process.env.keycloakIdpHint || "",
 });
 
 export default buildConfig;

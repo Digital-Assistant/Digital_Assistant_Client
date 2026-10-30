@@ -3,7 +3,9 @@
 // local server, signs in through an auth driver, records a two-step recording, saves, finds and plays
 // it. Knows nothing about secrets: the build it is given must already be able to sign in.
 //   node scripts/e2e/behaviour-check.mjs --build <dir> --backend <base-url>
-//        [--auth chrome-identity] [--identity <label>] [--out <dir>] [--headed]
+//        [--auth chrome-identity|keycloak-pkce] [--identity <label>] [--keycloak-user <name>] [--out <dir>] [--headed]
+// keycloak-pkce signs in as a Keycloak user on Keycloak's own page; the password comes from the
+// environment variable UDAN_E2E_KEYCLOAK_PASSWORD and is never printed.
 // <base-url> is the Server REST base (http(s)://host[:port]/api, the /api is optional).
 // Exit: 0 all 14 pass, 1 a check failed, 2 usage or setup error, 3 backend unreachable.
 // Output: <out>/behaviour-check.json and behaviour-check.md (check, result, evidence); a screenshot
@@ -18,7 +20,7 @@ import { parseArgs } from "node:util";
 import { chromium } from "playwright-core";
 
 const USAGE =
-  "usage: behaviour-check.mjs --build <dir> --backend <base-url> [--auth chrome-identity] [--identity <label>] [--out <dir>] [--headed]";
+  "usage: behaviour-check.mjs --build <dir> --backend <base-url> [--auth chrome-identity|keycloak-pkce] [--identity <label>] [--keycloak-user <name>] [--out <dir>] [--headed]";
 const STEP_MS = 30_000; // longest wait for one observation
 const SETTLE_MS = 2_500; // quiet time after load before the load-time checks are judged
 
@@ -30,6 +32,7 @@ try {
       backend: { type: "string" },
       auth: { type: "string", default: "chrome-identity" },
       identity: { type: "string", default: "pk-e2e-a" },
+      "keycloak-user": { type: "string" },
       out: { type: "string" },
       headed: { type: "boolean", default: false },
       help: { type: "boolean", default: false },
@@ -91,8 +94,10 @@ async function waitFor(fn, what, ms = STEP_MS) {
 // ---- auth drivers --------------------------------------------------------------------------------
 // An auth driver gets the extension from "signed out" to "signed in". prepare() runs once the
 // worker is up and before the host page opens (the page must load signed out, check 3); signIn()
-// runs from the open panel's login screen and returns when sign-in was started.
-// keycloak-pkce is the seam PK11 fills in (Keycloak authorization code + PKCE in the worker).
+// runs from the open panel's login screen and returns when sign-in was started. loginCalls are the
+// calls check 8 expects; extras() (optional) runs after check 14 and adds evidence outside the 14.
+const isTokenServiceCall = (r) => r.service === "token" && r.method === "POST" && r.path.endsWith("/user/token");
+const isKeycloakTokenCall = (r) => r.service === "keycloak" && r.method === "POST" && r.path.endsWith("/protocol/openid-connect/token");
 const authDrivers = {
   "chrome-identity": {
     // The worker signs in with chrome.identity.getProfileUserInfo (src/browser-auth/LoginWithBrowser.ts).
@@ -102,6 +107,14 @@ const authDrivers = {
     // carries test code. The stub answers "not signed in" (empty id and email, as Chrome does)
     // until signIn() sets the identity. If Chrome restarts the worker the stub is gone and the real
     // function also answers "not signed in", so signIn() installs it again on the current worker.
+    check8: "Login: getsessionkey 200, checkauthid 200, POST /user/token 201, checkusersession 200, with UDAN-Realm header",
+    loginCalls: [
+      ["getsessionkey", (r) => r.service === "backend" && r.path.endsWith("/user/getsessionkey"), [200], true],
+      ["checkauthid", (r) => r.service === "backend" && r.path.endsWith("/user/checkauthid"), [200], true],
+      ["POST /user/token", isTokenServiceCall, [201], true],
+      ["checkusersession", (r) => r.service === "backend" && r.path.endsWith("/user/checkusersession"), [200], true],
+    ],
+    secretExpected: true,
     async install(worker, identity) {
       await worker.evaluate((who) => {
         globalThis.__udaE2EIdentity = who;
@@ -124,11 +137,177 @@ const authDrivers = {
     },
   },
   "keycloak-pkce": {
-    // To fill in: prepare() clears any stored session; signIn() clicks Sign-in, completes the
-    // Keycloak login for the test identity in the auth window, and returns. Then drop `todo`.
-    todo: "auth driver keycloak-pkce is not implemented yet (the PKCE sign-in phase adds it)",
-    async prepare() { throw new Error(this.todo); },
-    async signIn() { throw new Error(this.todo); },
+    // The worker signs in with Keycloak authorization code + PKCE on the public client
+    // (src/browser-auth/LoginWithKeycloak.ts) through chrome.identity.launchWebAuthFlow, which
+    // headless Chromium cannot show. As with chrome-identity, the build is not patched: the runner
+    // replaces launchWebAuthFlow in the running worker with a stub that parks the authorization URL
+    // and waits. The runner opens that URL in a tab of the same profile, signs in on Keycloak's own
+    // page as --keycloak-user (password from UDAN_E2E_KEYCLOAK_PASSWORD), catches the redirect to
+    // https://<extension id>.chromiumapp.org/ by route interception and hands it to the stub. A silent
+    // request (interactive: false) is answered as Chrome answers it: Keycloak's redirect if it gives
+    // one without a page, else "User interaction required.". getProfileUserInfo answers "signed out",
+    // so the worker takes the Keycloak path. Needs a build with keycloakPublicClientId set and the
+    // client's redirect URI registered for the extension id.
+    check8: "Login: getsessionkey 200, Keycloak code exchange (POST /token) 200, checkauthid 200 and checkusersession 200 with a bearer token, no POST /user/token, with UDAN-Realm header",
+    loginCalls: [
+      ["getsessionkey", (r) => r.service === "backend" && r.path.endsWith("/user/getsessionkey"), [200], true],
+      ["Keycloak POST /token", isKeycloakTokenCall, [200], false],
+      ["checkauthid", (r) => r.service === "backend" && r.path.endsWith("/user/checkauthid") && r.bearer, [200], true],
+      ["checkusersession", (r) => r.service === "backend" && r.path.endsWith("/user/checkusersession") && r.bearer, [200], true],
+    ],
+    forbiddenLoginCalls: [["POST /user/token", isTokenServiceCall]],
+    secretExpected: false,
+    user: "",
+    password: "",
+    flows: [],
+    async install(worker) {
+      await worker.evaluate(() => {
+        chrome.identity.getProfileUserInfo = (_options, callback) => {
+          const value = { email: "", id: "" };
+          return typeof callback === "function" ? callback(value) : Promise.resolve(value);
+        };
+        globalThis.__udaE2EFlows = globalThis.__udaE2EFlows || [];
+        chrome.identity.launchWebAuthFlow = (details, callback) => {
+          const answer = new Promise((resolve, reject) => {
+            globalThis.__udaE2EFlows.push({ url: details.url, interactive: Boolean(details.interactive), taken: false, resolve, reject });
+          });
+          if (typeof callback === "function") { answer.then(callback, () => callback(undefined)); return undefined; }
+          return answer;
+        };
+      });
+    },
+    async prepare({ worker }) {
+      this.user = opts["keycloak-user"] || "";
+      this.password = process.env.UDAN_E2E_KEYCLOAK_PASSWORD || "";
+      if (!this.user || !this.password) throw new Error("keycloak-pkce needs --keycloak-user and UDAN_E2E_KEYCLOAK_PASSWORD");
+      this.extensionId = new URL(worker.url()).host;
+      await this.install(worker);
+      const stored = await worker.evaluate(async () => Boolean((await chrome.storage.local.get("udanKeycloakTokens")).udanKeycloakTokens));
+      if (stored) throw new Error("the fresh profile already holds Keycloak tokens");
+      return `chrome.identity.launchWebAuthFlow stubbed in the worker, extension id ${this.extensionId}`;
+    },
+    // One parked authorization request: open it, sign in if it is interactive, answer the stub.
+    async serve(context, flow) {
+      const redirectPrefix = `https://${this.extensionId}.chromiumapp.org/`;
+      const authUrl = new URL(flow.url);
+      this.clientId = authUrl.searchParams.get("client_id");
+      this.tokenEndpoint = `${authUrl.origin}${authUrl.pathname.replace(/\/auth$/, "/token")}`;
+      const tab = await context.newPage();
+      let redirect = null;
+      tab.on("request", (r) => { if (r.url().startsWith(redirectPrefix)) redirect = r.url(); });
+      await tab.route(`${redirectPrefix}**`, (route) => {
+        redirect = route.request().url();
+        return route.fulfill({ status: 200, contentType: "text/plain", body: "redirect captured by the behaviour check" });
+      });
+      let note;
+      try {
+        await tab.goto(flow.url, { waitUntil: "load", timeout: STEP_MS }).catch(() => {});
+        if (!redirect && flow.interactive) {
+          await tab.locator("#username").fill(this.user, { timeout: STEP_MS });
+          await tab.locator("#password").fill(this.password);
+          await tab.locator("#kc-login").click();
+          await waitFor(() => redirect, "the redirect to <extension id>.chromiumapp.org");
+        } else if (!redirect) {
+          await waitFor(() => redirect, "a silent redirect", 3_000).catch(() => {});
+        }
+      } finally {
+        await tab.close().catch(() => {});
+      }
+      const answered = redirect ? new URL(redirect).searchParams : null;
+      note = !redirect ? `${flow.interactive ? "interactive" : "silent"}: no redirect`
+        : `${flow.interactive ? "interactive" : "silent"}: ${answered.get("code") ? "code" : `error ${answered.get("error")}`}`;
+      const worker = context.serviceWorkers()[0];
+      await worker.evaluate(({ index, url }) => {
+        const f = globalThis.__udaE2EFlows[index];
+        if (url) f.resolve(url); else f.reject(new Error("User interaction required."));
+      }, { index: flow.index, url: redirect });
+      return note;
+    },
+    async signIn({ context, panel }) {
+      const worker = context.serviceWorkers()[0];
+      if (!worker) throw new Error("extension worker not running at sign-in");
+      await this.install(worker);
+      await panel.getByRole("button", { name: "Sign in with UDAN" }).click();
+      const end = Date.now() + 2 * STEP_MS;
+      while (Date.now() < end && !this.flows.some((n) => n.startsWith("interactive: code"))) {
+        const current = context.serviceWorkers()[0] || worker;
+        const pending = await current.evaluate(() => (globalThis.__udaE2EFlows || [])
+          .map((f, index) => ({ index, url: f.url, interactive: f.interactive, taken: f.taken }))
+          .filter((f) => !f.taken)).catch(() => []);
+        for (const flow of pending) {
+          await current.evaluate((i) => { globalThis.__udaE2EFlows[i].taken = true; }, flow.index);
+          this.flows.push(await this.serve(context, flow));
+        }
+        if (this.flows.some((n) => n.includes("code"))) break;
+        await sleep(250);
+      }
+      return `Keycloak user ${this.user} (sign-in windows: ${this.flows.join("; ") || "none"})`;
+    },
+    // Evidence beyond the 14: a refresh with the stored refresh token, and sign-out revoking it.
+    // Token values stay inside the browser; only yes/no and status codes come out.
+    async extras({ context, page, find, answered, describe }) {
+      const out = [];
+      const worker = context.serviceWorkers()[0];
+      // owner: the Server stores a Keycloak user's recordings under the numeric user row id, and the
+      // panel shows the owner buttons when that equals its user id (authData.id); ids are compared here, not printed
+      const saved = find((r) => r.service === "backend" && r.path.endsWith("/clickevents/recordsequencedata") && r.status === 200)[0];
+      const owner = await saved?.req.response().then((res) => res?.json()).then((b) => b?.usersessionid).catch(() => undefined);
+      const panelUserId = await page.evaluate(() => {
+        let v = localStorage.getItem("udaUserData");
+        for (let i = 0; i < 3 && typeof v === "string"; i++) { try { v = JSON.parse(v); } catch { break; } }
+        return v?.authData?.id ?? null;
+      });
+      const sameOwner = owner !== undefined && owner !== null && String(owner) === String(panelUserId);
+      out.push({ name: "Owner: the saved recording's owner is the panel's user id, a numeric user row id (owner buttons shown)", status: sameOwner && /^\d+$/.test(String(owner)) ? "PASS" : "FAIL",
+        evidence: `recordsequencedata owner ${owner === undefined ? "not read" : /^\d+$/.test(String(owner)) ? "is a row id" : "is not a row id"}; equals the panel's authData.id: ${sameOwner ? "yes" : "no"}` });
+      const tokenCalls = () => find(isKeycloakTokenCall).length;
+      // refresh: age the stored access token, then let the panel ask the worker for a fresh one
+      const before = tokenCalls();
+      await worker.evaluate(async () => {
+        const { udanKeycloakTokens: t } = await chrome.storage.local.get("udanKeycloakTokens");
+        globalThis.__udaE2EOld = { access: t.accessToken, refresh: t.refreshToken };
+        await chrome.storage.local.set({ udanKeycloakTokens: { ...t, expiresAt: Date.now() } });
+      });
+      const panelGotToken = await page.evaluate(() => new Promise((resolve) => {
+        const timer = setTimeout(() => resolve(false), 15_000);
+        document.addEventListener("UDAAccessTokenData", (e) => { clearTimeout(timer); resolve(Boolean(e.detail?.data?.token)); }, { once: true });
+        document.dispatchEvent(new CustomEvent("UDARequestAccessToken", { detail: {} }));
+      }));
+      const refreshed = await worker.evaluate(async () => {
+        const { udanKeycloakTokens: t } = await chrome.storage.local.get("udanKeycloakTokens");
+        return { changed: Boolean(t && t.accessToken !== globalThis.__udaE2EOld.access), fresh: Boolean(t && t.expiresAt > Date.now() + 60_000) };
+      });
+      await waitFor(() => tokenCalls() > before && find(isKeycloakTokenCall).slice(before).every(answered), "the refresh call", 10_000).catch(() => {});
+      const refreshCall = find(isKeycloakTokenCall).slice(before)[0];
+      const refreshOk = panelGotToken && refreshed.changed && refreshed.fresh && refreshCall?.status === 200;
+      out.push({ name: "Refresh: an expired access token is renewed with the stored refresh token; the panel gets the new access token", status: refreshOk ? "PASS" : "FAIL",
+        evidence: `panel answer ${panelGotToken ? "has a token" : "empty"}; worker token changed ${refreshed.changed ? "yes" : "no"}, valid > 60 s ${refreshed.fresh ? "yes" : "no"}; ${refreshCall ? describe(refreshCall) : "no Keycloak /token call"}` });
+      // sign-out: the panel's logout message; then the old refresh token must be refused
+      await worker.evaluate(async () => {
+        const { udanKeycloakTokens: t } = await chrome.storage.local.get("udanKeycloakTokens");
+        globalThis.__udaE2EOld.refresh = t?.refreshToken || globalThis.__udaE2EOld.refresh;
+      });
+      const logoutBefore = find((r) => r.service === "keycloak" && r.path.endsWith("/protocol/openid-connect/logout")).length;
+      await page.evaluate(() => document.dispatchEvent(new CustomEvent("RequestUDASessionData", { detail: { data: "UDASignOut" } })));
+      const logoutCall = await waitFor(() => find((r) => r.service === "keycloak" && r.path.endsWith("/protocol/openid-connect/logout")).slice(logoutBefore).find(answered), "the Keycloak logout call", 10_000).catch(() => null);
+      const after = await worker.evaluate(async ({ clientId, tokenEndpoint }) => {
+        const stored = await chrome.storage.local.get(null);
+        const tokensGone = !stored.udanKeycloakTokens;
+        const sessionGone = !Object.entries(stored).some(([, v]) => typeof v === "object" && v?.authenticationSource === "keycloak");
+        const res = await fetch(tokenEndpoint, {
+          method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({ grant_type: "refresh_token", client_id: clientId, refresh_token: globalThis.__udaE2EOld.refresh }),
+        });
+        const body = await res.json().catch(() => ({}));
+        delete globalThis.__udaE2EOld;
+        return { tokensGone, sessionGone, status: res.status, error: body.error || "" };
+      }, { clientId: this.clientId, tokenEndpoint: this.tokenEndpoint });
+      // judged by the status Keycloak sent (Chromium may still flag the body-less 204 as aborted)
+      const signOutOk = logoutCall?.status >= 200 && logoutCall.status < 300 && after.tokensGone && after.sessionGone && after.status === 400 && after.error === "invalid_grant";
+      out.push({ name: "Sign-out: Keycloak logout, worker forgets tokens and session, the old refresh token is refused", status: signOutOk ? "PASS" : "FAIL",
+        evidence: `${logoutCall ? `${logoutCall.method} ${logoutCall.path} status ${logoutCall.status ?? "none"}${logoutCall.failed ? ` (flagged ${logoutCall.failed})` : ""}` : "no Keycloak logout call"}; tokens gone ${after.tokensGone ? "yes" : "no"}, session gone ${after.sessionGone ? "yes" : "no"}; old refresh token -> ${after.status} ${after.error}` });
+      return out;
+    },
   },
 };
 const driver = authDrivers[opts.auth];
@@ -146,7 +325,7 @@ const CHECKS = {
   5: "Backend reached with the build's own defaults",
   6: "Early host-page UDAPluginSDK({environment, realm}) honoured (page world; worker takes build config)",
   7: "Zero Keycloak requests on page load",
-  8: "Login: getsessionkey 200, checkauthid 200, POST /user/token 201, checkusersession 200, with UDAN-Realm header",
+  8: driver.check8,
   9: "Search list GET /api/search/all 200; text filter shows a saved recording",
   10: "Record two clicks; steps listed",
   11: "Save: clickednode x2 200, recordsequencedata 200",
@@ -155,6 +334,7 @@ const CHECKS = {
   14: "No failed backend calls in the whole run",
 };
 const results = new Map(); // number -> { status, evidence }
+const extras = []; // { name, status, evidence }: driver evidence beyond the 14
 const pass = (n, evidence) => results.set(n, { status: "PASS", evidence });
 const fail = (n, evidence) => results.set(n, { status: "FAIL", evidence });
 const started = Date.now();
@@ -178,9 +358,11 @@ function writeReport(requests) {
     ok: passed === checks.length,
     setupError: setupError ? redact(setupError) : undefined,
     checks,
+    extras: extras.map((e) => ({ ...e, evidence: redact(e.evidence) })),
     requests: (requests || []).map((r) => ({
       phase: r.phase, method: r.method, service: r.service, path: r.path,
       status: r.failed ? `failed (${r.failed})` : r.status ?? "no answer", udanRealm: r.realm ? "yes" : "no",
+      bearer: r.bearer ? "yes" : "no", clientSecretField: r.secretField ? "yes" : "no",
     })),
   };
   writeFileSync(join(outDir, "behaviour-check.json"), JSON.stringify(report, null, 2) + "\n");
@@ -194,6 +376,14 @@ function writeReport(requests) {
     "|---|---|---|---|",
     ...checks.map((c) => `| ${c.check} | ${cell(c.name)} | ${c.status} | ${cell(c.evidence)} |`),
     "",
+    ...(extras.length ? [
+      "Extra evidence (not one of the 14):",
+      "",
+      "| Extra | Result | Evidence |",
+      "|---|---|---|",
+      ...extras.map((e) => `| ${cell(e.name)} | ${e.status} | ${cell(redact(e.evidence))} |`),
+      "",
+    ] : []),
   ].join("\n");
   writeFileSync(join(outDir, "behaviour-check.md"), md);
   return report;
@@ -204,8 +394,9 @@ function finish(requests, code) {
   log(`Behaviour check ${runId} (${opts.auth}, ${report.durationSeconds} s)`);
   if (setupError) log(`Setup error: ${setupError}`);
   for (const c of report.checks) log(`${c.status.padEnd(7)} ${String(c.check).padStart(2)} ${c.name} - ${c.evidence}`);
+  for (const e of report.extras) log(`${e.status.padEnd(7)} +  ${e.name} - ${e.evidence}`);
   log(`${report.passed}/${report.total} pass. Report: ${join(outDir, "behaviour-check.md")}`);
-  process.exit(code ?? (report.ok ? 0 : 1));
+  process.exit(code ?? (report.ok && report.extras.every((e) => e.status === "PASS") ? 0 : 1));
 }
 
 // ---- preflight: the backend answers at all ---------------------------------------------------------
@@ -248,7 +439,11 @@ context.on("request", (req) => {
   if (!service) return;
   // long hex ids in a path (e.g. the hashed user id in /votes/...) are shortened, not reported
   const path = new URL(url).pathname.replace(/[0-9a-f]{32,}/gi, "<hash>");
-  requests.push({ req, phase, service, method: req.method(), path, realm: Boolean(req.headers()["udan-realm"]) });
+  // header and body facts as yes/no only: the bearer token and the body are never kept
+  requests.push({
+    req, phase, service, method: req.method(), path, realm: Boolean(req.headers()["udan-realm"]),
+    bearer: /^Bearer \S/.test(req.headers().authorization || ""), secretField: /client_?secret/i.test(req.postData() || ""),
+  });
 });
 context.on("response", (res) => {
   const e = requests.find((r) => r.req === res.request());
@@ -333,12 +528,14 @@ try {
     const reached = loadCalls.find((r) => ok(r));
     if (!cfg.apiBaseUrl.replace(/\/+$/, "").startsWith(apiPrefix.replace(/\/api\/$/, ""))) {
       fail(5, `the build's backend is not --backend (worker apiBaseUrl differs): rebuild with the right env or pass its URL`);
-    } else if (!cfg.clientIdSet || !cfg.clientSecretSet || !cfg.realm) {
+    } else if (!cfg.clientIdSet || !cfg.realm || (driver.secretExpected && !cfg.clientSecretSet)) {
       fail(5, `worker SDK not configured (realm ${cfg.realm ? "set" : "missing"}, clientId ${cfg.clientIdSet ? "set" : "missing"}, client secret ${cfg.clientSecretSet ? "set" : "missing"}): the SDK sends nothing`);
+    } else if (!driver.secretExpected && cfg.clientSecretSet) {
+      fail(5, "the worker SDK holds a client secret; this driver signs in without one");
     } else if (!reached) {
       fail(5, loadCalls.length ? `no 2xx: ${loadCalls.map(describe).join("; ")}` : "no request reached <backend>/api/ during load");
     } else {
-      pass(5, `build default apiBaseUrl = <backend>; ${describe(reached)}`);
+      pass(5, `build default apiBaseUrl = <backend>; ${describe(reached)}${driver.secretExpected ? "" : "; no client secret in the worker config"}`);
     }
   }
 
@@ -376,23 +573,23 @@ try {
   const recordButton = panel.getByRole("button", { name: "Record" });
   await recordButton.waitFor({ state: "visible", timeout: STEP_MS }).catch(() => {});
   {
-    const want = [
-      ["getsessionkey", (r) => apiPath("/user/getsessionkey")(r), [200]],
-      ["checkauthid", (r) => apiPath("/user/checkauthid")(r), [200]],
-      ["POST /user/token", (r) => r.service === "token" && r.method === "POST" && r.path.endsWith("/user/token"), [201]],
-      ["checkusersession", (r) => apiPath("/user/checkusersession")(r), [200]],
-    ];
+    const want = driver.loginCalls;
     await waitFor(() => want.every(([, pred]) => requests.some((r) => pred(r) && answered(r))), "the login calls", 20_000).catch(() => {});
     const problems = [];
     const seen = [];
-    for (const [name, pred, statuses] of want) {
+    for (const [name, pred, statuses, needsRealm] of want) {
       const hits = requests.filter(pred);
       const good = hits.find((r) => statuses.includes(r.status));
       if (!good) problems.push(`${name}: ${hits.length ? hits.map(describe).join(", ") : "no request"}`);
       else {
-        seen.push(`${name} ${good.status}${good.realm ? " +realm" : ""}`);
-        if (!good.realm) problems.push(`${name} without UDAN-Realm`);
+        seen.push(`${name} ${good.status}${good.realm ? " +realm" : ""}${good.bearer ? " +bearer" : ""}`);
+        if (needsRealm && !good.realm) problems.push(`${name} without UDAN-Realm`);
       }
+    }
+    for (const [name, pred] of driver.forbiddenLoginCalls || []) {
+      const hits = requests.filter(pred);
+      if (hits.length) problems.push(`${name} must not be called: ${hits.map(describe).join(", ")}`);
+      else seen.push(`no ${name}`);
     }
     if (!(await recordButton.isVisible())) problems.push("panel did not reach the signed-in view (no Record button)");
     if (problems.length) fail(8, problems.join("; "));
@@ -520,10 +717,21 @@ try {
   {
     const bad = requests.filter((r) => r.failed || (r.status !== undefined && r.status >= 400));
     const pending = requests.filter((r) => !answered(r));
+    const withSecret = requests.filter((r) => r.secretField);
     if (bad.length) fail(14, `${bad.length} failed call(s): ${bad.slice(0, 5).map(describe).join("; ")}`);
+    else if (!driver.secretExpected && withSecret.length) fail(14, `${withSecret.length} call(s) carry a client secret field: ${withSecret.slice(0, 3).map(describe).join("; ")}`);
     else {
       const noRealm = requests.filter((r) => r.service !== "keycloak" && !r.realm).length;
-      pass(14, `${requests.length} backend/token calls, none failed${pending.length ? ` (${pending.length} still pending at the end)` : ""}; ${noRealm} without UDAN-Realm`);
+      pass(14, `${requests.length} backend/token calls, none failed${pending.length ? ` (${pending.length} still pending at the end)` : ""}; ${noRealm} without UDAN-Realm; ${withSecret.length} with a client secret field`);
+    }
+  }
+
+  if (driver.extras) {
+    phase = "extra";
+    try {
+      extras.push(...(await driver.extras({ context, page, find, answered, describe })));
+    } catch (err) {
+      extras.push({ name: "driver extras", status: "FAIL", evidence: `stopped: ${err.message.split("\n")[0]}` });
     }
   }
 } catch (err) {

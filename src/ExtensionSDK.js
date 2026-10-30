@@ -29,6 +29,9 @@ if(enableUDAPlugin === false){
     const sendEnvironmentToPage = function(data) {
         document.dispatchEvent(new CustomEvent("UDAEnvironmentData", {detail: {data: data}, bubbles: false, cancelable: false}));
     };
+    const sendAccessTokenToPage = function(data) {
+        document.dispatchEvent(new CustomEvent("UDAAccessTokenData", {detail: {data: data}, bubbles: false, cancelable: false}));
+    };
 
     document.addEventListener("RequestUDASessionData", function(data) {
         sendToBackground({action:data.detail.data,data:data.detail.data});
@@ -50,6 +53,16 @@ if(enableUDAPlugin === false){
         Promise.resolve(udaBrowserVar.runtime.sendMessage({action:"UDAGetEnvironment"}))
             .then(sendEnvironmentToPage)
             .catch(function() { sendEnvironmentToPage(null); });
+    });
+
+    /**
+     * Keycloak sign-in: the panel asks for a fresh access token before its own expires. The worker
+     * answers with {token, expiresAt} or null; the refresh token never leaves the worker.
+     */
+    document.addEventListener("UDARequestAccessToken", function() {
+        Promise.resolve(sendToBackground({action:"UDARenewAccessToken"}))
+            .then(function(response) { sendAccessTokenToPage(response && response.accessToken ? response.accessToken : null); })
+            .catch(function() { sendAccessTokenToPage(null); });
     });
 
     document.addEventListener("UDAPageEnvironment", function(data) {
