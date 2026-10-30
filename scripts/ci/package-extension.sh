@@ -4,17 +4,21 @@
 #   1. scripts/ci/check-env-keys.sh, then a clean `npm run build:prod` (dist/ is wiped first);
 #   2. stamps the BUILT dist/manifest.json (never public/manifest.json):
 #        version      = X.Y.Z.<run number>   (X.Y.Z from package.json)
-#        version_name = "X.Y.Z (<sha7>)"
-#   3. writes dist/build-info.json (commit, branch, run, SDK version + integrity, Node,
-#      names of the env keys that had a value; never values);
+#        version_name = "X.Y.Z (<sha7>) run <run number>.<attempt> cfg <config hash>"
+#      version_name is the build identity: it changes whenever the zip content can change
+#      (new commit, new run, a re-run attempt, or a changed build configuration);
+#   3. writes dist/build-info.json (commit, branch, run, attempt, config_hash, SDK version +
+#      integrity, Node, names of the env keys that had a value; never values; version_name
+#      is derivable from these fields);
 #   4. writes out/udan-extension-<version>.zip deterministically (sorted entries, fixed
 #      timestamps = commit time, fixed modes, zip -X -D), a copy of build-info.json and
 #      out/SHA256SUMS over both.
-# Same commit + same run number + same env = same zip bytes.
+# Same commit + same run number + attempt + env = same zip bytes.
 # Firefox is not in use: no Firefox zip (TODO). dist/manifest-firefox.json is copied but unused.
 #
 # Usage: scripts/ci/package-extension.sh [--run-number N] [--sha SHA] [--no-build]
 #   --run-number N  4th version part (default: GITHUB_RUN_NUMBER, else 0)
+# The attempt comes from GITHUB_RUN_ATTEMPT (default 1).
 #   --sha SHA       commit recorded in version_name/build-info (default: GITHUB_SHA, else HEAD)
 #   --no-build      package the existing dist/ (skips the env check and the build)
 # In GitHub Actions it also appends a summary to GITHUB_STEP_SUMMARY and sets the outputs
@@ -52,7 +56,8 @@ for p in "${parts[@]}"; do
     exit 1
   fi
 done
-version_name="${base} (${sha7})"
+run_attempt="${GITHUB_RUN_ATTEMPT:-1}"
+[[ "$run_attempt" =~ ^[1-9][0-9]*$ ]] || { echo "GITHUB_RUN_ATTEMPT '$run_attempt' is not a positive integer" >&2; exit 1; }
 
 if [[ "$do_build" == true ]]; then
   BUILD_ENV="$BUILD_ENV" scripts/ci/check-env-keys.sh
@@ -68,9 +73,13 @@ epoch="${SOURCE_DATE_EPOCH:-$(git log -1 --format=%ct "$sha" 2>/dev/null || echo
 
 branch="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME:-$(git branch --show-current 2>/dev/null || true)}}"
 env_keys_set="$(node scripts/build-env.js "$BUILD_ENV" --non-empty)"
+# Fingerprint of the values the build inlines (the same env webpack just used), never the values.
+config_hash="$(node scripts/build-env.js "$BUILD_ENV" --hash)"
+# Free-form (Chrome does not parse it). Keep in step with publish-test-build.sh.
+version_name="${base} (${sha7}) run ${run_number}.${run_attempt} cfg ${config_hash}"
 
 VERSION="$version" VERSION_NAME="$version_name" COMMIT="$sha" BRANCH="${branch:-unknown}" \
-RUN_ID="${GITHUB_RUN_ID:-local}" RUN_NUMBER="$run_number" RUN_ATTEMPT="${GITHUB_RUN_ATTEMPT:-}" \
+RUN_ID="${GITHUB_RUN_ID:-local}" RUN_NUMBER="$run_number" RUN_ATTEMPT="$run_attempt" CONFIG_HASH="$config_hash" \
 REPOSITORY="${GITHUB_REPOSITORY:-}" EPOCH="$epoch" ENV_KEYS_SET="$env_keys_set" SDK_PKG="$SDK_PKG" \
 node <<'EOF'
 const fs = require("fs");
@@ -101,7 +110,8 @@ const info = {
   repository: e.REPOSITORY || null,
   run_id: e.RUN_ID,
   run_number: Number(e.RUN_NUMBER),
-  run_attempt: e.RUN_ATTEMPT ? Number(e.RUN_ATTEMPT) : null,
+  run_attempt: Number(e.RUN_ATTEMPT),
+  config_hash: e.CONFIG_HASH,
   // Commit time, not wall-clock time: rebuilding the same commit gives the same bytes.
   // The CI run (run_id) tells when it was built.
   source_date_utc: new Date(Number(e.EPOCH) * 1000).toISOString(),
@@ -141,7 +151,8 @@ if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
     echo "### Extension zip"
     echo "| | |"
     echo "|---|---|"
-    echo "| Version | \`${version}\` (\`${version_name}\`) |"
+    echo "| Version | \`${version}\` |"
+    echo "| Build identity | \`${version_name}\` |"
     echo "| Zip | \`${zip_name}\` |"
     echo "| SHA256 | \`${zip_sha}\` |"
     echo "| SDK | \`${SDK_PKG}@${sdk_version}\` |"
