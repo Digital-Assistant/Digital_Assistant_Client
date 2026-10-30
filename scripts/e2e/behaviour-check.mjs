@@ -132,13 +132,13 @@ const authDrivers = {
       const worker = context.serviceWorkers()[0];
       if (!worker) throw new Error("extension worker not running at sign-in");
       await this.install(worker, { email: `${identity}@example.test`, id: identity });
-      await panel.getByRole("button", { name: "Sign in with UDAN" }).click();
+      await panel.getByRole("button", { name: "Sign in with Google" }).click();
       return `test identity ${identity}@example.test`;
     },
     async extras({ uiSignOut, signInShown }) {
       await uiSignOut();
       const shown = await signInShown();
-      return [{ name: "Logout: Settings > Sign Out shows the Sign-in button again", status: shown ? "PASS" : "FAIL", evidence: `"Sign in with UDAN" ${shown ? "visible" : "not visible"} after Sign Out` }];
+      return [{ name: "Logout: Settings > Sign Out shows the Sign-in button again", status: shown ? "PASS" : "FAIL", evidence: `"Sign in with Google" ${shown ? "visible" : "not visible"} after Sign Out` }];
     },
   },
   "keycloak-pkce": {
@@ -259,7 +259,7 @@ const authDrivers = {
       this.profileEmail = `${identity}@example.test`;
       await this.install(worker, { email: this.profileEmail, id: identity });
       this.flows = [];
-      await panel.getByRole("button", { name: "Sign in with UDAN" }).click();
+      await panel.getByRole("button", { name: "Sign in with Google" }).click();
       await this.pump(context, (notes) => notes.some((n) => n.startsWith("interactive: code")));
       return `Keycloak user ${this.user}, Chrome profile ${this.profileEmail} (sign-in windows: ${this.flows.join("; ") || "none"})`;
     },
@@ -269,7 +269,7 @@ const authDrivers = {
       const worker = context.serviceWorkers()[0];
       await this.install(worker);
       this.flows = [];
-      const button = panel.getByRole("button", { name: "Sign in with UDAN" });
+      const button = panel.getByRole("button", { name: "Sign in with Google" });
       const noIdentity = await button.isVisible();
       await button.click();
       // the page's own answer to the press must not end "Signing in…"; only the worker's answer does
@@ -299,7 +299,7 @@ const authDrivers = {
       await worker.evaluate(() => { chrome.storage.local.get = globalThis.__udaE2EStorageGet; delete globalThis.__udaE2EStorageGet; });
       this.flows = [];
       return [
-        { name: "No identity: the Sign-in button is shown (not signed in)", status: noIdentity ? "PASS" : "FAIL", evidence: `"Sign in with UDAN" ${noIdentity ? "visible" : "not visible"} before the press` },
+        { name: "No identity: the Sign-in button is shown (not signed in)", status: noIdentity ? "PASS" : "FAIL", evidence: `"Sign in with Google" ${noIdentity ? "visible" : "not visible"} before the press` },
         { name: "Busy: the Sign-in button stays disabled while the worker signs in", status: busy ? "PASS" : "FAIL", evidence: `0.5 s after the press the button is ${busy ? "disabled" : "enabled again"}` },
         { name: "Cancel: closing the sign-in window shows a plain message and keeps the Sign-in button; no tokens stored", status: /cancel/i.test(text) && again && !tokens ? "PASS" : "FAIL",
           evidence: `message "${text || "none"}"; Sign-in button ${again ? "enabled" : "not enabled"}; tokens stored ${tokens ? "yes" : "no"}` },
@@ -373,7 +373,7 @@ const authDrivers = {
       }, { clientId: this.clientId, tokenEndpoint: this.tokenEndpoint });
       // judged by the status Keycloak sent (Chromium may still flag the body-less 204 as aborted)
       const signOutOk = logoutCall?.status >= 200 && logoutCall.status < 300 && after.tokensGone && after.sessionGone && after.status === 400 && after.error === "invalid_grant";
-      out.push({ name: "Logout: Settings > Sign Out shows the Sign-in button again", status: await signInShown() ? "PASS" : "FAIL", evidence: `"Sign in with UDAN" ${await signInShown() ? "visible" : "not visible"} after Sign Out` });
+      out.push({ name: "Logout: Settings > Sign Out shows the Sign-in button again", status: await signInShown() ? "PASS" : "FAIL", evidence: `"Sign in with Google" ${await signInShown() ? "visible" : "not visible"} after Sign Out` });
       out.push({ name: "Sign-out: Keycloak logout, worker forgets tokens and session, the old refresh token is refused", status: signOutOk ? "PASS" : "FAIL",
         evidence: `${logoutCall ? `${logoutCall.method} ${logoutCall.path} status ${logoutCall.status ?? "none"}${logoutCall.failed ? ` (flagged ${logoutCall.failed})` : ""}` : "no Keycloak logout call"}; tokens gone ${after.tokensGone ? "yes" : "no"}, session gone ${after.sessionGone ? "yes" : "no"}; old refresh token -> ${after.status} ${after.error}` });
       // session expired: sign in again, then Keycloak refuses the refresh token (it is revoked/expired)
@@ -593,12 +593,12 @@ try {
   try {
     await waitFor(() => find(apiPath("/user/getsessionkey")).some(answered), "the load-time getsessionkey answer", 20_000);
   } catch { /* judged by check 5 */ }
-  const signInButton = panel.getByRole("button", { name: "Sign in with UDAN" });
+  const signInButton = panel.getByRole("button", { name: "Sign in with Google" });
   if (!(await signInButton.isVisible())) {
     await panel.getByRole("button", { name: "Open UDAN panel" }).click({ timeout: STEP_MS });
   }
   await signInButton.waitFor({ state: "visible", timeout: STEP_MS });
-  pass(3, `panel open, "Sign in with UDAN" shown (${authNote})`);
+  pass(3, `panel open, "Sign in with Google" shown (${authNote})`);
   await sleep(SETTLE_MS);
 
   // 4 ------------------------------------------------------------------------------------------------
@@ -821,7 +821,7 @@ try {
         await panel.getByRole("button", { name: "Settings" }).click({ timeout: STEP_MS });
         await panel.getByRole("button", { name: "Sign Out" }).click({ timeout: STEP_MS });
       };
-      const signInShown = () => panel.getByRole("button", { name: "Sign in with UDAN" }).waitFor({ state: "visible", timeout: 10_000 }).then(() => true, () => false);
+      const signInShown = () => panel.getByRole("button", { name: "Sign in with Google" }).waitFor({ state: "visible", timeout: 10_000 }).then(() => true, () => false);
       extras.push(...(await driver.extras({ context, page, panel, find, answered, describe, uiSignOut, signInShown })));
     } catch (err) {
       extras.push({ name: "driver extras", status: "FAIL", evidence: `stopped: ${err.message.split("\n")[0]}` });
