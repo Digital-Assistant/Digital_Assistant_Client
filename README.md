@@ -4,7 +4,7 @@ Browser extension UI for the Universal Digital Assistant Network. The core logic
 
 ## Integrating a site and required settings
 
-The SDK needs `realm`, `clientId` and `clientSecret` for the customer. There are no defaults: without them the SDK sends no request and logs which keys are missing. Host page setup (script tags, `UDAAuthDataConfig`, `UDAPluginSDK`, the `UDASdkReady` rule) is in the SDK's [`USAGE.md`](https://github.com/Digital-Assistant/Digital-Assistant-SDK/blob/main/USAGE.md), with a runnable [`sample/index.html`](https://github.com/Digital-Assistant/Digital-Assistant-SDK/blob/main/sample/index.html).
+The SDK needs `realm` and `clientId` for the customer; since SDK 0.13.0 `clientSecret` is optional and deprecated. There are no defaults: without `realm` and `clientId` the SDK sends no request and logs which keys are missing. Host page setup (script tags, `UDAAuthDataConfig`, `UDAPluginSDK`, the `UDASdkReady` rule) is in the SDK's [`USAGE.md`](https://github.com/Digital-Assistant/Digital-Assistant-SDK/blob/main/USAGE.md), with a runnable [`sample/index.html`](https://github.com/Digital-Assistant/Digital-Assistant-SDK/blob/main/sample/index.html).
 
 ## Build
 
@@ -28,14 +28,16 @@ The build reads public settings from `environments/<build>.env`: `local.env` for
 | `tokenProdUrl`, `tokenTestUrl` | Token service |
 | `llmProdUrl`, `llmTestUrl` | LLM search |
 | `keycloakProdUrl`, `keycloakTestUrl` | Keycloak base URL |
-| `keycloakRealm`, `keycloakClientId` | Keycloak realm and public client id |
+| `keycloakRealm`, `keycloakClientId` | Keycloak realm, and the client id the SDK sends to the token service (Chrome identity sign-in) |
+| `keycloakPublicClientId` | Public Keycloak client of the worker's PKCE sign-in (standard flow + PKCE S256, no secret, e.g. `udan-extension`). Empty = no Keycloak sign-in, only the Chrome identity flow |
+| `keycloakIdpHint` | Optional identity provider alias sent as `kc_idp_hint` (the Google IdP on TEST/PROD). Empty = Keycloak's own sign-in page |
 | `googleAnalyticsMeasurementId`, `enableGoogleAnalytics` | Google Analytics |
 
 Each URL has a PROD and a TEST value, so one build serves both; the environment is chosen at runtime (next section). The values are exposed as `src/config/buildConfig.ts` and handed to the SDK at start-up. The two Google Analytics keys are carried there but nothing reads them yet.
 
 **No secrets.** Everything in these files ends up in the extension, which anyone can unzip. `scripts/ci/check-env-keys.sh` fails the release build if a secret key (`keycloakClientSecret`, `profanityKey`, `googleTranslateApiKey`, `googleAnalyticsSecretKey`, `clientSecret`) has a value or is referenced in `src/`.
 
-Older env files: rename `keyCloakUrl` to `keycloakProdUrl` / `keycloakTestUrl`, split `tokenUrl` and `llmUrl` into the `Prod`/`Test` pairs, and delete the secret keys. `baseURL`, `profanity*` and `googleTranslate*` are no longer read.
+Older env files: rename `keyCloakUrl` to `keycloakProdUrl` / `keycloakTestUrl`, split `tokenUrl` and `llmUrl` into the `Prod`/`Test` pairs, add `keycloakPublicClientId` and `keycloakIdpHint` (empty is allowed; `check-env-keys.sh` needs every schema key present), and delete the secret keys. `baseURL`, `profanity*` and `googleTranslate*` are no longer read.
 
 ## TEST or PROD at runtime
 
@@ -48,11 +50,11 @@ One zip serves both backends. The extension decides when it starts, first match 
 | 3 | Install type: an **unpacked** install (`chrome.management.getSelf().installType === 'development'`) is TEST, any other install is PROD | Needs no extra permission; background service worker only |
 | 4 | Default: PROD | Same as the SDK |
 
-The URLs for the chosen environment come, per key, from the page (`apiBaseUrl`, `tokenUrl`, `llmUrl`, `keycloakUrl`), then from the build settings above, then from the SDK's own defaults. A key the page set is never overwritten. When the environment (or a backend, realm or client setting) changes while the panel is open, the panel drops the stored session of the old backend, asks the worker for the session again and runs the search again; no page reload is needed. This is `AuthContext` listening to `UDAConfigUpdated`. The Client never calls `authManager.init` (sign-in is the Chrome identity flow in the worker), so there is nothing else to re-run.
+The URLs for the chosen environment come, per key, from the page (`apiBaseUrl`, `tokenUrl`, `llmUrl`, `keycloakUrl`), then from the build settings above, then from the SDK's own defaults. A key the page set is never overwritten. When the environment (or a backend, realm or client setting) changes while the panel is open, the panel drops the stored session of the old backend, asks the worker for the session again and runs the search again; no page reload is needed. This is `AuthContext` listening to `UDAConfigUpdated`. The Client never calls `authManager.init` (sign-in runs in the worker), so there is nothing else to re-run.
 
 - **TEST badge.** When the extension runs against TEST, the panel header and the login screen show a `TEST` badge and the toolbar icon shows `TEST`. No badge means PROD.
 - **`UDASdkReady`.** After the extension has applied the environment it fires a `window` event `UDASdkReady` with `detail: { environment: 'TEST' | 'PROD', source: 'page' | 'override' | 'install-type' | 'default' }` and sets `window.UDASdkIsReady = true` (for pages that attach late). A host page must call `UDAAuthDataConfig` and `UDAPluginSDK` only after it: earlier calls reach a copy of the SDK that is replaced later and are lost. Guide: SDK `USAGE.md`.
-- **Manifest.** The runtime choice added `action` (toolbar badge) and `options_ui`; no new permission.
+- **Manifest.** The runtime choice added `action` (toolbar badge) and `options_ui`; no new permission. The `key` field pins the extension id (next section).
 - **Rule of thumb for testers.** Unpacked build from `test-current` = TEST. A build installed from the Chrome Web Store (later) = PROD. Whether the store default should be PROD is the owner's decision (R1 in the CI/CD track); the rule above is what the code does today.
 
 ## Installing in Chrome (unpacked)
@@ -76,9 +78,18 @@ Then load `dist/` unpacked as above, or run `scripts/ci/package-extension.sh` to
 
 ## Sign-in and where the config lives
 
-- **Login path.** The real login is the Chrome identity flow in the background worker (`LoginWithBrowser`, uses `chrome.identity`). The panel's Sign-in button sends the page event `RequestUDASessionData`; the worker answers with the session, or starts `LoginWithBrowser` when no signed-in identity exists. There is deliberately **no Keycloak `check-sso` on page load** (removed on purpose; the original extension never had it): opening a page makes zero Keycloak requests. Do not add one back.
-- **Config reaches the worker only through the build.** The worker (`Background.ts`) reads `src/config/buildConfig.ts`, which comes from the env settings above. A host page calling `UDAPluginSDK({...})` only changes the page world, not the worker, so realm and URLs cannot be set from a site. The host-page copy of the SDK (`src/Headers.js`) carries its own SDK build.
-- **Backend CORS.** The extension calls the backend from a `chrome-extension://` origin, and customer sites from their own origins. The backend must allow those origins (with credentials) and the request headers `Content-Type`, `Authorization`, `X-Requested-With`, `x-sdk-client` and `udan-realm`; otherwise the browser reports a CORS failure and the sanity check prints "TEST backend CORS". See the Server README, "CORS".
+- **Two sign-in paths, both in the background worker.** The panel's Sign-in button sends the page event `RequestUDASessionData` with `UDASignIn`.
+  - **Chrome identity** (`src/browser-auth/LoginWithBrowser.ts`, `chrome.identity.getProfileUserInfo`): used when the browser has a signed-in profile. Unchanged; it stays until the old token-service path is retired (track phase PK15).
+  - **Keycloak, authorization code + PKCE** (`src/browser-auth/LoginWithKeycloak.ts`): used when there is no Chrome identity (or the worker gets `UDASignInKeycloak`, the user's explicit choice), and only if the build has `keycloakPublicClientId`. It runs `chrome.identity.launchWebAuthFlow` against the public client: S256 challenge from a random verifier, `state` and `nonce` checked, scope `openid offline_access`, `kc_idp_hint` from `keycloakIdpHint`, `login_hint` from the Chrome email when there is one. It tries silently first (`interactive: false`, `prompt=none`) and opens a window only because the user pressed Sign in. The code is exchanged at Keycloak's `/token` with **no client secret**. The worker then calls `checkauthid` and `checkusersession` with the access token; the Server takes the user from the token (`sub`, authsource `keycloak`) and the session's `authData.id` is the numeric user row id the Server uses as owner key, so owner buttons work.
+  - Without a public client in the build, or with neither path possible, the worker answers "login" and the login screen stays.
+- **Where the Keycloak tokens live.** Only in the worker: `chrome.storage.local`, key `udanKeycloakTokens` (access, refresh/offline and id token, expiry, subject). The refresh token never leaves the worker. The worker refreshes a minute before the access token expires, and on demand after a worker restart (it reads storage, it keeps nothing in memory). A refused refresh (`invalid_grant`: revoked, idle too long) signs the user out.
+- **Panel token.** The panel runs in the host page and calls the Server itself, so it gets the short-lived access token only, in the session the worker sends (`UDAAuthenticatedUserSessionData`). `AuthContext` hands it to the SDK's host-token API (`setAuthToken` with its expiry) and registers a renewer: before expiry the SDK fires `UDARequestAccessToken`, the content script asks the worker (`UDARenewAccessToken`) and answers with `UDAAccessTokenData` (`{token, expiresAt}` or null). A `401` still fires `UDAGetNewToken`; for a Keycloak session the worker refreshes and sends the session again.
+- **Sign-out** (`UDASignOut`, sent by the panel's Logout): the worker posts the refresh token to Keycloak's logout endpoint, which ends the offline session and the browser session it came from, then forgets the tokens and the stored session.
+- **No Keycloak `check-sso` on page load** (removed on purpose; the original extension never had it): opening a page makes zero Keycloak requests for a signed-out user. Do not add one back. A signed-in Keycloak user's page load may refresh the access token once it is about to expire.
+- **Extension id and redirect URI.** `public/manifest.json` carries a public `key`, which pins the dev/TEST extension id to `lcnkfnijlogkgifbfhkcnmndhabnloco` for every unpacked build, so the redirect URI `https://lcnkfnijlogkgifbfhkcnmndhabnloco.chromiumapp.org/` is the same on every machine. Keycloak's `udan-extension` client must list `https://<id>.chromiumapp.org/*` for this id and, later, the store id. The private key never goes into git (owner decision Q6). A Chrome Web Store upload (C08, not built yet) must remove `key` from the manifest, because the store item keeps its own id.
+- **Firefox is not supported** (owner decision Q4): `manifest-firefox.json` has no gecko id and no `key`, and Firefox has no `getProfileUserInfo`. The PKCE module uses only `identity.launchWebAuthFlow` / `identity.getRedirectURL`, which Firefox also has, so adding it later needs a gecko id and a Firefox redirect URI in Keycloak.
+- **Config reaches the worker only through the build.** The worker (`Background.ts`) reads `src/config/buildConfig.ts`, which comes from the env settings above. A host page calling `UDAPluginSDK({...})` only changes the page world, not the worker, so realm, URLs and the Keycloak client cannot be set from a site. The host-page copy of the SDK (`src/Headers.js`) carries its own SDK build.
+- **Backend CORS.** The extension calls the backend from a `chrome-extension://` origin, and customer sites from their own origins. The backend must allow those origins (with credentials) and the request headers `Content-Type`, `Authorization`, `X-Requested-With`, `x-sdk-client` and `udan-realm`; otherwise the browser reports a CORS failure and the sanity check prints "TEST backend CORS". See the Server README, "CORS". The worker's Keycloak calls (`/token`, `/logout`) needed no web origin on the client in the local proof: the extension's host access (content-script matches `*://*/*`) covers them.
 
 ## Testing a change locally
 
@@ -87,8 +98,8 @@ The CI sanity check is unauthenticated. To exercise the whole flow against a loc
 1. Start the backend (Server `README`, "Run locally") and note its `/api` URL and the realm/client id the SDK must use.
 2. Build the SDK you want to test (`npm pack` in the SDK repo, see its `RELEASE_PROCESS.md`) and install the tarball without touching `package.json`: `npm install --no-save <sdk>.tgz`. A later `npm ci` reinstalls the pinned npm version, so install the tarball again after it. Check with `npm ls @udan/digital-assistant-sdk`.
 3. `npm run build:dev` with a local env file, then load `build/` unpacked (`chrome://extensions`).
-4. For automation use Playwright Chromium with the extension loaded in a persistent profile (`scripts/ci/smoke-extension.mjs` is the pattern) and stub `chrome.identity.getProfileUserInfo` in the service worker, so the Google sign-in needs no real account.
-5. The SDK needs `realm`, `clientId` and `clientSecret`; supply the secret only in your own untracked local build and never share or upload that build (everything in it is readable by whoever unzips it).
+4. For automation use Playwright Chromium with the extension loaded in a persistent profile (`scripts/ci/smoke-extension.mjs` is the pattern) and stub `chrome.identity.getProfileUserInfo` in the service worker, so the Google sign-in needs no real account. For the Keycloak sign-in stub `chrome.identity.launchWebAuthFlow` instead (the runner's `keycloak-pkce` driver, next section).
+5. The Chrome identity path still needs `clientSecret` for the token service; supply it only in your own untracked local build and never share or upload that build (everything in it is readable by whoever unzips it). The Keycloak sign-in needs no secret: set `keycloakPublicClientId` (and register the redirect URI for the pinned id on the client).
 
 Behaviour checklist (all 14 pass on `dev` with the current SDK against a local backend). `npm run e2e:behaviour` runs it, see the next section.
 
@@ -101,7 +112,7 @@ Behaviour checklist (all 14 pass on `dev` with the current SDK against a local b
 | 5 | Backend reached with the build's own defaults |
 | 6 | Early host-page `UDAPluginSDK({environment, realm})` honoured (page world; the worker takes the build config) |
 | 7 | Zero Keycloak requests on page load |
-| 8 | Login: `getsessionkey` 200, `checkauthid` 200, token service `POST /user/token` 201, `checkusersession` 200, with the `UDAN-Realm` header |
+| 8 | Login: `getsessionkey` 200, `checkauthid` 200, token service `POST /user/token` 201, `checkusersession` 200, with the `UDAN-Realm` header (Keycloak sign-in: Keycloak `POST /token` 200 instead of `/user/token`, which must not be called; `checkauthid`/`checkusersession` carry the bearer token) |
 | 9 | Search list `GET /api/search/all` 200; a text filter shows a saved recording |
 | 10 | Record two clicks; steps listed |
 | 11 | Save: `clickednode` x2 200, `recordsequencedata` 200 |
@@ -115,11 +126,13 @@ Behaviour checklist (all 14 pass on `dev` with the current SDK against a local b
 
 ```
 npm run build                        # local.env -> build/ (the backend URLs of your local stack)
-npm run e2e:behaviour -- --build <dir> --backend http://localhost:<port>/api [--auth chrome-identity] [--identity <label>] [--out <dir>] [--headed]
+npm run e2e:behaviour -- --build <dir> --backend http://localhost:<port>/api [--auth chrome-identity|keycloak-pkce] [--identity <label>] [--keycloak-user <name>] [--out <dir>] [--headed]
 ```
 
-- **The build must be able to sign in.** The SDK needs `realm`, `clientId` and `clientSecret`, and this repo never holds the secret, so a plain `build/` stops at check 5 ("worker SDK not configured"). Pass a copy that your own local tooling completed, keep it out of the repo and delete it after the run. The runner reads no secret and prints none.
-- **Auth drivers** (`--auth`): `chrome-identity` (default) replaces `chrome.identity.getProfileUserInfo` in the running worker with a stub. It answers "not signed in" while the page loads (check 3), then a labelled test identity (`<label>@example.test`, default label `pk-e2e-a`) when the runner clicks "Sign in with UDAN". The build is not patched. `keycloak-pkce` is a placeholder for the PKCE sign-in and exits 2 until it is implemented (the `authDrivers` object in the script).
+- **The build must be able to sign in.** `chrome-identity` needs the token service's `clientSecret`, which this repo never holds, so a plain `build/` stops at check 5 ("worker SDK not configured"): pass a copy that your own local tooling completed, keep it out of the repo and delete it after the run. `keycloak-pkce` needs no secret, only a build with `keycloakPublicClientId` (check 5 fails if the worker holds a secret). The runner reads no secret and prints none.
+- **Auth drivers** (`--auth`); in both the build is not patched, the runner replaces browser functions in the running worker:
+  - `chrome-identity` (default) stubs `chrome.identity.getProfileUserInfo`. It answers "not signed in" while the page loads (check 3), then a labelled test identity (`<label>@example.test`, default label `pk-e2e-a`) when the runner clicks "Sign in with UDAN".
+  - `keycloak-pkce` stubs `getProfileUserInfo` as signed out and `chrome.identity.launchWebAuthFlow` with a stub that parks the authorization URL. The runner opens it in a tab, signs in on Keycloak's own page as `--keycloak-user` with the password from the environment variable `UDAN_E2E_KEYCLOAK_PASSWORD` (never printed), catches the redirect to `https://<extension id>.chromiumapp.org/` by route interception and hands it back. A silent request gets Keycloak's own answer (`login_required` on a fresh profile). Needs the client's redirect URI registered for the pinned id. After check 14 it adds three extras (not part of the 14): the saved recording's owner equals the panel's user id, an expired access token is refreshed and handed to the panel, and sign-out revokes the refresh token. Check 14 also fails if any call carries a client secret field.
 - **Data:** each run saves a new recording named `pk e2e <label> <run id>` on a fresh host-page port (the SDK scopes recordings by host and port), so reruns stay green. The data stays in the local backend.
 - **Output** in `--out` (default `out/behaviour/<run id>/`, gitignored): `behaviour-check.json` (checks plus every backend, token-service and Keycloak call: method, path, status, `UDAN-Realm` yes/no) and `behaviour-check.md` (check, result, evidence), plus `failure.png` when a check fails. Hosts are shown as `<backend>`, `<token service>`, `<keycloak>`; tokens and bodies are never recorded.
 - **Exit codes:** 0 all 14 pass, 1 a check failed, 2 usage or setup error, 3 backend unreachable (checked before the browser starts).
@@ -134,7 +147,7 @@ Branch from `dev` and open a PR into `dev`; the PR title must be a [Conventional
 - Zip: `udan-extension-<X.Y.Z.N>.zip`, plus `SHA256SUMS` and `build-info.json` (commit, branch, run, SDK version and integrity, names of the env keys that were set). Same commit and run number give the same bytes.
 - Version: CI stamps the built manifest with `version = X.Y.Z.<run number>` and `version_name = "X.Y.Z (<short commit>)"`. X.Y.Z comes from `package.json` (Release Please owns it); the run number makes each build unique and higher than the last. The source manifests only hold the base version, for local builds.
 - Retention: artifact `client-zip`, 90 days for pushes to `dev`, 14 days for PRs. The run summary shows the version, SHA256 and SDK version.
-- Build settings in CI come from GitHub Actions **variables** (`BASE_PROD_URL`, `TOKEN_TEST_URL`, ...: `scripts/ci/generate-env.sh --print-names`), never from secrets. They are set once at the organization level and shared with the SDK repo, which uses the same names.
+- Build settings in CI come from GitHub Actions **variables** (`BASE_PROD_URL`, `TOKEN_TEST_URL`, ..., `KEYCLOAK_PUBLIC_CLIENT_ID`, `KEYCLOAK_IDP_HINT`: `scripts/ci/generate-env.sh --print-names`), never from secrets. They are set once at the organization level and shared with the SDK repo, which uses the same names.
 
 ```mermaid
 flowchart LR

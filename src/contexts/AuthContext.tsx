@@ -7,6 +7,10 @@ import {
   off,
   trigger,
   setUserData,
+  setAuthToken,
+  clearAuthToken,
+  setAuthTokenRenewer,
+  type HostAuthToken,
 } from "@udan/digital-assistant-sdk";
 import { coreSDK as DigitalAssistantCoreSDK } from "../services/coreSDK";
 
@@ -30,6 +34,46 @@ function sessionConfigSignature(): string {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const ACCESS_TOKEN_WAIT_MS = 20_000;
+
+/** Asks the worker (through the content script) for a fresh Keycloak access token; null if signed out. */
+function requestAccessToken(): Promise<HostAuthToken | null> {
+  return new Promise((resolve) => {
+    const done = (value: HostAuthToken | null) => {
+      clearTimeout(timer);
+      document.removeEventListener("UDAAccessTokenData", onAnswer);
+      resolve(value);
+    };
+    const onAnswer = (event: Event) => {
+      const data = (event as CustomEvent).detail?.data;
+      done(data?.token ? { token: data.token, expiresAt: data.expiresAt, authsource: "keycloak" } : null);
+    };
+    const timer = setTimeout(() => done(null), ACCESS_TOKEN_WAIT_MS);
+    document.addEventListener("UDAAccessTokenData", onAnswer);
+    trigger("UDARequestAccessToken", { detail: {}, bubbles: false, cancelable: false });
+  });
+}
+
+/**
+ * A session from the worker's Keycloak sign-in carries the access token only. The SDK sends it on
+ * every call and asks the worker for a new one before it expires (SDK host-token API); the refresh
+ * token stays in the worker. Sessions of the Chrome identity flow are left to the SDK as before.
+ */
+function applySessionToken(session: unknown) {
+  let parsed: any = session;
+  if (typeof session === "string") {
+    try { parsed = JSON.parse(session); } catch { return; }
+  }
+  const auth = parsed?.authData;
+  if (parsed?.authenticationSource !== "keycloak" || typeof auth?.token !== "string") return;
+  try {
+    setAuthToken({ token: auth.token, expiresAt: Number.isFinite(auth.expiresAt) ? auth.expiresAt : undefined, authsource: "keycloak" });
+    setAuthTokenRenewer(requestAccessToken);
+  } catch (error) {
+    console.warn("UDA: the session's access token was not usable:", (error as Error)?.message);
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
@@ -38,12 +82,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const createSession = useCallback(async (data: any) => {
     StorageUtil.setToStore(data.detail.data, CONFIG.USER_AUTH_DATA_KEY, true);
+    applySessionToken(data.detail.data);
     setIsAuthenticated(true);
     setUser(data.detail.data);
     DigitalAssistantCoreSDK.dispatch(setUserData(data.detail.data));
   }, []);
 
   const clearSession = useCallback(async () => {
+    clearAuthToken();
     await authManager.logout();
     setIsAuthenticated(false);
     setUser(null);
@@ -51,7 +97,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    // No Keycloak check-sso on load: the real login is the Chrome identity flow in the worker
+    // No Keycloak check-sso on load: sign-in runs in the worker (Chrome identity or Keycloak PKCE) on the Sign-in button
 
     // Check existing session
     const checkAuth = async () => {
@@ -71,6 +117,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         let userSessionData = StorageUtil.getFromStore(CONFIG.USER_AUTH_DATA_KEY, false);
         if (userSessionData) {
+          applySessionToken(userSessionData);
           setUser(userSessionData);
           setIsAuthenticated(true);
           DigitalAssistantCoreSDK.dispatch(setUserData(userSessionData));
@@ -150,17 +197,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("UDAConfigUpdated", onConfigUpdated);
   }, []);
 
-  // Sign-in asks the worker for the session; with no signed-in identity it starts LoginWithBrowser (Chrome identity)
+  // Sign-in asks the worker to sign in: Chrome identity if the browser has one (LoginWithBrowser), else the
+  // Keycloak sign-in (LoginWithKeycloak, may open a sign-in window); the worker answers with the session
   const login = () => {
     trigger("RequestUDASessionData", {
-      detail: { data: "getusersessiondata" },
+      detail: { data: "UDASignIn" },
       bubbles: false,
       cancelable: false,
     });
   };
 
+  // Sign-out also ends the worker's session (and the Keycloak session, if any)
   const logout = () => {
     clearSession();
+    trigger("RequestUDASessionData", {
+      detail: { data: "UDASignOut" },
+      bubbles: false,
+      cancelable: false,
+    });
   };
 
   return (
