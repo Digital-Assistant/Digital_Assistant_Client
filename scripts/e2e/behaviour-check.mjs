@@ -135,6 +135,11 @@ const authDrivers = {
       await panel.getByRole("button", { name: "Sign in with UDAN" }).click();
       return `test identity ${identity}@example.test`;
     },
+    async extras({ uiSignOut, signInShown }) {
+      await uiSignOut();
+      const shown = await signInShown();
+      return [{ name: "Logout: Settings > Sign Out shows the Sign-in button again", status: shown ? "PASS" : "FAIL", evidence: `"Sign in with UDAN" ${shown ? "visible" : "not visible"} after Sign Out` }];
+    },
   },
   "keycloak-pkce": {
     // The worker signs in with Keycloak authorization code + PKCE on the public client
@@ -187,7 +192,7 @@ const authDrivers = {
       return `chrome.identity.launchWebAuthFlow stubbed in the worker, extension id ${this.extensionId}`;
     },
     // One parked authorization request: open it, sign in if it is interactive, answer the stub.
-    async serve(context, flow) {
+    async serve(context, flow, { cancel = false } = {}) {
       const redirectPrefix = `https://${this.extensionId}.chromiumapp.org/`;
       const authUrl = new URL(flow.url);
       this.clientId = authUrl.searchParams.get("client_id");
@@ -202,7 +207,10 @@ const authDrivers = {
       let note;
       try {
         await tab.goto(flow.url, { waitUntil: "load", timeout: STEP_MS }).catch(() => {});
-        if (!redirect && flow.interactive) {
+        if (!redirect && flow.interactive && cancel) {
+          // the user closes the sign-in window without signing in
+          await tab.locator("#username").waitFor({ state: "visible", timeout: STEP_MS });
+        } else if (!redirect && flow.interactive) {
           await tab.locator("#username").fill(this.user, { timeout: STEP_MS });
           await tab.locator("#password").fill(this.password);
           await tab.locator("#kc-login").click();
@@ -214,7 +222,7 @@ const authDrivers = {
         await tab.close().catch(() => {});
       }
       const answered = redirect ? new URL(redirect).searchParams : null;
-      note = !redirect ? `${flow.interactive ? "interactive" : "silent"}: no redirect`
+      note = !redirect ? `${flow.interactive ? "interactive" : "silent"}: ${cancel && flow.interactive ? "window closed" : "no redirect"}`
         : `${flow.interactive ? "interactive" : "silent"}: ${answered.get("code") ? "code" : `error ${answered.get("error")}`}`;
       const worker = context.serviceWorkers()[0];
       await worker.evaluate(({ index, url }) => {
@@ -223,29 +231,56 @@ const authDrivers = {
       }, { index: flow.index, url: redirect });
       return note;
     },
+    // Serves the parked authorization requests until `done(notes)` is true or the time is up.
+    async pump(context, done, options) {
+      const end = Date.now() + 2 * STEP_MS;
+      while (Date.now() < end && !done(this.flows)) {
+        const current = context.serviceWorkers()[0];
+        const pending = current ? await current.evaluate(() => (globalThis.__udaE2EFlows || [])
+          .map((f, index) => ({ index, url: f.url, interactive: f.interactive, taken: f.taken }))
+          .filter((f) => !f.taken)).catch(() => []) : [];
+        for (const flow of pending) {
+          await current.evaluate((i) => { globalThis.__udaE2EFlows[i].taken = true; }, flow.index);
+          this.flows.push(await this.serve(context, flow, options));
+        }
+        if (done(this.flows)) break;
+        await sleep(250);
+      }
+    },
     async signIn({ context, panel }) {
       const worker = context.serviceWorkers()[0];
       if (!worker) throw new Error("extension worker not running at sign-in");
       await this.install(worker);
+      this.flows = [];
       await panel.getByRole("button", { name: "Sign in with UDAN" }).click();
-      const end = Date.now() + 2 * STEP_MS;
-      while (Date.now() < end && !this.flows.some((n) => n.startsWith("interactive: code"))) {
-        const current = context.serviceWorkers()[0] || worker;
-        const pending = await current.evaluate(() => (globalThis.__udaE2EFlows || [])
-          .map((f, index) => ({ index, url: f.url, interactive: f.interactive, taken: f.taken }))
-          .filter((f) => !f.taken)).catch(() => []);
-        for (const flow of pending) {
-          await current.evaluate((i) => { globalThis.__udaE2EFlows[i].taken = true; }, flow.index);
-          this.flows.push(await this.serve(context, flow));
-        }
-        if (this.flows.some((n) => n.includes("code"))) break;
-        await sleep(250);
-      }
+      await this.pump(context, (notes) => notes.some((n) => n.startsWith("interactive: code")));
       return `Keycloak user ${this.user} (sign-in windows: ${this.flows.join("; ") || "none"})`;
+    },
+    // Before the real sign-in: the user presses Sign in and closes the window. The panel must say so
+    // in plain words and keep the Sign-in button.
+    async beforeSignIn({ context, panel }) {
+      const worker = context.serviceWorkers()[0];
+      await this.install(worker);
+      this.flows = [];
+      const button = panel.getByRole("button", { name: "Sign in with UDAN" });
+      const noIdentity = await button.isVisible();
+      await button.click();
+      await this.pump(context, (notes) => notes.some((n) => n.startsWith("interactive:")), { cancel: true });
+      const message = panel.getByRole("alert");
+      await message.waitFor({ state: "visible", timeout: STEP_MS }).catch(() => {});
+      const text = ((await message.isVisible()) ? await message.innerText() : "").trim();
+      const again = await button.isEnabled().catch(() => false);
+      const tokens = await worker.evaluate(async () => Boolean((await chrome.storage.local.get("udanKeycloakTokens")).udanKeycloakTokens));
+      this.flows = [];
+      return [
+        { name: "No identity: the Sign-in button is shown (not signed in)", status: noIdentity ? "PASS" : "FAIL", evidence: `"Sign in with UDAN" ${noIdentity ? "visible" : "not visible"} before the press` },
+        { name: "Cancel: closing the sign-in window shows a plain message and keeps the Sign-in button; no tokens stored", status: /cancel/i.test(text) && again && !tokens ? "PASS" : "FAIL",
+          evidence: `message "${text || "none"}"; Sign-in button ${again ? "enabled" : "not enabled"}; tokens stored ${tokens ? "yes" : "no"}` },
+      ];
     },
     // Evidence beyond the 14: a refresh with the stored refresh token, and sign-out revoking it.
     // Token values stay inside the browser; only yes/no and status codes come out.
-    async extras({ context, page, find, answered, describe }) {
+    async extras({ context, page, panel, find, answered, describe, uiSignOut, signInShown }) {
       const out = [];
       const worker = context.serviceWorkers()[0];
       // owner: the Server stores a Keycloak user's recordings under the numeric user row id, and the
@@ -266,7 +301,7 @@ const authDrivers = {
       await worker.evaluate(async () => {
         const { udanKeycloakTokens: t } = await chrome.storage.local.get("udanKeycloakTokens");
         globalThis.__udaE2EOld = { access: t.accessToken, refresh: t.refreshToken };
-        await chrome.storage.local.set({ udanKeycloakTokens: { ...t, expiresAt: Date.now() } });
+        await chrome.storage.local.set({ udanKeycloakTokens: { ...t, expiresAt: Date.now() - 6 * 60_000 } });
       });
       const panelGotToken = await page.evaluate(() => new Promise((resolve) => {
         const timer = setTimeout(() => resolve(false), 15_000);
@@ -280,7 +315,7 @@ const authDrivers = {
       await waitFor(() => tokenCalls() > before && find(isKeycloakTokenCall).slice(before).every(answered), "the refresh call", 10_000).catch(() => {});
       const refreshCall = find(isKeycloakTokenCall).slice(before)[0];
       const refreshOk = panelGotToken && refreshed.changed && refreshed.fresh && refreshCall?.status === 200;
-      out.push({ name: "Refresh: an expired access token is renewed with the stored refresh token; the panel gets the new access token", status: refreshOk ? "PASS" : "FAIL",
+      out.push({ name: "Refresh after 5+ min idle: an access token expired 6 min ago is renewed with the stored refresh token; the panel gets the new access token", status: refreshOk ? "PASS" : "FAIL",
         evidence: `panel answer ${panelGotToken ? "has a token" : "empty"}; worker token changed ${refreshed.changed ? "yes" : "no"}, valid > 60 s ${refreshed.fresh ? "yes" : "no"}; ${refreshCall ? describe(refreshCall) : "no Keycloak /token call"}` });
       // sign-out: the panel's logout message; then the old refresh token must be refused
       await worker.evaluate(async () => {
@@ -288,7 +323,7 @@ const authDrivers = {
         globalThis.__udaE2EOld.refresh = t?.refreshToken || globalThis.__udaE2EOld.refresh;
       });
       const logoutBefore = find((r) => r.service === "keycloak" && r.path.endsWith("/protocol/openid-connect/logout")).length;
-      await page.evaluate(() => document.dispatchEvent(new CustomEvent("RequestUDASessionData", { detail: { data: "UDASignOut" } })));
+      await uiSignOut();
       const logoutCall = await waitFor(() => find((r) => r.service === "keycloak" && r.path.endsWith("/protocol/openid-connect/logout")).slice(logoutBefore).find(answered), "the Keycloak logout call", 10_000).catch(() => null);
       const after = await worker.evaluate(async ({ clientId, tokenEndpoint }) => {
         const stored = await chrome.storage.local.get(null);
@@ -304,8 +339,23 @@ const authDrivers = {
       }, { clientId: this.clientId, tokenEndpoint: this.tokenEndpoint });
       // judged by the status Keycloak sent (Chromium may still flag the body-less 204 as aborted)
       const signOutOk = logoutCall?.status >= 200 && logoutCall.status < 300 && after.tokensGone && after.sessionGone && after.status === 400 && after.error === "invalid_grant";
+      out.push({ name: "Logout: Settings > Sign Out shows the Sign-in button again", status: await signInShown() ? "PASS" : "FAIL", evidence: `"Sign in with UDAN" ${await signInShown() ? "visible" : "not visible"} after Sign Out` });
       out.push({ name: "Sign-out: Keycloak logout, worker forgets tokens and session, the old refresh token is refused", status: signOutOk ? "PASS" : "FAIL",
         evidence: `${logoutCall ? `${logoutCall.method} ${logoutCall.path} status ${logoutCall.status ?? "none"}${logoutCall.failed ? ` (flagged ${logoutCall.failed})` : ""}` : "no Keycloak logout call"}; tokens gone ${after.tokensGone ? "yes" : "no"}, session gone ${after.sessionGone ? "yes" : "no"}; old refresh token -> ${after.status} ${after.error}` });
+      // session expired: sign in again, then Keycloak refuses the refresh token (it is revoked/expired)
+      // while the access token has run out; the panel must say so and show the Sign-in button
+      const again = await this.signIn({ context, page, panel });
+      await panel.getByRole("button", { name: "Record" }).waitFor({ state: "visible", timeout: STEP_MS }).catch(() => {});
+      await worker.evaluate(async () => {
+        const { udanKeycloakTokens: t } = await chrome.storage.local.get("udanKeycloakTokens");
+        if (t) await chrome.storage.local.set({ udanKeycloakTokens: { ...t, refreshToken: "revoked-by-the-behaviour-check", expiresAt: Date.now() - 1_000 } });
+      });
+      await page.evaluate(() => document.dispatchEvent(new CustomEvent("UDARequestAccessToken", { detail: {} })));
+      const note = panel.getByRole("alert");
+      await note.waitFor({ state: "visible", timeout: STEP_MS }).catch(() => {});
+      const noteText = ((await note.isVisible()) ? await note.innerText() : "").trim();
+      out.push({ name: "Session expired: a refused refresh token shows a plain message and the Sign-in button", status: /expired/i.test(noteText) && await signInShown() ? "PASS" : "FAIL",
+        evidence: `${again ? "signed in again; " : ""}message "${noteText || "none"}"; Sign-in button ${await signInShown() ? "visible" : "not visible"}` });
       return out;
     },
   },
@@ -569,6 +619,7 @@ try {
 
   // 8 ------------------------------------------------------------------------------------------------
   phase = "login";
+  if (driver.beforeSignIn) extras.push(...(await driver.beforeSignIn({ context, page, panel })));
   const who = await driver.signIn({ context, page, panel, identity: opts.identity });
   const recordButton = panel.getByRole("button", { name: "Record" });
   await recordButton.waitFor({ state: "visible", timeout: STEP_MS }).catch(() => {});
@@ -729,9 +780,19 @@ try {
   if (driver.extras) {
     phase = "extra";
     try {
-      extras.push(...(await driver.extras({ context, page, find, answered, describe })));
+      // the panel's own logout: Settings menu > Sign Out
+      const uiSignOut = async () => {
+        const opener = panel.getByRole("button", { name: "Open UDAN panel" });
+        if (await opener.isVisible()) await opener.click();
+        await panel.getByRole("button", { name: "Settings" }).click({ timeout: STEP_MS });
+        await panel.getByRole("button", { name: "Sign Out" }).click({ timeout: STEP_MS });
+      };
+      const signInShown = () => panel.getByRole("button", { name: "Sign in with UDAN" }).waitFor({ state: "visible", timeout: 10_000 }).then(() => true, () => false);
+      extras.push(...(await driver.extras({ context, page, panel, find, answered, describe, uiSignOut, signInShown })));
     } catch (err) {
       extras.push({ name: "driver extras", status: "FAIL", evidence: `stopped: ${err.message.split("\n")[0]}` });
+      mkdirSync(outDir, { recursive: true });
+      await page.screenshot({ path: join(outDir, "failure.png") }).catch(() => {});
     }
   }
 } catch (err) {

@@ -20,6 +20,10 @@ interface AuthContextType {
   login: () => void;
   logout: () => void;
   user: any;
+  /** Plain-words reason the last sign-in did not work (or the session ended); null when there is none. */
+  authMessage: string | null;
+  /** True from the Sign-in press until the worker answers. */
+  signingIn: boolean;
   /** Changes when the environment or a backend/realm setting of the SDK changes; effects that fetch data depend on it. */
   configVersion: number;
 }
@@ -31,6 +35,15 @@ function sessionConfigSignature(): string {
   const config = (typeof window !== "undefined" ? (window as any).UDAGlobalConfig : undefined) || {};
   return JSON.stringify(SESSION_CONFIG_KEYS.map((key) => config[key] ?? ""));
 }
+
+/** The worker's `UDAAlertMessageData` codes that carry a message for the user (Background.ts). "login" only means "not signed in". */
+const AUTH_MESSAGES: Record<string, string> = {
+  "signin-no-identity": "No Chrome profile is signed in, so there is nothing to sign in with. Sign in to Chrome with your Google account, then press Sign in again.",
+  "signin-cancelled": "Sign-in was cancelled. Press Sign in to try again.",
+  "signin-failed": "Sign-in did not work. Please try again.",
+  "signin-network": "Could not reach the sign-in service. Check your connection and try again.",
+  "session-expired": "Your session has expired. Please sign in again.",
+};
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -79,8 +92,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isInitialized, setIsInitialized] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [configVersion, setConfigVersion] = useState(0);
+  const [authMessage, setAuthMessage] = useState<string | null>(null);
+  const [signingIn, setSigningIn] = useState(false);
 
   const createSession = useCallback(async (data: any) => {
+    setAuthMessage(null);
+    setSigningIn(false);
     StorageUtil.setToStore(data.detail.data, CONFIG.USER_AUTH_DATA_KEY, true);
     applySessionToken(data.detail.data);
     setIsAuthenticated(true);
@@ -94,6 +111,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsAuthenticated(false);
     setUser(null);
     // Do NOT trigger RequestUDASessionData here — that causes a retry loop on 401
+  }, []);
+
+  // The worker says why a sign-in did not complete, or that the session ended
+  const onAlert = useCallback((event: any) => {
+    const code = event?.detail?.data;
+    setSigningIn(false);
+    const text = typeof code === "string" ? AUTH_MESSAGES[code] : undefined;
+    if (!text) return;
+    if (code === "session-expired") clearSession();
+    setAuthMessage(text);
   }, []);
 
   useEffect(() => {
@@ -143,6 +170,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     on("UDAAuthenticatedUserSessionData", createSession);
     on("UDAClearSessionData", clearSession);
     on("UDAGetNewToken", clearSession);
+    on("UDAAlertMessageData", onAlert);
 
     // Subscribe to SDK state changes
     const unsubscribe = DigitalAssistantCoreSDK.subscribe(async (state) => {
@@ -166,6 +194,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       off("UDAAuthenticatedUserSessionData", createSession);
       off("UDAClearSessionData", clearSession);
       off("UDAGetNewToken", clearSession);
+      off("UDAAlertMessageData", onAlert);
       unsubscribe();
     };
   }, []); // run once on mount only — isAuthenticated changes must not re-register listeners
@@ -200,6 +229,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Sign-in asks the worker to sign in: Chrome identity if the browser has one (LoginWithBrowser), else the
   // Keycloak sign-in (LoginWithKeycloak, may open a sign-in window); the worker answers with the session
   const login = () => {
+    setAuthMessage(null);
+    setSigningIn(true);
     trigger("RequestUDASessionData", {
       detail: { data: "UDASignIn" },
       bubbles: false,
@@ -209,6 +240,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Sign-out also ends the worker's session (and the Keycloak session, if any)
   const logout = () => {
+    setAuthMessage(null);
     clearSession();
     trigger("RequestUDASessionData", {
       detail: { data: "UDASignOut" },
@@ -218,7 +250,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, isInitialized, login, logout, user, configVersion }}>
+    <AuthContext.Provider value={{ isAuthenticated, isInitialized, login, logout, user, authMessage, signingIn, configVersion }}>
       {children}
     </AuthContext.Provider>
   );

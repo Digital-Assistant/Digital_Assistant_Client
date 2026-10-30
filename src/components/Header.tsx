@@ -253,7 +253,8 @@ export function Header({
             </button>
           )}
 
-          {/* Settings icon - hidden until settings functionality is implemented
+          {/* Settings menu (Sign Out), only for a signed-in user */}
+          {isAuthenticated && (
           <div className="relative">
             <button
               onClick={() => setShowSettingsMenu(!showSettingsMenu)}
@@ -285,12 +286,11 @@ export function Header({
                 </svg>
               </div>
             </button>
-            Settings Menu - Only show when authenticated
-            {isAuthenticated && showSettingsMenu && (
+            {showSettingsMenu && (
               <SettingsMenu onClose={() => setShowSettingsMenu(false)} />
             )}
           </div>
-          */}
+          )}
 
           <button
             onClick={handleClose}
