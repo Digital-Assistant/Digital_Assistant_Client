@@ -30,7 +30,7 @@ export interface BuildConfig {
     keycloakClientId: string;
     /** Public Keycloak client for the worker's PKCE sign-in (no secret); empty = PKCE sign-in off. */
     keycloakPublicClientId: string;
-    /** Optional identity provider alias sent as kc_idp_hint (e.g. the Google IdP); empty = Keycloak's own page. */
+    /** Identity provider alias sent as kc_idp_hint; empty = "google" (Background.ts DEFAULT_IDP_HINT). */
     keycloakIdpHint: string;
 }
 

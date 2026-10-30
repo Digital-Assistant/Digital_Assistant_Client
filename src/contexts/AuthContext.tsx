@@ -36,12 +36,16 @@ function sessionConfigSignature(): string {
   return JSON.stringify(SESSION_CONFIG_KEYS.map((key) => config[key] ?? ""));
 }
 
-/** The worker's `UDAAlertMessageData` codes that carry a message for the user (Background.ts). "login" only means "not signed in". */
+/**
+ * The `UDAAlertMessageData` codes that carry a message for the user, from the worker (Background.ts) or the
+ * content script (ExtensionSDK.js, when the worker cannot answer). "login" only means "not signed in".
+ */
 const AUTH_MESSAGES: Record<string, string> = {
   "signin-no-identity": "No Chrome profile is signed in, so there is nothing to sign in with. Sign in to Chrome with your Google account, then press Sign in again.",
   "signin-cancelled": "Sign-in was cancelled. Press Sign in to try again.",
   "signin-failed": "Sign-in did not work. Please try again.",
   "signin-network": "Could not reach the sign-in service. Check your connection and try again.",
+  "signin-reload": "The extension was updated or reloaded. Reload this page, then press Sign in again.",
   "session-expired": "Your session has expired. Please sign in again.",
 };
 
@@ -116,6 +120,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // The worker says why a sign-in did not complete, or that the session ended
   const onAlert = useCallback((event: any) => {
     const code = event?.detail?.data;
+    // in the extension the worker answers a Sign-in press; the page's own "login" (AuthService, sent
+    // at once for every press) is not that answer and must not end "Signing in…"
+    if (code === "login" && document.documentElement.hasAttribute("data-udan-extension")) return;
     setSigningIn(false);
     const text = typeof code === "string" ? AUTH_MESSAGES[code] : undefined;
     if (!text) return;

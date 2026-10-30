@@ -150,9 +150,11 @@ const authDrivers = {
     // page as --keycloak-user (password from UDAN_E2E_KEYCLOAK_PASSWORD), catches the redirect to
     // https://<extension id>.chromiumapp.org/ by route interception and hands it to the stub. A silent
     // request (interactive: false) is answered as Chrome answers it: Keycloak's redirect if it gives
-    // one without a page, else "User interaction required.". getProfileUserInfo answers "signed out",
-    // so the worker takes the Keycloak path. Needs a build with keycloakPublicClientId set and the
-    // client's redirect URI registered for the extension id.
+    // one without a page, else "User interaction required.". getProfileUserInfo answers "signed out"
+    // for the cancel check and a signed-in Chrome profile (<label>@example.test) for the real sign-in,
+    // as on a tester's Chrome: a build without a client secret must still take the Keycloak path.
+    // Needs a build with keycloakPublicClientId set and the client's redirect URI registered for the
+    // extension id.
     check8: "Login: getsessionkey 200, Keycloak code exchange (POST /token) 200, checkauthid 200 and checkusersession 200 with a bearer token, no POST /user/token, with UDAN-Realm header",
     loginCalls: [
       ["getsessionkey", (r) => r.service === "backend" && r.path.endsWith("/user/getsessionkey"), [200], true],
@@ -165,10 +167,10 @@ const authDrivers = {
     user: "",
     password: "",
     flows: [],
-    async install(worker) {
-      await worker.evaluate(() => {
+    async install(worker, profile = { email: "", id: "" }) {
+      await worker.evaluate((who) => {
         chrome.identity.getProfileUserInfo = (_options, callback) => {
-          const value = { email: "", id: "" };
+          const value = { ...who };
           return typeof callback === "function" ? callback(value) : Promise.resolve(value);
         };
         globalThis.__udaE2EFlows = globalThis.__udaE2EFlows || [];
@@ -179,23 +181,26 @@ const authDrivers = {
           if (typeof callback === "function") { answer.then(callback, () => callback(undefined)); return undefined; }
           return answer;
         };
-      });
+      }, profile);
     },
     async prepare({ worker }) {
       this.user = opts["keycloak-user"] || "";
       this.password = process.env.UDAN_E2E_KEYCLOAK_PASSWORD || "";
       if (!this.user || !this.password) throw new Error("keycloak-pkce needs --keycloak-user and UDAN_E2E_KEYCLOAK_PASSWORD");
       this.extensionId = new URL(worker.url()).host;
+      // the browser's own API, before the stub replaces it: the worker needs it for the real sign-in window
+      const native = await worker.evaluate(() => typeof chrome.identity?.launchWebAuthFlow);
       await this.install(worker);
       const stored = await worker.evaluate(async () => Boolean((await chrome.storage.local.get("udanKeycloakTokens")).udanKeycloakTokens));
       if (stored) throw new Error("the fresh profile already holds Keycloak tokens");
-      return `chrome.identity.launchWebAuthFlow stubbed in the worker, extension id ${this.extensionId}`;
+      return `chrome.identity.launchWebAuthFlow (in the worker: ${native}) stubbed, extension id ${this.extensionId}`;
     },
     // One parked authorization request: open it, sign in if it is interactive, answer the stub.
     async serve(context, flow, { cancel = false } = {}) {
       const redirectPrefix = `https://${this.extensionId}.chromiumapp.org/`;
       const authUrl = new URL(flow.url);
       this.clientId = authUrl.searchParams.get("client_id");
+      if (flow.interactive) this.hints = { idp: authUrl.searchParams.get("kc_idp_hint") || "", login: authUrl.searchParams.get("login_hint") || "" };
       this.tokenEndpoint = `${authUrl.origin}${authUrl.pathname.replace(/\/auth$/, "/token")}`;
       const tab = await context.newPage();
       let redirect = null;
@@ -247,17 +252,19 @@ const authDrivers = {
         await sleep(250);
       }
     },
-    async signIn({ context, panel }) {
+    // The real sign-in runs with a signed-in Chrome profile, as on a tester's Chrome.
+    async signIn({ context, panel, identity = opts.identity }) {
       const worker = context.serviceWorkers()[0];
       if (!worker) throw new Error("extension worker not running at sign-in");
-      await this.install(worker);
+      this.profileEmail = `${identity}@example.test`;
+      await this.install(worker, { email: this.profileEmail, id: identity });
       this.flows = [];
       await panel.getByRole("button", { name: "Sign in with UDAN" }).click();
       await this.pump(context, (notes) => notes.some((n) => n.startsWith("interactive: code")));
-      return `Keycloak user ${this.user} (sign-in windows: ${this.flows.join("; ") || "none"})`;
+      return `Keycloak user ${this.user}, Chrome profile ${this.profileEmail} (sign-in windows: ${this.flows.join("; ") || "none"})`;
     },
-    // Before the real sign-in: the user presses Sign in and closes the window. The panel must say so
-    // in plain words and keep the Sign-in button.
+    // Before the real sign-in: the user presses Sign in and closes the window, then a sign-in fails
+    // inside the worker. The panel must say so in plain words each time and keep the Sign-in button.
     async beforeSignIn({ context, panel }) {
       const worker = context.serviceWorkers()[0];
       await this.install(worker);
@@ -265,17 +272,39 @@ const authDrivers = {
       const button = panel.getByRole("button", { name: "Sign in with UDAN" });
       const noIdentity = await button.isVisible();
       await button.click();
+      // the page's own answer to the press must not end "Signing in…"; only the worker's answer does
+      await sleep(500);
+      const busy = !(await button.isEnabled().catch(() => true));
       await this.pump(context, (notes) => notes.some((n) => n.startsWith("interactive:")), { cancel: true });
       const message = panel.getByRole("alert");
       await message.waitFor({ state: "visible", timeout: STEP_MS }).catch(() => {});
       const text = ((await message.isVisible()) ? await message.innerText() : "").trim();
       const again = await button.isEnabled().catch(() => false);
       const tokens = await worker.evaluate(async () => Boolean((await chrome.storage.local.get("udanKeycloakTokens")).udanKeycloakTokens));
+      // worker error: the worker's next storage read fails, so the sign-in throws before any window
+      await worker.evaluate(() => {
+        const area = chrome.storage.local;
+        globalThis.__udaE2EStorageGet = area.get;
+        area.get = function () {
+          area.get = globalThis.__udaE2EStorageGet;
+          return Promise.reject(new Error("storage refused by the behaviour check"));
+        };
+      });
+      await button.click();
+      const failed = await waitFor(async () => {
+        const shown = (await message.isVisible()) ? (await message.innerText()).trim() : "";
+        return /cancel/i.test(shown) ? "" : shown;
+      }, "a message after the worker error", 10_000).catch(() => "");
+      const enabledAfterError = await button.isEnabled().catch(() => false);
+      await worker.evaluate(() => { chrome.storage.local.get = globalThis.__udaE2EStorageGet; delete globalThis.__udaE2EStorageGet; });
       this.flows = [];
       return [
         { name: "No identity: the Sign-in button is shown (not signed in)", status: noIdentity ? "PASS" : "FAIL", evidence: `"Sign in with UDAN" ${noIdentity ? "visible" : "not visible"} before the press` },
+        { name: "Busy: the Sign-in button stays disabled while the worker signs in", status: busy ? "PASS" : "FAIL", evidence: `0.5 s after the press the button is ${busy ? "disabled" : "enabled again"}` },
         { name: "Cancel: closing the sign-in window shows a plain message and keeps the Sign-in button; no tokens stored", status: /cancel/i.test(text) && again && !tokens ? "PASS" : "FAIL",
           evidence: `message "${text || "none"}"; Sign-in button ${again ? "enabled" : "not enabled"}; tokens stored ${tokens ? "yes" : "no"}` },
+        { name: "Worker error: a sign-in that fails inside the worker shows a plain message and keeps the Sign-in button", status: failed && enabledAfterError ? "PASS" : "FAIL",
+          evidence: `message "${failed || "none"}"; Sign-in button ${enabledAfterError ? "enabled" : "not enabled"}` },
       ];
     },
     // Evidence beyond the 14: a refresh with the stored refresh token, and sign-out revoking it.
@@ -283,6 +312,11 @@ const authDrivers = {
     async extras({ context, page, panel, find, answered, describe, uiSignOut, signInShown }) {
       const out = [];
       const worker = context.serviceWorkers()[0];
+      // Google: the sign-in window goes to the Google IdP (a build without keycloakIdpHint sends "google")
+      // and Keycloak gets the Chrome profile's email as login_hint
+      const hints = this.hints || { idp: "", login: "" };
+      out.push({ name: "Google: the sign-in window asks Keycloak for the Google IdP and the Chrome profile's account", status: hints.idp === "google" && hints.login === this.profileEmail ? "PASS" : "FAIL",
+        evidence: `kc_idp_hint "${hints.idp || "none"}"; login_hint ${hints.login ? (hints.login === this.profileEmail ? "the Chrome profile's email" : "another value") : "none"}` });
       // owner: the Server stores a Keycloak user's recordings under the numeric user row id, and the
       // panel shows the owner buttons when that equals its user id (authData.id); ids are compared here, not printed
       const saved = find((r) => r.service === "backend" && r.path.endsWith("/clickevents/recordsequencedata") && r.status === 200)[0];
