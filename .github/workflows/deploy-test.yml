@@ -98,6 +98,7 @@ jobs:
           name: deployed-zip
           path: |
             build/udan-extension-*.zip
+            !build/udan-extension-*-store-*.zip
             build/SHA256SUMS
             build/build-info.json
           retention-days: 1
