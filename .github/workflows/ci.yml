@@ -139,6 +139,9 @@ jobs:
       - run: npm test
       - name: Store packaging tests
         run: scripts/ci/test-store-packaging.sh
+      # Offline: stub gh/curl/aws, a throw-away key; no network, no store call.
+      - name: Store release tests
+        run: scripts/ci/test-store-release.sh
 
   # Known: 11 high findings today (mostly indirect, fixable with `npm audit fix`).
   # Report-only until the owner decides; remove continue-on-error to make it block.

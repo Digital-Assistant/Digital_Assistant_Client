@@ -189,15 +189,16 @@ flowchart LR
     SAN --> TESTERS["Testers: load unpacked,<br/>badge says TEST"]
     SAN -- "red" --> RB["Rollback: Deploy to TEST<br/>with the previous version"]
     RB --> PRE
-    ZIP -. "later: C08 store, C09 SDK CDN" .-> PROD["GitHub release / store"]
+    ZIP -- "Release to Chrome Web Store: manual, dev only<br/>same store zips, STAGED_PUBLISH" --> STORE["Chrome Web Store<br/>TEST item, then PROD item"]
+    ZIP -. "later: C09 SDK CDN" .-> CDN["SDK CDN"]
     DEV --> REL["PR dev into master, merge commit"]
     REL --> RP["Release Please PR<br/>package.json, CHANGELOG"]
     RP --> TAG["Tag vX.Y.Z and GitHub release"]
     TAG --> BM["Back-merge PR to dev<br/>new X.Y.Z for the next dev builds"]
 ```
-Release Please no longer touches the manifests: CI owns the extension version. Attaching the zip to production releases and the store upload come in later steps; until then the store upload stays manual. `dist/` is no longer committed: it is only the local `build:prod` folder.
+Release Please no longer touches the manifests: CI owns the extension version. Attaching the zip to production releases comes in a later step; the store upload is the workflow `Release to Chrome Web Store` (below). `dist/` is no longer committed: it is only the local `build:prod` folder.
 
-**Store zips (Chrome Web Store).** `scripts/ci/package-extension.sh --store` (CI always passes it) cuts two more zips from the **same** `dist/` as the sideload zip: no second `npm run build`, one `config_hash`. Nothing is uploaded by this step; the zips are the input of the later store release workflow.
+**Store zips (Chrome Web Store).** `scripts/ci/package-extension.sh --store` (CI always passes it) cuts two more zips from the **same** `dist/` as the sideload zip: no second `npm run build`, one `config_hash`. Nothing is uploaded by this step; the zips are the input of `Release to Chrome Web Store`.
 
 | | Sideload zip `udan-extension-<v>.zip` | `...-store-test.zip` | `...-store-prod.zip` |
 |---|---|---|---|
@@ -216,6 +217,8 @@ scripts/ci/test-store-packaging.sh                                     # fixture
 ```
 
 `check-store-zip.sh` prints only pass/FAIL lines, booleans (which build keys were set, never values) and sha256 hashes, because the run logs of this repo are public. It fails when the name is wrong, the archive is damaged, a `key` is in the manifest, the manifest or `build-info.json` version differs from the name, `tier.json` is not exactly the one-key stamp of the zip's tier, the TEST name is not `UDA TEST`, a secret key name is in `env_keys_set` or is assigned a non-empty string anywhere in the zip (the published SDK has an empty `clientSecret` property, so that bare name alone is allowed), or, for the pair, any file other than the allowed ones differs. To change the TEST badge, replace the PNGs in `store/test-icons/` (same file names and sizes as `public/logos/`).
+
+**Release to Chrome Web Store.** Run the workflow `Release to Chrome Web Store` (`release-store.yml`) on `dev` with `tier` (`test` or `prod`), `version` (`X.Y.Z.N`) and `dry_run` (default **true**). A dry run checks the build and changes nothing. With `dry_run=false` it uploads that build's store zip to the item of the tier (`test-store` environment for the unlisted TEST item, `production` with two reviewers for the PROD item) and submits it with `STAGED_PUBLISH`; after Google's review the owner presses **Publish** in the dashboard. Release a version to TEST first: `tier=prod` is refused unless the TEST run of the same version uploaded the same bundle and the TEST item shows it published or staged; approving `production` is the smoke-pass sign-off. One pending submission per item: a second is refused unless `replace_pending=true`, which cancels the pending one (it loses its review queue position). The TEST store item is for release candidates (each upload is reviewed, days to weeks); per-commit checks stay on `Deploy to TEST`. Guards, variables and the laptop command: `scripts/ci/README.md` "Store release".
 
 **Deploy to TEST.** Testers get builds from GitHub prereleases, never from a rebuild. Run the workflow `Deploy to TEST` on `dev` (Actions tab, or `gh workflow run deploy-test.yml --ref dev`). With no input it takes the newest `dev` build; `-f version=X.Y.Z.N` (from a CI run summary) takes that one, which is also the rollback. It verifies `SHA256SUMS`, the version and that the commit is on `dev`, then publishes prerelease `test-v<version>` and moves `test-current` to it. Neither is ever marked latest. The notes say whether the build talks to the TEST backend and list known issues (`scripts/ci/test-known-issues.md`). The workflow refuses any other branch. A build is deployable while its artifact lives (90 days). After publishing, job `Sanity check TEST` loads that same zip into Chromium (Playwright) and checks that the extension starts, the panel mounts and the TEST backend answers; it is read-only and skips the backend checks for builds that call no backend. A failure turns the run red but does not unpublish; redeploy the previous version to roll back. Details and the laptop command: `scripts/ci/README.md`.
 
