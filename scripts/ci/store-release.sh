@@ -5,6 +5,7 @@
 #   scripts/ci/store-release.sh --tier test|prod --version X.Y.Z.N --dir DIR [--dry-run]
 #                               [--replace-pending] [--status-file F] [--test-status-file F]
 #                               [--test-record-file F]
+#   scripts/ci/store-release.sh --status --tier test|prod [--dry-run --status-file F [--test-status-file F]]
 #
 # DIR holds the client-zip artifact of a dev CI run: udan-extension-<v>.zip, -store-test.zip,
 # -store-prod.zip, SHA256SUMS, build-info.json (scripts/ci/package-extension.sh --store).
@@ -40,6 +41,31 @@
 # target item, --test-status-file for the TEST item; for tests and for checking a saved status).
 # --test-record-file uses a saved store-release-record instead of looking one up on GitHub.
 #
+# --status (read-only; mutually exclusive with a release; needs no --version, --dir or build): answers
+# "what is pending on this item right now, and would a new submission be accepted?" without trying an
+# upload. Alone it is the live read: GitHub OIDC -> AWS role -> key from Secrets Manager -> access
+# token (same path as the real run, GitHub Actions only), then ONLY `GET :fetchStatus` for the item
+# of --tier (and, for tier prod, also the TEST item, as the promotion guard does; informational).
+# It never calls :upload, :publish or cancelSubmission, nor any other write: api() asserts in code
+# that, in status mode, the only call is GET :fetchStatus, and aborts (exit 70) otherwise. Prints a
+# table with the item label (TEST or PROD, never an id), the submitted revision state, the submitted
+# and published versions, and whether a new submission would now be ACCEPTED or REFUSED under the
+# one-pending-submission rule (PENDING_REVIEW or STAGED = pending). With --dry-run it reads no
+# credential and calls no store API: it evaluates saved fetchStatus JSON (--status-file for the
+# item of the tier, --test-status-file for the TEST item of tier prod), for tests and for a saved
+# status. Version rules (the new version must be greater) need a build, so they stay with the real
+# run; the table prints the highest version the item already has.
+#
+# Exit codes
+#   0  release or dry run passed; with --status: the item has no pending submission, so a new one
+#      would be accepted
+#   1  refused: a guard failed, the store said no, or (--status) the item is taken down, an upload
+#      is in progress, the publicKey does not match the item id, or fetchStatus could not be read
+#   2  usage error, or a required tool is missing
+#   3  --status only: the item has a pending submission (PENDING_REVIEW or STAGED): a new submission
+#      is refused unless replace_pending=true (cancels it, loses the review queue position)
+#   70 internal assertion: status mode was about to make a call other than GET :fetchStatus
+#
 # Public repo, public logs: prints booleans, versions, states, hashes and the public PROD item id.
 # Never prints a token, a key, a response body of an auth call, or the TEST item id (unlisted).
 # Writes DIR/store-release-record.json (no ids, no secrets) for the workflow to keep.
@@ -62,15 +88,16 @@ RECORD_ARTIFACT=store-release-record
 here="$(cd "$(dirname "$0")" && pwd)"
 HELPER="${here}/store-helper.mjs"
 
-usage() { sed -n '5,8p' "$0" | sed 's/^# \{0,1\}//' >&2; exit 2; }
+usage() { sed -n '5,9p' "$0" | sed 's/^# \{0,1\}//' >&2; exit 2; }
 
-tier="" version="" dir="" dry_run="" replace_pending="" status_file="" test_status_file="" test_record_file=""
+tier="" version="" dir="" dry_run="" replace_pending="" status_file="" test_status_file="" test_record_file="" status_mode=""
 while (( $# )); do
   case "$1" in
     --tier) tier="${2:-}"; shift 2 ;;
     --version) version="${2:-}"; shift 2 ;;
     --dir) dir="${2:-}"; shift 2 ;;
     --dry-run) dry_run=1; shift ;;
+    --status) status_mode=1; shift ;;
     --replace-pending) replace_pending=1; shift ;;
     --status-file) status_file="${2:-}"; shift 2 ;;
     --test-status-file) test_status_file="${2:-}"; shift 2 ;;
@@ -91,16 +118,28 @@ is_true() { [[ -n "$1" ]] && echo true || echo false; }
 mask() { [[ "${GITHUB_ACTIONS:-}" == true && -n "$1" ]] && echo "::add-mask::$1"; return 0; }
 
 [[ "$tier" == test || "$tier" == prod ]] || { echo "--tier must be test or prod" >&2; usage; }
-[[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "--version must be X.Y.Z.N, got '${version}'" >&2; usage; }
-for p in ${version//./ }; do (( 10#$p <= 65535 )) || { echo "--version part ${p} is above 65535" >&2; usage; }; done
-[[ -d "$dir" ]] || { echo "--dir must be the directory with the client-zip artifact" >&2; usage; }
+if [[ -n "$status_mode" ]]; then
+  # Read-only status: mutually exclusive with everything that belongs to a release.
+  if [[ -n "$version" || -n "$dir" || -n "$replace_pending" || -n "$test_record_file" ]]; then
+    echo "--status is read-only and cannot be combined with --version, --dir, --replace-pending or --test-record-file" >&2; usage
+  fi
+  if [[ -n "$dry_run" && -z "$status_file" ]]; then
+    echo "--status --dry-run evaluates saved fetchStatus JSON: give --status-file" >&2; usage
+  fi
+else
+  [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "--version must be X.Y.Z.N, got '${version}'" >&2; usage; }
+  for p in ${version//./ }; do (( 10#$p <= 65535 )) || { echo "--version part ${p} is above 65535" >&2; usage; }; done
+  [[ -d "$dir" ]] || { echo "--dir must be the directory with the client-zip artifact" >&2; usage; }
+fi
 if [[ -z "$dry_run" && ( -n "$status_file" || -n "$test_status_file" || -n "$test_record_file" ) ]]; then
   echo "--status-file, --test-status-file and --test-record-file are for --dry-run only" >&2; usage
 fi
-for t in jq unzip sha256sum node; do command -v "$t" >/dev/null || { echo "$t is required" >&2; exit 2; }; done
+need_tools=(jq node)
+[[ -n "$status_mode" ]] || need_tools+=(unzip sha256sum)
+for t in "${need_tools[@]}"; do command -v "$t" >/dev/null || { echo "$t is required" >&2; exit 2; }; done
 
 TIER="${tier^^}"
-dir="$(cd "$dir" && pwd)"
+[[ -n "$status_mode" ]] || dir="$(cd "$dir" && pwd)"
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
 RESP="${tmp}/resp.json"
@@ -131,6 +170,176 @@ bundle_hash() {
     echo "build-info $(jq -S -c 'del(.tier)' build-info.json | sha256sum | cut -d' ' -f1)"
   ) | sha256sum | cut -d' ' -f1
 }
+
+# Highest version (published or submitted) in a fetchStatus JSON, empty when none.
+highest_version() { # <fetchStatus.json>
+  local v max=""
+  while read -r v; do
+    [[ -z "$v" ]] && continue
+    if [[ -z "$max" ]] || version_gt "$v" "$max"; then max="$v"; fi
+  done < <(jq -r '[.publishedItemRevisionStatus, .submittedItemRevisionStatus] | .[]? | .distributionChannels[]? | .crxVersion // empty' "$1")
+  printf '%s' "$max"
+}
+
+# Publisher and item ids (variables, not secrets); validates them and sets the target item.
+publisher="" test_item="" prod_item="" item="" item_label=""
+load_items() {
+  local id_re='^[a-p]{32}$'
+  publisher="${CWS_PUBLISHER_ID:-}"
+  test_item="${CWS_TEST_ITEM_ID:-}"
+  prod_item="${CWS_PROD_ITEM_ID:-}"
+  if [[ -n "$prod_item" ]]; then
+    [[ "$prod_item" == "$PROD_ITEM_ID_CONTRACT" ]] || refuse "CWS_PROD_ITEM_ID is not the PROD store item ${PROD_ITEM_ID_CONTRACT}"
+  fi
+  if [[ -n "$test_item" ]]; then
+    [[ "$test_item" =~ $id_re ]] || refuse "CWS_TEST_ITEM_ID is not a 32-letter item id"
+    [[ "$test_item" != "$PROD_ITEM_ID_CONTRACT" ]] || refuse "CWS_TEST_ITEM_ID is the PROD item"
+    mask "$test_item"
+  fi
+  [[ -z "$publisher" ]] || [[ "$publisher" =~ ^[A-Za-z0-9-]{8,64}$ ]] || refuse "CWS_PUBLISHER_ID does not look like a publisher id"
+  if [[ "$tier" == prod ]]; then item="$prod_item"; item_label="PROD ${PROD_ITEM_ID_CONTRACT}"; else item="$test_item"; item_label="TEST (id not printed)"; fi
+  note "target item ${item_label}; set: publisher=$(is_true "$publisher") test_item=$(is_true "$test_item") prod_item=$(is_true "$prod_item")"
+}
+
+# GitHub OIDC -> AWS role -> service account key (piped, never stored) -> signed assertion -> access
+# token in ACCESS_TOKEN (masked). Shared by the real run and --status; callers check the variables.
+ACCESS_TOKEN=""
+get_access_token() {
+  local oidc creds assertion code err
+  for t in curl aws; do command -v "$t" >/dev/null || refuse "$t is required"; done
+  oidc="$(curl -fsS -H @<(printf 'Authorization: bearer %s\n' "$ACTIONS_ID_TOKEN_REQUEST_TOKEN") \
+    "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=sts.amazonaws.com" 2>/dev/null | jq -r '.value // empty')" || true
+  [[ -n "$oidc" ]] || refuse "could not get the GitHub OIDC token"
+  mask "$oidc"
+  creds="$(aws sts assume-role-with-web-identity --region "$AWS_REGION" --role-arn "$STORE_AWS_ROLE_ARN" \
+    --role-session-name "cws-release-${GITHUB_RUN_ID:-0}" --web-identity-token "$oidc" --duration-seconds 900 \
+    --output json 2>/dev/null)" || refuse "could not assume the store AWS role (check its trust for this environment)"
+  AWS_ACCESS_KEY_ID="$(jq -r '.Credentials.AccessKeyId' <<<"$creds")"
+  AWS_SECRET_ACCESS_KEY="$(jq -r '.Credentials.SecretAccessKey' <<<"$creds")"
+  AWS_SESSION_TOKEN="$(jq -r '.Credentials.SessionToken' <<<"$creds")"
+  mask "$AWS_SECRET_ACCESS_KEY"; mask "$AWS_SESSION_TOKEN"
+  export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
+  ok "AWS role assumed"
+  # The key goes from the AWS CLI straight into the helper's stdin: never a variable, file or argument.
+  assertion="$(aws secretsmanager get-secret-value --region "$AWS_REGION" --secret-id "$STORE_KEY_SECRET_ID" \
+    --query SecretString --output text 2>/dev/null | node "$HELPER" assertion)" || refuse "could not read the service account key or sign with it"
+  mask "$assertion"
+  code="$(curl -sS -o "$RESP" -w '%{http_code}' --data-urlencode 'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer' \
+    --data-urlencode 'assertion@-' "$TOKEN_URL" <<<"$assertion" 2>/dev/null)" || code=000
+  if [[ "$code" != 200 ]]; then
+    # Only the OAuth error code (e.g. invalid_grant); never the body.
+    err="$(jq -r '.error // "unknown"' "$RESP" 2>/dev/null || echo unknown)"; rm -f "$RESP"
+    refuse "token exchange failed: HTTP ${code}, error ${err}"
+  fi
+  ACCESS_TOKEN="$(jq -r '.access_token // empty' "$RESP")"; rm -f "$RESP"
+  [[ -n "$ACCESS_TOKEN" ]] || refuse "token exchange returned no access token"
+  mask "$ACCESS_TOKEN"
+  unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
+  ok "store access token obtained (masked)"
+}
+
+api() { # api <METHOD> <path after /v2/publishers/<pub>/items/<item>> <item> [--upload FILE | --json BODY]; body in $RESP, code on stdout
+  # Read-only guarantee of --status, enforced here (the only function that talks to the store API):
+  # in status mode nothing but GET :fetchStatus gets through; anything else is a bug, never a request.
+  if [[ -n "$status_mode" ]] && ! [[ "$1" == GET && "$2" == :fetchStatus && $# -eq 3 ]]; then
+    echo "internal assertion: status mode may only GET :fetchStatus (asked for ${1:-?} ${2:-?}); nothing was sent" >&2
+    echo "::error::store-release --status tried a non-read call; nothing was sent" >&2
+    exit 70
+  fi
+  local method="$1" action="$2" it="$3" base="${STORE_API}/v2"; shift 3
+  local -a extra=()
+  case "${1:-}" in
+    --upload) base="${STORE_API}/upload/v2"; extra=(-T "$2") ;;
+    --json) extra=(-H 'Content-Type: application/json' --data "$2") ;;
+  esac
+  curl -sS -X "$method" -o "$RESP" -w '%{http_code}' -H @<(printf 'Authorization: Bearer %s\n' "$ACCESS_TOKEN") \
+    "${extra[@]}" "${base}/publishers/${publisher}/items/${it}${action}" 2>/dev/null || echo 000
+}
+api_fail() { # api_fail <what> <code>
+  local detail
+  detail="$(jq -r '[.error.status // empty, .error.message // empty, (.error.details[]? | .. | .reason? // empty)] | map(tostring) | join("; ")' "$RESP" 2>/dev/null || true)"
+  refuse "$1 failed: HTTP $2${detail:+ (${detail})}"
+}
+fetch_status() { # fetch_status <item> <out file>
+  local c; c="$(api GET :fetchStatus "$1")"
+  [[ "$c" == 200 ]] || api_fail fetchStatus "$c"
+  cp "$RESP" "$2"
+}
+
+# ---------------------------------------------------------------- --status (read-only)
+STATUS_EXIT_PENDING=3
+# One table row for a fetchStatus JSON. Sets ROW_VERDICT to ACCEPTED, PENDING or REFUSED.
+status_row() { # <label> <fetchStatus.json> <full id check: true|false>
+  local label="$1" s="$2" must="$3" st sv pv down up derived why="" key
+  jq -e 'type == "object"' "$s" >/dev/null 2>&1 || refuse "fetchStatus of ${label} is not a JSON object"
+  st="$(jq -r '.submittedItemRevisionStatus.state // "none"' "$s")"
+  sv="$(jq -r '[.submittedItemRevisionStatus.distributionChannels[]?.crxVersion // empty] | join(",") | if . == "" then "none" else . end' "$s")"
+  pv="$(jq -r '[.publishedItemRevisionStatus.distributionChannels[]?.crxVersion // empty] | join(",") | if . == "" then "none" else . end' "$s")"
+  down="$(jq -r '.takenDown // false' "$s")"
+  up="$(jq -r '.lastAsyncUploadState // "none"' "$s")"
+  ROW_VERDICT=ACCEPTED
+  if [[ "$down" == true ]]; then ROW_VERDICT=REFUSED; why="the item is taken down"
+  elif [[ "$up" == IN_PROGRESS ]]; then ROW_VERDICT=REFUSED; why="an upload is still in progress"
+  elif [[ "$st" == PENDING_REVIEW || "$st" == STAGED ]]; then
+    ROW_VERDICT=PENDING; why="pending submission (${st}); replace_pending=true cancels it and loses the review queue position"
+  fi
+  key="$(jq -r '.publicKey // empty' "$s")"
+  derived=""
+  [[ -z "$key" ]] || derived="$(node "$HELPER" extension-id <<<"$key" 2>/dev/null || true)"
+  ROW_ID_MATCH=n/a
+  if [[ -n "$derived" ]]; then
+    if [[ "$label" == PROD ]]; then [[ "$derived" == "$PROD_ITEM_ID_CONTRACT" ]] && ROW_ID_MATCH=true || ROW_ID_MATCH=false
+    elif [[ -n "$test_item" ]]; then [[ "$derived" == "$test_item" ]] && ROW_ID_MATCH=true || ROW_ID_MATCH=false
+    fi
+  fi
+  if [[ "$must" == true && "$ROW_ID_MATCH" == false ]]; then ROW_VERDICT=REFUSED; why="the id derived from the item's publicKey does not match the item id"; fi
+  [[ "$must" != true || -n "$key" ]] || { ROW_VERDICT=REFUSED; why="fetchStatus has no publicKey for the item"; }
+  printf '  %-5s %-15s %-16s %-16s %-9s %s\n' "$label" "$st" "$sv" "$pv" "$ROW_VERDICT" "${why:-a new submission would be accepted}"
+  ROW_WHY="$why"; ROW_HIGHEST="$(highest_version "$s")"
+}
+
+run_status() {
+  local label="$TIER" f="" tf="" rc=0
+  echo "== store status (read-only: nothing is uploaded, submitted or cancelled)"
+  load_items
+  if [[ -n "$dry_run" ]]; then
+    note "dry run: evaluating saved fetchStatus JSON; no credential read, no store call"
+    f="$status_file"; tf="$test_status_file"
+  else
+    [[ "${GITHUB_ACTIONS:-}" == true ]] || refuse "a live status read happens only in GitHub Actions (use --status --dry-run --status-file locally)"
+    local missing=() v needed=(CWS_PUBLISHER_ID STORE_AWS_ROLE_ARN AWS_REGION STORE_KEY_SECRET_ID ACTIONS_ID_TOKEN_REQUEST_URL ACTIONS_ID_TOKEN_REQUEST_TOKEN)
+    [[ "$tier" == prod ]] && needed+=(CWS_PROD_ITEM_ID CWS_TEST_ITEM_ID) || needed+=(CWS_TEST_ITEM_ID)
+    for v in "${needed[@]}"; do [[ -n "${!v:-}" ]] || missing+=("$v"); done
+    (( ${#missing[@]} == 0 )) || refuse "not set: ${missing[*]} (variables of the environment or the repository; OIDC needs id-token: write)"
+    echo "== credentials"
+    get_access_token
+    f="${tmp}/status.json"; fetch_status "$item" "$f"
+    if [[ "$tier" == prod ]]; then tf="${tmp}/test-status.json"; fetch_status "$test_item" "$tf"; fi
+  fi
+  printf '  %-5s %-15s %-16s %-16s %-9s %s\n' item "submitted state" "submitted ver." "published ver." verdict "new submission"
+  status_row "$label" "$f" true
+  local verdict="$ROW_VERDICT" why="$ROW_WHY" highest="$ROW_HIGHEST"
+  if [[ "$tier" == prod && -n "$tf" ]]; then
+    status_row TEST "$tf" false
+    note "TEST row is informational (promotion needs the TEST item to show the release version PUBLISHED or STAGED); id matches item: ${ROW_ID_MATCH}"
+  fi
+  note "highest version the ${TIER} item already has (published or submitted): ${highest:-none}; a new version must be greater"
+  case "$verdict" in
+    ACCEPTED) echo "Status: a new submission to the ${TIER} item would be ACCEPTED (no pending submission)." ;;
+    PENDING) echo "Status: a new submission to the ${TIER} item would be REFUSED: ${why}."; rc=$STATUS_EXIT_PENDING ;;
+    *) echo "REFUSED: ${why}" >&2; echo "::error::store-release --status: ${why}" >&2; rc=1 ;;
+  esac
+  if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+    {
+      echo "### Store status ${TIER}$( [[ -n "$dry_run" ]] && echo ' (saved status, no store call)' )"
+      echo "- New submission: **${verdict}**${why:+ (${why})}"
+      echo "- Highest version already on the item: \`${highest:-none}\`"
+      echo "- Read-only: only \`fetchStatus\` was called; no upload, no submission, no cancel."
+    } >>"$GITHUB_STEP_SUMMARY"
+  fi
+  exit "$rc"
+}
+[[ -z "$status_mode" ]] || run_status
 
 echo "Store release: tier ${TIER}, version ${version}, $( [[ -n "$dry_run" ]] && echo 'DRY RUN (no credential, no store call)' || echo 'REAL RUN' )"
 
@@ -192,37 +401,19 @@ note "permissions: $(unzip -p "$dir/$zip_name" manifest.json | jq -c '{permissio
 
 # ---------------------------------------------------------------- items
 echo "== items"
-publisher="${CWS_PUBLISHER_ID:-}"
-test_item="${CWS_TEST_ITEM_ID:-}"
-prod_item="${CWS_PROD_ITEM_ID:-}"
-id_re='^[a-p]{32}$'
-if [[ -n "$prod_item" ]]; then
-  [[ "$prod_item" == "$PROD_ITEM_ID_CONTRACT" ]] || refuse "CWS_PROD_ITEM_ID is not the PROD store item ${PROD_ITEM_ID_CONTRACT}"
-fi
-if [[ -n "$test_item" ]]; then
-  [[ "$test_item" =~ $id_re ]] || refuse "CWS_TEST_ITEM_ID is not a 32-letter item id"
-  [[ "$test_item" != "$PROD_ITEM_ID_CONTRACT" ]] || refuse "CWS_TEST_ITEM_ID is the PROD item"
-  mask "$test_item"
-fi
-[[ -z "$publisher" ]] || [[ "$publisher" =~ ^[A-Za-z0-9-]{8,64}$ ]] || refuse "CWS_PUBLISHER_ID does not look like a publisher id"
-if [[ "$tier" == prod ]]; then item="$prod_item"; item_label="PROD ${PROD_ITEM_ID_CONTRACT}"; else item="$test_item"; item_label="TEST (id not printed)"; fi
-note "target item ${item_label}; set: publisher=$(is_true "$publisher") test_item=$(is_true "$test_item") prod_item=$(is_true "$prod_item")"
+load_items
 
 # ---------------------------------------------------------------- store-state guards (pure, on fetchStatus JSON)
 pending_state() { jq -r '.submittedItemRevisionStatus.state // empty' "$1"; }
 
 check_store_state() { # check_store_state <fetchStatus.json> <item id or empty>
-  local s="$1" want_id="$2" st max v derived
+  local s="$1" want_id="$2" st max derived
   jq -e 'type == "object"' "$s" >/dev/null 2>&1 || refuse "fetchStatus is not a JSON object"
   [[ "$(jq -r '.takenDown // false' "$s")" != true ]] || refuse "the item is taken down"
   ok "item not taken down (warned: $(jq -r '.warned // false' "$s"))"
   [[ "$(jq -r '.lastAsyncUploadState // empty' "$s")" != IN_PROGRESS ]] || refuse "an upload to the item is still in progress"
   ok "no upload in progress"
-  max=""
-  while read -r v; do
-    [[ -z "$v" ]] && continue
-    if [[ -z "$max" ]] || version_gt "$v" "$max"; then max="$v"; fi
-  done < <(jq -r '[.publishedItemRevisionStatus, .submittedItemRevisionStatus] | .[]? | .distributionChannels[]? | .crxVersion // empty' "$s")
+  max="$(highest_version "$s")"
   if [[ -n "$max" ]]; then
     version_gt "$version" "$max" || refuse "version ${version} is not greater than ${max}, which the item already has (published or submitted)"
     ok "version ${version} is greater than the item's highest published/submitted version ${max}"
@@ -354,61 +545,8 @@ for v in CWS_PUBLISHER_ID CWS_TEST_ITEM_ID CWS_PROD_ITEM_ID STORE_AWS_ROLE_ARN A
   [[ -n "${!v:-}" ]] || missing+=("$v")
 done
 (( ${#missing[@]} == 0 )) || refuse "not set: ${missing[*]} (variables of the environment or the repository; OIDC needs id-token: write)"
-for t in curl aws; do command -v "$t" >/dev/null || refuse "$t is required"; done
-
 echo "== credentials"
-oidc="$(curl -fsS -H @<(printf 'Authorization: bearer %s\n' "$ACTIONS_ID_TOKEN_REQUEST_TOKEN") \
-  "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=sts.amazonaws.com" 2>/dev/null | jq -r '.value // empty')" || true
-[[ -n "$oidc" ]] || refuse "could not get the GitHub OIDC token"
-mask "$oidc"
-creds="$(aws sts assume-role-with-web-identity --region "$AWS_REGION" --role-arn "$STORE_AWS_ROLE_ARN" \
-  --role-session-name "cws-release-${GITHUB_RUN_ID:-0}" --web-identity-token "$oidc" --duration-seconds 900 \
-  --output json 2>/dev/null)" || refuse "could not assume the store AWS role (check its trust for this environment)"
-AWS_ACCESS_KEY_ID="$(jq -r '.Credentials.AccessKeyId' <<<"$creds")"
-AWS_SECRET_ACCESS_KEY="$(jq -r '.Credentials.SecretAccessKey' <<<"$creds")"
-AWS_SESSION_TOKEN="$(jq -r '.Credentials.SessionToken' <<<"$creds")"
-mask "$AWS_SECRET_ACCESS_KEY"; mask "$AWS_SESSION_TOKEN"
-export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
-unset creds oidc
-ok "AWS role assumed"
-# The key goes from the AWS CLI straight into the helper's stdin: never a variable, file or argument.
-assertion="$(aws secretsmanager get-secret-value --region "$AWS_REGION" --secret-id "$STORE_KEY_SECRET_ID" \
-  --query SecretString --output text 2>/dev/null | node "$HELPER" assertion)" || refuse "could not read the service account key or sign with it"
-mask "$assertion"
-code="$(curl -sS -o "$RESP" -w '%{http_code}' --data-urlencode 'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer' \
-  --data-urlencode 'assertion@-' "$TOKEN_URL" <<<"$assertion" 2>/dev/null)" || code=000
-unset assertion
-if [[ "$code" != 200 ]]; then
-  # Only the OAuth error code (e.g. invalid_grant); never the body.
-  err="$(jq -r '.error // "unknown"' "$RESP" 2>/dev/null || echo unknown)"; rm -f "$RESP"
-  refuse "token exchange failed: HTTP ${code}, error ${err}"
-fi
-ACCESS_TOKEN="$(jq -r '.access_token // empty' "$RESP")"; rm -f "$RESP"
-[[ -n "$ACCESS_TOKEN" ]] || refuse "token exchange returned no access token"
-mask "$ACCESS_TOKEN"
-unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
-ok "store access token obtained (masked)"
-
-api() { # api <METHOD> <path after /v2/publishers/<pub>/items/<item>> <item> [--upload FILE | --json BODY]; body in $RESP, code on stdout
-  local method="$1" action="$2" it="$3" base="${STORE_API}/v2"; shift 3
-  local -a extra=()
-  case "${1:-}" in
-    --upload) base="${STORE_API}/upload/v2"; extra=(-T "$2") ;;
-    --json) extra=(-H 'Content-Type: application/json' --data "$2") ;;
-  esac
-  curl -sS -X "$method" -o "$RESP" -w '%{http_code}' -H @<(printf 'Authorization: Bearer %s\n' "$ACCESS_TOKEN") \
-    "${extra[@]}" "${base}/publishers/${publisher}/items/${it}${action}" 2>/dev/null || echo 000
-}
-api_fail() { # api_fail <what> <code>
-  local detail
-  detail="$(jq -r '[.error.status // empty, .error.message // empty, (.error.details[]? | .. | .reason? // empty)] | map(tostring) | join("; ")' "$RESP" 2>/dev/null || true)"
-  refuse "$1 failed: HTTP $2${detail:+ (${detail})}"
-}
-fetch_status() { # fetch_status <item> <out file>
-  local c; c="$(api GET :fetchStatus "$1")"
-  [[ "$c" == 200 ]] || api_fail fetchStatus "$c"
-  cp "$RESP" "$2"
-}
+get_access_token
 
 echo "== store state"
 st_file="${tmp}/status.json"

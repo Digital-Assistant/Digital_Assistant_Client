@@ -2,7 +2,8 @@
 # Tests scripts/ci/store-release.sh offline: a fixture build (package-extension.sh --store on a tiny
 # dist/, no npm build) and stub `gh`, `curl` and `aws` on PATH. No network, no store call, no real
 # credential: the "service account key" is a throw-away RSA key made here and deleted at the end.
-# Covers the dry run of both tiers, a refusal for every guard, the real-run path (token exchange,
+# Covers the read-only --status mode (accepted, refused for PENDING_REVIEW and STAGED, no write call),
+# the dry run of both tiers, a refusal for every guard, the real-run path (token exchange,
 # fetchStatus, cancelSubmission, upload, polling, STAGED_PUBLISH) against the stubs, and that no
 # secret-like value reaches the output.
 #
@@ -27,6 +28,13 @@ expect() { # expect pass|fail "<label>" <command...>  (fail cases must also prin
   else
     failed=$((failed + 1)); echo "NOT OK ${label} (rc=${rc})"; sed 's/^/        /' "$work/last.log" | tail -20
   fi
+}
+expect_rc() { # expect_rc <code> "<label>" <command...>  (an exact exit code, e.g. 3 = pending in --status)
+  local want="$1" label="$2"; shift 2
+  local rc=0
+  "$@" >"$work/last.log" 2>&1 || rc=$?
+  if (( rc == want )); then pass=$((pass + 1)); echo "ok    ${label}"
+  else failed=$((failed + 1)); echo "NOT OK ${label} (rc=${rc}, wanted ${want})"; sed 's/^/        /' "$work/last.log" | tail -20; fi
 }
 assert() { # assert "<label>" <command...>
   local label="$1"; shift
@@ -335,6 +343,83 @@ expect fail "real run tier=prod: promotion found, then refuses a PROD item whose
 assert "  ... the TEST run record matched before that" grep -q 'uploaded this exact bundle' "$work/last.log"
 assert "  ... and nothing was uploaded to PROD" bash -c "! grep -qE ':upload|:publish' '$state/calls'"
 unset STUB_RUNS STUB_RECORD
+
+# ------------------------------------------------------------------ --status (read-only)
+# Live status against the stubs: no --version, no --dir, no build. Every curl line of the call log
+# must be the OIDC read, the OAuth token POST or GET :fetchStatus; nothing else may ever appear.
+writes_in_calls() { grep -E '^curl ' "$state/calls" | grep -vE 'oidc.example.invalid|oauth2.googleapis.com/token$|^curl GET .*:fetchStatus$' || true; }
+assert "status: no store call may be anything but GET :fetchStatus (helper sanity)" bash -c "[[ -z \$(printf 'curl GET https://x/y:fetchStatus\ncurl POST https://oauth2.googleapis.com/token\n' | grep -E '^curl ' | grep -vE 'oidc.example.invalid|oauth2.googleapis.com/token\$|^curl GET .*:fetchStatus\$') ]]"
+reset_state; cp "$work/st-ok.json" "$state/status-${TEST_ID}.json"
+expect_rc 0 "status tier=test: no pending submission -> exit 0, ACCEPTED" env "${real_env[@]}" GITHUB_STEP_SUMMARY="$work/status-summary.md" "$sr" --status --tier test
+cp "$work/last.log" "$work/status.log"
+assert "  ... the table says ACCEPTED, with the published version and no pending state" bash -c "grep -q 'ACCEPTED' '$work/status.log' && grep -q '1.0.0.1' '$work/status.log' && grep -q 'would be ACCEPTED' '$work/status.log'"
+assert "  ... one fetchStatus, the token exchange, and no other store call" bash -c "[[ \$(grep -c ':fetchStatus' '$state/calls') == 1 ]] && grep -q 'grant-type:jwt-bearer' '$state/calls' && [[ -z \$(grep -E '^curl ' '$state/calls' | grep -vE 'oidc.example.invalid|oauth2.googleapis.com/token\$|^curl GET .*:fetchStatus\$') ]]"
+assert "  ... NO write call: no upload, publish or cancelSubmission, no POST/PUT/DELETE to the store" bash -c "! grep -qE ':upload|:publish|cancelSubmission|curl (PUT|DELETE|PATCH)|upload/v2' '$state/calls' && ! grep -E '^curl POST' '$state/calls' | grep -v 'oauth2.googleapis.com/token\$' | grep -q ."
+assert "  ... masked the access token; printed no secret, no token, no item id" bash -c "grep -q '::add-mask::FAKEACCESSTOKEN' '$work/status.log' && ! grep -v '^::add-mask::' '$work/status.log' | grep -qE 'FAKEACCESSTOKEN|FAKESECRETKEY|FAKESESSION|FAKEOIDCTOKEN|FAKEREQUESTTOKEN|PRIVATE KEY|$TEST_ID'"
+assert "  ... the step summary has no secret and no item id, and says read-only" bash -c "! grep -qE 'FAKE|PRIVATE|$TEST_ID' '$work/status-summary.md' && grep -q 'Read-only' '$work/status-summary.md'"
+reset_state; cp "$work/st-rejected.json" "$state/status-${TEST_ID}.json"
+expect_rc 0 "status tier=test: an earlier REJECTED submission is not pending -> exit 0" env "${real_env[@]}" "$sr" --status --tier test
+reset_state; cp "$work/st-pending.json" "$state/status-${TEST_ID}.json"
+expect_rc 3 "status tier=test: PENDING_REVIEW -> distinct exit code 3, REFUSED" env "${real_env[@]}" "$sr" --status --tier test
+assert "  ... the table shows PENDING_REVIEW, the pending version and 'would be REFUSED'" bash -c "grep -q 'PENDING_REVIEW' '$work/last.log' && grep -q '1.0.0.5' '$work/last.log' && grep -q 'would be REFUSED' '$work/last.log' && grep -q 'replace_pending=true' '$work/last.log'"
+assert "  ... and it made no write call" bash -c "[[ -z \$(grep -E '^curl ' '$state/calls' | grep -vE 'oidc.example.invalid|oauth2.googleapis.com/token\$|^curl GET .*:fetchStatus\$') ]] && ! grep -qE ':upload|:publish|cancelSubmission' '$state/calls'"
+reset_state; cp "$work/st-staged.json" "$state/status-${TEST_ID}.json"
+expect_rc 3 "status tier=test: STAGED (approved, not yet published) -> exit 3, REFUSED" env "${real_env[@]}" "$sr" --status --tier test
+assert "  ... the table shows STAGED and 'would be REFUSED'" bash -c "grep -q 'STAGED' '$work/last.log' && grep -q 'would be REFUSED' '$work/last.log'"
+assert "  ... and it made no write call" bash -c "! grep -qE ':upload|:publish|cancelSubmission' '$state/calls'"
+reset_state; cp "$work/st-takendown.json" "$state/status-${TEST_ID}.json"
+expect fail "status tier=test: item taken down -> the existing refusal code 1" env "${real_env[@]}" "$sr" --status --tier test
+reset_state; cp "$work/st-uploading.json" "$state/status-${TEST_ID}.json"
+expect fail "status tier=test: an upload in progress -> refusal code 1" env "${real_env[@]}" "$sr" --status --tier test
+reset_state; cp "$work/st-otherkey.json" "$state/status-${TEST_ID}.json"
+expect fail "status tier=test: publicKey derives another id -> refusal code 1" env "${real_env[@]}" "$sr" --status --tier test
+reset_state
+expect fail "status tier=test: item unknown to the store (404) -> refusal code 1" env "${real_env[@]}" "$sr" --status --tier test
+reset_state; export STUB_TOKEN_FAIL=1; cp "$work/st-ok.json" "$state/status-${TEST_ID}.json"
+expect fail "status: failed token exchange -> refusal code 1, only the OAuth error code shown" env "${real_env[@]}" "$sr" --status --tier test
+assert "  ... no fetchStatus was sent without a token" bash -c "! grep -q ':fetchStatus' '$state/calls' && grep -q 'error invalid_grant' '$work/last.log' && ! grep -q 'Invalid JWT Signature' '$work/last.log'"
+unset STUB_TOKEN_FAIL
+# tier=prod: both items are read (the TEST item too); the PROD item's real publicKey is not known
+# offline, so the id check refuses, but the calls prove what was read and that nothing was written.
+reset_state; cp "$work/st-test-published.json" "$state/status-${TEST_ID}.json"; cp "$work/st-ok.json" "$state/status-${PROD_ID}.json"
+expect fail "status tier=prod: reads PROD and TEST, refuses a PROD item whose publicKey is not the PROD id" env "${real_env[@]}" "$sr" --status --tier prod
+assert "  ... fetchStatus was called for both items and nothing else touched the store" bash -c "[[ \$(grep -c ':fetchStatus' '$state/calls') == 2 ]] && [[ -z \$(grep -E '^curl ' '$state/calls' | grep -vE 'oidc.example.invalid|oauth2.googleapis.com/token\$|^curl GET .*:fetchStatus\$') ]]"
+reset_state
+expect fail "status: a live read outside GitHub Actions is refused" "$sr" --status --tier test
+expect fail "status: a variable missing is refused" env GITHUB_ACTIONS=true CWS_TEST_ITEM_ID="$TEST_ID" "$sr" --status --tier test
+assert "  ... and no store, token or AWS call was made" bash -c "! grep -qE '^(curl|aws) ' '$state/calls' 2>/dev/null"
+# --status --dry-run: saved fetchStatus JSON, no credential, no call.
+reset_state
+expect_rc 0 "status --dry-run on a saved status without a pending submission -> exit 0" env CWS_TEST_ITEM_ID="$TEST_ID" "$sr" --status --dry-run --tier test --status-file "$work/st-ok.json"
+expect_rc 3 "status --dry-run on a saved PENDING_REVIEW status -> exit 3" env CWS_TEST_ITEM_ID="$TEST_ID" "$sr" --status --dry-run --tier test --status-file "$work/st-pending.json"
+expect_rc 3 "status --dry-run on a saved STAGED status -> exit 3" env CWS_TEST_ITEM_ID="$TEST_ID" "$sr" --status --dry-run --tier test --status-file "$work/st-staged.json"
+assert "  ... no store, token or AWS call, no TEST item id printed" bash -c "! grep -qE '^(curl|aws) ' '$state/calls' 2>/dev/null && ! grep -q '$TEST_ID' '$work/last.log'"
+# Usage: --status is exclusive with a release.
+expect_rc 2 "usage: --status refuses --version" env "${real_env[@]}" "$sr" --status --tier test --version "$version"
+expect_rc 2 "usage: --status refuses --dir" env "${real_env[@]}" "$sr" --status --tier test --dir "$d"
+expect_rc 2 "usage: --status refuses --replace-pending" env "${real_env[@]}" "$sr" --status --tier test --replace-pending
+expect_rc 2 "usage: --status refuses --test-record-file" env "${real_env[@]}" "$sr" --status --tier test --test-record-file "$work/rec-ok.json"
+expect_rc 2 "usage: --status --dry-run without --status-file is refused" "$sr" --status --dry-run --tier test
+expect_rc 2 "usage: --status-file without --dry-run is refused" "$sr" --status --tier test --status-file "$work/st-ok.json"
+expect_rc 2 "usage: --status needs a tier" "$sr" --status
+# The in-code assertion: status mode lets nothing but GET :fetchStatus through api(). The function
+# is cut out of the script and run here with the stub curl.
+reset_state
+api_src="$(sed -n '/^api() {/,/^}/p' "$sr")"
+expect_rc 70 "assertion: api() in status mode aborts on :upload (exit 70)" bash -c "status_mode=1; STORE_API=x; publisher=p; RESP=/dev/null; ACCESS_TOKEN=t; $api_src
+api POST :upload item --upload /dev/null"
+expect_rc 70 "assertion: api() in status mode aborts on :publish" bash -c "status_mode=1; STORE_API=x; publisher=p; RESP=/dev/null; ACCESS_TOKEN=t; $api_src
+api POST :publish item --json '{}'"
+expect_rc 70 "assertion: api() in status mode aborts on cancelSubmission" bash -c "status_mode=1; STORE_API=x; publisher=p; RESP=/dev/null; ACCESS_TOKEN=t; $api_src
+api POST :cancelSubmission item"
+expect_rc 70 "assertion: api() in status mode aborts on a non-GET fetchStatus" bash -c "status_mode=1; STORE_API=x; publisher=p; RESP=/dev/null; ACCESS_TOKEN=t; $api_src
+api POST :fetchStatus item"
+assert "  ... none of those sent a request" bash -c "! grep -q . '$state/calls' 2>/dev/null"
+expect_rc 0 "assertion: api() in status mode lets GET :fetchStatus through" bash -c "status_mode=1; STORE_API=https://store.example.invalid; publisher=p; RESP=/dev/null; ACCESS_TOKEN=t; $api_src
+api GET :fetchStatus item >/dev/null"
+assert "  ... that one sent exactly one GET fetchStatus" bash -c "[[ \$(grep -c . '$state/calls') == 1 ]] && grep -q 'curl GET .*:fetchStatus' '$state/calls'"
+assert "  ... the same function allows an upload outside status mode (the real run still works)" bash -c "status_mode=''; STORE_API=https://store.example.invalid; publisher=p; RESP=/dev/null; ACCESS_TOKEN=t; $api_src
+api POST :publish item --json '{}' >/dev/null && grep -q 'curl POST .*:publish' '$state/calls'"
 
 echo
 echo "test-store-release: ${pass} passed, ${failed} failed"
