@@ -1,6 +1,16 @@
 name: Release to Chrome Web Store
-run-name: "Store release ${{ inputs.tier }} ${{ inputs.version }}${{ inputs.dry_run && ' (dry run)' || '' }}"
+run-name: "${{ inputs.status_only && format('Store status {0}', inputs.tier) || format('Store release {0} {1}{2}', inputs.tier, inputs.version, inputs.dry_run && ' (dry run)' || '') }}"
 
+# OPERATOR REFERENCE. Step 1, before cutting any release: ask what is pending on the item (read-only).
+#   gh workflow run release-store.yml --ref dev -f tier=test -f status_only=true
+# It reads the store state only (token exchange, then fetchStatus; no upload, no submission, no
+# cancel, no artifact). The run ends green when a new submission would be accepted, and red when it
+# would be refused: the log table says why (a pending submission PENDING_REVIEW or STAGED = exit
+# code 3, or taken down, upload in progress, publicKey mismatch = exit code 1). tier=prod also reads
+# the TEST item (informational). status_only=true must not be combined with dry_run=false. Run it in
+# the environment of the tier (tier=prod waits for the `production` reviewers, like a release).
+# Step 2: dry run of the release (default). Step 3: the real run, dry_run=false.
+#
 # Uploads the store zip that CI already built on dev (artifact client-zip; never a rebuild) to one
 # Chrome Web Store item and submits it for review with STAGED_PUBLISH: after Google approves, the
 # owner presses Publish in the dashboard. The logic lives in scripts/ci/store-release.sh (run it
@@ -11,7 +21,8 @@ run-name: "Store release ${{ inputs.tier }} ${{ inputs.version }}${{ inputs.dry_
 #                 item shows it PUBLISHED or STAGED. The reviewer's approval is the smoke-pass
 #                 attestation.
 # dry_run (default true) runs every build guard in job "check" and stops: no environment, no
-# credential, no store call. Only dry_run=false starts job "release".
+# credential, no store call. Only dry_run=false starts job "release". status_only=true runs only
+# job "status" (see above) and none of the others.
 # At most one pending submission per item: replace_pending=true cancels it first (loses the
 # review queue position).
 #   gh workflow run release-store.yml --ref dev -f tier=test -f version=X.Y.Z.N [-f dry_run=false]
@@ -29,13 +40,19 @@ on:
         type: choice
         options: [test, prod]
       version:
-        description: 'Build to release, X.Y.Z.N (the CI run summary of a dev build)'
-        required: true
+        description: 'Build to release, X.Y.Z.N (the CI run summary of a dev build). Not used by status_only'
+        required: false
+        default: ''
         type: string
       dry_run:
         description: 'Dry run: check everything, read no credential, call no store API'
         required: false
         default: true
+        type: boolean
+      status_only:
+        description: 'Status only: read what is pending on the item (read-only: no upload, no submit, no cancel). Leave dry_run on'
+        required: false
+        default: false
         type: boolean
       replace_pending:
         description: 'Cancel a pending submission of this item first (loses its review queue position)'
@@ -47,12 +64,64 @@ permissions: {}
 
 # One release per item at a time; never cancel one half way.
 concurrency:
-  group: release-store-${{ inputs.tier }}
+  group: release-store-${{ inputs.tier }}${{ inputs.status_only && '-status' || '' }}
   cancel-in-progress: false
 
 jobs:
+  # Runs first, with no environment and no permission, so a bad combination fails visibly before any
+  # approval is requested.
+  guard:
+    name: Check the inputs
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Refuse branches other than dev, and status_only together with dry_run=false
+        env:
+          REF: ${{ github.ref }}
+          STATUS_ONLY: ${{ inputs.status_only }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          [[ "$REF" == refs/heads/dev ]] || { echo "::error::Release to Chrome Web Store runs only on dev, not $REF"; exit 1; }
+          if [[ "$STATUS_ONLY" == true && "$DRY_RUN" != true ]]; then
+            echo "::error::status_only=true is read-only: use it with dry_run left on (true), or run a release with dry_run=false, not both"
+            exit 1
+          fi
+
+  status:
+    name: Store status (${{ inputs.tier }}, read-only)
+    needs: guard
+    if: ${{ inputs.status_only }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: ${{ inputs.tier == 'prod' && 'production' || 'test-store' }}
+    permissions:
+      contents: read # checkout the scripts
+      id-token: write # GitHub OIDC for the AWS role that may read the service account key
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Token exchange and fetchStatus only; the script asserts in code that nothing else is called.
+      # Exit 0 = a new submission would be accepted; 3 = a submission is pending; 1 = refused.
+      - name: Read the store status
+        env:
+          TIER: ${{ inputs.tier }}
+          CWS_PUBLISHER_ID: ${{ vars.CWS_PUBLISHER_ID }}
+          CWS_TEST_ITEM_ID: ${{ vars.CWS_TEST_ITEM_ID }}
+          CWS_PROD_ITEM_ID: ${{ vars.CWS_PROD_ITEM_ID }}
+          STORE_AWS_ROLE_ARN: ${{ vars.STORE_AWS_ROLE_ARN }}
+          STORE_KEY_SECRET_ID: ${{ vars.STORE_KEY_SECRET_ID }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+        run: |
+          set -euo pipefail
+          scripts/ci/store-release.sh --status --tier "$TIER"
+
   check:
     name: Check the build (no store call)
+    needs: guard
+    if: ${{ !inputs.status_only }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -112,7 +181,7 @@ jobs:
   release:
     name: Upload and submit (${{ inputs.tier }})
     needs: check
-    if: ${{ !inputs.dry_run }}
+    if: ${{ !inputs.dry_run && !inputs.status_only }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     environment: ${{ inputs.tier == 'prod' && 'production' || 'test-store' }}
