@@ -16,6 +16,7 @@
 import "../AuthService";
 import { AppConfig } from "@udan/digital-assistant-sdk";
 import {
+    allowedEnvironment,
     applyBuildConfig,
     normalizeEnvironment,
     type Environment,
@@ -28,6 +29,8 @@ const g = globalThis as any;
 const pageSetKeys = new Set<string>();
 const appliedKeys = new Set<string>();
 let backendChoice: EnvironmentChoice | undefined;
+/** Tier stamp of the installed extension (TEST store build = locked to TEST); undefined = none. */
+let tierStamp: Environment | undefined;
 let installed = false;
 let ready: Promise<void> | undefined;
 
@@ -54,6 +57,13 @@ function installPageWrapper() {
             for (const [key, value] of Object.entries(config)) {
                 if (typeof value !== "string") continue; // AppConfig rejects other types
                 if (key === "environment" && !normalizeEnvironment(value)) continue;
+                // a TEST-stamped install cannot be switched to PROD by a page: drop that request
+                if (key === "environment" && !allowedEnvironment(value, tierStamp)) {
+                    console.warn("[UDA] this extension build is locked to TEST; ignoring environment PROD from the page");
+                    config = { ...config };
+                    delete config[key];
+                    continue;
+                }
                 pageSetKeys.add(key);
             }
         }
@@ -107,6 +117,7 @@ export function initRuntimeEnvironment(timeoutMs = 3000): Promise<void> {
             const environment = normalizeEnvironment(data?.environment);
             if (environment) {
                 backendChoice = { environment, source: data.source };
+                tierStamp = normalizeEnvironment(data.tierStamp);
                 if (settled) sync(); // a later change (options override): AppConfig fires UDAConfigUpdated
             }
             settle();
