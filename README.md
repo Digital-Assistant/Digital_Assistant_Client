@@ -41,21 +41,24 @@ Older env files: rename `keyCloakUrl` to `keycloakProdUrl` / `keycloakTestUrl`, 
 
 ## TEST or PROD at runtime
 
-One zip serves both backends. The extension decides when it starts, first match wins:
+One bundle serves both backends. The extension decides when it starts, first match wins:
 
 | Order | Source | Notes |
 |---|---|---|
-| 1 | The host page: `window.UDAPluginSDK({ environment: 'TEST' })` | Only for pages that talk to the extension; call it after `UDASdkReady` (below) |
-| 2 | The options page override (`chrome.storage.local`, key `udanEnvironment`) | Extension options: Automatic, TEST or PROD; a change applies within seconds, no reload of the extension |
-| 3 | Install type: an **unpacked** install (`chrome.management.getSelf().installType === 'development'`) is TEST, any other install is PROD | Needs no extra permission; background service worker only |
-| 4 | Default: PROD | Same as the SDK |
+| 1 | The host page: `window.UDAPluginSDK({ environment: 'TEST' })` | Only for pages that talk to the extension; call it after `UDASdkReady` (below). Ignored when the build is stamped TEST and the page asks for PROD |
+| 2 | The options page override (`chrome.storage.local`, key `udanEnvironment`) | Extension options: Automatic, TEST or PROD; a change applies within seconds, no reload of the extension. A stored PROD is ignored when the build is stamped TEST |
+| 3 | The **tier stamp**: `tier.json` at the root of the package, exactly `{"tier":"TEST"}` or `{"tier":"PROD"}` | Written by the store packaging (the TEST and the PROD store zip come from the same bundle and differ only by this file, the manifest name and a build-info line). Read by the worker with a fetch of its own package file (`src/config/tierStamp.ts`). Missing, unreadable or invalid (bad JSON, extra keys, other case or value) = no stamp |
+| 4 | Install type: an **unpacked** install (`chrome.management.getSelf().installType === 'development'`) is TEST, any other install is PROD | Needs no extra permission; background service worker only |
+| 5 | Default: PROD | Same as the SDK |
+
+**Tier stamp.** The stamp is the default tier of a store install, so the TEST store item ("UDA TEST") and the PROD item run the same code and differ only in this default. A stamp `TEST` **locks** the extension to TEST: the options page hides the PROD choice, and a PROD request from the options override or from a host page is ignored (the worker and the page side both check). A stamp `PROD` accepts the overrides as before. Without a stamp nothing changes: an unpacked development build (the `test-current` zip has no stamp) is TEST, anything else is PROD. A stamped zip that is loaded unpacked follows its stamp (a PROD-stamped zip gives PROD), so the file you unpack declares its tier. The stamp holds no secret and no URL; the URLs still come from the build settings. The `source` reported by the options page and by `UDASdkReady` is `stamp` when the stamp decided.
 
 The URLs for the chosen environment come, per key, from the page (`apiBaseUrl`, `tokenUrl`, `llmUrl`, `keycloakUrl`), then from the build settings above, then from the SDK's own defaults. A key the page set is never overwritten. When the environment (or a backend, realm or client setting) changes while the panel is open, the panel drops the stored session of the old backend, asks the worker for the session again and runs the search again; no page reload is needed. This is `AuthContext` listening to `UDAConfigUpdated`. The Client never calls `authManager.init` (sign-in runs in the worker), so there is nothing else to re-run.
 
 - **TEST badge.** When the extension runs against TEST, the panel header and the login screen show a `TEST` badge and the toolbar icon shows `TEST`. No badge means PROD.
-- **`UDASdkReady`.** After the extension has applied the environment it fires a `window` event `UDASdkReady` with `detail: { environment: 'TEST' | 'PROD', source: 'page' | 'override' | 'install-type' | 'default' }` and sets `window.UDASdkIsReady = true` (for pages that attach late). A host page must call `UDAAuthDataConfig` and `UDAPluginSDK` only after it: earlier calls reach a copy of the SDK that is replaced later and are lost. Guide: SDK `USAGE.md`.
+- **`UDASdkReady`.** After the extension has applied the environment it fires a `window` event `UDASdkReady` with `detail: { environment: 'TEST' | 'PROD', source: 'page' | 'override' | 'stamp' | 'install-type' | 'default' }` and sets `window.UDASdkIsReady = true` (for pages that attach late). A host page must call `UDAAuthDataConfig` and `UDAPluginSDK` only after it: earlier calls reach a copy of the SDK that is replaced later and are lost. Guide: SDK `USAGE.md`.
 - **Manifest.** The runtime choice added `action` (toolbar badge) and `options_ui`; no new permission. The `key` field pins the extension id (next section).
-- **Rule of thumb for testers.** Unpacked build from `test-current` = TEST. A build installed from the Chrome Web Store (later) = PROD. Whether the store default should be PROD is the owner's decision (R1 in the CI/CD track); the rule above is what the code does today.
+- **Rule of thumb for testers.** Unpacked build from `test-current` = TEST (no stamp). A build installed from the Chrome Web Store follows its stamp: the TEST item is TEST and cannot be switched to PROD, the PROD item is PROD.
 
 ## Installing in Chrome (unpacked)
 
@@ -73,7 +76,7 @@ cp environments/env.example environments/production.env   # fill in public value
 npm run build:prod                                        # -> dist/
 ```
 
-Then load `dist/` unpacked as above, or run `scripts/ci/package-extension.sh` to get the same zip CI makes. A plain `npm run build` writes to `build/` and `npm start` rebuilds on change; reload the extension on `chrome://extensions` after each rebuild. There is no unit-test suite in this repo (the old Jest tests tested code that now lives in the SDK, which has its own); the check is the CI build, the type check and the sanity check below. `build:prod` and `build:qa` drop `console.*` calls (terser `drop_console`); `build` and `build:dev` keep them.
+Then load `dist/` unpacked as above, or run `scripts/ci/package-extension.sh` to get the same zip CI makes. A plain `npm run build` writes to `build/` and `npm start` rebuilds on change; reload the extension on `chrome://extensions` after each rebuild. `npm test` runs a small unit suite for the runtime-environment rules and the tier stamp (`tests/`); the old Jest tests tested code that now lives in the SDK, which has its own. The other checks are the CI build, the type check and the sanity check below. `build:prod` and `build:qa` drop `console.*` calls (terser `drop_console`); `build` and `build:dev` keep them.
 
 
 ## Sign-in and where the config lives
@@ -158,6 +161,7 @@ For the store listing and the privacy notice (the owner submits; draft text in `
 - **In the browser, `chrome.storage.local` (the extension's own storage, not readable by websites):** with the Keycloak sign-in, an access token, a long-lived refresh token (offline) and an ID token from Keycloak, their expiry, the Keycloak user id, and the email and name Keycloak got from Google. With the older Chrome identity sign-in: a session key and a SHA-512 hash of the Chrome profile id and email. Sign Out ends the Keycloak session and deletes the tokens.
 - **In the web page the panel runs in:** the short-lived access token only (about 5 minutes, renewed through the extension) and the session data (user row id, hashed email). **Any script on that page can ask the extension for a fresh access token** (`UDARequestAccessToken`), as it could already read the session from the page's `localStorage`; the refresh token never leaves the extension's worker.
 - **Sent to the UDAN backend:** the access token on each call, the recordings the user saves, search terms, and the Keycloak user id. The email is sent as a hash.
+- **Tier stamp:** the package file `tier.json` (`TEST` or `PROD`) is read from the extension's own package; it stores nothing and sends nothing. The TEST store item is locked to the TEST backend by it.
 - **Not stored or sent:** the Google password (Google or Keycloak's own page handles it), browsing history outside the pages where the user records.
 
 ## CI and releases

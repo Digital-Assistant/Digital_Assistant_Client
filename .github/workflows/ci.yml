@@ -127,6 +127,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx tsc --noEmit
+      - run: npm test
 
   # Known: 11 high findings today (mostly indirect, fixable with `npm audit fix`).
   # Report-only until the owner decides; remove continue-on-error to make it block.

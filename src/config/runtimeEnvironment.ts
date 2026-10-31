@@ -5,8 +5,14 @@
  * Environment precedence (first match wins):
  *   1. set by the page through UDAPluginSDK({ environment })   (page side only)
  *   2. the options override in chrome.storage.local (`udanEnvironment`)
- *   3. install type: `development` (unpacked) = TEST, anything else = PROD
- *   4. PROD
+ *   3. the tier stamp: `tier.json` at the zip root, `{"tier":"TEST"}` or `{"tier":"PROD"}`
+ *      (written by the store packaging, read by ./tierStamp.ts)
+ *   4. install type: `development` (unpacked) = TEST, anything else = PROD
+ *   5. PROD
+ * A stamp `TEST` locks the extension to TEST: a PROD value from step 1 or 2 is ignored (a TEST
+ * store install can never reach PROD). A stamp `PROD` accepts the overrides as before. A missing
+ * or invalid stamp is the same as no stamp (steps 4 and 5, today's behaviour), so an unpacked
+ * development build without a stamp is still TEST.
  * URL precedence within the environment: page keys, then the build config
  * (./buildConfig.ts, public values only), then the SDK defaults. Empty build values
  * are skipped so the SDK defaults apply.
@@ -15,7 +21,7 @@
 import { buildConfig, type BuildConfig } from "./buildConfig";
 
 export type Environment = "TEST" | "PROD";
-export type EnvironmentSource = "page" | "override" | "install-type" | "default";
+export type EnvironmentSource = "page" | "override" | "stamp" | "install-type" | "default";
 
 export interface EnvironmentChoice {
     environment: Environment;
@@ -35,10 +41,40 @@ export function normalizeEnvironment(value: unknown): Environment | undefined {
     return upper === "TEST" || upper === "PROD" ? upper : undefined;
 }
 
-/** Steps 2 to 4 of the precedence (the background has no page). */
-export function chooseEnvironment(installType?: string, override?: unknown): EnvironmentChoice {
-    const forced = normalizeEnvironment(override);
+/**
+ * Reads the content of `tier.json`. Strict on purpose: the text must be JSON, an object whose
+ * only key is `tier`, with the exact value "TEST" or "PROD". Anything else (bad JSON, extra keys,
+ * other case, other value, not a string) is no stamp, and the caller falls back to PROD.
+ */
+export function parseTierStamp(text: unknown): Environment | undefined {
+    if (typeof text !== "string") return undefined;
+    let data: unknown;
+    try {
+        data = JSON.parse(text);
+    } catch {
+        return undefined;
+    }
+    if (!data || typeof data !== "object" || Array.isArray(data)) return undefined;
+    const keys = Object.keys(data);
+    if (keys.length !== 1 || keys[0] !== "tier") return undefined;
+    const tier = (data as { tier: unknown }).tier;
+    return tier === "TEST" || tier === "PROD" ? tier : undefined;
+}
+
+/**
+ * An environment requested by a page (UDAPluginSDK({ environment })) or by the options override,
+ * or undefined when it is not allowed or not valid. With a TEST stamp a PROD request is refused.
+ */
+export function allowedEnvironment(requested: unknown, stamp?: Environment): Environment | undefined {
+    const wanted = normalizeEnvironment(requested);
+    return wanted && !(stamp === "TEST" && wanted === "PROD") ? wanted : undefined;
+}
+
+/** Steps 2 to 5 of the precedence (the background has no page). `stamp` = parsed `tier.json`, if any. */
+export function chooseEnvironment(installType?: string, override?: unknown, stamp?: Environment): EnvironmentChoice {
+    const forced = allowedEnvironment(override, stamp);
     if (forced) return { environment: forced, source: "override" };
+    if (stamp) return { environment: stamp, source: "stamp" };
     if (installType === "development") return { environment: "TEST", source: "install-type" };
     if (installType) return { environment: "PROD", source: "install-type" };
     return { environment: "PROD", source: "default" };
