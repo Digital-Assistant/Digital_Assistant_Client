@@ -14,13 +14,26 @@
 #      timestamps = commit time, fixed modes, zip -X -D), a copy of build-info.json and
 #      out/SHA256SUMS over both.
 # Same commit + same run number + attempt + env = same zip bytes.
+#
+# With --store it also cuts the two Chrome Web Store zips from the SAME dist/ (no second build,
+# one config_hash): out/udan-extension-<version>-store-test.zip and ...-store-prod.zip. Both
+# drop the manifest "key" (the store item id is fixed by the store, the key pins the dev/TEST id)
+# and carry a tier stamp tier.json ({"tier":"TEST"} or {"tier":"PROD"}, read by the extension at
+# runtime). They differ ONLY in: manifest.json "name" (TEST: "UDA TEST"), tier.json, the "tier"
+# field of build-info.json and the TEST icon badge files (store/test-icons/*.png over logos/).
+# Every other file is byte-identical, so what testers ran is what ships. Each zip gets its line
+# in SHA256SUMS. Verify with scripts/ci/check-store-zip.sh.
 # Firefox is not in use: no Firefox zip (TODO). dist/manifest-firefox.json is copied but unused.
 #
-# Usage: scripts/ci/package-extension.sh [--run-number N] [--sha SHA] [--no-build]
+# Usage: scripts/ci/package-extension.sh [--run-number N] [--sha SHA] [--no-build] [--store]
+#                                        [--dist-dir DIR] [--out-dir DIR]
 #   --run-number N  4th version part (default: GITHUB_RUN_NUMBER, else 0)
 # The attempt comes from GITHUB_RUN_ATTEMPT (default 1).
 #   --sha SHA       commit recorded in version_name/build-info (default: GITHUB_SHA, else HEAD)
 #   --no-build      package the existing dist/ (skips the env check and the build)
+#   --store         also write the two store zips (see above)
+#   --dist-dir DIR  built extension folder (default dist); --out-dir DIR  output folder (default out).
+#                   Meant for tests on a fixture dist/; relative paths are from the repo root.
 # In GitHub Actions it also appends a summary to GITHUB_STEP_SUMMARY and sets the outputs
 # version, zip and sha256 in GITHUB_OUTPUT.
 set -euo pipefail
@@ -32,11 +45,17 @@ SDK_PKG="@udan/digital-assistant-sdk"
 run_number="${GITHUB_RUN_NUMBER:-0}"
 sha="${GITHUB_SHA:-}"
 do_build=true
+store=false
+dist_dir=dist
+out_dir=out
 while (( $# )); do
   case "$1" in
     --run-number) run_number="${2:?--run-number needs a value}"; shift 2 ;;
     --sha) sha="${2:?--sha needs a value}"; shift 2 ;;
     --no-build) do_build=false; shift ;;
+    --store) store=true; shift ;;
+    --dist-dir) dist_dir="${2:?--dist-dir needs a value}"; shift 2 ;;
+    --out-dir) out_dir="${2:?--out-dir needs a value}"; shift 2 ;;
     *) echo "unknown argument: $1" >&2; exit 2 ;;
   esac
 done
@@ -60,11 +79,12 @@ run_attempt="${GITHUB_RUN_ATTEMPT:-1}"
 [[ "$run_attempt" =~ ^[1-9][0-9]*$ ]] || { echo "GITHUB_RUN_ATTEMPT '$run_attempt' is not a positive integer" >&2; exit 1; }
 
 if [[ "$do_build" == true ]]; then
+  [[ "$dist_dir" == dist ]] || { echo "--dist-dir needs --no-build (the build always writes dist/)" >&2; exit 2; }
   BUILD_ENV="$BUILD_ENV" scripts/ci/check-env-keys.sh
   rm -rf dist
   npm run build:prod
 fi
-[[ -f dist/manifest.json ]] || { echo "dist/manifest.json missing: build first" >&2; exit 1; }
+[[ -f "${dist_dir}/manifest.json" ]] || { echo "${dist_dir}/manifest.json missing: build first" >&2; exit 1; }
 
 # Fixed timestamp for every zip entry: the commit time (or SOURCE_DATE_EPOCH).
 epoch="${SOURCE_DATE_EPOCH:-$(git log -1 --format=%ct "$sha" 2>/dev/null || echo 315532800)}"
@@ -80,13 +100,13 @@ version_name="${base} (${sha7}) run ${run_number}.${run_attempt} cfg ${config_ha
 
 VERSION="$version" VERSION_NAME="$version_name" COMMIT="$sha" BRANCH="${branch:-unknown}" \
 RUN_ID="${GITHUB_RUN_ID:-local}" RUN_NUMBER="$run_number" RUN_ATTEMPT="$run_attempt" CONFIG_HASH="$config_hash" \
-REPOSITORY="${GITHUB_REPOSITORY:-}" EPOCH="$epoch" ENV_KEYS_SET="$env_keys_set" SDK_PKG="$SDK_PKG" \
+DIST_DIR="$dist_dir" REPOSITORY="${GITHUB_REPOSITORY:-}" EPOCH="$epoch" ENV_KEYS_SET="$env_keys_set" SDK_PKG="$SDK_PKG" \
 node <<'EOF'
 const fs = require("fs");
 const e = process.env;
 
 // Stamp the built manifest (version_name right after version).
-const manifestPath = "dist/manifest.json";
+const manifestPath = `${e.DIST_DIR}/manifest.json`;
 const m = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 const stamped = {};
 for (const [k, v] of Object.entries(m)) {
@@ -94,7 +114,7 @@ for (const [k, v] of Object.entries(m)) {
   stamped[k] = k === "version" ? e.VERSION : v;
   if (k === "version") stamped.version_name = e.VERSION_NAME;
 }
-if (!("version" in stamped)) throw new Error("dist/manifest.json has no version");
+if (!("version" in stamped)) throw new Error(`${manifestPath} has no version`);
 fs.writeFileSync(manifestPath, JSON.stringify(stamped, null, 2) + "\n");
 
 const lock = JSON.parse(fs.readFileSync("package-lock.json", "utf8"));
@@ -119,32 +139,83 @@ const info = {
   node: process.version,
   env_keys_set: JSON.parse(e.ENV_KEYS_SET),
 };
-fs.writeFileSync("dist/build-info.json", JSON.stringify(info, null, 2) + "\n");
+fs.writeFileSync(`${e.DIST_DIR}/build-info.json`, JSON.stringify(info, null, 2) + "\n");
 EOF
 
 # Deterministic zip: fixed modes and mtimes, sorted entries, no extra attributes, no dir entries.
-find dist -type d -exec chmod 755 {} +
-find dist -type f -exec chmod 644 {} +
-find dist -exec touch -h -d "@${epoch}" {} +
+mkdir -p "$out_dir"
+dist_abs="$(cd "$dist_dir" && pwd)"
+out_abs="$(cd "$out_dir" && pwd)"
+
+# pack_dir <folder> <zip path>: same bytes for the same folder content.
+pack_dir() {
+  find "$1" -type d -exec chmod 755 {} +
+  find "$1" -type f -exec chmod 644 {} +
+  find "$1" -exec touch -h -d "@${epoch}" {} +
+  (
+    cd "$1"
+    find . -type f -print | sed 's|^\./||' | LC_ALL=C sort | TZ=UTC zip -X -D -q -@ "$2"
+  )
+}
 
 zip_name="udan-extension-${version}.zip"
-mkdir -p out
-rm -f out/udan-extension-*.zip out/SHA256SUMS out/build-info.json
-(
-  cd dist
-  find . -type f -print | sed 's|^\./||' | LC_ALL=C sort | TZ=UTC zip -X -D -q -@ "../out/${zip_name}"
-)
-cp dist/build-info.json out/build-info.json
-(cd out && sha256sum "$zip_name" build-info.json > SHA256SUMS)
-zip_sha="$(cut -d' ' -f1 < <(grep " ${zip_name}\$" out/SHA256SUMS))"
-sdk_version="$(node -p "require('./out/build-info.json').sdk.version")"
+rm -f "${out_abs}"/udan-extension-*.zip "${out_abs}/SHA256SUMS" "${out_abs}/build-info.json"
+pack_dir "$dist_abs" "${out_abs}/${zip_name}"
+cp "${dist_abs}/build-info.json" "${out_abs}/build-info.json"
+sums=("$zip_name" build-info.json)
 
-echo "Packed out/${zip_name}"
+# Store zips: the two tiers are cut from the same, already stamped dist/ (never a second build).
+store_names=()
+if [[ "$store" == true ]]; then
+  icons_dir=store/test-icons
+  stage_root="$(mktemp -d)"
+  trap 'rm -rf "$stage_root"' EXIT
+  for tier in test prod; do
+    stage="${stage_root}/${tier}"
+    cp -a "$dist_abs" "$stage"
+    if [[ "$tier" == test ]]; then
+      [[ -d "$icons_dir" ]] || { echo "${icons_dir} missing (TEST icon badge files)" >&2; exit 1; }
+      for icon in "$icons_dir"/*.png; do
+        [[ -f "$stage/logos/$(basename "$icon")" ]] || { echo "dist has no logos/$(basename "$icon") to badge" >&2; exit 1; }
+        cp "$icon" "$stage/logos/$(basename "$icon")"
+      done
+    fi
+    STAGE="$stage" TIER="${tier^^}" node <<'EOF'
+const fs = require("fs");
+const { STAGE, TIER } = process.env;
+// manifest: no "key" (the store fixes the item id); the TEST item is named "UDA TEST".
+const mPath = `${STAGE}/manifest.json`;
+const m = JSON.parse(fs.readFileSync(mPath, "utf8"));
+delete m.key;
+if (TIER === "TEST") m.name = "UDA TEST";
+fs.writeFileSync(mPath, JSON.stringify(m, null, 2) + "\n");
+// tier stamp, exactly one key (the reader in src/config/tierStamp.ts is strict).
+fs.writeFileSync(`${STAGE}/tier.json`, JSON.stringify({ tier: TIER }) + "\n");
+// build-info.json: the one tier field is the only addition.
+const bPath = `${STAGE}/build-info.json`;
+const b = JSON.parse(fs.readFileSync(bPath, "utf8"));
+b.tier = TIER;
+fs.writeFileSync(bPath, JSON.stringify(b, null, 2) + "\n");
+EOF
+    store_zip="udan-extension-${version}-store-${tier}.zip"
+    pack_dir "$stage" "${out_abs}/${store_zip}"
+    sums+=("$store_zip")
+    store_names+=("$store_zip")
+  done
+fi
+(cd "$out_abs" && sha256sum "${sums[@]}" > SHA256SUMS)
+zip_sha="$(cut -d' ' -f1 < <(grep " ${zip_name}\$" "${out_abs}/SHA256SUMS"))"
+sdk_version="$(node -p "require('${out_abs}/build-info.json').sdk.version")"
+
+echo "Packed ${out_dir}/${zip_name}"
 echo "  version      ${version}"
 echo "  version_name ${version_name}"
 echo "  sha256       ${zip_sha}"
 echo "  sdk          ${SDK_PKG}@${sdk_version}"
 echo "  env keys set ${env_keys_set}"
+for n in "${store_names[@]}"; do
+  echo "  store zip    ${n} sha256 $(grep " ${n}\$" "${out_abs}/SHA256SUMS" | cut -d' ' -f1)"
+done
 
 if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
   {
@@ -157,12 +228,15 @@ if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
     echo "| SHA256 | \`${zip_sha}\` |"
     echo "| SDK | \`${SDK_PKG}@${sdk_version}\` |"
     echo "| Env keys set | \`${env_keys_set}\` |"
+    for n in "${store_names[@]}"; do
+      echo "| Store zip | \`${n}\` sha256 \`$(grep " ${n}\$" "${out_abs}/SHA256SUMS" | cut -d' ' -f1)\` |"
+    done
   } >>"$GITHUB_STEP_SUMMARY"
 fi
 if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
   {
     echo "version=${version}"
-    echo "zip=out/${zip_name}"
+    echo "zip=${out_dir}/${zip_name}"
     echo "sha256=${zip_sha}"
   } >>"$GITHUB_OUTPUT"
 fi

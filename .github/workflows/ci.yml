@@ -54,7 +54,9 @@ jobs:
 
   # Build once: one immutable, identifiable extension zip per run (the Client's version of an
   # image digest). Later phases hand exactly this zip to testers and PROD, never a rebuild.
-  # Artifact client-zip = out/udan-extension-<X.Y.Z.run>.zip + SHA256SUMS + build-info.json.
+  # Artifact client-zip = out/udan-extension-<X.Y.Z.run>.zip (sideload) + the two Chrome Web Store
+  # zips -store-test and -store-prod (same dist/, see package-extension.sh --store) + SHA256SUMS +
+  # build-info.json.
   # No npm cache: this job produces the release artifact (same rule as the Server image build).
   build:
     needs: changes
@@ -92,13 +94,20 @@ jobs:
           GOOGLE_ANALYTICS_MEASUREMENT_ID: ${{ vars.GOOGLE_ANALYTICS_MEASUREMENT_ID }}
           ENABLE_GOOGLE_ANALYTICS: ${{ vars.ENABLE_GOOGLE_ANALYTICS }}
         run: scripts/ci/generate-env.sh --build production
-      # Env check, clean build:prod, stamped manifest, build-info.json, deterministic zip,
-      # SHA256SUMS; writes version, SHA256 and SDK version to the run summary.
+      # Env check, clean build:prod, stamped manifest, build-info.json, deterministic zips (sideload
+      # and the two store zips cut from the same dist/), SHA256SUMS; writes version, SHA256 and SDK
+      # version to the run summary.
       - name: Build and pack the extension
         env:
           RUN_NUMBER: ${{ github.run_number }}
           COMMIT_SHA: ${{ github.sha }}
-        run: scripts/ci/package-extension.sh --run-number "$RUN_NUMBER" --sha "$COMMIT_SHA"
+        run: scripts/ci/package-extension.sh --store --run-number "$RUN_NUMBER" --sha "$COMMIT_SHA"
+      # Prints pass/FAIL lines, booleans and hashes only (public logs).
+      - name: Check the store zips
+        run: |
+          set -euo pipefail
+          v="$(jq -r .version out/build-info.json)"
+          scripts/ci/check-store-zip.sh "out/udan-extension-${v}-store-test.zip" "out/udan-extension-${v}-store-prod.zip"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: client-zip
@@ -128,6 +137,8 @@ jobs:
       - run: npm ci
       - run: npx tsc --noEmit
       - run: npm test
+      - name: Store packaging tests
+        run: scripts/ci/test-store-packaging.sh
 
   # Known: 11 high findings today (mostly indirect, fixable with `npm audit fix`).
   # Report-only until the owner decides; remove continue-on-error to make it block.

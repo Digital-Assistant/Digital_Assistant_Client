@@ -12,7 +12,7 @@ Browser extension UI (Chrome, Manifest V3) for the Universal Digital Assistant N
 - `npm test` runs the small unit suite in `tests/` (`node --test`, Node 22.18+ strips the TypeScript types; `scripts/test/` adds extensionless `.ts` imports). It covers the runtime-environment rules and the tier stamp. CI checks: build and pack, type check, gitleaks, workflow lint, `npm audit` (report only).
 - `npm run e2e:behaviour -- --build <dir> --backend <url>/api` runs the 14 behaviour checks against a local stack (README "Behaviour check (local stack)"). Not in CI. It needs a build that can sign in: `--auth keycloak-pkce` needs only `keycloakPublicClientId`, `--auth chrome-identity` a secret that never comes from this repo.
 - `scripts/ci/*`: the workflows only call these scripts, run them locally the same way. Index and details: `scripts/ci/README.md`.
-  - `package-extension.sh` builds once and writes `out/udan-extension-<X.Y.Z.N>.zip`, `SHA256SUMS`, `build-info.json`.
+  - `package-extension.sh` builds once and writes `out/udan-extension-<X.Y.Z.N>.zip`, `SHA256SUMS`, `build-info.json`; with `--store` (CI passes it) also the two Chrome Web Store zips `...-store-test.zip` and `...-store-prod.zip` from the same `dist/` (no `key`, `tier.json` stamp, same bytes except manifest name, stamp, one build-info field and the TEST icon badges). `check-store-zip.sh <zip> [<zip>]` verifies them, `test-store-packaging.sh` tests both on a fixture. Never package a store zip from a second build; never upload one with a secret.
   - `generate-env.sh`, `check-env-keys.sh`, `lint-workflows.sh`, `latest-client-build.sh`, `publish-test-build.sh`, `smoke-extension.sh`.
 - `webpack` is pinned at 5.112.2. Retried 2026-10-28 in a scratch install: 5.112.2 builds the SDK bundle and passes the smoke check, so the old 5.105.4 pin (5.112.0 failed) and the Dependabot ignore for webpack are gone. Bump it only through a PR that passes the smoke check. `buffer` and `process` are direct dependencies on purpose (webpack `ProvidePlugin`).
 - Build health: `drop_console` applies to `build:prod` and `build:qa` only (`isProd` in `webpack.config.js`); `.gitattributes` has `* text=auto eol=lf` (CRLF checkouts made noisy diffs; compare old trees with `git diff --strip-trailing-cr -w`); the old `antd` alias is gone.
@@ -29,7 +29,7 @@ Browser extension UI (Chrome, Manifest V3) for the Universal Digital Assistant N
 - Merge method: squash (PR title becomes the commit; the repo also allows merge and rebase, but use squash into `dev`; `dev` to `master` is a merge commit). Default branch is `dev`: GitHub registers `workflow_dispatch`-only workflows (like `Deploy to TEST`) only from the default branch, so keep it `dev`.
 - Unpacked installs never auto-update: testers remove the old extension and load the new folder.
 - The SDK pin changes only through a PR; the SDK is promoted to npm `latest` after a Client TEST pass (SDK `RELEASE_PROCESS.md`).
-- Chrome Web Store upload and the SDK CDN feed are not built yet (track phases C08, C09).
+- Chrome Web Store upload and the SDK CDN feed are not built yet (track phases C08, C09). The store zips are already cut and checked by CI; the release workflow that uploads them is a later phase.
 
 ## Dependabot and lockfile lessons
 - npm minor/patch updates are grouped into one weekly PR (`.github/dependabot.yml`); majors stay separate. Merge a Dependabot PR only when `gh pr view --json mergeStateStatus` says `CLEAN` (checks green and up to date), not just when checks are green.

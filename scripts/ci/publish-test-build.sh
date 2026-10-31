@@ -39,8 +39,10 @@ cd "$dir"
 # 1. Verify what CI produced.
 [[ -f SHA256SUMS && -f build-info.json ]] || { echo "${dir} must hold SHA256SUMS and build-info.json" >&2; exit 1; }
 sha256sum --check --strict --quiet SHA256SUMS || { echo "SHA256SUMS does not match the files" >&2; exit 1; }
-mapfile -t zips < <(awk '{print $2}' SHA256SUMS | grep -E '^udan-extension-.*\.zip$' || true)
-(( ${#zips[@]} == 1 )) || { echo "SHA256SUMS must list exactly one udan-extension-*.zip (found ${#zips[@]})" >&2; exit 1; }
+# The Chrome Web Store zips (-store-test, -store-prod) sit in the same artifact and SHA256SUMS; they are
+# not published here (store-release.sh takes them), so only the sideload zip counts.
+mapfile -t zips < <(awk '{print $2}' SHA256SUMS | grep -E '^udan-extension-.*\.zip$' | grep -vE -- '-store-(test|prod)\.zip$' || true)
+(( ${#zips[@]} == 1 )) || { echo "SHA256SUMS must list exactly one sideload udan-extension-*.zip (found ${#zips[@]})" >&2; exit 1; }
 zip_name="${zips[0]}"
 grep -qE '  build-info\.json$' SHA256SUMS || { echo "SHA256SUMS does not cover build-info.json" >&2; exit 1; }
 
