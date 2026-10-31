@@ -23,7 +23,7 @@ env:
 jobs:
   # Decides if the code changed. Docs-only changes skip the slow jobs.
   changes:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
       contents: read
@@ -59,7 +59,7 @@ jobs:
   build:
     needs: changes
     if: needs.changes.outputs.code == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
       contents: read
@@ -113,7 +113,7 @@ jobs:
   typecheck:
     needs: changes
     if: needs.changes.outputs.code == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
       contents: read
@@ -133,7 +133,7 @@ jobs:
   audit:
     needs: changes
     if: needs.changes.outputs.code == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: read
@@ -150,7 +150,7 @@ jobs:
   # Always runs (secrets can hide in docs too). Scans only the new commits,
   # because the old history holds a known token (finding G3 in security-findings.md).
   gitleaks:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: read
@@ -182,7 +182,7 @@ jobs:
           fi
 
   workflow-lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
       contents: read
@@ -200,7 +200,7 @@ jobs:
     name: CI Gate
     if: always()
     needs: [changes, build, typecheck, audit, gitleaks, workflow-lint]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 2
     permissions: {}
     steps:
