@@ -44,11 +44,11 @@ Text for each field is in `docs/store-listing-draft.md`.
 |---|---|
 | Store listing, Summary (max 132) | the "Summary" block (112 characters) |
 | Store listing, Description | the "Description" block |
-| Store listing, Category | Productivity |
+| Store listing, Category | Productivity (alternatives: Tools, Education) |
 | Store listing, Language | English |
 | Store listing, Screenshots | `01`, `02`, `03` (1280x800) |
 | Store listing, Small promo tile | `promo-tile-440x280.png` |
-| Store listing, Privacy policy URL | `https://udan.nistapp.com/privacy` |
+| Store listing, Privacy policy URL | `https://udan.nistapp.com/legal/privacy` (never `/privacy`: it renders an empty page) |
 | Privacy practices, Single purpose | the "Single purpose" block |
 | Privacy practices, Permission justifications | the table: `identity`, `identity.email`, `storage`, `tabs`, `activeTab`, host access |
 | Privacy practices, Remote code | No |

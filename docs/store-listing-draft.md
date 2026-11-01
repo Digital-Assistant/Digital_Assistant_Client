@@ -1,6 +1,6 @@
 # Store listing: copy-paste text for the Chrome Web Store dashboard
 
-The owner submits this text. It is checked against the README section "Privacy: what the extension stores"; change the README and this file together. Images and the dashboard field list are in `store/listing/README.md`. The two items (PROD and the unlisted TEST item "UDA TEST") use the same text; the item name comes from the manifest in each store zip, not from this file.
+The owner submits this text. It is checked against the README section "Privacy: what the extension stores"; change the README and this file together. Images and the dashboard field list are in `store/listing/README.md`. The two items (PROD and the unlisted TEST item "UDA TEST") use the same text; the item name comes from the manifest in each store zip, not from this file. The PROD name is `Universal Digital Assistant by Nistapp (UDAN)`, exactly 45 characters, the Chrome Web Store limit; keep any copy consistent with it.
 
 ## Store listing tab
 
@@ -30,14 +30,14 @@ Your data, in plain words
 - The web page where the panel runs receives a short-lived access token (about 5 minutes). A script on that page can ask the extension for a fresh access token while you are signed in. The long-lived refresh token never leaves the extension.
 - Your data is not sold and not used for advertising.
 
-Privacy policy: https://udan.nistapp.com/privacy
+Privacy policy: https://udan.nistapp.com/legal/privacy
 ```
 
-**Category:** Productivity (if the dashboard asks for a subcategory, "Workflow & Planning"; the exact subcategory names change, pick the closest).
+**Category:** Productivity, subcategory "Workflow & Planning". Closest alternatives: Productivity > "Tools" and Productivity > "Education" (from the dashboard list as I know it; I did not open the dashboard, so if a name has changed, pick the nearest).
 
 **Language:** English.
 
-**Privacy policy URL:** `https://udan.nistapp.com/privacy` (HTTP 200, checked 2026-11-01).
+**Privacy policy URL:** `https://udan.nistapp.com/legal/privacy` (renders the policy in a browser, verified 2026-11-01). Do not use `https://udan.nistapp.com/legal/privacy`: the site is a single-page app and that route renders an empty page.
 
 **Images:** see `store/listing/README.md` (three 1280x800 screenshots, small promo tile 440x280).
 
@@ -70,7 +70,7 @@ Record, save and replay step-by-step guides on a web page (Universal Digital Ass
 | Authentication information | yes | Access, refresh and ID tokens from the UDAN sign-in (kept in the extension's storage). |
 | User activity | yes | The clicks the user records as steps in a guide. |
 | Website content | yes | The labels and element data of the steps of a recorded guide. |
-| Web history | yes (conservative) | A saved guide carries the domain of the page it was recorded on. Owner: untick only if you confirm the saved data holds no page address. |
+| Web history | yes | A saved guide stores the page it was recorded on (`fetchDomain()` / the page URL is saved with the recording), so page addresses are collected. Verified. |
 | Health, Financial and payment, Personal communications, Location | no | Not collected. |
 
 **Certifications** (the three statements; tick all three)
@@ -86,8 +86,8 @@ Record, save and replay step-by-step guides on a web page (Universal Digital Ass
 | Is data sold? | No. |
 | Used for purposes unrelated to the single purpose (for example advertising)? | No. |
 | Is the data required for the single purpose? | Yes: the account is needed to save and find guides; the guides and search terms are the function itself. |
-| Encrypted in transit? | Yes, if the PROD backend URLs are all `https://` (owner: confirm; this file cannot see the real URLs). |
-| Can the user delete it? | Sign Out deletes the tokens in the extension. For data saved on the service, point to the privacy policy (owner: confirm that page names a deletion route). |
+| Encrypted in transit? | Yes. Evidence: the PROD store zip `1.1.0.204` was unzipped and the bundle grepped; every backend host is `https://` (`udan.nistapp.com`, `authenticate.nistapp.com`, `iam.nistapp.com`, the `*test` equivalents, third-party docs links). The only `http://` strings are `http://localhost` (dev only) and `http://www.w3.org` (a namespace string, not a request). Checkpoint: no PROD request uses plain HTTP. |
+| Can the user delete it? | Sign Out deletes the tokens in the extension. For data saved on the service, point to the privacy policy (the policy page is the place to name a deletion route; see the privacy-policy placeholder issue in the PR output). |
 
 ## Facts behind the text (from the README, keep in step)
 
