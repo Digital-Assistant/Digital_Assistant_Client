@@ -15,7 +15,7 @@ permissions: {}
 jobs:
   release-please:
     name: Release Please
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
@@ -41,7 +41,7 @@ jobs:
     name: Back-Merge to dev
     needs: release-please
     if: ${{ needs.release-please.outputs.release_created == 'true' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: read

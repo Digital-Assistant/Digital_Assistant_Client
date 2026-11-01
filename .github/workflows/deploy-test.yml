@@ -29,7 +29,7 @@ concurrency:
 jobs:
   choose:
     name: Choose build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
       contents: read # checkout; read package.json at the build commit
@@ -65,7 +65,7 @@ jobs:
   publish:
     name: Publish to testers
     needs: choose
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: write # create the prereleases and tags, upload assets
@@ -107,7 +107,7 @@ jobs:
   sanity:
     name: Sanity check TEST
     needs: publish
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
       contents: read # checkout the scripts and the pinned playwright-core
