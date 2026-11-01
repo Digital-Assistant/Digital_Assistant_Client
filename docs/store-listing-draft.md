@@ -37,7 +37,7 @@ Privacy policy: https://udan.nistapp.com/legal/privacy
 
 **Language:** English.
 
-**Privacy policy URL:** `https://udan.nistapp.com/legal/privacy` (renders the policy in a browser, verified 2026-11-01). Do not use `https://udan.nistapp.com/legal/privacy`: the site is a single-page app and that route renders an empty page.
+**Privacy policy URL:** `https://udan.nistapp.com/legal/privacy` (renders the policy in a browser, verified 2026-11-01). Do not use `https://udan.nistapp.com/privacy`: the site is a single-page app and that route renders an empty page.
 
 **Images:** see `store/listing/README.md` (three 1280x800 screenshots, small promo tile 440x280).
 
