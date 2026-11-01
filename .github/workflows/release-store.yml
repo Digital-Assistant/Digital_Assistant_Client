@@ -7,8 +7,10 @@ run-name: "${{ inputs.status_only && format('Store status {0}', inputs.tier) || 
 # cancel, no artifact). The run ends green when a new submission would be accepted, and red when it
 # would be refused: the log table says why (a pending submission PENDING_REVIEW or STAGED = exit
 # code 3, or taken down, upload in progress, publicKey mismatch = exit code 1). tier=prod also reads
-# the TEST item (informational). status_only=true must not be combined with dry_run=false. Run it in
-# the environment of the tier (tier=prod waits for the `production` reviewers, like a release).
+# the TEST item (informational). status_only=true must not be combined with dry_run=false. It is
+# read-only, so it always runs in the environment test-store (no reviewers), for BOTH tiers: a
+# tier=prod status read needs no approval and is safe to run at any time. A real tier=prod release
+# still runs in `production` and waits for its reviewers.
 # Step 2: dry run of the release (default). Step 3: the real run, dry_run=false.
 #
 # Uploads the store zip that CI already built on dev (artifact client-zip; never a rebuild) to one
@@ -16,7 +18,8 @@ run-name: "${{ inputs.status_only && format('Store status {0}', inputs.tier) || 
 # owner presses Publish in the dashboard. The logic lives in scripts/ci/store-release.sh (run it
 # locally with --dry-run); see its header for every guard.
 #   tier=test  -> the unlisted TEST item, environment test-store (no reviewers)
-#   tier=prod  -> the PROD item, environment production (two reviewers). Promotion: refused unless
+#   tier=prod  -> the PROD item, environment production (two reviewers; real release only, the
+#                 status read of either tier uses test-store). Promotion: refused unless
 #                 a real tier=test run of the same version uploaded the same bundle and the TEST
 #                 item shows it PUBLISHED or STAGED. The reviewer's approval is the smoke-pass
 #                 attestation.
@@ -94,7 +97,12 @@ jobs:
     if: ${{ inputs.status_only }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    environment: ${{ inputs.tier == 'prod' && 'production' || 'test-store' }}
+    # Always test-store, for both tiers (owner decision 2026-10-31). The AWS role is trusted only for
+    # the OIDC subjects of test-store and production, so a job with no environment cannot assume it;
+    # test-store has no reviewers, so a tier=prod status read needs no approval. The status job is
+    # read-only (the script allows only GET :fetchStatus). The real upload job below keeps
+    # `production` and its reviewers for tier=prod; that gate is untouched.
+    environment: test-store
     permissions:
       contents: read # checkout the scripts
       id-token: write # GitHub OIDC for the AWS role that may read the service account key

@@ -55,6 +55,9 @@
 # item of the tier, --test-status-file for the TEST item of tier prod), for tests and for a saved
 # status. Version rules (the new version must be greater) need a build, so they stay with the real
 # run; the table prints the highest version the item already has.
+# Approval rule: status_only=true is read-only and the workflow runs it in the environment
+# test-store for BOTH tiers, so it needs no approval (also for tier=prod). A real tier=prod release
+# still runs in the environment production and waits for its reviewers.
 #
 # Exit codes
 #   0  release or dry run passed; with --status: the item has no pending submission, so a new one

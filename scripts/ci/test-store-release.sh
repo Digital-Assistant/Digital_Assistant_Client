@@ -421,6 +421,23 @@ assert "  ... that one sent exactly one GET fetchStatus" bash -c "[[ \$(grep -c 
 assert "  ... the same function allows an upload outside status mode (the real run still works)" bash -c "status_mode=''; STORE_API=https://store.example.invalid; publisher=p; RESP=/dev/null; ACCESS_TOKEN=t; $api_src
 api POST :publish item --json '{}' >/dev/null && grep -q 'curl POST .*:publish' '$state/calls'"
 
+# ------------------------------------------------------------------ workflow: environment of each job
+# Plain text assertions on release-store.yml (owner decision 2026-10-31): the read-only status job
+# runs in test-store for BOTH tiers (no approval for a tier=prod status read); the real upload job
+# keeps production for tier=prod; the guard and check jobs have no environment.
+wf="$(cd "$(dirname "$sr")/../.." && pwd)/.github/workflows/release-store.yml"
+for j in guard status check release; do
+  awk -v j="  $j:" '$0 == j {on=1; next} on && /^  [a-z][a-z-]*:/ {exit} on' "$wf" >"$work/job-$j.txt"
+  grep -E '^    environment:' "$work/job-$j.txt" >"$work/env-$j.txt" || true
+  grep -vE '^ *#' "$work/job-$j.txt" >"$work/code-$j.txt"
+done
+assert "workflow: job status uses the fixed environment test-store (both tiers, no tier expression)" bash -c "[[ \$(cat '$work/env-status.txt') == '    environment: test-store' ]]"
+assert "workflow: job status has no reference to production outside comments" bash -c "! grep -q production '$work/code-status.txt'"
+assert "workflow: job release keeps production for tier=prod, test-store for tier=test" grep -qF "environment: \${{ inputs.tier == 'prod' && 'production' || 'test-store' }}" "$work/env-release.txt"
+assert "workflow: guard and check jobs have no environment" bash -c "[[ ! -s '$work/env-guard.txt' && ! -s '$work/env-check.txt' ]]"
+assert "workflow: status job runs only for status_only and calls the script with --status" bash -c "grep -qF 'if: \${{ inputs.status_only }}' '$work/code-status.txt' && grep -qF -- 'store-release.sh --status --tier' '$work/code-status.txt'"
+assert "workflow: status job never uploads, publishes, cancels or takes a version" bash -c "! grep -qiE ':upload|:publish|cancelSubmission|--replace-pending|--version|--dir' '$work/code-status.txt'"
+
 echo
 echo "test-store-release: ${pass} passed, ${failed} failed"
 (( failed == 0 ))
