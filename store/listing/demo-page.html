@@ -1,0 +1,50 @@
+<!doctype html>
+<!-- Synthetic host page for the store screenshots (store/listing/capture-screenshots.mjs).
+     Made up for the purpose: "Example Co." is a placeholder, nothing here is a real site,
+     customer or person. The page loads nothing from the network. After UDASdkReady it asks
+     for the PROD environment (documented host-page call) so the panel shows no TEST badge. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Example Co. - Help Center (demo page)</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; font-family: "DejaVu Sans", Arial, sans-serif; color: #1f2937; background: #f8fafc; }
+      header { background: #1e3a8a; color: #fff; padding: 18px 40px; display: flex; justify-content: space-between; align-items: center; }
+      header strong { font-size: 22px; letter-spacing: .3px; }
+      nav a { color: #dbeafe; margin-left: 24px; font-size: 15px; }
+      main { padding: 40px; max-width: 620px; }
+      h1 { margin: 0 0 8px; font-size: 30px; }
+      p.lead { margin: 0 0 28px; color: #4b5563; font-size: 17px; line-height: 1.5; }
+      form { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 24px; }
+      label { display: block; font-size: 14px; font-weight: bold; margin: 0 0 6px; }
+      input, select { width: 100%; padding: 10px 12px; margin: 0 0 18px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 15px; background: #fff; }
+      button { background: #2563eb; color: #fff; border: 0; padding: 11px 22px; border-radius: 6px; font-size: 15px; }
+    </style>
+    <script>
+      window.addEventListener("UDASdkReady", function () {
+        window.UDAPluginSDK({ environment: "PROD" });
+      });
+    </script>
+  </head>
+  <body>
+    <header>
+      <strong>Example Co.</strong>
+      <nav><a href="#">Products</a><a href="#">Pricing</a><a href="#">Help</a></nav>
+    </header>
+    <main>
+      <h1>Request a service visit</h1>
+      <p class="lead">A made-up page for illustration. Fill in the form below to book a visit.</p>
+      <form onsubmit="return false">
+        <label for="n">Full name</label>
+        <input id="n" placeholder="Jane Example">
+        <label for="t">Service type</label>
+        <select id="t"><option>Installation</option><option>Repair</option><option>Inspection</option></select>
+        <label for="d">Preferred date</label>
+        <input id="d" placeholder="2030-01-01">
+        <button type="button">Submit request</button>
+      </form>
+    </main>
+  </body>
+</html>
