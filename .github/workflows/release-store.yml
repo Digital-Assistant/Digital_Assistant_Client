@@ -75,7 +75,7 @@ jobs:
   # approval is requested.
   guard:
     name: Check the inputs
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 2
     steps:
       - name: Refuse branches other than dev, and status_only together with dry_run=false
@@ -95,7 +95,7 @@ jobs:
     name: Store status (${{ inputs.tier }}, read-only)
     needs: guard
     if: ${{ inputs.status_only }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     # Always test-store, for both tiers (owner decision 2026-10-31). The AWS role is trusted only for
     # the OIDC subjects of test-store and production, so a job with no environment cannot assume it;
@@ -130,7 +130,7 @@ jobs:
     name: Check the build (no store call)
     needs: guard
     if: ${{ !inputs.status_only }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: read # checkout; read package.json at the build commit; compare the commit with dev
@@ -190,7 +190,7 @@ jobs:
     name: Upload and submit (${{ inputs.tier }})
     needs: check
     if: ${{ !inputs.dry_run && !inputs.status_only }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     environment: ${{ inputs.tier == 'prod' && 'production' || 'test-store' }}
     permissions:
