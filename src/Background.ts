@@ -50,12 +50,14 @@ import {
 import { buildConfig } from "./config/buildConfig";
 import {
     applyBuildConfig,
+    allowedEnvironment,
     chooseEnvironment,
     normalizeEnvironment,
     ENVIRONMENT_STORAGE_KEY,
     type Environment,
     type EnvironmentChoice,
 } from "./config/runtimeEnvironment";
+import { getTierStamp } from "./config/tierStamp";
 
 // Initialize browser variables
 const browserVar = getBrowserVar();
@@ -75,13 +77,15 @@ let sessionData: UDASessionData = new UDASessionData();
 /**
  * Runtime environment (TEST or PROD). The worker has its own SDK instance: session key,
  * token and CheckUserSession calls run here, so it needs the environment too (not only
- * the page). `ownChoice` = options override, else install type (unpacked = TEST), else
- * PROD. A page that set `environment` itself sends it with its messages (`pageEnvironment`)
- * and wins for that message. getSelf() needs no permission and works in the worker only.
+ * the page). `ownChoice` = options override, else the tier stamp (`tier.json`, store zips),
+ * else install type (unpacked = TEST), else PROD. A TEST stamp refuses a PROD override and a
+ * PROD `pageEnvironment`. A page that set `environment` itself sends it with its messages
+ * (`pageEnvironment`) and wins for that message. getSelf() needs no permission and works in the worker only.
  */
 const anyBrowser = browserVar as any;
 let ownChoice: EnvironmentChoice = { environment: "PROD", source: "default" };
 let installType: string | undefined;
+let tierStamp: Environment | undefined;
 let appliedEnvironment: Environment | undefined;
 const appliedKeys = new Set<string>();
 
@@ -97,13 +101,14 @@ async function refreshEnvironment(): Promise<EnvironmentChoice> {
     } catch (err) {
         console.warn("[UDA Background] management.getSelf failed, using PROD:", err);
     }
+    tierStamp = await getTierStamp((path) => anyBrowser.runtime.getURL(path));
     let override: unknown;
     try {
         override = (await anyBrowser.storage.local.get(ENVIRONMENT_STORAGE_KEY))?.[ENVIRONMENT_STORAGE_KEY];
     } catch (err) {
         console.warn("[UDA Background] reading the environment override failed:", err);
     }
-    ownChoice = chooseEnvironment(installType, override);
+    ownChoice = chooseEnvironment(installType, override, tierStamp);
     applyEnvironment(ownChoice.environment);
     updateBadge();
     return ownChoice;
@@ -118,7 +123,7 @@ function updateBadge() {
 }
 
 function environmentInfo() {
-    return { environment: ownChoice.environment, source: ownChoice.source, installType };
+    return { environment: ownChoice.environment, source: ownChoice.source, installType, tierStamp };
 }
 
 let environmentReady: Promise<EnvironmentChoice> = refreshEnvironment();
@@ -152,7 +157,7 @@ browserVar.runtime.onMessage.addListener(function (request, sender, sendResponse
 	const handleMessage = async (): Promise<Record<string, unknown> | void> => {
 		await environmentReady;
 		// a page that set `environment` itself wins for its own messages
-		applyEnvironment(normalizeEnvironment(request.pageEnvironment) ?? ownChoice.environment);
+		applyEnvironment(allowedEnvironment(request.pageEnvironment, tierStamp) ?? ownChoice.environment);
 		if (request.action === "getusersessiondata" || request.action === "UDAGetNewToken") {
 			if (await resumeKeycloakSession(tabId, request.action === "UDAGetNewToken")) return;
 			if (keycloakSettings() && !chromeIdentityCanSignIn()) {

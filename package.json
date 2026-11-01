@@ -98,6 +98,7 @@
     "build:dev": "webpack --env build=development",
     "build:prod": "webpack --env build=production",
     "build:qa": "webpack --env build=qa",
-    "e2e:behaviour": "node scripts/e2e/behaviour-check.mjs"
+    "e2e:behaviour": "node scripts/e2e/behaviour-check.mjs",
+    "test": "node --import ./scripts/test/register-ts.mjs --test \"tests/**/*.test.ts\""
   }
 }

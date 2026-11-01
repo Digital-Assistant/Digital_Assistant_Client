@@ -1,0 +1,170 @@
+name: Release to Chrome Web Store
+run-name: "Store release ${{ inputs.tier }} ${{ inputs.version }}${{ inputs.dry_run && ' (dry run)' || '' }}"
+
+# Uploads the store zip that CI already built on dev (artifact client-zip; never a rebuild) to one
+# Chrome Web Store item and submits it for review with STAGED_PUBLISH: after Google approves, the
+# owner presses Publish in the dashboard. The logic lives in scripts/ci/store-release.sh (run it
+# locally with --dry-run); see its header for every guard.
+#   tier=test  -> the unlisted TEST item, environment test-store (no reviewers)
+#   tier=prod  -> the PROD item, environment production (two reviewers). Promotion: refused unless
+#                 a real tier=test run of the same version uploaded the same bundle and the TEST
+#                 item shows it PUBLISHED or STAGED. The reviewer's approval is the smoke-pass
+#                 attestation.
+# dry_run (default true) runs every build guard in job "check" and stops: no environment, no
+# credential, no store call. Only dry_run=false starts job "release".
+# At most one pending submission per item: replace_pending=true cancels it first (loses the
+# review queue position).
+#   gh workflow run release-store.yml --ref dev -f tier=test -f version=X.Y.Z.N [-f dry_run=false]
+# Variables (names only; values in the environments or the repository, none secret):
+#   CWS_PUBLISHER_ID, CWS_TEST_ITEM_ID, CWS_PROD_ITEM_ID, STORE_AWS_ROLE_ARN, STORE_KEY_SECRET_ID,
+#   AWS_REGION. The service account key lives only in AWS Secrets Manager, read through GitHub
+#   OIDC by a role trusted only for the environments test-store and production.
+
+on:
+  workflow_dispatch:
+    inputs:
+      tier:
+        description: 'Store item: test (unlisted TEST item) or prod (PROD item, needs approval)'
+        required: true
+        type: choice
+        options: [test, prod]
+      version:
+        description: 'Build to release, X.Y.Z.N (the CI run summary of a dev build)'
+        required: true
+        type: string
+      dry_run:
+        description: 'Dry run: check everything, read no credential, call no store API'
+        required: false
+        default: true
+        type: boolean
+      replace_pending:
+        description: 'Cancel a pending submission of this item first (loses its review queue position)'
+        required: false
+        default: false
+        type: boolean
+
+permissions: {}
+
+# One release per item at a time; never cancel one half way.
+concurrency:
+  group: release-store-${{ inputs.tier }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: Check the build (no store call)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read # checkout; read package.json at the build commit; compare the commit with dev
+      actions: read # find the dev CI run, download client-zip, find the TEST release run (prod)
+    outputs:
+      run-id: ${{ steps.build.outputs.run-id }}
+    steps:
+      # Fail visibly instead of a job-level `if` (which only shows "skipped").
+      - name: Refuse branches other than dev
+        if: ${{ github.ref != 'refs/heads/dev' }}
+        env:
+          REF: ${{ github.ref }}
+        run: |
+          echo "::error::Release to Chrome Web Store runs only on dev, not $REF"
+          exit 1
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Find the build
+        id: build
+        env:
+          GH_TOKEN: ${{ github.token }}
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          [[ "$INPUT_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::version must be X.Y.Z.N"; exit 1; }
+          read -r run_id version < <(scripts/ci/latest-client-build.sh "$INPUT_VERSION")
+          [[ "$version" == "$INPUT_VERSION" ]] || { echo "::error::found ${version}, asked for ${INPUT_VERSION}"; exit 1; }
+          echo "run-id=$run_id" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: client-zip
+          run-id: ${{ steps.build.outputs.run-id }}
+          github-token: ${{ github.token }}
+          path: build
+
+      # Item ids and the publisher id are variables, not secrets; the TEST item id is never printed.
+      - name: Dry run of the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TIER: ${{ inputs.tier }}
+          VERSION: ${{ inputs.version }}
+          REPLACE_PENDING: ${{ inputs.replace_pending }}
+          CWS_PUBLISHER_ID: ${{ vars.CWS_PUBLISHER_ID }}
+          CWS_TEST_ITEM_ID: ${{ vars.CWS_TEST_ITEM_ID }}
+          CWS_PROD_ITEM_ID: ${{ vars.CWS_PROD_ITEM_ID }}
+        run: |
+          set -euo pipefail
+          args=(--tier "$TIER" --version "$VERSION" --dir build --dry-run)
+          [[ "$REPLACE_PENDING" != true ]] || args+=(--replace-pending)
+          scripts/ci/store-release.sh "${args[@]}"
+
+  release:
+    name: Upload and submit (${{ inputs.tier }})
+    needs: check
+    if: ${{ !inputs.dry_run }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: ${{ inputs.tier == 'prod' && 'production' || 'test-store' }}
+    permissions:
+      contents: read # checkout the scripts; compare the commit with dev
+      actions: read # download client-zip; find the TEST release run (prod)
+      id-token: write # GitHub OIDC for the AWS role that may read the service account key
+    steps:
+      - name: Refuse branches other than dev
+        if: ${{ github.ref != 'refs/heads/dev' }}
+        env:
+          REF: ${{ github.ref }}
+        run: |
+          echo "::error::Release to Chrome Web Store runs only on dev, not $REF"
+          exit 1
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: client-zip
+          run-id: ${{ needs.check.outputs.run-id }}
+          github-token: ${{ github.token }}
+          path: build
+
+      # Repeats every guard, then reads the store state, uploads and submits (STAGED_PUBLISH).
+      # Prints booleans, versions, states and hashes only; tokens are masked and never echoed.
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TIER: ${{ inputs.tier }}
+          VERSION: ${{ inputs.version }}
+          REPLACE_PENDING: ${{ inputs.replace_pending }}
+          CWS_PUBLISHER_ID: ${{ vars.CWS_PUBLISHER_ID }}
+          CWS_TEST_ITEM_ID: ${{ vars.CWS_TEST_ITEM_ID }}
+          CWS_PROD_ITEM_ID: ${{ vars.CWS_PROD_ITEM_ID }}
+          STORE_AWS_ROLE_ARN: ${{ vars.STORE_AWS_ROLE_ARN }}
+          STORE_KEY_SECRET_ID: ${{ vars.STORE_KEY_SECRET_ID }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+        run: |
+          set -euo pipefail
+          args=(--tier "$TIER" --version "$VERSION" --dir build)
+          [[ "$REPLACE_PENDING" != true ]] || args+=(--replace-pending)
+          scripts/ci/store-release.sh "${args[@]}"
+
+      # What was uploaded (version, commit, hashes, states; no ids, no secrets). A later tier=prod
+      # run reads the record of the tier=test run of the same version.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: store-release-record
+          path: build/store-release-record.json
+          retention-days: 90
+          if-no-files-found: error

@@ -39,7 +39,7 @@ export function LoginScreen() {
         onClick={login}
         disabled={signingIn}
         className="flex items-center gap-3 bg-white border-2 border-[#d9d9d9] rounded-lg px-6 py-3 hover:bg-[#f8f8f8] hover:border-[#8e8e93] disabled:opacity-60 disabled:cursor-wait transition-all duration-200 shadow-sm hover:shadow-md group"
-        aria-label="Sign in with UDAN"
+        aria-label="Sign in with Google"
       >
         {/* UDAN Icon */}
         <div className="w-6 h-6 flex-shrink-0">
@@ -65,7 +65,7 @@ export function LoginScreen() {
         
         {/* Button Text */}
         <span className="text-[#1e1e1e] text-[16px] font-['Roboto',sans-serif] font-medium">
-          {signingIn ? 'Signing in…' : 'Sign in with UDAN'}
+          {signingIn ? 'Signing in…' : 'Sign in with Google'}
         </span>
       </button>
 

@@ -11,10 +11,12 @@
  *   node scripts/build-env.js <build> --file        prints the env file path
  *   node scripts/build-env.js <build> --schema      prints the schema keys, one per line
  *   node scripts/build-env.js <build> --non-empty   prints the names of keys with a value (JSON)
+ *   node scripts/build-env.js <build> --hash        prints the config hash (8 hex, see configHash)
  * It never prints values.
  */
 "use strict";
 
+const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
 
@@ -72,17 +74,29 @@ function defineEntries(build) {
     return { env, defs };
 }
 
-module.exports = { parseEnv, schemaKeys, envFilePath, loadBuildEnv, defineEntries };
+/**
+ * Short fingerprint of the configuration a build inlines: sha256 over the sorted
+ * `key=value` lines of the schema keys (what DefinePlugin gets, so env-var overrides count),
+ * first 8 hex. Any changed value or newly set key changes it; the values stay private.
+ */
+function configHash(build) {
+    const { keys, values } = loadBuildEnv(build);
+    const text = [...keys].sort().map((k) => `${k}=${JSON.stringify(values[k])}\n`).join("");
+    return crypto.createHash("sha256").update(text).digest("hex").slice(0, 8);
+}
+
+module.exports = { parseEnv, schemaKeys, envFilePath, loadBuildEnv, defineEntries, configHash };
 
 if (require.main === module) {
     const [build, flag] = process.argv.slice(2);
     if (!build || !flag) {
-        console.error("usage: node scripts/build-env.js <build> --file|--schema|--non-empty");
+        console.error("usage: node scripts/build-env.js <build> --file|--schema|--non-empty|--hash");
         process.exit(2);
     }
     if (flag === "--file") console.log(envFilePath(build));
     else if (flag === "--schema") console.log(schemaKeys().join("\n"));
     else if (flag === "--non-empty") console.log(JSON.stringify(loadBuildEnv(build).nonEmpty));
+    else if (flag === "--hash") console.log(configHash(build));
     else {
         console.error(`unknown flag: ${flag}`);
         process.exit(2);
