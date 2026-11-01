@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Universal Digital Assistant (UDA) Beta",
+  "name": "Universal Digital Assistant by Nistapp (UDAN)",
   "version": "1.1.0",
   "content_scripts": [
     {

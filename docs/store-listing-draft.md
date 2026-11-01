@@ -2,6 +2,10 @@
 
 Draft only. The Chrome Web Store text is the owner's to submit; check it against the README section "Privacy: what the extension stores" first.
 
+**Title (PROD item).** Universal Digital Assistant by Nistapp (UDAN)
+
+The title is the manifest `name` of the PROD store zip (45 characters; the documented manifest limit is 75). It is the product name, not a beta label: do not add Beta or Alpha to the listing title or text. The TEST item keeps the name "UDA TEST".
+
 **Single purpose.** Record, save and replay step-by-step guides on a web page (Universal Digital Assistant Network).
 
 **Data the extension handles**
