@@ -4,6 +4,8 @@ on:
   pull_request:
     types: [opened, edited, synchronize, reopened]
     branches: ['dev', 'master']
+  # Merge-queue runs have no PR title; report success so the check can be required.
+  merge_group:
 
 permissions: {}
 
@@ -16,7 +18,12 @@ jobs:
       - name: Check PR title
         env:
           TITLE: ${{ github.event.pull_request.title }}
+          EVENT: ${{ github.event_name }}
         run: |
+          if [[ "$EVENT" == "merge_group" ]]; then
+            echo "Merge group: no PR title to check (already checked on the pull_request run)."
+            exit 0
+          fi
           pattern='^(feat|fix|perf|refactor|docs|test|build|ci|chore|revert)(\([a-z0-9._/-]+\))?!?: .+'
           if [[ ! "$TITLE" =~ $pattern ]]; then
             echo "::error::PR title must look like 'feat: add x' or 'fix(api): y' (types: feat, fix, perf, refactor, docs, test, build, ci, chore, revert)."
