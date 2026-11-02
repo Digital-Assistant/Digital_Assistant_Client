@@ -29,7 +29,7 @@
     "service_worker": "./assets/UDABackground.js"
   },
   "action": {
-    "default_title": "Universal Digital Assistant (UDA)"
+    "default_title": "Universal Digital Assistant by Nistapp (UDAN)"
   },
   "options_ui": {
     "page": "options.html",
