@@ -1,1 +1,1 @@
-- The TEST backend currently rejects requests from browsers (CORS). Known issue, being fixed on the backend side.
+- None known at the moment.
