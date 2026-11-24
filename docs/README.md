@@ -7,7 +7,7 @@ This folder holds the permanent documentation of the Client. Start with the page
 | [`architecture/overview.md`](architecture/overview.md) | Components, entry points, sign-in, TEST or PROD choice and build configuration |
 | [`adr/README.md`](adr/README.md) | The index of architecture decision records |
 | [`store-listing-draft.md`](store-listing-draft.md) | Draft text for the Chrome Web Store listing |
-| [`agentic-readiness-report/`](agentic-readiness-report/README.md) | The audit reports: a frozen record, never edited |
+| [`agentic-readiness-report/`](agentic-readiness-report/README.md) | The audit reports: a point-in-time audit record; do not edit |
 
 Pages at the repository root:
 
