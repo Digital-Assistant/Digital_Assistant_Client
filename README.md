@@ -2,6 +2,8 @@
 
 Browser extension UI for the Universal Digital Assistant Network. The core logic comes from the published SDK, `@udan/digital-assistant-sdk` (source: https://github.com/Digital-Assistant/Digital-Assistant-SDK), so no local SDK checkout is needed.
 
+This repo is part of UDAN. The full multi-repository setup (infrastructure, Server, SDK, Client) is in the udan-workspace repository: <https://github.com/Digital-Assistant/udan-workspace>. This repo also works on its own.
+
 ## Integrating a site and required settings
 
 The SDK needs `realm` and `clientId` for the customer; since SDK 0.13.0 `clientSecret` is optional and deprecated. There are no defaults: without `realm` and `clientId` the SDK sends no request and logs which keys are missing. Host page setup (script tags, `UDAAuthDataConfig`, `UDAPluginSDK`, the `UDASdkReady` rule) is in the SDK's [`USAGE.md`](https://github.com/Digital-Assistant/Digital-Assistant-SDK/blob/main/USAGE.md), with a runnable [`sample/index.html`](https://github.com/Digital-Assistant/Digital-Assistant-SDK/blob/main/sample/index.html).

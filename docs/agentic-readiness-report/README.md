@@ -7,5 +7,8 @@ Permanent historical record of the first agentic-readiness audit of this reposit
 
 Produced read-only with the codebase-agentic-readiness-framework audit recipe. No repository files were changed by the audit itself.
 
-## Post-audit edit (only one)
-After finalising, one entry was removed from the AGT-08 harness-reach list in the JSON (a vendor name whose presence made a secret scanner read the two commit hashes in the report as access tokens), and the counts that depend on it were adjusted by one (`reached`, `total` 28 to 27, and the "N of 28 known harnesses" wording). Nothing else was changed; the file still passes `validate_report.py`.
+## Post-audit edits (two)
+
+**1. The JSON report.** After finalising, one entry was removed from the AGT-08 harness-reach list in the JSON (a vendor name whose presence made a secret scanner read the two commit hashes in the report as access tokens), and the counts that depend on it were adjusted by one (`reached`, `total` 28 to 27, and the "N of 28 known harnesses" wording). Nothing else was changed; the file still passes `validate_report.py`.
+
+**2. `suggested-improvements.md`.** In 2026-11, references to a repository that is not public were removed from `suggested-improvements.md`: one bullet was deleted and one sentence was reworded to say "one other repo". The reason was the public/private rule for this repository. Nothing else was changed.
