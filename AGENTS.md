@@ -1,6 +1,6 @@
 # AGENTS.md - Digital_Assistant_Client
 
-Browser extension UI (Chrome, Manifest V3) for the Universal Digital Assistant Network. The core logic is the published npm package `@udan/digital-assistant-sdk` (pinned to an exact version); this repo holds the UI, the content scripts and the background worker. **This repo is public.** The optional udan-workspace repository (https://github.com/Digital-Assistant/udan-workspace) sets up all UDAN repositories together; this file is enough on its own and covers only this repo. `CLAUDE.md` is a one-line import of this file.
+Browser extension UI (Chrome, Manifest V3) for the Universal Digital Assistant Network. The core logic is the published npm package `@udan/digital-assistant-sdk` (pinned to an exact version); this repo holds the UI, the content scripts and the background worker. **This repo is public.** The optional udan-workspace repository (<https://github.com/Digital-Assistant/udan-workspace>) sets up all UDAN repositories together; this file is enough on its own and covers only this repo. `CLAUDE.md` is a one-line import of this file.
 
 ## Public-repo rule
 - Never commit or print private values: hostnames of the real backends, AWS account ids, Parameter Store paths, secrets, tokens. Describe them by role ("the TEST backend").
